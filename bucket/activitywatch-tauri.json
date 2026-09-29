@@ -5,8 +5,14 @@
     "license": "MPL-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ActivityWatch/activitywatch/releases/download/v0.14.0b8/activitywatch-tauri-v0.14.0b8-windows-x86_64-setup.exe#/dl.7z",
-            "hash": "sha256:10fd0643adc50e096486433bc15e45e7c233ecace58cc19045e4abdb526d414a6"
+            "url": "https://github.com/ActivityWatch/activitywatch/releases/download/v0.14.0b8/activitywatch-tauri-v0.14.0b8-windows-x86_64-setup.exe",
+            "hash": "sha256:10fd0643adc50e096486433bc15e45e7c233ecace58cc19045e4abdb526d414a6",
+            "installer": {
+                "args": [
+                    "/S",
+                    "/D=$dir"
+                ]
+            }
         }
     },
     "bin": "activitywatch.exe",
@@ -24,7 +30,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/ActivityWatch/activitywatch/releases/download/v$version/activitywatch-tauri-v$version-windows-x86_64-setup.exe#/dl.7z"
+                "url": "https://github.com/ActivityWatch/activitywatch/releases/download/v$version/activitywatch-tauri-v$version-windows-x86_64-setup.exe"
             }
         }
     }
