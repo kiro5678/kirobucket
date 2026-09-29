@@ -9,6 +9,7 @@
             "hash": "7c8f5e0c049782b76bd8fc21372bcea3becb6650b14791cc5d609ddb9ca1e5ab"
         }
     },
+    "extract_dir": "activitywatch",
     "bin": "aw-tauri.exe",
     "shortcuts": [
         [
