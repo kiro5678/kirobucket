@@ -184,6 +184,20 @@ jobs:
               ""
               $end
           ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
           Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
 
       - name: Commit README changes
