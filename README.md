@@ -21,9 +21,11 @@ scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
 To remove KiroBucket:
 
 scoop bucket rm kirobucket
+
 Notes
 
 KiroBucket is currently a work in progress and is not stable yet. Some manifests may require changes or may stop working when upstream applications are updated
 
 https://github.com/ScoopInstaller/Scoop
+
 https://github.com/ScoopInstaller/BucketTemplate
