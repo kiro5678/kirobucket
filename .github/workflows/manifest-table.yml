@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "bucket/**"
+      - ".github/workflows/manifest-table.yml"
   workflow_dispatch:
 
 concurrency:
@@ -37,13 +38,28 @@ jobs:
 
           $rows = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File | Sort-Object Name) {
               $relativePath = "bucket/$($file.Name)"
-              $json = Get-Content -Path $file.FullName -Raw | ConvertFrom-Json
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
 
-              $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
-              $description = if ($null -ne $json.description -and [string]::IsNullOrWhiteSpace([string]$json.description) -eq $false) {
-                  ([string]$json.description).Trim()
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath`: $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and [string]::IsNullOrWhiteSpace([string]$json.description) -eq $false) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
               } else {
-                  "—"
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
               }
 
               $date = (& git log -1 --format=%cs -- $relativePath).Trim()
