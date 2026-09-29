@@ -117,9 +117,7 @@ jobs:
               }
           }
 
-          $rows = $rows | Sort-Object @{ Expression = {
-              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
-          }; Descending = $true }, Name | ForEach-Object { $_.Row }
+          $rows = $rows | Sort-Object Name | ForEach-Object { $_.Row }
 
           $table = @(
               "## Manifests"
