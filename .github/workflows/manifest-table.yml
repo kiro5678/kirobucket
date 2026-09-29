@@ -36,7 +36,7 @@ jobs:
           $readmePath = Join-Path $env:GITHUB_WORKSPACE "README.md"
           $readme = Get-Content -Path $readmePath -Raw
 
-          $rows = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File | Sort-Object Name) {
+          $manifests = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
               $raw = Get-Content -Path $file.FullName -Raw
               $json = $null
@@ -44,46 +44,7 @@ jobs:
               try {
                   $json = $raw | ConvertFrom-Json
               } catch {
-                  Write-Warning "Invalid JSON in $relativePath`: $($_.Exception.Message)"
-              }
-
-              if ($null -ne $json) {
-                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
-                  $description = if ($null -ne $json.description -and [string]::IsNullOrWhiteSpace([string]$json.description) -eq $false) {
-                      ([string]$json.description).Trim()
-                  } else {
-                      "—"
-                  }
-              } else {
-                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
-                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
-
-                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
-                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
-              }
-
-              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
-              if ([string]::IsNullOrWhiteSpace($date)) {
-                  $date = "—"
-              }
-
-              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-              $nameEscaped = $name.Replace("|", "\|")
-              $versionEscaped = $version.Replace("|", "\|")
-              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
-
-              "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
-          }
-
-          $rows = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
-              $relativePath = "bucket/$($file.Name)"
-              $raw = Get-Content -Path $file.FullName -Raw
-              $json = $null
-
-              try {
-                  $json = $raw | ConvertFrom-Json
-              } catch {
-                  Write-Warning "Invalid JSON in $relativePath\`: $($_.Exception.Message)"
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
               }
 
               if ($null -ne $json) {
@@ -101,9 +62,7 @@ jobs:
               }
 
               $date = (& git log -1 --format=%cs -- $relativePath).Trim()
-              if ([string]::IsNullOrWhiteSpace($date)) {
-                  $date = "—"
-              }
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
               $nameEscaped = $name.Replace("|", "\|")
@@ -117,7 +76,19 @@ jobs:
               }
           }
 
-          $rows = $rows | Sort-Object Name | ForEach-Object { $_.Row }
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newestRows = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name | ForEach-Object { $_.Row }
+          $oldestRows = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name | ForEach-Object { $_.Row }
+          $nameAzRows = $manifests | Sort-Object Name | ForEach-Object { $_.Row }
+          $nameZaRows = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true } | ForEach-Object { $_.Row }
+
+          $plainHeader = @(
+              "| Name | Version | LAST UPDATE | Description |"
+              "| --- | --- | --- | --- |"
+          )
 
           $table = @(
               "## Manifests"
@@ -125,10 +96,41 @@ jobs:
               "This table is generated automatically from the manifests currently available in the bucket directory."
               ""
               $start
-              '<a id="manifests"></a>'
-              "| Name | Version | LAST UPDATE | Description |"
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](#manifests-name-az) [↓](#manifests-name-za) | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |"
               "| --- | --- | --- | --- |"
-              $rows
+              $newestRows
+              ""
+              "<details>"
+              "<summary>Sort by name</summary>"
+              ""
+              '<a id="manifests-name-az"></a>'
+              "### Name A–Z"
+              ""
+              $plainHeader
+              $nameAzRows
+              ""
+              '<a id="manifests-name-za"></a>'
+              "### Name Z–A"
+              ""
+              $plainHeader
+              $nameZaRows
+              ""
+              "</details>"
+              ""
+              "<details>"
+              "<summary>Older update dates</summary>"
+              ""
+              '<a id="manifests-oldest"></a>'
+              "### Oldest first"
+              ""
+              $plainHeader
+              $oldestRows
+              ""
+              "</details>"
+              ""
+              "[↓ Newest](#manifests-newest) · [↑ Oldest](#manifests-oldest) · [↑ A–Z](#manifests-name-az) · [↓ Z–A](#manifests-name-za)"
+              ""
               $end
           ) -join [Environment]::NewLine
 
@@ -144,7 +146,6 @@ jobs:
           } else {
               $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
           }
-
           Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
 
       - name: Commit README changes
