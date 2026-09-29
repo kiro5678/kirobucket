@@ -29,26 +29,6 @@ Thank you for taking the time to check out the project.
 
 ## Manifests
 
-This table is generated from the manifests currently available in the `bucket` directory.
-
-## Manifests
-
-This table is generated automatically from the manifests currently available in the bucket directory.
-
-## Manifests
-
-This table is generated automatically from the manifests currently available in the bucket directory.
-
-## Manifests
-
-This table is generated automatically from the manifests currently available in the bucket directory.
-
-## Manifests
-
-This table is generated automatically from the manifests currently available in the bucket directory.
-
-## Manifests
-
 This table is generated automatically from the manifests currently available in the bucket directory.
 
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
