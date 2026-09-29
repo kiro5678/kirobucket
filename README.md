@@ -173,7 +173,6 @@ This table is generated from the manifests currently available in the `bucket` d
 | [MORT](bucket/MORT.json) | 1.320 | 2026-09-29 | Real-time game translator with OCR and machine translation. |
 | [motrix](bucket/motrix.json) | 1.8.19 | 2026-09-29 | Open-source download manager powered by aria2. |
 | [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-29 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
-| [motrix-next-beta](bucket/motrix-next-beta.json) | 3.9.8-beta.11 | 2026-09-29 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links (beta channel). |
 | [motrix-nightly](bucket/motrix-nightly.json) | 2.0.0-beta.30 | 2026-09-29 | Open-source download manager powered by aria2 (beta/nightly channel). |
 | [mouzi](bucket/mouzi.json) | 0.2.1 | 2026-09-29 | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
 | [moviebox-tui](bucket/moviebox-tui.json) | 0.1.25 | 2026-09-29 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
@@ -254,7 +253,6 @@ This table is generated from the manifests currently available in the `bucket` d
 | [smol](bucket/smol.json) | 1.0.0 | 2026-09-29 | Fast native Windows desktop app for compressing videos, audio, images, and PDFs. |
 | [sofast](bucket/sofast.json) | 0.12.0 | 2026-09-29 | Quick launcher and productivity tool for Windows. |
 | [spacedrive](bucket/spacedrive.json) | 0.4.3 | 2026-09-29 | Open source cross-platform file explorer. |
-| [spacedrive-alpha](bucket/spacedrive-alpha.json) | 2.0.0-alpha.2 | 2026-09-29 | Open source cross-platform file explorer. |
 | [sparkle](bucket/sparkle.json) | 2.24.0 | 2026-09-29 | Windows debloat and optimization tool. |
 | [spotlightsaver](bucket/spotlightsaver.json) | 7.0.0 | 2026-09-29 | Saves Windows 10/11 Spotlight wallpapers to a local folder. |
 | [stimesync](bucket/stimesync.json) | 1.0.1 | 2026-09-29 | Simple SNTP atomic clock time sync GUI app for Windows. |
