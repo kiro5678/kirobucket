@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: manifest-table-${{ github.ref }}
+  group: manifest-table-\${{ github.ref }}
   cancel-in-progress: false
 
 permissions:
@@ -25,16 +25,14 @@ jobs:
           ref: master
           fetch-depth: 0
 
-      - name: Update manifest table
+      - name: Generate manifest views
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
 
           $start = "<!-- KIROBUCKET-MANIFEST-TABLE-START -->"
           $end = "<!-- KIROBUCKET-MANIFEST-TABLE-END -->"
-
           $readmePath = Join-Path $env:GITHUB_WORKSPACE "README.md"
-          $readme = Get-Content -Path $readmePath -Raw
 
           $manifests = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
@@ -80,15 +78,40 @@ jobs:
               if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
           }
 
-          $newestRows = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name | ForEach-Object { $_.Row }
-          $oldestRows = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name | ForEach-Object { $_.Row }
-          $nameAzRows = $manifests | Sort-Object Name | ForEach-Object { $_.Row }
-          $nameZaRows = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true } | ForEach-Object { $_.Row }
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
 
-          $plainHeader = @(
-              "| Name | Version | LAST UPDATE | Description |"
-              "| --- | --- | --- | --- |"
-          )
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Description |"
+                  "| --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
 
           $table = @(
               "## Manifests"
@@ -97,40 +120,9 @@ jobs:
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [↑](#manifests-name-az) [↓](#manifests-name-za) | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |"
+              "| Name [Up A-Z](docs/manifests-name-az.md) [Down Z-A](docs/manifests-name-za.md) | Version | LAST UPDATE [Down Newest](docs/manifests-newest.md) [Up Oldest](docs/manifests-oldest.md) | Description |"
               "| --- | --- | --- | --- |"
-              $newestRows
-              ""
-              "<details>"
-              "<summary>Sort by name</summary>"
-              ""
-              '<a id="manifests-name-az"></a>'
-              "### Name A–Z"
-              ""
-              $plainHeader
-              $nameAzRows
-              ""
-              '<a id="manifests-name-za"></a>'
-              "### Name Z–A"
-              ""
-              $plainHeader
-              $nameZaRows
-              ""
-              "</details>"
-              ""
-              "<details>"
-              "<summary>Older update dates</summary>"
-              ""
-              '<a id="manifests-oldest"></a>'
-              "### Oldest first"
-              ""
-              $plainHeader
-              $oldestRows
-              ""
-              "</details>"
-              ""
-              "[↓ Newest](#manifests-newest) · [↑ Oldest](#manifests-oldest) · [↑ A–Z](#manifests-name-az) · [↓ Z–A](#manifests-name-za)"
-              ""
+              ($newest | ForEach-Object { $_.Row })
               $end
           ) -join [Environment]::NewLine
 
@@ -146,21 +138,22 @@ jobs:
           } else {
               $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
           }
+
           Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
 
-      - name: Commit README changes
+      - name: Commit generated files
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet -- README.md; then
-            echo "README is already up to date."
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
             exit 0
           fi
 
-          git add README.md
-          git commit -m "docs: update manifest table"
+          git add README.md docs
+          git commit -m "docs: update manifest views"
           git fetch origin master
           git rebase origin/master
           git push origin HEAD:master
