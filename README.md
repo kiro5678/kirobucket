@@ -23,6 +23,10 @@ If you like the project, don’t forget to support me by giving it a star.
 
 Thank you for taking the time to check out the project.
 
+https://github.com/ScoopInstaller/Scoop
+
+https://github.com/ScoopInstaller/BucketTemplate
+
 
 
 ## Manifests
@@ -595,9 +599,6 @@ This table is generated automatically from the manifests currently available in 
 
 
 
-https://github.com/ScoopInstaller/Scoop
-
-https://github.com/ScoopInstaller/BucketTemplate
 
 
 
