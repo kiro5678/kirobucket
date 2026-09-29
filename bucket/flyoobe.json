@@ -14,6 +14,10 @@
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/builtbybel/Flyoobe/releases/download/$version/FlyoobeApp.zip"
+        "url": "https://github.com/builtbybel/Flyoobe/releases/download/$version/FlyoobeApp.zip",
+        "hash": {
+            "url": "https://api.github.com/repos/builtbybel/Flyoobe/releases/tags/$version",
+            "jsonpath": "$.assets[?(@.name == '$basename')].digest"
+        }
     }
 }
