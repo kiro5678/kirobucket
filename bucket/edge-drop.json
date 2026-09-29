@@ -27,7 +27,7 @@
         "url": "https://github.com/Deepender25/Edge-Drop/releases/download/v$version/Edge-Drop-Setup-$version.exe",
         "hash": {
             "url": "https://api.github.com/repos/Deepender25/Edge-Drop/releases/tags/v$version",
-            "regex": "\"name\"\\s*:\\s*\"Edge-Drop-Setup-$version\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+            "jsonpath": "$.assets[?(@.name == '$basename')].digest"
         }
     }
 }
