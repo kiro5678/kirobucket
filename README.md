@@ -35,6 +35,10 @@ This table is generated from the manifests currently available in the `bucket` d
 
 This table is generated automatically from the manifests currently available in the bucket directory.
 
+## Manifests
+
+This table is generated automatically from the manifests currently available in the bucket directory.
+
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
 | Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
@@ -307,7 +311,7 @@ This table is generated automatically from the manifests currently available in 
 | [winzenith](bucket/winzenith.json) | 1.3.4 | 2026-09-29 | Free open-source Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
 | [wox](bucket/wox.json) | 2.4.1 | 2026-09-29 | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xfetch](bucket/xfetch.json) | 1.0.0 | 2026-09-29 | A customizable system information fetch tool. |
-| [xyplorer](bucket/xyplorer.json) | 28.30.2500 | 2026-09-29 | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
+| [xyplorer](bucket/xyplorer.json) | 28.30.2500 | 2026-09-30 | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [zapzap](bucket/zapzap.json) | 7.4.5 | 2026-09-29 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
 | [zenbreak-msix](bucket/zenbreak-msix.json) | 1.0.3 | 2026-09-29 | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [zenbreak](bucket/zenbreak.json) | 1.0.3 | 2026-09-29 | Desktop break reminder application for reducing screen fatigue and improving well-being. |
@@ -322,4 +326,5 @@ This table is generated automatically from the manifests currently available in 
 https://github.com/ScoopInstaller/Scoop
 
 https://github.com/ScoopInstaller/BucketTemplate
+
 
