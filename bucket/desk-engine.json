@@ -9,7 +9,7 @@
             "hash": "96aa1421b2dd9ce6554cca7a32df29f685e38cb1c7d1a16007972ba0d4d43864"
         }
     },
-    "pre_install": "Rename-Item "$dir\DeskEngine-Portable-$version.exe" "DeskEngine.exe"",
+    "pre_install": "Rename-Item \"$dir\\DeskEngine-Portable-$version.exe\" \"DeskEngine.exe\"",
     "bin": "DeskEngine.exe",
     "shortcuts": [
         [
