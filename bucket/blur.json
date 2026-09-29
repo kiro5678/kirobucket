@@ -3,13 +3,20 @@
     "description": "Native desktop application for adding motion blur to videos through frame blending and frame interpolation.",
     "homepage": "https://github.com/f0e/blur",
     "license": "GPL-3.0-or-later",
+    "suggest": {
+        "FFmpeg": "ffmpeg"
+    },
+    "notes": [
+        "The standalone build requires FFmpeg and FFprobe to be installed and available in PATH.",
+        "Install FFmpeg with: scoop install ffmpeg",
+        "VapourSynth and vspipe are also required by Blur."
+    ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/f0e/blur/releases/download/v2.45/blur-Windows-Installer-x64.exe",
-            "hash": "fe9c30fefae035c4edb1ef22fea2792e0cf69cccdf952f864f5305a61f40892b"
+            "url": "https://github.com/f0e/blur/releases/download/v2.45/blur-Windows-Release-x64.exe",
+            "hash": "0b0178a40d121b6b562cdda4c6feffa231e9bfe980f88ce7bffebff04c263a14"
         }
     },
-    "innosetup": true,
     "bin": "blur-gui.exe",
     "shortcuts": [
         [
@@ -23,7 +30,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/f0e/blur/releases/download/v$version/blur-Windows-Installer-x64.exe",
+                "url": "https://github.com/f0e/blur/releases/download/v$version/blur-Windows-Release-x64.exe",
                 "hash": {
                     "url": "https://api.github.com/repos/f0e/blur/releases/tags/v$version",
                     "jsonpath": "$.assets[?(@.name == '$basename')].digest"
