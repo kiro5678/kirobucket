@@ -6,7 +6,8 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/vg2222/DesktopTools/releases/download/v1.2.6/DesktopTools-1.2.6-win-x64-portable.zip",
-            "hash": "ad8a89fe07185522638b61fca6600bce2f6f25d8f054dcb8211f559a4f16cc71"
+            "hash": "ad8a89fe07185522638b61fca6600bce2f6f25d8f054dcb8211f559a4f16cc71",
+            "extract_dir": "DesktopTools-win-x64"
         }
     },
     "bin": "DesktopTools.exe",
@@ -23,6 +24,7 @@
         "architecture": {
             "64bit": {
                 "url": "https://github.com/vg2222/DesktopTools/releases/download/v$version/DesktopTools-$version-win-x64-portable.zip",
+                "extract_dir": "DesktopTools-win-x64",
                 "hash": {
                     "url": "https://api.github.com/repos/vg2222/DesktopTools/releases/tags/v$version",
                     "jsonpath": "$.assets[?(@.name == '$basename')].digest"
