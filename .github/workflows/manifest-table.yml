@@ -89,15 +89,12 @@ jobs:
 
           $pattern = "(?s)" + [regex]::Escape($start) + ".*?" + [regex]::Escape($end)
 
-          if ($readme -match $pattern) {
-              $readme = [regex]::Replace($readme, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table }, 1)
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace($readme, $sectionPattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table }, 1)
           } else {
-              $installation = $readme.IndexOf("`nInstallation")
-              if ($installation -ge 0) {
-                  $readme = $readme.Insert($installation, [Environment]::NewLine + $table + [Environment]::NewLine)
-              } else {
-                  $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
-              }
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
           }
 
           Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
