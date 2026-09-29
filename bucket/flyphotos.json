@@ -1,0 +1,37 @@
+{
+  "version": "2.7.2",
+  "description": "Fast and modern photo viewer for Windows.",
+  "homepage": "https://github.com/riyasy/FlyPhotos",
+  "license": "Proprietary",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/riyasy/FlyPhotos/releases/download/v2.7.2/FlyPhotosInstaller_2.7.2_x64.msi#/dl.msi",
+      "hash": "878fcd5114e976b04a00d40b1d64177ac1ff947a3b2cfcda5865765beaece63c"
+    },
+    "arm64": {
+      "url": "https://github.com/riyasy/FlyPhotos/releases/download/v2.7.2/FlyPhotosInstaller_2.7.2_ARM64.msi#/dl.msi",
+      "hash": "02e50ab2161781661b38b0b52705d5cfbd10267fd30edbb37120d150e2a55feb"
+    }
+  },
+  "extract_dir": "PFiles64\\RYFTools\\FlyPhotos",
+  "bin": "FlyPhotos.exe",
+  "shortcuts": [
+    [
+      "FlyPhotos.exe",
+      "Fly Photos"
+    ]
+  ],
+  "checkver": {
+    "github": "https://github.com/riyasy/FlyPhotos"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/riyasy/FlyPhotos/releases/download/v$version/FlyPhotosInstaller_$version_x64.msi#/dl.msi"
+      },
+      "arm64": {
+        "url": "https://github.com/riyasy/FlyPhotos/releases/download/v$version/FlyPhotosInstaller_$version_ARM64.msi#/dl.msi"
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+    "version": "1.2.9",
+    "description": "A cross-platform open-source file manager with two panels side by side.",
+    "homepage": "https://doublecmd.sourceforge.io/",
+    "license": "GPL-2.0-only",
+    "url": "https://github.com/doublecmd/doublecmd/releases/download/v1.2.9/doublecmd-1.2.9.x86_64-win64.zip",
+    "hash": "e8472c0105dbde55db4ffbdbd190eab65e9da0375596454995fae4a1fc128dee",
+    "extract_dir": "doublecmd",
+    "bin": "doublecmd.exe",
+    "shortcuts": [
+        [
+            "doublecmd.exe",
+            "Double Commander"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/doublecmd/doublecmd"
+    },
+    "autoupdate": {
+        "url": "https://github.com/doublecmd/doublecmd/releases/download/v$version/doublecmd-$version.x86_64-win64.zip",
+        "extract_dir": "doublecmd"
+    }
+}

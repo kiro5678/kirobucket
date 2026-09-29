@@ -1,0 +1,38 @@
+{
+    "version": "19.1.0",
+    "description": "A task management and time tracking application for personal productivity.",
+    "homepage": "https://github.com/super-productivity/super-productivity",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/super-productivity/super-productivity/releases/download/v19.1.0/Super-Productivity-Setup-x64.exe#/dl.7z",
+            "hash": "0a133278c97f0797a925f56aaa2e343fb62a43d89acbdcdc17041e4d67439a6b"
+        }
+    },
+    "installer": {
+        "script": [
+            "$embedded = Get-ChildItem \"$dir\" -Recurse -Filter 'app-64.7z' | Select-Object -First 1",
+            "if (!$embedded) { abort 'Could not find the embedded Super Productivity application archive (app-64.7z).' }",
+            "7z x \"$($embedded.FullName)\" -o\"$dir\" -y | Out-Null",
+            "Remove-Item \"$embedded\" -Force -ErrorAction SilentlyContinue",
+            "Get-ChildItem \"$dir\" -Filter 'Super-Productivity-Setup-x64.exe' -File -ErrorAction SilentlyContinue | Remove-Item -Force"
+        ]
+    },
+    "bin": "superProductivity.exe",
+    "shortcuts": [
+        [
+            "superProductivity.exe",
+            "Super Productivity"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/super-productivity/super-productivity"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/super-productivity/super-productivity/releases/download/v$version/Super-Productivity-Setup-x64.exe#/dl.7z"
+            }
+        }
+    }
+}

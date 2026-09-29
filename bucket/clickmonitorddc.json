@@ -1,0 +1,14 @@
+{
+    "version": "7.2",
+    "description": "Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI.",
+    "homepage": "https://github.com/chrismah/ClickMonitorDDC7.2",
+    "license": "Freeware",
+    "url": "https://raw.githubusercontent.com/chrismah/ClickMonitorDDC7.2/master/files/ClickMonitorDDC_7_2.zip",
+    "bin": "ClickMonitorDDC_7_2.exe",
+    "shortcuts": [
+        [
+            "ClickMonitorDDC_7_2.exe",
+            "ClickMonitorDDC"
+        ]
+    ]
+}

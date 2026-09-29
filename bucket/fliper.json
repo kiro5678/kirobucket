@@ -1,0 +1,22 @@
+{
+    "version": "1.2.0",
+    "description": "Universal keyboard layout and case converter for Windows.",
+    "homepage": "https://github.com/beatlejute/Fliper",
+    "license": "MIT",
+    "url": "https://github.com/beatlejute/Fliper/releases/download/Fliper_v1.2.0/Fliper.exe",
+    "hash": "407bd5b56ac660d1d2aa0665a9ea30f27ebb9a45c586ba1ba7808871e4c3dcdd",
+    "bin": "Fliper.exe",
+    "shortcuts": [
+        [
+            "Fliper.exe",
+            "Fliper"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/beatlejute/Fliper",
+        "regex": "Fliper_v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/beatlejute/Fliper/releases/download/Fliper_v$version/Fliper.exe"
+    }
+}

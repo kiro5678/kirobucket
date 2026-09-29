@@ -1,0 +1,31 @@
+{
+    "version": "2.2.0.2544",
+    "description": "Universal pasteboard across devices.",
+    "homepage": "https://crosspaste.com/en/",
+    "license": {
+        "identifier": "AGPL-3.0-only",
+        "url": "https://github.com/CrossPaste/crosspaste-desktop/blob/main/LICENSE"
+    },
+    "url": "https://github.com/CrossPaste/crosspaste-desktop/releases/download/2.2.0.2544/crosspaste-2.2.0-2544-windows-amd64.zip",
+    "hash": "2d36a427823633b83ca62a86ce63bc7922a4128809e17140ba2685f8016abca7",
+    "bin": "bin\\CrossPaste.exe",
+    "shortcuts": [
+        [
+            "bin\\CrossPaste.exe",
+            "CrossPaste"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/CrossPaste/crosspaste-desktop/releases",
+        "jsonpath": "$[*].assets[*].browser_download_url",
+        "regex": "/releases/download/(?<tag>[\\d.]+)/crosspaste-(?<release>[\\d.]+)-(?<build>\\d+)-windows-amd64\\.zip",
+        "replace": "${release}.${build}"
+    },
+    "autoupdate": {
+        "url": "https://github.com/CrossPaste/crosspaste-desktop/releases/download/$matchTag/crosspaste-$matchRelease-$matchBuild-windows-amd64.zip",
+        "hash": {
+            "url": "https://github.com/CrossPaste/crosspaste-desktop/releases/download/$matchTag/checksum.txt",
+            "regex": "(?im)^([0-9a-f]{64})\\s+\\*?$basename$"
+        }
+    }
+}

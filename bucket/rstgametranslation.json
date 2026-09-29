@@ -1,0 +1,30 @@
+{
+    "version": "5.5",
+    "description": "Real-time game screen OCR and translation tool.",
+    "homepage": "https://github.com/thanhkeke97/RSTGameTranslation",
+    "license": "GPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/thanhkeke97/RSTGameTranslation/releases/download/V5.5/RSTGameTranslation_v5.5.zip",
+            "hash": "ea7901b7d6c7839323cb63e5151cd44ee9ee6b624223804e6d164f2bc67aac5f"
+        }
+    },
+    "extract_dir": "RSTGameTranslation",
+    "bin": "rst.exe",
+    "shortcuts": [
+        [
+            "rst.exe",
+            "RSTGameTranslation"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/thanhkeke97/RSTGameTranslation"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/thanhkeke97/RSTGameTranslation/releases/download/V$version/RSTGameTranslation_v$version.zip"
+            }
+        }
+    }
+}

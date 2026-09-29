@@ -1,0 +1,39 @@
+{
+    "version": "1.1.4",
+    "description": "Disk cleanup, storage analysis, and system optimization for Windows.",
+    "homepage": "https://github.com/harry0703/MangoDisk",
+    "license": "GPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/harry0703/MangoDisk/releases/download/v1.1.4/MangoDisk-1.1.4-windows-portable.exe",
+            "hash": "309099f395ec37572ec6800ba58125f2e2e2e0b586f93ab701b55ef0a8a53ff0"
+        }
+    },
+    "bin": "MangoDisk-1.1.4-windows-portable.exe",
+    "shortcuts": [
+        [
+            "MangoDisk-1.1.4-windows-portable.exe",
+            "MangoDisk"
+        ]
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/harry0703/MangoDisk/releases/download/v$version/MangoDisk-$version-windows-portable.exe",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/harry0703/MangoDisk/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == '$basename')].digest"
+                }
+            }
+        },
+        "bin": "MangoDisk-$version-windows-portable.exe",
+        "shortcuts": [
+            [
+                "MangoDisk-$version-windows-portable.exe",
+                "MangoDisk"
+            ]
+        ]
+    }
+}

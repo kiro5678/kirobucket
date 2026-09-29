@@ -1,0 +1,18 @@
+{
+    "version": "2.87.4",
+    "description": "Glide/DirectX implementation on D3D11/12 for running old games on modern Windows.",
+    "homepage": "https://github.com/dege-diosg/dgVoodoo2",
+    "license": "Freeware",
+    "url": "https://github.com/dege-diosg/dgVoodoo2/releases/download/v2.87.4/dgVoodoo2_87_4.zip",
+    "hash": "74aeb464d829db80e3f4aa8fae235e6e3b38fc01188776c5c2376bb0dea0956e",
+    "bin": "dgVoodooCpl.exe",
+    "shortcuts": [
+        [
+            "dgVoodooCpl.exe",
+            "dgVoodoo Control Panel"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/dege-diosg/dgVoodoo2"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "version": "4.0.22",
+    "description": "Free and open-source time tracking application that monitors computer usage and working time.",
+    "homepage": "https://github.com/MayGo/tockler",
+    "license": "GPL-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/MayGo/tockler/releases/download/v4.0.22/tockler-4.0.22-portable-win-x64.exe"
+        }
+    },
+    "pre_install": "Rename-Item -Path \"$dir\\tockler-$version-portable-win-x64.exe\" -NewName \"tockler.exe\"",
+    "bin": "tockler.exe",
+    "shortcuts": [
+        [
+            "tockler.exe",
+            "Tockler"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/MayGo/tockler"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/MayGo/tockler/releases/download/v$version/tockler-$version-portable-win-x64.exe"
+            }
+        }
+    }
+}

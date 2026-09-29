@@ -1,0 +1,39 @@
+{
+    "version": "1.0rc3.1",
+    "description": "RGB lighting control that does not depend on manufacturer software.",
+    "homepage": "https://openrgb.org",
+    "license": "GPL-2.0-only",
+    "suggest": {
+        "vcredist": "extras/vcredist2022"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_1.0rc3.1/OpenRGB_1.0rc3.1_Windows_64_5e81e26.zip",
+            "hash": "C8403BB964E7871DE2748014C64C5A25138C5171E150E11B83D30B6D526FE858"
+        },
+        "32bit": {
+            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_1.0rc3.1/OpenRGB_1.0rc3.1_Windows_32_5e81e26.zip",
+            "hash": "B9FD4820D2E543FD6AD85693DE4230EB88C5C07B3C048B60B2CDE02E412B26C4"
+        }
+    },
+    "shortcuts": [
+        [
+            "OpenRGB.exe",
+            "OpenRGB"
+        ]
+    ],
+    "checkver": {
+        "url": "https://github.com/CalcProgrammer1/OpenRGB/releases",
+        "regex": "OpenRGB_([\\d.]+)_Windows_64_(?<commit>[\\da-fA-F]{7})\\.zip"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_$version/OpenRGB_$version_Windows_64_$matchCommit.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_$version/OpenRGB_$version_Windows_32_$matchCommit.zip"
+            }
+        }
+    }
+}

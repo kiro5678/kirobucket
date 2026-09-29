@@ -1,0 +1,36 @@
+{
+    "version": "1.2.15.0",
+    "description": "Audio enhancer and sound equalizer for Windows.",
+    "homepage": "https://github.com/fxsound2/fxsound-app",
+    "license": "AGPL-3.0-only",
+    "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe",
+    "hash": "175588d38bf2816d74e3995967b9918845219341c0535cf7037028563575f498",
+    "pre_install": [
+        "$staging = Join-Path $dir '.installer'",
+        "New-Item -ItemType Directory -Path $staging -Force | Out-Null",
+        "$setup = Join-Path $dir $fname",
+        "& $setup /extract $staging",
+        "if ($LASTEXITCODE -ne 0) { throw 'FxSound setup extraction failed.' }",
+        "$msi = Get-ChildItem -Path $staging -Filter '*.msi' -File | Select-Object -First 1",
+        "if (!$msi) { throw 'FxSound MSI was not found after extracting the setup.' }",
+        "Expand-MsiArchive $msi.FullName $dir | Out-Null",
+        "Remove-Item $staging -Recurse -Force -ErrorAction SilentlyContinue",
+        "Remove-Item $setup -Force -ErrorAction SilentlyContinue",
+        "Remove-Item (Join-Path $dir 'System*') -Recurse -Force -ErrorAction SilentlyContinue"
+    ],
+    "bin": "FxSound.exe",
+    "shortcuts": [
+        [
+            "FxSound.exe",
+            "FxSound Beta"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/fxsound2/fxsound-app",
+        "regex": "Version ([\\d.]+) \\(Beta\\)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe"
+    },
+    "notes": "The setup EXE is extracted to obtain its MSI, then Scoop extracts the MSI contents into the app directory instead of installing the product. FxSound's audio driver is installed by a separate MSI custom action during a normal installation, so this file-only extraction does not install the driver."
+}

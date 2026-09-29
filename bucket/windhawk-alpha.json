@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0-alpha.1",
+    "description": "Customization marketplace for Windows programs.",
+    "homepage": "https://windhawk.net/",
+    "license": {
+        "identifier": "GPL-3.0-or-later",
+        "url": "https://github.com/ramensoftware/windhawk/blob/main/LICENSE"
+    },
+    "url": "https://github.com/ramensoftware/windhawk/releases/download/2.0.0-alpha.1/windhawk_setup_offline.exe",
+    "hash": "61df5cdf4c3878206d34b07ec4302dcee29a4949f26fa1594285b47e4f858e05",
+    "pre_install": [
+        "if(!(test-path \"$persist_dir\\AppData\\settings.ini\")) {",
+        "    New-Item -ItemType \"Directory\" -Path \"$dir\\AppData\" | Out-Null",
+        "    Set-Content \"$dir\\AppData\\settings.ini\" \"[Settings]`r`nDisableUpdateCheck=1\" -Encoding Unicode",
+        "}"
+    ],
+    "post_install": [
+        "# Windhawk needs to apply permissive access attributes to AppData folder in order to work properly",
+        "Start-Process -FilePath \"$dir\\$fname\" -ArgumentList @('/S', '/portable', \"/D=$dir\") -Wait",
+        "Remove-Item -Path \"$dir\\$fname\" -Force",
+        "startmenu_shortcut \"$dir\\windhawk.exe\" 'Windhawk' $null $null $global",
+        "shim \"$dir\\windhawk.exe\" $global 'windhawk'"
+    ],
+    "persist": "AppData",
+    "post_uninstall": [
+        "# Remove shortcut and shim",
+        "Write-Host \"`nRemoving shortcut $(friendly_path \"$(shortcut_folder $global)\\Windhawk.lnk\")\"",
+        "Remove-Item \"$(shortcut_folder $global)\\Windhawk.lnk\" -Force -ErrorAction Ignore",
+        "rm_shim 'windhawk' \"$(shimdir $global)\""
+    ],
+    "checkver": {
+        "url": "https://github.com/ramensoftware/windhawk/releases",
+        "regex": "releases/tag/(2\\.0\\.0-alpha\\.[0-9]+)",
+        "reverse": true
+    },
+    "autoupdate": {
+        "url": "https://github.com/ramensoftware/windhawk/releases/download/$version/windhawk_setup_offline.exe"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "version": "1.13.0",
+    "description": "Open source screen recording application for Windows.",
+    "homepage": "https://github.com/getopenscreen/openscreen",
+    "license": "MIT",
+    "url": "https://github.com/getopenscreen/openscreen/releases/download/v1.13.0/Openscreen.Setup.1.13.0.exe",
+    "hash": "ff7f248664f1f43b32fbb4d1f136a9e204c0889cc60e59883a6fac213355e0c1",
+    "installer": {
+        "script": "Invoke-ExternalCommand \"$dir\\$fname\" -ArgumentList @('/S', \"/D=$dir\") -RunAs | Out-Null"
+    },
+    "bin": "Openscreen.exe",
+    "shortcuts": [
+        [
+            "Openscreen.exe",
+            "OpenScreen"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/getopenscreen/openscreen"
+    },
+    "autoupdate": {
+        "url": "https://github.com/getopenscreen/openscreen/releases/download/v$version/Openscreen.Setup.$version.exe"
+    }
+}

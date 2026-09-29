@@ -1,0 +1,21 @@
+{
+    "version": "0.6.0",
+    "description": "Flash Player emulator and SWF player written in Rust.",
+    "homepage": "https://ruffle.rs/",
+    "license": "MIT",
+    "url": "https://github.com/ruffle-rs/ruffle/releases/download/v0.6.0/ruffle-0.6.0-windows-x86_64.zip",
+    "hash": "4d151b83054ba2b9f6d4e422babee9e27c0d187634e50359d4857d315d6b52c6",
+    "bin": "ruffle.exe",
+    "shortcuts": [
+        [
+            "ruffle.exe",
+            "Ruffle"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/ruffle-rs/ruffle"
+    },
+    "autoupdate": {
+        "url": "https://github.com/ruffle-rs/ruffle/releases/download/v$version/ruffle-$version-windows-x86_64.zip"
+    }
+}

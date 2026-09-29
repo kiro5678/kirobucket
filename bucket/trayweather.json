@@ -1,0 +1,21 @@
+{
+    "version": "1.37.2",
+    "description": "A lightweight weather application that runs in the Windows system tray.",
+    "homepage": "https://github.com/FelixdelasPozas/TrayWeather",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/FelixdelasPozas/TrayWeather/releases/download/1.37.2/TrayWeather_v1.37.2_Portable.7z",
+    "hash": "92f0cea6f179f1772e6831b6135a7da689368094b353e7c1a04d04948dcd0fee",
+    "bin": "TrayWeather.exe",
+    "shortcuts": [
+        [
+            "TrayWeather.exe",
+            "TrayWeather"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/FelixdelasPozas/TrayWeather"
+    },
+    "autoupdate": {
+        "url": "https://github.com/FelixdelasPozas/TrayWeather/releases/download/$version/TrayWeather_v$version_Portable.7z"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "version": "2.2.0",
+    "description": "A modern cross-platform file manager with a powerful interface.",
+    "homepage": "https://github.com/aleksey-hoffman/sigma-file-manager",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/download/v2.2.0/Sigma-File-Manager-2.2.0-windows-setup.exe#/dl.7z",
+    "hash": "1deb6a2672e5c98f3160f8b626afb2ae178c37a8b42a543c73a30e75c467ceeb",
+    "bin": "sigma-file-manager.exe",
+    "shortcuts": [
+        [
+            "sigma-file-manager.exe",
+            "Sigma File Manager"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/aleksey-hoffman/sigma-file-manager"
+    },
+    "autoupdate": {
+        "url": "https://github.com/aleksey-hoffman/sigma-file-manager/releases/download/v$version/Sigma-File-Manager-$version-windows-setup.exe#/dl.7z"
+    }
+}

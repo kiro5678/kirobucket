@@ -1,0 +1,34 @@
+{
+    "version": "2.19.0",
+    "description": "Windows tiling window manager designed for power users.",
+    "homepage": "https://github.com/FancyWM/fancywm",
+    "license": "MIT",
+    "suggest": {
+        "MSIX certificate": "https://github.com/FancyWM/fancywm/releases/download/v2.19.0/FancyWM.Package_2.19.0.0_x64.cer"
+    },
+    "url": [
+        "https://github.com/FancyWM/fancywm/releases/download/v2.19.0/FancyWM.Release.x64.zip",
+        "https://github.com/FancyWM/fancywm/releases/download/v2.19.0/FancyWM.Package_2.19.0.0_x64.cer"
+    ],
+    "hash": [
+        "eaf46ae4d4e3c5ae6f16618425cf7664baeaa73a762c44133170096a41ca5587",
+        "cfbaa2351d39d7abecc5252bd22d5a0f9a4b6576c079c0ce320fd7723dd3b1c3"
+    ],
+    "bin": "FancyWM-GUI.exe",
+    "shortcuts": [
+        [
+            "FancyWM-GUI.exe",
+            "FancyWM"
+        ]
+    ],
+    "persist": "settings.json",
+    "checkver": {
+        "github": "https://github.com/FancyWM/fancywm"
+    },
+    "autoupdate": {
+        "url": [
+            "https://github.com/FancyWM/fancywm/releases/download/v$version/FancyWM.Release.x64.zip",
+            "https://github.com/FancyWM/fancywm/releases/download/v$version/FancyWM.Package_$version.0_x64.cer"
+        ]
+    }
+}

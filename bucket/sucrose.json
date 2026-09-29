@@ -1,0 +1,29 @@
+{
+    "version": "26.7.5.0",
+    "description": "Highly customizable live wallpaper application for Windows.",
+    "homepage": "https://github.com/Taiizor/Sucrose",
+    "license": "GPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Taiizor/Sucrose/releases/download/v26.7.5.0/Sucrose_Bundle_.NET_Framework_4.8_x64_26.7.5.0.7z",
+            "hash": "f36804548b0062be6845b4852287f4d872d59e7100303d040cf4eb4e9b2403e7"
+        }
+    },
+    "bin": "Sucrose.Launcher.exe",
+    "shortcuts": [
+        [
+            "Sucrose.Launcher.exe",
+            "Sucrose"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Taiizor/Sucrose"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Taiizor/Sucrose/releases/download/v$version/Sucrose_Bundle_.NET_Framework_4.8_x64_$version.7z"
+            }
+        }
+    }
+}

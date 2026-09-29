@@ -1,0 +1,36 @@
+{
+    "version": "2026.2",
+    "description": "Lightweight utility for customizing the Windows taskbar appearance.",
+    "homepage": "https://github.com/TranslucentTB/TranslucentTB",
+    "license": "GPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/2026.2/TranslucentTB-portable-x64.zip",
+            "hash": "0dbe8e0255c20e131cde536dcd0ae490d45989a7d360e26d0150dff1922ac420"
+        },
+        "arm64": {
+            "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/2026.2/TranslucentTB-portable-arm64.zip",
+            "hash": "81b2f386bd4776a2d9f5c44d8a9b5b3aebccd2eeffaa53435eac24aa38797c82"
+        }
+    },
+    "bin": "TranslucentTB.exe",
+    "shortcuts": [
+        [
+            "TranslucentTB.exe",
+            "TranslucentTB"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/TranslucentTB/TranslucentTB"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/$version/TranslucentTB-portable-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/TranslucentTB/TranslucentTB/releases/download/$version/TranslucentTB-portable-arm64.zip"
+            }
+        }
+    }
+}

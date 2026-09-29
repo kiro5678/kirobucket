@@ -1,0 +1,30 @@
+{
+    "version": "7.7",
+    "description": "Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings.",
+    "homepage": "https://github.com/RedDot-3ND7355/MPO-GPU-FIX",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/RedDot-3ND7355/MPO-GPU-FIX/releases/download/Update7.7/MPOGPUFIX.zip",
+            "hash": "cdb5258f875461fb2453c6be7b401bbaf202bc6843b4450b69cd2f4ff9e4b429"
+        }
+    },
+    "bin": "MPOGPUFIX.exe",
+    "shortcuts": [
+        [
+            "MPOGPUFIX.exe",
+            "MPOGPUFIX"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/RedDot-3ND7355/MPO-GPU-FIX",
+        "regex": "tag/Update(?<version>[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/RedDot-3ND7355/MPO-GPU-FIX/releases/download/Update$version/MPOGPUFIX.zip"
+            }
+        }
+    }
+}

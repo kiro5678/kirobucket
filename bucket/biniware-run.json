@@ -1,0 +1,22 @@
+{
+    "version": "7.8.0.0",
+    "description": "Portable Windows productivity tool for quickly accessing favorite website links, files and folders.",
+    "homepage": "https://biniware.com/brun",
+    "license": "Freeware",
+    "url": "https://biniware.com/download/brun/v4/brun.exe",
+    "hash": "c0aded6a8d6e9c2790558e3096c148c57872f73c5212123e8e96f340d4a8e250",
+    "bin": "brun.exe",
+    "shortcuts": [
+        [
+            "brun.exe",
+            "Biniware Run"
+        ]
+    ],
+    "checkver": {
+        "url": "https://biniware.com/brun",
+        "regex": "Current version[^\\d]*(\\d+(?:\\.\\d+){3})"
+    },
+    "autoupdate": {
+        "url": "https://biniware.com/download/brun/v4/brun.exe"
+    }
+}

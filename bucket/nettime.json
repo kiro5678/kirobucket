@@ -1,0 +1,20 @@
+{
+    "version": "3.14",
+    "description": "Simple Network Time Protocol (SNTP) client for Windows that synchronizes the system clock.",
+    "homepage": "https://www.timesynctool.com/",
+    "license": "GPL-3.0-only",
+    "url": "https://www.timesynctool.com/NetTimeSetup-314.exe",
+    "hash": "5e3a5cd4e7ce99c8a5701cbe50344cd0516bc9984681de56f15abde414d9dbde",
+    "innosetup": true,
+    "bin": "NetTime.exe",
+    "shortcuts": [
+        [
+            "NetTime.exe",
+            "NetTime"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.timesynctool.com/",
+        "regex": "Version ([0-9.]+) - Current Stable Version"
+    }
+}

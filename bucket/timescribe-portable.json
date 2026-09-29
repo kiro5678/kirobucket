@@ -1,0 +1,35 @@
+{
+    "version": "1.17.1",
+    "description": "Smart and private time tracking for Windows.",
+    "homepage": "https://github.com/WINBIGFOX/TimeScribe",
+    "license": "GPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/WINBIGFOX/TimeScribe/releases/download/v1.17.1/TimeScribe-1.17.1-setup.exe",
+            "hash": "6dbadef47a4ed4ada5befa798462a6571d2b5525ac9fa1e5e96f202469c645e1"
+        }
+    },
+    "installer": {
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
+    },
+    "bin": "TimeScribe.exe",
+    "shortcuts": [
+        [
+            "TimeScribe.exe",
+            "TimeScribe"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/WINBIGFOX/TimeScribe"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/WINBIGFOX/TimeScribe/releases/download/v$version/TimeScribe-$version-setup.exe"
+            }
+        }
+    }
+}

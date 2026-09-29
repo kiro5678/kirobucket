@@ -1,0 +1,30 @@
+{
+    "version": "4.0.2.3",
+    "description": "DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable)",
+    "homepage": "https://github.com/hbashton/DS4Windows",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/hbashton/DS4Windows/releases/download/v4.0.2.3/DS4Windows_4.0.2.3_x64.zip",
+            "hash": "c78c1b2a6aa83e55e3ca16cc49a30c259b5c0e19dc20e616b3d775f1e69329bc"
+        }
+    },
+    "bin": "DS4Windows\\DS4Windows.exe",
+    "shortcuts": [
+        [
+            "DS4Windows\\DS4Windows.exe",
+            "DS4Windows"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/hbashton/DS4Windows",
+        "regex": "tag/v([0-9.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/hbashton/DS4Windows/releases/download/v$version/DS4Windows_$version_x64.zip"
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "version": "0.7.0",
+    "description": "A powerful, minimalistic, cross-platform flowchart and diagram editor",
+    "homepage": "https://github.com/LinwoodDev/Flow",
+    "license": "AGPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/LinwoodDev/Flow/releases/download/v0.7.0/linwood-flow-windows-x86_64.zip",
+            "hash": "95d1a81bcc090e40462c6eb022bb8c3738d3a6d73443307075d32a4aebd9da29"
+        },
+        "arm64": {
+            "url": "https://github.com/LinwoodDev/Flow/releases/download/v0.7.0/linwood-flow-windows-arm64.zip",
+            "hash": "555162bbbbda967107e01a4767dca77f4522a2ba06ee49a3f2fc2ad6d6d195c6"
+        }
+    },
+    "bin": "flow.exe",
+    "shortcuts": [
+        [
+            "flow.exe",
+            "Flow"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/LinwoodDev/Flow"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/LinwoodDev/Flow/releases/download/v$version/linwood-flow-windows-x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/LinwoodDev/Flow/releases/download/v$version/linwood-flow-windows-arm64.zip"
+            }
+        }
+    }
+}
+

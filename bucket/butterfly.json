@@ -1,0 +1,36 @@
+{
+    "version": "2.6.0",
+    "description": "A powerful, minimalistic, cross-platform note-taking app",
+    "homepage": "https://github.com/LinwoodDev/Butterfly",
+    "license": "AGPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/LinwoodDev/Butterfly/releases/download/v2.6.0/linwood-butterfly-windows-x86_64.zip",
+            "hash": "0ab9ebe8ab68961783132af6545273c7881550bcba89cf58095e83533ebae13f"
+        },
+        "arm64": {
+            "url": "https://github.com/LinwoodDev/Butterfly/releases/download/v2.6.0/linwood-butterfly-windows-arm64.zip",
+            "hash": "6230e49f294b95be0ecd554b9f682d95ae5db6b99ad4fce6ffe5e79979f5d63e"
+        }
+    },
+    "bin": "butterfly.exe",
+    "shortcuts": [
+        [
+            "butterfly.exe",
+            "Butterfly"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/LinwoodDev/Butterfly"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/LinwoodDev/Butterfly/releases/download/v$version/linwood-butterfly-windows-x86_64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/LinwoodDev/Butterfly/releases/download/v$version/linwood-butterfly-windows-arm64.zip"
+            }
+        }
+    }
+}

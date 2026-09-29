@@ -1,0 +1,24 @@
+{
+    "version": "28.30.2500",
+    "description": "Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization.",
+    "homepage": "https://www.xyplorer.com/",
+    "license": "Proprietary",
+    "url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip",
+    "bin": [
+        "XYplorer.exe",
+        "XYcopy.exe"
+    ],
+    "shortcuts": [
+        [
+            "XYplorer.exe",
+            "XYplorer"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.xyplorer.com/download.php?bit=64",
+        "regex": "No-Install Package \(ZIP\).*?Version\\s*\\|\\s*(?<version>\\d+\\.\\d+\\.\\d+)"
+    },
+    "autoupdate": {
+        "url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip"
+    }
+}

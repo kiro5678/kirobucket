@@ -1,0 +1,21 @@
+{
+    "version": "1.8.19",
+    "description": "Open-source download manager powered by aria2.",
+    "homepage": "https://github.com/agalwood/Motrix",
+    "license": "MIT",
+    "url": "https://github.com/agalwood/Motrix/releases/download/v1.8.19/Motrix-1.8.19-win.zip",
+    "hash": "5238865630e99dc4981bcc6082ba2b8221c4a543f35b41c0205a34984fd8f3b5",
+    "bin": "Motrix.exe",
+    "shortcuts": [
+        [
+            "Motrix.exe",
+            "Motrix"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/agalwood/Motrix"
+    },
+    "autoupdate": {
+        "url": "https://github.com/agalwood/Motrix/releases/download/v$version/Motrix-$version-win.zip"
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "version": "2026-09-04",
+    "description": "Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust.",
+    "homepage": "https://ruffle.rs/",
+    "license": "MIT",
+    "url": "https://github.com/ruffle-rs/ruffle/releases/download/nightly-2026-09-04/ruffle-nightly-2026_09_04-windows-x86_64.zip",
+    "bin": "ruffle.exe",
+    "shortcuts": [
+        [
+            "ruffle.exe",
+            "Ruffle Nightly"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/ruffle-rs/ruffle/releases"
+    }
+}

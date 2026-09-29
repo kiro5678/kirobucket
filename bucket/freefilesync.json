@@ -1,0 +1,22 @@
+{
+    "version": "14.12.",
+    "description": "Folder comparison and synchronization software for backups and file synchronization.",
+    "homepage": "https://freefilesync.org/",
+    "license": "GPL-3.0",
+    "url": "https://freefilesync.org/download/FreeFileSync_14.12._Windows_Setup.exe",
+    "innosetup": true,
+    "bin": "FreeFileSync.exe",
+    "shortcuts": [
+        [
+            "FreeFileSync.exe",
+            "FreeFileSync"
+        ]
+    ],
+    "checkver": {
+        "url": "https://freefilesync.org/archive.php",
+        "regex": "FreeFileSync ([0-9.]+)"
+    },
+    "autoupdate": {
+        "url": "https://freefilesync.org/download/FreeFileSync_$version_Windows_Setup.exe"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "version": "7.4.4",
+    "description": "Unofficial WhatsApp Web desktop client built with Python and PyQt6.",
+    "homepage": "https://github.com/rafatosta/zapzap",
+    "license": "GPL-3.0-or-later",
+    "url": "https://github.com/rafatosta/zapzap/releases/download/7.4.4/ZapZap-7.4.4-windows-x86_64.exe",
+    "hash": "d400d38724ce33233096bc1bcc33c00c0be2346d9af06499d2f057627db19307",
+    "pre_install": "Rename-Item \"$dir\\ZapZap-7.4.4-windows-x86_64.exe\" \"ZapZap.exe\"",
+    "bin": "ZapZap.exe",
+    "shortcuts": [
+        [
+            "ZapZap.exe",
+            "ZapZap"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/rafatosta/zapzap/releases",
+        "jsonpath": "$[0].assets[*].browser_download_url",
+        "regex": "/releases/download/([\\d.]+)/ZapZap-([\\d.]+)-windows-x86_64\\.exe"
+    },
+    "autoupdate": {
+        "url": "https://github.com/rafatosta/zapzap/releases/download/$version/ZapZap-$version-windows-x86_64.exe",
+        "hash": {
+            "url": "https://github.com/rafatosta/zapzap/releases/download/$version/SHA256SUMS.txt",
+            "regex": "(?im)^([0-9a-f]{64})\\s+\\*?ZapZap-$version-windows-x86_64\\.exe$"
+        }
+    }
+}

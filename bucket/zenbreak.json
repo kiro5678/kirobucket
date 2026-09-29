@@ -1,0 +1,29 @@
+{
+    "version": "1.0.3",
+    "description": "Desktop break reminder application for reducing screen fatigue and improving well-being.",
+    "homepage": "https://zenbreak.app",
+    "license": "GPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Giuliopime/ZenBreak/releases/download/1.0.3/desktopapp-1.0.3-windows-amd64.zip",
+            "hash": "3ca1dcf407ffdc7d788554857413d2b50039714a10114169424723179b9e27b3"
+        }
+    },
+    "bin": "bin\\ZenBreak.exe",
+    "shortcuts": [
+        [
+            "bin\\ZenBreak.exe",
+            "ZenBreak"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Giuliopime/ZenBreak"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Giuliopime/ZenBreak/releases/download/$version/desktopapp-$version-windows-amd64.zip"
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "version": "1.4.0",
+    "description": "Open-source screen recorder and editor for polished demo videos.",
+    "homepage": "https://github.com/webadderallorg/Recordly",
+    "license": "AGPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/webadderallorg/Recordly/releases/download/v1.4.0/Recordly-windows-x64.exe",
+            "hash": "08f20bafb0d6cf82399b6e4d8d12f58cbf1821a1d93abdd1e944bb9727b66b20"
+        }
+    },
+    "installer": {
+        "script": "Invoke-ExternalCommand \"$dir\\$fname\" -ArgumentList @('/S', \"/D=$dir\") | Out-Null"
+    },
+    "bin": "Recordly.exe",
+    "shortcuts": [
+        [
+            "Recordly.exe",
+            "Recordly"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/webadderallorg/Recordly"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/webadderallorg/Recordly/releases/download/v$version/Recordly-windows-x64.exe"
+            }
+        }
+    },
+    "notes": "Uses the latest stable Windows x64 NSIS release and installs it into the Scoop app directory."
+}

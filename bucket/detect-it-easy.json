@@ -1,0 +1,19 @@
+{
+    "version": "3.10",
+    "description": "Tool for identifying packers, protectors, compilers, and file formats",
+    "homepage": "https://github.com/horsicq/Detect-It-Easy",
+    "license": "MIT",
+    "url": "https://github.com/horsicq/Detect-It-Easy/releases/download/Beta/die_win64_portable_3.10_x64.zip",
+    "hash": "",
+    "extract_dir": "die_win64_portable_3.10_x64",
+    "bin": "die.exe",
+    "shortcuts": [
+        ["die.exe", "Detect It Easy"]
+    ],
+    "checkver": {
+        "github": "https://github.com/horsicq/Detect-It-Easy"
+    },
+    "autoupdate": {
+        "url": "https://github.com/horsicq/Detect-It-Easy/releases/download/Beta/die_win64_portable_$version_x64.zip"
+    }
+}

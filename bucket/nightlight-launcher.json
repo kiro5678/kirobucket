@@ -1,0 +1,33 @@
+{
+    "version": "5.2.7",
+    "description": "Electron game launcher for managing a Steam library and launching games.",
+    "homepage": "https://github.com/onajlikezz/Nightlight-Launcher",
+    "license": "ISC",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/onajlikezz/Nightlight-Launcher/releases/download/NLLauncherV5.2.7/Nightlight.Launcher.Setup.5.2.7.exe#/dl.7z",
+            "hash": "16cc2fbd286be07c38b2ff5d82172547081f986df993237fc00f75a80ae103b8",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Force -Recurse -ErrorAction SilentlyContinue"
+            ]
+        }
+    },
+    "bin": "Nightlight Launcher.exe",
+    "shortcuts": [
+        [
+            "Nightlight Launcher.exe",
+            "Nightlight Launcher"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/onajlikezz/Nightlight-Launcher"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/onajlikezz/Nightlight-Launcher/releases/download/NLLauncherV$version/Nightlight.Launcher.Setup.$version.exe#/dl.7z"
+            }
+        }
+    }
+}

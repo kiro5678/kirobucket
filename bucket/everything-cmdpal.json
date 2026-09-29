@@ -1,0 +1,32 @@
+{
+    "version": "0.9.26030.0",
+    "description": "Everything search extension for PowerToys Command Palette",
+    "homepage": "https://github.com/lin-ycv/EverythingCommandPalette",
+    "license": "EPL-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/lin-ycv/EverythingCommandPalette/releases/download/v0.9.26030.0/VictorLin.EverythingCP_0.9.26030.0_x64__yazqh14evg2ve.Msix#/ecp.msix",
+            "hash": "3cf07ea226e66e84a6f38f9dd5f3489b4e71cde8502750efb85026561285fa18"
+        }
+    },
+    "suggest": {
+        "Everything": "extras/everything",
+        "PowerToys": "extras/powertoys"
+    },
+    "post_install": "Add-AppxPackage -Path \"$dir\\ecp.msix\"",
+    "pre_uninstall": "Get-AppxPackage VictorLin.EverythingCP* | Remove-AppxPackage -ErrorAction SilentlyContinue",
+    "checkver": {
+        "github": "https://github.com/lin-ycv/EverythingCommandPalette"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/lin-ycv/EverythingCommandPalette/releases/download/v$version/VictorLin.EverythingCP_$version_x64__yazqh14evg2ve.Msix#/ecp.msix",
+                "hash": {
+                    "url": "https://github.com/lin-ycv/EverythingCommandPalette/releases/tag/v$version",
+                    "regex": "(?s)msix-x64.*?$sha256"
+                }
+            }
+        }
+    }
+}

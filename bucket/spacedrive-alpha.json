@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0-alpha.2",
+    "description": "Open source cross-platform file explorer.",
+    "homepage": "https://github.com/spacedriveapp/spacedrive",
+    "license": "AGPL-3.0-only",
+    "url": "https://github.com/spacedriveapp/spacedrive/releases/download/v2.0.0-alpha.2/Spacedrive-windows-x86_64.exe#/dl.7z",
+    "hash": "c5924df72954192cdb240e3b35a807bfce8fb102f101b99ab243cc1ee0fe0c7e",
+    "bin": [
+        [
+            "Spacedrive.exe",
+            "Spacedrive-Alpha"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "Spacedrive.exe",
+            "Spacedrive Alpha"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/spacedriveapp/spacedrive",
+        "regex": "v([\\d.]+-alpha\\.\\d+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/spacedriveapp/spacedrive/releases/download/v$version/Spacedrive-windows-x86_64.exe#/dl.7z"
+    }
+}
