@@ -16,7 +16,7 @@
     ],
     "checkver": {
         "url": "https://www.xyplorer.com/download.php?bit=64",
-        "regex": "No-Install Package \(ZIP\).*?Version\\s*\\|\\s*(?<version>\\d+\\.\\d+\\.\\d+)"
+        "regex": "No-Install Package \\(ZIP\\).*?Version\\s*\\|\\s*(?<version>\\d+\\.\\d+\\.\\d+)"
     },
     "autoupdate": {
         "url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip"
