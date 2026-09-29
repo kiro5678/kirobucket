@@ -135,6 +135,7 @@ This table is generated automatically from the manifests currently available in 
 | [flyphotos](bucket/flyphotos.json) | 2.7.2 | 2026-09-29 | Fast and modern photo viewer for Windows. |
 | [foldersizeexplorer](bucket/foldersizeexplorer.json) | 1.0.4 | 2026-09-29 | Portable file manager with recursive folder-size analysis for Windows. |
 | [foldra](bucket/foldra.json) | 1.0 | 2026-09-29 | Lightweight desktop folder widgets and file organization utility for Windows. |
+| [FoliCon](bucket/FoliCon.JSON) | 5.3.1 | 2026-09-29 | Folder icon customizer for movies, TV shows, music, games, anime, and books. |
 | [fractus-atlas](bucket/fractus-atlas.json) | 2.3.0 | 2026-09-29 | An image viewer that lets you move images quickly into folders |
 | [freefilesync](bucket/freefilesync.json) | 14.12. | 2026-09-29 | Folder comparison and synchronization software for backups and file synchronization. |
 | [fxsound-beta](bucket/fxsound-beta.json) | 1.2.15.0 | 2026-09-29 | Audio enhancer and sound equalizer for Windows. |
@@ -312,6 +313,7 @@ This table is generated automatically from the manifests currently available in 
 | [zinc](bucket/zinc.json) | 1.0.0 | 2026-09-29 | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | 4.9.3 | 2026-09-29 | Markdown-based note-taking app for developers. |
 <!-- KIROBUCKET-MANIFEST-TABLE-END -->
+
 
 
 
