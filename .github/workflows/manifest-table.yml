@@ -75,28 +75,89 @@ jobs:
               "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
           }
 
+          $manifestRows = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File | Sort-Object Name) {
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath`: $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and [string]::IsNullOrWhiteSpace([string]$json.description) -eq $false) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) {
+                  $date = "—"
+              }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
+                  Date = $date
+              }
+          }
+
+          $newestRows = $manifestRows | Sort-Object @{ Expression = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }; Descending = $true }, Name | ForEach-Object { $_.Row }
+
+          $oldestRows = $manifestRows | Sort-Object @{ Expression = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }; Descending = $false }, Name | ForEach-Object { $_.Row }
+
+          $tableHeader = @(
+              "| Name | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |"
+              "| --- | --- | --- | --- |"
+          )
+
+          $newestTable = @(
+              '<a id="manifests-newest"></a>'
+              $tableHeader
+              $newestRows
+          ) -join [Environment]::NewLine
+
+          $oldestTable = @(
+              '<a id="manifests-oldest"></a>'
+              "### Oldest first"
+              ""
+              $tableHeader
+              $oldestRows
+          ) -join [Environment]::NewLine
+
           $table = @(
               "## Manifests"
               ""
               "This table is generated automatically from the manifests currently available in the bucket directory."
               ""
-              $start
-              "| Name | Version | LAST UPDATE | Description |"
-              "| --- | --- | --- | --- |"
-              $rows
+              $newestTable
+              ""
+              $oldestTable
+              ""
+              "[↑ Oldest first](#manifests-oldest) · [↓ Newest first](#manifests-newest)"
+              ""
               $end
           ) -join [Environment]::NewLine
-
-          $pattern = "(?s)" + [regex]::Escape($start) + ".*?" + [regex]::Escape($end)
-
-          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
-
-          if ($readme -match $sectionPattern) {
-              $readme = [regex]::Replace($readme, $sectionPattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table }, 1)
-          } else {
-              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
-          }
-
           Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
 
       - name: Commit README changes
