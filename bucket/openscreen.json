@@ -6,7 +6,16 @@
     "url": "https://github.com/getopenscreen/openscreen/releases/download/v1.13.0/Openscreen.Setup.1.13.0.exe",
     "hash": "ff7f248664f1f43b32fbb4d1f136a9e204c0889cc60e59883a6fac213355e0c1",
     "installer": {
-        "script": "Invoke-ExternalCommand \"$dir\\$fname\" -ArgumentList @('/S', \"/D=$dir\") -RunAs | Out-Null"
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
+    },
+    "uninstaller": {
+        "file": "Uninstall Openscreen.exe",
+        "args": [
+            "/S"
+        ]
     },
     "bin": "Openscreen.exe",
     "shortcuts": [
@@ -19,6 +28,10 @@
         "github": "https://github.com/getopenscreen/openscreen"
     },
     "autoupdate": {
-        "url": "https://github.com/getopenscreen/openscreen/releases/download/v$version/Openscreen.Setup.$version.exe"
+        "url": "https://github.com/getopenscreen/openscreen/releases/download/v$version/Openscreen.Setup.$version.exe",
+        "hash": {
+            "url": "https://api.github.com/repos/getopenscreen/openscreen/releases/tags/v$version",
+            "regex": "\"name\"\\s*:\\s*\"Openscreen.Setup.$version\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+        }
     }
 }
