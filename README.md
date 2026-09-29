@@ -169,7 +169,6 @@ This table is generated from the manifests currently available in the `bucket` d
 | [markra](bucket/markra.json) | 2.12.0 | 2026-09-29 | Cross-platform Markdown editor and workspace for local-first notes. |
 | [meshnotes](bucket/meshnotes.json) | 0.4.1 | 2026-09-29 | Open-source local-first note-taking application with LAN synchronization. |
 | [minimal-firewall](bucket/minimal-firewall.json) | 2.8.5 | 2026-09-29 | A lightweight frontend for Windows Firewall. |
-| [minimalfirewall](bucket/minimalfirewall.json) | 2.8.5 | 2026-09-29 | Windows Firewall frontend for blocking unknown outbound connections and managing firewall rules. |
 | [MORT](bucket/MORT.json) | 1.320 | 2026-09-29 | Real-time game translator with OCR and machine translation. |
 | [motrix](bucket/motrix.json) | 1.8.19 | 2026-09-29 | Open-source download manager powered by aria2. |
 | [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-29 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
