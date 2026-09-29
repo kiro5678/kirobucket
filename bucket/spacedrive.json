@@ -4,7 +4,7 @@
     "homepage": "https://github.com/spacedriveapp/spacedrive",
     "license": "AGPL-3.0-only",
     "url": "https://github.com/spacedriveapp/spacedrive/releases/download/v2.0.0-alpha.2/Spacedrive-windows-x86_64.exe",
-    "hash": "c5924df72954192cdb2400a625737fcfce999e8",
+    "hash": "c5924df72954192cdb240e3b35a807bfce8fb102f101b99ab243cc1ee0fe0c7e",
     "installer": {
         "args": [
             "/S",
