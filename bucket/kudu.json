@@ -1,9 +1,9 @@
 {
-    "version": "3.4.0",
+    "version": "3.5.0",
     "description": "Free, open-source system cleaner and security scanner for Windows, macOS, and Linux.",
     "homepage": "https://github.com/AdventDevInc/kudu",
     "license": "MIT",
-    "url": "https://github.com/AdventDevInc/kudu/releases/download/v3.4.0/Kudu-Portable-3.4.0.exe",
+    "url": "https://github.com/AdventDevInc/kudu/releases/download/v3.5.0/Kudu-Portable-3.5.0.exe",
     "bin": "Kudu-Portable-2.9.0.exe",
     "shortcuts": [
         [
