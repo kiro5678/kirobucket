@@ -17,9 +17,6 @@
             "Rigsight"
         ]
     ],
-    "persist": [
-        "%LOCALAPPDATA%\\Rigsight"
-    ],
     "checkver": {
         "github": "https://github.com/b0llu/Rigsight"
     },
