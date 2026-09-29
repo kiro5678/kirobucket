@@ -37,15 +37,10 @@ This table is generated automatically from the manifests currently available in 
 <a id="manifests"></a>
 | Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
-| [activitywatch-tauri](bucket/activitywatch-tauri.json) | 0.14.0b8 | 2026-09-30 | Open-source time tracker with a Tauri desktop application. |
-| [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
-| [motrix](bucket/motrix.json) | 2.0.0-beta.40 | 2026-09-30 | Open-source download manager powered by aria2. |
-| [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-30 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
-| [spacedrive](bucket/spacedrive.json) | 2.0.0-alpha.2 | 2026-09-30 | Open source cross-platform file explorer. |
-| [xyplorer](bucket/xyplorer.json) | 28.30.2500 | 2026-09-30 | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [0install-win](bucket/0install-win.json) | 2.29.3 | 2026-09-29 | Decentralized software installation system for Windows with a GUI and OS integrations. |
 | [2faguard](bucket/2faguard.json) | 1.8.3 | 2026-09-29 | A modern and secure Windows app for managing your 2FA authentication codes. |
 | [activitywatch](bucket/activitywatch.json) | 0.14.0b8 | 2026-09-29 | Open-source automated time tracker. |
+| [activitywatch-tauri](bucket/activitywatch-tauri.json) | 0.14.0b8 | 2026-09-30 | Open-source time tracker with a Tauri desktop application. |
 | [aero-dock](bucket/aero-dock.json) | 1.3.1 | 2026-09-29 | A lightweight Windows dock with a portable mode. |
 | [agaric](bucket/agaric.json) | 0.13.1 | 2026-09-29 | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [aifilesorter](bucket/aifilesorter.json) | 1.9.2 | 2026-09-29 | Local AI file organization with categorization and rename suggestions. |
@@ -76,6 +71,7 @@ This table is generated automatically from the manifests currently available in 
 | [compactgui](bucket/compactgui.json) | 4.0.0-beta.10 | 2026-09-29 | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
 | [contextmenumgrplus](bucket/contextmenumgrplus.json) | 1.7.6 | 2026-09-29 | Windows right-click context menu manager and protection utility |
 | [coodesker](bucket/coodesker.json) | 2.2.2.2 | 2026-09-29 | Desktop organization tool for automatically organizing desktop icons and running tasks. |
+| [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
 | [cooldesk](bucket/cooldesk.json) | 2.0.14 | 2026-09-29 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. |
 | [cooldesk-msi](bucket/cooldesk-msi.json) | 2.0.14 | 2026-09-29 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. |
 | [crapcheckthis](bucket/crapcheckthis.json) | 1.0 | 2026-09-29 | Read-only Windows audit companion for FluentCleaner Classic and CrapFixer. |
@@ -139,7 +135,6 @@ This table is generated automatically from the manifests currently available in 
 | [flyphotos](bucket/flyphotos.json) | 2.7.2 | 2026-09-29 | Fast and modern photo viewer for Windows. |
 | [foldersizeexplorer](bucket/foldersizeexplorer.json) | 1.0.4 | 2026-09-29 | Portable file manager with recursive folder-size analysis for Windows. |
 | [foldra](bucket/foldra.json) | 1.0 | 2026-09-29 | Lightweight desktop folder widgets and file organization utility for Windows. |
-| [FoliCon](bucket/FoliCon.JSON) | 5.3.1 | 2026-09-29 | Folder icon customizer for movies, TV shows, music, games, anime, and books. |
 | [fractus-atlas](bucket/fractus-atlas.json) | 2.3.0 | 2026-09-29 | An image viewer that lets you move images quickly into folders |
 | [freefilesync](bucket/freefilesync.json) | 14.12. | 2026-09-29 | Folder comparison and synchronization software for backups and file synchronization. |
 | [fxsound-beta](bucket/fxsound-beta.json) | 1.2.15.0 | 2026-09-29 | Audio enhancer and sound equalizer for Windows. |
@@ -176,6 +171,8 @@ This table is generated automatically from the manifests currently available in 
 | [meshnotes](bucket/meshnotes.json) | 0.4.1 | 2026-09-29 | Open-source local-first note-taking application with LAN synchronization. |
 | [minimal-firewall](bucket/minimal-firewall.json) | 2.8.5 | 2026-09-29 | A lightweight frontend for Windows Firewall. |
 | [MORT](bucket/MORT.json) | 1.320 | 2026-09-29 | Real-time game translator with OCR and machine translation. |
+| [motrix](bucket/motrix.json) | 2.0.0-beta.40 | 2026-09-30 | Open-source download manager powered by aria2. |
+| [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-30 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
 | [mouzi](bucket/mouzi.json) | 0.2.1 | 2026-09-29 | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
 | [moviebox-tui](bucket/moviebox-tui.json) | 0.1.25 | 2026-09-29 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | 7 | 2026-09-29 | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
@@ -254,6 +251,7 @@ This table is generated automatically from the manifests currently available in 
 | [smart-clipboard](bucket/smart-clipboard.json) | 1.3.2 | 2026-09-29 | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection |
 | [smol](bucket/smol.json) | 1.0.0 | 2026-09-29 | Fast native Windows desktop app for compressing videos, audio, images, and PDFs. |
 | [sofast](bucket/sofast.json) | 0.12.0 | 2026-09-29 | Quick launcher and productivity tool for Windows. |
+| [spacedrive](bucket/spacedrive.json) | 2.0.0-alpha.2 | 2026-09-30 | Open source cross-platform file explorer. |
 | [sparkle](bucket/sparkle.json) | 2.24.0 | 2026-09-29 | Windows debloat and optimization tool. |
 | [spotlightsaver](bucket/spotlightsaver.json) | 7.0.0 | 2026-09-29 | Saves Windows 10/11 Spotlight wallpapers to a local folder. |
 | [stimesync](bucket/stimesync.json) | 1.0.1 | 2026-09-29 | Simple SNTP atomic clock time sync GUI app for Windows. |
@@ -306,6 +304,7 @@ This table is generated automatically from the manifests currently available in 
 | [winzenith](bucket/winzenith.json) | 1.3.4 | 2026-09-29 | Free open-source Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
 | [wox](bucket/wox.json) | 2.4.1 | 2026-09-29 | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xfetch](bucket/xfetch.json) | 1.0.0 | 2026-09-29 | A customizable system information fetch tool. |
+| [xyplorer](bucket/xyplorer.json) | 28.30.2500 | 2026-09-30 | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [zapzap](bucket/zapzap.json) | 7.4.5 | 2026-09-29 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
 | [zenbreak](bucket/zenbreak.json) | 1.0.3 | 2026-09-29 | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [zenbreak-msix](bucket/zenbreak-msix.json) | 1.0.3 | 2026-09-29 | Desktop break reminder application for reducing screen fatigue and improving well-being. |
