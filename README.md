@@ -1,3 +1,6 @@
+Notes
+
+KiroBucket is currently a work in progress and is not stable yet. Some manifests may require changes or may stop working when upstream applications are updated
 I am not a developer, but I really enjoy using Scoop. It has made managing Windows applications much easier for me, so I decided to create my own Scoop bucket.
 
 This repository was initially created with the help of Slop AI. I do not have extensive development experience, and the project is still under development and may contain bugs, incomplete manifests, or other issues.
@@ -19,12 +22,10 @@ Add KiroBucket:
 scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
 
 To remove KiroBucket:
-
 scoop bucket rm kirobucket
 
-Notes
+If you like the project, don’t forget to support me by giving it a star.
 
-KiroBucket is currently a work in progress and is not stable yet. Some manifests may require changes or may stop working when upstream applications are updated
 
 https://github.com/ScoopInstaller/Scoop
 
