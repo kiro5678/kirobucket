@@ -1,0 +1,97 @@
+name: Update README Manifest Table
+
+on:
+  push:
+    paths:
+      - "bucket/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-table:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Update manifest table
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $start = "<!-- KIROBUCKET-MANIFEST-TABLE-START -->"
+          $end = "<!-- KIROBUCKET-MANIFEST-TABLE-END -->"
+
+          $readmePath = Join-Path $env:GITHUB_WORKSPACE "README.md"
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $rows = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File | Sort-Object Name) {
+              $relativePath = "bucket/$($file.Name)"
+              $json = Get-Content -Path $file.FullName -Raw | ConvertFrom-Json
+
+              $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+              $description = if ($null -ne $json.description -and [string]::IsNullOrWhiteSpace([string]$json.description) -eq $false) {
+                  ([string]$json.description).Trim()
+              } else {
+                  "—"
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) {
+                  $date = "—"
+              }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "|")
+              $versionEscaped = $version.Replace("|", "|")
+              $descriptionEscaped = $description.Replace("|", "|").Replace([Environment]::NewLine, " ")
+
+              "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
+          }
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              "| Name | Version | LAST UPDATE | Description |"
+              "| --- | --- | --- | --- |"
+              $rows
+              $end
+          ) -join [Environment]::NewLine
+
+          $pattern = "(?s)" + [regex]::Escape($start) + ".*?" + [regex]::Escape($end)
+
+          if ($readme -match $pattern) {
+              $readme = [regex]::Replace($readme, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table }, 1)
+          } else {
+              $installation = $readme.IndexOf("`nInstallation")
+              if ($installation -ge 0) {
+                  $readme = $readme.Insert($installation, [Environment]::NewLine + $table + [Environment]::NewLine)
+              } else {
+                  $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+              }
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit README changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md; then
+            echo "README is already up to date."
+            exit 0
+          fi
+
+          git add README.md
+          git commit -m "docs: update manifest table"
+          git push
