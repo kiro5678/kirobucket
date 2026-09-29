@@ -13,8 +13,11 @@
             "Spacedrive"
         ]
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://api.github.com/repos/spacedriveapp/spacedrive/releases?per_page=100",
+        "regex": "\"tag_name\"\\s*:\\s*\"v?(?<version>[\\d.]+(?:-[0-9A-Za-z.-]+)?)\"[\\s\\S]*?\"browser_download_url\"\\s*:\\s*\"(?<url>https://github\\.com/spacedriveapp/spacedrive/releases/download/[^\\\"]+/Spacedrive-windows-x86_64\\.(?:exe|msi))\""
+    },
     "autoupdate": {
-        "url": "https://github.com/spacedriveapp/spacedrive/releases/download/$version/Spacedrive-windows-x86_64.msi#/dl.msi"
+        "url": "$matchUrl"
     }
 }
