@@ -28,21 +28,20 @@
         "VersionData.txt"
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/kmonkeyhead/MORT/releases",
-        "regex": "MORT\\.(?<version>[\\d.]+)v\\.-\\.(?<build>[\\d]+)"
+        "github": "https://github.com/kmonkeyhead/MORT",
+        "jsonpath": "$..browser_download_url",
+        "regex": "MORT\\.(?<version>[\\d.]+)v\\.-\\.(?<build>[\\d]+)\\.zip",
+        "replace": "${version}"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/kmonkeyhead/MORT/releases/download/$matchVersion/MORT.$matchVersionv.-.$matchBuild.zip"
+                "url": "https://github.com/kmonkeyhead/MORT/releases/download/$matchVersion/MORT.$matchVersionv.-.$matchBuild.zip",
+                "hash": {
+                    "url": "https://api.github.com/repos/kmonkeyhead/MORT/releases/tags/$matchVersion",
+                    "jsonpath": "$.assets[?(@.name == '$basename')].digest"
+                }
             }
-        },
-        "bin": "MORT.exe",
-        "shortcuts": [
-            [
-                "MORT.exe",
-                "MORT"
-            ]
-        ]
+        }
     }
 }
