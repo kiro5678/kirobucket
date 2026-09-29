@@ -10,7 +10,10 @@
         }
     },
     "installer": {
-        "script": "Invoke-ExternalCommand \"$dir\\$fname\" -ArgumentList @('/S', \"/D=$dir\") | Out-Null"
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
     },
     "bin": "Recordly.exe",
     "shortcuts": [
@@ -25,9 +28,12 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/webadderallorg/Recordly/releases/download/v$version/Recordly-windows-x64.exe"
+                "url": "https://github.com/webadderallorg/Recordly/releases/download/v$version/Recordly-windows-x64.exe",
+                "hash": {
+                    "url": "https://api.github.com/repos/webadderallorg/Recordly/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == '$basename')].digest"
+                }
             }
         }
-    },
-    "notes": "Uses the latest stable Windows x64 NSIS release and installs it into the Scoop app directory."
+    }
 }
