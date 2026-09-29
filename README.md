@@ -39,6 +39,10 @@ This table is generated automatically from the manifests currently available in 
 
 This table is generated automatically from the manifests currently available in the bucket directory.
 
+## Manifests
+
+This table is generated automatically from the manifests currently available in the bucket directory.
+
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
 | Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
@@ -326,5 +330,6 @@ This table is generated automatically from the manifests currently available in 
 https://github.com/ScoopInstaller/Scoop
 
 https://github.com/ScoopInstaller/BucketTemplate
+
 
 
