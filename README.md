@@ -17,6 +17,10 @@ Thank you for taking the time to check out the project.
 
 This table is generated from the manifests currently available in the `bucket` directory.
 
+## Manifests
+
+This table is generated from the manifests currently available in the `bucket` directory.
+
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
 | Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
@@ -31,12 +35,14 @@ This table is generated from the manifests currently available in the `bucket` d
 | am-downloader | 1.3.3 | 2026-09-29 | A modern download manager for Windows. |
 | amule | 3.0.0 | 2026-09-29 | A free and open-source peer-to-peer file sharing client. |
 | android-dex | 1.3 | 2026-09-29 | Android desktop experience for controlling and mirroring Android devices. |
+| antalogy | 0.95.0 | 2026-09-29 | AI-ready desktop word processor for Markdown with a Word-like interface, local-first architecture, and an optional OpenAI-compatible AI assistant. |
 | anti-yandex | 1.3 | 2026-09-29 | Utility for finding and removing Yandex Browser files and registry entries |
 | babyshark | 0.3.0 | 2026-09-29 | Wireshark made easy in your terminal. |
 | bargozin | 0.2.0 | 2026-09-29 | DNS and network testing tool - Test URL accessibility, download speeds, and Docker registries across multiple DNS servers |
 | beaver-notes | 5.0.0-beta.2 | 2026-09-29 | A privacy-focused note-taking app for Windows, macOS and Linux. |
 | beetroot-portable | 1.6.7 | 2026-09-29 | Clipboard manager for Windows with AI transforms, OCR, and fuzzy search |
 | biniware-run | 7.8.0.0 | 2026-09-29 | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. |
+| blur | 2.45 | 2026-09-29 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. |
 | brisk | 2.3.9 | 2026-09-29 | Fast and lightweight download manager with browser integration. |
 | bulk-crap-uninstaller | 6.3.0 | 2026-09-29 | Bulk program uninstaller with advanced automation |
 | butterfly | 2.6.0 | 2026-09-29 | A powerful, minimalistic, cross-platform note-taking app |
@@ -73,14 +79,17 @@ This table is generated from the manifests currently available in the `bucket` d
 | czkawka-krokiet-skia-opengl | 12.0.2 | 2026-09-29 | Czkawka Krokiet Windows build using the Skia OpenGL backend |
 | czkawka-krokiet-skia-vulkan | 12.0.2 | 2026-09-29 | Czkawka Krokiet Windows build using the Skia Vulkan backend |
 | declutter | 1.13.7 | 2026-09-29 | Desktop application for managing and organizing files with automated processing rules and tagging. |
+| desk-engine | 5.1.1 | 2026-09-29 | Lightweight Windows desktop overlay utility for displaying GIFs, images, and videos directly on the desktop. |
 | deskdrop | 1.3.3 | 2026-09-29 | Local-first peer-to-peer clipboard sharing, file transfers, remote folder browsing, and continuity camera. |
 | deskframe | 1.44.0 | 2026-09-29 | A highly customizable, open-source tool for desktop organization. |
 | deskripple | 1.1.0 | 2026-09-29 | Folder docks for the Windows desktop that expand into grids of shortcuts. |
 | desktopframesplus | 2.7.7.294 | 2026-09-29 | Open-source desktop icon management software for organizing files and shortcuts into virtual frames. |
+| desktoptools | 1.2.6 | 2026-09-29 | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. |
 | detect-it-easy | 3.10 | 2026-09-29 | Tool for identifying packers, protectors, compilers, and file formats |
 | dgvoodoo2 | 2.87.4 | 2026-09-29 | Glide/DirectX implementation on D3D11/12 for running old games on modern Windows. |
 | die-engine | 3.21 | 2026-09-29 | Detect It Easy - file type, compiler, packer, protector, and binary analysis tool |
 | diskgeek | 1.1.1 | 2026-09-29 | A free, self-contained disk space analyser for Windows. |
+| dlman | 1.11.1 | 2026-09-29 | Fast, reliable, open-source download manager with multi-segment downloads, queue management, browser extensions, and SQLite persistence. |
 | dnschanger | 2.3.14 | 2026-09-29 | Open-source DNS changer for Windows, macOS, and Linux. |
 | dnschanger-msi | 2.3.14 | 2026-09-29 | Open-source DNS changer for Windows, macOS, and Linux. |
 | doublecmd | 1.2.9 | 2026-09-29 | A cross-platform open-source file manager with two panels side by side. |
@@ -95,7 +104,6 @@ This table is generated from the manifests currently available in the `bucket` d
 | ecopaste | 1.1.0 | 2026-09-29 | Open-source clipboard manager for Windows and macOS. |
 | ecopaste-nightly | 1.1.1-nightly.20260813.1 | 2026-09-29 | Open-source clipboard manager for Windows and macOS. Nightly build. |
 | edge-drop | 0.3.2 | 2026-09-29 | Clipboard manager that lives on the left edge of your screen. |
-| edge-drop-portable | 0.3.2 | 2026-09-29 | Clipboard manager that lives on the left edge of your screen (portable) |
 | everything-cmdpal | 0.9.26030.0 | 2026-09-29 | Everything search extension for PowerToys Command Palette |
 | fancywm | 2.19.0 | 2026-09-29 | Windows tiling window manager designed for power users. |
 | fancywm-msix-cert | 2.19.0 | 2026-09-29 | FancyWM MSIX signing certificate (download only; for MSIX installation). |
@@ -114,6 +122,7 @@ This table is generated from the manifests currently available in the `bucket` d
 | flyoobe | 3.03.100 | 2026-09-29 | Windows setup, customization, debloating, and system management utility. |
 | flyphotos | 2.7.2 | 2026-09-29 | Fast and modern photo viewer for Windows. |
 | foldersizeexplorer | 1.0.4 | 2026-09-29 | Portable file manager with recursive folder-size analysis for Windows. |
+| foldra | 1.0 | 2026-09-29 | Lightweight desktop folder widgets and file organization utility for Windows. |
 | FoliCon | 5.3.1 | 2026-09-29 | Folder icon customizer for movies, TV shows, music, games, anime, and books. |
 | fractus-atlas | 2.3.0 | 2026-09-29 | An image viewer that lets you move images quickly into folders |
 | freefilesync | 14.12. | 2026-09-29 | Folder comparison and synchronization software for backups and file synchronization. |
@@ -207,6 +216,7 @@ This table is generated from the manifests currently available in the `bucket` d
 | ram-cleaner-flusher-pro | 1.2.0 | 2026-09-29 | Native Win32 memory and standby cache optimizer for Windows. |
 | recordly | 1.4.0 | 2026-09-29 | Open-source screen recorder and editor for polished demo videos. |
 | rightclicktools | 2.0.3 | 2026-09-29 | A set of powerful tools and shortcuts for the Windows Explorer context menu. |
+| rigsight | 0.11.3 | 2026-09-29 | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | rpcs3 | 0.0.42-20089 | 2026-09-29 | Open-source PlayStation 3 emulator and debugger. |
 | rqbit | 9.0.1 | 2026-09-29 | A BitTorrent client with a desktop GUI, HTTP API and Web UI. |
 | rscoop | 1.10.1 | 2026-09-29 | A graphical user interface for Scoop package manager |
@@ -231,6 +241,7 @@ This table is generated from the manifests currently available in the `bucket` d
 | sklad-setup-portable | 0.2.3 | 2026-09-29 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text (portable) |
 | skyeclip | 1.4 | 2026-09-29 | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. |
 | smart-clipboard | 1.3.2 | 2026-09-29 | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection |
+| smol | 1.0.0 | 2026-09-29 | Fast native Windows desktop app for compressing videos, audio, images, and PDFs. |
 | sofast | 0.12.0 | 2026-09-29 | Quick launcher and productivity tool for Windows. |
 | spacedrive | 0.4.3 | 2026-09-29 | Open source cross-platform file explorer. |
 | spacedrive-alpha | 2.0.0-alpha.2 | 2026-09-29 | Open source cross-platform file explorer. |
