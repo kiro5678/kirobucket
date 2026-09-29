@@ -35,7 +35,7 @@ This table is generated automatically from the manifests currently available in 
 
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
 <a id="manifests"></a>
-| Name [↑](#manifests-name-asc) [↓](#manifests-name-desc) | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |
+| Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | 0.14.0b8 | 2026-09-30 | Open-source time tracker with a Tauri desktop application. |
 | [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
