@@ -75,7 +75,7 @@ jobs:
               "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
           }
 
-          $manifestRows = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File | Sort-Object Name) {
+          $rows = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
               $raw = Get-Content -Path $file.FullName -Raw
               $json = $null
@@ -83,12 +83,12 @@ jobs:
               try {
                   $json = $raw | ConvertFrom-Json
               } catch {
-                  Write-Warning "Invalid JSON in $relativePath`: $($_.Exception.Message)"
+                  Write-Warning "Invalid JSON in $relativePath\`: $($_.Exception.Message)"
               }
 
               if ($null -ne $json) {
                   $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
-                  $description = if ($null -ne $json.description -and [string]::IsNullOrWhiteSpace([string]$json.description) -eq $false) {
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
                       ([string]$json.description).Trim()
                   } else {
                       "—"
@@ -96,7 +96,6 @@ jobs:
               } else {
                   $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
                   $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
-
                   $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
                   $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
               }
@@ -113,75 +112,25 @@ jobs:
 
               [PSCustomObject]@{
                   Name = $name
-                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
                   Date = $date
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
               }
           }
 
-          $newestRows = $manifestRows | Sort-Object @{ Expression = {
+          $rows = $rows | Sort-Object @{ Expression = {
               if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
           }; Descending = $true }, Name | ForEach-Object { $_.Row }
-
-          $oldestRows = $manifestRows | Sort-Object @{ Expression = {
-              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
-          }; Descending = $false }, Name | ForEach-Object { $_.Row }
-
-          $nameAscRows = $manifestRows | Sort-Object Name | ForEach-Object { $_.Row }
-
-          $nameDescRows = $manifestRows | Sort-Object @{ Expression = { $_.Name }; Descending = $true } | ForEach-Object { $_.Row }
-
-          $tableHeader = @(
-              "| Name [↑](#manifests-name-asc) [↓](#manifests-name-desc) | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |"
-              "| --- | --- | --- | --- |"
-          )
-
-          $newestTable = @(
-              '<a id="manifests-newest"></a>'
-              "### Newest first"
-              ""
-              $tableHeader
-              $newestRows
-          ) -join [Environment]::NewLine
-
-          $nameAscTable = @(
-              '<a id="manifests-name-asc"></a>'
-              "### Name A–Z"
-              ""
-              $tableHeader
-              $nameAscRows
-          ) -join [Environment]::NewLine
-
-          $nameDescTable = @(
-              '<a id="manifests-name-desc"></a>'
-              "### Name Z–A"
-              ""
-              $tableHeader
-              $nameDescRows
-          ) -join [Environment]::NewLine
-
-          $oldestTable = @(
-              '<a id="manifests-oldest"></a>'
-              "### Oldest first"
-              ""
-              $tableHeader
-              $oldestRows
-          ) -join [Environment]::NewLine
 
           $table = @(
               "## Manifests"
               ""
               "This table is generated automatically from the manifests currently available in the bucket directory."
               ""
-              $newestTable
-              ""
-              $nameAscTable
-              ""
-              $nameDescTable
-              ""
-              $oldestTable
-              ""
-              "[↓ Newest](#manifests-newest) · [↑ Oldest](#manifests-oldest) · [↑ A–Z](#manifests-name-asc) · [↓ Z–A](#manifests-name-desc)"
-              ""
+              $start
+              '<a id="manifests"></a>'
+              "| Name | Version | LAST UPDATE | Description |"
+              "| --- | --- | --- | --- |"
+              $rows
               $end
           ) -join [Environment]::NewLine
 
