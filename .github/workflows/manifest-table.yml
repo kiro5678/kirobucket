@@ -126,16 +126,37 @@ jobs:
               if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
           }; Descending = $false }, Name | ForEach-Object { $_.Row }
 
+          $nameAscRows = $manifestRows | Sort-Object Name | ForEach-Object { $_.Row }
+
+          $nameDescRows = $manifestRows | Sort-Object @{ Expression = { $_.Name }; Descending = $true } | ForEach-Object { $_.Row }
+
           $tableHeader = @(
-              "| Name | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |"
+              "| Name [↑](#manifests-name-asc) [↓](#manifests-name-desc) | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |"
               "| --- | --- | --- | --- |"
           )
 
           $newestTable = @(
-              $start
               '<a id="manifests-newest"></a>'
+              "### Newest first"
+              ""
               $tableHeader
               $newestRows
+          ) -join [Environment]::NewLine
+
+          $nameAscTable = @(
+              '<a id="manifests-name-asc"></a>'
+              "### Name A–Z"
+              ""
+              $tableHeader
+              $nameAscRows
+          ) -join [Environment]::NewLine
+
+          $nameDescTable = @(
+              '<a id="manifests-name-desc"></a>'
+              "### Name Z–A"
+              ""
+              $tableHeader
+              $nameDescRows
           ) -join [Environment]::NewLine
 
           $oldestTable = @(
@@ -153,9 +174,13 @@ jobs:
               ""
               $newestTable
               ""
+              $nameAscTable
+              ""
+              $nameDescTable
+              ""
               $oldestTable
               ""
-              "[↑ Oldest first](#manifests-oldest) · [↓ Newest first](#manifests-newest)"
+              "[↓ Newest](#manifests-newest) · [↑ Oldest](#manifests-oldest) · [↑ A–Z](#manifests-name-asc) · [↓ Z–A](#manifests-name-desc)"
               ""
               $end
           ) -join [Environment]::NewLine
