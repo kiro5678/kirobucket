@@ -312,9 +312,8 @@ This table is generated automatically from the manifests currently available in 
 | [zexor](bucket/zexor.json) | 1.15 | 2026-09-29 | Visual Windows file manager with instant previews and the proprietary .zex container format. |
 | [zinc](bucket/zinc.json) | 1.0.0 | 2026-09-29 | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | 4.9.3 | 2026-09-29 | Markdown-based note-taking app for developers. |
-
-<a id="manifests-name-asc"></a>
 <!-- KIROBUCKET-MANIFEST-TABLE-END -->
+
 
 
 
