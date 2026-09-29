@@ -1,41 +1,10 @@
-KiroBucket is currently a work in progress and is not stable yet. Some manifests may require changes or may stop working when upstream applications are updated.
- I am still learning, testing manifests, fixing problems, and improving the repository over time.
+# KiroBucket Manifest View
 
-I am not a developer, but I really enjoy using Scoop. It has made managing Windows applications much easier for me, so I decided to create my own Scoop bucket.
-This repository was initially created with the help of AI
+## Newest first
 
+Generated automatically from the manifests in the bucket directory.
 
-Suggestions, bug reports, manifest improvements, and other constructive feedback are very welcome. They can help me improve the bucket and learn more along the way.
-
-Please keep in mind that some manifests may not work perfectly, and changes may sometimes introduce new issues.
-Installation
-
-First, make sure Scoop is installed on your system.
-
-Add KiroBucket:
-
-scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
-
-To remove KiroBucket:
-scoop bucket rm kirobucket
-
-If you like the project, don’t forget to support me by giving it a star.
-
-Thank you for taking the time to check out the project.
-
-https://github.com/ScoopInstaller/Scoop
-
-https://github.com/ScoopInstaller/BucketTemplate
-
-
-
-## Manifests
-
-This table is generated automatically from the manifests currently available in the bucket directory.
-
-<!-- KIROBUCKET-MANIFEST-TABLE-START -->
-<a id="manifests-newest"></a>
-| Name [Up A-Z](docs/manifests-name-az.md) [Down Z-A](docs/manifests-name-za.md) | Version | LAST UPDATE [Down Newest](docs/manifests-newest.md) [Up Oldest](docs/manifests-oldest.md) | Description |
+| Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | 0.14.0b8 | 2026-09-30 | Open-source time tracker with a Tauri desktop application. |
 | [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
@@ -312,25 +281,4 @@ This table is generated automatically from the manifests currently available in 
 | [zexor](bucket/zexor.json) | 1.15 | 2026-09-29 | Visual Windows file manager with instant previews and the proprietary .zex container format. |
 | [zinc](bucket/zinc.json) | 1.0.0 | 2026-09-29 | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | 4.9.3 | 2026-09-29 | Markdown-based note-taking app for developers. |
-<!-- KIROBUCKET-MANIFEST-TABLE-END -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

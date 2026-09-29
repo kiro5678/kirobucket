@@ -1,48 +1,11 @@
-KiroBucket is currently a work in progress and is not stable yet. Some manifests may require changes or may stop working when upstream applications are updated.
- I am still learning, testing manifests, fixing problems, and improving the repository over time.
+# KiroBucket Manifest View
 
-I am not a developer, but I really enjoy using Scoop. It has made managing Windows applications much easier for me, so I decided to create my own Scoop bucket.
-This repository was initially created with the help of AI
+## Oldest first
 
+Generated automatically from the manifests in the bucket directory.
 
-Suggestions, bug reports, manifest improvements, and other constructive feedback are very welcome. They can help me improve the bucket and learn more along the way.
-
-Please keep in mind that some manifests may not work perfectly, and changes may sometimes introduce new issues.
-Installation
-
-First, make sure Scoop is installed on your system.
-
-Add KiroBucket:
-
-scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
-
-To remove KiroBucket:
-scoop bucket rm kirobucket
-
-If you like the project, don’t forget to support me by giving it a star.
-
-Thank you for taking the time to check out the project.
-
-https://github.com/ScoopInstaller/Scoop
-
-https://github.com/ScoopInstaller/BucketTemplate
-
-
-
-## Manifests
-
-This table is generated automatically from the manifests currently available in the bucket directory.
-
-<!-- KIROBUCKET-MANIFEST-TABLE-START -->
-<a id="manifests-newest"></a>
-| Name [Up A-Z](docs/manifests-name-az.md) [Down Z-A](docs/manifests-name-za.md) | Version | LAST UPDATE [Down Newest](docs/manifests-newest.md) [Up Oldest](docs/manifests-oldest.md) | Description |
+| Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
-| [activitywatch-tauri](bucket/activitywatch-tauri.json) | 0.14.0b8 | 2026-09-30 | Open-source time tracker with a Tauri desktop application. |
-| [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
-| [motrix](bucket/motrix.json) | 2.0.0-beta.40 | 2026-09-30 | Open-source download manager powered by aria2. |
-| [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-30 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
-| [spacedrive](bucket/spacedrive.json) | 2.0.0-alpha.2 | 2026-09-30 | Open source cross-platform file explorer. |
-| [xyplorer](bucket/xyplorer.json) | 28.30.2500 | 2026-09-30 | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [0install-win](bucket/0install-win.json) | 2.29.3 | 2026-09-29 | Decentralized software installation system for Windows with a GUI and OS integrations. |
 | [2faguard](bucket/2faguard.json) | 1.8.3 | 2026-09-29 | A modern and secure Windows app for managing your 2FA authentication codes. |
 | [activitywatch](bucket/activitywatch.json) | 0.14.0b8 | 2026-09-29 | Open-source automated time tracker. |
@@ -312,25 +275,10 @@ This table is generated automatically from the manifests currently available in 
 | [zexor](bucket/zexor.json) | 1.15 | 2026-09-29 | Visual Windows file manager with instant previews and the proprietary .zex container format. |
 | [zinc](bucket/zinc.json) | 1.0.0 | 2026-09-29 | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | 4.9.3 | 2026-09-29 | Markdown-based note-taking app for developers. |
-<!-- KIROBUCKET-MANIFEST-TABLE-END -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+| [activitywatch-tauri](bucket/activitywatch-tauri.json) | 0.14.0b8 | 2026-09-30 | Open-source time tracker with a Tauri desktop application. |
+| [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
+| [motrix](bucket/motrix.json) | 2.0.0-beta.40 | 2026-09-30 | Open-source download manager powered by aria2. |
+| [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-30 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
+| [spacedrive](bucket/spacedrive.json) | 2.0.0-alpha.2 | 2026-09-30 | Open source cross-platform file explorer. |
+| [xyplorer](bucket/xyplorer.json) | 28.30.2500 | 2026-09-30 | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 
