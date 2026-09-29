@@ -1,11 +1,19 @@
 {
-    "version": "0.4.3",
+    "version": "2.0.0-alpha.2",
     "description": "Open source cross-platform file explorer.",
     "homepage": "https://github.com/spacedriveapp/spacedrive",
     "license": "AGPL-3.0-only",
-    "url": "https://github.com/spacedriveapp/spacedrive/releases/download/0.4.3/Spacedrive-windows-x86_64.msi#/dl.msi",
-    "hash": "0238532f899fdd152e15508aa72f512c3b41faf58be7600a625737fcfce999e8",
-    "extract_dir": "PFiles\\Spacedrive",
+    "url": "https://github.com/spacedriveapp/spacedrive/releases/download/v2.0.0-alpha.2/Spacedrive-windows-x86_64.exe",
+    "hash": "c5924df72954192cdb2400a625737fcfce999e8",
+    "installer": {
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
+    },
+    "uninstaller": {
+        "script": "if (Test-Path -LiteralPath \"$dir\\uninstall.exe\") { Invoke-ExternalCommand \"$dir\\uninstall.exe\" -ArgumentList '/S' | Out-Null }"
+    },
     "bin": "Spacedrive.exe",
     "shortcuts": [
         [
@@ -14,10 +22,10 @@
         ]
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/spacedriveapp/spacedrive/releases?per_page=100",
-        "regex": "\"tag_name\"\\s*:\\s*\"v?(?<version>[\\d.]+(?:-[0-9A-Za-z.-]+)?)\"[\\s\\S]*?\"browser_download_url\"\\s*:\\s*\"(?<url>https://github\\.com/spacedriveapp/spacedrive/releases/download/[^\\\"]+/Spacedrive-windows-x86_64\\.(?:exe|msi))\""
+        "github": "https://github.com/spacedriveapp/spacedrive",
+        "regex": "v?(2\\.0\\.0-alpha\\.[0-9]+|[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?)"
     },
     "autoupdate": {
-        "url": "$matchUrl"
+        "url": "https://github.com/spacedriveapp/spacedrive/releases/download/v$version/Spacedrive-windows-x86_64.exe"
     }
 }
