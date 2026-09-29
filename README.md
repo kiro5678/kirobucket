@@ -10,12 +10,22 @@ This repository was initially created with the help of AI
 Suggestions, bug reports, manifest improvements, and other constructive feedback are very welcome. They can help me improve the bucket and learn more along the way.
 
 Please keep in mind that some manifests may not work perfectly, and changes may sometimes introduce new issues.
+Installation
+
+First, make sure Scoop is installed on your system.
+
+Add KiroBucket:
+
+scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
+
+To remove KiroBucket:
+scoop bucket rm kirobucket
+
+If you like the project, don’t forget to support me by giving it a star.
 
 Thank you for taking the time to check out the project.
 
-## Manifests
 
-This table is generated from the manifests currently available in the `bucket` directory.
 
 ## Manifests
 
@@ -306,18 +316,7 @@ This table is generated from the manifests currently available in the `bucket` d
 | znote | 4.9.3 | 2026-09-29 | Markdown-based note-taking app for developers. |
 <!-- KIROBUCKET-MANIFEST-TABLE-END -->
 
-Installation
 
-First, make sure Scoop is installed on your system.
-
-Add KiroBucket:
-
-scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
-
-To remove KiroBucket:
-scoop bucket rm kirobucket
-
-If you like the project, don’t forget to support me by giving it a star.
 
 
 https://github.com/ScoopInstaller/Scoop
