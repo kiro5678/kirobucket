@@ -120,7 +120,7 @@ jobs:
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [Up A-Z](docs/manifests-name-az.md) [Down Z-A](docs/manifests-name-za.md) | Version | LAST UPDATE [Down Newest](docs/manifests-newest.md) [Up Oldest](docs/manifests-oldest.md) | Description |"
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Description |"
               "| --- | --- | --- | --- |"
               ($newest | ForEach-Object { $_.Row })
               $end
