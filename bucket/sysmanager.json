@@ -1,10 +1,10 @@
 {
-    "version": "1.114.28",
+    "version": "1.114.48",
     "description": "Modern Windows system monitoring and management toolkit.",
     "homepage": "https://github.com/laurentiu021/SystemManager",
     "license": "MIT",
-    "url": "https://github.com/laurentiu021/SystemManager/releases/download/v1.114.28/SysManager-v1.114.28.exe",
-    "hash": "83b6ac1ef160fc22edda29b8896d6413e6995fb8f8677bd97ddf217e1054887b",
+    "url": "https://github.com/laurentiu021/SystemManager/releases/download/v1.114.48/SysManager-v1.114.48.exe",
+    "hash": "54d7ae58e28b1c8e12b246ec174b440e85d065771b05876007011c37048234bc",
     "installer": {
         "script": "Rename-Item \"$dir\\$fname\" \"SysManager.exe\""
     },
