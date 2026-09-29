@@ -43,6 +43,10 @@ This table is generated automatically from the manifests currently available in 
 
 This table is generated automatically from the manifests currently available in the bucket directory.
 
+## Manifests
+
+This table is generated automatically from the manifests currently available in the bucket directory.
+
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
 | Name | Version | LAST UPDATE | Description |
 | --- | --- | --- | --- |
@@ -79,8 +83,7 @@ This table is generated automatically from the manifests currently available in 
 | [clustercut](bucket/clustercut.json) | 0.4.4 | 2026-09-29 | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
 | [compactgui](bucket/compactgui.json) | 4.0.0-beta.10 | 2026-09-29 | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
 | [contextmenumgrplus](bucket/contextmenumgrplus.json) | 1.7.6 | 2026-09-29 | Windows right-click context menu manager and protection utility |
-| [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-29 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
-| [coodesker-portable](bucket/coodesker-portable.json) | 1.1.0.9 | 2026-09-29 | Desktop organizer that automatically arranges shortcuts and files into resizable boxes (portable) |
+| [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
 | [coodesker](bucket/coodesker.json) | 2.2.2.2 | 2026-09-29 | Desktop organization tool for automatically organizing desktop icons and running tasks. |
 | [cooldesk-msi](bucket/cooldesk-msi.json) | 2.0.14 | 2026-09-29 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. |
 | [cooldesk](bucket/cooldesk.json) | 2.0.14 | 2026-09-29 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. |
@@ -330,6 +333,7 @@ This table is generated automatically from the manifests currently available in 
 https://github.com/ScoopInstaller/Scoop
 
 https://github.com/ScoopInstaller/BucketTemplate
+
 
 
 
