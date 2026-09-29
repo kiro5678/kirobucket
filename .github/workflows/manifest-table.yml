@@ -132,6 +132,7 @@ jobs:
           )
 
           $newestTable = @(
+              $start
               '<a id="manifests-newest"></a>'
               $tableHeader
               $newestRows
