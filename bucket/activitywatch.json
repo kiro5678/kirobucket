@@ -18,25 +18,9 @@
         ]
     ],
     "checkver": {
-        "script": [
-            "$auth = Get-GitHubToken",
-            "$headers = @{}",
-            "if($auth) { $headers['Authorization'] = \"Bearer $auth\" }",
-            "$url = 'https://api.github.com/repos/ActivityWatch/activitywatch/releases?per_page=100'",
-            "$releases = (Invoke-WebRequest -Headers $headers $url).Content | ConvertFrom-Json",
-            "$latest = ''",
-            "foreach($release in $releases) {",
-            "    if($release.tag_name -match '^v([0-9]+\\.[0-9]+\\.[0-9]+(?:b[0-9]+)?)$') {",
-            "        $candidate = $matches[1]",
-            "        if(!$latest -or (Compare-Version -ReferenceVersion $candidate -DifferenceVersion $latest) -gt 0) {",
-            "            $latest = $candidate",
-            "        }",
-            "    }",
-            "}",
-            "if(!$latest) { error 'Could not find an ActivityWatch stable or beta release.'; continue }",
-            "Write-Output $latest"
-        ],
-        "regex": "([0-9]+\\.[0-9]+\\.[0-9]+(?:b[0-9]+)?)"
+        "url": "https://api.github.com/repos/ActivityWatch/activitywatch/releases?per_page=100",
+        "jsonpath": "$[*].tag_name",
+        "regex": "v([\\d.]+(?:b\\d+)?)"
     },
     "autoupdate": {
         "architecture": {
