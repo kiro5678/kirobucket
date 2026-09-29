@@ -1,5 +1,3 @@
-Notes
-
 KiroBucket is currently a work in progress and is not stable yet. Some manifests may require changes or may stop working when upstream applications are updated.
  I am still learning, testing manifests, fixing problems, and improving the repository over time.
 
