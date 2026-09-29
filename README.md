@@ -31,6 +31,7 @@ Thank you for taking the time to check out the project.
 
 This table is generated automatically from the manifests currently available in the bucket directory.
 
+<!-- KIROBUCKET-MANIFEST-TABLE-START -->
 <a id="manifests-newest"></a>
 | Name | Version | LAST UPDATE [↓](#manifests-newest) [↑](#manifests-oldest) | Description |
 | --- | --- | --- | --- |
