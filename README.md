@@ -172,7 +172,6 @@ This table is generated from the manifests currently available in the `bucket` d
 | [MORT](bucket/MORT.json) | 1.320 | 2026-09-29 | Real-time game translator with OCR and machine translation. |
 | [motrix](bucket/motrix.json) | 1.8.19 | 2026-09-29 | Open-source download manager powered by aria2. |
 | [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-29 | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
-| [motrix-nightly](bucket/motrix-nightly.json) | 2.0.0-beta.30 | 2026-09-29 | Open-source download manager powered by aria2 (beta/nightly channel). |
 | [mouzi](bucket/mouzi.json) | 0.2.1 | 2026-09-29 | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
 | [moviebox-tui](bucket/moviebox-tui.json) | 0.1.25 | 2026-09-29 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | 7.7 | 2026-09-29 | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
