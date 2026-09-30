@@ -61,7 +61,7 @@ Generated automatically from the manifests in the bucket directory.
 | [traytoolbar](bucket/traytoolbar.json) | Windows Customization | 1.8.3 | 2026-09-29 | [Homepage](https://github.com/brondavies/TrayToolbar) | Custom toolbar for the Windows taskbar replacement menu. |
 | [wallpaper-changer](bucket/wallpaper-changer.json) | Windows Customization | 5.4.1 | 2026-09-29 | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. |
 | [wincux](bucket/wincux.json) | Windows Customization | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/samcuxx/WinCux) | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. |
-| [windhawk](bucket/windhawk.json) | Windows Customization | 1.7.3 | 2026-09-29 | [Homepage](https://windhawk.net/) | Customization framework for Windows. |
+| [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.6 | 2026-09-30 | [Homepage](https://windhawk.net/) | Customization framework for Windows. |
 | [wingodarktray](bucket/wingodarktray.json) | Windows Customization | 2.3.1 | 2026-09-29 | [Homepage](https://github.com/5mdt/WinGoDarkTray) | System tray app for toggling Windows light and dark themes. |
 | [trayweather](bucket/trayweather.json) | Weather & Information | 1.37.2 | 2026-09-29 | [Homepage](https://github.com/FelixdelasPozas/TrayWeather) | A lightweight weather application that runs in the Windows system tray. |
 | [crow-translate](bucket/crow-translate.json) | Translation & OCR | 4.1.0 | 2026-09-29 | [Homepage](https://apps.kde.org/crowtranslate) | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. |

@@ -29,6 +29,7 @@ Generated automatically from the manifests in the bucket directory.
 | [tcno-acc-switcher](bucket/tcno-acc-switcher.json) | Games & Game Utilities | 4.0.8 | 2026-09-30 | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. |
 | [timescribe](bucket/timescribe.json) | Other Utilities | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
 | [varia](bucket/varia.json) | Download Managers | 2026.8.5-1 | 2026-09-30 | [Homepage](https://github.com/giantpinkrobots/varia) | Download manager for files, torrents and videos. |
+| [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.6 | 2026-09-30 | [Homepage](https://windhawk.net/) | Customization framework for Windows. |
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.5 | 2026-09-30 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [0install-win](bucket/0install-win.json) | Package Management | 2.29.3 | 2026-09-29 | [Homepage](https://0install.net/) | Decentralized software installation system for Windows with a GUI and OS integrations. |
@@ -263,7 +264,6 @@ Generated automatically from the manifests in the bucket directory.
 | [wallpaper-changer](bucket/wallpaper-changer.json) | Windows Customization | 5.4.1 | 2026-09-29 | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. |
 | [warpinator](bucket/warpinator.json) | Network & DNS | 1.1 | 2026-09-29 | [Homepage](https://github.com/slowscript/warpinator-windows) | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. |
 | [wincux](bucket/wincux.json) | Windows Customization | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/samcuxx/WinCux) | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. |
-| [windhawk](bucket/windhawk.json) | Windows Customization | 1.7.3 | 2026-09-29 | [Homepage](https://windhawk.net/) | Customization framework for Windows. |
 | [wingodarktray](bucket/wingodarktray.json) | Windows Customization | 2.3.1 | 2026-09-29 | [Homepage](https://github.com/5mdt/WinGoDarkTray) | System tray app for toggling Windows light and dark themes. |
 | [winhance](bucket/winhance.json) | Windows Privacy & Tweaks | 26.06.12 | 2026-09-29 | [Homepage](https://github.com/memstechtips/Winhance) | Windows enhancement, debloating, optimization and customization utility |
 | [winscript](bucket/winscript.json) | Windows Privacy & Tweaks | 2.25.1 | 2026-09-29 | [Homepage](https://winscript.cc/) | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. |
