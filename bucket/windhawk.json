@@ -1,15 +1,16 @@
 {
-    "version": "1.7.3",
+    "version": "2.0.0-alpha.6",
     "description": "Customization framework for Windows.",
     "homepage": "https://windhawk.net/",
     "license": "MIT",
-    "url": "https://github.com/ramensoftware/windhawk/releases/download/v1.7.3/windhawk_setup.exe",
-    "hash": "5116cc1703384aac88b8d7a3b57f172aea5da32b6df7355fb2f8247d23813c8f",
+    "url": "https://github.com/ramensoftware/windhawk/releases/download/2.0.0-alpha.6/windhawk_setup.exe",
+    "hash": "f788f5eaf16d45841fc0f06750876a005a48848e6ebb7bb4df1b39c44afb5eab",
     "innosetup": true,
     "checkver": {
-        "github": "https://github.com/ramensoftware/windhawk"
+        "url": "https://github.com/ramensoftware/windhawk/releases",
+        "regex": "releases/tag/v?(?<version>\\d[\\w.-]+)"
     },
     "autoupdate": {
-        "url": "https://github.com/ramensoftware/windhawk/releases/download/v$version/windhawk_setup.exe"
+        "url": "https://github.com/ramensoftware/windhawk/releases/download/$version/windhawk_setup.exe"
     }
 }
