@@ -6,26 +6,42 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe",
-            "hash": "3e4c6aead03e1dd9f093de4ff9842b8d7ed9487f8b033a87c3ab83e5f65ca710"
+            "hash": "3e4c6aead03e1dd9f093de4ff9842b8d7ed9487f8b033a87c3ab83e5f65ca710",
+            "uninstaller": {
+                "file": "fxsound_setup.exe",
+                "args": [
+                    "/exenoui",
+                    "/x",
+                    "//",
+                    "/quiet",
+                    "/norestart"
+                ]
+            }
         },
         "arm64": {
             "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.arm64.exe",
-            "hash": "a60e8e73e98e1ddcd4d90deeb53297258d22708efa155fa3479182b648b83a35"
+            "hash": "a60e8e73e98e1ddcd4d90deeb53297258d22708efa155fa3479182b648b83a35",
+            "uninstaller": {
+                "file": "fxsound_setup.arm64.exe",
+                "args": [
+                    "/exenoui",
+                    "/x",
+                    "//",
+                    "/quiet",
+                    "/norestart"
+                ]
+            }
         }
     },
-    "pre_install": [
-        "$staging = Join-Path $dir '.installer'",
-        "New-Item -ItemType Directory -Path $staging -Force | Out-Null",
-        "$setup = Join-Path $dir $fname",
-        "& $setup /extract $staging",
-        "if ($LASTEXITCODE -ne 0) { throw 'FxSound setup extraction failed.' }",
-        "$msi = Get-ChildItem -Path $staging -Filter '*.msi' -File | Select-Object -First 1",
-        "if (!$msi) { throw 'FxSound MSI was not found after extracting the setup.' }",
-        "Expand-MsiArchive $msi.FullName $dir | Out-Null",
-        "Remove-Item $staging -Recurse -Force -ErrorAction SilentlyContinue",
-        "Remove-Item $setup -Force -ErrorAction SilentlyContinue",
-        "Get-ChildItem -Path $dir -Filter 'System*' -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue"
-    ],
+    "installer": {
+        "args": [
+            "/exenoui",
+            "/quiet",
+            "/norestart",
+            "APPDIR=$dir"
+        ],
+        "keep": true
+    },
     "bin": "FxSound.exe",
     "shortcuts": [
         [
@@ -47,5 +63,8 @@
             }
         }
     },
-    "notes": "The setup EXE is extracted to obtain its MSI, then Scoop extracts the MSI contents into the app directory instead of installing the product. FxSound's audio driver is installed by a separate MSI custom action during a normal installation, so this file-only extraction does not install the driver."
+    "notes": [
+        "Uses the official FxSound installer because FxSound requires its virtual audio driver.",
+        "The installer places the application in the Scoop app directory via APPDIR and installs the FxSound virtual audio driver system-wide."
+    ]
 }
