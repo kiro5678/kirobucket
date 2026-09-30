@@ -10,10 +10,10 @@
         }
     },
     "extract_dir": "Komi-Store",
-    "bin": "bin/Komi-Store.exe",
+    "bin": "Komi-Store.exe",
     "shortcuts": [
         [
-            "bin/Komi-Store.exe",
+            "Komi-Store.exe",
             "Komi Store"
         ]
     ],
