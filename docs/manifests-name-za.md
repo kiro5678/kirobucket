@@ -50,7 +50,7 @@ Generated automatically from the manifests in the bucket directory.
 | [time-sync](bucket/time-sync.json) | 3.2 | 2026-09-29 | [Homepage](https://vovsoft.com/software/time-sync/) | A lightweight utility for synchronizing the Windows clock with NTP servers. |
 | [thio-background-app-notifier](bucket/thio-background-app-notifier.json) | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. |
 | [tcno-acc-switcher-nightly](bucket/tcno-acc-switcher-nightly.json) | 4.0.7 | 2026-09-29 | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) | Pre-release account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. |
-| [tcno-acc-switcher](bucket/tcno-acc-switcher.json) | 4.0.7 | 2026-09-29 | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. |
+| [tcno-acc-switcher](bucket/tcno-acc-switcher.json) | 4.0.8 | 2026-09-30 | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. |
 | [taskexplorer](bucket/taskexplorer.json) | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/DavidXanatos/TaskExplorer) | Advanced process and system monitoring tool |
 | [takeoff-launcher-portable](bucket/takeoff-launcher-portable.json) | 1.0.4 | 2026-09-29 | [Homepage](https://github.com/akiraeng/takeoff-launcher) | Focused, lightweight native Windows application launcher (portable) |
 | [takeoff-launcher](bucket/takeoff-launcher.json) | 1.0.4 | 2026-09-29 | [Homepage](https://github.com/akiraeng/takeoff-launcher) | Focused, lightweight native Windows application launcher |
@@ -154,7 +154,7 @@ Generated automatically from the manifests in the bucket directory.
 | [lynxoptimizer](bucket/lynxoptimizer.json) | 0.90 | 2026-09-29 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [local-desktop-store](bucket/local-desktop-store.json) | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) | Private GitHub-based desktop application store and installer |
 | [livewallpaper-nightly](bucket/livewallpaper-nightly.json) | 4.0.1-alpha.2 | 2026-09-29 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Next-generation dynamic wallpaper client for Windows (alpha) |
-| [livewallpaper](bucket/livewallpaper.json) | 2.6.6.0 | 2026-09-29 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
+| [livewallpaper](bucket/livewallpaper.json) | 2.6.6.0 | 2026-09-30 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [lettuce-window-switcher](bucket/lettuce-window-switcher.json) | 0.3.70 | 2026-09-29 | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) | Windows 11 application switcher with live DWM previews and multiple switcher views |
 | [lapis](bucket/lapis.json) | 3.0.1 | 2026-09-29 | [Homepage](https://github.com/zexadev/lapisnote) | Local-first note-taking app with AI assistant and peer-to-peer sync. |
 | [langover](bucket/langover.json) | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/nachlib/LangOver) | Portable Windows utility for converting text between Hebrew and English keyboard layouts. |
