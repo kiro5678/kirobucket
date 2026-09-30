@@ -37,8 +37,8 @@ A separate directory groups all manifests by their primary purpose, including Wi
 | --- | ---: | --- |
 | Android & Device Tools | 6 | [View category](docs/categories.md#android-device-tools) |
 | Browsers & Communication | 2 | [View category](docs/categories.md#browsers-communication) |
-| Clipboard & Text | 13 | [View category](docs/categories.md#clipboard-text) |
-| Developer & Technical Tools | 6 | [View category](docs/categories.md#developer-technical-tools) |
+| Clipboard & Text | 14 | [View category](docs/categories.md#clipboard-text) |
+| Developer & Technical Tools | 5 | [View category](docs/categories.md#developer-technical-tools) |
 | Download Managers | 12 | [View category](docs/categories.md#download-managers) |
 | Emulators & Compatibility | 9 | [View category](docs/categories.md#emulators-compatibility) |
 | File Management | 26 | [View category](docs/categories.md#file-management) |
@@ -51,15 +51,15 @@ A separate directory groups all manifests by their primary purpose, including Wi
 | Other Utilities | 1 | [View category](docs/categories.md#other-utilities) |
 | Package Management | 6 | [View category](docs/categories.md#package-management) |
 | PDF & Documents | 7 | [View category](docs/categories.md#pdf-documents) |
-| Productivity & Launchers | 11 | [View category](docs/categories.md#productivity-launchers) |
+| Productivity & Launchers | 10 | [View category](docs/categories.md#productivity-launchers) |
 | Security | 7 | [View category](docs/categories.md#security) |
 | Storage & Disk Tools | 3 | [View category](docs/categories.md#storage-disk-tools) |
-| Sync & Backup | 5 | [View category](docs/categories.md#sync-backup) |
-| System Monitoring & Hardware | 15 | [View category](docs/categories.md#system-monitoring-hardware) |
+| Sync & Backup | 4 | [View category](docs/categories.md#sync-backup) |
+| System Monitoring & Hardware | 16 | [View category](docs/categories.md#system-monitoring-hardware) |
 | Time Tracking & Focus | 7 | [View category](docs/categories.md#time-tracking-focus) |
 | Translation & OCR | 5 | [View category](docs/categories.md#translation-ocr) |
 | Windows Customization | 42 | [View category](docs/categories.md#windows-customization) |
-| Windows Privacy & Tweaks | 17 | [View category](docs/categories.md#windows-privacy-tweaks) |
+| Windows Privacy & Tweaks | 18 | [View category](docs/categories.md#windows-privacy-tweaks) |
 
 **Total manifests: 269** · [Open the full categorized directory](docs/categories.md)
 
