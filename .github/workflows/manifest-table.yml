@@ -34,6 +34,3591 @@ jobs:
           $end = "<!-- KIROBUCKET-MANIFEST-TABLE-END -->"
           $readmePath = Join-Path $env:GITHUB_WORKSPACE "README.md"
 
+          $categoryRules = @(
+              @{ Name = "Android & Device Tools"; Pattern = '^(android-dex|scrcpy|scrcpy-gui-georgeenglezos|scrcpy-gui-kil0bit|scrcpy-gui-kil0bit-setup-portable|scrcpy-gui-simonaking)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              $category = Get-Category -Name $name
+              $categoryEscaped = $category.Replace("|", "\|")
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Category = $category
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $categoryEscaped | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Category | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Browsers & Communication"; Pattern = '^(viola|zapzap)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Clipboard & Text"; Pattern = '^(beetroot-portable|clipangel|cliptype|clustercut|crosspaste|deskdrop|ecopaste|ecopaste-nightly|edge-drop|pastebar|sklad|sklad-setup-portable|skyeclip|smart-clipboard)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Developer & Technical Tools"; Pattern = '^(c2flux|detect-it-easy|firelink|paseo|xfetch)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Download Managers"; Pattern = '^(am-downloader|brisk|cross-platform-download-manager|dlman|imfile|motrix|motrix-next|nanaget|qbittorrent|qbittorrent-lt20|rqbit|varia)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Emulators & Compatibility"; Pattern = '^(dgvoodoo2|die-engine|dxvk-gplall|dxwrapper|flycast|nglide|rpcs3|ruffle|ruffle-nightly)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "File Management"; Pattern = '^(aifilesorter|bulk-crap-uninstaller|czkawka-cli|czkawka-gui-gtk|czkawka-krokiet|czkawka-krokiet-femtovg-wgpu|czkawka-krokiet-on-linux|czkawka-krokiet-skia-opengl|czkawka-krokiet-skia-vulkan|declutter|doublecmd|dude|everything-cmdpal|findly|foldersizeexplorer|foldra|mouzi|mucommander|mucommander-nightly|nomina|omni-search|omni-search-exe|sigma-file-manager|spacedrive|xyplorer|zexor)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Games & Game Utilities"; Pattern = '^(tcno-acc-switcher|cuttherope-dx|ds4windows|ds4windows-prerelease|game-cheats-manager|nightlight-launcher|tonkatsu-box)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Images & Photos"; Pattern = '^(flyphotos|fractus-atlas|imageglass|imagemagick|imagemagick-hdri|imagemagick-q8|imagetype|Omoide|open-photo-ai|photomanager|photomanager-nightly|pictkura|selfphotos|tagstudio|tagstudio-x86_64)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Keyboard & Language"; Pattern = '^(cwitcher|fliper|keyboard-language-fix|langover)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Media & Audio/Video"; Pattern = '^(allplayer|blur|fastcast|fxsound-beta|moviebox-tui|openscreen|opennow|quick-audio-recorder|recordly|shotcut|ventic)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Network & DNS"; Pattern = '^(amule|bargozin|babyshark|cstatus|dnschanger|dnschanger-msi|net-max|netronome|netspeedtray|nettime|network-checker|opennetmeter|ubiquiti-wifiman-desktop|ubiquiti-wifiman-desktop-installer|ublockdnsclient|warpinator)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Notes & Knowledge"; Pattern = '^(agaric|antalogy|beaver-notes|butterfly|butterfly-nightly|helixnotes|lapis|markra|meshnotes|paperweight|siyuan|tiro-notes|zinc|znote)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Other Utilities"; Pattern = '^(trayweather)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Package Management"; Pattern = '^(0install-win|chocolateygui|local-desktop-store|rscoop|unigetui-portable|unigetuiglobal)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "PDF & Documents"; Pattern = '^(file-converter-pro|pdfcraft|pdfcraft-exe|poweriso|safepdf|safepdf-installer|smol)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Productivity & Launchers"; Pattern = '^(biniware-run|desktoptools|flashlaunch|flow|lettuce-window-switcher|quickpanel|shortercut|sofast|super-productivity|wox)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Security"; Pattern = '^(2faguard|crowdsec|openedr|permissionscope|sandboxie-plus|virustotal-context-menu|virustotal-uploader)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Storage & Disk Tools"; Pattern = '^(compactgui|diskgeek|mangodisk)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Sync & Backup"; Pattern = '^(freefilesync|syncthing)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "System Monitoring & Hardware"; Pattern = '^(clickmonitorddc|driverstoreexplorer|fluent-sensors|glow|hdsentinel-portable|MPOGPUFIX|nvidiaprofileinspector|pulse|ram-cleaner-flusher-pro|rigsight|sysmanager|systeminformer|taskexplorer|thio-background-app-notifier|ultimate-settings-panel|universal-intel-chipset-device-updater|universal-intel-wifi-bt-updater)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Time Tracking & Focus"; Pattern = '^(activitywatch-tauri|activitywatch|timescribe-portable|timigs|tockler|zenbreak|zenbreak-msix)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Translation & OCR"; Pattern = '^(crow-translate|dpscreenocr|MORT|rstgametranslation|translumo)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Windows Customization"; Pattern = '^(aero-dock|cedro-modern-dock|clockwork-orange|coodesker|coodesker-github|cooldesk|cooldesk-msi|contextmenumgrplus|desk-engine|deskframe|deskripple|desktopframesplus|dragwin|fancywm|fancywm-msix-cert|FoliCon|glowz-dock|glowz-dock-portable|iconswappergui|komorebi|komorebi-nightly|livewallpaper|nofences|nomeiryoui|open-shell|open-shell-nightly|openglass|openrgb|rightclicktools|shuffle-paper|spotlightsaver|sucrose|sucrose-nightly|takeoff-launcher|takeoff-launcher-portable|translucenttb|traytoolbar|wallpaper-changer|wincux|windhawk|windhawk-alpha|wingodarktray)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+              @{ Name = "Windows Privacy & Tweaks"; Pattern = '^(anti-yandex|crapcheckthis|crapfixer|fluentcleaner|fluentcleaner-classic|fluenttweaker|flyoobe|gtweak|gtweak-exe|kudu|lynxoptimizer|minimal-firewall|optimizerduck|sparkle|ultimate-settings-panel|winhance|winscript|winzenith)
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ }
+          )
+
+          function Get-Category {
+              param(
+                  [string]$Name
+              )
+
+              foreach ($rule in $categoryRules) {
+                  if ($Name -match $rule.Pattern) {
+                      return $rule.Name
+                  }
+              }
+
+              switch -Regex ($Name) {
+                  '^trayweather
+              $relativePath = "bucket/$($file.Name)"
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+              }
+
+              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $nameEscaped = $name.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
+
+              [PSCustomObject]@{
+                  Name = $name
+                  Date = $date
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Generated automatically from the manifests in the bucket directory."
+                  ""
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "This table is generated automatically from the manifests currently available in the bucket directory."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+ { return "Other Utilities" }
+                  default { return "Other Utilities" }
+              }
+          }
+
           $manifests = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
               $raw = Get-Content -Path $file.FullName -Raw
