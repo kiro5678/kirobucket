@@ -13,8 +13,8 @@ Generated automatically from the manifests in the bucket directory.
 | [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 1.16.206 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
 | [fluenttweaker](bucket/fluenttweaker.json) | Windows Privacy & Tweaks | 26.06.02 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentTweaker) | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. |
 | [flyoobe](bucket/flyoobe.json) | Windows Privacy & Tweaks | 3.03.100 | 2026-09-29 | [Homepage](https://github.com/builtbybel/Flyoobe) | Windows setup, customization, debloating, and system management utility. |
-| [gtweak](bucket/gtweak.json) | Windows Privacy & Tweaks | 5.5.5 | 2026-09-29 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
-| [gtweak-exe](bucket/gtweak-exe.json) | Windows Privacy & Tweaks | 5.5.5 | 2026-09-29 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
+| [gtweak](bucket/gtweak.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
+| [gtweak-exe](bucket/gtweak-exe.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.5.0 | 2026-09-30 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.90 | 2026-09-29 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.5 | 2026-09-29 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
@@ -45,7 +45,7 @@ Generated automatically from the manifests in the bucket directory.
 | [iconswappergui](bucket/iconswappergui.json) | Windows Customization | 2.1.2 | 2026-09-29 | [Homepage](https://github.com/aj-phillips/IconSwapperGui) | Portable GUI for swapping Windows file and folder icons. |
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | Windows Customization | 2026-08-22 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |
-| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 2.6.6.0 | 2026-09-30 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
+| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.2 | 2026-09-30 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [nofences](bucket/nofences.json) | Windows Customization | 1.8 | 2026-09-29 | [Homepage](https://github.com/Twometer/NoFences) | Open-source alternative to Fences for organizing the Windows desktop. |
 | [nomeiryoui](bucket/nomeiryoui.json) | Windows Customization | 3.5.1 | 2026-09-29 | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) | Windows utility for changing system UI fonts and font sizes. |
 | [open-shell](bucket/open-shell.json) | Windows Customization | 4.4.198 | 2026-09-29 | [Homepage](https://github.com/Open-Shell/Open-Shell-Menu) | A collection of utilities bringing back classic features to Windows. |
@@ -72,7 +72,7 @@ Generated automatically from the manifests in the bucket directory.
 | [translumo](bucket/translumo.json) | Translation & OCR | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/ramjke/Translumo) | Advanced real-time screen translator. |
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-29 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
-| [timescribe-portable](bucket/timescribe-portable.json) | Time Tracking & Focus | 1.17.1 | 2026-09-29 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
+| [timescribe-portable](bucket/timescribe-portable.json) | Time Tracking & Focus | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
 | [timigs](bucket/timigs.json) | Time Tracking & Focus | 1.12.1 | 2026-09-29 | [Homepage](https://github.com/BANSAFAn/timiGS-) | Lightweight PC activity tracker and usage analytics tool. |
 | [tockler](bucket/tockler.json) | Time Tracking & Focus | 4.0.21 | 2026-09-29 | [Homepage](https://github.com/MayGo/tockler) | An application that tracks your time by monitoring your active window title and idle time. |
 | [zenbreak](bucket/zenbreak.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |
@@ -86,8 +86,8 @@ Generated automatically from the manifests in the bucket directory.
 | [nvidiaprofileinspector](bucket/nvidiaprofileinspector.json) | System Monitoring & Hardware | 3.0.2.1 | 2026-09-29 | [Homepage](https://github.com/Orbmu2k/nvidiaProfileInspector) | NVIDIA graphics driver profile editor and settings utility. |
 | [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
 | [ram-cleaner-flusher-pro](bucket/ram-cleaner-flusher-pro.json) | System Monitoring & Hardware | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/alisakkaf/RAM-Cleaner-Flusher-Pro) | Native Win32 memory and standby cache optimizer for Windows. |
-| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.11.3 | 2026-09-29 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.114.51 | 2026-09-29 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.13.2 | 2026-09-30 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.114.53 | 2026-09-30 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
 | [taskexplorer](bucket/taskexplorer.json) | System Monitoring & Hardware | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/DavidXanatos/TaskExplorer) | Advanced process and system monitoring tool |
 | [thio-background-app-notifier](bucket/thio-background-app-notifier.json) | System Monitoring & Hardware | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. |
@@ -97,7 +97,7 @@ Generated automatically from the manifests in the bucket directory.
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.5 | 2026-09-29 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
 | [compactgui](bucket/compactgui.json) | Storage & Disk Tools | 4.0.0-beta.10 | 2026-09-29 | [Homepage](https://github.com/IridiumIO/CompactGUI) | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
 | [diskgeek](bucket/diskgeek.json) | Storage & Disk Tools | 1.1.1 | 2026-09-29 | [Homepage](https://github.com/techygeekshome/DiskGeek) | A free, self-contained disk space analyser for Windows. |
-| [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.1.4 | 2026-09-29 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
+| [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.1.5 | 2026-09-30 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
 | [2faguard](bucket/2faguard.json) | Security | 1.8.3 | 2026-09-29 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
 | [biniware-run](bucket/biniware-run.json) | Productivity & Launchers | 7.8.0.0 | 2026-09-29 | [Homepage](https://biniware.com/brun) | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. |
 | [desktoptools](bucket/desktoptools.json) | Productivity & Launchers | 1.2.6 | 2026-09-29 | [Homepage](https://github.com/vg2222/DesktopTools) | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. |
@@ -110,7 +110,7 @@ Generated automatically from the manifests in the bucket directory.
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.1.0 | 2026-09-29 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 | [takeoff-launcher](bucket/takeoff-launcher.json) | Productivity & Launchers | 1.0.4 | 2026-09-29 | [Homepage](https://github.com/akiraeng/takeoff-launcher) | Focused, lightweight native Windows application launcher |
 | [takeoff-launcher-portable](bucket/takeoff-launcher-portable.json) | Productivity & Launchers | 1.0.4 | 2026-09-29 | [Homepage](https://github.com/akiraeng/takeoff-launcher) | Focused, lightweight native Windows application launcher (portable) |
-| [wox](bucket/wox.json) | Productivity & Launchers | 2.4.1 | 2026-09-29 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
+| [wox](bucket/wox.json) | Productivity & Launchers | 2.4.5 | 2026-09-30 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [file-converter-pro](bucket/file-converter-pro.json) | PDF & Documents | 1.0.7 | 2026-09-29 | [Homepage](https://github.com/Hyacinthe-primus/File_Converter_Pro) | Free offline all-in-one file converter for Windows. Converts documents, images, audio and video locally. |
 | [pdfcraft](bucket/pdfcraft.json) | PDF & Documents | 2026.09.04-cd7e48a | 2026-09-29 | [Homepage](https://github.com/PDFCraftTool/pdfcraft) | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. |
 | [pdfcraft-exe](bucket/pdfcraft-exe.json) | PDF & Documents | 2026.09.04-cd7e48a | 2026-09-29 | [Homepage](https://github.com/PDFCraftTool/pdfcraft) | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. |
@@ -121,7 +121,7 @@ Generated automatically from the manifests in the bucket directory.
 | [0install-win](bucket/0install-win.json) | Package Management | 2.29.3 | 2026-09-29 | [Homepage](https://0install.net/) | Decentralized software installation system for Windows with a GUI and OS integrations. |
 | [chocolateygui](bucket/chocolateygui.json) | Package Management | 3.3.0 | 2026-09-29 | [Homepage](https://github.com/chocolatey/ChocolateyGUI) | Graphical user interface for Chocolatey. |
 | [local-desktop-store](bucket/local-desktop-store.json) | Package Management | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) | Private GitHub-based desktop application store and installer |
-| [rscoop](bucket/rscoop.json) | Package Management | 1.10.1 | 2026-09-29 | [Homepage](https://github.com/AmarBego/Rscoop) | A graphical user interface for Scoop package manager |
+| [rscoop](bucket/rscoop.json) | Package Management | 1.11.0 | 2026-09-30 | [Homepage](https://github.com/AmarBego/Rscoop) | A graphical user interface for Scoop package manager |
 | [unigetui-portable](bucket/unigetui-portable.json) | Package Management | 2026.3.0 | 2026-09-29 | [Homepage](https://devolutions.net/unigetui/) | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. |
 | [unigetuiglobal](bucket/unigetuiglobal.json) | Package Management | 2026.3.0 | 2026-09-29 | [Homepage](https://github.com/Devolutions/UniGetUI) | Graphical interface for Windows package managers. |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
@@ -130,7 +130,7 @@ Generated automatically from the manifests in the bucket directory.
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
 | [openedr](bucket/openedr.json) | Other Utilities | v2-release-22 | 2026-09-29 | [Homepage](https://github.com/HydraDragonAntivirus/HydraDragonAntivirus) | OpenEDR endpoint detection and response agent for Windows. |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.11 | 2026-09-29 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
-| [paseo](bucket/paseo.json) | Other Utilities | 0.10.1 | 2026-09-29 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
+| [paseo](bucket/paseo.json) | Other Utilities | 0.10.2 | 2026-09-30 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
 | [permissionscope](bucket/permissionscope.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/MukaSanches/PermissionScope) | Windows utility for inspecting and explaining file and folder permissions. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
 | [stimesync](bucket/stimesync.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/setsumi/stimesync) | Simple SNTP atomic clock time sync GUI app for Windows. |
@@ -146,7 +146,7 @@ Generated automatically from the manifests in the bucket directory.
 | [beaver-notes](bucket/beaver-notes.json) | Notes & Knowledge | 5.0.0-beta.2 | 2026-09-29 | [Homepage](https://github.com/Beaver-Notes/Beaver-Notes) | A privacy-focused note-taking app for Windows, macOS and Linux. |
 | [butterfly](bucket/butterfly.json) | Notes & Knowledge | 2.6.0 | 2026-09-29 | [Homepage](https://github.com/LinwoodDev/Butterfly) | A powerful, minimalistic, cross-platform note-taking app |
 | [butterfly-nightly](bucket/butterfly-nightly.json) | Notes & Knowledge | nightly | 2026-09-29 | [Homepage](https://github.com/LinwoodDev/Butterfly) | A powerful, minimalistic, cross-platform note-taking app (nightly build) |
-| [helixnotes](bucket/helixnotes.json) | Notes & Knowledge | 1.3.5 | 2026-09-29 | [Homepage](https://helixnotes.com/) | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. |
+| [helixnotes](bucket/helixnotes.json) | Notes & Knowledge | 1.3.6 | 2026-09-30 | [Homepage](https://helixnotes.com/) | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. |
 | [lapis](bucket/lapis.json) | Notes & Knowledge | 3.0.1 | 2026-09-29 | [Homepage](https://github.com/zexadev/lapisnote) | Local-first note-taking app with AI assistant and peer-to-peer sync. |
 | [markra](bucket/markra.json) | Notes & Knowledge | 2.12.0 | 2026-09-29 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
@@ -183,15 +183,15 @@ Generated automatically from the manifests in the bucket directory.
 | [shotcut](bucket/shotcut.json) | Media & Audio/Video | 26.9.27 | 2026-09-29 | [Homepage](https://www.shotcut.org) | Free, open source, cross-platform video editor. |
 | [ventic](bucket/ventic.json) | Media & Audio/Video | 0.5.0 | 2026-09-29 | [Homepage](https://github.com/ventic/ventic) | A media library and BitTorrent player for the desktop and Android TV. |
 | [cwitcher](bucket/cwitcher.json) | Keyboard & Language | 0.6.2 | 2026-09-29 | [Homepage](https://github.com/Astrent-bear/Cwitcher) | Lightweight Windows tray utility for keyboard layout switching and text transformation. |
-| [fliper](bucket/fliper.json) | Keyboard & Language | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/beatlejute/Fliper) | Universal keyboard layout and case converter for Windows. |
+| [fliper](bucket/fliper.json) | Keyboard & Language | 1.2.1 | 2026-09-30 | [Homepage](https://github.com/beatlejute/Fliper) | Universal keyboard layout and case converter for Windows. |
 | [keyboard-language-fix](bucket/keyboard-language-fix.json) | Keyboard & Language | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) | Fix text typed with the wrong keyboard language on Windows. |
 | [langover](bucket/langover.json) | Keyboard & Language | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/nachlib/LangOver) | Portable Windows utility for converting text between Hebrew and English keyboard layouts. |
 | [flyphotos](bucket/flyphotos.json) | Images & Photos | 2.7.2 | 2026-09-29 | [Homepage](https://github.com/riyasy/FlyPhotos) | Fast and modern photo viewer for Windows. |
 | [fractus-atlas](bucket/fractus-atlas.json) | Images & Photos | 2.3.0 | 2026-09-29 | [Homepage](https://github.com/Jimskapt/fractus-atlas) | An image viewer that lets you move images quickly into folders |
 | [imageglass](bucket/imageglass.json) | Images & Photos | 10.0.6.906 | 2026-09-29 | [Homepage](https://imageglass.org) | A fast, modern, open-source image viewer for Windows |
 | [imagemagick](bucket/imagemagick.json) | Images & Photos | 7.1.2-32 | 2026-09-29 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats. |
-| [imagemagick-hdri](bucket/imagemagick-hdri.json) | Images & Photos | 7.1.2-31 | 2026-09-29 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. |
-| [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-31 | 2026-09-29 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
+| [imagemagick-hdri](bucket/imagemagick-hdri.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. |
+| [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
 | [imagetype](bucket/imagetype.json) | Images & Photos | 3.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ImageType) | Accessible image editor for adding custom text to images |
 | [Omoide](bucket/Omoide.json) | Images & Photos | 0.7.2 | 2026-09-29 | [Homepage](https://github.com/EinAeffchen/Omoide) | Offline-first, self-hosted photo and video library with local AI-powered organization and search. |
 | [open-photo-ai](bucket/open-photo-ai.json) | Images & Photos | 26.9.3 | 2026-09-29 | [Homepage](https://github.com/vegidio/open-photo-ai) | An open source alternative to the popular photo AI editor. |
@@ -205,7 +205,7 @@ Generated automatically from the manifests in the bucket directory.
 | [ds4windows](bucket/ds4windows.json) | Games & Game Utilities | 4.0.2.3 | 2026-09-29 | [Homepage](https://github.com/hbashton/DS4Windows) | DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable) |
 | [ds4windows-prerelease](bucket/ds4windows-prerelease.json) | Games & Game Utilities | 4.5.9 | 2026-09-29 | [Homepage](https://github.com/hbashton/DS4Windows) | DualShock 4, DualSense, and other controller remapping tool for Windows (pre-release portable) |
 | [game-cheats-manager](bucket/game-cheats-manager.json) | Games & Game Utilities | 2.5.1 | 2026-09-29 | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) | Game cheats manager for Windows. |
-| [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.7 | 2026-09-29 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
+| [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.9 | 2026-09-30 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
 | [tcno-acc-switcher](bucket/tcno-acc-switcher.json) | Games & Game Utilities | 4.0.8 | 2026-09-30 | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. |
 | [tonkatsu-box](bucket/tonkatsu-box.json) | Games & Game Utilities | 0.44.0 | 2026-09-29 | [Homepage](https://github.com/hacan359/tonkatsu_box) | Personal collection manager for games, movies, TV shows, anime, visual novels, manga, books, music and podcasts. |
 | [aifilesorter](bucket/aifilesorter.json) | File Management | 1.9.2 | 2026-09-29 | [Homepage](https://github.com/hyperfield/ai-file-sorter) | Local AI file organization with categorization and rename suggestions. |
@@ -240,7 +240,7 @@ Generated automatically from the manifests in the bucket directory.
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.8.8600.25 | 2026-09-29 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
 | [flycast](bucket/flycast.json) | Emulators & Compatibility | 2.7 | 2026-09-29 | [Homepage](https://github.com/flyinghead/flycast) | Multiplatform Sega Dreamcast, Naomi, Naomi 2 and Atomiswave emulator. |
 | [nglide](bucket/nglide.json) | Emulators & Compatibility | 2.10 | 2026-09-29 | [Homepage](https://www.zeus-software.com/games/nglide) | 3Dfx Voodoo Glide wrapper for playing Glide games using modern graphics APIs. |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.42-20090 | 2026-09-29 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.42-20122 | 2026-09-30 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [ruffle](bucket/ruffle.json) | Emulators & Compatibility | 0.6.0 | 2026-09-29 | [Homepage](https://ruffle.rs/) | Flash Player emulator and SWF player written in Rust. |
 | [ruffle-nightly](bucket/ruffle-nightly.json) | Emulators & Compatibility | 2026-09-04 | 2026-09-29 | [Homepage](https://ruffle.rs/) | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. |
 | [am-downloader](bucket/am-downloader.json) | Download Managers | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/antikmozib/AM-Downloader) | A modern download manager for Windows. |
@@ -254,7 +254,7 @@ Generated automatically from the manifests in the bucket directory.
 | [qbittorrent](bucket/qbittorrent.json) | Download Managers | 5.2.4 | 2026-09-29 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). |
 | [qbittorrent-lt20](bucket/qbittorrent-lt20.json) | Download Managers | 5.2.4 | 2026-09-29 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). |
 | [rqbit](bucket/rqbit.json) | Download Managers | 9.0.1 | 2026-09-29 | [Homepage](https://github.com/ikatson/rqbit) | A BitTorrent client with a desktop GUI, HTTP API and Web UI. |
-| [varia](bucket/varia.json) | Download Managers | 2026.8.5 | 2026-09-29 | [Homepage](https://github.com/giantpinkrobots/varia) | Download manager for files, torrents and videos. |
+| [varia](bucket/varia.json) | Download Managers | 2026.8.5-1 | 2026-09-30 | [Homepage](https://github.com/giantpinkrobots/varia) | Download manager for files, torrents and videos. |
 | [beetroot-portable](bucket/beetroot-portable.json) | Clipboard & Text | 1.6.7 | 2026-09-29 | [Homepage](https://github.com/mnardit/beetroot-releases) | Clipboard manager for Windows with AI transforms, OCR, and fuzzy search |
 | [clipangel](bucket/clipangel.json) | Clipboard & Text | 2.23 | 2026-09-29 | [Homepage](https://sourceforge.net/projects/clip-angel/) | Clipboard history capture and paste tool. |
 | [cliptype](bucket/cliptype.json) | Clipboard & Text | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ClipType) | Clipboard injector that types clipboard contents using native keystrokes |
