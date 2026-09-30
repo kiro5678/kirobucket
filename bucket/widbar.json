@@ -1,0 +1,16 @@
+{
+    "version": "store",
+    "description": "Windows 11 taskbar widget manager distributed through the Microsoft Store.",
+    "homepage": "https://andelby.github.io/widbar/",
+    "license": "Proprietary",
+    "installer": {
+        "script": "if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { throw 'WinGet is required to install WidBar from the Microsoft Store.' }\nwinget install --id 9PKLDNM83TP9 --source msstore --exact --accept-source-agreements --accept-package-agreements\nif ($LASTEXITCODE -ne 0) { throw \"WinGet failed to install WidBar (exit code $LASTEXITCODE).\" }"
+    },
+    "uninstaller": {
+        "script": "if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { throw 'WinGet is required to uninstall WidBar from the Microsoft Store.' }\nwinget uninstall --id 9PKLDNM83TP9 --source msstore --exact --accept-source-agreements\nif ($LASTEXITCODE -ne 0) { throw \"WinGet failed to uninstall WidBar (exit code $LASTEXITCODE).\" }"
+    },
+    "notes": [
+        "WidBar is installed and updated by the Microsoft Store.",
+        "Requires Windows 11 and WinGet."
+    ]
+}
