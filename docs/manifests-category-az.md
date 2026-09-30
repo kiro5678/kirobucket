@@ -151,6 +151,7 @@ Generated automatically from the manifests in the bucket directory.
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
 | [stimesync](bucket/stimesync.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/setsumi/stimesync) | Simple SNTP atomic clock time sync GUI app for Windows. |
 | [time-sync](bucket/time-sync.json) | Other Utilities | 3.2 | 2026-09-29 | [Homepage](https://vovsoft.com/software/time-sync/) | A lightweight utility for synchronizing the Windows clock with NTP servers. |
+| [timescribe](bucket/timescribe.json) | Other Utilities | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
 | [tokri](bucket/tokri.json) | Other Utilities | 2026.09.26 | 2026-09-29 | [Homepage](https://github.com/ysuraj1999/tokri) | Desktop basket to drag and drop text, URLs, images, and files. |
 | [viola](bucket/viola.json) | Other Utilities | 0.2.10 | 2026-09-29 | [Homepage](https://github.com/nmcmil/Viola-Downloads) | Native desktop web browser. |
 | [virustotal-context-menu](bucket/virustotal-context-menu.json) | Other Utilities | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/Genbox/VirusTotalContextMenu) | Portable Windows context-menu utility for scanning files with VirusTotal |
@@ -206,7 +207,6 @@ Generated automatically from the manifests in the bucket directory.
 | [universal-intel-wifi-bt-updater](bucket/universal-intel-wifi-bt-updater.json) | System Monitoring & Hardware | 2026.07.0008 | 2026-09-29 | [Homepage](https://github.com/FirstEverTech/Universal-Intel-WiFi-BT-Updater) | Automatically detects Intel Wi-Fi and Bluetooth hardware and installs the latest matching official drivers. |
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-29 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
-| [timescribe-portable](bucket/timescribe-portable.json) | Time Tracking & Focus | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
 | [timigs](bucket/timigs.json) | Time Tracking & Focus | 1.12.1 | 2026-09-29 | [Homepage](https://github.com/BANSAFAn/timiGS-) | Lightweight PC activity tracker and usage analytics tool. |
 | [tockler](bucket/tockler.json) | Time Tracking & Focus | 4.0.21 | 2026-09-29 | [Homepage](https://github.com/MayGo/tockler) | An application that tracks your time by monitoring your active window title and idle time. |
 | [zenbreak](bucket/zenbreak.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |

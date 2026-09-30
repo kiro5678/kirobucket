@@ -57,7 +57,7 @@ This table is generated automatically from the manifests currently available in 
 | [spacedrive](bucket/spacedrive.json) | File Management | 2.0.0-alpha.2 | 2026-09-30 | [Homepage](https://github.com/spacedriveapp/spacedrive) | Open source cross-platform file explorer. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.114.53 | 2026-09-30 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [tcno-acc-switcher](bucket/tcno-acc-switcher.json) | Games & Game Utilities | 4.0.8 | 2026-09-30 | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. |
-| [timescribe-portable](bucket/timescribe-portable.json) | Time Tracking & Focus | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
+| [timescribe](bucket/timescribe.json) | Other Utilities | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
 | [varia](bucket/varia.json) | Download Managers | 2026.8.5-1 | 2026-09-30 | [Homepage](https://github.com/giantpinkrobots/varia) | Download manager for files, torrents and videos. |
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.5 | 2026-09-30 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
@@ -307,6 +307,7 @@ This table is generated automatically from the manifests currently available in 
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-09-29 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | Notes & Knowledge | 4.9.3 | 2026-09-29 | [Homepage](https://github.com/alagrede/znote-app) | Markdown-based note-taking app for developers. |
 <!-- KIROBUCKET-MANIFEST-TABLE-END -->
+
 
 
 
