@@ -32,9 +32,12 @@
         ]
     },
     "checkver": {
-        "url": "https://appagg.com/windows/utilitiesandtools/widbar-widget-taskbar-system-43311425.html?hl=en",
-        "regex": "Last Updated:\s*([0-9]{4}-[0-9]{2}-[0-9]{2})",
-        "replace": "$1"
+        "script": [
+            "$page = Invoke-WebRequest 'https://appagg.com/windows/utilitiesandtools/widbar-widget-taskbar-system-43311425.html?hl=en' -UseBasicParsing",
+            "$m = [regex]::Match($page.Content, 'Last Updated:\\s*([0-9]{4}-[0-9]{2}-[0-9]{2})')",
+            "if (-not $m.Success) { throw 'WidBar update date was not found.' }",
+            "([datetime]::ParseExact($m.Groups[1].Value, 'yyyy-MM-dd', $null)).ToString('yyyy.MM.dd')"
+        ]
     },
     "autoupdate": {
         "architecture": {
