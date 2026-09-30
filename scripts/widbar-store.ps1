@@ -3,7 +3,10 @@ param(
     [string]$ProductId,
 
     [Parameter(Mandatory)]
-    [string]$OutputPath
+    [string]$OutputPath,
+
+    [ValidateSet('x64', 'x86', 'arm64')]
+    [string]$Architecture = 'x64'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -26,12 +29,16 @@ if (-not $links) {
     throw 'No MSIX/MSIXBundle package was returned for the Microsoft Store product.'
 }
 
-$package = $links |
-    Where-Object { $_ -match '(?i)(x64|amd64)' } |
-    Select-Object -First 1
+$pattern = switch ($Architecture) {
+    'x64'   { '(?i)(x64|amd64)' }
+    'x86'   { '(?i)(x86|x32|32.?bit)' }
+    'arm64' { '(?i)(arm64|aarch64)' }
+}
+
+$package = $links | Where-Object { $_ -match $pattern } | Select-Object -First 1
 
 if (-not $package) {
-    $package = $links | Select-Object -First 1
+    throw "No $Architecture MSIX/MSIXBundle package was returned."
 }
 
 $fileName = [IO.Path]::GetFileName(([uri]$package).AbsolutePath)
