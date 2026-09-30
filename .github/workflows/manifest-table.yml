@@ -449,6 +449,6 @@ jobs:
 
           git add README.md docs
           git commit -m "docs: update manifest views"
-          git fetch origin master
+          git fetch origin master:refs/remotes/origin/master
           git rebase origin/master
           git push origin HEAD:master
