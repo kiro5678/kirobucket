@@ -1,16 +1,38 @@
 {
     "version": "2.0.0-alpha.6",
-    "description": "Customization framework for Windows.",
+    "description": "Customization framework for Windows programs.",
     "homepage": "https://windhawk.net/",
-    "license": "MIT",
-    "url": "https://github.com/ramensoftware/windhawk/releases/download/2.0.0-alpha.6/windhawk_setup.exe",
-    "hash": "f788f5eaf16d45841fc0f06750876a005a48848e6ebb7bb4df1b39c44afb5eab",
-    "innosetup": true,
+    "license": {
+        "identifier": "GPL-3.0-or-later",
+        "url": "https://github.com/ramensoftware/windhawk/blob/main/LICENSE"
+    },
+    "url": "https://github.com/ramensoftware/windhawk/releases/download/2.0.0-alpha.6/windhawk_setup_offline.exe",
+    "hash": "eac905e2e0d87c53241f3a06721124b83a56e7736695eedf1e1a40b536523d23",
+    "pre_install": [
+        "if(!(test-path \"$persist_dir\\AppData\\settings.ini\")) {",
+        "    New-Item -ItemType \"Directory\" -Path \"$dir\\AppData\" | Out-Null",
+        "    Set-Content \"$dir\\AppData\\settings.ini\" \"[Settings]`r`nDisableUpdateCheck=1\" -Encoding Unicode",
+        "}"
+    ],
+    "post_install": [
+        "# Windhawk needs to apply permissive access attributes to AppData folder in order to work properly",
+        "Start-Process -FilePath \"$dir\\$fname\" -ArgumentList @('/S', '/portable', \"/D=$dir\") -Wait",
+        "Remove-Item -Path \"$dir\\$fname\" -Force",
+        "startmenu_shortcut \"$dir\\windhawk.exe\" 'Windhawk' $null $null $global",
+        "shim \"$dir\\windhawk.exe\" $global 'windhawk'"
+    ],
+    "persist": "AppData",
+    "post_uninstall": [
+        "# Remove shortcut and shim",
+        "Write-Host \"`nRemoving shortcut $(friendly_path \"$(shortcut_folder $global)\\Windhawk.lnk\")\"",
+        "Remove-Item \"$(shortcut_folder $global)\\Windhawk.lnk\" -Force -ErrorAction Ignore",
+        "rm_shim 'windhawk' \"$(shimdir $global)\""
+    ],
     "checkver": {
         "url": "https://github.com/ramensoftware/windhawk/releases",
         "regex": "releases/tag/(?<tag>v)?(?<version>\\d[\\w.-]+)"
     },
     "autoupdate": {
-        "url": "https://github.com/ramensoftware/windhawk/releases/download/$matchTag$version/windhawk_setup.exe"
+        "url": "https://github.com/ramensoftware/windhawk/releases/download/$matchTag$version/windhawk_setup_offline.exe"
     }
 }
