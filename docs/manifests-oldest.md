@@ -276,5 +276,5 @@ Generated automatically from the manifests in the bucket directory.
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.5 | 2026-09-30 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [widbar](bucket/widbar.json) | Other Utilities | 2026.08.29 | 2026-10-01 | — | Customizable widgets for the Windows 11 taskbar. |
-| [widbar-winget](bucket/widbar-winget.json) | Other Utilities | 2026.08.29 | 2026-10-01 | — | Customizable widgets for the Windows 11 taskbar. |
+| [widbar-winget](bucket/widbar-winget.json) | Other Utilities | 2026.08.29 | 2026-10-01 | [Homepage](https://andelby.github.io/widbar/) | Customizable widgets for the Windows 11 taskbar. |
 
