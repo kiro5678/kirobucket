@@ -331,8 +331,8 @@ jobs:
                       ""
                   }
               } else {
-                  $versionMatch = [regex]::Match($raw, '(?m)"version"s*:s*"([^"]*)"')
-                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"s*:s*"([^"]*)"')
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
                   $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
                   $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
                   $homepage = ""
@@ -344,11 +344,11 @@ jobs:
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
               $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { "Other Utilities" }
 
-              $nameEscaped = $name.Replace("|", "|")
-              $categoryEscaped = $category.Replace("|", "|")
-              $versionEscaped = $version.Replace("|", "|")
-              $descriptionEscaped = $description.Replace("|", "|").Replace([Environment]::NewLine, " ")
-              $homepageEscaped = $homepage.Replace("|", "|").Replace(")", "%29")
+              $nameEscaped = $name.Replace("|", "\|")
+              $categoryEscaped = $category.Replace("|", "\|")
+              $versionEscaped = $version.Replace("|", "\|")
+              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
 
               $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
                   "—"
