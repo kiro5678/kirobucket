@@ -6,8 +6,6 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
-| [widbar](bucket/widbar.json) | Other Utilities | 2026.08.29 | 2026-10-01 | — | Customizable widgets for the Windows 11 taskbar. |
-| [widbar-winget](bucket/widbar-winget.json) | Other Utilities | 2026.08.29 | 2026-10-01 | [Homepage](https://andelby.github.io/widbar/) | Customizable widgets for the Windows 11 taskbar. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [coodesker-github](bucket/coodesker-github.json) | Windows Customization | 1.1.0.9 | 2026-09-30 | [Homepage](https://github.com/coodesker/coodesker-desktop) | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
 | [fliper](bucket/fliper.json) | Keyboard & Language | 1.2.1 | 2026-09-30 | [Homepage](https://github.com/beatlejute/Fliper) | Universal keyboard layout and case converter for Windows. |

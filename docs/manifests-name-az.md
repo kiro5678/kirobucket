@@ -260,8 +260,6 @@ Generated automatically from the manifests in the bucket directory.
 | [virustotal-uploader](bucket/virustotal-uploader.json) | Other Utilities | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/SamuelTulach/VirusTotalUploader) | Open-source WinForms application for uploading files to VirusTotal |
 | [wallpaper-changer](bucket/wallpaper-changer.json) | Windows Customization | 5.4.1 | 2026-09-29 | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. |
 | [warpinator](bucket/warpinator.json) | Network & DNS | 1.1 | 2026-09-29 | [Homepage](https://github.com/slowscript/warpinator-windows) | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. |
-| [widbar](bucket/widbar.json) | Other Utilities | 2026.08.29 | 2026-10-01 | — | Customizable widgets for the Windows 11 taskbar. |
-| [widbar-winget](bucket/widbar-winget.json) | Other Utilities | 2026.08.29 | 2026-10-01 | [Homepage](https://andelby.github.io/widbar/) | Customizable widgets for the Windows 11 taskbar. |
 | [wincux](bucket/wincux.json) | Windows Customization | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/samcuxx/WinCux) | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.6 | 2026-09-30 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [wingodarktray](bucket/wingodarktray.json) | Windows Customization | 2.3.1 | 2026-09-29 | [Homepage](https://github.com/5mdt/WinGoDarkTray) | System tray app for toggling Windows light and dark themes. |
