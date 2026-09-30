@@ -125,9 +125,7 @@ Generated automatically from the manifests in the bucket directory.
 | [Omoide](bucket/Omoide.json) | 0.7.2 | 2026-09-29 | [Homepage](https://github.com/EinAeffchen/Omoide) | Offline-first, self-hosted photo and video library with local AI-powered organization and search. |
 | [omni-search-exe](bucket/omni-search-exe.json) | 0.1.16 | 2026-09-29 | [Homepage](https://github.com/Eul45/omni-search) | Fast Windows desktop file search and duplicate finder with Android LAN sync. Portable payload extracted from the official setup executable. |
 | [omni-search](bucket/omni-search.json) | 0.1.16 | 2026-09-29 | [Homepage](https://github.com/Eul45/omni-search) | Fast Windows desktop file search and duplicate finder with Android LAN sync. |
-| [nvidiaprofileinspector-portable](bucket/nvidiaprofileinspector-portable.json) | 3.0.2.1 | 2026-09-29 | [Homepage](https://github.com/Orbmu2k/nvidiaProfileInspector) | Portable NVIDIA graphics driver profile editor and settings utility. |
 | [nvidiaprofileinspector](bucket/nvidiaprofileinspector.json) | 3.0.2.1 | 2026-09-29 | [Homepage](https://github.com/Orbmu2k/nvidiaProfileInspector) | NVIDIA graphics driver profile editor and settings utility. |
-| [nomina-setup](bucket/nomina-setup.json) | 1.1 | 2026-09-29 | [Homepage](https://github.com/esmail-mkh/Nomina) | Advanced batch file and folder renamer for Windows. |
 | [nomina](bucket/nomina.json) | 1.1 | 2026-09-29 | [Homepage](https://github.com/esmail-mkh/Nomina) | Advanced batch file and folder renamer for Windows. |
 | [nomeiryoui](bucket/nomeiryoui.json) | 3.5.1 | 2026-09-29 | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) | Windows utility for changing system UI fonts and font sizes. |
 | [nofences](bucket/nofences.json) | 1.8 | 2026-09-29 | [Homepage](https://github.com/Twometer/NoFences) | Open-source alternative to Fences for organizing the Windows desktop. |
