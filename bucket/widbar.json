@@ -14,8 +14,7 @@
             "$mainPackage = $packages | Where-Object { $_.Name -match '(?i)WidBar' } | Select-Object -First 1",
             "if (-not $mainPackage) { error 'WidBar MSIX package was not found in the Scoop app directory.'; break }",
             "$dependencies = $packages | Where-Object { $_.FullName -ne $mainPackage.FullName }",
-            "foreach ($dependency in $dependencies) { Add-AppxPackage -Path $dependency.FullName -ErrorAction Stop }",
-            "Add-AppxPackage -Path $mainPackage.FullName -ErrorAction Stop"
+            "if ($dependencies) { Add-AppxPackage -Path $mainPackage.FullName -DependencyPath $dependencies.FullName -ErrorAction Stop } else { Add-AppxPackage -Path $mainPackage.FullName -ErrorAction Stop }"
         ]
     },
     "uninstaller": {
