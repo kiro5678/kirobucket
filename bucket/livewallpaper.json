@@ -12,11 +12,18 @@
         "script": "$uninstaller = Get-ChildItem -LiteralPath $dir -Filter 'unins*.exe' -File -ErrorAction SilentlyContinue | Select-Object -First 1; if ($uninstaller) { Invoke-ExternalCommand $uninstaller.FullName -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -RunAs | Out-Null }"
     },
     "bin": "LiveWallpaper3.exe",
-    "shortcuts": [["LiveWallpaper3.exe", "LiveWallpaper"]],
+    "shortcuts": [
+        [
+            "LiveWallpaper3.exe",
+            "LiveWallpaper"
+        ]
+    ],
     "checkver": {
-        "github": "https://github.com/GiantappMan/livewallpaper"
+        "github": "https://api.github.com/repos/GiantappMan/livewallpaper/releases",
+        "jsonpath": "$[0].assets[*].browser_download_url",
+        "regex": "download/v(?<version>[^/]+)/(?<file>(?:LiveWallpaper\\.Installer\\.v[^/]+\\.exe|GiantappWallpaper_[^/]+_x64-setup\\.exe))"
     },
     "autoupdate": {
-        "url": "https://github.com/GiantappMan/livewallpaper/releases/download/v$version/LiveWallpaper.Installer.v$version.exe"
+        "url": "https://github.com/GiantappMan/livewallpaper/releases/download/v$version/$matchFile"
     }
 }
