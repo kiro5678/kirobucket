@@ -256,7 +256,6 @@ Generated automatically from the manifests in the bucket directory.
 | [wallpaper-changer](bucket/wallpaper-changer.json) | Windows Customization | 5.4.1 | 2026-09-29 | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. |
 | [wincux](bucket/wincux.json) | Windows Customization | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/samcuxx/WinCux) | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 1.7.3 | 2026-09-29 | [Homepage](https://windhawk.net/) | Customization framework for Windows. |
-| [windhawk-alpha](bucket/windhawk-alpha.json) | Windows Customization | 2.0.0-alpha.1 | 2026-09-29 | [Homepage](https://windhawk.net/) | Customization marketplace for Windows programs. |
 | [wingodarktray](bucket/wingodarktray.json) | Windows Customization | 2.3.1 | 2026-09-29 | [Homepage](https://github.com/5mdt/WinGoDarkTray) | System tray app for toggling Windows light and dark themes. |
 | [anti-yandex](bucket/anti-yandex.json) | Windows Privacy & Tweaks | 1.3 | 2026-09-29 | [Homepage](https://github.com/TheCawa/AntiYandex) | Utility for finding and removing Yandex Browser files and registry entries |
 | [crapcheckthis](bucket/crapcheckthis.json) | Windows Privacy & Tweaks | 1.0 | 2026-09-29 | [Homepage](https://github.com/builtbybel/CrapCheckThis) | Read-only Windows audit companion for FluentCleaner Classic and CrapFixer. |

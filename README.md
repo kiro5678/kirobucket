@@ -295,7 +295,6 @@ This table is generated automatically from the manifests currently available in 
 | [warpinator](bucket/warpinator.json) | Network & DNS | 1.1 | 2026-09-29 | [Homepage](https://github.com/slowscript/warpinator-windows) | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. |
 | [wincux](bucket/wincux.json) | Windows Customization | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/samcuxx/WinCux) | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 1.7.3 | 2026-09-29 | [Homepage](https://windhawk.net/) | Customization framework for Windows. |
-| [windhawk-alpha](bucket/windhawk-alpha.json) | Windows Customization | 2.0.0-alpha.1 | 2026-09-29 | [Homepage](https://windhawk.net/) | Customization marketplace for Windows programs. |
 | [wingodarktray](bucket/wingodarktray.json) | Windows Customization | 2.3.1 | 2026-09-29 | [Homepage](https://github.com/5mdt/WinGoDarkTray) | System tray app for toggling Windows light and dark themes. |
 | [winhance](bucket/winhance.json) | Windows Privacy & Tweaks | 26.06.12 | 2026-09-29 | [Homepage](https://github.com/memstechtips/Winhance) | Windows enhancement, debloating, optimization and customization utility |
 | [winscript](bucket/winscript.json) | Windows Privacy & Tweaks | 2.25.1 | 2026-09-29 | [Homepage](https://winscript.cc/) | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. |
@@ -308,6 +307,7 @@ This table is generated automatically from the manifests currently available in 
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-09-29 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | Notes & Knowledge | 4.9.3 | 2026-09-29 | [Homepage](https://github.com/alagrede/znote-app) | Markdown-based note-taking app for developers. |
 <!-- KIROBUCKET-MANIFEST-TABLE-END -->
+
 
 
 
