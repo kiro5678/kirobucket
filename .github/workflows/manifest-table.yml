@@ -52,6 +52,11 @@ jobs:
                   } else {
                       "—"
                   }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
               } else {
                   $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
                   $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
@@ -66,11 +71,19 @@ jobs:
               $nameEscaped = $name.Replace("|", "\|")
               $versionEscaped = $version.Replace("|", "\|")
               $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
+                  "—"
+              } else {
+                  "[Homepage]($homepageEscaped)"
+              }
 
               [PSCustomObject]@{
                   Name = $name
                   Date = $date
-                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $descriptionEscaped |"
+                  Homepage = $homepage
+                  Row = "| [$nameEscaped]($relativePath) | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
               }
           }
 
@@ -96,8 +109,8 @@ jobs:
                   ""
                   "Generated automatically from the manifests in the bucket directory."
                   ""
-                  "| Name | Version | LAST UPDATE | Description |"
-                  "| --- | --- | --- | --- |"
+                  "| Name | Version | LAST UPDATE | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- |"
                   ($Items | ForEach-Object { $_.Row })
                   ""
               ) -join [Environment]::NewLine
@@ -120,8 +133,8 @@ jobs:
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Description |"
-              "| --- | --- | --- | --- |"
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- |"
               ($newest | ForEach-Object { $_.Row })
               $end
           ) -join [Environment]::NewLine
