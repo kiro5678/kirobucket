@@ -158,9 +158,7 @@ Generated automatically from the manifests in the bucket directory.
 | [lettuce-window-switcher](bucket/lettuce-window-switcher.json) | 0.3.70 | 2026-09-29 | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) | Windows 11 application switcher with live DWM previews and multiple switcher views |
 | [lapis](bucket/lapis.json) | 3.0.1 | 2026-09-29 | [Homepage](https://github.com/zexadev/lapisnote) | Local-first note-taking app with AI assistant and peer-to-peer sync. |
 | [langover](bucket/langover.json) | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/nachlib/LangOver) | Portable Windows utility for converting text between Hebrew and English keyboard layouts. |
-| [kudu-setup](bucket/kudu-setup.json) | 3.5.0 | 2026-09-29 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
-| [kudu-portable](bucket/kudu-portable.json) | 3.5.0 | 2026-09-29 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
-| [kudu](bucket/kudu.json) | 3.5.0 | 2026-09-29 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
+| [kudu](bucket/kudu.json) | 3.5.0 | 2026-09-30 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | 2026-08-22 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |
 | [komorebi](bucket/komorebi.json) | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [keyboard-language-fix](bucket/keyboard-language-fix.json) | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) | Fix text typed with the wrong keyboard language on Windows. |

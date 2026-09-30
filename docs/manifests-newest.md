@@ -8,6 +8,7 @@ Generated automatically from the manifests in the bucket directory.
 | --- | --- | --- | --- | --- |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [coodesker-github](bucket/coodesker-github.json) | 1.1.0.9 | 2026-09-30 | [Homepage](https://github.com/coodesker/coodesker-desktop) | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
+| [kudu](bucket/kudu.json) | 3.5.0 | 2026-09-30 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [motrix-next](bucket/motrix-next.json) | 3.9.9 | 2026-09-30 | [Homepage](https://github.com/AnInsomniacy/motrix-next) | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
 | [spacedrive](bucket/spacedrive.json) | 2.0.0-alpha.2 | 2026-09-30 | [Homepage](https://github.com/spacedriveapp/spacedrive) | Open source cross-platform file explorer. |
 | [xyplorer](bucket/xyplorer.json) | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
@@ -129,9 +130,6 @@ Generated automatically from the manifests in the bucket directory.
 | [keyboard-language-fix](bucket/keyboard-language-fix.json) | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) | Fix text typed with the wrong keyboard language on Windows. |
 | [komorebi](bucket/komorebi.json) | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | 2026-08-22 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |
-| [kudu](bucket/kudu.json) | 3.5.0 | 2026-09-29 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
-| [kudu-portable](bucket/kudu-portable.json) | 3.5.0 | 2026-09-29 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
-| [kudu-setup](bucket/kudu-setup.json) | 3.5.0 | 2026-09-29 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [langover](bucket/langover.json) | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/nachlib/LangOver) | Portable Windows utility for converting text between Hebrew and English keyboard layouts. |
 | [lapis](bucket/lapis.json) | 3.0.1 | 2026-09-29 | [Homepage](https://github.com/zexadev/lapisnote) | Local-first note-taking app with AI assistant and peer-to-peer sync. |
 | [lettuce-window-switcher](bucket/lettuce-window-switcher.json) | 0.3.70 | 2026-09-29 | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) | Windows 11 application switcher with live DWM previews and multiple switcher views |
