@@ -373,6 +373,8 @@ jobs:
           $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
           $nameAz = $manifests | Sort-Object Name
           $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+          $categoryAz = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $false }, Name
+          $categoryZa = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $true }, Name
 
           function New-View {
               param(
@@ -401,6 +403,8 @@ jobs:
           Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-az.md") -Value (New-View "Category A-Z" $categoryAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-za.md") -Value (New-View "Category Z-A" $categoryZa) -Encoding utf8NoBOM
 
           $readme = Get-Content -Path $readmePath -Raw
 
@@ -411,7 +415,7 @@ jobs:
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
               "| --- | --- | --- | --- | --- | --- |"
               ($newest | ForEach-Object { $_.Row })
               $end
