@@ -1,16 +1,35 @@
 {
-    "version": "store",
-    "description": "Windows 11 taskbar widget manager distributed through the Microsoft Store.",
+    "version": "2026.08.29",
+    "description": "Customizable widgets for the Windows 11 taskbar.",
     "homepage": "https://andelby.github.io/widbar/",
     "license": "Proprietary",
     "installer": {
-        "script": "if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { throw 'WinGet is required to install WidBar from the Microsoft Store.' }\nwinget install --id 9PKLDNM83TP9 --source msstore --exact --accept-source-agreements --accept-package-agreements\nif ($LASTEXITCODE -ne 0) { throw \"WinGet failed to install WidBar (exit code $LASTEXITCODE).\" }"
+        "script": [
+            "if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { error 'WinGet is required to download the Microsoft Store package.'; break }",
+            "$wingetArchitecture = @{ '64bit' = 'x64'; '32bit' = 'x86'; 'arm64' = 'arm64' }[$architecture]",
+            "if (-not $wingetArchitecture) { error \"Unsupported architecture: $architecture\"; break }",
+            "winget download --id 9PKLDNM83TP9 --source msstore --exact --architecture $wingetArchitecture --platform Windows.Desktop --download-directory \"$dir\" --skip-license --accept-source-agreements --accept-package-agreements --disable-interactivity",
+            "if ($LASTEXITCODE -ne 0) { error \"WinGet failed to download the Microsoft Store package (exit code $LASTEXITCODE).\"; break }",
+            "$packages = Get-ChildItem \"$dir\" -File | Where-Object { $_.Extension -in '.msix', '.msixbundle', '.appx', '.appxbundle' }",
+            "$mainPackage = $packages | Where-Object { $_.Name -match '(?i)WidBar' } | Select-Object -First 1",
+            "if (-not $mainPackage) { error 'WidBar MSIX package was not found in the Scoop app directory.'; break }",
+            "$dependencies = $packages | Where-Object { $_.FullName -ne $mainPackage.FullName }",
+            "foreach ($dependency in $dependencies) { Add-AppxPackage -Path $dependency.FullName -ErrorAction Stop }",
+            "Add-AppxPackage -Path $mainPackage.FullName -ErrorAction Stop"
+        ]
     },
     "uninstaller": {
-        "script": "if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { throw 'WinGet is required to uninstall WidBar from the Microsoft Store.' }\nwinget uninstall --id 9PKLDNM83TP9 --source msstore --exact --accept-source-agreements\nif ($LASTEXITCODE -ne 0) { throw \"WinGet failed to uninstall WidBar (exit code $LASTEXITCODE).\" }"
+        "script": [
+            "Get-AppxPackage '30113AndreaDelBello.WidBar-WidgetTaskbarsystem*' | Remove-AppxPackage -ErrorAction SilentlyContinue",
+            "Remove-Item \"$dir\*\" -Force -Recurse -ErrorAction SilentlyContinue"
+        ]
     },
-    "notes": [
-        "WidBar is installed and updated by the Microsoft Store.",
-        "Requires Windows 11 and WinGet."
-    ]
+    "checkver": {
+        "script": [
+            "$r = Invoke-RestMethod 'https://storeedgefd.dsx.mp.microsoft.com/v9.0/products/9PKLDNM83TP9?market=US&locale=en-us&deviceFamily=Windows.Desktop'",
+            "$d = $r.Payload.LastUpdateDateUtc",
+            "if (-not $d) { throw 'Microsoft Store did not return LastUpdateDateUtc.' }",
+            "([datetime]$d).ToUniversalTime().ToString('yyyy.MM.dd')"
+        ]
+    }
 }
