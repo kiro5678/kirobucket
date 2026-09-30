@@ -1,10 +1,18 @@
 {
-    "version": "1.2.15.0",
+    "version": "1.2.16.0",
     "description": "Audio enhancer and sound equalizer for Windows.",
     "homepage": "https://github.com/fxsound2/fxsound-app",
     "license": "AGPL-3.0-only",
-    "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe",
-    "hash": "175588d38bf2816d74e3995967b9918845219341c0535cf7037028563575f498",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe",
+            "hash": "3e4c6aead03e1dd9f093de4ff9842b8d7ed9487f8b033a87c3ab83e5f65ca710"
+        },
+        "arm64": {
+            "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.arm64.exe",
+            "hash": "a60e8e73e98e1ddcd4d90deeb53297258d22708efa155fa3479182b648b83a35"
+        }
+    },
     "pre_install": [
         "$staging = Join-Path $dir '.installer'",
         "New-Item -ItemType Directory -Path $staging -Force | Out-Null",
@@ -16,7 +24,7 @@
         "Expand-MsiArchive $msi.FullName $dir | Out-Null",
         "Remove-Item $staging -Recurse -Force -ErrorAction SilentlyContinue",
         "Remove-Item $setup -Force -ErrorAction SilentlyContinue",
-        "Remove-Item (Join-Path $dir 'System*') -Recurse -Force -ErrorAction SilentlyContinue"
+        "Get-ChildItem -Path $dir -Filter 'System*' -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue"
     ],
     "bin": "FxSound.exe",
     "shortcuts": [
@@ -30,7 +38,14 @@
         "regex": "Version ([\\d.]+) \\(Beta\\)"
     },
     "autoupdate": {
-        "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.arm64.exe"
+            }
+        }
     },
     "notes": "The setup EXE is extracted to obtain its MSI, then Scoop extracts the MSI contents into the app directory instead of installing the product. FxSound's audio driver is installed by a separate MSI custom action during a normal installation, so this file-only extraction does not install the driver."
 }
