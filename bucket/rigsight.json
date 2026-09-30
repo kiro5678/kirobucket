@@ -1,12 +1,12 @@
 {
-    "version": "0.11.3",
+    "version": "0.12.1",
     "description": "Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights.",
     "homepage": "https://github.com/b0llu/Rigsight",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/b0llu/Rigsight/releases/download/v0.11.3/Rigsight-Setup-0.11.3.exe",
-            "hash": "9a98715a94b622192c643f476faa256153afb6eeb636d9f9fff8e97b2a57a07d"
+            "url": "https://github.com/b0llu/Rigsight/releases/download/v0.12.1/Rigsight-Setup-0.12.1.exe",
+            "hash": "bea344d915a03defc0d20321b1bba10948415d3cc7df47233c232096ce310164"
         }
     },
     "innosetup": true,
