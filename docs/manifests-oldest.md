@@ -259,6 +259,7 @@ Generated automatically from the manifests in the bucket directory.
 | [helixnotes](bucket/helixnotes.json) | Notes & Knowledge | 1.3.6 | 2026-09-30 | [Homepage](https://helixnotes.com/) | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. |
 | [imagemagick-hdri](bucket/imagemagick-hdri.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. |
 | [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
+| [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.5.0 | 2026-09-30 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.2 | 2026-09-30 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.1.5 | 2026-09-30 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |

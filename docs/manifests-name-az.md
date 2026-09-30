@@ -124,6 +124,7 @@ Generated automatically from the manifests in the bucket directory.
 | [imagetype](bucket/imagetype.json) | Images & Photos | 3.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ImageType) | Accessible image editor for adding custom text to images |
 | [imfile](bucket/imfile.json) | Download Managers | 2.3.4 | 2026-09-29 | [Homepage](https://github.com/imfile-io/imfile-desktop) | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. |
 | [keyboard-language-fix](bucket/keyboard-language-fix.json) | Keyboard & Language | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) | Fix text typed with the wrong keyboard language on Windows. |
+| [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | Windows Customization | 2026-08-22 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.5.0 | 2026-09-30 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
