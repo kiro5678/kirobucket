@@ -54,6 +54,7 @@ Generated automatically from the manifests in the bucket directory.
 | [takeoff-launcher](bucket/takeoff-launcher.json) | Productivity & Launchers | 1.0.4 | 2026-09-29 | [Homepage](https://github.com/akiraeng/takeoff-launcher) | Focused, lightweight native Windows application launcher |
 | [tagstudio-x86_64](bucket/tagstudio-x86_64.json) | Images & Photos | 9.6.3 | 2026-09-29 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
 | [tagstudio](bucket/tagstudio.json) | Images & Photos | 9.6.3 | 2026-09-29 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
+| [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.114.53 | 2026-09-30 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.5 | 2026-09-29 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
@@ -81,6 +82,7 @@ Generated automatically from the manifests in the bucket directory.
 | [scrcpy-gui-kil0bit](bucket/scrcpy-gui-kil0bit.json) | Android & Device Tools | 4.1.0 | 2026-09-29 | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. |
 | [scrcpy-gui-georgeenglezos](bucket/scrcpy-gui-georgeenglezos.json) | Android & Device Tools | 1.7.5 | 2026-09-29 | [Homepage](https://github.com/GeorgeEnglezos/Scrcpy-GUI) | A modern GUI for scrcpy |
 | [scrcpy](bucket/scrcpy.json) | Android & Device Tools | 4.1 | 2026-09-29 | [Homepage](https://github.com/Genymobile/scrcpy) | Display and control Android devices from Windows. |
+| [savestate](bucket/savestate.json) | Other Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
 | [safepdf-installer](bucket/safepdf-installer.json) | PDF & Documents | 1.0.16 | 2026-09-29 | [Homepage](https://github.com/mcagriaksoy/SafePDF) | A lightweight and privacy-focused PDF utility for Windows. Installer package repackaged as a portable Scoop installation. |
 | [safepdf](bucket/safepdf.json) | PDF & Documents | 1.0.16 | 2026-09-29 | [Homepage](https://github.com/mcagriaksoy/SafePDF) | A lightweight and privacy-focused PDF utility for Windows. |

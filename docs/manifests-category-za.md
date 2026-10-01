@@ -132,7 +132,9 @@ Generated automatically from the manifests in the bucket directory.
 | [paseo](bucket/paseo.json) | Other Utilities | 0.10.2 | 2026-09-30 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
 | [permissionscope](bucket/permissionscope.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/MukaSanches/PermissionScope) | Windows utility for inspecting and explaining file and folder permissions. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
+| [savestate](bucket/savestate.json) | Other Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
 | [stimesync](bucket/stimesync.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/setsumi/stimesync) | Simple SNTP atomic clock time sync GUI app for Windows. |
+| [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [time-sync](bucket/time-sync.json) | Other Utilities | 3.2 | 2026-09-29 | [Homepage](https://vovsoft.com/software/time-sync/) | A lightweight utility for synchronizing the Windows clock with NTP servers. |
 | [timescribe](bucket/timescribe.json) | Other Utilities | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
 | [tokri](bucket/tokri.json) | Other Utilities | 2026.09.26 | 2026-09-29 | [Homepage](https://github.com/ysuraj1999/tokri) | Desktop basket to drag and drop text, URLs, images, and files. |

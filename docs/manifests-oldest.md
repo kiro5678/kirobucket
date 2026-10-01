@@ -275,4 +275,6 @@ Generated automatically from the manifests in the bucket directory.
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.26 | 2026-10-01 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
+| [savestate](bucket/savestate.json) | Other Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
+| [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 

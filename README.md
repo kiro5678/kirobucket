@@ -39,6 +39,8 @@ This table is generated automatically from the manifests currently available in 
 | --- | --- | --- | --- | --- | --- |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.26 | 2026-10-01 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
+| [savestate](bucket/savestate.json) | Other Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
+| [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [coodesker-github](bucket/coodesker-github.json) | Windows Customization | 1.1.0.9 | 2026-09-30 | [Homepage](https://github.com/coodesker/coodesker-desktop) | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
 | [fliper](bucket/fliper.json) | Keyboard & Language | 1.2.1 | 2026-09-30 | [Homepage](https://github.com/beatlejute/Fliper) | Universal keyboard layout and case converter for Windows. |
@@ -307,6 +309,7 @@ This table is generated automatically from the manifests currently available in 
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-09-29 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | Notes & Knowledge | 4.9.3 | 2026-09-29 | [Homepage](https://github.com/alagrede/znote-app) | Markdown-based note-taking app for developers. |
 <!-- KIROBUCKET-MANIFEST-TABLE-END -->
+
 
 
 
