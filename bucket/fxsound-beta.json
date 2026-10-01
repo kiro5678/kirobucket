@@ -50,7 +50,7 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/fxsound2/fxsound-app",
+        "url": "https://github.com/fxsound2/fxsound-app/releases",
         "regex": "Version ([\\d.]+) \\(Beta\\)"
     },
     "autoupdate": {
@@ -63,6 +63,9 @@
             }
         }
     },
+    "pre_uninstall": [
+        "Get-Process -Name 'FxSound' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue"
+    ],
     "notes": [
         "Uses the official FxSound installer because FxSound requires its virtual audio driver.",
         "The installer places the application in the Scoop app directory via APPDIR and installs the FxSound virtual audio driver system-wide."
