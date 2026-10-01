@@ -1,10 +1,9 @@
-name: Format manifests
+name: Normalize manifest newlines
 
 on:
   push:
     paths:
       - "bucket/**"
-      - "bin/formatjson.ps1"
       - ".github/workflows/format-manifests.yml"
   workflow_dispatch:
 
@@ -16,28 +15,44 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  format:
-    name: Format Scoop manifests
+  normalize:
+    name: Normalize Scoop manifest endings
     runs-on: windows-latest
 
     steps:
       - name: Checkout bucket
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Checkout Scoop
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ScoopInstaller/Scoop
-          path: scoop_core
-
-      - name: Normalize manifest formatting
+      - name: Remove extra trailing line breaks
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          $env:SCOOP_HOME = Join-Path $env:GITHUB_WORKSPACE "scoop_core"
-          & "$env:GITHUB_WORKSPACE\bin\formatjson.ps1"
+          $bucketPath = Join-Path $env:GITHUB_WORKSPACE "bucket"
 
-      - name: Commit formatting changes
+          Get-ChildItem -Path $bucketPath -Filter "*.json" -File -Recurse | ForEach-Object {
+            $fileBytes = [System.IO.File]::ReadAllBytes($_.FullName)
+            $contentLength = $fileBytes.Length
+
+            while ($contentLength -gt 0 -and ($fileBytes[$contentLength - 1] -eq 10 -or $fileBytes[$contentLength - 1] -eq 13 -or $fileBytes[$contentLength - 1] -eq 32 -or $fileBytes[$contentLength - 1] -eq 9)) {
+              $contentLength--
+            }
+
+            $trailingLength = $fileBytes.Length - $contentLength
+            $hasSingleCrLf = $false
+            if ($trailingLength -eq 2) {
+              $hasSingleCrLf = $fileBytes[$contentLength] -eq 13 -and $fileBytes[$contentLength + 1] -eq 10
+            }
+
+            if (-not $hasSingleCrLf) {
+              $normalizedBytes = [byte[]]::new($contentLength + 2)
+              [System.Array]::Copy($fileBytes, $normalizedBytes, $contentLength)
+              $normalizedBytes[$contentLength] = 13
+              $normalizedBytes[$contentLength + 1] = 10
+              [System.IO.File]::WriteAllBytes($_.FullName, $normalizedBytes)
+            }
+          }
+
+      - name: Commit normalization changes
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
@@ -48,19 +63,19 @@ jobs:
           $diffExitCode = $LASTEXITCODE
 
           if ($diffExitCode -eq 0) {
-            Write-Host "All manifests already use Scoop's standard formatting."
+            Write-Host "All manifests already have exactly one CRLF at end of file."
             exit 0
           }
           if ($diffExitCode -ne 1) {
             throw "Could not inspect staged manifest changes."
           }
 
-          git commit -m "chore: normalize Scoop manifest formatting"
+          git commit -m "chore: remove extra manifest newlines"
           if ($LASTEXITCODE -ne 0) {
-            throw "Could not commit the formatted manifests."
+            throw "Could not commit normalized manifests."
           }
 
           git push
           if ($LASTEXITCODE -ne 0) {
-            throw "Could not push the formatted manifests."
+            throw "Could not push normalized manifests."
           }

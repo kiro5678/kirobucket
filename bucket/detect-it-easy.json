@@ -8,10 +8,7 @@
     "extract_dir": "die_win64_portable_3.10_x64",
     "bin": "die.exe",
     "shortcuts": [
-        [
-            "die.exe",
-            "Detect It Easy"
-        ]
+        ["die.exe", "Detect It Easy"]
     ],
     "checkver": {
         "github": "https://github.com/horsicq/Detect-It-Easy"

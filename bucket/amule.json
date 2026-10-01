@@ -1,21 +1,21 @@
 {
-    "version": "3.0.0",
-    "description": "A free and open-source peer-to-peer file sharing client.",
-    "homepage": "https://www.amule-project.net/",
-    "license": "GPL-2.0-or-later",
-    "url": "https://github.com/amule-project/amule/releases/download/3.0.0/aMule-3.0.0-Windows-x64.zip",
-    "hash": "9b5a6a17a1039c5b1d6ea15adb471bf5495691d73c57a5eda54d696e03f7c299",
-    "bin": "amule.exe",
-    "shortcuts": [
-        [
-            "amule.exe",
-            "aMule"
-        ]
-    ],
-    "checkver": {
-        "github": "https://github.com/amule-project/amule"
-    },
-    "autoupdate": {
-        "url": "https://github.com/amule-project/amule/releases/download/$version/aMule-$version-Windows-x64.zip"
-    }
+  "version": "3.0.0",
+  "description": "A free and open-source peer-to-peer file sharing client.",
+  "homepage": "https://www.amule-project.net/",
+  "license": "GPL-2.0-or-later",
+  "url": "https://github.com/amule-project/amule/releases/download/3.0.0/aMule-3.0.0-Windows-x64.zip",
+  "hash": "9b5a6a17a1039c5b1d6ea15adb471bf5495691d73c57a5eda54d696e03f7c299",
+  "bin": "amule.exe",
+  "shortcuts": [
+    [
+      "amule.exe",
+      "aMule"
+    ]
+  ],
+  "checkver": {
+    "github": "https://github.com/amule-project/amule"
+  },
+  "autoupdate": {
+    "url": "https://github.com/amule-project/amule/releases/download/$version/aMule-$version-Windows-x64.zip"
+  }
 }

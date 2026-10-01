@@ -10,15 +10,8 @@
         }
     },
     "bin": "ImageType.exe",
-    "shortcuts": [
-        [
-            "ImageType.exe",
-            "ImageType"
-        ]
-    ],
-    "checkver": {
-        "github": "https://github.com/ahmedthebest31/ImageType"
-    },
+    "shortcuts": [["ImageType.exe", "ImageType"]],
+    "checkver": {"github": "https://github.com/ahmedthebest31/ImageType"},
     "autoupdate": {
         "architecture": {
             "64bit": {
