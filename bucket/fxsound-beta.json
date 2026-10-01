@@ -6,31 +6,11 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe",
-            "hash": "3e4c6aead03e1dd9f093de4ff9842b8d7ed9487f8b033a87c3ab83e5f65ca710",
-            "uninstaller": {
-                "file": "fxsound_setup.exe",
-                "args": [
-                    "/exenoui",
-                    "/x",
-                    "//",
-                    "/qn",
-                    "/norestart"
-                ]
-            }
+            "hash": "3e4c6aead03e1dd9f093de4ff9842b8d7ed9487f8b033a87c3ab83e5f65ca710"
         },
         "arm64": {
             "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.arm64.exe",
-            "hash": "a60e8e73e98e1ddcd4d90deeb53297258d22708efa155fa3479182b648b83a35",
-            "uninstaller": {
-                "file": "fxsound_setup.arm64.exe",
-                "args": [
-                    "/exenoui",
-                    "/x",
-                    "//",
-                    "/qn",
-                    "/norestart"
-                ]
-            }
+            "hash": "a60e8e73e98e1ddcd4d90deeb53297258d22708efa155fa3479182b648b83a35"
         }
     },
     "installer": {
@@ -39,9 +19,25 @@
             "/qn",
             "/norestart",
             "APPDIR=$dir"
-        ],
-        "keep": true
+        ]
     },
+    "uninstaller": {
+        "script": [
+            "$uninstallPaths = @(",
+            "    'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*',",
+            "    'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*'",
+            ")",
+            "$entry = Get-ItemProperty -Path $uninstallPaths -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -eq 'FxSound' } | Select-Object -First 1",
+            "if (!$entry) { throw 'FxSound MSI registration was not found.' }",
+            "$productCode = $entry.PSChildName",
+            "if ($productCode -notmatch '^\{[0-9A-Fa-f-]+\}$') { throw \"Invalid FxSound MSI product code: $productCode\" }",
+            "$process = Start-Process 'msiexec.exe' -Wait -Verb RunAs -ArgumentList @('/x', $productCode, '/qn', '/norestart') -PassThru",
+            "if ($process.ExitCode -ne 0) { throw \"FxSound MSI uninstall failed with exit code $($process.ExitCode).\" }"
+        ]
+    },
+    "pre_uninstall": [
+        "Get-Process -Name 'FxSound' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue"
+    ],
     "bin": "FxSound.exe",
     "shortcuts": [
         [
@@ -63,11 +59,9 @@
             }
         }
     },
-    "pre_uninstall": [
-        "Get-Process -Name 'FxSound' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue"
-    ],
     "notes": [
         "Uses the official FxSound installer because FxSound requires its virtual audio driver.",
-        "The installer places the application in the Scoop app directory via APPDIR and installs the FxSound virtual audio driver system-wide."
+        "The application files are installed into the Scoop app directory via APPDIR.",
+        "The FxSound virtual audio driver is installed system-wide by the official MSI."
     ]
 }
