@@ -215,66 +215,78 @@ jobs:
 
           Push-Location $project
           try {
-              dotnet new console --framework net8.0 --no-restore
-              dotnet add package NAudio --version 2.2.1 --no-restore
-              dotnet restore
+              dotnet new console --framework net8.0
+              dotnet add package NAudio --version 2.2.1
+              using System;
+              using System.Linq;
+              using System.Threading;
+              using NAudio.CoreAudioApi;
+              using NAudio.Wave;
+              using NAudio.Wave.SampleProviders;
               
-              @'
-using System;
-using System.Linq;
-using System.Threading;
-using NAudio.CoreAudioApi;
-using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
-
-class Program
-{
-    static int Main()
-    {
-        using var enumerator = new MMDeviceEnumerator();
-        var device = enumerator
-            .EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
-            .FirstOrDefault(d => d.FriendlyName.Equals("FxSound Audio Enhancer", StringComparison.OrdinalIgnoreCase));
-
-        if (device == null)
-        {
-            Console.Error.WriteLine("FxSound Audio Enhancer render endpoint was not found.");
-            return 2;
-        }
-
-        Console.WriteLine($"Endpoint: {device.FriendlyName}");
-        Console.WriteLine($"State: {device.State}");
-        Console.WriteLine($"Format: {device.AudioClient.MixFormat}");
-
-        var format = device.AudioClient.MixFormat;
-        var signal = new SignalGenerator(format.SampleRate, format.Channels)
-        {
-            Frequency = 1000,
-            Gain = 0.05,
-            Type = SignalGeneratorType.Sin
-        }.Take(TimeSpan.FromSeconds(3));
-
-        using var output = new WasapiOut(device, AudioClientShareMode.Shared, true, 100);
-        output.Init(signal.ToWaveProvider16());
-        output.Play();
-
-        var deadline = DateTime.UtcNow.AddSeconds(8);
-        while (output.PlaybackState == PlaybackState.Playing && DateTime.UtcNow < deadline)
-            Thread.Sleep(100);
-
-        output.Stop();
-
-        if (DateTime.UtcNow >= deadline)
-        {
-            Console.Error.WriteLine("Audio playback did not complete.");
-            return 3;
-        }
-
-        Console.WriteLine("WASAPI successfully opened the FxSound virtual render endpoint and accepted a real audio stream.");
-        return 0;
-    }
-}
-'@ | Set-Content -Path (Join-Path $project "Program.cs") -Encoding utf8NoBOM
+              class Program
+              {
+                  static int Main()
+                  {
+                      using var enumerator = new MMDeviceEnumerator();
+              
+                      var device = enumerator
+                          .EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
+                          .FirstOrDefault(d =>
+                              d.FriendlyName.Equals(
+                                  "FxSound Audio Enhancer",
+                                  StringComparison.OrdinalIgnoreCase));
+              
+                      if (device == null)
+                      {
+                          Console.Error.WriteLine("FxSound Audio Enhancer render endpoint was not found.");
+                          return 2;
+                      }
+              
+                      Console.WriteLine($"Endpoint: {device.FriendlyName}");
+                      Console.WriteLine($"State: {device.State}");
+                      Console.WriteLine($"Format: {device.AudioClient.MixFormat}");
+              
+                      var format = device.AudioClient.MixFormat;
+              
+                      var signal = new SignalGenerator(format.SampleRate, format.Channels)
+                      {
+                          Frequency = 1000,
+                          Gain = 0.05,
+                          Type = SignalGeneratorType.Sin
+                      }.Take(TimeSpan.FromSeconds(3));
+              
+                      using var output = new WasapiOut(
+                          device,
+                          AudioClientShareMode.Shared,
+                          true,
+                          100);
+              
+                      output.Init(signal.ToWaveProvider16());
+                      output.Play();
+              
+                      var deadline = DateTime.UtcNow.AddSeconds(8);
+              
+                      while (output.PlaybackState == PlaybackState.Playing &&
+                             DateTime.UtcNow < deadline)
+                      {
+                          Thread.Sleep(100);
+                      }
+              
+                      output.Stop();
+              
+                      if (DateTime.UtcNow >= deadline)
+                      {
+                          Console.Error.WriteLine("Audio playback did not complete.");
+                          return 3;
+                      }
+              
+                      Console.WriteLine(
+                          "WASAPI opened the FxSound virtual render endpoint and accepted a real audio stream.");
+              
+                      return 0;
+                  }
+              }
 
               dotnet run --configuration Release
           }
