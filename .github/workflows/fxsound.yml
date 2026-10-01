@@ -1,0 +1,141 @@
+name: FxSound Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/fxsound-beta.json"
+      - ".github/workflows/fxsound.yml"
+  pull_request:
+    paths:
+      - "bucket/fxsound-beta.json"
+      - ".github/workflows/fxsound.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fxsound:
+    name: Install / Driver / Uninstall
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+
+      - name: Validate manifest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $manifest = Join-Path $env:GITHUB_WORKSPACE "bucket\fxsound-beta.json"
+
+          Get-Content $manifest -Raw | ConvertFrom-Json | Out-Null
+          scoop checkver $manifest -f
+
+      - name: Install FxSound from local manifest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $manifest = Join-Path $env:GITHUB_WORKSPACE "bucket\fxsound-beta.json"
+          scoop install $manifest
+
+      - name: Verify Scoop application files
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $appRoot = Join-Path $env:USERPROFILE "scoop\apps\fxsound-beta"
+          $current = Join-Path $appRoot "current"
+          $exe = Join-Path $current "FxSound.exe"
+
+          if (!(Test-Path $exe -PathType Leaf)) {
+              throw "FxSound.exe was not installed under Scoop: $exe"
+          }
+
+          Write-Host "FxSound.exe: $exe"
+          Get-ChildItem $current -Force | Select-Object Name, Length
+
+      - name: Verify FxSound driver
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $driverFile = Join-Path $env:WINDIR "System32\drivers\fxvad.sys"
+
+          if (!(Test-Path $driverFile -PathType Leaf)) {
+              throw "FxSound driver file was not installed: $driverFile"
+          }
+
+          $drivers = Get-CimInstance Win32_PnPSignedDriver |
+              Where-Object {
+                  $_.DeviceName -match "FxSound Audio Enhancer" -or
+                  $_.DriverName -match "^FXVAD$" -or
+                  $_.InfName -match "fxvad"
+              }
+
+          $drivers | Format-List DeviceName, DriverName, DriverVersion, InfName, IsSigned
+
+          if (!$drivers) {
+              throw "FxSound virtual audio driver was not detected by Windows."
+          }
+
+          $device = Get-PnpDevice -ErrorAction SilentlyContinue |
+              Where-Object {
+                  $_.FriendlyName -match "FxSound Audio Enhancer" -or
+                  $_.InstanceId -match "FXVAD"
+              }
+
+          if (!$device) {
+              throw "FxSound virtual audio device was not detected."
+          }
+
+          $device | Format-Table Status, Class, FriendlyName, InstanceId -AutoSize
+
+          if ($device.Status -contains "Error") {
+              throw "FxSound virtual audio device is present but has an error state."
+          }
+
+      - name: Uninstall FxSound
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          scoop uninstall fxsound-beta
+
+      - name: Verify uninstall
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $appRoot = Join-Path $env:USERPROFILE "scoop\apps\fxsound-beta"
+          $driverFile = Join-Path $env:WINDIR "System32\drivers\fxvad.sys"
+
+          if (Test-Path $appRoot) {
+              throw "Scoop FxSound directory still exists: $appRoot"
+          }
+
+          $device = Get-PnpDevice -ErrorAction SilentlyContinue |
+              Where-Object {
+                  $_.FriendlyName -match "FxSound Audio Enhancer" -or
+                  $_.InstanceId -match "FXVAD"
+              }
+
+          $device | Format-Table Status, Class, FriendlyName, InstanceId -AutoSize
+
+          if ($device) {
+              throw "FxSound virtual audio device is still installed after uninstall."
+          }
+
+          if (Test-Path $driverFile) {
+              throw "FxSound driver file still exists after uninstall: $driverFile"
+          }
+
+          Write-Host "FxSound application and virtual audio driver were removed successfully."
