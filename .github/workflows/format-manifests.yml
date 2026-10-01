@@ -1,0 +1,66 @@
+name: Format manifests
+
+on:
+  push:
+    paths:
+      - "bucket/**"
+      - "bin/formatjson.ps1"
+      - ".github/workflows/format-manifests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: format-manifests-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  format:
+    name: Format Scoop manifests
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Checkout Scoop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+
+      - name: Normalize manifest formatting
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $env:SCOOP_HOME = Join-Path $env:GITHUB_WORKSPACE "scoop_core"
+          & "$env:GITHUB_WORKSPACE\bin\formatjson.ps1"
+
+      - name: Commit formatting changes
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- bucket
+          git diff --cached --quiet
+          $diffExitCode = $LASTEXITCODE
+
+          if ($diffExitCode -eq 0) {
+            Write-Host "All manifests already use Scoop's standard formatting."
+            exit 0
+          }
+          if ($diffExitCode -ne 1) {
+            throw "Could not inspect staged manifest changes."
+          }
+
+          git commit -m "chore: normalize Scoop manifest formatting"
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not commit the formatted manifests."
+          }
+
+          git push
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not push the formatted manifests."
+          }
