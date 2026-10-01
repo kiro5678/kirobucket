@@ -274,5 +274,5 @@ Generated automatically from the manifests in the bucket directory.
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.6 | 2026-09-30 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.5 | 2026-09-30 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
-| [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
+| [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | — | Audio enhancer and sound equalizer for Windows. |
 
