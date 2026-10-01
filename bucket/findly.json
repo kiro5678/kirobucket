@@ -8,7 +8,10 @@
     "innosetup": true,
     "bin": "Findly.exe",
     "shortcuts": [
-        ["Findly.exe", "Findly"]
+        [
+            "Findly.exe",
+            "Findly"
+        ]
     ],
     "post_install": "Remove-Item -LiteralPath \"$dir\\$fname\" -Force -ErrorAction SilentlyContinue",
     "checkver": {

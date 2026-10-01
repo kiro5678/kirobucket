@@ -40,9 +40,7 @@
             "}"
         ]
     },
-    "pre_uninstall": [
-        "Get-Process -Name 'FxSound' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue"
-    ],
+    "pre_uninstall": "Get-Process -Name 'FxSound' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue",
     "bin": "FxSound.exe",
     "shortcuts": [
         [

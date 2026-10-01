@@ -11,9 +11,7 @@
             "/D=$dir"
         ]
     },
-    "post_install": [
-        "if (!(Test-Path (Join-Path $dir 'agaric.exe'))) { throw 'agaric.exe was not found after installation.' }"
-    ],
+    "post_install": "if (!(Test-Path (Join-Path $dir 'agaric.exe'))) { throw 'agaric.exe was not found after installation.' }",
     "bin": "agaric.exe",
     "shortcuts": [
         [

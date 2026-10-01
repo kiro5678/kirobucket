@@ -7,7 +7,10 @@
     "hash": "a255b600f6829cdf0ef5cb051dcefd5c1c5d52165192003fa636b4dab97f2d44",
     "bin": "LocalDesktopStore.exe",
     "shortcuts": [
-        ["LocalDesktopStore.exe", "LocalDesktopStore"]
+        [
+            "LocalDesktopStore.exe",
+            "LocalDesktopStore"
+        ]
     ],
     "checkver": {
         "github": "https://github.com/SysAdminDoc/LocalDesktopStore"

@@ -7,7 +7,10 @@
     "hash": "93c5eb10e852c52c63aa992bd7b0212cabcdfda3cc37d4d79efaf888739863c4",
     "bin": "AntiYandex.exe",
     "shortcuts": [
-        ["AntiYandex.exe", "AntiYandex"]
+        [
+            "AntiYandex.exe",
+            "AntiYandex"
+        ]
     ],
     "checkver": {
         "github": "https://github.com/TheCawa/AntiYandex"

@@ -10,7 +10,12 @@
         }
     },
     "bin": "Beetroot.exe",
-    "shortcuts": [["Beetroot.exe", "Beetroot"]],
+    "shortcuts": [
+        [
+            "Beetroot.exe",
+            "Beetroot"
+        ]
+    ],
     "checkver": {
         "github": "https://github.com/mnardit/beetroot-releases"
     },

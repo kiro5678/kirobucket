@@ -13,9 +13,7 @@
     },
     "uninstaller": {
         "file": "Uninstall Openscreen.exe",
-        "args": [
-            "/S"
-        ]
+        "args": "/S"
     },
     "bin": "Openscreen.exe",
     "shortcuts": [

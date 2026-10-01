@@ -22,11 +22,26 @@
         }
     },
     "bin": [
-        ["komorebi.exe", "komorebi-nightly"],
-        ["komorebic.exe", "komorebic-nightly"],
-        ["komorebic-no-console.exe", "komorebic-no-console-nightly"],
-        ["komorebi-gui.exe", "komorebi-gui-nightly"],
-        ["komorebi-bar.exe", "komorebi-bar-nightly"]
+        [
+            "komorebi.exe",
+            "komorebi-nightly"
+        ],
+        [
+            "komorebic.exe",
+            "komorebic-nightly"
+        ],
+        [
+            "komorebic-no-console.exe",
+            "komorebic-no-console-nightly"
+        ],
+        [
+            "komorebi-gui.exe",
+            "komorebi-gui-nightly"
+        ],
+        [
+            "komorebi-bar.exe",
+            "komorebi-bar-nightly"
+        ]
     ],
     "shortcuts": [
         [
@@ -34,9 +49,7 @@
             "Komorebi Nightly"
         ]
     ],
-    "pre_install": [
-        "if (Get-Process -Name komorebi -ErrorAction SilentlyContinue) { komorebic stop --whkd --bar }"
-    ],
+    "pre_install": "if (Get-Process -Name komorebi -ErrorAction SilentlyContinue) { komorebic stop --whkd --bar }",
     "checkver": {
         "github": "https://api.github.com/repos/LGUG2Z/komorebi/releases/tags/nightly",
         "jsonpath": "$.body",

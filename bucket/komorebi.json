@@ -31,9 +31,7 @@
             "Komorebi"
         ]
     ],
-    "pre_install": [
-        "if (Get-Process -Name komorebi -ErrorAction SilentlyContinue) { komorebic stop }"
-    ],
+    "pre_install": "if (Get-Process -Name komorebi -ErrorAction SilentlyContinue) { komorebic stop }",
     "checkver": {
         "github": "https://github.com/LGUG2Z/komorebi"
     },

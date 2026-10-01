@@ -12,9 +12,7 @@
             "TcNo Account Switcher"
         ]
     ],
-    "persist": [
-        "TcNo Account Switcher"
-    ],
+    "persist": "TcNo Account Switcher",
     "checkver": {
         "github": "https://api.github.com/repos/TCNOco/TcNo-Acc-Switcher/releases",
         "jsonpath": "$[0].assets[?(@.name =~ /TcNo-Acc-Switcher\\.7z/)].browser_download_url",

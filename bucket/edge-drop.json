@@ -13,9 +13,7 @@
     },
     "uninstaller": {
         "file": "Uninstall Edge-Drop.exe",
-        "args": [
-            "/S"
-        ]
+        "args": "/S"
     },
     "bin": "Edge-Drop.exe",
     "shortcuts": [

@@ -14,7 +14,12 @@
         }
     },
     "bin": "wifiman-desktop.exe",
-    "shortcuts": [["wifiman-desktop.exe", "WiFiman Desktop"]],
+    "shortcuts": [
+        [
+            "wifiman-desktop.exe",
+            "WiFiman Desktop"
+        ]
+    ],
     "checkver": {
         "url": "https://community.chocolatey.org/packages/ubiquiti-wifiman-desktop",
         "regex": "Ubiquiti WiFiman Desktop \\(Install\\) ([0-9.]+)\\s+\\|"
