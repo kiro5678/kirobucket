@@ -94,14 +94,30 @@ jobs:
           }
 
           if ($arp.InstallLocation) {
+              $resolvedCurrent = (Resolve-Path -LiteralPath $current).Path
               $normalizedArp = [IO.Path]::GetFullPath($arp.InstallLocation).TrimEnd('\')
-              $normalizedCurrent = [IO.Path]::GetFullPath($current).TrimEnd('\')
+              $normalizedCurrent = [IO.Path]::GetFullPath($resolvedCurrent).TrimEnd('\')
               if ($normalizedArp -ne $normalizedCurrent) {
-                  throw "FxSound InstallLocation is not the Scoop directory. Found: $normalizedArp"
+                  throw "FxSound InstallLocation is not the Scoop version directory. Found: $normalizedArp; expected: $normalizedCurrent"
               }
           }
 
+          $setupLeftovers = foreach ($root in @(
+              (Join-Path $env:APPDATA "FxSound LLC"),
+              (Join-Path $env:LOCALAPPDATA "FxSound LLC")
+          )) {
+              if (Test-Path $root) {
+                  Get-ChildItem -LiteralPath $root -Recurse -File -Filter "fxsound_setup.exe" -ErrorAction SilentlyContinue
+              }
+          }
+
+          if ($setupLeftovers) {
+              $setupLeftovers | ForEach-Object { Write-Host "Installer leftover: $($_.FullName)" }
+              throw "FxSound setup.exe was left in the Advanced Installer extraction directory."
+          }
+
           Write-Host "FxSound application directory: $current"
+          Write-Host "Resolved Scoop version directory: $resolvedCurrent"
           Write-Host "Registered InstallLocation: $($arp.InstallLocation)"
           Get-ChildItem $current -Force | Select-Object Name, Length
 
@@ -142,6 +158,19 @@ jobs:
 
           if (@($device | Where-Object Status -ne "OK").Count -gt 0) {
               throw "FxSound virtual audio device is not in OK state."
+          }
+
+          $service = Get-CimInstance Win32_SystemDriver -ErrorAction SilentlyContinue |
+              Where-Object { $_.Name -eq "FXVAD" } |
+              Select-Object -First 1
+
+          if (!$service) {
+              throw "FXVAD driver service was not found."
+          }
+
+          Write-Host "FXVAD service state: $($service.State)"
+          if ($service.State -ne "Running") {
+              throw "FXVAD driver service is not running."
           }
 
           $fxdiag = Join-Path $env:USERPROFILE "scoop\apps\fxsound-beta\current\fxdiag.exe"
@@ -223,76 +252,188 @@ jobs:
           try {
               dotnet new console --framework net8.0
               dotnet add package NAudio --version 2.2.1
-              using System;
-              using System.Linq;
-              using System.Threading;
-              using NAudio.CoreAudioApi;
-              using NAudio.Wave;
-              using NAudio.Wave.SampleProviders;
-              
-              class Program
-              {
-                  static int Main()
-                  {
-                      using var enumerator = new MMDeviceEnumerator();
-              
-                      var device = enumerator
-                          .EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
-                          .FirstOrDefault(d =>
-                              d.FriendlyName.Equals(
-                                  "FxSound Audio Enhancer",
-                                  StringComparison.OrdinalIgnoreCase));
-              
-                      if (device == null)
-                      {
-                          Console.Error.WriteLine("FxSound Audio Enhancer render endpoint was not found.");
-                          return 2;
-                      }
-              
-                      Console.WriteLine($"Endpoint: {device.FriendlyName}");
-                      Console.WriteLine($"State: {device.State}");
-                      Console.WriteLine($"Format: {device.AudioClient.MixFormat}");
-              
-                      var format = device.AudioClient.MixFormat;
-              
-                      var signal = new SignalGenerator(format.SampleRate, format.Channels)
-                      {
-                          Frequency = 1000,
-                          Gain = 0.05,
-                          Type = SignalGeneratorType.Sin
-                      }.Take(TimeSpan.FromSeconds(3));
-              
-                      using var output = new WasapiOut(
-                          device,
-                          AudioClientShareMode.Shared,
-                          true,
-                          100);
-              
-                      output.Init(signal.ToWaveProvider16());
-                      output.Play();
-              
-                      var deadline = DateTime.UtcNow.AddSeconds(8);
-              
-                      while (output.PlaybackState == PlaybackState.Playing &&
-                             DateTime.UtcNow < deadline)
-                      {
-                          Thread.Sleep(100);
-                      }
-              
-                      output.Stop();
-              
-                      if (DateTime.UtcNow >= deadline)
-                      {
-                          Console.Error.WriteLine("Audio playback did not complete.");
-                          return 3;
-                      }
-              
-                      Console.WriteLine(
-                          "WASAPI opened the FxSound virtual render endpoint and accepted a real audio stream.");
-              
-                      return 0;
-                  }
-              }
+
+              @'
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using System.Threading;
+
+using NAudio.CoreAudioApi;
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+
+class Program
+{
+    static int Main()
+    {
+        var statusPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "FxSound",
+            "status.json");
+
+        if (!File.Exists(statusPath))
+        {
+            Console.Error.WriteLine("FxSound status.json was not found.");
+            return 2;
+        }
+
+        using var statusDoc = JsonDocument.Parse(File.ReadAllText(statusPath));
+        var root = statusDoc.RootElement;
+
+        if (!root.GetProperty("power").GetBoolean())
+        {
+            Console.Error.WriteLine("FxSound processing is not enabled.");
+            return 3;
+        }
+
+        var selectedOutput = root.GetProperty("selected_output").GetString();
+        if (string.IsNullOrWhiteSpace(selectedOutput))
+        {
+            Console.Error.WriteLine("FxSound has no selected output.");
+            return 4;
+        }
+
+        using var enumerator = new MMDeviceEnumerator();
+
+        var renderDevices = enumerator
+            .EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
+            .ToList();
+
+        var fxDevice = renderDevices.FirstOrDefault(d =>
+            d.FriendlyName.Equals(
+                "FxSound Audio Enhancer",
+                StringComparison.OrdinalIgnoreCase));
+
+        if (fxDevice == null)
+        {
+            Console.Error.WriteLine("FxSound Audio Enhancer render endpoint was not found.");
+            return 5;
+        }
+
+        var outputDevice = renderDevices.FirstOrDefault(d =>
+            !d.FriendlyName.Equals(
+                "FxSound Audio Enhancer",
+                StringComparison.OrdinalIgnoreCase) &&
+            d.FriendlyName.Equals(
+                selectedOutput,
+                StringComparison.OrdinalIgnoreCase));
+
+        if (outputDevice == null)
+        {
+            Console.WriteLine("Available active render endpoints:");
+            foreach (var d in renderDevices)
+                Console.WriteLine($"- {d.FriendlyName}");
+
+            Console.Error.WriteLine(
+                $"FxSound selected output '{selectedOutput}' was not found as an active render endpoint.");
+            return 6;
+        }
+
+        Console.WriteLine($"FxSound virtual endpoint: {fxDevice.FriendlyName}");
+        Console.WriteLine($"FxSound selected output: {outputDevice.FriendlyName}");
+
+        using var capture = new WasapiLoopbackCapture(outputDevice);
+
+        long sampleCount = 0;
+        double sumSquares = 0;
+        double peak = 0;
+
+        capture.DataAvailable += (_, e) =>
+        {
+            int bytesPerSample = capture.WaveFormat.BitsPerSample / 8;
+            if (bytesPerSample <= 0)
+                return;
+
+            int channels = Math.Max(1, capture.WaveFormat.Channels);
+            int frameSize = bytesPerSample * channels;
+
+            for (int i = 0; i + frameSize <= e.BytesRecorded; i += frameSize)
+            {
+                for (int ch = 0; ch < channels; ch++)
+                {
+                    int offset = i + (ch * bytesPerSample);
+                    double sample;
+
+                    if (capture.WaveFormat.Encoding == WaveFormatEncoding.IeeeFloat &&
+                        capture.WaveFormat.BitsPerSample == 32)
+                    {
+                        sample = BitConverter.ToSingle(e.Buffer, offset);
+                    }
+                    else if (capture.WaveFormat.BitsPerSample == 16)
+                    {
+                        sample = BitConverter.ToInt16(e.Buffer, offset) / 32768.0;
+                    }
+                    else if (capture.WaveFormat.BitsPerSample == 32)
+                    {
+                        sample = BitConverter.ToInt32(e.Buffer, offset) / 2147483648.0;
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                    var absolute = Math.Abs(sample);
+                    if (absolute > peak)
+                        peak = absolute;
+
+                    sumSquares += sample * sample;
+                    sampleCount++;
+                }
+            }
+        };
+
+        capture.StartRecording();
+
+        var format = fxDevice.AudioClient.MixFormat;
+        var signal = new SignalGenerator(format.SampleRate, format.Channels)
+        {
+            Frequency = 1000,
+            Gain = 0.2,
+            Type = SignalGeneratorType.Sin
+        }.Take(TimeSpan.FromSeconds(4));
+
+        using var output = new WasapiOut(
+            fxDevice,
+            AudioClientShareMode.Shared,
+            true,
+            100);
+
+        output.Init(signal.ToWaveProvider16());
+        output.Play();
+
+        Thread.Sleep(5000);
+
+        output.Stop();
+        capture.StopRecording();
+
+        var rms = sampleCount > 0 ? Math.Sqrt(sumSquares / sampleCount) : 0;
+
+        Console.WriteLine($"Captured samples: {sampleCount}");
+        Console.WriteLine($"RMS: {rms:F6}");
+        Console.WriteLine($"Peak: {peak:F6}");
+
+        if (sampleCount == 0)
+        {
+            Console.Error.WriteLine("No samples were captured from the selected output.");
+            return 7;
+        }
+
+        if (peak < 0.001 || rms < 0.0001)
+        {
+            Console.Error.WriteLine(
+                "The FxSound virtual render stream did not produce measurable audio on the selected output.");
+            return 8;
+        }
+
+        Console.WriteLine(
+            "Audio passed from the FxSound virtual render endpoint to the selected output and was captured successfully.");
+
+        return 0;
+    }
+}
+'@ | Set-Content -Path (Join-Path $project "Program.cs") -Encoding utf8NoBOM
 
               dotnet run --configuration Release
           }
