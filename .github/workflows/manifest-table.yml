@@ -2,6 +2,8 @@ name: Update README Manifest Table
 
 on:
   push:
+    branches:
+      - master
     paths:
       - "bucket/**"
       - ".github/workflows/manifest-table.yml"
@@ -434,7 +436,12 @@ jobs:
               $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
           }
 
-          Set-Content -Path $readmePath -Value $readme -Encoding utf8NoBOM
+          $readme = [regex]::Replace($readme, '(?:\r?\n)+\z', '') + "`n"
+          [System.IO.File]::WriteAllText(
+              $readmePath,
+              $readme,
+              [System.Text.UTF8Encoding]::new($false)
+          )
 
       - name: Commit generated files
         shell: bash
