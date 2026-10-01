@@ -94,9 +94,15 @@ jobs:
           }
 
           if ($arp.InstallLocation) {
-              $expectedVersionDir = Join-Path $appRoot $json.version
+              $currentItem = Get-Item -LiteralPath $current -Force
+              $expectedVersionDir = [string]$currentItem.Target
+              if ([string]::IsNullOrWhiteSpace($expectedVersionDir)) {
+                  throw "Could not resolve the Scoop current junction target."
+              }
+
               $normalizedArp = [IO.Path]::GetFullPath($arp.InstallLocation).TrimEnd('\')
               $normalizedExpected = [IO.Path]::GetFullPath($expectedVersionDir).TrimEnd('\')
+
               if ($normalizedArp -ne $normalizedExpected) {
                   throw "FxSound InstallLocation is not the Scoop version directory. Found: $normalizedArp; expected: $normalizedExpected"
               }
@@ -117,7 +123,7 @@ jobs:
           }
 
           Write-Host "FxSound application directory: $current"
-          Write-Host "Expected Scoop version directory: $expectedVersionDir"
+          Write-Host "Resolved Scoop version directory: $expectedVersionDir"
           Write-Host "Registered InstallLocation: $($arp.InstallLocation)"
           Get-ChildItem $current -Force | Select-Object Name, Length
 
