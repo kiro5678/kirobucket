@@ -7,6 +7,7 @@ Generated automatically from the manifests in the bucket directory.
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
+| [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.26 | 2026-10-01 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [coodesker-github](bucket/coodesker-github.json) | Windows Customization | 1.1.0.9 | 2026-09-30 | [Homepage](https://github.com/coodesker/coodesker-desktop) | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
 | [fliper](bucket/fliper.json) | Keyboard & Language | 1.2.1 | 2026-09-30 | [Homepage](https://github.com/beatlejute/Fliper) | Universal keyboard layout and case converter for Windows. |
@@ -155,7 +156,6 @@ Generated automatically from the manifests in the bucket directory.
 | [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-09-29 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.44 | 2026-09-29 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
 | [mouzi](bucket/mouzi.json) | File Management | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/hsr88/mouzi) | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
-| [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.25 | 2026-09-29 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | System Monitoring & Hardware | 7 | 2026-09-29 | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
 | [mucommander](bucket/mucommander.json) | File Management | 1.6.2-1 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager |
 | [mucommander-nightly](bucket/mucommander-nightly.json) | File Management | 1.6.3 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager (nightly build). |

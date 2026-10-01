@@ -138,7 +138,7 @@ Generated automatically from the manifests in the bucket directory.
 | [mucommander-nightly](bucket/mucommander-nightly.json) | File Management | 1.6.3 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager (nightly build). |
 | [mucommander](bucket/mucommander.json) | File Management | 1.6.2-1 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager |
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | System Monitoring & Hardware | 7 | 2026-09-29 | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
-| [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.25 | 2026-09-29 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
+| [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.26 | 2026-10-01 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [mouzi](bucket/mouzi.json) | File Management | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/hsr88/mouzi) | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
 | [motrix-next](bucket/motrix-next.json) | Download Managers | 3.9.9 | 2026-09-30 | [Homepage](https://github.com/AnInsomniacy/motrix-next) | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.44 | 2026-09-29 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |

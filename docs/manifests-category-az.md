@@ -103,7 +103,7 @@ Generated automatically from the manifests in the bucket directory.
 | [blur](bucket/blur.json) | Media & Audio/Video | 2.45 | 2026-09-29 | [Homepage](https://github.com/f0e/blur) | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. |
 | [fastcast](bucket/fastcast.json) | Media & Audio/Video | 0.9.2 | 2026-09-29 | [Homepage](https://github.com/CalvinSturm/FastCast-releases) | Native Windows screen recorder and live streaming app. |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
-| [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.25 | 2026-09-29 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
+| [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.26 | 2026-10-01 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [opennow](bucket/opennow.json) | Media & Audio/Video | 0.5.5 | 2026-09-29 | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) | An open-source GeForce NOW desktop client. |
 | [openscreen](bucket/openscreen.json) | Media & Audio/Video | 1.13.0 | 2026-09-29 | [Homepage](https://github.com/getopenscreen/openscreen) | Open source screen recording application for Windows. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
