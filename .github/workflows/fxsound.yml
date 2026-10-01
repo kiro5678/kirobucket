@@ -46,7 +46,10 @@ jobs:
               throw "Scoop checkver script was not found: $checkver"
           }
 
-          & $checkver $manifest -ForceUpdate
+          & $checkver $manifest
+          if ($LASTEXITCODE -ne 0) {
+              throw "Scoop checkver failed."
+          }
 
       - name: Install FxSound from local manifest
         shell: pwsh
@@ -85,7 +88,7 @@ jobs:
           $drivers = Get-CimInstance Win32_PnPSignedDriver |
               Where-Object {
                   $_.DeviceName -match "FxSound Audio Enhancer" -or
-                  $_.DriverName -match "^FXVAD$" -or
+                  $_.DriverName -match "fxvad" -or
                   $_.InfName -match "fxvad"
               }
 
@@ -123,26 +126,38 @@ jobs:
           $ErrorActionPreference = "Stop"
 
           $appRoot = Join-Path $env:USERPROFILE "scoop\apps\fxsound-beta"
-          $driverFile = Join-Path $env:WINDIR "System32\drivers\fxvad.sys"
-
           if (Test-Path $appRoot) {
               throw "Scoop FxSound directory still exists: $appRoot"
           }
 
-          $device = Get-PnpDevice -ErrorAction SilentlyContinue |
-              Where-Object {
-                  $_.FriendlyName -match "FxSound Audio Enhancer" -or
-                  $_.InstanceId -match "FXVAD"
-              }
+          $deadline = (Get-Date).AddSeconds(20)
+          do {
+              Start-Sleep -Seconds 2
+              $device = Get-PnpDevice -ErrorAction SilentlyContinue |
+                  Where-Object {
+                      $_.FriendlyName -match "FxSound Audio Enhancer" -or
+                      $_.InstanceId -match "FXVAD"
+                  }
+              $driverFileExists = Test-Path (Join-Path $env:WINDIR "System32\drivers\fxvad.sys") -PathType Leaf
+              $driverStore = pnputil /enum-drivers 2>$null | Out-String
+              $driverStoreMatch = $driverStore -match "(?im)fxvad"
 
-          $device | Format-Table Status, Class, FriendlyName, InstanceId -AutoSize
+              if (!$device -and !$driverFileExists -and !$driverStoreMatch) {
+                  break
+              }
+          } while ((Get-Date) -lt $deadline)
 
           if ($device) {
+              $device | Format-Table Status, Class, FriendlyName, InstanceId -AutoSize
               throw "FxSound virtual audio device is still installed after uninstall."
           }
 
-          if (Test-Path $driverFile) {
-              throw "FxSound driver file still exists after uninstall: $driverFile"
+          if ($driverFileExists) {
+              throw "FxSound driver file still exists after uninstall."
+          }
+
+          if ($driverStoreMatch) {
+              throw "FxSound driver package is still present in the Windows Driver Store."
           }
 
           Write-Host "FxSound application and virtual audio driver were removed successfully."
