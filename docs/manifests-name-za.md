@@ -250,6 +250,7 @@ Generated automatically from the manifests in the bucket directory.
 | [clustercut](bucket/clustercut.json) | Clipboard & Text | 0.4.4 | 2026-09-29 | [Homepage](https://github.com/keithvassallomt/ClusterCut) | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
 | [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.4.0 | 2026-09-29 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
 | [cliptype](bucket/cliptype.json) | Clipboard & Text | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ClipType) | Clipboard injector that types clipboard contents using native keystrokes |
+| [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-02 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
 | [clipangel](bucket/clipangel.json) | Clipboard & Text | 2.23 | 2026-09-29 | [Homepage](https://sourceforge.net/projects/clip-angel/) | Clipboard history capture and paste tool. |
 | [clickmonitorddc](bucket/clickmonitorddc.json) | System Monitoring & Hardware | 7.2 | 2026-09-29 | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. |
 | [chocolateygui](bucket/chocolateygui.json) | Package Management | 3.3.0 | 2026-09-29 | [Homepage](https://github.com/chocolatey/ChocolateyGUI) | Graphical user interface for Chocolatey. |

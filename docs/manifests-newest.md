@@ -6,6 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-02 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
 | [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.9 | 2026-10-02 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.13 | 2026-10-02 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.14.3 | 2026-10-02 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
