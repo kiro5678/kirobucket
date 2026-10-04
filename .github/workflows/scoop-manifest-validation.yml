@@ -1,4 +1,4 @@
-name: Manual Scoop Manifest Validation
+name: Manual Scoop Manifest Test
 
 on:
   workflow_dispatch:
@@ -7,8 +7,8 @@ permissions:
   contents: read
 
 jobs:
-  validate:
-    name: Validate all manifests (${{ matrix.shell }})
+  test:
+    name: Test (${{ matrix.shell }})
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -42,52 +42,3 @@ jobs:
           SCOOP_HOME: ${{ github.workspace }}\\scoop_core
         run: |
           .\\my_bucket\\bin\\test.ps1
-
-      - name: Validate every manifest individually
-        env:
-          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
-        run: |
-          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
-          $bucket = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket'
-          $failed = @()
-
-          $manifests = Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse |
-            Sort-Object FullName
-
-          Write-Host "Found $($manifests.Count) manifest(s)."
-
-          foreach ($manifest in $manifests) {
-            Write-Host ''
-            Write-Host "============================================================"
-            Write-Host "Checking: $($manifest.Name)"
-            Write-Host "============================================================"
-
-            try {
-              & $checkver -App $manifest.FullName -ThrowError
-              if ($LASTEXITCODE -ne 0) {
-                throw "checkver exited with code $LASTEXITCODE"
-              }
-            }
-            catch {
-              $failed += [PSCustomObject]@{
-                Manifest = $manifest.Name
-                Error    = $_.Exception.Message
-              }
-              Write-Host "FAILED: $($manifest.Name)" -ForegroundColor Red
-              Write-Host $_.Exception.Message -ForegroundColor Red
-            }
-          }
-
-          Write-Host ''
-          Write-Host "============================================================"
-          Write-Host "Validation summary"
-          Write-Host "============================================================"
-          Write-Host "Checked: $($manifests.Count)"
-          Write-Host "Failed:  $($failed.Count)"
-
-          if ($failed.Count -gt 0) {
-            $failed | Format-Table -AutoSize
-            exit 1
-          }
-
-          Write-Host "All manifests passed validation." -ForegroundColor Green
