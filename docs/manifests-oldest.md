@@ -286,7 +286,7 @@ Generated automatically from the manifests in the bucket directory.
 | [pdfsam](bucket/pdfsam.json) | Other Utilities | 6.0.6 | 2026-10-04 | [Homepage](https://github.com/torakiki/pdfsam) | A JavaFX desktop application to split, merge, rotate and perform other manipulations on PDF documents |
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20206 | 2026-10-04 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [ruffle-nightly](bucket/ruffle-nightly.json) | Emulators & Compatibility | 2026-09-04 | 2026-10-04 | [Homepage](https://ruffle.rs/) | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. |
-| [scanner](bucket/scanner.json) | Other Utilities | 3.2.9.0 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
+| [scanner](bucket/scanner.json) | Other Utilities | 4.0.2.0 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
 | [selfphotos](bucket/selfphotos.json) | Images & Photos | 0.8.5 | 2026-10-04 | [Homepage](https://selfphotos.com/) | Cross-platform photo and video management desktop app with local-first privacy. |
 | [sofast](bucket/sofast.json) | Productivity & Launchers | 0.12.0 | 2026-10-04 | [Homepage](https://www.sofast.fun/) | Quick launcher and productivity tool for Windows. |
 | [volumey](bucket/volumey.json) | Other Utilities | 1.5.4.0 | 2026-10-04 | [Homepage](https://github.com/G-Stas/Volumey) | Volume mixer with global hotkeys for controlling Windows audio. |

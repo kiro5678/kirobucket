@@ -212,7 +212,7 @@ Generated automatically from the manifests in the bucket directory.
 | [safepdf-installer](bucket/safepdf-installer.json) | PDF & Documents | 1.0.16 | 2026-09-29 | [Homepage](https://github.com/mcagriaksoy/SafePDF) | A lightweight and privacy-focused PDF utility for Windows. Installer package repackaged as a portable Scoop installation. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
 | [savestate](bucket/savestate.json) | Other Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
-| [scanner](bucket/scanner.json) | Other Utilities | 3.2.9.0 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
+| [scanner](bucket/scanner.json) | Other Utilities | 4.0.2.0 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
 | [scrcpy](bucket/scrcpy.json) | Android & Device Tools | 4.1 | 2026-09-29 | [Homepage](https://github.com/Genymobile/scrcpy) | Display and control Android devices from Windows. |
 | [scrcpy-gui-georgeenglezos](bucket/scrcpy-gui-georgeenglezos.json) | Android & Device Tools | 1.7.5 | 2026-09-29 | [Homepage](https://github.com/GeorgeEnglezos/Scrcpy-GUI) | A modern GUI for scrcpy |
 | [scrcpy-gui-kil0bit](bucket/scrcpy-gui-kil0bit.json) | Android & Device Tools | 4.1.0 | 2026-09-29 | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. |
