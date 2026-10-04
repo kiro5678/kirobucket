@@ -109,6 +109,7 @@ Generated automatically from the manifests in the bucket directory.
 | [foldersizeexplorer](bucket/foldersizeexplorer.json) | File Management | 1.0.4 | 2026-09-29 | [Homepage](https://github.com/ribeirogustav/FolderSizeExplorer-Releases) | Portable file manager with recursive folder-size analysis for Windows. |
 | [foldra](bucket/foldra.json) | File Management | 1.0 | 2026-09-29 | [Homepage](https://github.com/YusufEren97/FoldRa) | Lightweight desktop folder widgets and file organization utility for Windows. |
 | [FoliCon](bucket/FoliCon.JSON) | Windows Customization | 5.3.1 | 2026-09-29 | [Homepage](https://github.com/DineshSolanki/FoliCon) | Folder icon customizer for movies, TV shows, music, games, anime, and books. |
+| [fort](bucket/fort.json) | Other Utilities | 3.20.0 | 2026-10-04 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [fractus-atlas](bucket/fractus-atlas.json) | Images & Photos | 2.3.0 | 2026-09-29 | [Homepage](https://github.com/Jimskapt/fractus-atlas) | An image viewer that lets you move images quickly into folders |
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.12. | 2026-09-29 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |

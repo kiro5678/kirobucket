@@ -148,6 +148,7 @@ Generated automatically from the manifests in the bucket directory.
 | [detect-it-easy](bucket/detect-it-easy.json) | Other Utilities | 3.10 | 2026-09-29 | [Homepage](https://github.com/horsicq/Detect-It-Easy) | Tool for identifying packers, protectors, compilers, and file formats |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
 | [fluentstore](bucket/fluentstore.json) | Other Utilities | 0.4.0-beta | 2026-10-04 | [Homepage](https://github.com/yoshiask/FluentStore) | Unifying frontend for Windows app stores and package managers. |
+| [fort](bucket/fort.json) | Other Utilities | 3.20.0 | 2026-10-04 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [haruna](bucket/haruna.json) | Other Utilities | 1944 | 2026-10-04 | [Homepage](https://haruna.kde.org/) | An open source media player built with Qt/QML and libmpv |
 | [kalarm](bucket/kalarm.json) | Other Utilities | 3532 | 2026-10-04 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
