@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   validate:
-    name: Validate manifests ({{ matrix.shell }})
+    name: Validate manifests (${{ matrix.shell }})
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -21,7 +21,7 @@ jobs:
         shell: [powershell, pwsh]
     defaults:
       run:
-        shell: {{ matrix.shell }}
+        shell: ${{ matrix.shell }}
 
     steps:
       - name: Checkout Bucket
@@ -40,16 +40,16 @@ jobs:
         uses: potatoqualitee/psmodulecache@9e4b63833c22c1768d648e115a9c849afdda22a5 # v6.3
         with:
           modules-to-cache: BuildHelpers, Pester
-          shell: {{ matrix.shell }}
+          shell: ${{ matrix.shell }}
 
       - name: Run official Scoop bucket tests
         env:
-          SCOOP_HOME: {{ github.workspace }}\\scoop_core
+          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
         run: |
           .\\my_bucket\\bin\\test.ps1
 
       - name: Validate checkver for every manifest
         env:
-          SCOOP_HOME: {{ github.workspace }}\\scoop_core
+          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
         run: |
           .\\scoop_core\\bin\\checkver.ps1 -Dir .\\my_bucket\\bucket -ThrowError
