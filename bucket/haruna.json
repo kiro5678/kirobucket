@@ -1,0 +1,37 @@
+{
+    "version": "1944",
+    "description": "An open source media player built with Qt/QML and libmpv",
+    "homepage": "https://haruna.kde.org/",
+    "license": "GPL-3.0-or-later",
+    "architecture": {
+        "64bit": {
+            "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/haruna-master-1944-windows-gcc-x86_64.7z",
+            "hash": {
+                "url": "$url.sha256",
+                "regex": "([a-f0-9]{64})"
+            }
+        }
+    },
+    "bin": "bin\\haruna.exe",
+    "shortcuts": [
+        [
+            "bin\\haruna.exe",
+            "Haruna"
+        ]
+    ],
+    "checkver": {
+        "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/",
+        "regex": "haruna-master-([0-9]+)-windows-gcc-x86_64\\.7z"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/haruna-master-$version-windows-gcc-x86_64.7z",
+                "hash": {
+                    "url": "$url.sha256",
+                    "regex": "([a-f0-9]{64})"
+                }
+            }
+        }
+    }
+}
