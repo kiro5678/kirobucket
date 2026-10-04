@@ -22,7 +22,9 @@
             ]
         }
     },
-    "checkver": "github",
+    "checkver": {
+        "github": "https://github.com/Blushyes/sofast-release"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
