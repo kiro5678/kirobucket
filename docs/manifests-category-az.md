@@ -146,6 +146,7 @@ Generated automatically from the manifests in the bucket directory.
 | [detect-it-easy](bucket/detect-it-easy.json) | Other Utilities | 3.10 | 2026-09-29 | [Homepage](https://github.com/horsicq/Detect-It-Easy) | Tool for identifying packers, protectors, compilers, and file formats |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
 | [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
+| [lively](bucket/lively.json) | Other Utilities | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
 | [openedr](bucket/openedr.json) | Other Utilities | v2-release-22 | 2026-09-29 | [Homepage](https://github.com/HydraDragonAntivirus/HydraDragonAntivirus) | OpenEDR endpoint detection and response agent for Windows. |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.13 | 2026-10-02 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
 | [paseo](bucket/paseo.json) | Other Utilities | 0.10.3 | 2026-10-02 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |

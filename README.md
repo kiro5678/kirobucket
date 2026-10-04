@@ -38,6 +38,7 @@ This table is generated automatically from the manifests currently available in 
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
+| [lively](bucket/lively.json) | Other Utilities | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
 | [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.4.2 | 2026-10-03 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
 | [contextmenumgrplus](bucket/contextmenumgrplus.json) | Windows Customization | 1.7.7 | 2026-10-03 | [Homepage](https://github.com/PLFJY/ContextMenuMgr) | Windows right-click context menu manager and protection utility |
 | [desktoptools](bucket/desktoptools.json) | Productivity & Launchers | 1.2.7 | 2026-10-03 | [Homepage](https://github.com/vg2222/DesktopTools) | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. |
