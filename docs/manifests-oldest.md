@@ -89,7 +89,6 @@ Generated automatically from the manifests in the bucket directory.
 | [flashlaunch](bucket/flashlaunch.json) | Productivity & Launchers | 1.0.5 | 2026-09-29 | [Homepage](https://github.com/SingCJ/FlashLaunch) | Lightweight keyboard-first application launcher for Windows. |
 | [fluent-sensors](bucket/fluent-sensors.json) | System Monitoring & Hardware | 1.6.0 | 2026-09-29 | [Homepage](https://github.com/cechout/fluent-sensors) | Native Windows hardware monitoring app. |
 | [fluentcleaner](bucket/fluentcleaner.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Windows privacy cleaner and system cleanup utility. |
-| [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 1.16.206 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
 | [fluenttweaker](bucket/fluenttweaker.json) | Windows Privacy & Tweaks | 26.06.02 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentTweaker) | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. |
 | [flycast](bucket/flycast.json) | Emulators & Compatibility | 2.7 | 2026-09-29 | [Homepage](https://github.com/flyinghead/flycast) | Multiplatform Sega Dreamcast, Naomi, Naomi 2 and Atomiswave emulator. |
 | [flyoobe](bucket/flyoobe.json) | Windows Privacy & Tweaks | 3.03.100 | 2026-09-29 | [Homepage](https://github.com/builtbybel/Flyoobe) | Windows setup, customization, debloating, and system management utility. |
@@ -166,7 +165,6 @@ Generated automatically from the manifests in the bucket directory.
 | [rqbit](bucket/rqbit.json) | Download Managers | 9.0.1 | 2026-09-29 | [Homepage](https://github.com/ikatson/rqbit) | A BitTorrent client with a desktop GUI, HTTP API and Web UI. |
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.5 | 2026-09-29 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
 | [ruffle](bucket/ruffle.json) | Emulators & Compatibility | 0.6.0 | 2026-09-29 | [Homepage](https://ruffle.rs/) | Flash Player emulator and SWF player written in Rust. |
-| [ruffle-nightly](bucket/ruffle-nightly.json) | Emulators & Compatibility | 2026-09-04 | 2026-09-29 | [Homepage](https://ruffle.rs/) | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. |
 | [safepdf](bucket/safepdf.json) | PDF & Documents | 1.0.16 | 2026-09-29 | [Homepage](https://github.com/mcagriaksoy/SafePDF) | A lightweight and privacy-focused PDF utility for Windows. |
 | [safepdf-installer](bucket/safepdf-installer.json) | PDF & Documents | 1.0.16 | 2026-09-29 | [Homepage](https://github.com/mcagriaksoy/SafePDF) | A lightweight and privacy-focused PDF utility for Windows. Installer package repackaged as a portable Scoop installation. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
@@ -175,7 +173,6 @@ Generated automatically from the manifests in the bucket directory.
 | [scrcpy-gui-kil0bit](bucket/scrcpy-gui-kil0bit.json) | Android & Device Tools | 4.1.0 | 2026-09-29 | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. |
 | [scrcpy-gui-kil0bit-setup-portable](bucket/scrcpy-gui-kil0bit-setup-portable.json) | Android & Device Tools | 4.1.0 | 2026-09-29 | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) | ScrcpyGUI desktop GUI for scrcpy, packaged as a portable Scoop app by extracting the Windows setup executable. |
 | [scrcpy-gui-simonaking](bucket/scrcpy-gui-simonaking.json) | Android & Device Tools | 2.4.5 | 2026-09-29 | [Homepage](https://github.com/SimonAKing/scrcpy-gui) | Modern desktop GUI for scrcpy with bundled scrcpy and ADB. |
-| [selfphotos](bucket/selfphotos.json) | Images & Photos | 0.8.4 | 2026-09-29 | [Homepage](https://selfphotos.com/) | Cross-platform photo and video management desktop app with local-first privacy. |
 | [shortercut](bucket/shortercut.json) | Productivity & Launchers | 1.0.0.7 | 2026-09-29 | [Homepage](https://www.getshortercut.com/) | Free and lightweight app launcher and desktop organizer. |
 | [shotcut](bucket/shotcut.json) | Media & Audio/Video | 26.9.27 | 2026-09-29 | [Homepage](https://www.shotcut.org) | Free, open source, cross-platform video editor. |
 | [shuffle-paper](bucket/shuffle-paper.json) | Windows Customization | 0.4.0 | 2026-09-29 | [Homepage](https://github.com/jcsm/ShufflePaper) | Privacy-friendly wallpaper shuffle and rotation utility for Windows |
@@ -186,7 +183,6 @@ Generated automatically from the manifests in the bucket directory.
 | [skyeclip](bucket/skyeclip.json) | Clipboard & Text | 1.4 | 2026-09-29 | [Homepage](https://github.com/YodeSkye/SkyeClip) | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. |
 | [smart-clipboard](bucket/smart-clipboard.json) | Clipboard & Text | 1.3.2 | 2026-09-29 | [Homepage](https://github.com/ezeiq7/Smart-Clipboard) | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection |
 | [smol](bucket/smol.json) | PDF & Documents | 1.0.0 | 2026-09-29 | [Homepage](https://github.com/Metwalley/Smol) | Fast native Windows desktop app for compressing videos, audio, images, and PDFs. |
-| [sofast](bucket/sofast.json) | Productivity & Launchers | 0.12.0 | 2026-09-29 | [Homepage](https://www.sofast.fun/) | Quick launcher and productivity tool for Windows. |
 | [sparkle](bucket/sparkle.json) | Windows Privacy & Tweaks | 2.24.0 | 2026-09-29 | [Homepage](https://getsparkle.net) | Windows debloat and optimization tool. |
 | [spotlightsaver](bucket/spotlightsaver.json) | Windows Customization | 7.0.0 | 2026-09-29 | [Homepage](https://github.com/depthbomb/SpotlightSaver) | Saves Windows 10/11 Spotlight wallpapers to a local folder. |
 | [stimesync](bucket/stimesync.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/setsumi/stimesync) | Simple SNTP atomic clock time sync GUI app for Windows. |
@@ -280,6 +276,7 @@ Generated automatically from the manifests in the bucket directory.
 | [clipper](bucket/clipper.json) | Other Utilities | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
 | [copyq](bucket/copyq.json) | Other Utilities | 17.0.0 | 2026-10-04 | [Homepage](https://hluk.github.io/CopyQ/) | Clipboard manager |
+| [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 1.16.206 | 2026-10-04 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
 | [fluentstore](bucket/fluentstore.json) | Other Utilities | 0.4.0-beta | 2026-10-04 | [Homepage](https://github.com/yoshiask/FluentStore) | Unifying frontend for Windows app stores and package managers. |
 | [haruna](bucket/haruna.json) | Other Utilities | 1944 | 2026-10-04 | [Homepage](https://haruna.kde.org/) | An open source media player built with Qt/QML and libmpv |
 | [kalarm](bucket/kalarm.json) | Other Utilities | 3509 | 2026-10-04 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
@@ -288,5 +285,8 @@ Generated automatically from the manifests in the bucket directory.
 | [ncspot](bucket/ncspot.json) | Other Utilities | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.9 | 2026-10-04 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
 | [pdfsam](bucket/pdfsam.json) | Other Utilities | 6.0.6 | 2026-10-04 | [Homepage](https://github.com/torakiki/pdfsam) | A JavaFX desktop application to split, merge, rotate and perform other manipulations on PDF documents |
+| [ruffle-nightly](bucket/ruffle-nightly.json) | Emulators & Compatibility | 2026-09-04 | 2026-10-04 | [Homepage](https://ruffle.rs/) | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. |
+| [selfphotos](bucket/selfphotos.json) | Images & Photos | 0.8.4 | 2026-10-04 | [Homepage](https://selfphotos.com/) | Cross-platform photo and video management desktop app with local-first privacy. |
+| [sofast](bucket/sofast.json) | Productivity & Launchers | 0.12.0 | 2026-10-04 | [Homepage](https://www.sofast.fun/) | Quick launcher and productivity tool for Windows. |
 | [volumey](bucket/volumey.json) | Other Utilities | 1.5.4.0 | 2026-10-04 | [Homepage](https://github.com/G-Stas/Volumey) | Volume mixer with global hotkeys for controlling Windows audio. |
 
