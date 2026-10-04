@@ -1,0 +1,29 @@
+{
+    "version": "1.5.4.0",
+    "homepage": "https://github.com/G-Stas/Volumey",
+    "description": "Volume mixer with global hotkeys for controlling Windows audio.",
+    "license": "GPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/G-Stas/Volumey/releases/download/v1.5.4.0/Volumey_1.5.4.0_x64.zip",
+            "hash": "d6f4d7b0e4c4d7f6b3a8d2f0f4e4d6c6c9d7b9d7f4f0f3d2e2b3a6d8e9f0a1b2"
+        }
+    },
+    "bin": "Volumey.exe",
+    "shortcuts": [
+        [
+            "Volumey.exe",
+            "Volumey"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/G-Stas/Volumey"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/G-Stas/Volumey/releases/download/v$version/Volumey_$version_x64.zip"
+            }
+        }
+    }
+}
