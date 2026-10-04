@@ -12,6 +12,6 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/ruffle-rs/ruffle/releases"
+        "github": "https://github.com/ruffle-rs/ruffle"
     }
 }
