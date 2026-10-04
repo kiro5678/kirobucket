@@ -13,7 +13,9 @@
             "Self Photos"
         ]
     ],
-    "checkver": "github",
+    "checkver": {
+        "github": "https://github.com/SelfPhotos/SelfPhotos"
+    },
     "autoupdate": {
         "url": "https://github.com/SelfPhotos/SelfPhotos/releases/download/$version/SelfPhotos_$version_x64.msi#/dl.msi"
     }
