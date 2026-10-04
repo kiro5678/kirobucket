@@ -1,8 +1,17 @@
 {
-    "version": "3.2.9.0",
+    "version": "4.0.2.0",
     "description": "An all-in-one scanner app for Windows",
     "homepage": "https://github.com/simon-knuth/scanner",
     "license": "MPL-2.0",
-    "url": "https://github.com/simon-knuth/scanner/releases/download/3.2.9.0/9390SimonKnuth.ScannerforWindows10_3.2.9.0_neutral_._69n05hp4v3s90.Msixbundle",
-    "hash": "sha256:placeholder"
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/simon-knuth/scanner/releases/download/4.0.2.0/Scanner.Preview.4.0.2.x64.msix",
+            "hash": "0287b28bd85f6c89f6c2762f9d4bd3443053a744de91bf517a6886862d9416fb"
+        }
+    },
+    "post_install": "Add-AppxPackage -Path \"$dir\\Scanner.Preview.4.0.2.x64.msix\"",
+    "pre_uninstall": "Get-AppxPackage *Scanner* | Remove-AppxPackage -ErrorAction SilentlyContinue",
+    "checkver": {
+        "github": "https://github.com/simon-knuth/scanner"
+    }
 }
