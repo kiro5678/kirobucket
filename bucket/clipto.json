@@ -14,7 +14,7 @@
     ]
   ],
   "checkver": {
-    "github": "clipto-pro/Desktop"
+    "github": "https://github.com/clipto-pro/Desktop"
   },
   "autoupdate": {
     "url": "https://github.com/clipto-pro/Desktop/releases/download/v$version/clipto-$version.exe#/dl.7z",
