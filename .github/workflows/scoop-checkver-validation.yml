@@ -1,0 +1,81 @@
+name: Manual Scoop Checkver Validation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checkver:
+    name: Checkver (${{ matrix.shell }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout Bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+          path: my_bucket
+
+      - name: Checkout Scoop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+
+      - name: Validate every manifest with checkver
+        env:
+          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
+        run: |
+          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
+          $bucket = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket'
+          $failed = @()
+
+          $manifests = Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse |
+            Sort-Object FullName
+
+          Write-Host "Found $($manifests.Count) manifest(s)."
+
+          foreach ($manifest in $manifests) {
+            Write-Host ''
+            Write-Host "============================================================"
+            Write-Host "Checking: $($manifest.Name)"
+            Write-Host "============================================================"
+
+            try {
+              & $checkver -App $manifest.FullName -ThrowError
+              if ($LASTEXITCODE -ne 0) {
+                throw "checkver exited with code $LASTEXITCODE"
+              }
+            }
+            catch {
+              $failed += [PSCustomObject]@{
+                Manifest = $manifest.Name
+                Error    = $_.Exception.Message
+              }
+              Write-Host "FAILED: $($manifest.Name)" -ForegroundColor Red
+              Write-Host $_.Exception.Message -ForegroundColor Red
+            }
+          }
+
+          Write-Host ''
+          Write-Host "============================================================"
+          Write-Host "Checkver summary"
+          Write-Host "============================================================"
+          Write-Host "Checked: $($manifests.Count)"
+          Write-Host "Failed:  $($failed.Count)"
+
+          if ($failed.Count -gt 0) {
+            $failed | Format-Table -AutoSize
+            exit 1
+          }
+
+          Write-Host "All manifests passed checkver validation." -ForegroundColor Green
