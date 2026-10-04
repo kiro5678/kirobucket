@@ -1,0 +1,34 @@
+{
+    "version": "0.24.3",
+    "description": "Clipboard manager with local and network synchronization.",
+    "homepage": "https://github.com/windoze/clipper",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/windoze/clipper/releases/download/v0.24.3/Clipper_v0.24.3_x64.msi#/dl.msi_",
+            "hash": "8b92d68a537585f201ac6856ab3f02d351df8eada0c977d4803e779f07a2dff6"
+        }
+    },
+    "pre_install": [
+        "Expand-MsiArchive \"$dir\\dl.msi_\" \"$dir\\Clipper\" | Out-Null",
+        "Remove-Item \"$dir\\dl.msi_\" -Force"
+    ],
+    "bin": "Clipper\\Clipper.exe",
+    "shortcuts": [
+        [
+            "Clipper\\Clipper.exe",
+            "Clipper"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/windoze/clipper",
+        "regex": "v([0-9]+(?:\\.[0-9]+)+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/windoze/clipper/releases/download/v$version/Clipper_v$version_x64.msi#/dl.msi_"
+            }
+        }
+    }
+}
