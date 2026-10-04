@@ -5,11 +5,7 @@
     "license": "GPL-3.0-or-later",
     "architecture": {
         "64bit": {
-            "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/haruna-master-1944-windows-gcc-x86_64.7z",
-            "hash": {
-                "url": "$url.sha256",
-                "regex": "([a-f0-9]{64})"
-            }
+            "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/haruna-master-1944-windows-gcc-x86_64.7z"
         }
     },
     "bin": "bin\\haruna.exe",
