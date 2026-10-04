@@ -152,6 +152,7 @@ Generated automatically from the manifests in the bucket directory.
 | [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [lively](bucket/lively.json) | Other Utilities | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Other Utilities | 4602 | 2026-10-04 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
+| [ncspot](bucket/ncspot.json) | Other Utilities | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [openedr](bucket/openedr.json) | Other Utilities | v2-release-22 | 2026-09-29 | [Homepage](https://github.com/HydraDragonAntivirus/HydraDragonAntivirus) | OpenEDR endpoint detection and response agent for Windows. |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.13 | 2026-10-02 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
 | [paseo](bucket/paseo.json) | Other Utilities | 0.10.3 | 2026-10-02 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |

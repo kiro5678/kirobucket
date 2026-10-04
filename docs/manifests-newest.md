@@ -13,6 +13,7 @@ Generated automatically from the manifests in the bucket directory.
 | [kalarm](bucket/kalarm.json) | Other Utilities | 3509 | 2026-10-04 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [lively](bucket/lively.json) | Other Utilities | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Other Utilities | 4602 | 2026-10-04 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
+| [ncspot](bucket/ncspot.json) | Other Utilities | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.9 | 2026-10-04 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
 | [pdfsam](bucket/pdfsam.json) | Other Utilities | 6.0.6 | 2026-10-04 | [Homepage](https://github.com/torakiki/pdfsam) | A JavaFX desktop application to split, merge, rotate and perform other manipulations on PDF documents |
 | [volumey](bucket/volumey.json) | Other Utilities | 1.5.4.0 | 2026-10-04 | [Homepage](https://github.com/G-Stas/Volumey) | Volume mixer with global hotkeys for controlling Windows audio. |

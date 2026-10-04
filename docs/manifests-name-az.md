@@ -154,6 +154,7 @@ Generated automatically from the manifests in the bucket directory.
 | [mucommander](bucket/mucommander.json) | File Management | 1.6.2-1 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager |
 | [mucommander-nightly](bucket/mucommander-nightly.json) | File Management | 1.6.3 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager (nightly build). |
 | [nanaget](bucket/nanaget.json) | Download Managers | 1.3.1609.0 | 2026-09-29 | [Homepage](https://github.com/M2Team/NanaGet) | Lightweight file transfer utility based on aria2 and XAML Islands. |
+| [ncspot](bucket/ncspot.json) | Other Utilities | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [net-max](bucket/net-max.json) | Network & DNS | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/anwaremad/NetMax) | A professional Windows desktop network monitoring application. |
 | [netronome](bucket/netronome.json) | Network & DNS | 0.15.0 | 2026-09-29 | [Homepage](https://github.com/autobrr/netronome) | Modern network speed testing and monitoring tool built with Go and React. |
 | [netspeedtray](bucket/netspeedtray.json) | Network & DNS | 2.1.7 | 2026-09-29 | [Homepage](https://github.com/erez-c137/NetSpeedTray) | Live network speeds, CPU/GPU stats, temperatures, and power draw on the Windows taskbar. |
