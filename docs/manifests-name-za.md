@@ -150,6 +150,7 @@ Generated automatically from the manifests in the bucket directory.
 | [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-09-29 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.5 | 2026-09-29 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
+| [merkuro-calendar](bucket/merkuro-calendar.json) | Other Utilities | 4602 | 2026-10-04 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
 | [markra](bucket/markra.json) | Notes & Knowledge | 2.12.0 | 2026-09-29 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.1.5 | 2026-09-30 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
 | [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.90 | 2026-09-29 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
@@ -164,6 +165,7 @@ Generated automatically from the manifests in the bucket directory.
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [keyboard-language-fix](bucket/keyboard-language-fix.json) | Keyboard & Language | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) | Fix text typed with the wrong keyboard language on Windows. |
+| [kalarm](bucket/kalarm.json) | Other Utilities | 3509 | 2026-10-04 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [imfile](bucket/imfile.json) | Download Managers | 2.3.4 | 2026-09-29 | [Homepage](https://github.com/imfile-io/imfile-desktop) | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. |
 | [imagetype](bucket/imagetype.json) | Images & Photos | 3.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ImageType) | Accessible image editor for adding custom text to images |
 | [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
