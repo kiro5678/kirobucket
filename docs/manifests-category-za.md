@@ -124,6 +124,7 @@ Generated automatically from the manifests in the bucket directory.
 | [unigetuiglobal](bucket/unigetuiglobal.json) | Package Management | 2026.3.0 | 2026-09-29 | [Homepage](https://github.com/Devolutions/UniGetUI) | Graphical interface for Windows package managers. |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
+| [copyq](bucket/copyq.json) | Other Utilities | 17.0.0 | 2026-10-04 | [Homepage](https://hluk.github.io/CopyQ/) | Clipboard manager |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [detect-it-easy](bucket/detect-it-easy.json) | Other Utilities | 3.10 | 2026-09-29 | [Homepage](https://github.com/horsicq/Detect-It-Easy) | Tool for identifying packers, protectors, compilers, and file formats |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |

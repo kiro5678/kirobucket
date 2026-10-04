@@ -278,6 +278,7 @@ Generated automatically from the manifests in the bucket directory.
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20204 | 2026-10-03 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [tonkatsu-box](bucket/tonkatsu-box.json) | Games & Game Utilities | 0.45.0 | 2026-10-03 | [Homepage](https://github.com/hacan359/tonkatsu_box) | Personal collection manager for games, movies, TV shows, anime, visual novels, manga, books, music and podcasts. |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
+| [copyq](bucket/copyq.json) | Other Utilities | 17.0.0 | 2026-10-04 | [Homepage](https://hluk.github.io/CopyQ/) | Clipboard manager |
 | [lively](bucket/lively.json) | Other Utilities | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
 | [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.9 | 2026-10-04 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
 | [volumey](bucket/volumey.json) | Other Utilities | 1.5.4.0 | 2026-10-04 | [Homepage](https://github.com/G-Stas/Volumey) | Volume mixer with global hotkeys for controlling Windows audio. |
