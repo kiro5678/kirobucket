@@ -18,7 +18,7 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/builtbybel/FluentCleaner/releases",
+        "github": "https://github.com/builtbybel/FluentCleaner",
         "regex": "classic-([0-9]+\\.[0-9]+\\.[0-9]+)"
     },
     "autoupdate": {
