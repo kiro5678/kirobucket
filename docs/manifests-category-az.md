@@ -166,6 +166,7 @@ Generated automatically from the manifests in the bucket directory.
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
 | [savestate](bucket/savestate.json) | Other Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
 | [scanner](bucket/scanner.json) | Other Utilities | 4.0.2.0 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
+| [screenbox](bucket/screenbox.json) | Other Utilities | 0.23.0 | 2026-10-05 | [Homepage](https://github.com/huynhsontung/Screenbox) | LibVLC-based media player for the Universal Windows Platform. |
 | [stimesync](bucket/stimesync.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/setsumi/stimesync) | Simple SNTP atomic clock time sync GUI app for Windows. |
 | [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [time-sync](bucket/time-sync.json) | Other Utilities | 3.2 | 2026-09-29 | [Homepage](https://vovsoft.com/software/time-sync/) | A lightweight utility for synchronizing the Windows clock with NTP servers. |

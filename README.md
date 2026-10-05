@@ -48,6 +48,7 @@ This table is generated automatically from the manifests currently available in 
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.15.2 | 2026-10-05 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20222 | 2026-10-05 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [scrcpy](bucket/scrcpy.json) | Android & Device Tools | 5.0 | 2026-10-05 | [Homepage](https://github.com/Genymobile/scrcpy) | Display and control Android devices from Windows. |
+| [screenbox](bucket/screenbox.json) | Other Utilities | 0.23.0 | 2026-10-05 | [Homepage](https://github.com/huynhsontung/Screenbox) | LibVLC-based media player for the Universal Windows Platform. |
 | [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-05 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.116.0 | 2026-10-05 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [clipper](bucket/clipper.json) | Other Utilities | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
