@@ -18,7 +18,7 @@
     ],
     "uninstaller": {
         "script": [
-            "if (Test-Path "$dir\\uninstall.exe") { Invoke-ExternalCommand "$dir\\uninstall.exe" -ArgumentList '/S' | Out-Null }"
+            "if (Test-Path (Join-Path $dir 'uninstall.exe')) { Invoke-ExternalCommand (Join-Path $dir 'uninstall.exe') -ArgumentList '/S' | Out-Null }"
         ]
     },
     "bin": "ClusterCut.exe",
