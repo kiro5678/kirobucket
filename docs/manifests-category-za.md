@@ -276,7 +276,7 @@ Generated automatically from the manifests in the bucket directory.
 | [beetroot-portable](bucket/beetroot-portable.json) | Clipboard & Text | 1.6.7 | 2026-09-29 | [Homepage](https://github.com/mnardit/beetroot-releases) | Clipboard manager for Windows with AI transforms, OCR, and fuzzy search |
 | [clipangel](bucket/clipangel.json) | Clipboard & Text | 2.23 | 2026-09-29 | [Homepage](https://sourceforge.net/projects/clip-angel/) | Clipboard history capture and paste tool. |
 | [cliptype](bucket/cliptype.json) | Clipboard & Text | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ClipType) | Clipboard injector that types clipboard contents using native keystrokes |
-| [clustercut](bucket/clustercut.json) | Clipboard & Text | 0.4.4 | 2026-10-05 | — | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
+| [clustercut](bucket/clustercut.json) | Clipboard & Text | 0.4.4 | 2026-10-05 | [Homepage](https://github.com/keithvassallomt/ClusterCut) | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
 | [crosspaste](bucket/crosspaste.json) | Clipboard & Text | 2.2.0.2544 | 2026-09-29 | [Homepage](https://crosspaste.com/en/) | Universal pasteboard across devices. |
 | [deskdrop](bucket/deskdrop.json) | Clipboard & Text | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/ChinmayyK/Deskdrop) | Local-first peer-to-peer clipboard sharing, file transfers, remote folder browsing, and continuity camera. |
 | [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
