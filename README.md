@@ -40,6 +40,7 @@ This table is generated automatically from the manifests currently available in 
 | [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.6.0 | 2026-10-05 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
 | [cmtrace](bucket/cmtrace.json) | Other Utilities | 1.6.0 | 2026-10-05 | [Homepage](https://cmtraceopen.com) | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. |
 | [markra](bucket/markra.json) | Notes & Knowledge | 2.12.1 | 2026-10-05 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
+| [poltertype](bucket/poltertype.json) | Other Utilities | 0.36.4 | 2026-10-05 | [Homepage](https://github.com/Just-Code-NET/PolterType) | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. |
 | [clipper](bucket/clipper.json) | Other Utilities | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
 | [copyq](bucket/copyq.json) | Other Utilities | 17.0.0 | 2026-10-04 | [Homepage](https://hluk.github.io/CopyQ/) | Clipboard manager |
