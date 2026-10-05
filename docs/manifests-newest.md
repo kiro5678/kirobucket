@@ -7,9 +7,18 @@ Generated automatically from the manifests in the bucket directory.
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.6.0 | 2026-10-05 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
+| [clustercut](bucket/clustercut.json) | Clipboard & Text | 0.4.4 | 2026-10-05 | — | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
 | [cmtrace](bucket/cmtrace.json) | Other Utilities | 1.6.0 | 2026-10-05 | [Homepage](https://cmtraceopen.com) | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. |
+| [kalarm](bucket/kalarm.json) | Other Utilities | 3541 | 2026-10-05 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [markra](bucket/markra.json) | Notes & Knowledge | 2.12.1 | 2026-10-05 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
+| [merkuro-calendar](bucket/merkuro-calendar.json) | Other Utilities | 6693 | 2026-10-05 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
+| [netronome](bucket/netronome.json) | Network & DNS | 0.16.0 | 2026-10-05 | [Homepage](https://github.com/autobrr/netronome) | Modern network speed testing and monitoring tool built with Go and React. |
 | [poltertype](bucket/poltertype.json) | Other Utilities | 0.36.4 | 2026-10-05 | [Homepage](https://github.com/Just-Code-NET/PolterType) | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. |
+| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.15.2 | 2026-10-05 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20222 | 2026-10-05 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [scrcpy](bucket/scrcpy.json) | Android & Device Tools | 5.0 | 2026-10-05 | [Homepage](https://github.com/Genymobile/scrcpy) | Display and control Android devices from Windows. |
+| [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-05 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.116.0 | 2026-10-05 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [clipper](bucket/clipper.json) | Other Utilities | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
 | [copyq](bucket/copyq.json) | Other Utilities | 17.0.0 | 2026-10-04 | [Homepage](https://hluk.github.io/CopyQ/) | Clipboard manager |
@@ -17,16 +26,13 @@ Generated automatically from the manifests in the bucket directory.
 | [fluentstore](bucket/fluentstore.json) | Other Utilities | 0.4.0-beta | 2026-10-04 | [Homepage](https://github.com/yoshiask/FluentStore) | Unifying frontend for Windows app stores and package managers. |
 | [fort](bucket/fort.json) | Other Utilities | 3.20.0 | 2026-10-04 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [haruna](bucket/haruna.json) | Other Utilities | 1944 | 2026-10-04 | [Homepage](https://haruna.kde.org/) | An open source media player built with Qt/QML and libmpv |
-| [kalarm](bucket/kalarm.json) | Other Utilities | 3532 | 2026-10-04 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [lively](bucket/lively.json) | Other Utilities | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.1.6 | 2026-10-04 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
-| [merkuro-calendar](bucket/merkuro-calendar.json) | Other Utilities | 6687 | 2026-10-04 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
 | [ncspot](bucket/ncspot.json) | Other Utilities | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.9 | 2026-10-04 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.16 | 2026-10-04 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
 | [optimizerduck](bucket/optimizerduck.json) | Windows Privacy & Tweaks | 2.28.1 | 2026-10-04 | [Homepage](https://github.com/itsfatduck/optimizerDuck) | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. |
 | [pdfsam](bucket/pdfsam.json) | Other Utilities | 6.0.6 | 2026-10-04 | [Homepage](https://github.com/torakiki/pdfsam) | A JavaFX desktop application to split, merge, rotate and perform other manipulations on PDF documents |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20214 | 2026-10-04 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [ruffle-nightly](bucket/ruffle-nightly.json) | Emulators & Compatibility | 2026-09-04 | 2026-10-04 | [Homepage](https://ruffle.rs/) | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. |
 | [scanner](bucket/scanner.json) | Other Utilities | 4.0.2.0 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
 | [selfphotos](bucket/selfphotos.json) | Images & Photos | 0.8.5 | 2026-10-04 | [Homepage](https://selfphotos.com/) | Cross-platform photo and video management desktop app with local-first privacy. |
@@ -40,7 +46,6 @@ Generated automatically from the manifests in the bucket directory.
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.14.0 | 2026-10-02 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.46 | 2026-10-02 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
 | [paseo](bucket/paseo.json) | Other Utilities | 0.10.3 | 2026-10-02 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
-| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.14.4 | 2026-10-02 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [tagstudio](bucket/tagstudio.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
 | [tagstudio-x86_64](bucket/tagstudio-x86_64.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
 | [winscript](bucket/winscript.json) | Windows Privacy & Tweaks | 2.26.0 | 2026-10-02 | [Homepage](https://winscript.cc/) | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. |
@@ -50,7 +55,6 @@ Generated automatically from the manifests in the bucket directory.
 | [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.26 | 2026-10-01 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [registry-finder](bucket/registry-finder.json) | Other Utilities | 2.62.0.0 | 2026-10-01 | [Homepage](https://registry-finder.com/) | Registry Finder is an improved replacement for the built-in Windows registry editor |
 | [savestate](bucket/savestate.json) | Other Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.114.54 | 2026-10-01 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-01 | [Homepage](https://github.com/WinZenith/winzenith.github.io) | Free open-source Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
@@ -100,7 +104,6 @@ Generated automatically from the manifests in the bucket directory.
 | [clickmonitorddc](bucket/clickmonitorddc.json) | System Monitoring & Hardware | 7.2 | 2026-09-29 | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. |
 | [clipangel](bucket/clipangel.json) | Clipboard & Text | 2.23 | 2026-09-29 | [Homepage](https://sourceforge.net/projects/clip-angel/) | Clipboard history capture and paste tool. |
 | [cliptype](bucket/cliptype.json) | Clipboard & Text | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ClipType) | Clipboard injector that types clipboard contents using native keystrokes |
-| [clustercut](bucket/clustercut.json) | Clipboard & Text | 0.4.4 | 2026-09-29 | [Homepage](https://github.com/keithvassallomt/ClusterCut) | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
 | [compactgui](bucket/compactgui.json) | Storage & Disk Tools | 4.0.0-beta.10 | 2026-09-29 | [Homepage](https://github.com/IridiumIO/CompactGUI) | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
 | [coodesker](bucket/coodesker.json) | Windows Customization | 2.2.2.2 | 2026-09-29 | [Homepage](https://www.coodesker.com/) | Desktop organization tool for automatically organizing desktop icons and running tasks. |
 | [cooldesk](bucket/cooldesk.json) | Windows Customization | 2.0.14 | 2026-09-29 | [Homepage](https://github.com/abhayraghuwanshi/cooldesk-extension) | Desktop organization tool with customizable boxes, dock, workspaces, and application management. |
@@ -191,7 +194,6 @@ Generated automatically from the manifests in the bucket directory.
 | [mucommander-nightly](bucket/mucommander-nightly.json) | File Management | 1.6.3 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager (nightly build). |
 | [nanaget](bucket/nanaget.json) | Download Managers | 1.3.1609.0 | 2026-09-29 | [Homepage](https://github.com/M2Team/NanaGet) | Lightweight file transfer utility based on aria2 and XAML Islands. |
 | [net-max](bucket/net-max.json) | Network & DNS | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/anwaremad/NetMax) | A professional Windows desktop network monitoring application. |
-| [netronome](bucket/netronome.json) | Network & DNS | 0.15.0 | 2026-09-29 | [Homepage](https://github.com/autobrr/netronome) | Modern network speed testing and monitoring tool built with Go and React. |
 | [netspeedtray](bucket/netspeedtray.json) | Network & DNS | 2.1.7 | 2026-09-29 | [Homepage](https://github.com/erez-c137/NetSpeedTray) | Live network speeds, CPU/GPU stats, temperatures, and power draw on the Windows taskbar. |
 | [nettime](bucket/nettime.json) | Network & DNS | 3.14 | 2026-09-29 | [Homepage](https://www.timesynctool.com/) | Simple Network Time Protocol (SNTP) client for Windows that synchronizes the system clock. |
 | [network-checker](bucket/network-checker.json) | Network & DNS | 1.7.1 | 2026-09-29 | [Homepage](https://github.com/mirarr-app/network-checker) | Network connectivity checker - test domains and IP ranges. |
@@ -233,7 +235,6 @@ Generated automatically from the manifests in the bucket directory.
 | [safepdf](bucket/safepdf.json) | PDF & Documents | 1.0.16 | 2026-09-29 | [Homepage](https://github.com/mcagriaksoy/SafePDF) | A lightweight and privacy-focused PDF utility for Windows. |
 | [safepdf-installer](bucket/safepdf-installer.json) | PDF & Documents | 1.0.16 | 2026-09-29 | [Homepage](https://github.com/mcagriaksoy/SafePDF) | A lightweight and privacy-focused PDF utility for Windows. Installer package repackaged as a portable Scoop installation. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.5 | 2026-09-29 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
-| [scrcpy](bucket/scrcpy.json) | Android & Device Tools | 4.1 | 2026-09-29 | [Homepage](https://github.com/Genymobile/scrcpy) | Display and control Android devices from Windows. |
 | [scrcpy-gui-georgeenglezos](bucket/scrcpy-gui-georgeenglezos.json) | Android & Device Tools | 1.7.5 | 2026-09-29 | [Homepage](https://github.com/GeorgeEnglezos/Scrcpy-GUI) | A modern GUI for scrcpy |
 | [scrcpy-gui-kil0bit](bucket/scrcpy-gui-kil0bit.json) | Android & Device Tools | 4.1.0 | 2026-09-29 | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. |
 | [scrcpy-gui-kil0bit-setup-portable](bucket/scrcpy-gui-kil0bit-setup-portable.json) | Android & Device Tools | 4.1.0 | 2026-09-29 | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) | ScrcpyGUI desktop GUI for scrcpy, packaged as a portable Scoop app by extracting the Windows setup executable. |
@@ -252,7 +253,6 @@ Generated automatically from the manifests in the bucket directory.
 | [spotlightsaver](bucket/spotlightsaver.json) | Windows Customization | 7.0.0 | 2026-09-29 | [Homepage](https://github.com/depthbomb/SpotlightSaver) | Saves Windows 10/11 Spotlight wallpapers to a local folder. |
 | [stimesync](bucket/stimesync.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/setsumi/stimesync) | Simple SNTP atomic clock time sync GUI app for Windows. |
 | [sucrose](bucket/sucrose.json) | Windows Customization | 26.7.5.0 | 2026-09-29 | [Homepage](https://github.com/Taiizor/Sucrose) | Highly customizable live wallpaper application for Windows. |
-| [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.8.31.0 | 2026-09-29 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.1.0 | 2026-09-29 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.5 | 2026-09-29 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
