@@ -284,6 +284,7 @@ Generated automatically from the manifests in the bucket directory.
 | [babyshark](bucket/babyshark.json) | Network & DNS | 0.3.0 | 2026-09-29 | [Homepage](https://github.com/vignesh07/babyshark) | Wireshark made easy in your terminal. |
 | [anti-yandex](bucket/anti-yandex.json) | Windows Privacy & Tweaks | 1.3 | 2026-09-29 | [Homepage](https://github.com/TheCawa/AntiYandex) | Utility for finding and removing Yandex Browser files and registry entries |
 | [antalogy](bucket/antalogy.json) | Notes & Knowledge | 0.95.0 | 2026-09-29 | [Homepage](https://antalogy.com/) | AI-ready desktop word processor for Markdown with a Word-like interface, local-first architecture, and an optional OpenAI-compatible AI assistant. |
+| [another](bucket/another.json) | Other Utilities | 0.4.4 | 2026-10-06 | [Homepage](https://github.com/Zfinix/another) | A desktop app for mirroring and controlling Android devices over USB. |
 | [android-dex](bucket/android-dex.json) | Android & Device Tools | 1.3 | 2026-09-29 | [Homepage](https://github.com/Shrey113/Android-Dex) | Android desktop experience for controlling and mirroring Android devices. |
 | [amule](bucket/amule.json) | Network & DNS | 3.0.0 | 2026-09-29 | [Homepage](https://www.amule-project.net/) | A free and open-source peer-to-peer file sharing client. |
 | [am-downloader](bucket/am-downloader.json) | Download Managers | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/antikmozib/AM-Downloader) | A modern download manager for Windows. |

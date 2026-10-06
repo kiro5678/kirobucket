@@ -6,6 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [another](bucket/another.json) | Other Utilities | 0.4.4 | 2026-10-06 | [Homepage](https://github.com/Zfinix/another) | A desktop app for mirroring and controlling Android devices over USB. |
 | [cmtrace](bucket/cmtrace.json) | Other Utilities | 1.6.2 | 2026-10-06 | [Homepage](https://cmtraceopen.com) | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. |
 | [endstate-gui](bucket/endstate-gui.json) | Other Utilities | 3.11.0 | 2026-10-06 | [Homepage](https://github.com/Artexis10/endstate-gui) | The official desktop app for Endstate, for restoring apps and settings from a portable file. |
 | [flashlaunch](bucket/flashlaunch.json) | Productivity & Launchers | 1.0.8 | 2026-10-06 | [Homepage](https://github.com/SingCJ/FlashLaunch) | Lightweight keyboard-first application launcher for Windows. |

@@ -140,6 +140,7 @@ Generated automatically from the manifests in the bucket directory.
 | [tiro-notes](bucket/tiro-notes.json) | Notes & Knowledge | 0.30.3 | 2026-09-29 | [Homepage](https://github.com/dotgreg/tiro-notes) | Open-source, cross-platform Markdown note-taking app. |
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-09-29 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | Notes & Knowledge | 4.9.3 | 2026-09-29 | [Homepage](https://github.com/alagrede/znote-app) | Markdown-based note-taking app for developers. |
+| [another](bucket/another.json) | Other Utilities | 0.4.4 | 2026-10-06 | [Homepage](https://github.com/Zfinix/another) | A desktop app for mirroring and controlling Android devices over USB. |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
 | [clipper](bucket/clipper.json) | Other Utilities | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
