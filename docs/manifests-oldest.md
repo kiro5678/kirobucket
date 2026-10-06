@@ -296,4 +296,5 @@ Generated automatically from the manifests in the bucket directory.
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20234 | 2026-10-06 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.6 | 2026-10-06 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.118.0 | 2026-10-06 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [voicestudio](bucket/voicestudio.json) | Other Utilities | 0.5.6 | 2026-10-06 | [Homepage](https://voicestudio.sh) | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. |
 
