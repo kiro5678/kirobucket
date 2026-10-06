@@ -287,7 +287,7 @@ Generated automatically from the manifests in the bucket directory.
 | [gtweak](bucket/gtweak.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
 | [gtweak-exe](bucket/gtweak-exe.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.6.1 | 2026-10-06 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
-| [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.90 | 2026-09-29 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
+| [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.104 | 2026-10-06 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.5 | 2026-09-29 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [optimizerduck](bucket/optimizerduck.json) | Windows Privacy & Tweaks | 2.28.1 | 2026-10-04 | [Homepage](https://github.com/itsfatduck/optimizerDuck) | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. |
 | [sparkle](bucket/sparkle.json) | Windows Privacy & Tweaks | 2.24.0 | 2026-09-29 | [Homepage](https://getsparkle.net) | Windows debloat and optimization tool. |
