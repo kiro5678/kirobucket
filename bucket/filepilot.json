@@ -1,0 +1,35 @@
+{
+    "version": "1.0.6",
+    "description": "Local-first Windows file organization workbench with AI-assisted planning and reversible execution.",
+    "homepage": "https://github.com/qup1010/FilePilot",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/qup1010/FilePilot/releases/download/v1.0.6/FilePilot_1.0.6_x64-setup.exe",
+            "hash": "7fc9686c86c61be70640748273a908fc866d0278d5793fcb21ca6ae9ffc41511"
+        }
+    },
+    "installer": {
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
+    },
+    "bin": "file-pilot-desktop.exe",
+    "shortcuts": [
+        [
+            "file-pilot-desktop.exe",
+            "FilePilot"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/qup1010/FilePilot"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/qup1010/FilePilot/releases/download/v$version/FilePilot_$version_x64-setup.exe"
+            }
+        }
+    }
+}
