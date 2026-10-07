@@ -8,8 +8,8 @@ Generated automatically from the manifests in the bucket directory.
 | --- | --- | --- | --- | --- | --- |
 | [0install-win](bucket/0install-win.json) | Package Management | 2.29.3 | 2026-09-29 | [Homepage](https://0install.net/) | Decentralized software installation system for Windows with a GUI and OS integrations. |
 | [2faguard](bucket/2faguard.json) | Security | 1.8.3 | 2026-09-29 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
-| [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-29 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
-| [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0b8 | 2026-09-30 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
+| [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.0 | 2026-10-06 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
+| [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0 | 2026-10-06 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [aero-dock](bucket/aero-dock.json) | Windows Customization | 1.3.2 | 2026-09-29 | [Homepage](https://github.com/TheAgencyMGE/aero-dock) | A lightweight Windows dock with a portable mode. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.14.0 | 2026-10-02 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [aifilesorter](bucket/aifilesorter.json) | File Management | 1.9.2 | 2026-09-29 | [Homepage](https://github.com/hyperfield/ai-file-sorter) | Local AI file organization with categorization and rename suggestions. |
@@ -96,6 +96,7 @@ Generated automatically from the manifests in the bucket directory.
 | [fancywm-msix-cert](bucket/fancywm-msix-cert.json) | Windows Customization | 2.19.0 | 2026-09-29 | [Homepage](https://github.com/FancyWM/fancywm) | FancyWM MSIX signing certificate (download only; for MSIX installation). |
 | [fastcast](bucket/fastcast.json) | Media & Audio/Video | 0.9.2 | 2026-09-29 | [Homepage](https://github.com/CalvinSturm/FastCast-releases) | Native Windows screen recorder and live streaming app. |
 | [file-converter-pro](bucket/file-converter-pro.json) | PDF & Documents | 1.0.7 | 2026-09-29 | [Homepage](https://github.com/Hyacinthe-primus/File_Converter_Pro) | Free offline all-in-one file converter for Windows. Converts documents, images, audio and video locally. |
+| [filepilot](bucket/filepilot.json) | Other Utilities | 1.0.6 | 2026-10-07 | [Homepage](https://github.com/qup1010/FilePilot) | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. |
 | [findly](bucket/findly.json) | File Management | 1.0.2 | 2026-09-29 | [Homepage](https://findly.devslim.com/) | Windows utility for finding installed programs and their executable paths |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
 | [flashlaunch](bucket/flashlaunch.json) | Productivity & Launchers | 1.0.8 | 2026-10-06 | [Homepage](https://github.com/SingCJ/FlashLaunch) | Lightweight keyboard-first application launcher for Windows. |
@@ -132,7 +133,7 @@ Generated automatically from the manifests in the bucket directory.
 | [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
 | [imagetype](bucket/imagetype.json) | Images & Photos | 3.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ImageType) | Accessible image editor for adding custom text to images |
 | [imfile](bucket/imfile.json) | Download Managers | 2.3.4 | 2026-09-29 | [Homepage](https://github.com/imfile-io/imfile-desktop) | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. |
-| [kalarm](bucket/kalarm.json) | Other Utilities | 3544 | 2026-10-06 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
+| [kalarm](bucket/kalarm.json) | Other Utilities | 3549 | 2026-10-06 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [keyboard-language-fix](bucket/keyboard-language-fix.json) | Keyboard & Language | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) | Fix text typed with the wrong keyboard language on Windows. |
 | [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
@@ -206,8 +207,8 @@ Generated automatically from the manifests in the bucket directory.
 | [recordly](bucket/recordly.json) | Media & Audio/Video | 1.4.0 | 2026-09-29 | [Homepage](https://github.com/webadderallorg/Recordly) | Open-source screen recorder and editor for polished demo videos. |
 | [registry-finder](bucket/registry-finder.json) | Other Utilities | 2.62.0.0 | 2026-10-01 | [Homepage](https://registry-finder.com/) | Registry Finder is an improved replacement for the built-in Windows registry editor |
 | [rightclicktools](bucket/rightclicktools.json) | Windows Customization | 2.0.4 | 2026-10-03 | [Homepage](https://github.com/LesFerch/RightClickTools) | A set of powerful tools and shortcuts for the Windows Explorer context menu. |
-| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.16.0 | 2026-10-06 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20234 | 2026-10-06 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.16.1 | 2026-10-06 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20237 | 2026-10-06 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [rqbit](bucket/rqbit.json) | Download Managers | 9.0.1 | 2026-09-29 | [Homepage](https://github.com/ikatson/rqbit) | A BitTorrent client with a desktop GUI, HTTP API and Web UI. |
 | [rscoop](bucket/rscoop.json) | Package Management | 1.11.0 | 2026-09-30 | [Homepage](https://github.com/AmarBego/Rscoop) | A graphical user interface for Scoop package manager |
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.5 | 2026-09-29 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
@@ -244,7 +245,7 @@ Generated automatically from the manifests in the bucket directory.
 | [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-05 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.1.0 | 2026-09-29 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.6 | 2026-10-06 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.118.0 | 2026-10-06 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.122.0 | 2026-10-06 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
 | [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [tagstudio](bucket/tagstudio.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
@@ -288,7 +289,7 @@ Generated automatically from the manifests in the bucket directory.
 | [winhance](bucket/winhance.json) | Windows Privacy & Tweaks | 26.06.12 | 2026-09-29 | [Homepage](https://github.com/memstechtips/Winhance) | Windows enhancement, debloating, optimization and customization utility |
 | [winscript](bucket/winscript.json) | Windows Privacy & Tweaks | 2.26.0 | 2026-10-02 | [Homepage](https://winscript.cc/) | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. |
 | [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-01 | [Homepage](https://github.com/WinZenith/winzenith.github.io) | Free open-source Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
-| [wox](bucket/wox.json) | Productivity & Launchers | 2.4.5 | 2026-09-30 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
+| [wox](bucket/wox.json) | Productivity & Launchers | 2.4.6 | 2026-10-06 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.0 | 2026-09-29 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [zapzap](bucket/zapzap.json) | Other Utilities | 7.4.5 | 2026-09-29 | [Homepage](https://github.com/rafatosta/zapzap) | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
