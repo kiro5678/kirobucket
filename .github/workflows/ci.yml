@@ -5,8 +5,14 @@ on:
     branches:
       - 'main'
       - 'master'
+    paths-ignore:
+      - 'bucket/**'
+      - '.github/workflows/format-manifests.yml'
   pull_request:
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - manifests-normalized
 
 permissions:
   contents: read
