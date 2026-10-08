@@ -16,7 +16,6 @@
             "hash": "fcc1aa8f863313e485ca4e589c405bc2568bbb09888d7945b1026f9820c1e36a"
         }
     },
-    "pre_install": "Set-Content -Value $null -Path \"$dir\\ForceUniGetUIPortable\"",
     "bin": "UniGetUI.exe",
     "shortcuts": [
         [
@@ -24,7 +23,6 @@
             "UniGetUI"
         ]
     ],
-    "persist": "Settings",
     "checkver": {
         "github": "https://github.com/Devolutions/UniGetUI"
     },
