@@ -120,8 +120,7 @@ Generated automatically from the manifests in the bucket directory.
 | [chocolateygui](bucket/chocolateygui.json) | Package Management | 3.3.0 | 2026-09-29 | [Homepage](https://github.com/chocolatey/ChocolateyGUI) | Graphical user interface for Chocolatey. |
 | [local-desktop-store](bucket/local-desktop-store.json) | Package Management | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) | Private GitHub-based desktop application store and installer |
 | [rscoop](bucket/rscoop.json) | Package Management | 1.11.0 | 2026-09-30 | [Homepage](https://github.com/AmarBego/Rscoop) | A graphical user interface for Scoop package manager |
-| [unigetui-portable](bucket/unigetui-portable.json) | Package Management | 2026.3.0 | 2026-09-29 | [Homepage](https://devolutions.net/unigetui/) | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. |
-| [unigetuiglobal](bucket/unigetuiglobal.json) | Package Management | 2026.3.0 | 2026-09-29 | [Homepage](https://github.com/Devolutions/UniGetUI) | Graphical interface for Windows package managers. |
+| [unigetui-portable](bucket/unigetui-portable.json) | Package Management | 2026.3.1 | 2026-10-08 | [Homepage](https://devolutions.net/unigetui/) | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. |
 | [another](bucket/another.json) | Other Utilities | 0.4.4 | 2026-10-06 | [Homepage](https://github.com/Zfinix/another) | A desktop app for mirroring and controlling Android devices over USB. |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
 | [clipper](bucket/clipper.json) | Other Utilities | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
