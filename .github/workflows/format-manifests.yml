@@ -70,8 +70,7 @@ jobs:
           if ($diffExitCode -eq 0) {
             Write-Host "All manifests already have exactly one CRLF at end of file."
             "changed=false" >> $env:GITHUB_OUTPUT
-          }
-          if ($diffExitCode -eq 1) {
+          } elseif ($diffExitCode -eq 1) {
             git commit -m "chore: remove extra manifest newlines"
             if ($LASTEXITCODE -ne 0) {
               throw "Could not commit normalized manifests."
@@ -89,28 +88,12 @@ jobs:
             }
 
             "changed=true" >> $env:GITHUB_OUTPUT
-          } elseif ($diffExitCode -ne 0) {
+          } else {
             throw "Could not inspect staged manifest changes."
           }
-          if ($LASTEXITCODE -ne 0) {
-            throw "Could not commit normalized manifests."
-          }
-
-          git fetch origin master
-          git rebase origin/master
-          if ($LASTEXITCODE -ne 0) {
-            throw "Could not rebase normalization changes onto the latest master."
-          }
-
-          git push origin HEAD:master
-          if ($LASTEXITCODE -ne 0) {
-            throw "Could not push normalized manifests."
-          }
-
-          "changed=true" >> $env:GITHUB_OUTPUT
 
       - name: Run CI after normalization
-        if: steps.commit.outputs.changed == 'true'
+        if: github.actor != 'github-actions[bot]' || steps.commit.outputs.changed == 'true'
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
