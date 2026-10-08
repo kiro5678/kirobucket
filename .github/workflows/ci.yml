@@ -7,9 +7,6 @@ on:
       - 'master'
   pull_request:
   workflow_dispatch:
-  repository_dispatch:
-    types:
-      - manifests-normalized
 
 permissions:
   contents: read
@@ -36,12 +33,6 @@ jobs:
         with:
           repository: ScoopInstaller/Scoop
           path: 'scoop_core'
-      - name: Register PSGallery
-        run: |
-          if (-not (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
-            Register-PSRepository -Default
-          }
-          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
       - name: Install and cache test dependencies
         uses: potatoqualitee/psmodulecache@9e4b63833c22c1768d648e115a9c849afdda22a5 # v6.3
         with:
