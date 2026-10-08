@@ -39,6 +39,24 @@ This log records the important changes, fixes, and CI results related to the rep
 - Run 36644154237 — README table workflow success.
 - Run 36644990100 — README table workflow success.
 
+## 2026-10-08
+
+### UniGetUI manifest and workflow fixes
+- Added/updated `bucket/unigetui.json` for UniGetUI `2026.3.1`, matching the official Scoop Extras manifest while keeping UniGetUI data in the normal user AppData location instead of Scoop's `persist` directory.
+- Removed `pre_install` creation of `ForceUniGetUIPortable` and removed `persist: "Settings"` so UniGetUI does not run in forced portable mode.
+- Fixed CI failure caused by `unigetui.json` missing the required final CRLF newline; the manifest schema itself was valid.
+- Fixed a race in `format-manifests.yml` where simultaneous workflow pushes could fail with `fetch first`.
+- Updated manifest normalization to fetch/rebase against the latest `master` before pushing.
+- Updated CI triggering so normalization can explicitly dispatch a follow-up CI run after it changes manifests.
+
+### Relevant workflow runs
+- Run 37833777695 — normalization failed because another workflow had already advanced `master`; push was rejected with `fetch first`.
+- Run 37834096226 — CI failed only because `unigetui.json` lacked the required final newline; schema validation passed.
+- Run 37834096251 — normalization succeeded for the corrected manifest formatting.
+- Run 37835084703 — CI started from the workflow fix commit.
+- Run 37835120920 — normalization workflow running with the race-condition fix.
+- Run 37835121006 — CI running on commit `986ed518862eb3d8e39ea14654a552aed19af9a8`.
+
 ## Current workflow behavior
 
 The manifest-table workflow:
