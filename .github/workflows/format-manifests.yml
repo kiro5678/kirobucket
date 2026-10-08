@@ -1,0 +1,119 @@
+name: Normalize manifest newlines
+
+on:
+  push:
+    paths:
+      - "bucket/**"
+      - ".github/workflows/format-manifests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: format-manifests-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  normalize:
+    name: Normalize Scoop manifest endings
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Normalize manifest endings
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          git fetch origin master
+          git reset --hard origin/master
+
+          $bucketPath = Join-Path $env:GITHUB_WORKSPACE "bucket"
+
+          Get-ChildItem -Path $bucketPath -Filter "*.json" -File -Recurse | ForEach-Object {
+            $fileBytes = [System.IO.File]::ReadAllBytes($_.FullName)
+            $contentLength = $fileBytes.Length
+
+            while ($contentLength -gt 0 -and ($fileBytes[$contentLength - 1] -eq 10 -or $fileBytes[$contentLength - 1] -eq 13 -or $fileBytes[$contentLength - 1] -eq 32 -or $fileBytes[$contentLength - 1] -eq 9)) {
+              $contentLength--
+            }
+
+            $trailingLength = $fileBytes.Length - $contentLength
+            $hasSingleCrLf = $false
+            if ($trailingLength -eq 2) {
+              $hasSingleCrLf = $fileBytes[$contentLength] -eq 13 -and $fileBytes[$contentLength + 1] -eq 10
+            }
+
+            if (-not $hasSingleCrLf) {
+              $normalizedBytes = [byte[]]::new($contentLength + 2)
+              [System.Array]::Copy($fileBytes, $normalizedBytes, $contentLength)
+              $normalizedBytes[$contentLength] = 13
+              $normalizedBytes[$contentLength + 1] = 10
+              [System.IO.File]::WriteAllBytes($_.FullName, $normalizedBytes)
+            }
+          }
+
+      - name: Commit normalization changes
+        id: commit
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- bucket
+          git diff --cached --quiet
+          $diffExitCode = $LASTEXITCODE
+
+          if ($diffExitCode -eq 0) {
+            Write-Host "All manifests already have exactly one CRLF at end of file."
+            "changed=false" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          if ($diffExitCode -ne 1) {
+            throw "Could not inspect staged manifest changes."
+          }
+
+          git commit -m "chore: remove extra manifest newlines"
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not commit normalized manifests."
+          }
+
+          git fetch origin master
+          git rebase origin/master
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not rebase normalization changes onto the latest master."
+          }
+
+          git push origin HEAD:master
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not push normalized manifests."
+          }
+
+          "changed=true" >> $env:GITHUB_OUTPUT
+
+      - name: Run CI after normalization
+        if: steps.commit.outputs.changed == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            Authorization = "Bearer $env:GH_TOKEN"
+            "X-GitHub-Api-Version" = "2026-03-10"
+          }
+          $body = @{
+            event_type = "manifests-normalized"
+          } | ConvertTo-Json
+
+          Invoke-RestMethod `
+            -Method Post `
+            -Uri "https://api.github.com/repos/${{ github.repository }}/dispatches" `
+            -Headers $headers `
+            -ContentType "application/json" `
+            -Body $body
