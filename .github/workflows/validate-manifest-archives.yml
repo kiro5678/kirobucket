@@ -254,15 +254,17 @@ jobs:
                   }
 
                   $pathPart = $uri.AbsolutePath.ToLowerInvariant()
-                  $looksLikeArchive = $pathPart -match '\.(zip|7z|rar|cab|tar|tgz|txz|tbz2|nupkg|whl|jar|war|vsix|xpi|apk)$' -or $pathPart -match '\.tar\.(gz|xz|bz2)$'
+                  $looksLikeArchive = $pathPart -match '\.(zip|7z|rar|cab|tar|tgz|txz|tbz2|msi|nupkg|whl|jar|war|vsix|xpi|apk)$' -or $pathPart -match '\.tar\.(gz|xz|bz2)$'
                   $extractDir = ''
                   if ($extractDirs.Count -eq 1) {
                     $extractDir = $extractDirs[0]
                   } elseif ($archiveOrdinal -lt $extractDirs.Count) {
                     $extractDir = $extractDirs[$archiveOrdinal]
                   }
-                  $isKnownInstaller = $pathPart -match '\.(exe|msi|msix|msixbundle|appx|appxbundle)$'
-                  $shouldInspect = $looksLikeArchive -or -not [string]::IsNullOrWhiteSpace($extractDir) -or ($config.Contains('innosetup') -and $config['innosetup'] -eq $true) -or -not $isKnownInstaller
+                  $pathExtension = [System.IO.Path]::GetExtension($uri.AbsolutePath)
+                  $isKnownInstaller = $pathPart -match '\.(exe|msix|msixbundle|appx|appxbundle)$'
+                  $hasNoExtension = [string]::IsNullOrWhiteSpace($pathExtension)
+                  $shouldInspect = $looksLikeArchive -or -not [string]::IsNullOrWhiteSpace($extractDir) -or ($config.Contains('innosetup') -and $config['innosetup'] -eq $true) -or ($hasNoExtension -and -not $isKnownInstaller)
                   if (-not $shouldInspect) {
                     $uninspectedAssets++
                     Write-Warning "$relativePath ($($archConfig.Name)): skipping installer asset that is not an archive: $($uri.AbsolutePath)"
