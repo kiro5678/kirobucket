@@ -6,7 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
-| [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Free open-source Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
+| [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.16.0 | 2026-10-09 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [fort](bucket/fort.json) | Other Utilities | 3.20.3 | 2026-10-09 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [network-checker](bucket/network-checker.json) | Network & DNS | 1.7.2 | 2026-10-09 | [Homepage](https://github.com/mirarr-app/network-checker) | Network connectivity checker - test domains and IP ranges. |

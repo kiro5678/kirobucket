@@ -297,5 +297,5 @@ Generated automatically from the manifests in the bucket directory.
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20262 | 2026-10-09 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.128.3 | 2026-10-09 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [zapzap](bucket/zapzap.json) | Other Utilities | 7.5 | 2026-10-09 | [Homepage](https://github.com/rafatosta/zapzap) | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
-| [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Free open-source Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
+| [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
 
