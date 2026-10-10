@@ -121,7 +121,11 @@ jobs:
             if ($null -eq $Value) {
               return @()
             }
-            $items = if ($Value -is [System.Array]) { $Value } else { @($Value) }
+            if ($Value -is [System.Array]) {
+              $items = $Value
+            } else {
+              $items = @($Value)
+            }
             foreach ($item in $items) {
               $path = $null
               if ($item -is [string]) {
