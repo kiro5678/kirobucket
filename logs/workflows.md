@@ -86,3 +86,9 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Added a direct-push gate in `ci.yml` so a push containing any `bucket/*.json` change cannot start Scoop tests before archive validation. README/docs/log-only changes are ignored by the direct CI trigger; successful archive validation triggers CI with the `archives-validated` event.
 - The archive path filter is case-insensitive so uppercase manifest extensions such as `FoliCon.JSON` are included.
 
+### `format-manifests.yml` dispatch fix
+- Fixed the PowerShell dispatch step to avoid the malformed multiline SHA regex that caused earlier workflow runs to fail during workflow parsing before any jobs started.
+- Moved GitHub event and commit-message values into environment variables, then validates the base commit SHA in PowerShell using the anchored 40-character hexadecimal pattern.
+- Kept a guarded fallback to the parent commit when the push event does not provide a valid base SHA; the step fails explicitly if a valid SHA still cannot be determined.
+- Runs 38025532072, 38025537807, 38025539515, and 38025581234 are historical failures from the earlier broken workflow revisions.
+- Run 38025708738 — `Normalize manifest newlines` succeeded after the fix.
