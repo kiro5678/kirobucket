@@ -92,3 +92,14 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Kept a guarded fallback to the parent commit when the push event does not provide a valid base SHA; the step fails explicitly if a valid SHA still cannot be determined.
 - Runs 38025532072, 38025537807, 38025539515, and 38025581234 are historical failures from the earlier broken workflow revisions.
 - Run 38025708738 — `Normalize manifest newlines` succeeded after the fix.
+
+### CI trigger order and safeguards
+- For pushes affecting `bucket/**`, `format-manifests.yml` runs first and normalizes manifest JSON files to exactly one trailing CRLF. It commits and pushes only when normalization changes file contents.
+- After normalization, `format-manifests.yml` sends the `manifests-normalized` repository dispatch with the pre-change base SHA to `validate-manifest-archives.yml`.
+- The archive validator checks changed manifests' downloadable archives, static hashes, and statically verifiable `extract_dir`, `bin`, and shortcut paths. Only after successful validation does it send the `archives-validated` dispatch that starts `ci.yml`.
+- The direct `push` trigger in `ci.yml` ignores `bucket/**` and `.github/workflows/format-manifests.yml` (as well as README, docs, and logs). Its gate also prevents direct-push test jobs from running when changed manifest JSON files have not passed the archive-validation path.
+- `Register PSGallery` remains in the CI test job before the dependency-installation and Scoop test steps.
+- Run 38025708738 — the normalization workflow succeeded, but reported that manifests already had exactly one CRLF, so this run did not demonstrate a normalization commit.
+- Run 38025720619 — archive validation succeeded for `bucket/winzenith.json`, including SHA-256 and declared `bin`/shortcut path checks; the validator dispatched CI after the checks passed.
+- Run 38025734499 — both CI matrix jobs (`powershell` and `pwsh`) passed, including `Register PSGallery` and Scoop tests.
+- These results verify the formatter workflow, archive validator, and dispatched CI success. They do not, by themselves, establish that one newly modified manifest was pushed and observed completing the entire end-to-end sequence in a single test.
