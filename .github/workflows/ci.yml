@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
   repository_dispatch:
     types:
-      - manifests-normalized
+      - archives-validated
 
 permissions:
   contents: read
