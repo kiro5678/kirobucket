@@ -50,7 +50,7 @@ jobs:
           $manifestPaths = @()
           if (-not [string]::IsNullOrWhiteSpace($env:MANIFEST_INPUT)) {
             $manualPath = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
-            if ($manualPath -notmatch '^bucket/.+\.json$') {
+            if ($manualPath -notmatch '(?i)^bucket/.+\.json$') {
               throw "Manual validation requires a path under bucket/, such as bucket/winzenith.json. Received: $manualPath"
             }
             if (-not (Test-Path -LiteralPath (Join-Path $repoRoot $manualPath) -PathType Leaf)) {
@@ -70,7 +70,7 @@ jobs:
             if ($LASTEXITCODE -ne 0) {
               throw "Could not compare $baseSha with HEAD."
             }
-            $manifestPaths = @($changedPaths | Where-Object { $_ -match '^bucket/.+\.json$' } | Sort-Object -Unique)
+            $manifestPaths = @($changedPaths | Where-Object { $_ -match '(?i)^bucket/.+\.json$' } | Sort-Object -Unique)
           }
 
           if ($manifestPaths.Count -eq 0) {
