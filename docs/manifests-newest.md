@@ -6,6 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs and automatic subtitle support. |
 | [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.36 | 2026-10-11 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
 | [2faguard](bucket/2faguard.json) | Security | 1.8.4 | 2026-10-10 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
@@ -103,7 +104,6 @@ Generated automatically from the manifests in the bucket directory.
 | [0install-win](bucket/0install-win.json) | Package Management | 2.29.3 | 2026-09-29 | [Homepage](https://0install.net/) | Decentralized software installation system for Windows with a GUI and OS integrations. |
 | [aero-dock](bucket/aero-dock.json) | Windows Customization | 1.3.2 | 2026-09-29 | [Homepage](https://github.com/TheAgencyMGE/aero-dock) | A lightweight Windows dock with a portable mode. |
 | [aifilesorter](bucket/aifilesorter.json) | File Management | 1.9.2 | 2026-09-29 | [Homepage](https://github.com/hyperfield/ai-file-sorter) | Local AI file organization with categorization and rename suggestions. |
-| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-09-29 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs and automatic subtitle support. |
 | [am-downloader](bucket/am-downloader.json) | Download Managers | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/antikmozib/AM-Downloader) | A modern download manager for Windows. |
 | [amule](bucket/amule.json) | Network & DNS | 3.0.0 | 2026-09-29 | [Homepage](https://www.amule-project.net/) | A free and open-source peer-to-peer file sharing client. |
 | [android-dex](bucket/android-dex.json) | Android & Device Tools | 1.3 | 2026-09-29 | [Homepage](https://github.com/Shrey113/Android-Dex) | Android desktop experience for controlling and mirroring Android devices. |
