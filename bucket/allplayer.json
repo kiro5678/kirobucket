@@ -10,7 +10,9 @@
     "shortcuts": [
         [
             "ALLPlayer.exe",
-            "ALLPlayer"
+            "ALLPlayer",
+            "",
+            "ALLPlayer.ico"
         ]
     ],
     "checkver": {
@@ -24,7 +26,11 @@
         "if (!(Test-Path -LiteralPath \"$dir\\ALLPlayer,1.exe\" -PathType Leaf)) { throw 'The 64-bit ALLPlayer executable was not found after extraction.' }",
         "if (Test-Path -LiteralPath \"$dir\\ALLPlayer.exe\" -PathType Leaf) { throw 'Refusing to overwrite an existing ALLPlayer.exe.' }",
         "Move-Item -LiteralPath \"$dir\\ALLPlayer,1.exe\" -Destination \"$dir\\ALLPlayer.exe\" -ErrorAction Stop",
+        "Add-Type -AssemblyName System.Drawing",
+        "$iconPath = Join-Path $dir 'ALLPlayer.ico'; if (!(Test-Path -LiteralPath $iconPath -PathType Leaf)) { $icon = [System.Drawing.Icon]::ExtractAssociatedIcon((Join-Path $dir 'ALLPlayer.exe')); if ($null -eq $icon) { throw 'Could not extract the ALLPlayer icon from ALLPlayer.exe.' }; $iconStream = [System.IO.File]::Open($iconPath, [System.IO.FileMode]::CreateNew); try { $icon.Save($iconStream) } finally { $iconStream.Dispose(); $icon.Dispose() } }",
+        "if (!(Test-Path -LiteralPath \"$dir\\ALLPlayer.ico\" -PathType Leaf)) { throw 'The ALLPlayer.ico shortcut icon was not created.' }",
         "if (!(Test-Path -LiteralPath \"$dir\\lib64\" -PathType Container)) { throw 'The 64-bit lib64 directory was not found after extraction.' }",
-        "if (Test-Path -LiteralPath \"$dir\\lib\" -PathType Container) { Remove-Item -LiteralPath \"$dir\\lib\" -Recurse -Force -ErrorAction Stop }"
+        "if (Test-Path -LiteralPath \"$dir\\lib\" -PathType Container) { Remove-Item -LiteralPath \"$dir\\lib\" -Recurse -Force -ErrorAction Stop }",
+        "if (Test-Path -LiteralPath \"$dir\\ALLPlayer,2.exe\" -PathType Leaf) { Remove-Item -LiteralPath \"$dir\\ALLPlayer,2.exe\" -Force -ErrorAction Stop }"
     ]
 }
