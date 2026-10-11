@@ -319,6 +319,15 @@ jobs:
                   $normalizedEntries = @()
                   foreach ($entry in $entries) {
                     $entryPath = ConvertTo-ArchivePath ([string]$entry.Path)
+                    # 7-Zip exposes Inno Setup's {app} payload under an "app/" prefix,
+                    # while Scoop extracts relative to {app} via innounp -c{app}.
+                    if ($config.Contains('innosetup') -and $config['innosetup'] -eq $true) {
+                      if ($entryPath -match '^(?i:app)/') {
+                        $entryPath = $entryPath.Substring(4)
+                      } elseif ($entryPath -match '^(?i:\{app\})/') {
+                        $entryPath = $entryPath.Substring(6)
+                      }
+                    }
                     if (-not [string]::IsNullOrWhiteSpace($entryPath)) {
                       $normalizedEntries += [PSCustomObject]@{ Path = $entryPath; Folder = [bool]$entry.Folder }
                     }
