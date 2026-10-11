@@ -38,7 +38,10 @@ This table is generated automatically from the manifests currently available in 
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs and automatic subtitles. |
+| [crosspaste](bucket/crosspaste.json) | Clipboard & Text | 2.2.1.2706 | 2026-10-11 | [Homepage](https://crosspaste.com/en/) | Universal pasteboard across devices. |
 | [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.36 | 2026-10-11 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
+| [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-11 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
+| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.21.0 | 2026-10-11 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [2faguard](bucket/2faguard.json) | Security | 1.8.4 | 2026-10-10 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
@@ -49,7 +52,6 @@ This table is generated automatically from the manifests currently available in 
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.8.0 | 2026-10-10 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.4 | 2026-10-10 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.47 | 2026-10-10 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
-| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.20.0 | 2026-10-10 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20281 | 2026-10-10 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.128.7 | 2026-10-10 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-10 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
@@ -163,7 +165,6 @@ This table is generated automatically from the manifests currently available in 
 | [crapcheckthis](bucket/crapcheckthis.json) | Windows Privacy & Tweaks | 1.0 | 2026-09-29 | [Homepage](https://github.com/builtbybel/CrapCheckThis) | Read-only Windows audit companion for FluentCleaner Classic and CrapFixer. |
 | [crapfixer](bucket/crapfixer.json) | Windows Privacy & Tweaks | 2.01.41 | 2026-09-29 | [Homepage](https://github.com/builtbybel/CrapFixer) | Windows tweaking, privacy, and app removal utility. |
 | [cross-platform-download-manager](bucket/cross-platform-download-manager.json) | Download Managers | 0.30.0 | 2026-09-29 | [Homepage](https://github.com/adel-bakhshi/CrossPlatformDownloadManager) | Fast, free, and open-source cross-platform download manager |
-| [crosspaste](bucket/crosspaste.json) | Clipboard & Text | 2.2.0.2544 | 2026-09-29 | [Homepage](https://crosspaste.com/en/) | Universal pasteboard across devices. |
 | [crow-translate](bucket/crow-translate.json) | Translation & OCR | 4.1.0 | 2026-09-29 | [Homepage](https://apps.kde.org/crowtranslate) | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [cstatus](bucket/cstatus.json) | Network & DNS | 1.2.7.1 | 2026-09-29 | [Homepage](https://www.hnsoft.pt/cstatus) | Free network monitoring and scanning tool for Windows |
@@ -267,7 +268,6 @@ This table is generated automatically from the manifests currently available in 
 | [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
 | [qbittorrent](bucket/qbittorrent.json) | Download Managers | 5.2.4 | 2026-09-29 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). |
 | [qbittorrent-lt20](bucket/qbittorrent-lt20.json) | Download Managers | 5.2.4 | 2026-09-29 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). |
-| [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
 | [quickpanel](bucket/quickpanel.json) | Productivity & Launchers | 1.0.12 | 2026-09-29 | [Homepage](https://github.com/lucasgiusiano/QuickPanel) | A floating Windows panel for launching web apps in native WebView2 windows. |
 | [ram-cleaner-flusher-pro](bucket/ram-cleaner-flusher-pro.json) | System Monitoring & Hardware | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/alisakkaf/RAM-Cleaner-Flusher-Pro) | Native Win32 memory and standby cache optimizer for Windows. |
 | [recordly](bucket/recordly.json) | Media & Audio/Video | 1.4.0 | 2026-09-29 | [Homepage](https://github.com/webadderallorg/Recordly) | Open-source screen recorder and editor for polished demo videos. |
