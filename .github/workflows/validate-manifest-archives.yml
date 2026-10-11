@@ -332,7 +332,27 @@ jobs:
                     $exeDetails = @($innoFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
                       $relative = [System.IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\', '/')
                       $versionInfo = $_.VersionInfo
-                      "{0} | {1} bytes | Product='{2}' | Description='{3}' | Original='{4}'" -f $relative, $_.Length, $versionInfo.ProductName, $versionInfo.FileDescription, $versionInfo.OriginalFilename
+                      $stream = [System.IO.File]::OpenRead($_.FullName)
+                      try {
+                        $reader = [System.IO.BinaryReader]::new($stream)
+                        try {
+                          $stream.Position = 0x3C
+                          $peOffset = $reader.ReadInt32()
+                          $stream.Position = $peOffset + 4
+                          $machine = $reader.ReadUInt16()
+                          $architecture = switch ($machine) {
+                            0x014c { 'x86' }
+                            0x8664 { 'x64' }
+                            0xAA64 { 'ARM64' }
+                            default { 'unknown (0x{0:X4})' -f $machine }
+                          }
+                        } finally {
+                          $reader.Dispose()
+                        }
+                      } finally {
+                        $stream.Dispose()
+                      }
+                      "{0} | {1} | {2} bytes | Product='{3}' | Description='{4}' | Original='{5}' | Version='{6}'" -f $relative, $architecture, $_.Length, $versionInfo.ProductName, $versionInfo.FileDescription, $versionInfo.OriginalFilename, $versionInfo.ProductVersion
                     })
                     Write-Host "$relativePath ($($archConfig.Name)): innounp extracted $($innoFiles.Count) app file(s). Executables: $($exeDetails -join '; ')"
                     $inspectableArchives++
