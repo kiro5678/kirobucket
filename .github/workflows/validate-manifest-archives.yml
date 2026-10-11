@@ -292,9 +292,8 @@ jobs:
                   }
                   Test-StaticHash -ArchivePath $archivePath -HashValue $hashValue -Context "$relativePath ($($archConfig.Name), URL $($urlIndex + 1))"
 
-                  # Scoop extracts Inno Setup installers with innounp, not 7-Zip.
-                  # 7-Zip may only list PE sections (.text, .rsrc, etc.), which are not
-                  # the application files that remain after Scoop's extraction.
+                  # Scoop extracts Inno Setup EXEs with innounp; 7-Zip only sees PE sections
+                  # for some installers, so it cannot reliably validate the extracted app paths.
                   if ($pathPart.EndsWith('.exe') -and $config.Contains('innosetup') -and $config['innosetup'] -eq $true) {
                     $uninspectedAssets++
                     Write-Warning "$relativePath ($($archConfig.Name)): static SHA hash checked; skipping launch-path inspection for the Inno Setup EXE because 7-Zip cannot confirm innounp's extracted file layout."
@@ -306,7 +305,6 @@ jobs:
                   if ($LASTEXITCODE -ne 0) {
                     throw "$relativePath ($($archConfig.Name)): the asset could not be listed as an archive. URL: $downloadUrl"
                   }
-
                   $records = @()
                   $current = $null
                   foreach ($lineObject in $listing) {
@@ -391,154 +389,7 @@ jobs:
                   if ($uninspectedAssets -gt 0 -or $hasInstallHooks) {
                     Write-Warning "$relativePath ($($archConfig.Name)): could not confirm these launch paths from the inspected archives: $($missing -join ', '). The manifest has non-archive assets or install hooks."
                   } else {
-                    $archivePathSample = ($archiveFiles | Select-Object -First 40) -join ', '
-                    throw "$relativePath ($($archConfig.Name)): these bin/shortcut files are missing after extraction: $($missing -join ', '). Inspected file paths: $archivePathSample"
-                  }
-                } elseif ($expectedPaths.Count -gt 0) {
-                  Write-Host "$relativePath ($($archConfig.Name)): all declared bin/shortcut paths exist in the inspected archive contents."
-                }
-              }
-            } catch {
-              $failures += "$relativePath : $($_.Exception.Message)"
-              Write-Host "FAILED: $relativePath" -ForegroundColor Red
-              Write-Host $_.Exception.Message -ForegroundColor Red
-            }
-          }
-
-          Write-Host ''
-          Write-Host '============================================================'
-          Write-Host 'Archive validation summary'
-          Write-Host "Manifests checked: $($manifestPaths.Count)"
-          Write-Host "Failures: $($failures.Count)"
-          Write-Host '============================================================'
-          if ($failures.Count -gt 0) {
-            $failures | ForEach-Object { Write-Host $_ -ForegroundColor Red }
-            exit 1
-          }
-          Write-Host 'All changed manifests passed archive path validation.' -ForegroundColor Green
-
-      - name: Trigger CI after archive validation
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $headers = @{
-            Accept = 'application/vnd.github+json'
-            Authorization = "Bearer $env:GH_TOKEN"
-            'X-GitHub-Api-Version' = '2022-11-28'
-          }
-          $body = @{
-            event_type = 'archives-validated'
-          } | ConvertTo-Json -Depth 3
-          Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$env:REPOSITORY/dispatches" -Headers $headers -ContentType 'application/json' -Body $body
- -and $config.Contains('innosetup') -and $config['innosetup'] -eq $true) {
-                    $uninspectedAssets++
-                    Write-Warning "$relativePath ($($archConfig.Name)): static SHA hash checked; skipping launch-path inspection for the Inno Setup EXE because 7-Zip cannot confirm innounp's extracted file layout."
-                    Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
-                    continue
-                  }
-
-                  $listing = & $sevenZipPath l -slt $archivePath 2>&1
-                  if ($LASTEXITCODE -ne 0) {
-                    throw "$relativePath ($($archConfig.Name)): the asset could not be listed as an archive. URL: $downloadUrl"
-                  }
-                  $records = @()
-                  $current = $null
-                  foreach ($lineObject in $listing) {
-                    $line = [string]$lineObject
-                    if ($line -match '^Path = (.*)$') {
-                      if ($null -ne $current) {
-                        $records += [PSCustomObject]$current
-                      }
-                      $current = [ordered]@{ Path = $Matches[1]; Folder = $false }
-                    } elseif ($null -ne $current -and $line -match '^Folder = \+$') {
-                      $current.Folder = $true
-                    }
-                  }
-                  if ($null -ne $current) {
-                    $records += [PSCustomObject]$current
-                  }
-                  if ($records.Count -le 1) {
-                    throw "$relativePath ($($archConfig.Name)): archive listing contained no file entries: $downloadUrl"
-                  }
-                  $entries = @($records | Select-Object -Skip 1)
-                  $normalizedEntries = @()
-                  foreach ($entry in $entries) {
-                    $entryPath = ConvertTo-ArchivePath ([string]$entry.Path)
-                    # 7-Zip exposes Inno Setup's {app} payload under an "app/" prefix,
-                    # while Scoop extracts relative to {app} via innounp -c{app}.
-                    if ($config.Contains('innosetup') -and $config['innosetup'] -eq $true) {
-                      if ($entryPath -match '^(?i:app)/') {
-                        $entryPath = $entryPath.Substring(4)
-                      } elseif ($entryPath -match '^(?i:\{app\})/') {
-                        $entryPath = $entryPath.Substring(6)
-                      }
-                    }
-                    if (-not [string]::IsNullOrWhiteSpace($entryPath)) {
-                      $normalizedEntries += [PSCustomObject]@{ Path = $entryPath; Folder = [bool]$entry.Folder }
-                    }
-                  }
-
-                  if (-not [string]::IsNullOrWhiteSpace($extractDir)) {
-                    $prefix = ConvertTo-ArchivePath $extractDir
-                    $hasExtractDirectory = @($normalizedEntries | Where-Object {
-                      $_.Path.Equals($prefix, [System.StringComparison]::OrdinalIgnoreCase) -or
-                      $_.Path.StartsWith("$prefix/", [System.StringComparison]::OrdinalIgnoreCase)
-                    }).Count -gt 0
-                    if (-not $hasExtractDirectory) {
-                      $sample = ($normalizedEntries | Select-Object -First 12 | ForEach-Object { $_.Path }) -join ', '
-                      throw "$relativePath ($($archConfig.Name)): extract_dir '$extractDir' does not exist in the archive. First entries: $sample"
-                    }
-                    $prefixWithSlash = "$prefix/"
-                    foreach ($entry in $normalizedEntries) {
-                      if (-not $entry.Folder -and $entry.Path.StartsWith($prefixWithSlash, [System.StringComparison]::OrdinalIgnoreCase)) {
-                        $archiveFiles += $entry.Path.Substring($prefixWithSlash.Length)
-                      }
-                    }
-                    Write-Host "extract_dir '$extractDir' exists in the archive."
-                  } else {
-                    $archiveFiles += @($normalizedEntries | Where-Object { -not $_.Folder } | ForEach-Object { $_.Path })
-                  }
-                  $inspectableArchives++
-                  $archiveOrdinal++
-                  Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
-                }
-
-                if ($inspectableArchives -eq 0) {
-                  if ($extractDirs.Count -gt 0) {
-                    throw "$relativePath ($($archConfig.Name)): extract_dir was specified, but no archive could be inspected."
-                  }
-                  Write-Warning "$relativePath ($($archConfig.Name)): no inspectable archive URLs; executable-path validation was skipped."
-                  continue
-                }
-
-                $expectedPaths = @()
-                $expectedPaths += @(Get-LaunchPaths $config['bin'])
-                $expectedPaths += @(Get-LaunchPaths $config['shortcuts'])
-                $expectedPaths = @($expectedPaths | Sort-Object -Unique)
-                $missing = @()
-                foreach ($expected in $expectedPaths) {
-                  $found = $false
-                  foreach ($actualPath in $archiveFiles) {
-                    if ([string]::Equals($actualPath, $expected, [System.StringComparison]::OrdinalIgnoreCase)) {
-                      $found = $true
-                      break
-                    }
-                  }
-                  if (-not $found) {
-                    $missing += $expected
-                  }
-                }
-
-                if ($missing.Count -gt 0) {
-                  $hasInstallHooks = $config.Contains('pre_install') -or $config.Contains('post_install')
-                  if ($uninspectedAssets -gt 0 -or $hasInstallHooks) {
-                    Write-Warning "$relativePath ($($archConfig.Name)): could not confirm these launch paths from the inspected archives: $($missing -join ', '). The manifest has non-archive assets or install hooks."
-                  } else {
-                    $archivePathSample = ($archiveFiles | Select-Object -First 40) -join ', '
-                    throw "$relativePath ($($archConfig.Name)): these bin/shortcut files are missing after extraction: $($missing -join ', '). Inspected file paths: $archivePathSample"
+                    throw "$relativePath ($($archConfig.Name)): these bin/shortcut files are missing after extraction: $($missing -join ', ')"
                   }
                 } elseif ($expectedPaths.Count -gt 0) {
                   Write-Host "$relativePath ($($archConfig.Name)): all declared bin/shortcut paths exist in the inspected archive contents."
