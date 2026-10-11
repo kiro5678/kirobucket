@@ -200,6 +200,7 @@ jobs:
 
           $failures = @()
           $downloadCounter = 0
+          $innounpPath = $null
           foreach ($relativePath in $manifestPaths) {
             Write-Host ''
             Write-Host '============================================================'
@@ -292,11 +293,46 @@ jobs:
                   }
                   Test-StaticHash -ArchivePath $archivePath -HashValue $hashValue -Context "$relativePath ($($archConfig.Name), URL $($urlIndex + 1))"
 
-                  # Scoop extracts Inno Setup EXEs with innounp; 7-Zip only sees PE sections
-                  # for some installers, so it cannot reliably validate the extracted app paths.
+                  # Use the same unpacker as Scoop for Inno Setup files. 7-Zip only sees PE
+                  # sections for many installer EXEs and cannot verify the application's paths.
                   if ($pathPart.EndsWith('.exe') -and $config.Contains('innosetup') -and $config['innosetup'] -eq $true) {
-                    $uninspectedAssets++
-                    Write-Warning "$relativePath ($($archConfig.Name)): static SHA hash checked; skipping launch-path inspection for the Inno Setup EXE because 7-Zip cannot confirm innounp's extracted file layout."
+                    if ([string]::IsNullOrWhiteSpace($innounpPath)) {
+                      $innounpZip = Join-Path $env:RUNNER_TEMP 'innounp-2.zip'
+                      $innounpRoot = Join-Path $env:RUNNER_TEMP 'innounp-helper'
+                      Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/refs/heads/master/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 120
+                      Test-StaticHash -ArchivePath $innounpZip -HashValue 'f2f037fdbc63de31248efae9ccb294398d160dc0cbad5f36d14c2f159e17bbf5' -Context 'innounp helper'
+                      New-Item -ItemType Directory -Path $innounpRoot -Force | Out-Null
+                      & $sevenZipPath x $innounpZip "-o$innounpRoot" '-y' | Out-Null
+                      if ($LASTEXITCODE -ne 0) {
+                        throw 'Could not extract the innounp helper archive.'
+                      }
+                      $innounpExe = Get-ChildItem -LiteralPath $innounpRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+                      if ($null -eq $innounpExe) {
+                        throw 'The innounp helper archive did not contain innounp.exe.'
+                      }
+                      $innounpPath = $innounpExe.FullName
+                    }
+
+                    $innoExtractRoot = Join-Path $env:RUNNER_TEMP "manifest-inno-$downloadCounter"
+                    New-Item -ItemType Directory -Path $innoExtractRoot -Force | Out-Null
+                    $innounpOutput = & $innounpPath '-x' "-d$innoExtractRoot" $archivePath '-y' '-c{app}' 2>&1
+                    $innounpExitCode = $LASTEXITCODE
+                    if ($innounpExitCode -ne 0) {
+                      $innounpDetails = ($innounpOutput | Select-Object -Last 8) -join ' '
+                      throw "$relativePath ($($archConfig.Name)): innounp extraction failed with exit code $innounpExitCode. $innounpDetails"
+                    }
+
+                    $innoFiles = @(Get-ChildItem -LiteralPath $innoExtractRoot -File -Recurse)
+                    if ($innoFiles.Count -eq 0) {
+                      throw "$relativePath ($($archConfig.Name)): innounp succeeded but extracted no files from the Inno Setup app directory."
+                    }
+                    $archiveFiles += @($innoFiles | ForEach-Object {
+                      [System.IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\', '/')
+                    })
+                    Write-Host "$relativePath ($($archConfig.Name)): innounp extracted $($innoFiles.Count) app file(s). Sample paths: $(($archiveFiles | Select-Object -First 20) -join ', ')"
+                    $inspectableArchives++
+                    $archiveOrdinal++
+                    Remove-Item -LiteralPath $innoExtractRoot -Recurse -Force -ErrorAction SilentlyContinue
                     Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
                     continue
                   }
