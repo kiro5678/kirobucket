@@ -133,6 +133,12 @@ The repository CI remains responsible for validating manifest syntax and schema 
 ### ALLPlayer x86 executable cleanup and shortcut icon
 - Updated `bucket/allplayer.json` in commit `bb4530a2f270512e00019c9587c40d426978fbf9`.
 - Extended `pre_install` to remove `ALLPlayer,2.exe` (the x86 executable) after renaming `ALLPlayer,1.exe` to `ALLPlayer.exe`; the existing cleanup still removes only `lib` and preserves `lib64`.
-- Added a single `ALLPlayer.ico` file generated from the associated icon in the x64 `ALLPlayer.exe`, and configured the Start Menu shortcut to use that icon.
-- Follow-up manifest commit `d0719740edbedfc7e9c237cd428f5fdf4a78f464` validates the generated ICO header and removes the outdated description that claimed 32-bit/64-bit components.
+- Initially configured a single `ALLPlayer.ico` shortcut icon, then corrected the approach in commit `42cb22bf8f4417f03bca0c9cf026cc56eb9e3def` to use the bundled `allplayer-radio,1.ico` instead of generating an icon from the executable.
+- The selected ICO is renamed to `ALLPlayer.ico`, its ICO header is validated, and `allplayer-radio,2.ico` is removed so only the selected bundled icon remains. The shortcut points to `ALLPlayer.ico`.
 - CI workflow definitions were not changed by these manifest updates. The archive validator does not execute `pre_install`, so successful archive validation alone cannot prove the x86 file is removed or the icon is generated; those actions need runtime verification on Windows. No CI result for the follow-up commit has been confirmed yet.
+
+
+### ALLPlayer bundled ICO selection correction
+- Commit `42cb22bf8f4417f03bca0c9cf026cc56eb9e3def` updates `pre_install` to keep the bundled `allplayer-radio,1.ico` as `ALLPlayer.ico`, remove `allplayer-radio,2.ico`, and validate the ICO header before keeping the shortcut reference.
+- The same hook removes `ALLPlayer,2.exe` and `lib`, while requiring and preserving `lib64`.
+- No CI run has been confirmed for this latest commit. Archive validation does not execute `pre_install`, so the cleanup and ICO selection need installation-time verification.
