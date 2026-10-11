@@ -12,7 +12,7 @@
             "ALLPlayer.exe",
             "ALLPlayer",
             "",
-            "ALLPlayer.ico"
+            "allplayer-radio.ico"
         ]
     ],
     "checkver": {
@@ -26,10 +26,10 @@
         "if (!(Test-Path -LiteralPath \"$dir\\ALLPlayer,1.exe\" -PathType Leaf)) { throw 'The 64-bit ALLPlayer executable was not found after extraction.' }",
         "if (Test-Path -LiteralPath \"$dir\\ALLPlayer.exe\" -PathType Leaf) { throw 'Refusing to overwrite an existing ALLPlayer.exe.' }",
         "Move-Item -LiteralPath \"$dir\\ALLPlayer,1.exe\" -Destination \"$dir\\ALLPlayer.exe\" -ErrorAction Stop",
-        "if (!(Test-Path -LiteralPath \"$dir\\allplayer-radio,1.ico\" -PathType Leaf)) { throw 'The selected ALLPlayer icon allplayer-radio,1.ico was not found after extraction.' }",
+        "if (!(Test-Path -LiteralPath \"$dir\\allplayer-radio,1.ico\" -PathType Leaf)) { throw 'The selected icon allplayer-radio,1.ico was not found after extraction.' }",
         "if (Test-Path -LiteralPath \"$dir\\ALLPlayer.ico\" -PathType Leaf) { throw 'Refusing to overwrite an existing ALLPlayer.ico.' }",
         "Move-Item -LiteralPath \"$dir\\allplayer-radio,1.ico\" -Destination \"$dir\\ALLPlayer.ico\" -ErrorAction Stop",
-        "$iconBytes = [System.IO.File]::ReadAllBytes((Join-Path $dir 'ALLPlayer.ico')); if ($iconBytes.Length -lt 22 -or $iconBytes[0] -ne 0 -or $iconBytes[1] -ne 0 -or $iconBytes[2] -ne 1 -or $iconBytes[3] -ne 0) { throw 'The extracted ALLPlayer.ico is invalid.' }",
+        "$iconBytes = [System.IO.File]::ReadAllBytes((Join-Path $dir 'allplayer-radio.ico')); if ($iconBytes.Length -lt 22 -or $iconBytes[0] -ne 0 -or $iconBytes[1] -ne 0 -or $iconBytes[2] -ne 1 -or $iconBytes[3] -ne 0) { throw 'The extracted allplayer-radio.ico is invalid.' }",
         "if (Test-Path -LiteralPath \"$dir\\allplayer-radio,2.ico\" -PathType Leaf) { Remove-Item -LiteralPath \"$dir\\allplayer-radio,2.ico\" -Force -ErrorAction Stop }",
         "if (!(Test-Path -LiteralPath \"$dir\\lib64\" -PathType Container)) { throw 'The 64-bit lib64 directory was not found after extraction.' }",
         "if (Test-Path -LiteralPath \"$dir\\lib\" -PathType Container) { Remove-Item -LiteralPath \"$dir\\lib\" -Recurse -Force -ErrorAction Stop }",
