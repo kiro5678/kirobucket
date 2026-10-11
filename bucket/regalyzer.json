@@ -1,0 +1,26 @@
+{
+    "version": "2.0.2.24",
+    "description": "Advanced registry editor with background search, regex search, bookmarks, and registry hive snapshots.",
+    "homepage": "https://www.safer-networking.org/products/regalyzer/",
+    "license": "Freeware",
+    "url": "https://download.spybot.info/RegAlyzer/RegAlyzer-2.0.2.24-setup.exe",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "innosetup": true,
+    "bin": "RegAlyzer.exe",
+    "shortcuts": [
+        [
+            "RegAlyzer.exe",
+            "RegAlyzer"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.safer-networking.org/products/regalyzer/version-history/",
+        "regex": "Version\\s+([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://download.spybot.info/RegAlyzer/RegAlyzer-$version-setup.exe",
+        "hash": {
+            "mode": "download"
+        }
+    }
+}
