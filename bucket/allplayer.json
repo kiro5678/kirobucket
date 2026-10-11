@@ -23,6 +23,8 @@
     "pre_install": [
         "if (!(Test-Path -LiteralPath \"$dir\\ALLPlayer,1.exe\" -PathType Leaf)) { throw 'The 64-bit ALLPlayer executable was not found after extraction.' }",
         "if (Test-Path -LiteralPath \"$dir\\ALLPlayer.exe\" -PathType Leaf) { throw 'Refusing to overwrite an existing ALLPlayer.exe.' }",
-        "Move-Item -LiteralPath \"$dir\\ALLPlayer,1.exe\" -Destination \"$dir\\ALLPlayer.exe\" -ErrorAction Stop"
+        "Move-Item -LiteralPath \"$dir\\ALLPlayer,1.exe\" -Destination \"$dir\\ALLPlayer.exe\" -ErrorAction Stop",
+        "if (!(Test-Path -LiteralPath \"$dir\\lib64\" -PathType Container)) { throw 'The 64-bit lib64 directory was not found after extraction.' }",
+        "if (Test-Path -LiteralPath \"$dir\\lib\" -PathType Container) { Remove-Item -LiteralPath \"$dir\\lib\" -Recurse -Force -ErrorAction Stop }"
     ]
 }
