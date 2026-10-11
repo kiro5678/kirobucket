@@ -142,3 +142,8 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Commit `42cb22bf8f4417f03bca0c9cf026cc56eb9e3def` updates `pre_install` to keep the bundled `allplayer-radio,1.ico` as `ALLPlayer.ico`, remove `allplayer-radio,2.ico`, and validate the ICO header before keeping the shortcut reference.
 - The same hook removes `ALLPlayer,2.exe` and `lib`, while requiring and preserving `lib64`.
 - No CI run has been confirmed for this latest commit. Archive validation does not execute `pre_install`, so the cleanup and ICO selection need installation-time verification.
+
+### ALLPlayer icon filename correction
+- Manifest commit `b76fac043317d96ccacc011833ef442884391f79` sets the final icon name to exactly `allplayer-radio.ico`.
+- The hook renames `allplayer-radio,1.ico` to `allplayer-radio.ico`, validates that ICO, removes `allplayer-radio,2.ico`, and the shortcut references `allplayer-radio.ico`.
+- No CI run has been confirmed for this latest manifest commit. Archive validation does not execute `pre_install`, so the runtime rename/removal still requires installation-time verification.
