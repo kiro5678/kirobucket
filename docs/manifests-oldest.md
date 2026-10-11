@@ -69,7 +69,6 @@ Generated automatically from the manifests in the bucket directory.
 | [dude](bucket/dude.json) | File Management | 2.0763.579 | 2026-09-29 | [Homepage](https://github.com/PJDude/dude) | Disk usage analyzer and file browser for Windows. |
 | [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.8-2 | 2026-09-29 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.8.8600.25 | 2026-09-29 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
-| [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
 | [ecopaste-nightly](bucket/ecopaste-nightly.json) | Clipboard & Text | 1.1.1-nightly.20260813.1 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. Nightly build. |
 | [edge-drop](bucket/edge-drop.json) | Clipboard & Text | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/Deepender25/Edge-Drop) | Clipboard manager that lives on the left edge of your screen. |
 | [everything-cmdpal](bucket/everything-cmdpal.json) | File Management | 0.9.26030.0 | 2026-09-29 | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) | Everything search extension for PowerToys Command Palette |
@@ -296,6 +295,7 @@ Generated automatically from the manifests in the bucket directory.
 | [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs and automatic subtitles. |
 | [crosspaste](bucket/crosspaste.json) | Clipboard & Text | 2.2.1.2706 | 2026-10-11 | [Homepage](https://crosspaste.com/en/) | Universal pasteboard across devices. |
 | [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.36 | 2026-10-11 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
+| [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-10-11 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-11 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.21.0 | 2026-10-11 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 

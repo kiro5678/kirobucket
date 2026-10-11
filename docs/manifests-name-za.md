@@ -216,7 +216,7 @@ Generated automatically from the manifests in the bucket directory.
 | [endstate-gui](bucket/endstate-gui.json) | Other Utilities | 3.11.0 | 2026-10-06 | [Homepage](https://github.com/Artexis10/endstate-gui) | The official desktop app for Endstate, for restoring apps and settings from a portable file. |
 | [edge-drop](bucket/edge-drop.json) | Clipboard & Text | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/Deepender25/Edge-Drop) | Clipboard manager that lives on the left edge of your screen. |
 | [ecopaste-nightly](bucket/ecopaste-nightly.json) | Clipboard & Text | 1.1.1-nightly.20260813.1 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. Nightly build. |
-| [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
+| [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-10-11 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.8.8600.25 | 2026-09-29 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
 | [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.8-2 | 2026-09-29 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
 | [dude](bucket/dude.json) | File Management | 2.0763.579 | 2026-09-29 | [Homepage](https://github.com/PJDude/dude) | Disk usage analyzer and file browser for Windows. |

@@ -18,7 +18,7 @@ Generated automatically from the manifests in the bucket directory.
 | [clustercut](bucket/clustercut.json) | Clipboard & Text | 0.4.4 | 2026-10-05 | [Homepage](https://github.com/keithvassallomt/ClusterCut) | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
 | [crosspaste](bucket/crosspaste.json) | Clipboard & Text | 2.2.1.2706 | 2026-10-11 | [Homepage](https://crosspaste.com/en/) | Universal pasteboard across devices. |
 | [deskdrop](bucket/deskdrop.json) | Clipboard & Text | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/ChinmayyK/Deskdrop) | Local-first peer-to-peer clipboard sharing, file transfers, remote folder browsing, and continuity camera. |
-| [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
+| [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-10-11 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
 | [ecopaste-nightly](bucket/ecopaste-nightly.json) | Clipboard & Text | 1.1.1-nightly.20260813.1 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. Nightly build. |
 | [edge-drop](bucket/edge-drop.json) | Clipboard & Text | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/Deepender25/Edge-Drop) | Clipboard manager that lives on the left edge of your screen. |
 | [pastebar](bucket/pastebar.json) | Clipboard & Text | 0.7.0 | 2026-09-29 | [Homepage](https://www.pastebar.app/) | Limitless, Free Clipboard Manager for Mac and Windows |
