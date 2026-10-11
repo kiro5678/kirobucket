@@ -122,5 +122,5 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Confirmed from the actual v9.6.0.0 installer that `ALLPlayer,1.exe` is x64 (22,715,984 bytes), while `ALLPlayer,2.exe` is x86 (17,049,168 bytes). Both report the original filename `ALLPlayer.exe`.
 - Updated `bucket/allplayer.json` with a guarded `pre_install` hook that renames the x64 `ALLPlayer,1.exe` to the expected `ALLPlayer.exe` before Scoop creates the shim and shortcut. The hook fails explicitly if the x64 executable is missing or if a target file already exists.
 - Run 38109276051 — archive validation succeeded; the installer SHA-256 and innounp helper SHA-256 matched. The validator found both executable architectures and reported 0 failures. Launch-path presence is warned rather than asserted at archive-inspection time because the pre-install hook creates the canonical `ALLPlayer.exe` name.
-- Run 38109309430 — CI dispatched after successful archive validation; the `pwsh` matrix job passed while the `powershell` job was still running at the time of this log update.
+- Run 38109309430 — CI passed after archive validation; both `powershell` and `pwsh` matrix jobs succeeded, including `Register PSGallery` and Scoop tests.
 
