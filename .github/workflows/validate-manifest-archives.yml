@@ -295,7 +295,19 @@ jobs:
                   # Scoop extracts Inno Setup installers with innounp, not 7-Zip.
                   # 7-Zip may only list PE sections (.text, .rsrc, etc.), which are not
                   # the application files that remain after Scoop's extraction.
-                  if ($pathPart -match '\\.exe                  $records = @()
+                  if ($pathPart.EndsWith('.exe') -and $config.Contains('innosetup') -and $config['innosetup'] -eq $true) {
+                    $uninspectedAssets++
+                    Write-Warning "$relativePath ($($archConfig.Name)): static SHA hash checked; skipping launch-path inspection for the Inno Setup EXE because 7-Zip cannot confirm innounp's extracted file layout."
+                    Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
+                    continue
+                  }
+
+                  $listing = & $sevenZipPath l -slt $archivePath 2>&1
+                  if ($LASTEXITCODE -ne 0) {
+                    throw "$relativePath ($($archConfig.Name)): the asset could not be listed as an archive. URL: $downloadUrl"
+                  }
+
+                  $records = @()
                   $current = $null
                   foreach ($lineObject in $listing) {
                     $line = [string]$lineObject
