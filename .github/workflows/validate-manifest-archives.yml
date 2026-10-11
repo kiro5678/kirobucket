@@ -389,7 +389,8 @@ jobs:
                   if ($uninspectedAssets -gt 0 -or $hasInstallHooks) {
                     Write-Warning "$relativePath ($($archConfig.Name)): could not confirm these launch paths from the inspected archives: $($missing -join ', '). The manifest has non-archive assets or install hooks."
                   } else {
-                    throw "$relativePath ($($archConfig.Name)): these bin/shortcut files are missing after extraction: $($missing -join ', ')"
+                    $archivePathSample = ($archiveFiles | Select-Object -First 40) -join ', '
+                    throw "$relativePath ($($archConfig.Name)): these bin/shortcut files are missing after extraction: $($missing -join ', '). Inspected file paths: $archivePathSample"
                   }
                 } elseif ($expectedPaths.Count -gt 0) {
                   Write-Host "$relativePath ($($archConfig.Name)): all declared bin/shortcut paths exist in the inspected archive contents."
