@@ -7,9 +7,9 @@ Generated automatically from the manifests in the bucket directory.
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [0install-win](bucket/0install-win.json) | Package Management | 2.29.3 | 2026-09-29 | [Homepage](https://0install.net/) | Decentralized software installation system for Windows with a GUI and OS integrations. |
-| [2faguard](bucket/2faguard.json) | Security | 1.8.3 | 2026-09-29 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
-| [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.0 | 2026-10-06 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
-| [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.0 | 2026-10-06 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
+| [2faguard](bucket/2faguard.json) | Security | 1.8.4 | 2026-10-10 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
+| [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
+| [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [aero-dock](bucket/aero-dock.json) | Windows Customization | 1.3.2 | 2026-09-29 | [Homepage](https://github.com/TheAgencyMGE/aero-dock) | A lightweight Windows dock with a portable mode. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.16.0 | 2026-10-09 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [aifilesorter](bucket/aifilesorter.json) | File Management | 1.9.2 | 2026-09-29 | [Homepage](https://github.com/hyperfield/ai-file-sorter) | Local AI file organization with categorization and rename suggestions. |
@@ -55,7 +55,7 @@ Generated automatically from the manifests in the bucket directory.
 | [crow-translate](bucket/crow-translate.json) | Translation & OCR | 4.1.0 | 2026-09-29 | [Homepage](https://apps.kde.org/crowtranslate) | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [cstatus](bucket/cstatus.json) | Network & DNS | 1.2.7.1 | 2026-09-29 | [Homepage](https://www.hnsoft.pt/cstatus) | Free network monitoring and scanning tool for Windows |
-| [cuttherope-dx](bucket/cuttherope-dx.json) | Games & Game Utilities | 2.50.0 | 2026-10-07 | [Homepage](https://github.com/yell0wsuit/cuttherope-dx) | Open-source remake of Cut the Rope for Windows and other platforms. |
+| [cuttherope-dx](bucket/cuttherope-dx.json) | Games & Game Utilities | 2.50.1 | 2026-10-10 | [Homepage](https://github.com/yell0wsuit/cuttherope-dx) | Open-source remake of Cut the Rope for Windows and other platforms. |
 | [cwitcher](bucket/cwitcher.json) | Keyboard & Language | 0.6.2 | 2026-09-29 | [Homepage](https://github.com/Astrent-bear/Cwitcher) | Lightweight Windows tray utility for keyboard layout switching and text transformation. |
 | [czkawka-cli](bucket/czkawka-cli.json) | File Management | 12.0.2 | 2026-09-29 | [Homepage](https://github.com/qarmin/czkawka) | Command-line file and directory cleaner and duplicate finder |
 | [czkawka-gui-gtk](bucket/czkawka-gui-gtk.json) | File Management | 12.0.2 | 2026-09-29 | [Homepage](https://github.com/qarmin/czkawka) | Legacy GTK graphical interface for Czkawka |
@@ -81,7 +81,7 @@ Generated automatically from the manifests in the bucket directory.
 | [doublecmd](bucket/doublecmd.json) | File Management | 1.2.9 | 2026-09-29 | [Homepage](https://doublecmd.sourceforge.io/) | A cross-platform open-source file manager with two panels side by side. |
 | [dpscreenocr](bucket/dpscreenocr.json) | Translation & OCR | 1.5.1 | 2026-09-29 | [Homepage](https://danpla.github.io/dpscreenocr/) | A free and open-source program to recognize text on the screen. |
 | [dragwin](bucket/dragwin.json) | Windows Customization | 1.1.6 | 2026-09-29 | [Homepage](https://github.com/PinchToDebug/DragWin) | Move and resize Windows without holding Alt or Control. |
-| [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.26 | 2026-09-29 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
+| [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.36 | 2026-10-11 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
 | [ds4windows](bucket/ds4windows.json) | Games & Game Utilities | 4.0.2.3 | 2026-09-29 | [Homepage](https://github.com/hbashton/DS4Windows) | DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable) |
 | [ds4windows-prerelease](bucket/ds4windows-prerelease.json) | Games & Game Utilities | 4.5.9 | 2026-09-29 | [Homepage](https://github.com/hbashton/DS4Windows) | DualShock 4, DualSense, and other controller remapping tool for Windows (pre-release portable) |
 | [dude](bucket/dude.json) | File Management | 2.0763.579 | 2026-09-29 | [Homepage](https://github.com/PJDude/dude) | Disk usage analyzer and file browser for Windows. |
@@ -128,9 +128,9 @@ Generated automatically from the manifests in the bucket directory.
 | [helixnotes](bucket/helixnotes.json) | Notes & Knowledge | 1.3.6 | 2026-09-30 | [Homepage](https://helixnotes.com/) | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. |
 | [iconswappergui](bucket/iconswappergui.json) | Windows Customization | 2.1.2 | 2026-09-29 | [Homepage](https://github.com/aj-phillips/IconSwapperGui) | Portable GUI for swapping Windows file and folder icons. |
 | [imageglass](bucket/imageglass.json) | Images & Photos | 10.0.6.906 | 2026-09-29 | [Homepage](https://imageglass.org) | A fast, modern, open-source image viewer for Windows |
-| [imagemagick](bucket/imagemagick.json) | Images & Photos | 7.1.2-32 | 2026-09-29 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats. |
-| [imagemagick-hdri](bucket/imagemagick-hdri.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. |
-| [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-32 | 2026-09-30 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
+| [imagemagick](bucket/imagemagick.json) | Images & Photos | 7.1.2-33 | 2026-10-10 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats. |
+| [imagemagick-hdri](bucket/imagemagick-hdri.json) | Images & Photos | 7.1.2-33 | 2026-10-10 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. |
+| [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-33 | 2026-10-10 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
 | [imagetype](bucket/imagetype.json) | Images & Photos | 3.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ImageType) | Accessible image editor for adding custom text to images |
 | [imfile](bucket/imfile.json) | Download Managers | 2.3.4 | 2026-09-29 | [Homepage](https://github.com/imfile-io/imfile-desktop) | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. |
 | [kalarm](bucket/kalarm.json) | Other Utilities | 3549 | 2026-10-06 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
@@ -138,12 +138,12 @@ Generated automatically from the manifests in the bucket directory.
 | [komi-store](bucket/komi-store.json) | Other Utilities | 1.9.2 | 2026-09-30 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | Windows Customization | 2026-08-22 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |
-| [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.6.1 | 2026-10-06 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
+| [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.8.0 | 2026-10-10 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [langover](bucket/langover.json) | Keyboard & Language | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/nachlib/LangOver) | Portable Windows utility for converting text between Hebrew and English keyboard layouts. |
 | [lapis](bucket/lapis.json) | Notes & Knowledge | 3.0.1 | 2026-09-29 | [Homepage](https://github.com/zexadev/lapisnote) | Local-first note-taking app with AI assistant and peer-to-peer sync. |
 | [lettuce-window-switcher](bucket/lettuce-window-switcher.json) | Productivity & Launchers | 0.3.70 | 2026-09-29 | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) | Windows 11 application switcher with live DWM previews and multiple switcher views |
 | [lively](bucket/lively.json) | Other Utilities | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
-| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.2 | 2026-09-30 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
+| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.4 | 2026-10-10 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [local-desktop-store](bucket/local-desktop-store.json) | Package Management | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) | Private GitHub-based desktop application store and installer |
 | [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.104 | 2026-10-06 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.1.7 | 2026-10-08 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
@@ -152,7 +152,7 @@ Generated automatically from the manifests in the bucket directory.
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.5 | 2026-09-29 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-09-29 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
-| [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.46 | 2026-10-02 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
+| [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.47 | 2026-10-10 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
 | [motrix-next](bucket/motrix-next.json) | Download Managers | 3.9.9 | 2026-09-30 | [Homepage](https://github.com/AnInsomniacy/motrix-next) | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
 | [mouzi](bucket/mouzi.json) | File Management | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/hsr88/mouzi) | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
 | [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.26 | 2026-10-01 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
@@ -207,8 +207,8 @@ Generated automatically from the manifests in the bucket directory.
 | [recordly](bucket/recordly.json) | Media & Audio/Video | 1.4.0 | 2026-09-29 | [Homepage](https://github.com/webadderallorg/Recordly) | Open-source screen recorder and editor for polished demo videos. |
 | [registry-finder](bucket/registry-finder.json) | Other Utilities | 2.62.0.0 | 2026-10-01 | [Homepage](https://registry-finder.com/) | Registry Finder is an improved replacement for the built-in Windows registry editor |
 | [rightclicktools](bucket/rightclicktools.json) | Windows Customization | 2.0.4 | 2026-10-03 | [Homepage](https://github.com/LesFerch/RightClickTools) | A set of powerful tools and shortcuts for the Windows Explorer context menu. |
-| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.19.2 | 2026-10-09 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20262 | 2026-10-09 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.20.0 | 2026-10-10 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20281 | 2026-10-10 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [rqbit](bucket/rqbit.json) | Download Managers | 9.0.1 | 2026-09-29 | [Homepage](https://github.com/ikatson/rqbit) | A BitTorrent client with a desktop GUI, HTTP API and Web UI. |
 | [rscoop](bucket/rscoop.json) | Package Management | 1.11.0 | 2026-09-30 | [Homepage](https://github.com/AmarBego/Rscoop) | A graphical user interface for Scoop package manager |
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.6 | 2026-10-07 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
@@ -245,7 +245,7 @@ Generated automatically from the manifests in the bucket directory.
 | [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-05 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.1.0 | 2026-09-29 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.6 | 2026-10-06 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.128.3 | 2026-10-09 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.128.7 | 2026-10-10 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
 | [tabame](bucket/tabame.json) | Other Utilities | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [tagstudio](bucket/tagstudio.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
@@ -284,7 +284,7 @@ Generated automatically from the manifests in the bucket directory.
 | [wallpaper-changer](bucket/wallpaper-changer.json) | Windows Customization | 5.4.1 | 2026-09-29 | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. |
 | [warpinator](bucket/warpinator.json) | Network & DNS | 1.1 | 2026-09-29 | [Homepage](https://github.com/slowscript/warpinator-windows) | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. |
 | [wincux](bucket/wincux.json) | Windows Customization | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/samcuxx/WinCux) | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. |
-| [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.6 | 2026-09-30 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
+| [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-10 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [wingodarktray](bucket/wingodarktray.json) | Windows Customization | 2.3.1 | 2026-09-29 | [Homepage](https://github.com/5mdt/WinGoDarkTray) | System tray app for toggling Windows light and dark themes. |
 | [winhance](bucket/winhance.json) | Windows Privacy & Tweaks | 26.06.12 | 2026-09-29 | [Homepage](https://github.com/memstechtips/Winhance) | Windows enhancement, debloating, optimization and customization utility |
 | [winscript](bucket/winscript.json) | Windows Privacy & Tweaks | 2.27.0 | 2026-10-07 | [Homepage](https://winscript.cc/) | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. |
