@@ -329,7 +329,12 @@ jobs:
                     $archiveFiles += @($innoFiles | ForEach-Object {
                       [System.IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\', '/')
                     })
-                    Write-Host "$relativePath ($($archConfig.Name)): innounp extracted $($innoFiles.Count) app file(s). Sample paths: $(($archiveFiles | Select-Object -First 20) -join ', ')"
+                    $exeDetails = @($innoFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+                      $relative = [System.IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\', '/')
+                      $versionInfo = $_.VersionInfo
+                      "{0} | {1} bytes | Product='{2}' | Description='{3}' | Original='{4}'" -f $relative, $_.Length, $versionInfo.ProductName, $versionInfo.FileDescription, $versionInfo.OriginalFilename
+                    })
+                    Write-Host "$relativePath ($($archConfig.Name)): innounp extracted $($innoFiles.Count) app file(s). Executables: $($exeDetails -join '; ')"
                     $inspectableArchives++
                     $archiveOrdinal++
                     Remove-Item -LiteralPath $innoExtractRoot -Recurse -Force -ErrorAction SilentlyContinue
