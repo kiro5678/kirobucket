@@ -134,4 +134,5 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Updated `bucket/allplayer.json` in commit `bb4530a2f270512e00019c9587c40d426978fbf9`.
 - Extended `pre_install` to remove `ALLPlayer,2.exe` (the x86 executable) after renaming `ALLPlayer,1.exe` to `ALLPlayer.exe`; the existing cleanup still removes only `lib` and preserves `lib64`.
 - Added a single `ALLPlayer.ico` file generated from the associated icon in the x64 `ALLPlayer.exe`, and configured the Start Menu shortcut to use that icon.
-- CI workflow definitions were not changed by this manifest update. The archive validator does not execute `pre_install`, so successful archive validation alone cannot prove the x86 file is removed or the icon is generated; those actions need runtime verification on Windows.
+- Follow-up manifest commit `d0719740edbedfc7e9c237cd428f5fdf4a78f464` validates the generated ICO header and removes the outdated description that claimed 32-bit/64-bit components.
+- CI workflow definitions were not changed by these manifest updates. The archive validator does not execute `pre_install`, so successful archive validation alone cannot prove the x86 file is removed or the icon is generated; those actions need runtime verification on Windows. No CI result for the follow-up commit has been confirmed yet.
