@@ -13,7 +13,7 @@ Generated automatically from the manifests in the bucket directory.
 | [aero-dock](bucket/aero-dock.json) | Windows Customization | 1.3.2 | 2026-09-29 | [Homepage](https://github.com/TheAgencyMGE/aero-dock) | A lightweight Windows dock with a portable mode. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.16.0 | 2026-10-09 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [aifilesorter](bucket/aifilesorter.json) | File Management | 1.9.2 | 2026-09-29 | [Homepage](https://github.com/hyperfield/ai-file-sorter) | Local AI file organization with categorization and rename suggestions. |
-| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player for Windows with built-in codecs and automatic subtitle support. |
+| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free Windows multimedia player with built-in codecs and automatic subtitle support. |
 | [am-downloader](bucket/am-downloader.json) | Download Managers | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/antikmozib/AM-Downloader) | A modern download manager for Windows. |
 | [amule](bucket/amule.json) | Network & DNS | 3.0.0 | 2026-09-29 | [Homepage](https://www.amule-project.net/) | A free and open-source peer-to-peer file sharing client. |
 | [android-dex](bucket/android-dex.json) | Android & Device Tools | 1.3 | 2026-09-29 | [Homepage](https://github.com/Shrey113/Android-Dex) | Android desktop experience for controlling and mirroring Android devices. |
