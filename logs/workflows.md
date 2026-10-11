@@ -103,3 +103,14 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Run 38025720619 — archive validation succeeded for `bucket/winzenith.json`, including SHA-256 and declared `bin`/shortcut path checks; the validator dispatched CI after the checks passed.
 - Run 38025734499 — both CI matrix jobs (`powershell` and `pwsh`) passed, including `Register PSGallery` and Scoop tests.
 - These results verify the formatter workflow, archive validator, and dispatched CI success. They do not, by themselves, establish that one newly modified manifest was pushed and observed completing the entire end-to-end sequence in a single test.
+
+## 2026-10-11
+
+### ALLPlayer manifest and Inno Setup archive validation
+- Fixed `bucket/allplayer.json` installation metadata by assigning the downloaded setup a distinct local filename (`ALLPlayer-setup-$version.exe`) so it cannot collide with the extracted `ALLPlayer.exe` application executable.
+- Added the static SHA-256 for the current 9.6 installer: `239deb29411cffcc716718ed7fd16a2db7afa7f903c2b1ccc54b8b4bda2d8a65`.
+- Added a short manifest comment explaining why the local setup filename differs from the remote filename.
+- Updated `.github/workflows/validate-manifest-archives.yml`: it verifies static hashes for Inno Setup EXEs, but skips launch-path inspection when 7-Zip exposes PE sections instead of the files extracted by Scoop's `innounp`. This avoids treating the executable's PE sections as an archive file list; it does not constitute a runtime installation test.
+- Run 38107881846 — archive validation passed for `bucket/allplayer.json`: SHA-256 OK, 0 failures; the workflow dispatched CI run 38107896724.
+- Earlier runs 38107473777 and 38107600546 failed because the validator tried to infer extracted application paths from 7-Zip's PE-section listing, not because of a checksum mismatch.
+
