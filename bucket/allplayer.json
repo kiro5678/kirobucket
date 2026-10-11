@@ -1,6 +1,6 @@
 {
     "version": "9.6",
-    "description": "Free multimedia player with built-in codecs, automatic subtitles, and 32-bit/64-bit components.",
+    "description": "Free multimedia player with built-in codecs and automatic subtitles.",
     "homepage": "https://allplayer.com/",
     "license": "Freeware",
     "url": "https://allplayer.com/Download/ALLPlayer.exe#/ALLPlayer-setup-9.6.exe",
@@ -27,7 +27,7 @@
         "if (Test-Path -LiteralPath \"$dir\\ALLPlayer.exe\" -PathType Leaf) { throw 'Refusing to overwrite an existing ALLPlayer.exe.' }",
         "Move-Item -LiteralPath \"$dir\\ALLPlayer,1.exe\" -Destination \"$dir\\ALLPlayer.exe\" -ErrorAction Stop",
         "Add-Type -AssemblyName System.Drawing",
-        "$iconPath = Join-Path $dir 'ALLPlayer.ico'; if (!(Test-Path -LiteralPath $iconPath -PathType Leaf)) { $icon = [System.Drawing.Icon]::ExtractAssociatedIcon((Join-Path $dir 'ALLPlayer.exe')); if ($null -eq $icon) { throw 'Could not extract the ALLPlayer icon from ALLPlayer.exe.' }; $iconStream = [System.IO.File]::Open($iconPath, [System.IO.FileMode]::CreateNew); try { $icon.Save($iconStream) } finally { $iconStream.Dispose(); $icon.Dispose() } }",
+        "$iconPath = Join-Path $dir 'ALLPlayer.ico'; if (!(Test-Path -LiteralPath $iconPath -PathType Leaf)) { $icon = [System.Drawing.Icon]::ExtractAssociatedIcon((Join-Path $dir 'ALLPlayer.exe')); if ($null -eq $icon) { throw 'Could not extract the ALLPlayer icon from ALLPlayer.exe.' }; $iconStream = [System.IO.File]::Open($iconPath, [System.IO.FileMode]::CreateNew); try { $icon.Save($iconStream) } finally { $iconStream.Dispose(); $icon.Dispose() } }; $iconBytes = [System.IO.File]::ReadAllBytes($iconPath); if ($iconBytes.Length -lt 22 -or $iconBytes[0] -ne 0 -or $iconBytes[1] -ne 0 -or $iconBytes[2] -ne 1 -or $iconBytes[3] -ne 0) { throw 'The extracted ALLPlayer.ico is invalid.' }",
         "if (!(Test-Path -LiteralPath \"$dir\\ALLPlayer.ico\" -PathType Leaf)) { throw 'The ALLPlayer.ico shortcut icon was not created.' }",
         "if (!(Test-Path -LiteralPath \"$dir\\lib64\" -PathType Container)) { throw 'The 64-bit lib64 directory was not found after extraction.' }",
         "if (Test-Path -LiteralPath \"$dir\\lib\" -PathType Container) { Remove-Item -LiteralPath \"$dir\\lib\" -Recurse -Force -ErrorAction Stop }",
