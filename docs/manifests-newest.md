@@ -6,7 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
-| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs and automatic subtitle support. |
+| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player for Windows with built-in codecs and automatic subtitle support. |
 | [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.36 | 2026-10-11 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
 | [2faguard](bucket/2faguard.json) | Security | 1.8.4 | 2026-10-10 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
