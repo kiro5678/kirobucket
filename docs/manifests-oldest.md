@@ -296,7 +296,7 @@ Generated automatically from the manifests in the bucket directory.
 | [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-10-11 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |
 | [filepilot](bucket/filepilot.json) | Other Utilities | 1.0.7 | 2026-10-11 | [Homepage](https://github.com/qup1010/FilePilot) | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-11 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
-| [regalyzer](bucket/regalyzer.json) | Other Utilities | 2.0.2.24 | 2026-10-11 | [Homepage](https://www.safer-networking.org/products/regalyzer/) | Advanced registry editor with background search, regex search, bookmarks, and registry hive snapshots. |
+| [regalyzer](bucket/regalyzer.json) | Other Utilities | 2.0.2.24 | 2026-10-11 | [Homepage](https://www.safer-networking.org/products/regalyzer/) | Registry editor with background search, regular-expression search, bookmarks, and hive snapshots. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.21.0 | 2026-10-11 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.2.0 | 2026-10-11 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 
