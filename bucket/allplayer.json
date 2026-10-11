@@ -3,7 +3,7 @@
     "description": "Free multimedia player with built-in codecs and automatic subtitle support.",
     "homepage": "https://allplayer.com/",
     "license": "Freeware",
-    "url": "https://allplayer.com/Download/ALLPlayer.exe#/ALLPlayer-setup.exe",
+    "url": "https://allplayer.com/Download/ALLPlayer.exe#/ALLPlayer-setup-9.6.exe",
     "hash": "239deb29411cffcc716718ed7fd16a2db7afa7f903c2b1ccc54b8b4bda2d8a65",
     "innosetup": true,
     "bin": "ALLPlayer.exe",
@@ -18,6 +18,6 @@
         "regex": "ALLPlayer ([\\d.]+)"
     },
     "autoupdate": {
-        "url": "https://allplayer.com/Download/ALLPlayer.exe#/ALLPlayer-setup.exe"
+        "url": "https://allplayer.com/Download/ALLPlayer.exe#/ALLPlayer-setup-$version.exe"
     }
 }
