@@ -1,7 +1,6 @@
 {
     "version": "9.6",
     "description": "Free multimedia player for Windows with built-in codecs and automatic subtitle support.",
-    "##": "The distinct local setup filename avoids colliding with the extracted application executable.",
     "homepage": "https://allplayer.com/",
     "license": "Freeware",
     "url": "https://allplayer.com/Download/ALLPlayer.exe#/ALLPlayer-setup-9.6.exe",
