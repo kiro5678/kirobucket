@@ -99,7 +99,7 @@ Generated automatically from the manifests in the bucket directory.
 | [fliper](bucket/fliper.json) | Keyboard & Language | 1.2.1 | 2026-09-30 | [Homepage](https://github.com/beatlejute/Fliper) | Universal keyboard layout and case converter for Windows. |
 | [keyboard-language-fix](bucket/keyboard-language-fix.json) | Keyboard & Language | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) | Fix text typed with the wrong keyboard language on Windows. |
 | [langover](bucket/langover.json) | Keyboard & Language | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/nachlib/LangOver) | Portable Windows utility for converting text between Hebrew and English keyboard layouts. |
-| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free Windows multimedia player with built-in codecs and automatic subtitle support. |
+| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs, automatic subtitles, and 32-bit/64-bit components. |
 | [blur](bucket/blur.json) | Media & Audio/Video | 2.45 | 2026-09-29 | [Homepage](https://github.com/f0e/blur) | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. |
 | [fastcast](bucket/fastcast.json) | Media & Audio/Video | 0.9.2 | 2026-09-29 | [Homepage](https://github.com/CalvinSturm/FastCast-releases) | Native Windows screen recorder and live streaming app. |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-01 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |

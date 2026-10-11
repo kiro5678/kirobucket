@@ -296,6 +296,6 @@ Generated automatically from the manifests in the bucket directory.
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.128.7 | 2026-10-10 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-10 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
-| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free Windows multimedia player with built-in codecs and automatic subtitle support. |
+| [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs, automatic subtitles, and 32-bit/64-bit components. |
 | [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.36 | 2026-10-11 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
 
