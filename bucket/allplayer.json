@@ -19,5 +19,10 @@
     },
     "autoupdate": {
         "url": "https://allplayer.com/Download/ALLPlayer.exe#/ALLPlayer-setup-$version.exe"
-    }
+    },
+    "pre_install": [
+        "if (!(Test-Path -LiteralPath \"$dir\\ALLPlayer,1.exe\" -PathType Leaf)) { throw 'The 64-bit ALLPlayer executable was not found after extraction.' }",
+        "if (Test-Path -LiteralPath \"$dir\\ALLPlayer.exe\" -PathType Leaf) { throw 'Refusing to overwrite an existing ALLPlayer.exe.' }",
+        "Move-Item -LiteralPath \"$dir\\ALLPlayer,1.exe\" -Destination \"$dir\\ALLPlayer.exe\" -ErrorAction Stop"
+    ]
 }
