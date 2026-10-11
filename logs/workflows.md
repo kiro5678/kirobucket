@@ -114,3 +114,13 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Run 38107881846 — archive validation passed for `bucket/allplayer.json`: SHA-256 OK, 0 failures; the workflow dispatched CI run 38107896724.
 - Earlier runs 38107473777 and 38107600546 failed because the validator tried to infer extracted application paths from 7-Zip's PE-section listing, not because of a checksum mismatch.
 
+## 2026-10-11
+
+### ALLPlayer executable collision fix
+- The earlier fix that only changed the local installer filename did not resolve shim creation: Scoop's `bin` still pointed to `ALLPlayer.exe`, which was not present after Inno Setup extraction.
+- Updated archive validation to use the same `innounp` extraction style Scoop uses for Inno Setup installers and to report executable architecture and version metadata.
+- Confirmed from the actual v9.6.0.0 installer that `ALLPlayer,1.exe` is x64 (22,715,984 bytes), while `ALLPlayer,2.exe` is x86 (17,049,168 bytes). Both report the original filename `ALLPlayer.exe`.
+- Updated `bucket/allplayer.json` with a guarded `pre_install` hook that renames the x64 `ALLPlayer,1.exe` to the expected `ALLPlayer.exe` before Scoop creates the shim and shortcut. The hook fails explicitly if the x64 executable is missing or if a target file already exists.
+- Run 38109276051 — archive validation succeeded; the installer SHA-256 and innounp helper SHA-256 matched. The validator found both executable architectures and reported 0 failures. Launch-path presence is warned rather than asserted at archive-inspection time because the pre-install hook creates the canonical `ALLPlayer.exe` name.
+- Run 38109309430 — CI dispatched after successful archive validation; the `pwsh` matrix job passed while the `powershell` job was still running at the time of this log update.
+
