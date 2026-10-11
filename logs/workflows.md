@@ -129,3 +129,9 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Extended `pre_install` to require the `lib64` directory and remove only the exact `$dir\lib` directory when it exists; `lib64` is intentionally preserved.
 - This is a manifest install-hook change; `.github/workflows/ci.yml` and the archive-validation workflow were not changed for this adjustment.
 - Validation status: no CI/archive-validation run has yet been confirmed for commit `9ed1030cb242e684dd0099f5d13e7792a247b92f`. The existing archive validator inspects extracted files but deliberately does not execute install hooks, so the new directory cleanup still needs runtime verification.
+
+### ALLPlayer x86 executable cleanup and shortcut icon
+- Updated `bucket/allplayer.json` in commit `bb4530a2f270512e00019c9587c40d426978fbf9`.
+- Extended `pre_install` to remove `ALLPlayer,2.exe` (the x86 executable) after renaming `ALLPlayer,1.exe` to `ALLPlayer.exe`; the existing cleanup still removes only `lib` and preserves `lib64`.
+- Added a single `ALLPlayer.ico` file generated from the associated icon in the x64 `ALLPlayer.exe`, and configured the Start Menu shortcut to use that icon.
+- CI workflow definitions were not changed by this manifest update. The archive validator does not execute `pre_install`, so successful archive validation alone cannot prove the x86 file is removed or the icon is generated; those actions need runtime verification on Windows.
