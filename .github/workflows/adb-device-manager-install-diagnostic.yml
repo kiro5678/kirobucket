@@ -1,0 +1,376 @@
+name: Manual ADB Device Manager Install Path Diagnostic
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-and-inspect:
+    name: Install ADB Device Manager and inspect locations
+    runs-on: windows-2022
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+          "$env:USERPROFILE\scoop\shims" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Validate ADB Device Manager manifest and capture pre-install state
+        id: prepare
+        env:
+          MANIFEST_INPUT: bucket/adb-device-manager.json
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $diagRoot = Join-Path $env:RUNNER_TEMP "adb-device-manager-install-diagnostics"
+          New-Item -ItemType Directory -Path $diagRoot -Force | Out-Null
+          $relativePath = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
+
+          if ($relativePath -notmatch '(?i)^bucket/.+\.json$') {
+            throw "Provide a manifest path under bucket/, e.g. bucket/adb-device-manager.json. Received: $relativePath"
+          }
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE ($relativePath.Replace('/', '\'))
+          if (!(Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            throw "Manifest not found: $manifestPath"
+          }
+
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          if ([string]::IsNullOrWhiteSpace([string]$manifest.version)) {
+            throw "Manifest has no version: $relativePath"
+          }
+
+          function Get-UninstallEntries {
+            $items = @()
+            $roots = @(
+              'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
+            )
+            foreach ($root in $roots) {
+              if (Test-Path -LiteralPath $root) {
+                foreach ($key in (Get-ChildItem -LiteralPath $root -ErrorAction SilentlyContinue)) {
+                  $p = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+                  if ($p.DisplayName) {
+                    $items += [PSCustomObject]@{
+                      Id = "$root\$($key.PSChildName)|$($p.DisplayName)"
+                      DisplayName = [string]$p.DisplayName
+                      InstallLocation = [string]$p.InstallLocation
+                      DisplayIcon = [string]$p.DisplayIcon
+                      UninstallString = [string]$p.UninstallString
+                    }
+                  }
+                }
+              }
+            }
+            return @($items)
+          }
+
+          function Get-StartMenuShortcuts {
+            $roots = @(
+              (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'),
+              (Join-Path $env:ProgramData 'Microsoft\Windows\Start Menu\Programs')
+            )
+            $items = @()
+            foreach ($root in $roots) {
+              if (Test-Path -LiteralPath $root) {
+                $items += @(Get-ChildItem -LiteralPath $root -Filter '*.lnk' -File -Recurse -Force -ErrorAction SilentlyContinue |
+                  ForEach-Object { $_.FullName })
+              }
+            }
+            return @($items | Sort-Object -Unique)
+          }
+
+          $appsRoot = Join-Path $env:USERPROFILE 'scoop\apps'
+          $appNames = @()
+          if (Test-Path -LiteralPath $appsRoot) {
+            $appNames = @(Get-ChildItem -LiteralPath $appsRoot -Directory -Force | ForEach-Object { $_.Name })
+          }
+
+          $baseline = [PSCustomObject]@{
+            ManifestPath = $relativePath
+            ManifestVersion = [string]$manifest.version
+            CapturedAtUtc = [DateTime]::UtcNow.ToString('o')
+            ScoopApps = $appNames
+            StartMenu = @(Get-StartMenuShortcuts)
+            Uninstall = @(Get-UninstallEntries)
+          }
+          $baseline | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $diagRoot 'baseline.json') -Encoding utf8
+          "manifest_path=$relativePath" >> $env:GITHUB_OUTPUT
+          Write-Host "Manifest: $relativePath"
+          Write-Host "Version: $($manifest.version)"
+          Write-Host "Pre-install baseline captured."
+
+      - name: Run actual Scoop install for ADB Device Manager
+        id: install_app
+        env:
+          MANIFEST_PATH: ${{ steps.prepare.outputs.manifest_path }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $diagRoot = Join-Path $env:RUNNER_TEMP "adb-device-manager-install-diagnostics"
+          $logPath = Join-Path $diagRoot 'scoop-install.log'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE ($env:MANIFEST_PATH.Replace('/', '\'))
+          $exitCode = 1
+          Start-Transcript -LiteralPath $logPath -Force
+          try {
+            Write-Host "Installing manifest: $manifestPath"
+            $global:LASTEXITCODE = 0
+            scoop install $manifestPath
+            if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+              $exitCode = [int]$global:LASTEXITCODE
+            } else {
+              $exitCode = 0
+            }
+          } catch {
+            Write-Host "Scoop installation error: $($_.Exception.Message)"
+            $exitCode = 1
+          } finally {
+            Stop-Transcript | Out-Null
+          }
+
+          "install_exit_code=$exitCode" >> $env:GITHUB_OUTPUT
+          Write-Host "Install exit code: $exitCode"
+          if ($exitCode -ne 0) {
+            Write-Host 'Installation failed; the next step will still inspect any files that were created.'
+            exit 1
+          }
+
+      - name: Discover ADB Device Manager files, shortcuts, and registered locations
+        if: always()
+        env:
+          MANIFEST_PATH: ${{ steps.prepare.outputs.manifest_path }}
+          INSTALL_OUTCOME: ${{ steps.install_app.outcome }}
+          INSTALL_EXIT_CODE: ${{ steps.install_app.outputs.install_exit_code }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $diagRoot = Join-Path $env:RUNNER_TEMP "adb-device-manager-install-diagnostics"
+          New-Item -ItemType Directory -Path $diagRoot -Force | Out-Null
+          $reportPath = Join-Path $diagRoot 'installation-report.txt'
+          $baselinePath = Join-Path $diagRoot 'baseline.json'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE ($env:MANIFEST_PATH.Replace('/', '\'))
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          $appName = [System.IO.Path]::GetFileNameWithoutExtension($env:MANIFEST_PATH)
+
+          function Get-UninstallEntries {
+            $items = @()
+            $roots = @(
+              'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
+            )
+            foreach ($root in $roots) {
+              if (Test-Path -LiteralPath $root) {
+                foreach ($key in (Get-ChildItem -LiteralPath $root -ErrorAction SilentlyContinue)) {
+                  $p = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+                  if ($p.DisplayName) {
+                    $items += [PSCustomObject]@{
+                      Id = "$root\$($key.PSChildName)|$($p.DisplayName)"
+                      DisplayName = [string]$p.DisplayName
+                      InstallLocation = [string]$p.InstallLocation
+                      DisplayIcon = [string]$p.DisplayIcon
+                      UninstallString = [string]$p.UninstallString
+                    }
+                  }
+                }
+              }
+            }
+            return @($items)
+          }
+
+          function Get-StartMenuShortcuts {
+            $roots = @(
+              (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'),
+              (Join-Path $env:ProgramData 'Microsoft\Windows\Start Menu\Programs')
+            )
+            $items = @()
+            foreach ($root in $roots) {
+              if (Test-Path -LiteralPath $root) {
+                $items += @(Get-ChildItem -LiteralPath $root -Filter '*.lnk' -File -Recurse -Force -ErrorAction SilentlyContinue |
+                  ForEach-Object { $_.FullName })
+              }
+            }
+            return @($items | Sort-Object -Unique)
+          }
+
+          if (Test-Path -LiteralPath $baselinePath -PathType Leaf) {
+            $baseline = Get-Content -LiteralPath $baselinePath -Raw | ConvertFrom-Json
+          } else {
+            $baseline = [PSCustomObject]@{ ScoopApps = @(); StartMenu = @(); Uninstall = @(); CapturedAtUtc = [DateTime]::UtcNow.ToString('o') }
+          }
+
+          $lines.Add('ADB Device Manager install path diagnostic')
+          $lines.Add('=============================')
+          $lines.Add("Manifest: $env:MANIFEST_PATH")
+          $lines.Add("Version: $($manifest.version)")
+          $lines.Add("Install result: $env:INSTALL_OUTCOME")
+          $lines.Add("Scoop exit code: $env:INSTALL_EXIT_CODE")
+          $lines.Add("Scoop root: $(Join-Path $env:USERPROFILE 'scoop')")
+          $lines.Add('')
+
+          $newAppDirs = @()
+          $appsRoot = Join-Path $env:USERPROFILE 'scoop\apps'
+          if (Test-Path -LiteralPath $appsRoot) {
+            $newAppDirs = @(Get-ChildItem -LiteralPath $appsRoot -Directory -Force |
+              Where-Object { @($baseline.ScoopApps) -notcontains $_.Name } | Sort-Object Name)
+          }
+          $lines.Add("New Scoop app directories (includes dependencies): $($newAppDirs.Count)")
+          $allFiles = @()
+          $mainAppDir = $newAppDirs | Where-Object { $_.Name -ieq $appName } | Select-Object -First 1
+
+          foreach ($appDir in $newAppDirs) {
+            $lines.Add("APP DIRECTORY: $($appDir.FullName)")
+            $currentPath = Join-Path $appDir.FullName 'current'
+            if (Test-Path -LiteralPath $currentPath) {
+              $currentItem = Get-Item -LiteralPath $currentPath -Force
+              $target = $currentItem.Target
+              if ($target -is [array]) { $target = $target | Select-Object -First 1 }
+              if ([string]::IsNullOrWhiteSpace([string]$target)) {
+                try { $target = (Resolve-Path -LiteralPath $currentPath).Path } catch { $target = '(unable to resolve)' }
+              } elseif (![System.IO.Path]::IsPathRooted([string]$target)) {
+                $target = Join-Path $appDir.FullName ([string]$target)
+              }
+              $lines.Add("CURRENT TARGET: $target")
+            }
+
+            $versionDirs = @(Get-ChildItem -LiteralPath $appDir.FullName -Directory -Force -ErrorAction SilentlyContinue |
+              Where-Object { $_.Name -ne 'current' })
+            foreach ($versionDir in $versionDirs) {
+              $lines.Add("VERSION DIRECTORY: $($versionDir.FullName)")
+            }
+
+            $files = @(Get-ChildItem -LiteralPath $appDir.FullName -File -Recurse -Force -ErrorAction SilentlyContinue | Sort-Object FullName)
+            $allFiles += $files
+            $lines.Add("FILES IN APP DIRECTORY: $($files.Count)")
+            foreach ($file in $files) {
+              $lines.Add("  $($file.FullName) [$($file.Length) bytes]")
+            }
+            $lines.Add('')
+          }
+
+          $lines.Add('Manifest-declared bin and shortcut paths:')
+          $launchPaths = [System.Collections.Generic.List[string]]::new()
+          if ($manifest.bin -is [string]) {
+            $launchPaths.Add([string]$manifest.bin)
+          } elseif ($null -ne $manifest.bin) {
+            foreach ($item in $manifest.bin) {
+              if ($item -is [string]) {
+                $launchPaths.Add([string]$item)
+              } elseif ($item -is [array] -and $item.Count -gt 0) {
+                $launchPaths.Add([string]$item[0])
+              } elseif ($item.PSObject.Properties['path']) {
+                $launchPaths.Add([string]$item.path)
+              }
+            }
+          }
+          if ($null -ne $manifest.shortcuts) {
+            foreach ($shortcut in $manifest.shortcuts) {
+              if ($shortcut -is [array] -and $shortcut.Count -gt 0) {
+                $launchPaths.Add([string]$shortcut[0])
+              }
+            }
+          }
+          foreach ($path in @($launchPaths | Sort-Object -Unique)) {
+            if ($path -match '[\$%]') {
+              $lines.Add("SKIPPED runtime-expanded path: $path")
+            } elseif ($null -eq $mainAppDir) {
+              $lines.Add("Could not map manifest filename to a newly installed Scoop folder for: $path")
+            } else {
+              $candidate = Join-Path (Join-Path $mainAppDir.FullName 'current') ($path -replace '/', '\')
+              if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+                $lines.Add("FOUND: $candidate")
+              } else {
+                $lines.Add("NOT FOUND: $candidate")
+              }
+            }
+          }
+
+          $persistItems = @()
+          if ($manifest.persist -is [string]) {
+            $persistItems = @([string]$manifest.persist)
+          } elseif ($null -ne $manifest.persist) {
+            $persistItems = @($manifest.persist | ForEach-Object { [string]$_ })
+          }
+          $persistRoot = Join-Path (Join-Path $env:USERPROFILE 'scoop\persist') $appName
+          $lines.Add('')
+          $lines.Add("Manifest persist root: $persistRoot")
+          foreach ($persistItem in $persistItems) {
+            $path = Join-Path $persistRoot ($persistItem -replace '/', '\')
+            $lines.Add("PERSIST: $persistItem => $path (exists: $(Test-Path -LiteralPath $path))")
+          }
+          if ($persistItems.Count -eq 0) { $lines.Add('No persist field is declared.') }
+
+          $baselineShortcuts = @($baseline.StartMenu)
+          $newShortcuts = @(Get-StartMenuShortcuts | Where-Object { $baselineShortcuts -notcontains $_ })
+          $lines.Add('')
+          $lines.Add("New Start Menu shortcuts: $($newShortcuts.Count)")
+          foreach ($shortcut in $newShortcuts) { $lines.Add("  $shortcut") }
+
+          $baselineUninstall = @($baseline.Uninstall | ForEach-Object { $_.Id })
+          $newUninstall = @(Get-UninstallEntries | Where-Object { $baselineUninstall -notcontains $_.Id })
+          $lines.Add('')
+          $lines.Add("New uninstall registry entries: $($newUninstall.Count)")
+          foreach ($entry in $newUninstall) {
+            $lines.Add("  Name: $($entry.DisplayName)")
+            $lines.Add("  InstallLocation: $($entry.InstallLocation)")
+            $lines.Add("  DisplayIcon: $($entry.DisplayIcon)")
+            $lines.Add("  UninstallString: $($entry.UninstallString)")
+          }
+
+          $startUtc = [DateTime]::Parse([string]$baseline.CapturedAtUtc).ToUniversalTime()
+          $externalRoots = @(
+            $env:ProgramFiles,
+            [Environment]::GetEnvironmentVariable('ProgramFiles(x86)'),
+            (Join-Path $env:LOCALAPPDATA 'Programs'),
+            $env:APPDATA,
+            $env:ProgramData
+          ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Container) } | Sort-Object -Unique
+
+          $lines.Add('')
+          $lines.Add('Files outside Scoop with a recent LastWriteTimeUtc (heuristic, not proof):')
+          $externalFiles = @()
+          foreach ($root in $externalRoots) {
+            $externalFiles += @(Get-ChildItem -LiteralPath $root -File -Recurse -Force -ErrorAction SilentlyContinue |
+              Where-Object { $_.LastWriteTimeUtc -ge $startUtc.AddSeconds(-2) })
+          }
+          $lines.Add("Recent external files found: $($externalFiles.Count)")
+          foreach ($file in ($externalFiles | Sort-Object FullName | Select-Object -First 3000)) {
+            $lines.Add("  $($file.FullName) [$($file.Length) bytes]")
+          }
+          if ($externalFiles.Count -gt 3000) { $lines.Add("Only the first 3000 of $($externalFiles.Count) files are listed.") }
+
+          Set-Content -LiteralPath $reportPath -Value ($lines -join [Environment]::NewLine) -Encoding utf8
+          Get-Content -LiteralPath $reportPath | ForEach-Object { Write-Host $_ }
+
+          @(
+            '## ADB Device Manager install path diagnostic',
+            '',
+            "- Manifest: **$env:MANIFEST_PATH**",
+            "- Install result: **$env:INSTALL_OUTCOME**",
+            "- New Scoop app directories: **$($newAppDirs.Count)**",
+            "- Files listed in new Scoop app directories: **$($allFiles.Count)**",
+            "- New Start Menu shortcuts: **$($newShortcuts.Count)**",
+            "- New uninstall registry entries: **$($newUninstall.Count)**",
+            '- Full inventory and install log are available in the adb-device-manager-install-diagnostics artifact.',
+            ''
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+
+      - name: Upload installation report and log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: adb-device-manager-install-diagnostics
+          path: ${{ runner.temp }}/adb-device-manager-install-diagnostics/
+          if-no-files-found: warn
+          retention-days: 7
