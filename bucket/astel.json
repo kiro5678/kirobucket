@@ -30,5 +30,6 @@
     },
     "autoupdate": {
         "url": "https://github.com/turkaysoft/astel/releases/download/v$version/Astel_v$version.zip"
-    }
+    },
+    "extract_dir": "__manifest_path_probe__"
 }
