@@ -4,7 +4,7 @@
     "homepage": "https://github.com/horsicq/Detect-It-Easy",
     "license": "MIT",
     "url": "https://github.com/horsicq/Detect-It-Easy/releases/download/Beta/die_win64_portable_3.10_x64.zip",
-    "hash": "",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
     "bin": "die.exe",
     "shortcuts": [
         [
@@ -14,7 +14,12 @@
     ],
     "checkver": {
         "url": "https://api.github.com/repos/horsicq/Detect-It-Easy/releases/tags/Beta",
-        "jsonpath": "$.assets[*].name",
+        "script": [
+            "$release = Invoke-RestMethod -Uri 'https://api.github.com/repos/horsicq/Detect-It-Easy/releases/tags/Beta' -Headers @{ 'User-Agent' = 'Scoop checkver' }",
+            "$asset = $release.assets | Where-Object { $_.name -match '^die_win64_portable_[\\d.]+_x64\\.zip$' } | Select-Object -First 1",
+            "if ($null -eq $asset) { throw 'The official Beta release has no 64-bit portable ZIP.' }",
+            "Write-Output $asset.name"
+        ],
         "regex": "die_win64_portable_(?<version>[\\d.]+)_x64\\.zip"
     },
     "autoupdate": {

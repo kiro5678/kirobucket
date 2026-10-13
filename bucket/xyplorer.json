@@ -16,10 +16,10 @@
     ],
     "checkver": {
         "url": "https://www.xyplorer.com/download.php?bit=64",
-        "regex": "(?is)No-Install Package.*?\\(ZIP\\).*?Version.{0,300}?(?<version>\\d+\\.\\d+\\.\\d+)"
+        "regex": "(?is)No-Install Package \\(ZIP\\).*?Version.*?(?<version>\\d+\\.\\d+\\.\\d+)"
     },
     "autoupdate": {
         "url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.rar"
     },
-    "hash": "bbcf8ec7ee4bc5e66338ee87d613eba139edbba8667fe7f13b235b456a3447a1"
+    "hash": "21e8169826c78e8460d2270438a9b69c951ef0c382e036f89073c88b5c45a8ed"
 }

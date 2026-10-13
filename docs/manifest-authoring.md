@@ -26,6 +26,8 @@ Use the project's official release page, repository, documentation, and release 
 
 Do not copy an existing manifest blindly. Use it as a reference only after verifying it against the current release and current Scoop behavior.
 
+- When a canonical upstream repository or download page returns 404, verify whether the project has officially moved and whether the new location has real releases/assets. Do not replace a missing source with an unverified fork or hard-code a fake `checkver` result just to make validation pass. If no verifiable canonical download/update source remains, remove the obsolete manifest or report it as blocked.
+
 ## 3. Version detection: `checkver`
 
 - Choose a version source that reliably follows the intended release channel.

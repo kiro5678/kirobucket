@@ -5,7 +5,6 @@
     "license": "GPL-3.0-only",
     "url": "https://github.com/Cedro-Software/cedro-modern-dock/releases/download/Version-1.2/CedroModernDock-1.2.0-x64.msi#/dl.msi",
     "hash": "e6d618c875e228eeaccf2124f5d6deef39a4b118b6105f439acbdee401796900",
-    "extract_dir": "PFiles\\CedroModernDock",
     "bin": "CedroModernDock.exe",
     "shortcuts": [
         [
@@ -15,10 +14,20 @@
     ],
     "checkver": {
         "url": "https://api.github.com/repos/Cedro-Software/cedro-modern-dock/releases/latest",
-        "jsonpath": "$.assets[*].browser_download_url",
-        "regex": "Version-(?<tag>[\\d.]+)/CedroModernDock-(?<version>[\\d.]+)-x64\\.msi"
+        "script": [
+            "$release = Invoke-RestMethod -Uri 'https://api.github.com/repos/Cedro-Software/cedro-modern-dock/releases/latest' -Headers @{ 'User-Agent' = 'Scoop checkver' }",
+            "$asset = $release.assets | Where-Object { $_.name -match '^CedroModernDock-[\\d.]+-x64\\.msi$' } | Select-Object -First 1",
+            "if ($null -eq $asset) { throw 'The latest release does not contain CedroModernDock x64 MSI.' }",
+            "Write-Output \"$($release.tag_name)|$($asset.name)\""
+        ],
+        "regex": "Version-(?<tag>[\\d.]+)\\|CedroModernDock-(?<version>[\\d.]+)-x64\\.msi"
     },
     "autoupdate": {
         "url": "https://github.com/Cedro-Software/cedro-modern-dock/releases/download/Version-$matchTag/CedroModernDock-$version-x64.msi#/dl.msi"
-    }
+    },
+    "pre_install": [
+        "$exe = Get-ChildItem -LiteralPath $dir -Filter 'CedroModernDock.exe' -File -Recurse | Select-Object -First 1",
+        "if ($null -eq $exe) { throw 'CedroModernDock.exe was not found in the extracted MSI payload.' }",
+        "if ($exe.DirectoryName -ne $dir) { Get-ChildItem -LiteralPath $exe.DirectoryName -Force | ForEach-Object { Move-Item -LiteralPath $_.FullName -Destination $dir -Force } }"
+    ]
 }

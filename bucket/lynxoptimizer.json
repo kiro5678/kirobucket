@@ -27,5 +27,10 @@
                 "url": "https://github.com/caxzy/LynxOptimizer/releases/download/PREVIEW-DEV/LynxPreviewBuild-$version.zip"
             }
         }
-    }
+    },
+    "pre_install": [
+        "$exe = Get-ChildItem -LiteralPath $dir -Filter 'LynxOptimizer.exe' -File -Recurse | Select-Object -First 1",
+        "if ($null -eq $exe) { throw 'LynxOptimizer.exe was not found in the extracted archive.' }",
+        "if ($exe.DirectoryName -ne $dir) { Get-ChildItem -LiteralPath $exe.DirectoryName -Force | ForEach-Object { Move-Item -LiteralPath $_.FullName -Destination $dir -Force } }"
+    ]
 }
