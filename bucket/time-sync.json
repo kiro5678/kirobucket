@@ -13,7 +13,7 @@
     ],
     "checkver": {
         "url": "https://vovsoft.com/download/time-sync/",
-        "regex": "Version:\\s*(?<version>[\\d.]+)"
+        "regex": "(?is)Version.*?(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://cdn.vovsoft.com/time-sync-portable.zip?v=$version"

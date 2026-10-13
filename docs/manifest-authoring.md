@@ -46,6 +46,8 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 - For a mutable alias asset URL (for example, a fixed `nightly` URL), a constant manifest version will not signal that the bytes changed, so the hash may never refresh automatically. Derive the Scoop version from a reliable build/update timestamp or commit identifier when the same URL is republished, and verify that `checkver.ps1 -Update` refreshes the hash. Keep the version string compatible with Scoop/Windows version handling. For example, if `checkver` returns `2.0.1` while the release tag is `v2.0.1`, the URL template may need `v$version`. Do not add or remove a `v` without checking the actual tag and output.
 - Validate version detection with the current Scoop `checkver.ps1`; do not infer success from reading the JSON.
 
+- When matching an HTML page, write the regex against the raw HTML response that Scoop actually downloads, not a text-rendered search result. Table columns may be separate tags or whitespace rather than literal separators such as `|`; use a bounded, case-insensitive single-line pattern where necessary, then validate the extracted version with Scoop.
+
 ## 4. Automatic URL and hash updates
 
 - Put the current, verified download URL and SHA-256 in the applicable manifest architecture.
