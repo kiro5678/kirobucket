@@ -41,6 +41,7 @@ jobs:
               "2faguard" = "Security"
               "activitywatch" = "Time Tracking & Focus"
               "activitywatch-tauri" = "Time Tracking & Focus"
+              "adb-device-manager" = "Android & Device Tools"
               "aero-dock" = "Windows Customization"
               "agaric" = "Notes & Knowledge"
               "aifilesorter" = "File Management"
@@ -50,11 +51,13 @@ jobs:
               "android-dex" = "Android & Device Tools"
               "antalogy" = "Notes & Knowledge"
               "anti-yandex" = "Windows Privacy & Tweaks"
+              "astel" = "Security"
               "babyshark" = "Network & DNS"
               "bargozin" = "Network & DNS"
               "beaver-notes" = "Notes & Knowledge"
               "beetroot-portable" = "Clipboard & Text"
               "biniware-run" = "Productivity & Launchers"
+              "bloatynosy" = "Windows Privacy & Tweaks"
               "blur" = "Media & Audio/Video"
               "brisk" = "Download Managers"
               "bulk-crap-uninstaller" = "File Management"
@@ -116,6 +119,7 @@ jobs:
               "dxwrapper" = "Emulators & Compatibility"
               "ecopaste" = "Clipboard & Text"
               "ecopaste-nightly" = "Clipboard & Text"
+              "encryphix" = "Security"
               "edge-drop" = "Clipboard & Text"
               "everything-cmdpal" = "File Management"
               "fancywm" = "Windows Customization"
@@ -309,6 +313,7 @@ jobs:
               "znote" = "Notes & Knowledge"
           }
 
+          $uncategorized = [System.Collections.Generic.List[string]]::new()
           $manifests = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
               $raw = Get-Content -Path $file.FullName -Raw
@@ -344,7 +349,13 @@ jobs:
               if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { "Other Utilities" }
+              if ($categoryMap.ContainsKey($name)) {
+                  $category = $categoryMap[$name]
+              } else {
+                  $category = "Other Utilities"
+                  $uncategorized.Add($name)
+                  Write-Warning "Manifest $name has no explicit category mapping; add it to categoryMap."
+              }
 
               $nameEscaped = $name.Replace("|", "\|")
               $categoryEscaped = $category.Replace("|", "\|")
@@ -365,6 +376,11 @@ jobs:
                   Homepage = $homepage
                   Row = "| [$nameEscaped]($relativePath) | $categoryEscaped | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
               }
+          }
+
+          if ($uncategorized.Count -gt 0) {
+              $missingCategories = $uncategorized | Sort-Object -Unique
+              throw "Missing explicit category mappings for: $($missingCategories -join ", "). Add each manifest to categoryMap before regenerating the README and manifest views."
           }
 
           $dateValue = {
