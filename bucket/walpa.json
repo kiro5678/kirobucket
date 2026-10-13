@@ -5,6 +5,7 @@
     "license": "MIT",
     "url": "https://github.com/turkaysoft/walpa/releases/download/v26.10/Walpa_v26.10.zip",
     "hash": "48f8dbed613a746ae6dd95513db69a94bcd7fcc501d95748cd00f06e2208e190",
+    "extract_dir": "Walpa_v26.10",
     "architecture": {
         "64bit": {
             "bin": "Walpa_x64.exe",
@@ -29,6 +30,7 @@
         "github": "https://github.com/turkaysoft/walpa"
     },
     "autoupdate": {
-        "url": "https://github.com/turkaysoft/walpa/releases/download/v$version/Walpa_v$version.zip"
+        "url": "https://github.com/turkaysoft/walpa/releases/download/v$version/Walpa_v$version.zip",
+        "extract_dir": "Walpa_v$version"
     }
 }

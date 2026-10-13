@@ -5,6 +5,7 @@
     "license": "MIT",
     "url": "https://github.com/turkaysoft/vimera/releases/download/v26.11/Vimera_v26.11.zip",
     "hash": "8d12515ee68e327d053455b52c26785418e59c3c4dfd162356685282f6c5aecf",
+    "extract_dir": "Vimera_v26.11",
     "architecture": {
         "64bit": {
             "bin": "Vimera_x64.exe",
@@ -29,6 +30,7 @@
         "github": "https://github.com/turkaysoft/vimera"
     },
     "autoupdate": {
-        "url": "https://github.com/turkaysoft/vimera/releases/download/v$version/Vimera_v$version.zip"
+        "url": "https://github.com/turkaysoft/vimera/releases/download/v$version/Vimera_v$version.zip",
+        "extract_dir": "Vimera_v$version"
     }
 }
