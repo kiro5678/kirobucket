@@ -6,7 +6,7 @@ on:
       manifest:
         description: "Any manifest path under bucket/, e.g. bucket/nixthis.json"
         required: true
-        default: "bucket/adb-device-manager.json"
+        default: "bucket/nixthis.json"
         type: string
 
 permissions:
