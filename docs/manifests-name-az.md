@@ -120,7 +120,7 @@ Generated automatically from the manifests in the bucket directory.
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.12. | 2026-09-29 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-12 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [game-cheats-manager](bucket/game-cheats-manager.json) | Games & Game Utilities | 2.5.4 | 2026-10-11 | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) | Game cheats manager for Windows. |
-| [glow](bucket/glow.json) | System Monitoring & Hardware | 26.13 | 2026-09-29 | [Homepage](https://github.com/turkaysoft/glow) | Advanced system analysis software for Windows. |
+| [glow](bucket/glow.json) | System Monitoring & Hardware | 26.13 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/glow) | Advanced system analysis software for Windows. |
 | [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11. |
 | [glowz-dock-portable](bucket/glowz-dock-portable.json) | Windows Customization | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable). |
 | [gtweak](bucket/gtweak.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
