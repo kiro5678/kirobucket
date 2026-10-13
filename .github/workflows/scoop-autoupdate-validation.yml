@@ -44,12 +44,12 @@ jobs:
           MANUAL_MANIFEST: ${{ inputs.manifest || '' }}
           FORCE_UPDATE: ${{ inputs.force_update || false }}
           MANIFESTS_JSON: ${{ toJSON(github.event.client_payload.manifests || fromJSON('[]')) }}
-          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
+          SCOOP_HOME: ${{ github.workspace }}/scoop_core
         run: |
           $ErrorActionPreference = 'Stop'
           $repoRoot = Join-Path $env:GITHUB_WORKSPACE 'my_bucket'
           $bucketRoot = Join-Path $repoRoot 'bucket'
-          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
+          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core/bin/checkver.ps1'
           $forceUpdate = $env:FORCE_UPDATE -eq 'true'
           $manifestPaths = @()
 
@@ -59,8 +59,8 @@ jobs:
             }
             $manifestPaths = @(ConvertFrom-Json -InputObject $env:MANIFESTS_JSON)
           } else {
-            $inputPath = $env:MANUAL_MANIFEST.Trim().Replace('\\', '/')
-            if ($inputPath -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\\.json)$') {
+            $inputPath = $env:MANUAL_MANIFEST.Trim().Replace('\', '/')
+            if ($inputPath -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
               throw "Provide one manifest filename or bucket/filename.json. Received: $inputPath"
             }
             $manifestPaths = @("bucket/$($Matches.name)")
@@ -74,11 +74,11 @@ jobs:
           $failures = @()
           $notExercised = @()
           $testedCount = 0
-          $failurePattern = "(?i)(couldn't\\s+(retrieve|find|match)|could\\s+not\\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
+          $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
 
           foreach ($candidate in $manifestPaths) {
-            $relativePath = ([string]$candidate).Trim().Replace('\\', '/')
-            if ($relativePath -notmatch '(?i)^bucket/[^/]+\\.json$') {
+            $relativePath = ([string]$candidate).Trim().Replace('\', '/')
+            if ($relativePath -notmatch '(?i)^bucket/[^/]+\.json$') {
               $failures += "$relativePath : invalid manifest path in dispatch payload."
               Write-Host "FAILED: $relativePath - invalid manifest path." -ForegroundColor Red
               continue
