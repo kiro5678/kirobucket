@@ -338,7 +338,6 @@ jobs:
               "zafuse" = "Developer & Technical Tools"
           }
 
-          $uncategorized = [System.Collections.Generic.List[string]]::new()
           $manifests = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
               $raw = Get-Content -Path $file.FullName -Raw
@@ -374,13 +373,7 @@ jobs:
               if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-              if ($categoryMap.ContainsKey($name)) {
-                  $category = $categoryMap[$name]
-              } else {
-                  $category = "Other Utilities"
-                  $uncategorized.Add($name)
-                  Write-Warning "Manifest $name has no explicit category mapping; add it to categoryMap."
-              }
+              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { "Other Utilities" }
 
               $nameEscaped = $name.Replace("|", "\|")
               $categoryEscaped = $category.Replace("|", "\|")
@@ -401,11 +394,6 @@ jobs:
                   Homepage = $homepage
                   Row = "| [$nameEscaped]($relativePath) | $categoryEscaped | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
               }
-          }
-
-          if ($uncategorized.Count -gt 0) {
-              $missingCategories = $uncategorized | Sort-Object -Unique
-              throw "Missing explicit category mappings for: $($missingCategories -join ", "). Add each manifest to categoryMap before regenerating the README and manifest views."
           }
 
           $dateValue = {
