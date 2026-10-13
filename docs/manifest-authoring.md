@@ -74,7 +74,7 @@ Run the relevant checks from a disposable checkout or working copy where practic
 
 The repository currently has these related workflows:
 - `.github/workflows/excavator.yml`: scheduled/manual manifest updater; requires write permission to commit changes.
-- `.github/workflows/scoop-checkver-validation.yml`: manually validates version detection. This does not by itself prove that `-Update` rewrites URLs and hashes correctly.
+- `.github/workflows/scoop-checkver-validation.yml`: manually validates version detection and also runs when that workflow file changes. This does not by itself prove that `-Update` rewrites URLs and hashes correctly.
 - `.github/workflows/validate-manifest-archives.yml`: validates downloadable assets, hashes, and archive paths.
 - `.github/workflows/ci.yml`: general manifest tests.
 
