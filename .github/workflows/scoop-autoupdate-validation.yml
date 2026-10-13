@@ -1,0 +1,171 @@
+name: Scoop Autoupdate Validation
+
+on:
+  repository_dispatch:
+    types:
+      - manifests-archives-validated
+  workflow_dispatch:
+    inputs:
+      manifest:
+        description: "Manifest path under bucket/, e.g. bucket/taskexplorer.json"
+        required: true
+        type: string
+      force_update:
+        description: "Force URL/hash update validation even if upstream version matches"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  autoupdate:
+    name: Autoupdate validation
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.client_payload.head_sha || github.sha }}
+          path: my_bucket
+
+      - name: Checkout Scoop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+
+      - name: Test automatic update path in an isolated copy
+        shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          MANUAL_MANIFEST: ${{ inputs.manifest || '' }}
+          FORCE_UPDATE: ${{ inputs.force_update || false }}
+          MANIFESTS_JSON: ${{ toJSON(github.event.client_payload.manifests || fromJSON('[]')) }}
+          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $repoRoot = Join-Path $env:GITHUB_WORKSPACE 'my_bucket'
+          $bucketRoot = Join-Path $repoRoot 'bucket'
+          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
+          $forceUpdate = $env:FORCE_UPDATE -eq 'true'
+          $manifestPaths = @()
+
+          if ($env:EVENT_NAME -eq 'repository_dispatch') {
+            if ([string]::IsNullOrWhiteSpace($env:MANIFESTS_JSON)) {
+              throw 'The archive-validation dispatch did not include manifest paths.'
+            }
+            $manifestPaths = @(ConvertFrom-Json -InputObject $env:MANIFESTS_JSON)
+          } else {
+            $inputPath = $env:MANUAL_MANIFEST.Trim().Replace('\\', '/')
+            if ($inputPath -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\\.json)$') {
+              throw "Provide one manifest filename or bucket/filename.json. Received: $inputPath"
+            }
+            $manifestPaths = @("bucket/$($Matches.name)")
+          }
+
+          if ($manifestPaths.Count -eq 0) {
+            Write-Host 'No manifests were supplied; nothing to validate.'
+            exit 0
+          }
+
+          $failures = @()
+          $notExercised = @()
+          $testedCount = 0
+          $failurePattern = "(?i)(couldn't\\s+(retrieve|find|match)|could\\s+not\\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
+
+          foreach ($candidate in $manifestPaths) {
+            $relativePath = ([string]$candidate).Trim().Replace('\\', '/')
+            if ($relativePath -notmatch '(?i)^bucket/[^/]+\\.json$') {
+              $failures += "$relativePath : invalid manifest path in dispatch payload."
+              Write-Host "FAILED: $relativePath - invalid manifest path." -ForegroundColor Red
+              continue
+            }
+
+            $sourcePath = Join-Path $repoRoot $relativePath
+            if (-not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
+              $failures += "$relativePath : manifest does not exist at the selected commit."
+              Write-Host "FAILED: $relativePath - file not found." -ForegroundColor Red
+              continue
+            }
+
+            $manifest = Get-Content -LiteralPath $sourcePath -Raw | ConvertFrom-Json -AsHashtable
+            if (-not $manifest.ContainsKey('checkver')) {
+              $failures += "$relativePath : missing checkver; cannot verify automatic updates."
+              Write-Host "FAILED: $relativePath - missing checkver." -ForegroundColor Red
+              continue
+            }
+            if (-not $manifest.ContainsKey('autoupdate')) {
+              $failures += "$relativePath : missing autoupdate; automatic update templates are required."
+              Write-Host "FAILED: $relativePath - missing autoupdate." -ForegroundColor Red
+              continue
+            }
+
+            $manifestName = [System.IO.Path]::GetFileNameWithoutExtension($sourcePath)
+            $testDir = Join-Path $env:RUNNER_TEMP ("scoop-autoupdate-" + [guid]::NewGuid().ToString('N'))
+            New-Item -ItemType Directory -Path $testDir -Force | Out-Null
+            Copy-Item -LiteralPath $sourcePath -Destination (Join-Path $testDir ([System.IO.Path]::GetFileName($sourcePath)))
+
+            Write-Host ''
+            Write-Host '============================================================'
+            Write-Host "Manifest: $relativePath"
+            Write-Host "Mode: $(if ($forceUpdate) { 'ForceUpdate' } else { 'Update' })"
+            Write-Host '============================================================'
+
+            $modeArgs = if ($forceUpdate) { @('-ForceUpdate') } else { @('-Update') }
+            $checkverArgs = @('-App', $manifestName, '-Dir', $testDir) + $modeArgs + @('-ThrowError')
+            $outputText = ''
+            try {
+              # checkver.ps1 is a PowerShell script; handle its exceptions/output rather than $LASTEXITCODE.
+              $output = @(& $checkver @checkverArgs *>&1 | ForEach-Object { [string]$_ })
+              $outputText = $output -join [Environment]::NewLine
+              if ($outputText -match $failurePattern) {
+                throw "Scoop reported a version/update error: $($Matches[0])"
+              }
+
+              if ($forceUpdate -or $outputText -match '(?i)autoupdate available') {
+                $testedCount++
+                Write-Host "PASS: automatic update path was exercised for $manifestName." -ForegroundColor Green
+              } else {
+                $notExercised += $manifestName
+                Write-Warning "$manifestName: checkver passed, but upstream has no newer version. URL/hash templates were not exercised; use workflow_dispatch with force_update=true for a forced test."
+              }
+              if ($outputText) { Write-Host $outputText }
+            }
+            catch {
+              $failures += "$relativePath : $($_.Exception.Message)"
+              Write-Host "FAILED: $relativePath" -ForegroundColor Red
+              Write-Host $_.Exception.Message -ForegroundColor Red
+              if ($outputText) { Write-Host $outputText }
+            }
+          }
+
+          Write-Host ''
+          Write-Host '============================================================'
+          Write-Host 'Autoupdate validation summary'
+          Write-Host "Manifests received: $($manifestPaths.Count)"
+          Write-Host "Update paths exercised: $testedCount"
+          Write-Host "No newer version (not exercised): $($notExercised.Count)"
+          Write-Host "Failures: $($failures.Count)"
+          Write-Host '============================================================'
+
+          if ($notExercised.Count -gt 0) {
+            Write-Host 'Not exercised:'
+            $notExercised | ForEach-Object { Write-Host " - $_" }
+          }
+          if ($failures.Count -gt 0) {
+            $failures | ForEach-Object { Write-Host $_ -ForegroundColor Red }
+            exit 1
+          }
+
+          @(
+            '## Scoop autoupdate validation',
+            '',
+            "- Manifests received: **$($manifestPaths.Count)**",
+            "- Update paths exercised: **$testedCount**",
+            "- No newer version, update path not exercised: **$($notExercised.Count)**",
+            "- Failures: **$($failures.Count)**",
+            ''
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
