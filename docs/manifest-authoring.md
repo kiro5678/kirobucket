@@ -10,6 +10,7 @@ A manifest is not finished merely because the current version installs. By defau
 - Configure `autoupdate` templates for the download URL and every version-dependent field, including `extract_dir` when the archive's root folder changes with the version.
 - Ensure the hash will be refreshed correctly by the current Scoop updater. Never leave an old fixed hash in place while allowing the URL to move to a new version.
 - Test the entire version → URL → hash update path with Scoop's actual `checkver.ps1 -Update`. A successful version lookup alone does **not** prove that automatic updating works.
+- `-Update` only exercises the URL/hash update path when the upstream version is newer. To test templates when the manifest already matches upstream, use `checkver.ps1 -ForceUpdate` against a disposable copy; never force-update the working bucket checkout because Scoop will rewrite the manifest.
 - If upstream genuinely provides no reliable automatic version source, investigate the official API, release feed, or a custom `checkver.script` before considering a manual-only manifest. State the limitation explicitly rather than silently omitting update support.
 
 `autoupdate` is a template, not a background scheduler. GitHub updates the repository manifest only when an updater such as the repository's Excavator workflow runs successfully and commits the result. User machines receive the updated manifest after their bucket is pulled with `scoop update`.
@@ -84,8 +85,9 @@ Run the relevant checks from a disposable checkout or working copy where practic
 
 The repository currently has these related workflows:
 - `.github/workflows/excavator.yml`: scheduled/manual manifest updater; requires write permission to commit changes.
-- `.github/workflows/scoop-checkver-validation.yml`: manually validates version detection and also runs when that workflow file changes. This does not by itself prove that `-Update` rewrites URLs and hashes correctly.
-- `.github/workflows/validate-manifest-archives.yml`: validates downloadable assets, hashes, and archive paths.
+- `.github/workflows/scoop-checkver-validation.yml`: validates version detection for every manifest; it does not by itself prove that update templates work.
+- `.github/workflows/validate-manifest-archives.yml`: validates downloadable assets, hashes, and archive paths, then dispatches the checked manifest paths to autoupdate validation.
+- `.github/workflows/scoop-autoupdate-validation.yml`: tests only the archive-validated manifest(s) against an isolated copy with Scoop's `checkver.ps1 -Update`. If there is no newer upstream version, it reports that the URL/hash path was not exercised rather than falsely claiming a full test. Manually dispatch it with `force_update=true` to exercise URL/hash templates even when the current version is already up to date.
 - `.github/workflows/ci.yml`: general manifest tests.
 
 For a local update test, run from the bucket repository root in a disposable working copy:
