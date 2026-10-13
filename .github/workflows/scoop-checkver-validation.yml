@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - '.github/workflows/scoop-checkver-validation.yml'
+      - 'docs/manifest-authoring.md'
 
 permissions:
   contents: read

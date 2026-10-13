@@ -15,9 +15,9 @@
     ],
     "checkver": {
         "github": "https://github.com/Cedro-Software/cedro-modern-dock",
-        "regex": "tag/v([\\d.]+)"
+        "regex": "(?s)tag/Version-(?<tag>[\\d.]+).*?CedroModernDock-(?<version>[\\d.]+)-x64\\.msi"
     },
     "autoupdate": {
-        "url": "https://github.com/Cedro-Software/cedro-modern-dock/releases/download/Version-$version/CedroModernDock-$version-x64.msi#/dl.msi"
+        "url": "https://github.com/Cedro-Software/cedro-modern-dock/releases/download/Version-$matchTag/CedroModernDock-$version-x64.msi#/dl.msi"
     }
 }

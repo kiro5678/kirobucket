@@ -17,7 +17,8 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/Shrey113/Android-Dex"
+        "github": "https://github.com/Shrey113/Android-Dex",
+        "regex": "tag/Android-Dex-v\\.(?<version>[\\d.]+)"
     },
     "autoupdate": {
         "architecture": {

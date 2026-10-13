@@ -1,5 +1,5 @@
 {
-    "version": "1.0rc3.1",
+    "version": "1.0",
     "description": "RGB lighting control that does not depend on manufacturer software.",
     "homepage": "https://openrgb.org",
     "license": "GPL-2.0-only",
@@ -8,12 +8,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_1.0rc3.1/OpenRGB_1.0rc3.1_Windows_64_5e81e26.zip",
-            "hash": "C8403BB964E7871DE2748014C64C5A25138C5171E150E11B83D30B6D526FE858"
+            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_1.0/OpenRGB_1.0_Windows_64_81bbe18.zip",
+            "hash": "182a52a3c97c4c4ae52c80286b4260c9666c51c3447dbc416ee8945f66192e90"
         },
         "32bit": {
-            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_1.0rc3.1/OpenRGB_1.0rc3.1_Windows_32_5e81e26.zip",
-            "hash": "B9FD4820D2E543FD6AD85693DE4230EB88C5C07B3C048B60B2CDE02E412B26C4"
+            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_1.0/OpenRGB_1.0_Windows_32_81bbe18.zip",
+            "hash": "da4dfc3aeddc93d07bfb8144014cb4c6b318c7ec9783c795d10cf34e52306e45"
         }
     },
     "shortcuts": [
@@ -23,16 +23,17 @@
         ]
     ],
     "checkver": {
-        "url": "https://github.com/CalcProgrammer1/OpenRGB/releases",
-        "regex": "OpenRGB_([\\d.]+)_Windows_64_(?<commit>[\\da-fA-F]{7})\\.zip"
+        "url": "https://api.github.com/repos/CalcProgrammer1/OpenRGB/releases/latest",
+        "jsonpath": "$.assets[*].name",
+        "regex": "OpenRGB_(?<version>[\\d.]+)_Windows_64_(?<commit>[\\da-fA-F]{7})\\.zip"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_$version/OpenRGB_$version_Windows_64_$matchCommit.zip"
+                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_$version/OpenRGB_$version_Windows_64_$matchCommit.zip"
             },
             "32bit": {
-                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_candidate_$version/OpenRGB_$version_Windows_32_$matchCommit.zip"
+                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_$version/OpenRGB_$version_Windows_32_$matchCommit.zip"
             }
         }
     }
