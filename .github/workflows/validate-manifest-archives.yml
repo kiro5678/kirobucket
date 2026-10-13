@@ -30,6 +30,7 @@ jobs:
           fetch-depth: 0
 
       - name: Validate changed manifests against archives
+        id: archive_validation
         shell: pwsh
         env:
           BASE_SHA: ${{ github.event.client_payload.base_sha || '' }}
@@ -479,6 +480,40 @@ jobs:
             exit 1
           }
           Write-Host 'All changed manifests passed archive path validation.' -ForegroundColor Green
+          $validatedManifestsJson = ConvertTo-Json -InputObject @($manifestPaths) -Compress
+          "validated_manifests=$validatedManifestsJson" >> $env:GITHUB_OUTPUT
+
+      - name: Trigger Scoop autoupdate validation
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_SHA: ${{ github.sha }}
+          MANIFESTS_JSON: ${{ steps.archive_validation.outputs.validated_manifests }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:MANIFESTS_JSON)) {
+            throw 'Archive validation did not produce its validated manifest list.'
+          }
+          $manifestList = @(ConvertFrom-Json -InputObject $env:MANIFESTS_JSON)
+          if ($manifestList.Count -eq 0) {
+            Write-Host 'No manifests were changed; autoupdate validation will not be dispatched.'
+            exit 0
+          }
+          $headers = @{
+            Accept = 'application/vnd.github+json'
+            Authorization = "Bearer $env:GH_TOKEN"
+            'X-GitHub-Api-Version' = '2022-11-28'
+          }
+          $body = @{
+            event_type = 'manifests-archives-validated'
+            client_payload = @{
+              manifests = [object[]]$manifestList
+              head_sha = $env:HEAD_SHA
+            }
+          } | ConvertTo-Json -Depth 5
+          Write-Host "Dispatching autoupdate validation for $($manifestList.Count) manifest(s): $($manifestList -join ', ')"
+          Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$env:REPOSITORY/dispatches" -Headers $headers -ContentType 'application/json' -Body $body
 
       - name: Trigger CI after archive validation
         shell: pwsh
