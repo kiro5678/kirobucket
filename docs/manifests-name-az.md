@@ -119,7 +119,6 @@ Generated automatically from the manifests in the bucket directory.
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.12. | 2026-09-29 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-12 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [game-cheats-manager](bucket/game-cheats-manager.json) | Games & Game Utilities | 2.5.4 | 2026-10-11 | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) | Game cheats manager for Windows. |
-| [glow](bucket/glow.json) | System Monitoring & Hardware | 26.13 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/glow) | Advanced system analysis software for Windows. |
 | [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11. |
 | [glowz-dock-portable](bucket/glowz-dock-portable.json) | Windows Customization | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable). |
 | [gtweak](bucket/gtweak.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
@@ -266,6 +265,7 @@ Generated automatically from the manifests in the bucket directory.
 | [translumo](bucket/translumo.json) | Translation & OCR | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/ramjke/Translumo) | Advanced real-time screen translator. |
 | [traytoolbar](bucket/traytoolbar.json) | Windows Customization | 1.8.3 | 2026-09-29 | [Homepage](https://github.com/brondavies/TrayToolbar) | Custom toolbar for the Windows taskbar replacement menu. |
 | [trayweather](bucket/trayweather.json) | Weather & Information | 1.37.2 | 2026-09-29 | [Homepage](https://github.com/FelixdelasPozas/TrayWeather) | A lightweight weather application that runs in the Windows system tray. |
+| [turkaysoft-glow](bucket/turkaysoft-glow.json) | System Monitoring & Hardware | 26.13 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/glow) | Advanced system analysis software for Windows. |
 | [ubiquiti-wifiman-desktop](bucket/ubiquiti-wifiman-desktop.json) | Network & DNS | 1.2.8 | 2026-10-13 | [Homepage](https://ui.com/download/app/wifiman-desktop) | Desktop application for discovering UniFi devices, Wi-Fi scanning, speed testing, and Teleport VPN |
 | [ubiquiti-wifiman-desktop-installer](bucket/ubiquiti-wifiman-desktop-installer.json) | Network & DNS | 1.2.8 | 2026-10-13 | [Homepage](https://ui.com/download/app/wifiman-desktop) | Desktop application for discovering UniFi devices, Wi-Fi scanning, speed testing, and Teleport VPN |
 | [ublockdnsclient](bucket/ublockdnsclient.json) | Network & DNS | 0.3.3 | 2026-09-29 | [Homepage](https://github.com/ugzv/ublockdnsclient) | Cross-platform system DNS client for uBlockDNS with device-wide ad and tracker blocking. |
