@@ -37,6 +37,7 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
   ```
   Use the actual upstream owner and repository. Do not point it at this bucket or a fork unless that fork is the true source.
 - For non-GitHub releases, use a reliable official release/download page, JSON API, XML feed, or a script. Use a regular expression or JSONPath that matches the real response and captures the intended version only.
+- If `checkver` uses JSONPath, make sure the configured source actually returns JSON. With GitHub, the repository URL normally makes Scoop read the HTML `releases/latest` page; use an explicit API URL such as `https://api.github.com/repos/OWNER/REPOSITORY/releases/latest` when parsing a JSON response. Never combine an HTML source with `jsonpath`/`jp` and assume it will work.
 - Make sure the extracted version matches the values used in `autoupdate`. For example, if `checkver` returns `2.0.1` while the release tag is `v2.0.1`, the URL template may need `v$version`. Do not add or remove a `v` without checking the actual tag and output.
 - Validate version detection with the current Scoop `checkver.ps1`; do not infer success from reading the JSON.
 
@@ -68,7 +69,8 @@ Run the relevant checks from a disposable checkout or working copy where practic
 4. **Archive validation:** run the repository's manifest archive validation workflow. Confirm download, SHA-256, extraction, and executable-path checks succeed where applicable.
 5. **Installation behavior:** where practical, install the manifest from its file path and verify that the declared executable and shortcut work. Check persistence/migration behavior when relevant.
 6. **Workflow follow-through:** inspect the actual GitHub Actions runs and job logs. Do not claim a check passed while it is queued or running. Do not equate a successful archive check with a successful full CI run.
-7. **Live automatic update:** inspect the latest successful Excavator run in relation to the upstream release publication time. A scheduled workflow can be delayed or missed; if necessary, manually dispatch Excavator and inspect whether it detects and commits the update.
+7. **PowerShell workflow exit handling:** `checkver.ps1` is a PowerShell script, not a native executable. Do not use `$LASTEXITCODE` after invoking it; that variable may be `$null` or stale and can incorrectly mark every manifest as failed. Capture its output, handle terminating exceptions, and detect Scoop's explicit no-match/download/JSON diagnostics (some checkver failures are printed without setting a native process exit code). Confirm the workflow reports realistic per-manifest results instead of counting successful version lookups as failures.
+8. **Live automatic update:** inspect the latest successful Excavator run in relation to the upstream release publication time. A scheduled workflow can be delayed or missed; if necessary, manually dispatch Excavator and inspect whether it detects and commits the update.
 
 The repository currently has these related workflows:
 - `.github/workflows/excavator.yml`: scheduled/manual manifest updater; requires write permission to commit changes.
