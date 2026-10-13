@@ -48,6 +48,8 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 
 - When matching an HTML page, write the regex against the raw HTML response that Scoop actually downloads, not a text-rendered search result. Table columns may be separate tags or whitespace rather than literal separators such as `|`; use a bounded, case-insensitive single-line pattern where necessary, then validate the extracted version with Scoop.
 
+- Prefer native `jsonpath` plus `regex`/`replace` when those fields can extract both the release tag and app version; reserve `checkver.script` for cases the built-in fields cannot express. This reduces duplicate requests and makes normal version checks easier to debug.
+
 ## 4. Automatic URL and hash updates
 
 - Put the current, verified download URL and SHA-256 in the applicable manifest architecture.

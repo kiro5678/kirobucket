@@ -14,12 +14,7 @@
     ],
     "checkver": {
         "url": "https://api.github.com/repos/horsicq/Detect-It-Easy/releases/tags/Beta",
-        "script": [
-            "$release = Invoke-RestMethod -Uri 'https://api.github.com/repos/horsicq/Detect-It-Easy/releases/tags/Beta' -Headers @{ 'User-Agent' = 'Scoop checkver' }",
-            "$asset = $release.assets | Where-Object { $_.name -match '^die_win64_portable_[\\d.]+_x64\\.zip$' } | Select-Object -First 1",
-            "if ($null -eq $asset) { throw 'The official Beta release has no 64-bit portable ZIP.' }",
-            "Write-Output $asset.name"
-        ],
+        "jsonpath": "$.assets[*].name",
         "regex": "die_win64_portable_(?<version>[\\d.]+)_x64\\.zip"
     },
     "autoupdate": {

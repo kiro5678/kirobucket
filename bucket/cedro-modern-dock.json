@@ -14,13 +14,9 @@
     ],
     "checkver": {
         "url": "https://api.github.com/repos/Cedro-Software/cedro-modern-dock/releases/latest",
-        "script": [
-            "$release = Invoke-RestMethod -Uri 'https://api.github.com/repos/Cedro-Software/cedro-modern-dock/releases/latest' -Headers @{ 'User-Agent' = 'Scoop checkver' }",
-            "$asset = $release.assets | Where-Object { $_.name -match '^CedroModernDock-[\\d.]+-x64\\.msi$' } | Select-Object -First 1",
-            "if ($null -eq $asset) { throw 'The latest release does not contain CedroModernDock x64 MSI.' }",
-            "Write-Output \"$($release.tag_name)|$($asset.name)\""
-        ],
-        "regex": "Version-(?<tag>[\\d.]+)\\|CedroModernDock-(?<version>[\\d.]+)-x64\\.msi"
+        "jsonpath": "$.tag_name",
+        "regex": "Version-(?<tag>[\\d.]+)",
+        "replace": "${tag}.0"
     },
     "autoupdate": {
         "url": "https://github.com/Cedro-Software/cedro-modern-dock/releases/download/Version-$matchTag/CedroModernDock-$version-x64.msi#/dl.msi"
