@@ -2,6 +2,9 @@ name: Manual Scoop Checkver Validation
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/scoop-checkver-validation.yml'
 
 permissions:
   contents: read
