@@ -60,6 +60,7 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 - Use `innosetup: true` and `innounp` only after confirming the asset is genuinely an Inno Setup installer and that extraction is the intended installation method.
 - Never append `#/dl.7z` to an `.exe` or another URL unless the URL is intentionally handled as an archive and that exact extraction behavior has been verified.
 - Set `extract_dir` to the exact directory present in the archive. Confirm the path and capitalization from the actual archive listing. If the root directory is version-dependent, update both the current value and `autoupdate.extract_dir`.
+- After any upstream packaging change, rerun archive validation and inspect the reported paths before changing `bin`, `shortcuts`, or `extract_dir`; do not guess executable names or directory prefixes. For MSI assets, a generic archive listing may expose internal file IDs such as `FILE_Exe` instead of the installed target paths. Treat that as an installer payload, not a portable archive, unless a verified extraction or installation method is available.
 - Do not call an app portable in the description solely because Scoop extracts an installer. Describe the actual distribution and install behavior accurately.
 
 ## 6. Required validation before considering work complete

@@ -5,7 +5,6 @@
     "license": "MIT",
     "url": "https://github.com/horsicq/Detect-It-Easy/releases/download/Beta/die_win64_portable_3.10_x64.zip",
     "hash": "",
-    "extract_dir": "die_win64_portable_3.10_x64",
     "bin": "die.exe",
     "shortcuts": [
         [
@@ -14,7 +13,8 @@
         ]
     ],
     "checkver": {
-        "url": "https://github.com/horsicq/Detect-It-Easy/releases/tag/Beta",
+        "url": "https://api.github.com/repos/horsicq/Detect-It-Easy/releases/tags/Beta",
+        "jsonpath": "$.assets[*].name",
         "regex": "die_win64_portable_(?<version>[\\d.]+)_x64\\.zip"
     },
     "autoupdate": {
