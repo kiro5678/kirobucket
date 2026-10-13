@@ -2,7 +2,6 @@ KiroBucket is currently a work in progress and is not stable yet. Some manifests
  I am still learning, testing manifests, fixing problems, and improving the repository over time.
 
 I am not a developer, but I really enjoy using Scoop. It has made managing Windows applications much easier for me, so I decided to create my own Scoop bucket.
-Before editing manifests, follow [the manifest rules](docs/manifest-authoring.md).
 
 
 Suggestions, bug reports, manifest improvements, and other constructive feedback are very welcome. They can help me improve the bucket and learn more along the way.
@@ -26,6 +25,8 @@ Thank you for taking the time to check out the project.
 https://github.com/ScoopInstaller/Scoop
 
 https://github.com/ScoopInstaller/BucketTemplate
+
+[the manifest rules](docs/manifest-authoring.md).
 
 
 
