@@ -74,7 +74,7 @@ jobs:
           $failures = @()
           $notExercised = @()
           $testedCount = 0
-          $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
+          $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
 
           foreach ($candidate in $manifestPaths) {
             $relativePath = ([string]$candidate).Trim().Replace('\', '/')
