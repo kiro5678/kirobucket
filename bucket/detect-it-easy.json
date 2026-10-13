@@ -4,7 +4,7 @@
     "homepage": "https://github.com/horsicq/Detect-It-Easy",
     "license": "MIT",
     "url": "https://github.com/horsicq/Detect-It-Easy/releases/download/Beta/die_win64_portable_3.10_x64.zip",
-    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "hash": "8eb0604244f029718f2bd6ab8a9fcf5f8eaf9f2e7ab4041fd02d2cce9bdf7e8",
     "bin": "die.exe",
     "shortcuts": [
         [
