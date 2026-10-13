@@ -15,10 +15,10 @@
     "checkver": {
         "url": "https://api.github.com/repos/Hawkynt/PhotoManager/releases?per_page=1",
         "jsonpath": "$[0].name",
-        "regex": "Nightly (?<year>[0-9]{4})(?<month>[0-9]{2})(?<day>[0-9]{2}) \\((?<appversion>[^)]+)\\)",
+        "regex": "Nightly (?<date>(?<year>[0-9]{4})(?<month>[0-9]{2})(?<day>[0-9]{2})) \\((?<appversion>[^)]+)\\)",
         "replace": "${year}.${month}.${day}"
     },
     "autoupdate": {
-        "url": "https://github.com/Hawkynt/PhotoManager/releases/download/nightly-$matchYear$matchMonth$matchDay/PhotoManager-UI-win-x64-$matchAppversion.zip"
+        "url": "https://github.com/Hawkynt/PhotoManager/releases/download/nightly-$matchDate/PhotoManager-UI-win-x64-$matchAppversion.zip"
     }
 }
