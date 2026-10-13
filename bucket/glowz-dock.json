@@ -5,6 +5,10 @@
     "license": "MIT",
     "url": "https://github.com/Suraween/GlowZ-Dock/releases/download/1.2.1/GlowZ-Dock_1.2.1.zip",
     "hash": "c394c857c3373ddb907c09d1cd0f4e8a412fd508643f81bfbb885c50656707aa",
+    "persist": [
+        "GlowZ-Dock/.dock-cache",
+        "GlowZ-Dock/data"
+    ],
     "bin": "GlowZ-Dock/GlowZ Dock.exe",
     "shortcuts": [
         [
