@@ -39,8 +39,7 @@ Generated automatically from the manifests in the bucket directory.
 | [fancywm](bucket/fancywm.json) | Windows Customization | 2.19.0 | 2026-09-29 | [Homepage](https://github.com/FancyWM/fancywm) | Windows tiling window manager designed for power users. |
 | [fancywm-msix-cert](bucket/fancywm-msix-cert.json) | Windows Customization | 2.19.0 | 2026-09-29 | [Homepage](https://github.com/FancyWM/fancywm) | FancyWM MSIX signing certificate (download only; for MSIX installation). |
 | [FoliCon](bucket/FoliCon.JSON) | Windows Customization | 5.3.1 | 2026-09-29 | [Homepage](https://github.com/DineshSolanki/FoliCon) | Folder icon customizer for movies, TV shows, music, games, anime, and books. |
-| [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11. |
-| [glowz-dock-portable](bucket/glowz-dock-portable.json) | Windows Customization | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable). |
+| [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). |
 | [iconswappergui](bucket/iconswappergui.json) | Windows Customization | 2.1.2 | 2026-09-29 | [Homepage](https://github.com/aj-phillips/IconSwapperGui) | Portable GUI for swapping Windows file and folder icons. |
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | Windows Customization | 2026-08-22 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |

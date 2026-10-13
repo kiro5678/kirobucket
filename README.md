@@ -49,6 +49,7 @@ This table is generated automatically from the manifests currently available in 
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.9.8700.25 | 2026-10-13 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
 | [encryphix](bucket/encryphix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-10-13 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
+| [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). |
 | [hdsentinel-portable](bucket/hdsentinel-portable.json) | System Monitoring & Hardware | 6.40 | 2026-10-13 | [Homepage](https://www.hdsentinel.com/) | Hard disk and SSD monitoring, health analysis, testing and repair tool. |
 | [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.216.2 | 2026-10-13 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-10-13 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
@@ -242,8 +243,6 @@ This table is generated automatically from the manifests currently available in 
 | [FoliCon](bucket/FoliCon.JSON) | Windows Customization | 5.3.1 | 2026-09-29 | [Homepage](https://github.com/DineshSolanki/FoliCon) | Folder icon customizer for movies, TV shows, music, games, anime, and books. |
 | [fractus-atlas](bucket/fractus-atlas.json) | Images & Photos | 2.3.0 | 2026-09-29 | [Homepage](https://github.com/Jimskapt/fractus-atlas) | An image viewer that lets you move images quickly into folders |
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.12. | 2026-09-29 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
-| [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11. |
-| [glowz-dock-portable](bucket/glowz-dock-portable.json) | Windows Customization | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable). |
 | [iconswappergui](bucket/iconswappergui.json) | Windows Customization | 2.1.2 | 2026-09-29 | [Homepage](https://github.com/aj-phillips/IconSwapperGui) | Portable GUI for swapping Windows file and folder icons. |
 | [imageglass](bucket/imageglass.json) | Images & Photos | 10.0.6.906 | 2026-09-29 | [Homepage](https://imageglass.org) | A fast, modern, open-source image viewer for Windows |
 | [imagetype](bucket/imagetype.json) | Images & Photos | 3.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ImageType) | Accessible image editor for adding custom text to images |
