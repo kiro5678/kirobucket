@@ -47,7 +47,12 @@ jobs:
             throw 'Could not reset to the latest master.'
           }
           $validatedHeadSha = (git rev-parse HEAD).Trim()
-          if ($LASTEXITCODE -ne 0 -or $validatedHeadSha -notmatch '^[0-9a-fA-F]{40}          $manifestPaths = @()
+          if ($LASTEXITCODE -ne 0 -or $validatedHeadSha -notmatch '^[0-9a-fA-F]{40}$') {
+            throw 'Could not determine the exact commit used for archive validation.'
+          }
+
+          $repoRoot = $env:GITHUB_WORKSPACE
+          $manifestPaths = @()
           if (-not [string]::IsNullOrWhiteSpace($env:MANIFEST_INPUT)) {
             $manualPath = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
             if ($manualPath -notmatch '(?i)^bucket/.+\.json$') {
@@ -536,7 +541,6 @@ jobs:
           }
 
           $repoRoot = $env:GITHUB_WORKSPACE
-          $manifestPaths = @()
           if (-not [string]::IsNullOrWhiteSpace($env:MANIFEST_INPUT)) {
             $manualPath = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
             if ($manualPath -notmatch '(?i)^bucket/.+\.json$') {
