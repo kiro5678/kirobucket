@@ -39,13 +39,14 @@ jobs:
           }
 
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-          "Manifest: $manifestPath" | Tee-Object -FilePath $installLog
-          "Manifest version: $($manifest.version)" | Tee-Object -FilePath $installLog -Append
-          "Scoop root: $env:USERPROFILE\scoop" | Tee-Object -FilePath $installLog -Append
-
-          scoop install $manifestPath 2>&1 | Tee-Object -FilePath $installLog -Append
-          if ($LASTEXITCODE -ne 0) {
-            throw "scoop install failed with exit code $LASTEXITCODE. See the scoop-install.log artifact."
+          Start-Transcript -LiteralPath $installLog -Force
+          try {
+            Write-Host "Manifest: $manifestPath"
+            Write-Host "Manifest version: $($manifest.version)"
+            Write-Host "Scoop root: $env:USERPROFILE\scoop"
+            scoop install $manifestPath
+          } finally {
+            Stop-Transcript | Out-Null
           }
 
           "install_exit_code=0" >> $env:GITHUB_OUTPUT
