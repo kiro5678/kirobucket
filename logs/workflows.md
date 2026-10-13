@@ -142,3 +142,30 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Commit `42cb22bf8f4417f03bca0c9cf026cc56eb9e3def` updates `pre_install` to keep the bundled `allplayer-radio,1.ico` as `ALLPlayer.ico`, remove `allplayer-radio,2.ico`, and validate the ICO header before keeping the shortcut reference.
 - The same hook removes `ALLPlayer,2.exe` and `lib`, while requiring and preserving `lib64`.
 - No CI run has been confirmed for this latest commit. Archive validation does not execute `pre_install`, so the cleanup and ICO selection need installation-time verification.
+
+## 2026-10-14
+
+### Manifest table category mappings
+- Added explicit category mappings in `.github/workflows/manifest-table.yml` for existing manifests that previously fell back to `Other Utilities`.
+- Removed eight obsolete category keys that no longer matched a current manifest filename: `crapcheckthis`, `developer-placeholder`, `pdfcraft`, `pdfcraft-exe`, `ram-cleaner-flusher-pro`, `timescribe-portable`, `unigetuiglobal`, and `windhawk-alpha`.
+- Kept the original fallback behavior at the user's request: unmapped future manifests are categorized as `Other Utilities`; the workflow does not warn or fail because of a missing category mapping.
+- The workflow regenerated `README.md` and the six generated manifest-view files under `docs/`.
+- [Manifest-table workflow run 38484025594 — success](https://github.com/kiro5678/kirobucket/actions/runs/38484025594).
+- [CI run 38484025576 — success](https://github.com/kiro5678/kirobucket/actions/runs/38484025576).
+
+### Archive validation and Scoop autoupdate validation
+- Modified `.github/workflows/validate-manifest-archives.yml` to capture the exact commit SHA being checked and expose it together with the validated manifest paths as step outputs.
+- After archive/path validation succeeds, the workflow dispatches `manifests-archives-validated` with the manifest list and validated commit SHA. It retains the existing `archives-validated` dispatch for the regular CI workflow.
+- Added `.github/workflows/scoop-autoupdate-validation.yml`. It can run from that dispatch or manually; it checks for `checkver` and `autoupdate`, then tests Scoop's update path against a disposable copy rather than rewriting the repository's manifest.
+- The autoupdate workflow can use `-ForceUpdate` when its manual `force_update` input is enabled. A normal `-Update` with no newer upstream version does not prove that the URL/hash update template was exercised, so that case is reported as not exercised.
+- Updated `docs/manifest-authoring.md` with this distinction and the safe disposable-copy procedure.
+- Relevant archive workflow commits: [dispatch integration](https://github.com/kiro5678/kirobucket/commit/4bffa6b1c83ed8484872bcec28749578628be18c) and [output repair](https://github.com/kiro5678/kirobucket/commit/317ccf3ded611703729358116259c8cb6483e5d9).
+- Autoupdate workflow commits: [initial workflow](https://github.com/kiro5678/kirobucket/commit/b4dbec3546c2748f47b96a2d7a6ebdd8acf8f2ee), [PowerShell path/regex repair](https://github.com/kiro5678/kirobucket/commit/548e7aa6d03d7d6724a721fa9a8c69bacefc724c), and [failure-pattern repair](https://github.com/kiro5678/kirobucket/commit/b69b787366c13215430dce9f0f63b8abf08b64d2).
+- Two intermediate archive-workflow attempts failed while wiring the output: [run 38441504477](https://github.com/kiro5678/kirobucket/actions/runs/38441504477) and [run 38441685973](https://github.com/kiro5678/kirobucket/actions/runs/38441685973). The workflow file was rebuilt and repaired afterward.
+- [CI run 38442021855 — success](https://github.com/kiro5678/kirobucket/actions/runs/38442021855).
+- [Scoop checkver validation run 38440879693 — PowerShell 5 and PowerShell 7 jobs passed](https://github.com/kiro5678/kirobucket/actions/runs/38440879693). This checks version detection, not necessarily the complete URL/hash update path.
+- **End-to-end caveat:** a successful general CI run does not prove that the archive-validation dispatch triggered and completed an autoupdate check against a real changed manifest. That specific end-to-end run has not yet been confirmed.
+- `.github/workflows/ci.yml` and `.github/workflows/scoop-checkver-validation.yml` were not modified by this set of changes.
+
+### Log file location
+- Consolidated this record into `logs/workflows.md`, alongside the existing workflow history. The temporary duplicate `docs/workflow-change-log.md` was removed after its information was incorporated here.
