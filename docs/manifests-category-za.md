@@ -130,6 +130,7 @@ Generated automatically from the manifests in the bucket directory.
 | [copyq](bucket/copyq.json) | Other Utilities | 17.0.0 | 2026-10-04 | [Homepage](https://hluk.github.io/CopyQ/) | Clipboard manager |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [detect-it-easy](bucket/detect-it-easy.json) | Other Utilities | 3.10 | 2026-09-29 | [Homepage](https://github.com/horsicq/Detect-It-Easy) | Tool for identifying packers, protectors, compilers, and file formats |
+| [encryphix](bucket/encryphix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [endstate-gui](bucket/endstate-gui.json) | Other Utilities | 3.11.0 | 2026-10-06 | [Homepage](https://github.com/Artexis10/endstate-gui) | The official desktop app for Endstate, for restoring apps and settings from a portable file. |
 | [filepilot](bucket/filepilot.json) | Other Utilities | 1.0.7 | 2026-10-11 | [Homepage](https://github.com/qup1010/FilePilot) | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
@@ -159,14 +160,17 @@ Generated automatically from the manifests in the bucket directory.
 | [timescribe](bucket/timescribe.json) | Other Utilities | 1.17.1 | 2026-09-30 | [Homepage](https://github.com/WINBIGFOX/TimeScribe) | Smart and private time tracking for Windows. |
 | [tokri](bucket/tokri.json) | Other Utilities | 2026.09.26 | 2026-09-29 | [Homepage](https://github.com/ysuraj1999/tokri) | Desktop basket to drag and drop text, URLs, images, and files. |
 | [unigetui](bucket/unigetui.json) | Other Utilities | 2026.3.1 | 2026-10-08 | [Homepage](https://devolutions.net/unigetui/) | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. |
+| [vcardix](bucket/vcardix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vcardix) | Contact manager and converter for vCard, CSV, and JSON files. |
 | [vimera](bucket/vimera.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
 | [viola](bucket/viola.json) | Other Utilities | 0.2.10 | 2026-09-29 | [Homepage](https://github.com/nmcmil/Viola-Downloads) | Native desktop web browser. |
 | [virustotal-context-menu](bucket/virustotal-context-menu.json) | Other Utilities | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/Genbox/VirusTotalContextMenu) | Portable Windows context-menu utility for scanning files with VirusTotal |
 | [virustotal-uploader](bucket/virustotal-uploader.json) | Other Utilities | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/SamuelTulach/VirusTotalUploader) | Open-source WinForms application for uploading files to VirusTotal |
 | [voicestudio](bucket/voicestudio.json) | Other Utilities | 0.5.6 | 2026-10-06 | [Homepage](https://voicestudio.sh) | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. |
 | [volumey](bucket/volumey.json) | Other Utilities | 1.5.4.0 | 2026-10-04 | [Homepage](https://github.com/G-Stas/Volumey) | Volume mixer with global hotkeys for controlling Windows audio. |
+| [walpa](bucket/walpa.json) | Other Utilities | 26.10 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/walpa) | Lossless raster icon recoloring tool for Windows. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.0 | 2026-09-29 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |
 | [yamira](bucket/yamira.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
+| [zafuse](bucket/zafuse.json) | Other Utilities | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 | [zapzap](bucket/zapzap.json) | Other Utilities | 7.5 | 2026-10-09 | [Homepage](https://github.com/rafatosta/zapzap) | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.16.0 | 2026-10-09 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [antalogy](bucket/antalogy.json) | Notes & Knowledge | 0.95.0 | 2026-09-29 | [Homepage](https://antalogy.com/) | AI-ready desktop word processor for Markdown with a Word-like interface, local-first architecture, and an optional OpenAI-compatible AI assistant. |

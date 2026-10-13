@@ -12,6 +12,7 @@ Generated automatically from the manifests in the bucket directory.
 | [zenbreak-msix](bucket/zenbreak-msix.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [zenbreak](bucket/zenbreak.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [zapzap](bucket/zapzap.json) | Other Utilities | 7.5 | 2026-10-09 | [Homepage](https://github.com/rafatosta/zapzap) | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
+| [zafuse](bucket/zafuse.json) | Other Utilities | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 | [yamira](bucket/yamira.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.0 | 2026-09-29 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |
@@ -23,6 +24,7 @@ Generated automatically from the manifests in the bucket directory.
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-10 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [wincux](bucket/wincux.json) | Windows Customization | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/samcuxx/WinCux) | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. |
 | [warpinator](bucket/warpinator.json) | Network & DNS | 1.1 | 2026-09-29 | [Homepage](https://github.com/slowscript/warpinator-windows) | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. |
+| [walpa](bucket/walpa.json) | Other Utilities | 26.10 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/walpa) | Lossless raster icon recoloring tool for Windows. |
 | [wallpaper-changer](bucket/wallpaper-changer.json) | Windows Customization | 5.4.1 | 2026-09-29 | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. |
 | [volumey](bucket/volumey.json) | Other Utilities | 1.5.4.0 | 2026-10-04 | [Homepage](https://github.com/G-Stas/Volumey) | Volume mixer with global hotkeys for controlling Windows audio. |
 | [voicestudio](bucket/voicestudio.json) | Other Utilities | 0.5.6 | 2026-10-06 | [Homepage](https://voicestudio.sh) | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. |
@@ -31,6 +33,7 @@ Generated automatically from the manifests in the bucket directory.
 | [viola](bucket/viola.json) | Other Utilities | 0.2.10 | 2026-09-29 | [Homepage](https://github.com/nmcmil/Viola-Downloads) | Native desktop web browser. |
 | [vimera](bucket/vimera.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
 | [ventic](bucket/ventic.json) | Media & Audio/Video | 0.5.0 | 2026-09-29 | [Homepage](https://github.com/ventic/ventic) | A media library and BitTorrent player for the desktop and Android TV. |
+| [vcardix](bucket/vcardix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vcardix) | Contact manager and converter for vCard, CSV, and JSON files. |
 | [varia](bucket/varia.json) | Download Managers | 2026.8.5-1 | 2026-09-30 | [Homepage](https://github.com/giantpinkrobots/varia) | Download manager for files, torrents and videos. |
 | [universal-intel-wifi-bt-updater](bucket/universal-intel-wifi-bt-updater.json) | System Monitoring & Hardware | 2026.07.0008 | 2026-09-29 | [Homepage](https://github.com/FirstEverTech/Universal-Intel-WiFi-BT-Updater) | Automatically detects Intel Wi-Fi and Bluetooth hardware and installs the latest matching official drivers. |
 | [universal-intel-chipset-device-updater](bucket/universal-intel-chipset-device-updater.json) | System Monitoring & Hardware | 2026.09.0019 | 2026-09-29 | [Homepage](https://github.com/FirstEverTech/Universal-Intel-Chipset-Updater) | Automatically detects Intel chipset hardware and installs the latest matching INF files with safety checks. |
@@ -217,6 +220,7 @@ Generated automatically from the manifests in the bucket directory.
 | [fancywm](bucket/fancywm.json) | Windows Customization | 2.19.0 | 2026-09-29 | [Homepage](https://github.com/FancyWM/fancywm) | Windows tiling window manager designed for power users. |
 | [everything-cmdpal](bucket/everything-cmdpal.json) | File Management | 0.9.26030.0 | 2026-09-29 | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) | Everything search extension for PowerToys Command Palette |
 | [endstate-gui](bucket/endstate-gui.json) | Other Utilities | 3.11.0 | 2026-10-06 | [Homepage](https://github.com/Artexis10/endstate-gui) | The official desktop app for Endstate, for restoring apps and settings from a portable file. |
+| [encryphix](bucket/encryphix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [edge-drop](bucket/edge-drop.json) | Clipboard & Text | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/Deepender25/Edge-Drop) | Clipboard manager that lives on the left edge of your screen. |
 | [ecopaste-nightly](bucket/ecopaste-nightly.json) | Clipboard & Text | 1.1.1-nightly.20260813.1 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. Nightly build. |
 | [ecopaste](bucket/ecopaste.json) | Clipboard & Text | 1.1.0 | 2026-10-11 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. |

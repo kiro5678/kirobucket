@@ -38,9 +38,13 @@ This table is generated automatically from the manifests currently available in 
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [astel](bucket/astel.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/astel) | Encrypted password manager for Windows. |
+| [encryphix](bucket/encryphix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
+| [vcardix](bucket/vcardix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vcardix) | Contact manager and converter for vCard, CSV, and JSON files. |
 | [vimera](bucket/vimera.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
+| [walpa](bucket/walpa.json) | Other Utilities | 26.10 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/walpa) | Lossless raster icon recoloring tool for Windows. |
 | [yamira](bucket/yamira.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
+| [zafuse](bucket/zafuse.json) | Other Utilities | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-12 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [kalarm](bucket/kalarm.json) | Other Utilities | 3554 | 2026-10-12 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Other Utilities | 6719 | 2026-10-12 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |

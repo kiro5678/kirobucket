@@ -299,7 +299,11 @@ Generated automatically from the manifests in the bucket directory.
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.7 | 2026-10-12 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.129.0 | 2026-10-12 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [astel](bucket/astel.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/astel) | Encrypted password manager for Windows. |
+| [encryphix](bucket/encryphix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
+| [vcardix](bucket/vcardix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vcardix) | Contact manager and converter for vCard, CSV, and JSON files. |
 | [vimera](bucket/vimera.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
+| [walpa](bucket/walpa.json) | Other Utilities | 26.10 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/walpa) | Lossless raster icon recoloring tool for Windows. |
 | [yamira](bucket/yamira.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
+| [zafuse](bucket/zafuse.json) | Other Utilities | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 
