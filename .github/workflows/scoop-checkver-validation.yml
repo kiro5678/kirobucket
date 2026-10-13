@@ -38,6 +38,7 @@ jobs:
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $bucket = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket'
           $failed = @()
+          $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
 
           $manifests = Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse |
             Sort-Object FullName
@@ -50,11 +51,19 @@ jobs:
             Write-Host "Checking: $($manifest.Name)"
             Write-Host "============================================================"
 
+            $outputText = ''
+
             try {
-              & $checkver -App $manifest.FullName -ThrowError
-              if ($LASTEXITCODE -ne 0) {
-                throw "checkver exited with code $LASTEXITCODE"
+              # checkver.ps1 is a PowerShell script, not a native executable.
+              # Do not use $LASTEXITCODE to judge its result.
+              $output = @(& $checkver -App $manifest.FullName -ThrowError *>&1 | ForEach-Object { "$_" })
+              $outputText = $output -join [Environment]::NewLine
+
+              if ($outputText -match $failurePattern) {
+                throw "Version detection failed: $($Matches[0])"
               }
+
+              Write-Host "PASS: $($manifest.BaseName)" -ForegroundColor Green
             }
             catch {
               $failed += [PSCustomObject]@{
@@ -63,6 +72,9 @@ jobs:
               }
               Write-Host "FAILED: $($manifest.Name)" -ForegroundColor Red
               Write-Host $_.Exception.Message -ForegroundColor Red
+              if ($outputText) {
+                Write-Host $outputText
+              }
             }
           }
 
