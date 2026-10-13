@@ -7,7 +7,6 @@ Generated automatically from the manifests in the bucket directory.
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [anti-yandex](bucket/anti-yandex.json) | Windows Privacy & Tweaks | 1.3 | 2026-09-29 | [Homepage](https://github.com/TheCawa/AntiYandex) | Utility for finding and removing Yandex Browser files and registry entries |
-| [crapcheckthis](bucket/crapcheckthis.json) | Windows Privacy & Tweaks | 1.0 | 2026-09-29 | [Homepage](https://github.com/builtbybel/CrapCheckThis) | Read-only Windows audit companion for FluentCleaner Classic and CrapFixer. |
 | [crapfixer](bucket/crapfixer.json) | Windows Privacy & Tweaks | 2.01.41 | 2026-09-29 | [Homepage](https://github.com/builtbybel/CrapFixer) | Windows tweaking, privacy, and app removal utility. |
 | [fluentcleaner](bucket/fluentcleaner.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Windows privacy cleaner and system cleanup utility. |
 | [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-10-13 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
@@ -83,7 +82,6 @@ Generated automatically from the manifests in the bucket directory.
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | System Monitoring & Hardware | 7 | 2026-09-29 | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
 | [nvidiaprofileinspector](bucket/nvidiaprofileinspector.json) | System Monitoring & Hardware | 3.0.2.1 | 2026-09-29 | [Homepage](https://github.com/Orbmu2k/nvidiaProfileInspector) | NVIDIA graphics driver profile editor and settings utility. |
 | [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.2.0 | 2026-10-13 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
-| [ram-cleaner-flusher-pro](bucket/ram-cleaner-flusher-pro.json) | System Monitoring & Hardware | 1.2.0 | 2026-09-29 | [Homepage](https://github.com/alisakkaf/RAM-Cleaner-Flusher-Pro) | Native Win32 memory and standby cache optimizer for Windows. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.22.0 | 2026-10-12 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.129.0 | 2026-10-12 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
