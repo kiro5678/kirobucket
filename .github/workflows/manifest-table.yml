@@ -181,6 +181,7 @@ jobs:
               "netronome" = "Network & DNS"
               "netspeedtray" = "Network & DNS"
               "nettime" = "Network & DNS"
+              "nixthis" = "Windows Privacy & Tweaks"
               "network-checker" = "Network & DNS"
               "nglide" = "Emulators & Compatibility"
               "nightlight-launcher" = "Games & Game Utilities"
