@@ -12,6 +12,7 @@ Generated automatically from the manifests in the bucket directory.
 | [zenbreak-msix](bucket/zenbreak-msix.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [zenbreak](bucket/zenbreak.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [zapzap](bucket/zapzap.json) | Other Utilities | 7.5 | 2026-10-09 | [Homepage](https://github.com/rafatosta/zapzap) | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
+| [yamira](bucket/yamira.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.30.2500 | 2026-09-30 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.0 | 2026-09-29 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.6 | 2026-10-06 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
@@ -28,6 +29,7 @@ Generated automatically from the manifests in the bucket directory.
 | [virustotal-uploader](bucket/virustotal-uploader.json) | Other Utilities | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/SamuelTulach/VirusTotalUploader) | Open-source WinForms application for uploading files to VirusTotal |
 | [virustotal-context-menu](bucket/virustotal-context-menu.json) | Other Utilities | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/Genbox/VirusTotalContextMenu) | Portable Windows context-menu utility for scanning files with VirusTotal |
 | [viola](bucket/viola.json) | Other Utilities | 0.2.10 | 2026-09-29 | [Homepage](https://github.com/nmcmil/Viola-Downloads) | Native desktop web browser. |
+| [vimera](bucket/vimera.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
 | [ventic](bucket/ventic.json) | Media & Audio/Video | 0.5.0 | 2026-09-29 | [Homepage](https://github.com/ventic/ventic) | A media library and BitTorrent player for the desktop and Android TV. |
 | [varia](bucket/varia.json) | Download Managers | 2026.8.5-1 | 2026-09-30 | [Homepage](https://github.com/giantpinkrobots/varia) | Download manager for files, torrents and videos. |
 | [universal-intel-wifi-bt-updater](bucket/universal-intel-wifi-bt-updater.json) | System Monitoring & Hardware | 2026.07.0008 | 2026-09-29 | [Homepage](https://github.com/FirstEverTech/Universal-Intel-WiFi-BT-Updater) | Automatically detects Intel Wi-Fi and Bluetooth hardware and installs the latest matching official drivers. |
@@ -285,6 +287,7 @@ Generated automatically from the manifests in the bucket directory.
 | [beaver-notes](bucket/beaver-notes.json) | Notes & Knowledge | 5.0.0-beta.2 | 2026-09-29 | [Homepage](https://github.com/Beaver-Notes/Beaver-Notes) | A privacy-focused note-taking app for Windows, macOS and Linux. |
 | [bargozin](bucket/bargozin.json) | Network & DNS | 0.2.0 | 2026-09-29 | [Homepage](https://github.com/403unlocker/bargozin-desktop) | DNS and network testing tool - Test URL accessibility, download speeds, and Docker registries across multiple DNS servers |
 | [babyshark](bucket/babyshark.json) | Network & DNS | 0.3.0 | 2026-09-29 | [Homepage](https://github.com/vignesh07/babyshark) | Wireshark made easy in your terminal. |
+| [astel](bucket/astel.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/astel) | Encrypted password manager for Windows. |
 | [anti-yandex](bucket/anti-yandex.json) | Windows Privacy & Tweaks | 1.3 | 2026-09-29 | [Homepage](https://github.com/TheCawa/AntiYandex) | Utility for finding and removing Yandex Browser files and registry entries |
 | [antalogy](bucket/antalogy.json) | Notes & Knowledge | 0.95.0 | 2026-09-29 | [Homepage](https://antalogy.com/) | AI-ready desktop word processor for Markdown with a Word-like interface, local-first architecture, and an optional OpenAI-compatible AI assistant. |
 | [another](bucket/another.json) | Other Utilities | 0.4.4 | 2026-10-06 | [Homepage](https://github.com/Zfinix/another) | A desktop app for mirroring and controlling Android devices over USB. |
