@@ -244,7 +244,7 @@ Generated automatically from the manifests in the bucket directory.
 | [zenbreak-msix](bucket/zenbreak-msix.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [crow-translate](bucket/crow-translate.json) | Translation & OCR | 4.1.0 | 2026-09-29 | [Homepage](https://apps.kde.org/crowtranslate) | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. |
 | [dpscreenocr](bucket/dpscreenocr.json) | Translation & OCR | 1.5.1 | 2026-09-29 | [Homepage](https://danpla.github.io/dpscreenocr/) | A free and open-source program to recognize text on the screen. |
-| [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-09-29 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
+| [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-10-13 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.7 | 2026-10-12 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
 | [translumo](bucket/translumo.json) | Translation & OCR | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/ramjke/Translumo) | Advanced real-time screen translator. |
 | [trayweather](bucket/trayweather.json) | Weather & Information | 1.37.2 | 2026-09-29 | [Homepage](https://github.com/FelixdelasPozas/TrayWeather) | A lightweight weather application that runs in the Windows system tray. |

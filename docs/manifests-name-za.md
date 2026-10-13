@@ -157,7 +157,7 @@ Generated automatically from the manifests in the bucket directory.
 | [mouzi](bucket/mouzi.json) | File Management | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/hsr88/mouzi) | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
 | [motrix-next](bucket/motrix-next.json) | Download Managers | 3.9.9 | 2026-09-30 | [Homepage](https://github.com/AnInsomniacy/motrix-next) | Modern download manager for HTTP, FTP, BitTorrent and Magnet links. |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.47 | 2026-10-10 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
-| [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-09-29 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
+| [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-10-13 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.6 | 2026-10-11 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Other Utilities | 6719 | 2026-10-12 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |

@@ -41,6 +41,7 @@ This table is generated automatically from the manifests currently available in 
 | [astel](bucket/astel.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/astel) | Encrypted password manager for Windows. |
 | [encryphix](bucket/encryphix.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [glow](bucket/glow.json) | System Monitoring & Hardware | 26.13 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/glow) | Advanced system analysis software for Windows. |
+| [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-10-13 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [PdfCraftTool](bucket/PdfCraftTool.json) | Other Utilities | 2026.10.12-6c20c53 | 2026-10-13 | [Homepage](https://github.com/PDFCraftTool/pdfcraft) | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
 | [taskexplorer](bucket/taskexplorer.json) | System Monitoring & Hardware | 2.0.1 | 2026-10-13 | [Homepage](https://github.com/DavidXanatos/TaskExplorer) | Advanced process and system monitoring tool |
@@ -247,7 +248,6 @@ This table is generated automatically from the manifests currently available in 
 | [lettuce-window-switcher](bucket/lettuce-window-switcher.json) | Productivity & Launchers | 0.3.70 | 2026-09-29 | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) | Windows 11 application switcher with live DWM previews and multiple switcher views |
 | [local-desktop-store](bucket/local-desktop-store.json) | Package Management | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) | Private GitHub-based desktop application store and installer |
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
-| [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-09-29 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [mouzi](bucket/mouzi.json) | File Management | 0.2.1 | 2026-09-29 | [Homepage](https://github.com/hsr88/mouzi) | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. |
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | System Monitoring & Hardware | 7 | 2026-09-29 | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
 | [mucommander](bucket/mucommander.json) | File Management | 1.6.2-1 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager |
