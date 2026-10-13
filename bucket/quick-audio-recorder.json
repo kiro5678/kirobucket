@@ -5,12 +5,52 @@
     "license": "MIT",
     "url": "https://github.com/lukmay/QuickAudioRecorder/releases/download/v1.2.1/QuickAudioRecorder.exe",
     "hash": "637265394fb2ceee2298e34b2dd28041782dc4c64f0c91cf4817a1586d84551d",
-    "bin": "QuickAudioRecorder.exe",
+    "bin": "QuickAudioRecorder.cmd",
     "shortcuts": [
         [
-            "QuickAudioRecorder.exe",
+            "QuickAudioRecorder.vbs",
             "Quick Audio Recorder"
         ]
+    ],
+    "pre_install": [
+        "$recordingsPath = Join-Path $persist_dir 'recordings'",
+        "New-Item -ItemType Directory -Force -Path $recordingsPath | Out-Null",
+        "$settingsPath = Join-Path $dir 'settings.json'",
+        "$persistedSettingsPath = Join-Path $persist_dir 'settings.json'",
+        "$legacyDir = Join-Path (Split-Path -Parent $dir) 'current'",
+        "$legacySettingsPath = Join-Path $legacyDir 'settings.json'",
+        "if (-not (Test-Path -LiteralPath $persistedSettingsPath -PathType Leaf) -and -not (Test-Path -LiteralPath $settingsPath -PathType Leaf)) {",
+        "    if (Test-Path -LiteralPath $legacySettingsPath -PathType Leaf) {",
+        "        Copy-Item -LiteralPath $legacySettingsPath -Destination $settingsPath",
+        "        try {",
+        "            $settings = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json",
+        "            $outputPath = [Environment]::ExpandEnvironmentVariables([string]$settings.output_folder)",
+        "            if ($outputPath -and (Test-Path -LiteralPath $legacyDir -PathType Container)) {",
+        "                $oldInstallPath = (Resolve-Path -LiteralPath $legacyDir).Path.TrimEnd('\\')",
+        "                $outputPath = [IO.Path]::GetFullPath($outputPath).TrimEnd('\\')",
+        "                if ($outputPath -ieq $oldInstallPath -or $outputPath -ieq $legacyDir.TrimEnd('\\')) {",
+        "                    Get-ChildItem -LiteralPath $outputPath -File | Where-Object { $_.Extension -in @('.mp3', '.wav', '.flac') } | ForEach-Object {",
+        "                        $destination = Join-Path $recordingsPath $_.Name",
+        "                        if (Test-Path -LiteralPath $destination) { $destination = Join-Path $recordingsPath ('{0}_{1}{2}' -f $_.BaseName, [guid]::NewGuid().ToString('N'), $_.Extension) }",
+        "                        Copy-Item -LiteralPath $_.FullName -Destination $destination",
+        "                    }",
+        "                    $settings.output_folder = $recordingsPath",
+        "                    [IO.File]::WriteAllText($settingsPath, ($settings | ConvertTo-Json -Depth 10 -Compress), [Text.UTF8Encoding]::new($false))",
+        "                }",
+        "            }",
+        "        } catch { Write-Warning 'Legacy settings were copied, but automatic recording migration failed.' }",
+        "    } else {",
+        "        [IO.File]::WriteAllText($settingsPath, (@{ output_folder = $recordingsPath } | ConvertTo-Json -Compress), [Text.UTF8Encoding]::new($false))",
+        "    }",
+        "}",
+        "$cmdContent = @('@echo off', 'setlocal', ('cd /d \"' + $persist_dir + '\"'), ('\"%~dp0QuickAudioRecorder.exe\" %*')) -join [Environment]::NewLine",
+        "[IO.File]::WriteAllText((Join-Path $dir 'QuickAudioRecorder.cmd'), $cmdContent, [Text.Encoding]::ASCII)",
+        "$vbsContent = @('Set shell = CreateObject(\"WScript.Shell\")', 'Set fso = CreateObject(\"Scripting.FileSystemObject\")', 'appPath = fso.BuildPath(fso.GetParentFolderName(WScript.ScriptFullName), \"QuickAudioRecorder.exe\")', ('shell.CurrentDirectory = \"' + $persist_dir + '\"'), 'shell.Run \"\"\"\" & appPath & \"\"\"\", 0, False') -join [Environment]::NewLine",
+        "[IO.File]::WriteAllText((Join-Path $dir 'QuickAudioRecorder.vbs'), $vbsContent, [Text.Encoding]::ASCII)"
+    ],
+    "persist": [
+        "settings.json",
+        "recordings"
     ],
     "checkver": {
         "github": "https://github.com/lukmay/QuickAudioRecorder"
