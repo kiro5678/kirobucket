@@ -120,6 +120,7 @@ Generated automatically from the manifests in the bucket directory.
 | [adb-device-manager](bucket/adb-device-manager.json) | Other Utilities | 1.8 | 2026-10-13 | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. |
 | [another](bucket/another.json) | Other Utilities | 0.4.4 | 2026-10-06 | [Homepage](https://github.com/Zfinix/another) | A desktop app for mirroring and controlling Android devices over USB. |
 | [astel](bucket/astel.json) | Other Utilities | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/astel) | Encrypted password manager for Windows. |
+| [bloatynosy](bucket/bloatynosy.json) | Other Utilities | 1.0.50 | 2026-10-13 | [Homepage](https://github.com/builtbybel/Bloatynosy) | Windows debloater for reviewing privacy tweaks, system settings, and installed apps |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
 | [clipper](bucket/clipper.json) | Other Utilities | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
 | [clipto](bucket/clipto.json) | Other Utilities | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
