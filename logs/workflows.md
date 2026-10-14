@@ -208,3 +208,10 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Added the manifest to the `Emulators & Compatibility` category in `.github/workflows/manifest-table.yml`; the README table workflow will regenerate the index.
 - Added a pre-uninstall hook that launches the engine-specific uninstaller if present. The actual install/uninstall behavior has not been runtime-tested; archive/manifest validation cannot prove the emulator launches or that the engine uninstaller exits silently.
 - Source release: https://github.com/LOVECHEN/mumu-release/releases/tag/win-global-offline-6.8.5
+
+
+### MuMuPlayer NX-main installer failure and correction
+- User-provided installation log showed the original `/S` invocation did not create `nx_main\\MuMuNxMain.exe`; Scoop nevertheless continued far enough to report the package as installed, while shortcut creation failed and cleanup complained that root-level `uninstall.exe` did not exist.
+- Replaced the single `/S` invocation in `bucket/mumuplayer.json` with the documented two-stage installer orchestration: `/action=install_prepare`, then `/action=commit`, using `/from_orchestrator=1`, `/silent=1`, a shared transaction ID, international channel `gw-overseas12`, and `/auto_run=false`. Product version is derived from the NXMAIN engine version (for example, `1.8.5.5748` maps to product version `6.8.5.0`).
+- Removed the assumed root-level `uninstall.exe` deletion. The installer hook now checks that `nx_main\\MuMuNxMain.exe` exists and fails the install explicitly if it does not, preventing another false-success installation.
+- Runtime installation has not yet been tested on the user's PC; CI and manifest checks must still complete. Reference for the two-stage installation arguments: https://gist.github.com/TameemS/603686cec857ff1f91e68607e374b0d8 and current international-channel command-line observation: https://tria.ge/260825-xwla1ayakg/behavioral1.
