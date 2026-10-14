@@ -179,5 +179,6 @@ The repository CI remains responsible for validating manifest syntax and schema 
 
 ### Scoop Autoupdate Validation parser correction
 - Fixed a PowerShell parser error in `.github/workflows/scoop-autoupdate-validation.yml`: changed `$manifestName:` to `${manifestName}:` so the variable is delimited before the colon.
+- Fixed the isolated Scoop checkver invocation to pass the copied manifest's full path as the positional `App` argument. Passing the manifest basename together with `-Dir` caused Scoop to interpret the basename as a directory during parameter validation.
 - Run [38495030674](https://github.com/kiro5678/kirobucket/actions/runs/38495030674) failed before running manifest checks because of that parser error; it did not indicate a `mumuplayer` version, URL, or hash failure.
 - Expanded the MuMuPlayer release metadata query from 30 to 100 releases so newer non-global tags are less likely to push the latest global release outside the response window.
