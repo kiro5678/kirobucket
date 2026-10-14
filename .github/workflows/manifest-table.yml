@@ -178,6 +178,7 @@ jobs:
               "MPOGPUFIX" = "System Monitoring & Hardware"
               "mucommander" = "File Management"
               "mucommander-nightly" = "File Management"
+              "mumuplayer" = "Emulators & Compatibility"
               "nanaget" = "Download Managers"
               "net-max" = "Network & DNS"
               "netronome" = "Network & DNS"
