@@ -21,7 +21,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
-  $url = "https://github.com/LOVECHEN/mumu-release/releases/download/win-global-offline-6.8.5/MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
+          $url = "https://github.com/LOVECHEN/mumu-release/releases/download/win-global-offline-6.8.5/MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
           $expected = "dd5be7411c9a3ccf78ddaaaea89b295260ceb527713ae66b82d2a82f730919c9"
           $installer = Join-Path $env:RUNNER_TEMP "MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
           Invoke-WebRequest -Uri $url -OutFile $installer
