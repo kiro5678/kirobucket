@@ -215,3 +215,9 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Replaced the single `/S` invocation in `bucket/mumuplayer.json` with the documented two-stage installer orchestration: `/action=install_prepare`, then `/action=commit`, using `/from_orchestrator=1`, `/silent=1`, a shared transaction ID, international channel `gw-overseas12`, and `/auto_run=false`. Product version is derived from the NXMAIN engine version (for example, `1.8.5.5748` maps to product version `6.8.5.0`).
 - Removed the assumed root-level `uninstall.exe` deletion. The installer hook now checks that `nx_main\\MuMuNxMain.exe` exists and fails the install explicitly if it does not, preventing another false-success installation.
 - Runtime installation has not yet been tested on the user's PC; CI and manifest checks must still complete. Reference for the two-stage installation arguments: https://gist.github.com/TameemS/603686cec857ff1f91e68607e374b0d8 and current international-channel command-line observation: https://tria.ge/260825-xwla1ayakg/behavioral1.
+
+
+### MuMuPlayer error 10002 follow-up
+- User's retry reached `install_prepare` but failed with exit code `10002`. MuMuPlayer's official installation-error guide identifies `10002` as an abnormal/unavailable installation path: https://www.mumuplayer.com/help/win/installation-error-codes.html.
+- Changed the NXMAIN installer path argument from the quoted form `/D="...` to the unquoted form `/D=...`, matching the observed MuMuPlayer command line in https://tria.ge/260825-xwla1ayakg/behavioral1.
+- The path itself is still Scoop's version directory (`$dir`). This change only fixes the argument formatting; a runtime retry is needed to determine whether MuMuPlayer accepts this Scoop-managed destination.
