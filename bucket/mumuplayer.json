@@ -32,7 +32,9 @@
         "script": [
             "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/LOVECHEN/mumu-release/releases?per_page=100' -Headers @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
             "$release = $releases | Where-Object { $_.tag_name -like 'win-global-offline-*' } | Select-Object -First 1",
+            "if (-not $release) { throw 'No MuMuPlayer international global release was found.' }",
             "$asset = $release.assets | Where-Object { $_.name -match '^MuMu-setup-nxmain-V[\\d.]+-overseas-[\\d]+\\.exe$' } | Select-Object -First 1",
+            "if (-not $asset) { throw 'No NX main installer asset was found in the latest international global release.' }",
             "if ($asset) { $asset.name }"
         ],
         "regex": "nxmain-V(?<version>[\\d.]+)-overseas-(?<build>[\\d]+)"
