@@ -252,3 +252,10 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Reworked `checkver` to locate both assets from the same latest `win-global-offline-*` release and emit a composite match string; `autoupdate` uses the corresponding capture groups to refresh both download URLs.
 - Source for the four-command sequence: https://gist.github.com/TameemS/603686cec857ff1f91e68607e374b0d8?permalink_comment_id=6135981. This is community documentation, not an official MuMuPlayer command-line reference; the source demonstrates version `6.5.2.0`, so the arguments and sequence must still be validated against the current `6.8.5.0` installers in a runtime test.
 - SHA-256 pins were cross-checked against the `win-global-offline-6.8.5` release metadata: NXMAIN `dd5be7411c9a3ccf78ddaaaea89b295260ceb527713ae66b82d2a82f730919c9`; MUMU15 `cc21f4f886e5a5edcc8ab311cdee80f41fba30d6dfc3d0c28db3885cd455aaec`.
+
+
+### MuMuPlayer engine manifest separation correction
+- Corrected `bucket/mumuplayer.json` after the prior change had mistakenly combined both NXMAIN and MUMU15 installer payloads in one manifest. It now downloads and installs only the NXMAIN engine again.
+- Kept the two-stage `install_prepare` then `commit` invocation for NXMAIN, with the installer staged outside the target directory and the expected `nx_main\\MuMuNxMain.exe` checked after setup.
+- MUMU15 remains a separate add-on manifest at `bucket/mumuplayer-android15.json`, as originally requested. The four-step two-engine sequence from a community guide should not be used to silently make the base manifest install MUMU15 as well.
+- The two-engine sequence in the linked Gist is community guidance, not official MuMuPlayer documentation; runtime testing is still required to validate this single-engine install orchestration on current builds.
