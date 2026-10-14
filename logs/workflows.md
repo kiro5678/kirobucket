@@ -230,3 +230,10 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - This addresses the identified path collision, but actual installation still requires a fresh runtime attempt. The official help identifies error `10002` as an abnormal installation path: https://www.mumuplayer.com/help/win/installation-error-codes.html.
 
 - Follow-up hardening: derive the Scoop root from the manifest's version directory rather than relying on `$env:SCOOP`, so staging remains under the actual Scoop root even when UniGetUI launches an elevated shell with a different environment.
+
+
+### MuMuPlayer installer cache-path refinement
+- Confirmed from Scoop's `lib/download.ps1` that `Invoke-CachedDownload` retains the original download under Scoop's cache path and copies it to the version directory for the manifest's pre-install hook. The user's log line `Loading ... from cache` confirms this behavior on their machine.
+- Updated `bucket/mumuplayer.json` to use Scoop's `cache_path` helper to locate the original cached installer by app, version, and exact download URL. It removes only the staged copy from the app version directory before installation, avoiding an unnecessary second copy into another cache subfolder.
+- Retained a fallback temporary staging directory for cases where the cache file isn't available (for example, when Scoop cache use is disabled). The target directory is still checked to be empty before MuMuPlayer setup runs.
+- References: https://github.com/ScoopInstaller/Scoop/blob/develop/lib/download.ps1 and https://github.com/ScoopInstaller/Scoop/blob/develop/lib/core.ps1.
