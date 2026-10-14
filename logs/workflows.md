@@ -221,3 +221,10 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - User's retry reached `install_prepare` but failed with exit code `10002`. MuMuPlayer's official installation-error guide identifies `10002` as an abnormal/unavailable installation path: https://www.mumuplayer.com/help/win/installation-error-codes.html.
 - Changed the NXMAIN installer path argument from the quoted form `/D="...` to the unquoted form `/D=...`, matching the observed MuMuPlayer command line in https://tria.ge/260825-xwla1ayakg/behavioral1.
 - The path itself is still Scoop's version directory (`$dir`). This change only fixes the argument formatting; a runtime retry is needed to determine whether MuMuPlayer accepts this Scoop-managed destination.
+
+
+### MuMuPlayer install-path collision fix
+- Follow-up analysis found that Scoop stages the downloaded installer inside `$dir` and the manifest also passed that same directory as the MuMuPlayer install destination. This means the destination contained the setup executable when `install_prepare` began, which is consistent with MuMuPlayer's documented error `10002` for an abnormal installation path.
+- Updated `bucket/mumuplayer.json` to copy the installer to a unique temporary folder under `$env:SCOOP\\cache`, remove the staged copy from the target version directory, and run both `install_prepare` and `commit` from the separate staging folder while keeping `/D=$dir` as the target. The staging folder is removed in a `finally` block.
+- Added an explicit check that the target directory is empty before installation and retained a post-setup check for `nx_main\\MuMuNxMain.exe` so Scoop cannot report success when the expected program binary is absent.
+- This addresses the identified path collision, but actual installation still requires a fresh runtime attempt. The official help identifies error `10002` as an abnormal installation path: https://www.mumuplayer.com/help/win/installation-error-codes.html.
