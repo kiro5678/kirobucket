@@ -1,0 +1,77 @@
+name: Inspect MuMuPlayer NXMAIN Installer
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/inspect-mumuplayer-installer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - name: Download and verify exact NXMAIN installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $url = "https://a11.gdl.easebar.com/MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
+          $expected = "dd5be7411c9a3ccf78ddaaaea89b295260ceb527713ae66b82d2a82f730919c9"
+          $installer = Join-Path $env:RUNNER_TEMP "MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
+          Invoke-WebRequest -Uri $url -OutFile $installer
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Output "Installer path: $installer"
+          Write-Output "File size: $((Get-Item -LiteralPath $installer).Length) bytes"
+          Write-Output "SHA256: $actual"
+          if ($actual -ne $expected) { throw "SHA256 mismatch. Expected $expected, got $actual" }
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          Write-Output "Authenticode status: $($signature.Status)"
+          Write-Output "Signer: $($signature.SignerCertificate.Subject)"
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+          Write-Output "Product: $($versionInfo.ProductName)"
+          Write-Output "File description: $($versionInfo.FileDescription)"
+          Write-Output "File version: $($versionInfo.FileVersion)"
+          @(
+            "## MuMuPlayer NXMAIN installer metadata"
+            ""
+            "- **Size:** $((Get-Item -LiteralPath $installer).Length) bytes"
+            "- **SHA-256:** `$actual`"
+            "- **Authenticode:** $($signature.Status)"
+            "- **Signer:** $($signature.SignerCertificate.Subject)"
+            "- **Product name:** $($versionInfo.ProductName)"
+            "- **Description:** $($versionInfo.FileDescription)"
+            "- **File version:** $($versionInfo.FileVersion)"
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Identify packer and installer framework with Detect It Easy
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $installer = Join-Path $env:RUNNER_TEMP "MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/horsicq/DIE-engine/releases/latest" -Headers @{ "Accept" = "application/vnd.github+json"; "User-Agent" = "kirobucket-installer-inspection" }
+          $asset = $release.assets | Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } | Select-Object -First 1
+          if (-not $asset) { throw "Could not find the Windows x64 portable Detect It Easy asset in the latest release." }
+          $zip = Join-Path $env:RUNNER_TEMP $asset.name
+          $toolDir = Join-Path $env:RUNNER_TEMP "detect-it-easy"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip
+          Expand-Archive -LiteralPath $zip -DestinationPath $toolDir -Force
+          $diec = Get-ChildItem -LiteralPath $toolDir -Filter "diec.exe" -Recurse | Select-Object -First 1
+          if (-not $diec) { throw "diec.exe was not found in the portable archive." }
+          Write-Output "Detect It Easy release: $($release.tag_name)"
+          Write-Output "Running static scan against the verified MuMuPlayer installer (the installer will not be executed)."
+          $scanOutput = @(& $diec.FullName $installer 2>&1 | ForEach-Object { "$_" })
+          $scanOutput | ForEach-Object { Write-Output $_ }
+          if ($scanOutput.Count -eq 0) { throw "Detect It Easy returned no output." }
+          @(
+            ""
+            "## Detect It Easy static identification"
+            ""
+            "```text"
+            $scanOutput
+            "```"
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
