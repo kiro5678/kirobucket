@@ -51,5 +51,6 @@
                 "url": "https://a11.gdl.easebar.com/MuMu-setup-mumu15-V$matchVersion-overseas-$matchBuild.exe"
             }
         }
-    }
+    },
+    "notes": "This add-on installs the Android 15 engine into the shared directory managed by mumuplayer. If mumuplayer is reinstalled or updated and the Android 15 engine disappears, reinstall this manifest."
 }
