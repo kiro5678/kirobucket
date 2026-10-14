@@ -72,7 +72,7 @@ jobs:
             ""
             "## Detect It Easy static identification"
             ""
-            "```text"
+            '```text'
             $scanOutput
-            "```"
+            '```'
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
