@@ -199,3 +199,12 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Added the `mumuplayer-online` category mapping as `Emulators & Compatibility` in `.github/workflows/manifest-table.yml`; the README manifest-table workflow will regenerate the manifest views.
 - [Archive-validation run 38497203542 — success](https://github.com/kiro5678/kirobucket/actions/runs/38497203542). The validator treated the online `.exe` as an installer rather than an archive, so executable-path inspection was skipped; this does not prove runtime installation behavior.
 - [Scoop autoupdate-validation run 38497224351 — success](https://github.com/kiro5678/kirobucket/actions/runs/38497224351). `checkver` found the current asset with no failures, but the URL/hash update path was not exercised because the version matched. The CI run associated with the new split is tracked separately and must be checked for its final result.
+
+
+### MuMuPlayer Android 15 engine manifest
+- Added `bucket/mumuplayer-android15.json` for the international MUMU15 Android 15 engine, version `15.8.5.5750`, from the `win-global-offline-6.8.5` release.
+- Set the official CDN URL to `MuMu-setup-mumu15-V15.8.5.5750-overseas-1013104801.exe` and its release-mirror SHA-256 to `cc21f4f886e5a5edcc8ab311cdee80f41fba30d6dfc3d0c28db3885cd455aaec`.
+- Declared `mumuplayer` as a dependency because MUMU15 is an engine component that shares the NX-main installation directory; the manifest stages the installer with `/action=install_prepare` and then `/action=commit`, passing `/silent=1`, the matching product version, international channel, and shared install directory.
+- Added the manifest to the `Emulators & Compatibility` category in `.github/workflows/manifest-table.yml`; the README table workflow will regenerate the index.
+- Added a pre-uninstall hook that launches the engine-specific uninstaller if present. The actual install/uninstall behavior has not been runtime-tested; archive/manifest validation cannot prove the emulator launches or that the engine uninstaller exits silently.
+- Source release: https://github.com/LOVECHEN/mumu-release/releases/tag/win-global-offline-6.8.5
