@@ -228,3 +228,5 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Updated `bucket/mumuplayer.json` to copy the installer to a unique temporary folder under `$env:SCOOP\\cache`, remove the staged copy from the target version directory, and run both `install_prepare` and `commit` from the separate staging folder while keeping `/D=$dir` as the target. The staging folder is removed in a `finally` block.
 - Added an explicit check that the target directory is empty before installation and retained a post-setup check for `nx_main\\MuMuNxMain.exe` so Scoop cannot report success when the expected program binary is absent.
 - This addresses the identified path collision, but actual installation still requires a fresh runtime attempt. The official help identifies error `10002` as an abnormal installation path: https://www.mumuplayer.com/help/win/installation-error-codes.html.
+
+- Follow-up hardening: derive the Scoop root from the manifest's version directory rather than relying on `$env:SCOOP`, so staging remains under the actual Scoop root even when UniGetUI launches an elevated shell with a different environment.
