@@ -186,3 +186,9 @@ The repository CI remains responsible for validating manifest syntax and schema 
 
 - Latest verification after the fixes: [Scoop Autoupdate Validation run 38495845346 — success](https://github.com/kiro5678/kirobucket/actions/runs/38495845346), [archive validation run 38495811462 — success](https://github.com/kiro5678/kirobucket/actions/runs/38495811462), and [CI run 38495846052 — success](https://github.com/kiro5678/kirobucket/actions/runs/38495846052).
 - The checkver script found the current MuMuPlayer NX asset with no failures. The upstream version already matched the manifest, so `-Update` reported the URL/hash update path as **not exercised**; this run does not prove a future release will automatically refresh the URL and hash.
+
+### MuMuPlayer online installer update
+- Replaced the single-engine `NXMAIN` offline installer in `bucket/mumuplayer.json` with the international online installer `MuMu_6.0.2_gw-overseas12_all_1786519314.exe`, SHA-256 `552d4729428664d76dbd2aa2bce64db9ad9a923ac4be3209f3c76064e5aac095`.
+- The online installer is a small downloader that retrieves MuMuPlayer's install payload from NetEase; the manifest passes the international channel and silent-install arguments so setup can provision the engine components in one installation.
+- Updated `checkver` to locate the newest international online-installer asset, skipping Chinese-only online installer releases, and configured the matching official CDN URL template in `autoupdate`.
+- Kept `configs` and `vms` persistence and the existing `MuMuNxMain.exe` shortcut target. The workflow can verify URL/hash and manifest schema, but only a runtime installation test can confirm both engine instances are available and the shortcut launches the intended manager.
