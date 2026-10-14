@@ -54,16 +54,14 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           $installer = Join-Path $env:RUNNER_TEMP "MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
-          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/horsicq/DIE-engine/releases/latest" -Headers @{ "Accept" = "application/vnd.github+json"; "User-Agent" = "kirobucket-installer-inspection" }
-          $asset = $release.assets | Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } | Select-Object -First 1
-          if (-not $asset) { throw "Could not find the Windows x64 portable Detect It Easy asset in the latest release." }
-          $zip = Join-Path $env:RUNNER_TEMP $asset.name
+          $zip = Join-Path $env:RUNNER_TEMP "die_win64_portable_3.21_x64.zip"
           $toolDir = Join-Path $env:RUNNER_TEMP "detect-it-easy"
-          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip
+          $dieUrl = "https://github.com/horsicq/DIE-engine/releases/download/3.21/die_win64_portable_3.21_x64.zip"
+          Invoke-WebRequest -Uri $dieUrl -OutFile $zip
           Expand-Archive -LiteralPath $zip -DestinationPath $toolDir -Force
           $diec = Get-ChildItem -LiteralPath $toolDir -Filter "diec.exe" -Recurse | Select-Object -First 1
           if (-not $diec) { throw "diec.exe was not found in the portable archive." }
-          Write-Output "Detect It Easy release: $($release.tag_name)"
+          Write-Output "Detect It Easy release: 3.21"
           Write-Output "Running static scan against the verified MuMuPlayer installer (the installer will not be executed)."
           $scanOutput = @(& $diec.FullName $installer 2>&1 | ForEach-Object { "$_" })
           $scanOutput | ForEach-Object { Write-Output $_ }
