@@ -130,7 +130,7 @@ jobs:
                 Write-Host "PASS: automatic update path was exercised for $manifestName." -ForegroundColor Green
               } else {
                 $notExercised += $manifestName
-                Write-Warning "$manifestName: checkver passed, but upstream has no newer version. URL/hash templates were not exercised; use workflow_dispatch with force_update=true for a forced test."
+                Write-Warning "${manifestName}: checkver passed, but upstream has no newer version. URL/hash templates were not exercised; use workflow_dispatch with force_update=true for a forced test."
               }
               if ($outputText) { Write-Host $outputText }
             }
