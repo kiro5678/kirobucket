@@ -1,5 +1,5 @@
 {
-    "version": "7.1.2-33",
+    "version": "7.1.2-34",
     "description": "Create, edit, compose, and convert 200+ bitmap image formats.",
     "homepage": "https://imagemagick.org/",
     "license": "ImageMagick",
@@ -12,12 +12,12 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-33/ImageMagick-7.1.2-33-portable-Q16-x64.7z",
-            "hash": "5c242a23c4343add3f3bbdf265e74baa28d97d565a7b2a7c2827a4c3c449c278"
+            "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-34/ImageMagick-7.1.2-34-portable-Q16-x64.7z",
+            "hash": "52cc6a441c7884f5ff4274b410c9b90c4b7d54245dcdf4d32988bb4e4df4e5d1"
         },
         "arm64": {
-            "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-33/ImageMagick-7.1.2-33-portable-Q16-arm64.7z",
-            "hash": "c0a102d93f43b4a5f3c45f5af1657baf9cb984ed81b7f90e882e7f1deed3bf94"
+            "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-34/ImageMagick-7.1.2-34-portable-Q16-arm64.7z",
+            "hash": "bc8585b66875ea1418cca76fcb4a885732fb9fcc797bf8952dabc6cec062fbb2"
         }
     },
     "bin": "magick.exe",
