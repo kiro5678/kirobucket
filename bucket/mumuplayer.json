@@ -30,7 +30,7 @@
     ],
     "checkver": {
         "script": [
-            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/LOVECHEN/mumu-release/releases?per_page=30' -Headers @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/LOVECHEN/mumu-release/releases?per_page=100' -Headers @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
             "$release = $releases | Where-Object { $_.tag_name -like 'win-global-offline-*' } | Select-Object -First 1",
             "$asset = $release.assets | Where-Object { $_.name -match '^MuMu-setup-nxmain-V[\\d.]+-overseas-[\\d]+\\.exe$' } | Select-Object -First 1",
             "if ($asset) { $asset.name }"
