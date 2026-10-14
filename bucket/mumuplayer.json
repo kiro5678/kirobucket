@@ -10,10 +10,24 @@
         }
     },
     "pre_install": [
-        "if (!(is_admin)) { \"$app requires admin rights to $cmd\"; break }",
-        "Start-Process \"$dir\\$fname\" -ArgumentList @('/S', '/auto_start=false', \"/D=$dir\") -Wait -Verb RunAs"
+        "if (!(is_admin)) { throw \"$app requires admin rights to $cmd\" }",
+        "$installerPath = Join-Path $dir $fname",
+        "$versionParts = $version -split \"\\.\"",
+        "if ($versionParts.Count -lt 3) { throw \"Cannot derive MuMuPlayer product version from NXMAIN version $version.\" }",
+        "$productVersion = \"6.$($versionParts[1]).$($versionParts[2]).0\"",
+        "$txnId = [guid]::NewGuid().ToString()",
+        "$commonArguments = @(\"/from_orchestrator=1\", \"/txn_id=$txnId\", \"/silent=1\", \"/product_version=$productVersion\", \"/auto_start=false\", \"/fchannel=gw-overseas12\", \"/auto_run=false\", \"/D=`\"$dir`\"\")",
+        "$prepareArguments = @(\"/action=install_prepare\") + $commonArguments",
+        "$prepare = Start-Process -FilePath $installerPath -ArgumentList $prepareArguments -Wait -PassThru",
+        "if ($prepare.ExitCode -ne 0) { throw \"MuMuPlayer install_prepare failed with exit code $($prepare.ExitCode).\" }",
+        "Start-Sleep -Seconds 12",
+        "$commitArguments = @(\"/action=commit\") + $commonArguments",
+        "$commit = Start-Process -FilePath $installerPath -ArgumentList $commitArguments -Wait -PassThru",
+        "if ($commit.ExitCode -ne 0) { throw \"MuMuPlayer commit failed with exit code $($commit.ExitCode).\" }",
+        "$mainExe = Join-Path $dir \"nx_main\\MuMuNxMain.exe\"",
+        "if (-not (Test-Path $mainExe)) { throw \"MuMuPlayer setup returned successfully but did not create the expected executable: $mainExe\" }"
     ],
-    "post_install": "Remove-Item \"$dir\\$fname\", \"$dir\\uninstall.exe\"",
+    "post_install": "Remove-Item (Join-Path $dir $fname) -Force -ErrorAction SilentlyContinue",
     "shortcuts": [
         [
             "nx_main\\MuMuNxMain.exe",
