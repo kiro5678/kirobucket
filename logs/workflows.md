@@ -183,3 +183,6 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Changed the invocation again to pass `-App`, `-Update`/`-ForceUpdate`, and `-ThrowError` as explicit named parameters. Passing the switch names inside a string array caused PowerShell to bind `-Update` positionally to `Dir`.
 - Run [38495030674](https://github.com/kiro5678/kirobucket/actions/runs/38495030674) failed before running manifest checks because of that parser error; it did not indicate a `mumuplayer` version, URL, or hash failure.
 - Expanded the MuMuPlayer release metadata query from 30 to 100 releases so newer non-global tags are less likely to push the latest global release outside the response window.
+
+- Latest verification after the fixes: [Scoop Autoupdate Validation run 38495845346 — success](https://github.com/kiro5678/kirobucket/actions/runs/38495845346), [archive validation run 38495811462 — success](https://github.com/kiro5678/kirobucket/actions/runs/38495811462), and [CI run 38495846052 — success](https://github.com/kiro5678/kirobucket/actions/runs/38495846052).
+- The checkver script found the current MuMuPlayer NX asset with no failures. The upstream version already matched the manifest, so `-Update` reported the URL/hash update path as **not exercised**; this run does not prove a future release will automatically refresh the URL and hash.
