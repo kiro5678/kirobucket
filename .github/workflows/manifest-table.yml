@@ -179,6 +179,7 @@ jobs:
               "mucommander" = "File Management"
               "mucommander-nightly" = "File Management"
               "mumuplayer" = "Emulators & Compatibility"
+              "mumuplayer-online" = "Emulators & Compatibility"
               "nanaget" = "Download Managers"
               "net-max" = "Network & DNS"
               "netronome" = "Network & DNS"
