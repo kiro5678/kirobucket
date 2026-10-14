@@ -16,7 +16,7 @@
         "if ($versionParts.Count -lt 3) { throw \"Cannot derive MuMuPlayer product version from NXMAIN version $version.\" }",
         "$productVersion = \"6.$($versionParts[1]).$($versionParts[2]).0\"",
         "$txnId = [guid]::NewGuid().ToString()",
-        "$commonArguments = @(\"/from_orchestrator=1\", \"/txn_id=$txnId\", \"/silent=1\", \"/product_version=$productVersion\", \"/auto_start=false\", \"/fchannel=gw-overseas12\", \"/auto_run=false\", \"/D=`\"$dir`\"\")",
+        "$commonArguments = @(\"/from_orchestrator=1\", \"/txn_id=$txnId\", \"/silent=1\", \"/product_version=$productVersion\", \"/auto_start=false\", \"/fchannel=gw-overseas12\", \"/auto_run=false\", \"/D=$dir\")",
         "$prepareArguments = @(\"/action=install_prepare\") + $commonArguments",
         "$prepare = Start-Process -FilePath $installerPath -ArgumentList $prepareArguments -Wait -PassThru",
         "if ($prepare.ExitCode -ne 0) { throw \"MuMuPlayer install_prepare failed with exit code $($prepare.ExitCode).\" }",
