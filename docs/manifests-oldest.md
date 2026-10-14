@@ -306,6 +306,6 @@ Generated automatically from the manifests in the bucket directory.
 | [zafuse](bucket/zafuse.json) | Developer & Technical Tools | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-10-13 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
-| [mumuplayer-android15](bucket/mumuplayer-android15.json) | Other Utilities | 15.8.5.5750 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
+| [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
 | [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 
