@@ -169,3 +169,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
 
 ### Log file location
 - Consolidated this record into `logs/workflows.md`, alongside the existing workflow history. The temporary duplicate `docs/workflow-change-log.md` was removed after its information was incorporated here.
+
+### MuMuPlayer manifest
+- Added `bucket/mumuplayer.json` for the current international NX-main installer build `1.8.5.5748`, included in the MuMu Player 12 global release `6.8.5` published on 2026-10-13.
+- Set the official CDN download URL and the SHA-256 reported for that exact installer by the release mirror: `dd5be7411c9a3ccf78ddaaaea89b295260ceb527713ae66b82d2a82f730919c9`.
+- Configured `checkver` to discover the newest `nxmain` asset from `LOVECHEN/mumu-release` global-release metadata; `autoupdate` builds the matching official CDN URL from the detected version and build number.
+- Added the explicit `mumuplayer` category mapping as `Emulators & Compatibility` in `.github/workflows/manifest-table.yml`.
+- The manifest retains the referenced installer switches, shortcut target, and `configs`/`vms` persistence. The shortcut target is installer-generated and still needs runtime verification; archive validation alone cannot prove it exists after installation.
+
