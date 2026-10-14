@@ -1,0 +1,47 @@
+{
+    "version": "1.8.5.5748",
+    "description": "Android emulator (NX main engine)",
+    "homepage": "https://www.mumuplayer.com/",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://a11.gdl.easebar.com/MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe",
+            "hash": "dd5be7411c9a3ccf78ddaaaea89b295260ceb527713ae66b82d2a82f730919c9"
+        }
+    },
+    "pre_install": [
+        "if (!(is_admin)) { \"$app requires admin rights to $cmd\"; break }",
+        "Start-Process \"$dir\\$fname\" -ArgumentList @('/S', '/auto_start=false', \"/D=$dir\") -Wait -Verb RunAs"
+    ],
+    "post_install": "Remove-Item \"$dir\\$fname\", \"$dir\\uninstall.exe\"",
+    "shortcuts": [
+        [
+            "nx_main\\MuMuNxMain.exe",
+            "MuMuPlayer"
+        ]
+    ],
+    "persist": [
+        "configs",
+        "vms"
+    ],
+    "post_uninstall": [
+        "Remove-Item \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\MuMuPlayer\" -Recurse -Force -ErrorAction SilentlyContinue",
+        "Remove-Item \"$env:USERPROFILE\\Desktop\\MuMuPlayer.lnk\" -ErrorAction SilentlyContinue"
+    ],
+    "checkver": {
+        "script": [
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/LOVECHEN/mumu-release/releases?per_page=30' -Headers @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "$release = $releases | Where-Object { $_.tag_name -like 'win-global-offline-*' } | Select-Object -First 1",
+            "$asset = $release.assets | Where-Object { $_.name -match '^MuMu-setup-nxmain-V[\\d.]+-overseas-[\\d]+\\.exe$' } | Select-Object -First 1",
+            "if ($asset) { $asset.name }"
+        ],
+        "regex": "nxmain-V(?<version>[\\d.]+)-overseas-(?<build>[\\d]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://a11.gdl.easebar.com/MuMu-setup-nxmain-V$matchVersion-overseas-$matchBuild.exe"
+            }
+        }
+    }
+}
