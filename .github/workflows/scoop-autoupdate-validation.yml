@@ -115,7 +115,8 @@ jobs:
             Write-Host '============================================================'
 
             $modeArgs = if ($forceUpdate) { @('-ForceUpdate') } else { @('-Update') }
-            $checkverArgs = @('-App', $manifestName, '-Dir', $testDir) + $modeArgs + @('-ThrowError')
+            $testManifestPath = Join-Path $testDir ([System.IO.Path]::GetFileName($sourcePath))
+            $checkverArgs = @($testManifestPath) + $modeArgs + @('-ThrowError')
             $outputText = ''
             try {
               # checkver.ps1 is a PowerShell script; handle its exceptions/output rather than $LASTEXITCODE.
