@@ -244,3 +244,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Detect It Easy reported: `PE32`; compiler `Microsoft Visual C/C++ (19.29.30147) [C]`; installer `Nullsoft Scriptable Install System (27-Feb-2026.cvs) [zlib, solid]`. Thus, the file is an NSIS-based installer, not Inno Setup.
 - Authenticode signature status was `Valid`, with signer `Netease Interactive Entertainment Pte. Ltd.`; Windows file metadata identified `MuMuPlayer`, version `1.8.5.5748`.
 - Inspection workflow: [run 38522600720 — success](https://github.com/kiro5678/kirobucket/actions/runs/38522600720). The installer was inspected statically and was not executed. The inspection workflow remains in `.github/workflows/inspect-mumuplayer-installer.yml` and can be triggered manually to repeat the static inspection of this pinned installer version.
+
+
+### MuMuPlayer offline installer orchestration correction
+- Reworked `bucket/mumuplayer.json` to install both official international offline payloads from the same global release: NXMAIN `1.8.5.5748` and MUMU15 `15.8.5.5750`. The two assets have independent SHA-256 pins and are both managed by Scoop's URL/hash arrays.
+- Changed the pre-install hook to run the observed four-step order with one shared transaction ID and product version `6.8.5.0`: NXMAIN `install_prepare`, MUMU15 `install_prepare`, MUMU15 `commit`, then NXMAIN `commit`, waiting 12 seconds between stages. Both installer files are staged/used from Scoop's cache rather than left in the installation target directory.
+- Reworked `checkver` to locate both assets from the same latest `win-global-offline-*` release and emit a composite match string; `autoupdate` uses the corresponding capture groups to refresh both download URLs.
+- Source for the four-command sequence: https://gist.github.com/TameemS/603686cec857ff1f91e68607e374b0d8?permalink_comment_id=6135981. This is community documentation, not an official MuMuPlayer command-line reference; the source demonstrates version `6.5.2.0`, so the arguments and sequence must still be validated against the current `6.8.5.0` installers in a runtime test.
+- SHA-256 pins were cross-checked against the `win-global-offline-6.8.5` release metadata: NXMAIN `dd5be7411c9a3ccf78ddaaaea89b295260ceb527713ae66b82d2a82f730919c9`; MUMU15 `cc21f4f886e5a5edcc8ab311cdee80f41fba30d6dfc3d0c28db3885cd455aaec`.
