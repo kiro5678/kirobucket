@@ -38,7 +38,7 @@ This table is generated automatically from the manifests currently available in 
 <a id="manifests-newest"></a>
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
-| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator (NX main engine) |
+| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
 | [adb-device-manager](bucket/adb-device-manager.json) | Android & Device Tools | 1.8 | 2026-10-13 | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. |
 | [android-dex](bucket/android-dex.json) | Android & Device Tools | 1.3 | 2026-10-13 | [Homepage](https://github.com/Shrey113/Android-Dex) | Android desktop experience for controlling and mirroring Android devices. |
 | [astel](bucket/astel.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/astel) | Encrypted password manager for Windows. |
