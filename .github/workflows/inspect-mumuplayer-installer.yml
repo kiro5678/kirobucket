@@ -40,7 +40,7 @@ jobs:
             "## MuMuPlayer NXMAIN installer metadata"
             ""
             "- **Size:** $((Get-Item -LiteralPath $installer).Length) bytes"
-            "- **SHA-256:** `$actual`"
+            "- **SHA-256:** $actual"
             "- **Authenticode:** $($signature.Status)"
             "- **Signer:** $($signature.SignerCertificate.Subject)"
             "- **Product name:** $($versionInfo.ProductName)"
