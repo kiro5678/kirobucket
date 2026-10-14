@@ -305,5 +305,6 @@ Generated automatically from the manifests in the bucket directory.
 | [yamira](bucket/yamira.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
 | [zafuse](bucket/zafuse.json) | Developer & Technical Tools | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-10-13 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
-| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer with Android 12 and Android 15 engine support |
+| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
+| [mumuplayer-online](bucket/mumuplayer-online.json) | Other Utilities | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 

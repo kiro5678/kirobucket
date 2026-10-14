@@ -50,7 +50,7 @@ Generated automatically from the manifests in the bucket directory.
 | [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.8-2 | 2026-09-29 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.9.8700.25 | 2026-10-13 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
 | [flycast](bucket/flycast.json) | Emulators & Compatibility | 2.7 | 2026-09-29 | [Homepage](https://github.com/flyinghead/flycast) | Multiplatform Sega Dreamcast, Naomi, Naomi 2 and Atomiswave emulator. |
-| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer with Android 12 and Android 15 engine support |
+| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
 | [nglide](bucket/nglide.json) | Emulators & Compatibility | 2.10 | 2026-09-29 | [Homepage](https://www.zeus-software.com/games/nglide) | 3Dfx Voodoo Glide wrapper for playing Glide games using modern graphics APIs. |
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20290 | 2026-10-13 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [ruffle](bucket/ruffle.json) | Emulators & Compatibility | 0.7.1 | 2026-10-07 | [Homepage](https://ruffle.rs/) | Flash Player emulator and SWF player written in Rust. |
@@ -162,6 +162,7 @@ Generated automatically from the manifests in the bucket directory.
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [detect-it-easy](bucket/detect-it-easy.json) | Other Utilities | 3.10 | 2026-10-13 | [Homepage](https://github.com/horsicq/Detect-It-Easy) | Tool for identifying packers, protectors, compilers, and file formats |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
+| [mumuplayer-online](bucket/mumuplayer-online.json) | Other Utilities | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 | [openedr](bucket/openedr.json) | Other Utilities | v2-release-23-2 | 2026-10-13 | [Homepage](https://github.com/HydraDragonAntivirus/HydraDragonAntivirus) | OpenEDR endpoint detection and response agent for Windows. |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.16 | 2026-10-04 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
 | [paseo](bucket/paseo.json) | Other Utilities | 0.11.2 | 2026-10-09 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
