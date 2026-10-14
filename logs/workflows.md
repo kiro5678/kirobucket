@@ -177,3 +177,7 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Added the explicit `mumuplayer` category mapping as `Emulators & Compatibility` in `.github/workflows/manifest-table.yml`.
 - The manifest retains the referenced installer switches, shortcut target, and `configs`/`vms` persistence. The shortcut target is installer-generated and still needs runtime verification; archive validation alone cannot prove it exists after installation.
 
+### Scoop Autoupdate Validation parser correction
+- Fixed a PowerShell parser error in `.github/workflows/scoop-autoupdate-validation.yml`: changed `$manifestName:` to `${manifestName}:` so the variable is delimited before the colon.
+- Run [38495030674](https://github.com/kiro5678/kirobucket/actions/runs/38495030674) failed before running manifest checks because of that parser error; it did not indicate a `mumuplayer` version, URL, or hash failure.
+- Expanded the MuMuPlayer release metadata query from 30 to 100 releases so newer non-global tags are less likely to push the latest global release outside the response window.
