@@ -6,7 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
-| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international offline installer (NX-main and Android 15 engines) |
+| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
 | [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
 | [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 | [adb-device-manager](bucket/adb-device-manager.json) | Android & Device Tools | 1.8 | 2026-10-13 | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. |
