@@ -86,9 +86,9 @@ Generated automatically from the manifests in the bucket directory.
 | [hdsentinel-portable](bucket/hdsentinel-portable.json) | System Monitoring & Hardware | 6.40 | 2026-10-13 | [Homepage](https://www.hdsentinel.com/) | Hard disk and SSD monitoring, health analysis, testing and repair tool. |
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | System Monitoring & Hardware | 7 | 2026-09-29 | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
 | [nvidiaprofileinspector](bucket/nvidiaprofileinspector.json) | System Monitoring & Hardware | 3.0.2.1 | 2026-09-29 | [Homepage](https://github.com/Orbmu2k/nvidiaProfileInspector) | NVIDIA graphics driver profile editor and settings utility. |
-| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.2.0 | 2026-10-13 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
+| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.3.0 | 2026-10-13 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.23.0 | 2026-10-13 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.0 | 2026-10-13 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.2 | 2026-10-13 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
 | [taskexplorer](bucket/taskexplorer.json) | System Monitoring & Hardware | 2.0.1 | 2026-10-13 | [Homepage](https://github.com/DavidXanatos/TaskExplorer) | Advanced process and system monitoring tool |
 | [thio-background-app-notifier](bucket/thio-background-app-notifier.json) | System Monitoring & Hardware | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. |
@@ -104,7 +104,7 @@ Generated automatically from the manifests in the bucket directory.
 | [2faguard](bucket/2faguard.json) | Security | 1.8.4 | 2026-10-10 | [Homepage](https://2faguard.app/) | A modern and secure Windows app for managing your 2FA authentication codes. |
 | [astel](bucket/astel.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/astel) | Encrypted password manager for Windows. |
 | [encryphix](bucket/encryphix.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
-| [fort](bucket/fort.json) | Security | 3.20.3 | 2026-10-09 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
+| [fort](bucket/fort.json) | Security | 3.20.4 | 2026-10-13 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [vimera](bucket/vimera.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
 | [yamira](bucket/yamira.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
 | [biniware-run](bucket/biniware-run.json) | Productivity & Launchers | 7.8.0.0 | 2026-09-29 | [Homepage](https://biniware.com/brun) | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. |
@@ -141,6 +141,7 @@ Generated automatically from the manifests in the bucket directory.
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [detect-it-easy](bucket/detect-it-easy.json) | Other Utilities | 3.10 | 2026-10-13 | [Homepage](https://github.com/horsicq/Detect-It-Easy) | Tool for identifying packers, protectors, compilers, and file formats |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.4.2 | 2026-09-29 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
+| [mumuplayer](bucket/mumuplayer.json) | Other Utilities | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator (NX main engine) |
 | [openedr](bucket/openedr.json) | Other Utilities | v2-release-23-2 | 2026-10-13 | [Homepage](https://github.com/HydraDragonAntivirus/HydraDragonAntivirus) | OpenEDR endpoint detection and response agent for Windows. |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.16 | 2026-10-04 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
 | [paseo](bucket/paseo.json) | Other Utilities | 0.11.2 | 2026-10-09 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
@@ -263,7 +264,7 @@ Generated automatically from the manifests in the bucket directory.
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.9.8700.25 | 2026-10-13 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
 | [flycast](bucket/flycast.json) | Emulators & Compatibility | 2.7 | 2026-09-29 | [Homepage](https://github.com/flyinghead/flycast) | Multiplatform Sega Dreamcast, Naomi, Naomi 2 and Atomiswave emulator. |
 | [nglide](bucket/nglide.json) | Emulators & Compatibility | 2.10 | 2026-09-29 | [Homepage](https://www.zeus-software.com/games/nglide) | 3Dfx Voodoo Glide wrapper for playing Glide games using modern graphics APIs. |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20284 | 2026-10-11 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20290 | 2026-10-13 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [ruffle](bucket/ruffle.json) | Emulators & Compatibility | 0.7.1 | 2026-10-07 | [Homepage](https://ruffle.rs/) | Flash Player emulator and SWF player written in Rust. |
 | [ruffle-nightly](bucket/ruffle-nightly.json) | Emulators & Compatibility | 2026-09-04 | 2026-10-04 | [Homepage](https://ruffle.rs/) | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. |
 | [am-downloader](bucket/am-downloader.json) | Download Managers | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/antikmozib/AM-Downloader) | A modern download manager for Windows. |

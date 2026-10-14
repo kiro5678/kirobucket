@@ -64,7 +64,7 @@ Generated automatically from the manifests in the bucket directory.
 | [tagstudio](bucket/tagstudio.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
 | [tabame](bucket/tabame.json) | Productivity & Launchers | 2.0.0 | 2026-10-01 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.0 | 2026-10-13 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.2 | 2026-10-13 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.6 | 2026-10-06 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.2.0 | 2026-10-11 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 | [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-05 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
@@ -101,7 +101,7 @@ Generated automatically from the manifests in the bucket directory.
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.7 | 2026-10-12 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
 | [rscoop](bucket/rscoop.json) | Package Management | 1.11.0 | 2026-09-30 | [Homepage](https://github.com/AmarBego/Rscoop) | A graphical user interface for Scoop package manager |
 | [rqbit](bucket/rqbit.json) | Download Managers | 9.0.1 | 2026-09-29 | [Homepage](https://github.com/ikatson/rqbit) | A BitTorrent client with a desktop GUI, HTTP API and Web UI. |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20284 | 2026-10-11 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20290 | 2026-10-13 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.23.0 | 2026-10-13 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [rightclicktools](bucket/rightclicktools.json) | Windows Customization | 2.0.4 | 2026-10-03 | [Homepage](https://github.com/LesFerch/RightClickTools) | A set of powerful tools and shortcuts for the Windows Explorer context menu. |
 | [registry-finder](bucket/registry-finder.json) | Windows Privacy & Tweaks | 2.62.0.0 | 2026-10-01 | [Homepage](https://registry-finder.com/) | Registry Finder is an improved replacement for the built-in Windows registry editor |
@@ -111,7 +111,7 @@ Generated automatically from the manifests in the bucket directory.
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
 | [qbittorrent-lt20](bucket/qbittorrent-lt20.json) | Download Managers | 5.2.4 | 2026-09-29 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). |
 | [qbittorrent](bucket/qbittorrent.json) | Download Managers | 5.2.4 | 2026-09-29 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). |
-| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.2.0 | 2026-10-13 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
+| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.3.0 | 2026-10-13 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
 | [poweriso](bucket/poweriso.json) | PDF & Documents | 9.5 | 2026-09-29 | [Homepage](https://www.poweriso.com/) | Disc image utility for creating, editing, mounting, burning, and converting ISO files. |
 | [poltertype](bucket/poltertype.json) | Keyboard & Language | 0.36.5 | 2026-10-07 | [Homepage](https://github.com/Just-Code-NET/PolterType) | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. |
 | [pictkura](bucket/pictkura.json) | Images & Photos | 0.3.0 | 2026-10-07 | [Homepage](https://harusame64.github.io/pictkura/) | Photo manager for importing from camera cards and browsing RAW, HEIC, AVIF, video and other image files. |
@@ -151,6 +151,7 @@ Generated automatically from the manifests in the bucket directory.
 | [net-max](bucket/net-max.json) | Network & DNS | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/anwaremad/NetMax) | A professional Windows desktop network monitoring application. |
 | [ncspot](bucket/ncspot.json) | Media & Audio/Video | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [nanaget](bucket/nanaget.json) | Download Managers | 1.3.1609.0 | 2026-09-29 | [Homepage](https://github.com/M2Team/NanaGet) | Lightweight file transfer utility based on aria2 and XAML Islands. |
+| [mumuplayer](bucket/mumuplayer.json) | Other Utilities | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator (NX main engine) |
 | [mucommander-nightly](bucket/mucommander-nightly.json) | File Management | 1.6.3 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager (nightly build). |
 | [mucommander](bucket/mucommander.json) | File Management | 1.6.2-1 | 2026-09-29 | [Homepage](https://www.mucommander.com) | Dual-pane file manager |
 | [MPOGPUFIX](bucket/MPOGPUFIX.json) | System Monitoring & Hardware | 7 | 2026-09-29 | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. |
@@ -194,7 +195,7 @@ Generated automatically from the manifests in the bucket directory.
 | [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-12 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.12. | 2026-09-29 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
 | [fractus-atlas](bucket/fractus-atlas.json) | Images & Photos | 2.3.0 | 2026-09-29 | [Homepage](https://github.com/Jimskapt/fractus-atlas) | An image viewer that lets you move images quickly into folders |
-| [fort](bucket/fort.json) | Security | 3.20.3 | 2026-10-09 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
+| [fort](bucket/fort.json) | Security | 3.20.4 | 2026-10-13 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [FoliCon](bucket/FoliCon.JSON) | Windows Customization | 5.3.1 | 2026-09-29 | [Homepage](https://github.com/DineshSolanki/FoliCon) | Folder icon customizer for movies, TV shows, music, games, anime, and books. |
 | [foldra](bucket/foldra.json) | File Management | 1.0 | 2026-09-29 | [Homepage](https://github.com/YusufEren97/FoldRa) | Lightweight desktop folder widgets and file organization utility for Windows. |
 | [foldersizeexplorer](bucket/foldersizeexplorer.json) | File Management | 1.0.4 | 2026-09-29 | [Homepage](https://github.com/ribeirogustav/FolderSizeExplorer-Releases) | Portable file manager with recursive folder-size analysis for Windows. |

@@ -230,7 +230,6 @@ Generated automatically from the manifests in the bucket directory.
 | [unigetui](bucket/unigetui.json) | Package Management | 2026.3.1 | 2026-10-08 | [Homepage](https://devolutions.net/unigetui/) | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. |
 | [unigetui-portable](bucket/unigetui-portable.json) | Package Management | 2026.3.1 | 2026-10-08 | [Homepage](https://devolutions.net/unigetui/) | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.16.0 | 2026-10-09 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
-| [fort](bucket/fort.json) | Security | 3.20.3 | 2026-10-09 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [network-checker](bucket/network-checker.json) | Network & DNS | 1.7.2 | 2026-10-09 | [Homepage](https://github.com/mirarr-app/network-checker) | Network connectivity checker - test domains and IP ranges. |
 | [paseo](bucket/paseo.json) | Other Utilities | 0.11.2 | 2026-10-09 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
 | [zapzap](bucket/zapzap.json) | Other Utilities | 7.5 | 2026-10-09 | [Homepage](https://github.com/rafatosta/zapzap) | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
@@ -254,7 +253,6 @@ Generated automatically from the manifests in the bucket directory.
 | [game-cheats-manager](bucket/game-cheats-manager.json) | Games & Game Utilities | 2.5.4 | 2026-10-11 | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) | Game cheats manager for Windows. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.6 | 2026-10-11 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [regalyzer](bucket/regalyzer.json) | Windows Privacy & Tweaks | 2.0.2.24 | 2026-10-11 | [Homepage](https://www.safer-networking.org/products/regalyzer/) | Registry editor with background search, regular-expression search, bookmarks, and hive snapshots. |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20284 | 2026-10-11 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.6 | 2026-10-11 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.2.0 | 2026-10-11 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 | [winscript](bucket/winscript.json) | Windows Privacy & Tweaks | 2.27.1 | 2026-10-11 | [Homepage](https://winscript.cc/) | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. |
@@ -277,6 +275,7 @@ Generated automatically from the manifests in the bucket directory.
 | [encryphix](bucket/encryphix.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-10-13 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
 | [flyphotos](bucket/flyphotos.json) | Images & Photos | 2.7.4 | 2026-10-13 | [Homepage](https://github.com/riyasy/FlyPhotos) | Fast and modern photo viewer for Windows. |
+| [fort](bucket/fort.json) | Security | 3.20.4 | 2026-10-13 | [Homepage](https://github.com/tnodir/fort) | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. |
 | [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). |
 | [hdsentinel-portable](bucket/hdsentinel-portable.json) | System Monitoring & Hardware | 6.40 | 2026-10-13 | [Homepage](https://www.hdsentinel.com/) | Hard disk and SSD monitoring, health analysis, testing and repair tool. |
 | [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.216.2 | 2026-10-13 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
@@ -289,10 +288,11 @@ Generated automatically from the manifests in the bucket directory.
 | [openrgb](bucket/openrgb.json) | Windows Customization | 1.0 | 2026-10-13 | [Homepage](https://openrgb.org) | RGB lighting control that does not depend on manufacturer software. |
 | [PdfCraftTool](bucket/PdfCraftTool.json) | PDF & Documents | 2026.10.12-6c20c53 | 2026-10-13 | [Homepage](https://github.com/PDFCraftTool/pdfcraft) | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. |
 | [photomanager-nightly](bucket/photomanager-nightly.json) | Images & Photos | 2026.09.11 | 2026-10-13 | [Homepage](https://github.com/Hawkynt/PhotoManager) | Cross-platform photo manager and lightweight digital asset manager (nightly channel). |
-| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.2.0 | 2026-10-13 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
+| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.3.0 | 2026-10-13 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.23.0 | 2026-10-13 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.0 | 2026-10-13 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20290 | 2026-10-13 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.2 | 2026-10-13 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [taskexplorer](bucket/taskexplorer.json) | System Monitoring & Hardware | 2.0.1 | 2026-10-13 | [Homepage](https://github.com/DavidXanatos/TaskExplorer) | Advanced process and system monitoring tool |
 | [time-sync](bucket/time-sync.json) | Other Utilities | 3.7.1 | 2026-10-13 | [Homepage](https://vovsoft.com/software/time-sync/) | A lightweight utility for synchronizing the Windows clock with NTP servers. |
 | [turkaysoft-glow](bucket/turkaysoft-glow.json) | System Monitoring & Hardware | 26.13 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/glow) | Advanced system analysis software for Windows. |
@@ -305,4 +305,5 @@ Generated automatically from the manifests in the bucket directory.
 | [yamira](bucket/yamira.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
 | [zafuse](bucket/zafuse.json) | Developer & Technical Tools | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-10-13 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
+| [mumuplayer](bucket/mumuplayer.json) | Other Utilities | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator (NX main engine) |
 
