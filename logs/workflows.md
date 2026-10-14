@@ -237,3 +237,10 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Updated `bucket/mumuplayer.json` to use Scoop's `cache_path` helper to locate the original cached installer by app, version, and exact download URL. It removes only the staged copy from the app version directory before installation, avoiding an unnecessary second copy into another cache subfolder.
 - Retained a fallback temporary staging directory for cases where the cache file isn't available (for example, when Scoop cache use is disabled). The target directory is still checked to be empty before MuMuPlayer setup runs.
 - References: https://github.com/ScoopInstaller/Scoop/blob/develop/lib/download.ps1 and https://github.com/ScoopInstaller/Scoop/blob/develop/lib/core.ps1.
+
+
+### MuMuPlayer NXMAIN installer type inspection
+- Inspected the exact file referenced by `bucket/mumuplayer.json` in a Windows GitHub Actions runner using Detect It Easy 3.21. The installer was downloaded from the public `LOVECHEN/mumu-release` mirror and its SHA-256 matched the manifest exactly: `dd5be7411c9a3ccf78ddaaaea89b295260ceb527713ae66b82d2a82f730919c9`.
+- Detect It Easy reported: `PE32`; compiler `Microsoft Visual C/C++ (19.29.30147) [C]`; installer `Nullsoft Scriptable Install System (27-Feb-2026.cvs) [zlib, solid]`. Thus, the file is an NSIS-based installer, not Inno Setup.
+- Authenticode signature status was `Valid`, with signer `Netease Interactive Entertainment Pte. Ltd.`; Windows file metadata identified `MuMuPlayer`, version `1.8.5.5748`.
+- Inspection workflow: [run 38522600720 — success](https://github.com/kiro5678/kirobucket/actions/runs/38522600720). The installer was inspected statically and was not executed. The temporary one-off inspection workflow was removed after completing the scan.
