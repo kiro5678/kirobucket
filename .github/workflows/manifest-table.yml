@@ -267,6 +267,7 @@ jobs:
               "taskexplorer" = "System Monitoring & Hardware"
               "tcno-acc-switcher" = "Games & Game Utilities"
               "thio-background-app-notifier" = "System Monitoring & Hardware"
+              "tiez-clipboard" = "Clipboard & Text"
               "time-sync" = "Other Utilities"
               "timigs" = "Time Tracking & Focus"
               "tiro-notes" = "Notes & Knowledge"
@@ -376,7 +377,7 @@ jobs:
               if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { "Other Utilities" }
+              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { throw "Missing category mapping for manifest '$name' in .github/workflows/manifest-table.yml." }
 
               $nameEscaped = $name.Replace("|", "\|")
               $categoryEscaped = $category.Replace("|", "\|")

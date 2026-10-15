@@ -259,3 +259,14 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Kept the two-stage `install_prepare` then `commit` invocation for NXMAIN, with the installer staged outside the target directory and the expected `nx_main\\MuMuNxMain.exe` checked after setup.
 - MUMU15 remains a separate add-on manifest at `bucket/mumuplayer-android15.json`, as originally requested. The four-step two-engine sequence from a community guide should not be used to silently make the base manifest install MUMU15 as well.
 - The two-engine sequence in the linked Gist is community guidance, not official MuMuPlayer documentation; runtime testing is still required to validate this single-engine install orchestration on current builds.
+
+## 2026-10-15
+
+### TieZ clipboard manager manifest
+- Added `bucket/tiez-clipboard.json` for the upstream Windows portable ZIP v0.3.3; the SHA-256 value comes from the official GitHub release asset digest.
+- Configured version detection against the official release-assets API and matched only Windows portable ZIP assets, avoiding the separate `mac-v*` release tags.
+- Configured `tiez-app.exe` as the launch target and persisted the upstream `data` directory across upgrades.
+- Registered `tiez-clipboard` in the `Clipboard & Text` category in `.github/workflows/manifest-table.yml`.
+- Changed manifest-table generation to fail when a manifest has no category mapping instead of silently assigning `Other Utilities`. Existing bucket JSON filenames were checked against the current mappings.
+- Archive validation and Scoop CI results will be recorded after the GitHub Actions runs complete.
+
