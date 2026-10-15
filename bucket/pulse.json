@@ -1,6 +1,6 @@
 {
     "version": "1.4.0",
-    "description": "Read-only Windows diagnostics for Event Log, system health, inventory and reports, with an optional local AI assistant.",
+    "description": "Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService.",
     "homepage": "https://github.com/Regncreative/Pulse",
     "license": "MIT",
     "url": "https://github.com/Regncreative/Pulse/releases/download/v1.4.0/Pulse-1.4.0-windows-x64.zip",
@@ -82,5 +82,5 @@
         "    }",
         "}"
     ],
-    "notes": "The release ZIP is a payload, not a true portable edition. PulseService is required; Scoop registers and starts it with one administrator/UAC prompt and removes it on Scoop uninstall. The Visual C++ runtime is installed if needed and is not removed on uninstall. User settings and logs remain under %LOCALAPPDATA%\\Pulse."
+    "notes": "The release ZIP is a payload, not a true portable edition. PulseService is required; Scoop registers, starts and refreshes it with one administrator/UAC prompt and removes it on Scoop uninstall. Close Pulse before installing, updating or uninstalling it through Scoop. The Visual C++ runtime is installed if needed and is not removed on uninstall. User settings and logs remain under %LOCALAPPDATA%\\Pulse."
 }
