@@ -38,6 +38,7 @@ This table is generated automatically from the manifests currently available in 
 <a id="manifests-newest"></a>
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.4.0 | 2026-10-15 | [Homepage](https://github.com/Regncreative/Pulse) | Read-only Windows diagnostics for Event Log, system health, inventory and reports, with an optional local AI assistant. |
 | [tiez-clipboard](bucket/tiez-clipboard.json) | Clipboard & Text | 0.3.3 | 2026-10-15 | [Homepage](https://github.com/jimuzhe/tiez-clipboard) | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. |
 | [bloatynosy](bucket/bloatynosy.json) | Windows Privacy & Tweaks | 1.0.71 | 2026-10-14 | [Homepage](https://github.com/builtbybel/Bloatynosy) | Windows debloater for reviewing privacy tweaks, system settings, and installed apps |
 | [coodesker-github](bucket/coodesker-github.json) | Windows Customization | 1.1.1.1 | 2026-10-14 | [Homepage](https://github.com/coodesker/coodesker-desktop) | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
@@ -49,7 +50,6 @@ This table is generated automatically from the manifests currently available in 
 | [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
 | [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 | [Omoide](bucket/Omoide.json) | Images & Photos | 0.7.4 | 2026-10-14 | [Homepage](https://github.com/EinAeffchen/Omoide) | Offline-first, self-hosted photo and video library with local AI-powered organization and search. |
-| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.4.0 | 2026-10-14 | [Homepage](https://github.com/Regncreative/Pulse) | Windows system diagnostics and monitoring application with a local AI assistant. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.24.1 | 2026-10-14 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20307 | 2026-10-14 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.8 | 2026-10-14 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
