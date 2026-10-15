@@ -46,6 +46,7 @@
         "    '    $runtimeCode = $LASTEXITCODE',",
         "    '    if ($runtimeCode -notin @(0, 1638, 3010)) { Write-Warning (''Visual C++ Redistributable returned exit code {0}.'' -f $runtimeCode) }',",
         "    '}',",
+        "    'Set-Location -LiteralPath (Split-Path -Parent __SERVICE_PATH__)',",
         "    'if (__HAS_SERVICE__) {',",
         "    '    & __SERVICE_PATH__ --stop',",
         "    '    $stopCode = $LASTEXITCODE',",
