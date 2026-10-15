@@ -273,3 +273,17 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Run 38680993995 — both Scoop CI matrix jobs (`powershell` and `pwsh`) passed, including `Register PSGallery`.
 - Run 38680946022 — README manifest-table workflow succeeded and generated the updated manifest views; the README lists `tiez-clipboard` under `Clipboard & Text`.
 
+### Pulse manifest review and service lifecycle
+- The official latest stable release at review time was v1.4.0, published on 2026-10-14. The manifest already had the correct version, download URL, and SHA-256 digest; no newer version was available to bump to.
+- Confirmed from the upstream README, installation guide, and packaging source that `Pulse-1.4.0-windows-x64.zip` is a payload archive, not a true portable edition. `Pulse.exe` depends on the `PulseService` Windows service; the official Setup also installs the bundled VC++ runtime and registers/starts the service.
+- Fixed `bucket/pulse.json`: installing now requests elevation once to install the runtime if needed, stop an existing Scoop-managed service, and register/start the service from the updated payload. It removes the extracted redistributable installer afterward.
+- Added safeguards to refuse install/update while `Pulse.exe` is running and to refuse replacing a `PulseService` registered outside this Scoop app directory. Scoop uninstall now refuses to continue while Pulse is running and removes the service only when its registered executable belongs to this Scoop installation.
+- Updated the description and notes to disclose the required service, UAC prompt, the fact that the ZIP is not truly portable, and that settings/logs remain in `%LOCALAPPDATA%\\Pulse`. The Visual C++ runtime is machine-wide and is not removed on Scoop uninstall.
+- Updated `docs/manifest-authoring.md` with rules for ZIP payloads that depend on system services or machine-wide prerequisites.
+- Run 38685176274 — archive validation passed: SHA-256 matched, `Pulse.exe` bin/shortcut paths existed in the archive, 0 failures.
+- Run 38685198558 — targeted Scoop checkver/autoupdate validation succeeded. `checkver` passed, but no newer upstream version was available, so the URL/hash update template was not exercised.
+- Run 38685199402 — Scoop CI passed both `powershell` and `pwsh` jobs.
+- Run 38685166448 — README manifest-table workflow succeeded; the generated README now lists Pulse 1.4.0 under `System Monitoring & Hardware` with the corrected description.
+- Run 38685089644 — repository-wide checkver validation failed on GitHub API rate limits (HTTP 403) during the all-manifest sweep. It logged `pulse.json` as checked but showed no Pulse-specific failure; the targeted validation above reported Pulse checkver success.
+- The GitHub workflows validate JSON/schema, archive layout, hashes, checkver, and Scoop tests, but they do not execute UAC prompts or perform a full service install/update/uninstall on a real Windows machine. The lifecycle hooks were checked against upstream's documented `--stop`, `--install-start`, and `--uninstall` commands; end-to-end installation behavior still needs a runtime test on Windows.
+
