@@ -19,6 +19,7 @@
         "url": "https://github.com/Regncreative/Pulse/releases/download/v$version/Pulse-$version-windows-x64.zip"
     },
     "pre_install": [
+        "if (Get-Process -Name 'Pulse' -ErrorAction SilentlyContinue) { throw 'Close Pulse before installing or updating it through Scoop.' }",
         "$service = Get-CimInstance -ClassName Win32_Service -Filter \"Name='PulseService'\" -ErrorAction SilentlyContinue",
         "if ($service) {",
         "    $pathMatch = [regex]::Match([string]$service.PathName, '^\\s*\"(?<path>[^\"]+\\.exe)\"', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)",
@@ -61,6 +62,7 @@
         "Remove-Item -LiteralPath (Join-Path $dir 'redist') -Recurse -Force -ErrorAction SilentlyContinue"
     ],
     "pre_uninstall": [
+        "if (Get-Process -Name 'Pulse' -ErrorAction SilentlyContinue) { throw 'Close Pulse before uninstalling it through Scoop; the service has not been removed.' }",
         "$service = Get-CimInstance -ClassName Win32_Service -Filter \"Name='PulseService'\" -ErrorAction SilentlyContinue",
         "if ($service) {",
         "    $pathMatch = [regex]::Match([string]$service.PathName, '^\\s*\"(?<path>[^\"]+\\.exe)\"', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)",
