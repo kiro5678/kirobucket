@@ -307,6 +307,6 @@ Generated automatically from the manifests in the bucket directory.
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.8 | 2026-10-14 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
 | [siyuan](bucket/siyuan.json) | Notes & Knowledge | 3.8.7 | 2026-10-14 | [Homepage](https://github.com/siyuan-note/siyuan) | Personal knowledge management and note-taking software. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.4 | 2026-10-14 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
-| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.4.0 | 2026-10-15 | [Homepage](https://github.com/Regncreative/Pulse) | Read-only Windows diagnostics for Event Log, system health, inventory and reports, with an optional local AI assistant. |
+| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.4.0 | 2026-10-15 | [Homepage](https://github.com/Regncreative/Pulse) | Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService. |
 | [tiez-clipboard](bucket/tiez-clipboard.json) | Clipboard & Text | 0.3.3 | 2026-10-15 | [Homepage](https://github.com/jimuzhe/tiez-clipboard) | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. |
 

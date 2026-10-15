@@ -6,7 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
-| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.4.0 | 2026-10-15 | [Homepage](https://github.com/Regncreative/Pulse) | Read-only Windows diagnostics for Event Log, system health, inventory and reports, with an optional local AI assistant. |
+| [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.4.0 | 2026-10-15 | [Homepage](https://github.com/Regncreative/Pulse) | Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService. |
 | [tiez-clipboard](bucket/tiez-clipboard.json) | Clipboard & Text | 0.3.3 | 2026-10-15 | [Homepage](https://github.com/jimuzhe/tiez-clipboard) | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. |
 | [bloatynosy](bucket/bloatynosy.json) | Windows Privacy & Tweaks | 1.0.71 | 2026-10-14 | [Homepage](https://github.com/builtbybel/Bloatynosy) | Windows debloater for reviewing privacy tweaks, system settings, and installed apps |
 | [coodesker-github](bucket/coodesker-github.json) | Windows Customization | 1.1.1.1 | 2026-10-14 | [Homepage](https://github.com/coodesker/coodesker-desktop) | Desktop organization tool for automatically organizing desktop icons into resizable boxes. |
