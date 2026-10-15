@@ -267,5 +267,9 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Configured `tiez-app.exe` as the launch target and persisted the upstream `data` directory across upgrades.
 - Registered `tiez-clipboard` in the `Clipboard & Text` category in `.github/workflows/manifest-table.yml`.
 - Changed manifest-table generation to fail when a manifest has no category mapping instead of silently assigning `Other Utilities`. Existing bucket JSON filenames were checked against the current mappings.
-- Archive validation and Scoop CI results will be recorded after the GitHub Actions runs complete.
+- Run 38680645332 initially verified the SHA-256 but failed launch-path validation because the executable was nested under `TieZ_0.3.3-portable/`; added the verified `extract_dir` and its autoupdate template.
+- Run 38680967583 — archive validation succeeded: SHA-256 OK, `extract_dir` found, all declared launch paths present, 0 failures.
+- Run 38680993286 — Scoop `checkver` validation succeeded. No newer upstream version was available, so the workflow did not exercise URL/hash autoupdate templates; a forced template check remains unverified.
+- Run 38680993995 — both Scoop CI matrix jobs (`powershell` and `pwsh`) passed, including `Register PSGallery`.
+- Run 38680946022 — README manifest-table workflow succeeded and generated the updated manifest views; the README lists `tiez-clipboard` under `Clipboard & Text`.
 
