@@ -115,6 +115,7 @@ jobs:
               "dude" = "File Management"
               "dxvk-gplall" = "Emulators & Compatibility"
               "dxwrapper" = "Emulators & Compatibility"
+              "dynamicwin" = "Windows Customization"
               "ecopaste" = "Clipboard & Text"
               "ecopaste-nightly" = "Clipboard & Text"
               "encryphix" = "Security"
