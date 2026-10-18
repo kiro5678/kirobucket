@@ -1,0 +1,22 @@
+{
+    "version": "1.0.0",
+    "description": "Cross-platform desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving.",
+    "homepage": "https://github.com/imsyy/yt-dlp-gui",
+    "license": "MIT",
+    "url": "https://github.com/imsyy/yt-dlp-gui/releases/download/v1.0.0/YDL.GUI_1.0.0_x64_en-US.msi#/dl.msi",
+    "hash": "68525730ca59c59a5dcb7425600859a5e7709bc0461023fed186780829a166ed",
+    "extract_dir": "PFiles64\\YDL GUI",
+    "bin": "yt-dlp-gui.exe",
+    "shortcuts": [
+        [
+            "yt-dlp-gui.exe",
+            "YDL GUI"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/imsyy/yt-dlp-gui"
+    },
+    "autoupdate": {
+        "url": "https://github.com/imsyy/yt-dlp-gui/releases/download/v$version/YDL.GUI_$version_x64_en-US.msi#/dl.msi"
+    }
+}

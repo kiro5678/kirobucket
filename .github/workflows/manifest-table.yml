@@ -302,6 +302,7 @@ jobs:
               "wox" = "Productivity & Launchers"
               "xfetch" = "Other Utilities"
               "xyplorer" = "File Management"
+              "yt-dlp-gui" = "Download Managers"
               "zapzap" = "Other Utilities"
               "zenbreak" = "Time Tracking & Focus"
               "zenbreak-msix" = "Time Tracking & Focus"
