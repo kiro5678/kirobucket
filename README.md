@@ -38,12 +38,17 @@ This table is generated automatically from the manifests currently available in 
 <a id="manifests-newest"></a>
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.7.0 | 2026-10-18 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
 | [dynamicwin](bucket/dynamicwin.json) | Windows Customization | 2.0.3 | 2026-10-18 | [Homepage](https://github.com/FlorianButz/DynamicWin) | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. |
+| [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.9.0 | 2026-10-18 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
+| [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.17 | 2026-10-18 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
+| [poltertype](bucket/poltertype.json) | Keyboard & Language | 0.38.0 | 2026-10-18 | [Homepage](https://github.com/Just-Code-NET/PolterType) | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. |
+| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.28.0 | 2026-10-18 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
+| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20332 | 2026-10-18 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
+| [yt-dlp-gui](bucket/yt-dlp-gui.json) | Download Managers | 1.0.0 | 2026-10-18 | [Homepage](https://github.com/imsyy/yt-dlp-gui) | Cross-platform desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. |
 | [openrgb](bucket/openrgb.json) | Windows Customization | 1.1 | 2026-10-17 | [Homepage](https://openrgb.org) | RGB lighting control that does not depend on manufacturer software. |
 | [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.4.1 | 2026-10-17 | [Homepage](https://github.com/Regncreative/Pulse) | Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.3.0 | 2026-10-17 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
-| [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.27.1 | 2026-10-17 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
-| [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20331 | 2026-10-17 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [sandboxie-plus](bucket/sandboxie-plus.json) | Other Utilities | 1.18.8 | 2026-10-17 | [Homepage](https://github.com/sandboxie-plus/Sandboxie) | Sandboxie Plus sandboxing software for Windows. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.18.0 | 2026-10-16 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.13. | 2026-10-16 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
@@ -57,7 +62,6 @@ This table is generated automatically from the manifests currently available in 
 | [kalarm](bucket/kalarm.json) | Time Tracking & Focus | 3567 | 2026-10-15 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.0-beta.49 | 2026-10-15 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
 | [paseo](bucket/paseo.json) | Other Utilities | 0.11.4 | 2026-10-15 | [Homepage](https://paseo.sh) | Voice-controlled development environment for local AI coding agents. |
-| [poltertype](bucket/poltertype.json) | Keyboard & Language | 0.37.0 | 2026-10-15 | [Homepage](https://github.com/Just-Code-NET/PolterType) | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. |
 | [registry-finder](bucket/registry-finder.json) | Windows Privacy & Tweaks | 2.63.0.0 | 2026-10-15 | [Homepage](https://registry-finder.com/) | Registry Finder is an improved replacement for the built-in Windows registry editor |
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 5.9 | 2026-10-15 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
 | [tiez-clipboard](bucket/tiez-clipboard.json) | Clipboard & Text | 0.3.3 | 2026-10-15 | [Homepage](https://github.com/jimuzhe/tiez-clipboard) | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. |
@@ -126,7 +130,6 @@ This table is generated automatically from the manifests currently available in 
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [cuttherope-dx](bucket/cuttherope-dx.json) | Games & Game Utilities | 2.50.1 | 2026-10-10 | [Homepage](https://github.com/yell0wsuit/cuttherope-dx) | Open-source remake of Cut the Rope for Windows and other platforms. |
-| [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.8.0 | 2026-10-10 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
 | [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.4 | 2026-10-10 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-10 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
@@ -143,7 +146,6 @@ This table is generated automatically from the manifests currently available in 
 | [openglass](bucket/openglass.json) | Windows Customization | 3.0.2.3749 | 2026-10-06 | [Homepage](https://github.com/ALTaleX531/OpenGlass) | A replacement for the Desktop Window Manager glass effect on Windows. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.6 | 2026-10-06 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
 | [voicestudio](bucket/voicestudio.json) | Media & Audio/Video | 0.5.6 | 2026-10-06 | [Homepage](https://voicestudio.sh) | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. |
-| [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.6.0 | 2026-10-05 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
 | [clustercut](bucket/clustercut.json) | Clipboard & Text | 0.4.4 | 2026-10-05 | [Homepage](https://github.com/keithvassallomt/ClusterCut) | Secure, local clipboard synchronization across Windows, macOS, and Linux. |
 | [netronome](bucket/netronome.json) | Network & DNS | 0.16.0 | 2026-10-05 | [Homepage](https://github.com/autobrr/netronome) | Modern network speed testing and monitoring tool built with Go and React. |
 | [screenbox](bucket/screenbox.json) | Media & Audio/Video | 0.23.0 | 2026-10-05 | [Homepage](https://github.com/huynhsontung/Screenbox) | LibVLC-based media player for the Universal Windows Platform. |
@@ -155,7 +157,6 @@ This table is generated automatically from the manifests currently available in 
 | [haruna](bucket/haruna.json) | Media & Audio/Video | 1944 | 2026-10-04 | [Homepage](https://haruna.kde.org/) | An open source media player built with Qt/QML and libmpv |
 | [lively](bucket/lively.json) | Windows Customization | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
 | [ncspot](bucket/ncspot.json) | Media & Audio/Video | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
-| [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.16 | 2026-10-04 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
 | [pdfsam](bucket/pdfsam.json) | PDF & Documents | 6.0.6 | 2026-10-04 | [Homepage](https://github.com/torakiki/pdfsam) | A JavaFX desktop application to split, merge, rotate and perform other manipulations on PDF documents |
 | [ruffle-nightly](bucket/ruffle-nightly.json) | Emulators & Compatibility | 2026-09-04 | 2026-10-04 | [Homepage](https://ruffle.rs/) | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. |
 | [scanner](bucket/scanner.json) | PDF & Documents | 4.0.2.0 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
