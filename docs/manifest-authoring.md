@@ -32,6 +32,7 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 ## 3. Version detection: `checkver`
 
 - Choose a version source that reliably follows the intended release channel.
+- When a project publishes separate release streams for different operating systems, do not blindly use `/releases/latest` for a platform-specific manifest. Select the intended platform's tag or asset family from the releases API/page, then validate that `checkver` chooses the newest matching release rather than another OS's newer version.
 - For GitHub releases, prefer the explicit current syntax:
   ```json
   "checkver": {
