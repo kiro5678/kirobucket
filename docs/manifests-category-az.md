@@ -281,6 +281,7 @@ Generated automatically from the manifests in the bucket directory.
 | [openrgb](bucket/openrgb.json) | Windows Customization | 1.1 | 2026-10-17 | [Homepage](https://openrgb.org) | RGB lighting control that does not depend on manufacturer software. |
 | [rightclicktools](bucket/rightclicktools.json) | Windows Customization | 2.0.4 | 2026-10-03 | [Homepage](https://github.com/LesFerch/RightClickTools) | A set of powerful tools and shortcuts for the Windows Explorer context menu. |
 | [shuffle-paper](bucket/shuffle-paper.json) | Windows Customization | 0.4.0 | 2026-09-29 | [Homepage](https://github.com/jcsm/ShufflePaper) | Privacy-friendly wallpaper shuffle and rotation utility for Windows |
+| [spotlight-dimmer](bucket/spotlight-dimmer.json) | Windows Customization | 0.9.1 | 2026-10-18 | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) | Windows utility that dims inactive displays or regions to spotlight the active window. |
 | [spotlightsaver](bucket/spotlightsaver.json) | Windows Customization | 7.0.0 | 2026-09-29 | [Homepage](https://github.com/depthbomb/SpotlightSaver) | Saves Windows 10/11 Spotlight wallpapers to a local folder. |
 | [sucrose](bucket/sucrose.json) | Windows Customization | 26.7.5.0 | 2026-09-29 | [Homepage](https://github.com/Taiizor/Sucrose) | Highly customizable live wallpaper application for Windows. |
 | [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-05 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |

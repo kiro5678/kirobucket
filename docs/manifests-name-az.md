@@ -244,6 +244,7 @@ Generated automatically from the manifests in the bucket directory.
 | [sofast](bucket/sofast.json) | Productivity & Launchers | 0.12.0 | 2026-10-04 | [Homepage](https://www.sofast.fun/) | Quick launcher and productivity tool for Windows. |
 | [spacedrive](bucket/spacedrive.json) | File Management | 2.0.0-alpha.2 | 2026-09-30 | [Homepage](https://github.com/spacedriveapp/spacedrive) | Open source cross-platform file explorer. |
 | [sparkle](bucket/sparkle.json) | Windows Privacy & Tweaks | 2.24.0 | 2026-09-29 | [Homepage](https://getsparkle.net) | Windows debloat and optimization tool. |
+| [spotlight-dimmer](bucket/spotlight-dimmer.json) | Windows Customization | 0.9.1 | 2026-10-18 | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) | Windows utility that dims inactive displays or regions to spotlight the active window. |
 | [spotlightsaver](bucket/spotlightsaver.json) | Windows Customization | 7.0.0 | 2026-09-29 | [Homepage](https://github.com/depthbomb/SpotlightSaver) | Saves Windows 10/11 Spotlight wallpapers to a local folder. |
 | [stimesync](bucket/stimesync.json) | Other Utilities | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/setsumi/stimesync) | Simple SNTP atomic clock time sync GUI app for Windows. |
 | [sucrose](bucket/sucrose.json) | Windows Customization | 26.7.5.0 | 2026-09-29 | [Homepage](https://github.com/Taiizor/Sucrose) | Highly customizable live wallpaper application for Windows. |
