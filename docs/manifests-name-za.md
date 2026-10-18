@@ -13,7 +13,7 @@ Generated automatically from the manifests in the bucket directory.
 | [zenbreak](bucket/zenbreak.json) | Time Tracking & Focus | 1.0.3 | 2026-09-29 | [Homepage](https://zenbreak.app) | Desktop break reminder application for reducing screen fatigue and improving well-being. |
 | [zapzap](bucket/zapzap.json) | Other Utilities | 7.5.1 | 2026-10-15 | [Homepage](https://github.com/rafatosta/zapzap) | Unofficial WhatsApp Web desktop client built with Python and PyQt6. |
 | [zafuse](bucket/zafuse.json) | Developer & Technical Tools | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
-| [yt-dlp-gui](bucket/yt-dlp-gui.json) | Download Managers | 1.0.0 | 2026-10-18 | [Homepage](https://github.com/imsyy/yt-dlp-gui) | Cross-platform desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. |
+| [yt-dlp-gui](bucket/yt-dlp-gui.json) | Download Managers | 1.0.0 | 2026-10-18 | [Homepage](https://github.com/imsyy/yt-dlp-gui) | Desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. |
 | [yamira](bucket/yamira.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.40.0600 | 2026-10-13 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.0 | 2026-09-29 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |

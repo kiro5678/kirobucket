@@ -310,5 +310,5 @@ Generated automatically from the manifests in the bucket directory.
 | [poltertype](bucket/poltertype.json) | Keyboard & Language | 0.38.0 | 2026-10-18 | [Homepage](https://github.com/Just-Code-NET/PolterType) | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 0.28.0 | 2026-10-18 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20332 | 2026-10-18 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
-| [yt-dlp-gui](bucket/yt-dlp-gui.json) | Download Managers | 1.0.0 | 2026-10-18 | [Homepage](https://github.com/imsyy/yt-dlp-gui) | Cross-platform desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. |
+| [yt-dlp-gui](bucket/yt-dlp-gui.json) | Download Managers | 1.0.0 | 2026-10-18 | [Homepage](https://github.com/imsyy/yt-dlp-gui) | Desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. |
 
