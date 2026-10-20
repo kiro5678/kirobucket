@@ -6,6 +6,9 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
+| [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
+| [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 | [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.7.0 | 2026-10-18 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
 | [dynamicwin](bucket/dynamicwin.json) | Windows Customization | 2.0.3 | 2026-10-18 | [Homepage](https://github.com/FlorianButz/DynamicWin) | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. |
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.9.0 | 2026-10-18 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
@@ -44,9 +47,6 @@ Generated automatically from the manifests in the bucket directory.
 | [imagemagick](bucket/imagemagick.json) | Images & Photos | 7.1.2-34 | 2026-10-14 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats. |
 | [imagemagick-hdri](bucket/imagemagick-hdri.json) | Images & Photos | 7.1.2-34 | 2026-10-14 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. |
 | [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-34 | 2026-10-14 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
-| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
-| [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
-| [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 | [Omoide](bucket/Omoide.json) | Images & Photos | 0.7.4 | 2026-10-14 | [Homepage](https://github.com/EinAeffchen/Omoide) | Offline-first, self-hosted photo and video library with local AI-powered organization and search. |
 | [siyuan](bucket/siyuan.json) | Notes & Knowledge | 3.8.7 | 2026-10-14 | [Homepage](https://github.com/siyuan-note/siyuan) | Personal knowledge management and note-taking software. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.4 | 2026-10-14 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |

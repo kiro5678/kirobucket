@@ -274,9 +274,6 @@ Generated automatically from the manifests in the bucket directory.
 | [imagemagick](bucket/imagemagick.json) | Images & Photos | 7.1.2-34 | 2026-10-14 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats. |
 | [imagemagick-hdri](bucket/imagemagick-hdri.json) | Images & Photos | 7.1.2-34 | 2026-10-14 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. |
 | [imagemagick-q8](bucket/imagemagick-q8.json) | Images & Photos | 7.1.2-34 | 2026-10-14 | [Homepage](https://imagemagick.org/) | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. |
-| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
-| [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
-| [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-14 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 | [Omoide](bucket/Omoide.json) | Images & Photos | 0.7.4 | 2026-10-14 | [Homepage](https://github.com/EinAeffchen/Omoide) | Offline-first, self-hosted photo and video library with local AI-powered organization and search. |
 | [siyuan](bucket/siyuan.json) | Notes & Knowledge | 3.8.7 | 2026-10-14 | [Homepage](https://github.com/siyuan-note/siyuan) | Personal knowledge management and note-taking software. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.4 | 2026-10-14 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
@@ -312,4 +309,7 @@ Generated automatically from the manifests in the bucket directory.
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20332 | 2026-10-18 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [spotlight-dimmer](bucket/spotlight-dimmer.json) | Windows Customization | 0.9.1 | 2026-10-18 | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) | Windows utility that dims inactive displays or regions to spotlight the active window. |
 | [yt-dlp-gui](bucket/yt-dlp-gui.json) | Download Managers | 1.0.0 | 2026-10-18 | [Homepage](https://github.com/imsyy/yt-dlp-gui) | Desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. |
+| [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
+| [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
+| [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |
 
