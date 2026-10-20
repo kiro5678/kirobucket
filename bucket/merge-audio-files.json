@@ -1,0 +1,19 @@
+{
+    "version": "1.3",
+    "description": "Portable utility for merging multiple audio files into one track.",
+    "homepage": "https://vovsoft.com/software/merge-audio-files/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/merge-audio-files-portable.zip?v=1.3",
+    "hash": "",
+    "notes": [
+        "The SHA-256 hash and archive contents have not been verified in this environment.",
+        "Before treating this manifest as production-ready, calculate the ZIP SHA-256 and inspect the archive to confirm the executable path."
+    ],
+    "checkver": {
+        "url": "https://vovsoft.com/latest-updates/",
+        "regex": "(?is)Merge Audio Files(?:\\s|<[^>]*>)*?(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/merge-audio-files-portable.zip?v=$version"
+    }
+}
