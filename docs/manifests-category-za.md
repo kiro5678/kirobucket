@@ -58,10 +58,10 @@ Generated automatically from the manifests in the bucket directory.
 | [openrgb](bucket/openrgb.json) | Windows Customization | 1.1 | 2026-10-17 | [Homepage](https://openrgb.org) | RGB lighting control that does not depend on manufacturer software. |
 | [rightclicktools](bucket/rightclicktools.json) | Windows Customization | 2.0.4 | 2026-10-03 | [Homepage](https://github.com/LesFerch/RightClickTools) | A set of powerful tools and shortcuts for the Windows Explorer context menu. |
 | [shuffle-paper](bucket/shuffle-paper.json) | Windows Customization | 0.4.0 | 2026-09-29 | [Homepage](https://github.com/jcsm/ShufflePaper) | Privacy-friendly wallpaper shuffle and rotation utility for Windows |
-| [spotlight-dimmer](bucket/spotlight-dimmer.json) | Windows Customization | 0.9.1 | 2026-10-18 | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) | Windows utility that dims inactive displays or regions to spotlight the active window. |
+| [spotlight-dimmer](bucket/spotlight-dimmer.json) | Windows Customization | 0.9.1 | 2026-10-20 | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) | Windows utility that dims inactive displays or regions to spotlight the active window. |
 | [spotlightsaver](bucket/spotlightsaver.json) | Windows Customization | 7.0.0 | 2026-09-29 | [Homepage](https://github.com/depthbomb/SpotlightSaver) | Saves Windows 10/11 Spotlight wallpapers to a local folder. |
 | [sucrose](bucket/sucrose.json) | Windows Customization | 26.7.5.0 | 2026-09-29 | [Homepage](https://github.com/Taiizor/Sucrose) | Highly customizable live wallpaper application for Windows. |
-| [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-05 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
+| [sucrose-nightly](bucket/sucrose-nightly.json) | Windows Customization | 26.10.5.0 | 2026-10-20 | [Homepage](https://github.com/Taiizor/Sucrose) | Sucrose Wallpaper Engine (nightly build) |
 | [translucenttb](bucket/translucenttb.json) | Windows Customization | 2026.2 | 2026-09-29 | [Homepage](https://github.com/TranslucentTB/TranslucentTB) | Lightweight utility for customizing the Windows taskbar appearance. |
 | [traytoolbar](bucket/traytoolbar.json) | Windows Customization | 1.8.4 | 2026-10-16 | [Homepage](https://github.com/brondavies/TrayToolbar) | Custom toolbar for the Windows taskbar replacement menu. |
 | [wallpaper-changer](bucket/wallpaper-changer.json) | Windows Customization | 5.4.1 | 2026-09-29 | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. |
@@ -73,7 +73,7 @@ Generated automatically from the manifests in the bucket directory.
 | [dpscreenocr](bucket/dpscreenocr.json) | Translation & OCR | 1.5.1 | 2026-09-29 | [Homepage](https://danpla.github.io/dpscreenocr/) | A free and open-source program to recognize text on the screen. |
 | [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-10-13 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 6.0 | 2026-10-20 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
-| [translumo](bucket/translumo.json) | Translation & OCR | 1.1.0 | 2026-09-29 | [Homepage](https://github.com/ramjke/Translumo) | Advanced real-time screen translator. |
+| [translumo](bucket/translumo.json) | Translation & OCR | 1.1.0 | 2026-10-20 | [Homepage](https://github.com/ramjke/Translumo) | Advanced real-time screen translator. |
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [kalarm](bucket/kalarm.json) | Time Tracking & Focus | 3568 | 2026-10-20 | [Homepage](https://apps.kde.org/kalarm/) | Personal alarm message, command and email scheduler application |
@@ -167,7 +167,7 @@ Generated automatically from the manifests in the bucket directory.
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
 | [paperweight](bucket/paperweight.json) | Notes & Knowledge | 0.6.0 | 2026-09-29 | [Homepage](https://github.com/wslyvh/paperweight) | A local-first desktop app for collecting, organizing, and working with notes and documents |
 | [siyuan](bucket/siyuan.json) | Notes & Knowledge | 3.8.8 | 2026-10-20 | [Homepage](https://github.com/siyuan-note/siyuan) | Personal knowledge management and note-taking software. |
-| [tiro-notes](bucket/tiro-notes.json) | Notes & Knowledge | 0.30.3 | 2026-09-29 | [Homepage](https://github.com/dotgreg/tiro-notes) | Open-source, cross-platform Markdown note-taking app. |
+| [tiro-notes](bucket/tiro-notes.json) | Notes & Knowledge | 0.30.3 | 2026-10-20 | [Homepage](https://github.com/dotgreg/tiro-notes) | Open-source, cross-platform Markdown note-taking app. |
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 1.0.0 | 2026-10-13 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [znote](bucket/znote.json) | Notes & Knowledge | 4.9.3 | 2026-09-29 | [Homepage](https://github.com/alagrede/znote-app) | Markdown-based note-taking app for developers. |
 | [amule](bucket/amule.json) | Network & DNS | 3.0.0 | 2026-09-29 | [Homepage](https://www.amule-project.net/) | A free and open-source peer-to-peer file sharing client. |
@@ -303,7 +303,7 @@ Generated automatically from the manifests in the bucket directory.
 | [sklad-setup-portable](bucket/sklad-setup-portable.json) | Clipboard & Text | 0.2.3 | 2026-09-29 | [Homepage](https://github.com/Rench321/sklad) | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text (portable) |
 | [skyeclip](bucket/skyeclip.json) | Clipboard & Text | 1.4 | 2026-09-29 | [Homepage](https://github.com/YodeSkye/SkyeClip) | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. |
 | [smart-clipboard](bucket/smart-clipboard.json) | Clipboard & Text | 1.3.2 | 2026-09-29 | [Homepage](https://github.com/ezeiq7/Smart-Clipboard) | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection |
-| [tiez-clipboard](bucket/tiez-clipboard.json) | Clipboard & Text | 0.3.3 | 2026-10-15 | [Homepage](https://github.com/jimuzhe/tiez-clipboard) | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. |
+| [tiez-clipboard](bucket/tiez-clipboard.json) | Clipboard & Text | 0.3.3 | 2026-10-20 | [Homepage](https://github.com/jimuzhe/tiez-clipboard) | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. |
 | [adb-device-manager](bucket/adb-device-manager.json) | Android & Device Tools | 1.8 | 2026-10-20 | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. |
 | [android-dex](bucket/android-dex.json) | Android & Device Tools | 1.4 | 2026-10-20 | [Homepage](https://github.com/Shrey113/Android-Dex) | Android desktop experience for controlling and mirroring Android devices. |
 | [another](bucket/another.json) | Android & Device Tools | 0.4.4 | 2026-10-06 | [Homepage](https://github.com/Zfinix/another) | A desktop app for mirroring and controlling Android devices over USB. |
