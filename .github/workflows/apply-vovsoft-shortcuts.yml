@@ -1,0 +1,268 @@
+name: Temporary Vovsoft shortcut repair
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/apply-vovsoft-shortcuts.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    name: Add verified Vovsoft Start Menu shortcuts
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Verify archives and add shortcuts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sevenZipPath = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZipPath -PathType Leaf)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if ($command) { $sevenZipPath = $command.Source }
+          }
+          if (-not (Test-Path -LiteralPath $sevenZipPath -PathType Leaf)) {
+            throw '7-Zip was not found on the runner.'
+          }
+
+          $helperNames = @(
+            'ffmpeg.exe', 'ffprobe.exe', 'magick.exe', 'realesrgan-ncnn-vulkan.exe',
+            'php.exe', 'php-cgi.exe', 'php-win.exe', 'phpdbg.exe', 'deplister.exe',
+            'pdfimages.exe', 'pdfinfo.exe', 'pdftopng.exe', 'exiftool.exe', 'gmic.exe',
+            'vtracer.exe', 'whisper-cli.exe', 'whisper-stream.exe', 'voskrunner.exe',
+            'sherpa-onnx.exe', 'vc_redist.x86.exe'
+          )
+
+          $ambiguousOverrides = @{
+            'vovsoft-copy-files-into-multiple-folders.json' = 'copymultiple.exe'
+            'vovsoft-delete-multiple-files.json' = 'deletemultiple.exe'
+            'vovsoft-image-to-pdf-converter.json' = 'image2pdf.exe'
+            'vovsoft-merge-multiple-folders.json' = 'mergefolders.exe'
+          }
+
+          function Get-ShortcutDisplayName {
+            param([System.Collections.IDictionary]$Manifest, [System.IO.FileInfo]$ManifestFile)
+            $description = [string]$Manifest['description']
+            $title = $null
+            if ($description -match '^(?i:portable edition of)\s+(.+?)\.?$') {
+              $title = $Matches[1].Trim().TrimEnd('.')
+            } elseif ($description -match '(?i)\b(Vovsoft\s+.+?)(?:\.|$)') {
+              $title = $Matches[1].Trim()
+            }
+            if ([string]::IsNullOrWhiteSpace($title)) {
+              $slug = $ManifestFile.BaseName -replace '(?i)^vovsoft-', ''
+              $culture = [System.Globalization.CultureInfo]::InvariantCulture
+              $title = $culture.TextInfo.ToTitleCase($slug.Replace('-', ' '))
+            }
+            if ($title -match '^(?i:Vovsoft)\s+') {
+              return $title
+            }
+            return "Vovsoft $title"
+          }
+
+          function Get-ArchiveRecords {
+            param([string[]]$Listing)
+            $records = @()
+            $current = $null
+            foreach ($lineObject in $Listing) {
+              $line = [string]$lineObject
+              if ($line -match '^Path = (.*)$') {
+                if ($null -ne $current) { $records += [PSCustomObject]$current }
+                $current = [ordered]@{ Path = $Matches[1]; Folder = $false }
+              } elseif ($null -ne $current -and $line -match '^Folder = \+$') {
+                $current.Folder = $true
+              }
+            }
+            if ($null -ne $current) { $records += [PSCustomObject]$current }
+            return @($records)
+          }
+
+          $manifestFiles = @(Get-ChildItem -LiteralPath 'bucket' -Filter 'vovsoft-*.json' -File | Sort-Object Name)
+          $downloadRoot = Join-Path $env:RUNNER_TEMP 'vovsoft-shortcut-repair'
+          New-Item -ItemType Directory -Path $downloadRoot -Force | Out-Null
+          $changedFiles = [System.Collections.Generic.List[string]]::new()
+          $failures = [System.Collections.Generic.List[string]]::new()
+          $addedShortcuts = 0
+          $verifiedExisting = 0
+          $revisedNotes = 0
+          $index = 0
+
+          foreach ($manifestFile in $manifestFiles) {
+            $index++
+            $archivePath = Join-Path $downloadRoot ("archive-{0}.zip" -f $index)
+            $relativePath = "bucket/$($manifestFile.Name)"
+            try {
+              $manifest = Get-Content -LiteralPath $manifestFile.FullName -Raw | ConvertFrom-Json -AsHashtable
+              $url = [string]$manifest['url']
+              if ([string]::IsNullOrWhiteSpace($url)) {
+                throw 'No root-level download URL.'
+              }
+              $url = $url.Replace('$version', [string]$manifest['version'])
+              if ($url -match '\{version\}|\{slug\}') {
+                throw "Unresolved URL template: $url"
+              }
+
+              Write-Host "Inspecting $($manifestFile.Name) ($($manifest['version']))"
+              Invoke-WebRequest -Uri $url -OutFile $archivePath -MaximumRedirection 10 -TimeoutSec 180
+              $listing = & $sevenZipPath l -slt $archivePath 2>&1
+              if ($LASTEXITCODE -ne 0) {
+                throw "7-Zip could not inspect the downloaded asset: $url"
+              }
+              $records = @(Get-ArchiveRecords -Listing $listing)
+              $archiveFiles = @($records | Where-Object { -not $_.Folder } | ForEach-Object { ([string]$_.Path).Replace('/', '\') })
+              $exePaths = @($archiveFiles | Where-Object { $_ -match '(?i)\.exe$' } | Sort-Object -Unique)
+              if ($exePaths.Count -eq 0) {
+                throw 'The current portable archive contains no EXE file.'
+              }
+
+              $fileChanged = $false
+              $hasShortcuts = (($manifest.Keys -contains 'shortcuts') -and $null -ne $manifest['shortcuts'])
+              if (-not $hasShortcuts) {
+                $candidates = @($exePaths | Where-Object {
+                  $baseName = [System.IO.Path]::GetFileName([string]$_).ToLowerInvariant()
+                  $helperNames -notcontains $baseName
+                })
+
+                $selectedExe = $null
+                if ($ambiguousOverrides.ContainsKey($manifestFile.Name)) {
+                  $expectedName = [string]$ambiguousOverrides[$manifestFile.Name]
+                  $selectedExe = $candidates | Where-Object {
+                    [System.IO.Path]::GetFileName([string]$_) -ieq $expectedName
+                  } | Select-Object -First 1
+                  if ($null -eq $selectedExe) {
+                    throw "The selected primary executable '$expectedName' is not present among the verified candidates: $($candidates -join ', ')"
+                  }
+                } elseif ($candidates.Count -eq 1) {
+                  $selectedExe = [string]$candidates[0]
+                } else {
+                  throw "Expected one primary application executable but found $($candidates.Count): $($candidates -join ', ')"
+                }
+
+                if (@($exePaths | Where-Object { [string]::Equals([string]$_, [string]$selectedExe, [System.StringComparison]::OrdinalIgnoreCase) }).Count -eq 0) {
+                  throw "The selected shortcut path '$selectedExe' does not exist in the inspected archive."
+                }
+
+                $pair = [System.Collections.ArrayList]::new()
+                [void]$pair.Add([string]$selectedExe)
+                [void]$pair.Add((Get-ShortcutDisplayName -Manifest $manifest -ManifestFile $manifestFile))
+                $shortcuts = [System.Collections.ArrayList]::new()
+                [void]$shortcuts.Add($pair)
+
+                $updatedManifest = [ordered]@{}
+                $insertedShortcut = $false
+                foreach ($key in $manifest.Keys) {
+                  if (-not $insertedShortcut -and $key -eq 'notes') {
+                    $updatedManifest['shortcuts'] = $shortcuts
+                    $insertedShortcut = $true
+                  }
+                  $updatedManifest[$key] = $manifest[$key]
+                }
+                if (-not $insertedShortcut) {
+                  $updatedManifest['shortcuts'] = $shortcuts
+                }
+                $manifest = $updatedManifest
+                $fileChanged = $true
+                $addedShortcuts++
+                Write-Host "@@SHORTCUT@@|$($manifestFile.Name)|$selectedExe|$($shortcuts[0][1])|ADDED"
+              }
+
+              foreach ($shortcut in $manifest['shortcuts']) {
+                if ($null -eq $shortcut -or $shortcut.Count -lt 2) {
+                  throw 'A shortcuts entry does not contain both an executable path and a display name.'
+                }
+                $declaredPath = ([string]$shortcut[0]).Replace('/', '\')
+                if (@($archiveFiles | Where-Object { [string]::Equals([string]$_, $declaredPath, [System.StringComparison]::OrdinalIgnoreCase) }).Count -eq 0) {
+                  throw "Declared shortcut target '$declaredPath' is missing from the current archive."
+                }
+                $verifiedExisting++
+              }
+
+              if (($manifest.Keys -contains 'bin') -and $null -ne $manifest['bin']) {
+                $binEntries = @()
+                if ($manifest['bin'] -is [string]) {
+                  $binEntries = @([string]$manifest['bin'])
+                } else {
+                  foreach ($entry in $manifest['bin']) {
+                    if ($entry -is [string]) { $binEntries += [string]$entry }
+                    elseif ($entry -is [System.Array] -and $entry.Count -gt 0) { $binEntries += [string]$entry[0] }
+                    elseif ($entry -is [System.Collections.IDictionary] -and ($entry.Keys -contains 'path')) { $binEntries += [string]$entry['path'] }
+                  }
+                }
+                foreach ($binPath in $binEntries) {
+                  $normalizedBin = ([string]$binPath).Replace('/', '\')
+                  if ($normalizedBin -match '[\$%]') { continue }
+                  if (@($archiveFiles | Where-Object { [string]::Equals([string]$_, $normalizedBin, [System.StringComparison]::OrdinalIgnoreCase) }).Count -eq 0) {
+                    throw "Declared bin path '$normalizedBin' is missing from the current archive."
+                  }
+                }
+              }
+
+              if (($manifest.Keys -contains 'notes') -and $null -ne $manifest['notes']) {
+                if ($manifest['notes'] -is [string]) {
+                  if ([string]$manifest['notes'] -match '(?i)SHA-256 and archive contents are not yet verified') {
+                    $manifest['notes'] = 'SHA-256 has not been verified; the archive contents and shortcut target have been checked.'
+                    $fileChanged = $true
+                    $revisedNotes++
+                  }
+                } else {
+                  $notes = $manifest['notes']
+                  for ($i = 0; $i -lt $notes.Count; $i++) {
+                    if ([string]$notes[$i] -match '(?i)SHA-256 and archive contents are not yet verified') {
+                      $notes[$i] = 'SHA-256 has not been verified; the archive contents and shortcut target have been checked.'
+                      $manifest['notes'] = $notes
+                      $fileChanged = $true
+                      $revisedNotes++
+                    }
+                  }
+                }
+              }
+
+              if ($fileChanged) {
+                $json = ConvertTo-Json -InputObject $manifest -Depth 100
+                $jsonLines = $json -split '\r?\n'
+                $jsonIndented = ($jsonLines | ForEach-Object {
+                  if ($_ -match '^( +)') {
+                    (' ' * ($Matches[1].Length * 2)) + $_.Substring($Matches[1].Length)
+                  } else {
+                    $_
+                  }
+                }) -join [System.Environment]::NewLine
+                [System.IO.File]::WriteAllText($manifestFile.FullName, $jsonIndented + [System.Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
+                $changedFiles.Add($relativePath)
+              }
+            } catch {
+              $message = $_.Exception.Message -replace '[\r\n|]', ' '
+              $failures.Add("$relativePath : $message")
+              Write-Host "@@FAIL@@|$relativePath|$message"
+            } finally {
+              Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          Write-Host "@@SUMMARY@@|manifests=$($manifestFiles.Count)|added_shortcuts=$addedShortcuts|verified_shortcuts=$verifiedExisting|revised_notes=$revisedNotes|changed_files=$($changedFiles.Count)|failures=$($failures.Count)"
+          if ($failures.Count -gt 0) {
+            $failures | ForEach-Object { Write-Error $_ }
+            throw 'Shortcut repair was not committed because at least one manifest failed archive validation.'
+          }
+
+          if ($changedFiles.Count -gt 0) {
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- bucket
+            git commit -m 'Add verified Start Menu shortcuts to Vovsoft manifests'
+            if ($LASTEXITCODE -ne 0) { throw 'Could not commit updated Vovsoft manifests.' }
+            git push origin HEAD:master
+            if ($LASTEXITCODE -ne 0) { throw 'Could not push updated Vovsoft manifests.' }
+            Write-Host "Committed $($changedFiles.Count) manifest changes."
+          } else {
+            Write-Host 'No manifest changes were needed.'
+          }
