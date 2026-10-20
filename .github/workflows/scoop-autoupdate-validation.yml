@@ -43,6 +43,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           MANUAL_MANIFEST: ${{ inputs.manifest || '' }}
           FORCE_UPDATE: ${{ inputs.force_update || false }}
+          GITHUB_TOKEN: ${{ github.token }}
           MANIFESTS_JSON: ${{ toJSON(github.event.client_payload.manifests || fromJSON('[]')) }}
           SCOOP_HOME: ${{ github.workspace }}/scoop_core
         run: |

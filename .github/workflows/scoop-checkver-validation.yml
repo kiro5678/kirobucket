@@ -37,6 +37,7 @@ jobs:
 
       - name: Validate every manifest with checkver
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           SCOOP_HOME: ${{ github.workspace }}\\scoop_core
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
