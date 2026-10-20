@@ -14,39 +14,198 @@ jobs:
   repair:
     name: Add verified Vovsoft Start Menu shortcuts
     runs-on: windows-latest
-    timeout-minutes: 45
+    timeout-minutes: 15
     steps:
       - name: Checkout bucket
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
-      - name: Verify archives and add shortcuts
+      - name: Apply paths verified from the archive inventory
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $sevenZipPath = 'C:\Program Files\7-Zip\7z.exe'
-          if (-not (Test-Path -LiteralPath $sevenZipPath -PathType Leaf)) {
-            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
-            if ($command) { $sevenZipPath = $command.Source }
+          $exeMapJson = @'
+          {
+            "vovsoft-3d-box-maker.json": "boxmaker.exe",
+            "vovsoft-ai-automator.json": "aiautomator.exe",
+            "vovsoft-ai-requester.json": "airequester.exe",
+            "vovsoft-audio-to-lyrics-converter.json": "audio2lyrics.exe",
+            "vovsoft-auto-change-screensavers.json": "autochangescr.exe",
+            "vovsoft-auto-change-wallpapers.json": "acwall.exe",
+            "vovsoft-auto-mouse-clicker.json": "clicker.exe",
+            "vovsoft-batch-audio-converter.json": "batchaudio.exe",
+            "vovsoft-batch-image-converter.json": "batchimage.exe",
+            "vovsoft-batch-image-resizer.json": "batchimageresizer.exe",
+            "vovsoft-batch-image-upscaler.json": "batchimageupscaler.exe",
+            "vovsoft-batch-translator.json": "batchtranslator.exe",
+            "vovsoft-batch-url-downloader.json": "batchurl.exe",
+            "vovsoft-batch-video-upscaler.json": "batchvideoupscaler.exe",
+            "vovsoft-battery-alert.json": "battery.exe",
+            "vovsoft-blur-multiple-images.json": "blur.exe",
+            "vovsoft-broken-link-detector.json": "brokenlink.exe",
+            "vovsoft-bulk-barcode-generator.json": "barcodegen.exe",
+            "vovsoft-bulk-domain-appraisal.json": "bulkdomainapp.exe",
+            "vovsoft-bulk-qr-code-generator.json": "qrcode.exe",
+            "vovsoft-clipboard-reader.json": "clipboardreader.exe",
+            "vovsoft-collect-url.json": "collecturl.exe",
+            "vovsoft-compare-two-lists.json": "compare2lists.exe",
+            "vovsoft-compare-two-texts.json": "compare2texts.exe",
+            "vovsoft-contact-manager.json": "contactmanager.exe",
+            "vovsoft-container-loading-calculator.json": "container.exe",
+            "vovsoft-convert-video-to-audio.json": "convertva.exe",
+            "vovsoft-copy-files-into-multiple-folders.json": "copymultiple.exe",
+            "vovsoft-cpu-benchmark.json": "cpubenchmark.exe",
+            "vovsoft-cpu-monitor-gadget.json": "cpumonitor.exe",
+            "vovsoft-create-image-gallery.json": "gallery.exe",
+            "vovsoft-create-multiple-folders.json": "createmf.exe",
+            "vovsoft-cryptocurrency-tracker.json": "cryptotracker.exe",
+            "vovsoft-csv-splitter.json": "csvsplitter.exe",
+            "vovsoft-csv-to-json-converter.json": "csvjsonconv.exe",
+            "vovsoft-csv-to-sql-converter.json": "sqlconv.exe",
+            "vovsoft-csv-to-vcf-converter.json": "csv2vcf.exe",
+            "vovsoft-csv-to-xls-converter.json": "csvconv.exe",
+            "vovsoft-customer-tracker.json": "customertracker.exe",
+            "vovsoft-delete-multiple-files.json": "deletemultiple.exe",
+            "vovsoft-diagram-maker.json": "diagram.exe",
+            "vovsoft-directory-monitor.json": "dirmonitor.exe",
+            "vovsoft-disk-benchmark.json": "diskbenchmark.exe",
+            "vovsoft-disk-monitor-gadget.json": "diskmonitor.exe",
+            "vovsoft-document-manager.json": "dmanager.exe",
+            "vovsoft-domain-checker.json": "domain.exe",
+            "vovsoft-download-mailbox-emails.json": "dmailbox.exe",
+            "vovsoft-dummy-file-generator.json": "dummygen.exe",
+            "vovsoft-duplicate-file-finder.json": "duplicateff.exe",
+            "vovsoft-eml-converter.json": "emlconverter.exe",
+            "vovsoft-executable-bit-scanner.json": "bitscanner.exe",
+            "vovsoft-external-link-detector.json": "extlink.exe",
+            "vovsoft-face-detector.json": "facedetector.exe",
+            "vovsoft-file-checksum-calculator.json": "filechecksum.exe",
+            "vovsoft-file-splitter-and-joiner.json": "filesplitjoin.exe",
+            "vovsoft-filename-lister.json": "flister.exe",
+            "vovsoft-find-and-replace-multiple-files.json": "findreplace.exe",
+            "vovsoft-folder-splitter.json": "foldersplitter.exe",
+            "vovsoft-health-break-reminder.json": "healthbreak.exe",
+            "vovsoft-hex-viewer.json": "hexviewer.exe",
+            "vovsoft-hierarchical-file-manager.json": "hfmanager.exe",
+            "vovsoft-html-stripper.json": "htmlstripper.exe",
+            "vovsoft-http-requester.json": "httprequester.exe",
+            "vovsoft-image-combiner.json": "combiner.exe",
+            "vovsoft-image-pixelator.json": "imagepixelator.exe",
+            "vovsoft-image-splitter.json": "imagesplitter.exe",
+            "vovsoft-image-to-cartoon-converter.json": "image2cartoon.exe",
+            "vovsoft-image-to-pdf-converter.json": "image2pdf.exe",
+            "vovsoft-ip-scanner.json": "ipscanner.exe",
+            "vovsoft-ip-to-country-converter.json": "ipconverter.exe",
+            "vovsoft-json-beautifier.json": "jsonbeautifier.exe",
+            "vovsoft-json-to-csv-converter.json": "json2csv.exe",
+            "vovsoft-keep-software-alive.json": "keepalive.exe",
+            "vovsoft-keyboard-lights.json": "keyboard.exe",
+            "vovsoft-keyboard-soundboard.json": "keysoundboard.exe",
+            "vovsoft-keystroke-visualizer.json": "keystroke.exe",
+            "vovsoft-keyword-combiner.json": "keywordcombiner.exe",
+            "vovsoft-link-analyzer.json": "linkanalyzer.exe",
+            "vovsoft-log-analyzer.json": "loganalyzer.exe",
+            "vovsoft-machine-learning-requester.json": "mlrequester.exe",
+            "vovsoft-map-chart-creator.json": "mapchart.exe",
+            "vovsoft-markdown-converter.json": "markdown.exe",
+            "vovsoft-match-pairs.json": "matchpairs.exe",
+            "vovsoft-math-practice.json": "math.exe",
+            "vovsoft-merge-audio-files.json": "mergeaudio.exe",
+            "vovsoft-merge-multiple-folders.json": "mergefolders.exe",
+            "vovsoft-merge-xml-files.json": "mergexml.exe",
+            "vovsoft-metadata-viewer.json": "metadataviewer.exe",
+            "vovsoft-network-alarmer.json": "alarmer.exe",
+            "vovsoft-noise-detector.json": "noisedetector.exe",
+            "vovsoft-ocr-reader.json": "ocrreader.exe",
+            "vovsoft-open-multiple-files.json": "openmultiple.exe",
+            "vovsoft-password-generator.json": "password.exe",
+            "vovsoft-pdf-reader.json": "pdfreader.exe",
+            "vovsoft-pdf-to-image-converter.json": "pdftoimage.exe",
+            "vovsoft-pdf-to-text-converter.json": "pdf2text.exe",
+            "vovsoft-photos-to-video.json": "photos2video.exe",
+            "vovsoft-picture-downloader.json": "picdownload.exe",
+            "vovsoft-picture-puzzle.json": "puzzle.exe",
+            "vovsoft-placebo-cleaner.json": "pcleaner.exe",
+            "vovsoft-podcast-downloader.json": "podcast.exe",
+            "vovsoft-prevent-computer-sleep.json": "pcsleep.exe",
+            "vovsoft-prevent-disk-sleep.json": "pdsleep.exe",
+            "vovsoft-prime-number-counter.json": "prime.exe",
+            "vovsoft-print-multiple-web-pages.json": "printmultiple.exe",
+            "vovsoft-proxy-checker.json": "proxychecker.exe",
+            "vovsoft-proxy-server.json": "proxyserver.exe",
+            "vovsoft-proxy-switcher.json": "proxyswitcher.exe",
+            "vovsoft-qr-code-and-barcode-reader.json": "codereader.exe",
+            "vovsoft-ram-benchmark.json": "rambenchmark.exe",
+            "vovsoft-ram-monitor-gadget.json": "rammonitor.exe",
+            "vovsoft-random-wordlist-generator.json": "wordlist.exe",
+            "vovsoft-read-mode.json": "readmode.exe",
+            "vovsoft-regex-extractor.json": "regex.exe",
+            "vovsoft-rename-multiple-files.json": "renamemf.exe",
+            "vovsoft-resource-extractor.json": "resource.exe",
+            "vovsoft-retail-barcode.json": "retailbarcode.exe",
+            "vovsoft-rich-text-editor.json": "rteditor.exe",
+            "vovsoft-screen-reader.json": "screenreader.exe",
+            "vovsoft-search-text-in-files.json": "searchtext.exe",
+            "vovsoft-seo-checker.json": "seochecker.exe",
+            "vovsoft-serial-port-monitor.json": "serialportmon.exe",
+            "vovsoft-silence-remover.json": "silenceremover.exe",
+            "vovsoft-sitemap-generator.json": "sitemap.exe",
+            "vovsoft-software-manager.json": "softwaremanager.exe",
+            "vovsoft-sound-recorder.json": "soundrec.exe",
+            "vovsoft-speech-to-subtitle-converter.json": "speechtosubtitle.exe",
+            "vovsoft-speech-to-text-converter.json": "speechtotext.exe",
+            "vovsoft-spreadsheet-combiner.json": "spreadsheet.exe",
+            "vovsoft-subtitle-renamer.json": "subtitleren.exe",
+            "vovsoft-subtitle-translator.json": "subtitletranslator.exe",
+            "vovsoft-svg-converter.json": "svgconverter.exe",
+            "vovsoft-syslog-server.json": "syslog.exe",
+            "vovsoft-text-decoder-and-encoder.json": "textdecenc.exe",
+            "vovsoft-text-edit-plus.json": "text.exe",
+            "vovsoft-text-filter.json": "textfilter.exe",
+            "vovsoft-text-statistics-analyzer.json": "textstats.exe",
+            "vovsoft-text-to-image-converter.json": "text2image.exe",
+            "vovsoft-text-to-mp3-converter.json": "texttomp3.exe",
+            "vovsoft-text-to-pdf-converter.json": "text2pdf.exe",
+            "vovsoft-time-sync.json": "timesync.exe",
+            "vovsoft-tree-notes.json": "treenotes.exe",
+            "vovsoft-url-extractor.json": "urlextractor.exe",
+            "vovsoft-vcf-editor.json": "vcfeditor.exe",
+            "vovsoft-vcf-merger.json": "vcfmerger.exe",
+            "vovsoft-vcf-splitter.json": "vcfsplitter.exe",
+            "vovsoft-vcf-to-csv-converter.json": "vcfconv.exe",
+            "vovsoft-vcf-to-txt-converter.json": "vcfconv.exe",
+            "vovsoft-vcf-to-xls-converter.json": "vcfconv.exe",
+            "vovsoft-video-manager.json": "vmanager.exe",
+            "vovsoft-video-to-photos.json": "video2photos.exe",
+            "vovsoft-visual-notes.json": "vnotes.exe",
+            "vovsoft-vocal-and-instrumental-splitter.json": "visplitter.exe",
+            "vovsoft-voice-changer.json": "voicechanger.exe",
+            "vovsoft-vov-alpha-blend.json": "alphablend.exe",
+            "vovsoft-vov-music-player.json": "vovmusic.exe",
+            "vovsoft-vov-screen-recorder.json": "srecorder.exe",
+            "vovsoft-vov-sticky-notes.json": "sticky.exe",
+            "vovsoft-vov-stop-start.json": "stopstart.exe",
+            "vovsoft-vov-system-uptime.json": "vovsu.exe",
+            "vovsoft-watermark-image.json": "watermarkimage.exe",
+            "vovsoft-watermark-video.json": "watermarkvideo.exe",
+            "vovsoft-web-platform-identifier.json": "wpidentifier.exe",
+            "vovsoft-webcam-capture.json": "webcam.exe",
+            "vovsoft-webcam-motion-detector.json": "webcammotion.exe",
+            "vovsoft-webp-converter.json": "webpconverter.exe",
+            "vovsoft-website-file-collector.json": "wsfilecollector.exe",
+            "vovsoft-website-screenshot-generator.json": "wsgen.exe",
+            "vovsoft-website-spell-checker.json": "wschecker.exe",
+            "vovsoft-website-watcher.json": "websitewatcher.exe",
+            "vovsoft-window-resizer.json": "windowresizer.exe",
+            "vovsoft-world-heatmap-creator.json": "heatmap.exe",
+            "vovsoft-xls-to-csv-converter.json": "xls2csv.exe",
+            "vovsoft-xml-to-csv-converter.json": "xml2csv.exe"
           }
-          if (-not (Test-Path -LiteralPath $sevenZipPath -PathType Leaf)) {
-            throw '7-Zip was not found on the runner.'
-          }
-
-          $helperNames = @(
-            'ffmpeg.exe', 'ffprobe.exe', 'magick.exe', 'realesrgan-ncnn-vulkan.exe',
-            'php.exe', 'php-cgi.exe', 'php-win.exe', 'phpdbg.exe', 'deplister.exe',
-            'pdfimages.exe', 'pdfinfo.exe', 'pdftopng.exe', 'exiftool.exe', 'gmic.exe',
-            'vtracer.exe', 'whisper-cli.exe', 'whisper-stream.exe', 'voskrunner.exe',
-            'sherpa-onnx.exe', 'vc_redist.x86.exe'
-          )
-
-          $ambiguousOverrides = @{
-            'vovsoft-copy-files-into-multiple-folders.json' = 'copymultiple.exe'
-            'vovsoft-delete-multiple-files.json' = 'deletemultiple.exe'
-            'vovsoft-image-to-pdf-converter.json' = 'image2pdf.exe'
-            'vovsoft-merge-multiple-folders.json' = 'mergefolders.exe'
+          '@
+          $exeMap = $exeMapJson | ConvertFrom-Json -AsHashtable
+          if ($exeMap.Count -ne 174) {
+            throw "Expected the 174-path inventory; found $($exeMap.Count) entries."
           }
 
           function Get-ShortcutDisplayName {
@@ -63,96 +222,42 @@ jobs:
               $culture = [System.Globalization.CultureInfo]::InvariantCulture
               $title = $culture.TextInfo.ToTitleCase($slug.Replace('-', ' '))
             }
-            if ($title -match '^(?i:Vovsoft)\s+') {
-              return $title
-            }
+            if ($title -match '^(?i:Vovsoft)\s+') { return $title }
             return "Vovsoft $title"
           }
 
-          function Get-ArchiveRecords {
-            param([string[]]$Listing)
-            $records = @()
-            $current = $null
-            foreach ($lineObject in $Listing) {
-              $line = [string]$lineObject
-              if ($line -match '^Path = (.*)$') {
-                if ($null -ne $current) { $records += [PSCustomObject]$current }
-                $current = [ordered]@{ Path = $Matches[1]; Folder = $false }
-              } elseif ($null -ne $current -and $line -match '^Folder = \+$') {
-                $current.Folder = $true
-              }
-            }
-            if ($null -ne $current) { $records += [PSCustomObject]$current }
-            return @($records)
-          }
-
           $manifestFiles = @(Get-ChildItem -LiteralPath 'bucket' -Filter 'vovsoft-*.json' -File | Sort-Object Name)
-          $downloadRoot = Join-Path $env:RUNNER_TEMP 'vovsoft-shortcut-repair'
-          New-Item -ItemType Directory -Path $downloadRoot -Force | Out-Null
           $changedFiles = [System.Collections.Generic.List[string]]::new()
           $failures = [System.Collections.Generic.List[string]]::new()
           $addedShortcuts = 0
           $verifiedExisting = 0
           $revisedNotes = 0
-          $index = 0
 
           foreach ($manifestFile in $manifestFiles) {
-            $index++
-            $archivePath = Join-Path $downloadRoot ("archive-{0}.zip" -f $index)
             $relativePath = "bucket/$($manifestFile.Name)"
             try {
+              if (-not ($exeMap.Keys -contains $manifestFile.Name)) {
+                throw 'No previously verified executable path exists for this manifest.'
+              }
+              $selectedExe = [string]$exeMap[$manifestFile.Name]
               $manifest = Get-Content -LiteralPath $manifestFile.FullName -Raw | ConvertFrom-Json -AsHashtable
-              $url = [string]$manifest['url']
-              if ([string]::IsNullOrWhiteSpace($url)) {
-                throw 'No root-level download URL.'
-              }
-              $url = $url.Replace('$version', [string]$manifest['version'])
-              if ($url -match '\{version\}|\{slug\}') {
-                throw "Unresolved URL template: $url"
-              }
-
-              Write-Host "Inspecting $($manifestFile.Name) ($($manifest['version']))"
-              Invoke-WebRequest -Uri $url -OutFile $archivePath -MaximumRedirection 10 -TimeoutSec 180
-              $listing = & $sevenZipPath l -slt $archivePath 2>&1
-              if ($LASTEXITCODE -ne 0) {
-                throw "7-Zip could not inspect the downloaded asset: $url"
-              }
-              $records = @(Get-ArchiveRecords -Listing $listing)
-              $archiveFiles = @($records | Where-Object { -not $_.Folder } | ForEach-Object { ([string]$_.Path).Replace('/', '\') })
-              $exePaths = @($archiveFiles | Where-Object { $_ -match '(?i)\.exe$' } | Sort-Object -Unique)
-              if ($exePaths.Count -eq 0) {
-                throw 'The current portable archive contains no EXE file.'
-              }
-
               $fileChanged = $false
               $hasShortcuts = (($manifest.Keys -contains 'shortcuts') -and $null -ne $manifest['shortcuts'])
-              if (-not $hasShortcuts) {
-                $candidates = @($exePaths | Where-Object {
-                  $baseName = [System.IO.Path]::GetFileName([string]$_).ToLowerInvariant()
-                  $helperNames -notcontains $baseName
-                })
 
-                $selectedExe = $null
-                if ($ambiguousOverrides.ContainsKey($manifestFile.Name)) {
-                  $expectedName = [string]$ambiguousOverrides[$manifestFile.Name]
-                  $selectedExe = $candidates | Where-Object {
-                    [System.IO.Path]::GetFileName([string]$_) -ieq $expectedName
-                  } | Select-Object -First 1
-                  if ($null -eq $selectedExe) {
-                    throw "The selected primary executable '$expectedName' is not present among the verified candidates: $($candidates -join ', ')"
+              if ($hasShortcuts) {
+                foreach ($shortcut in $manifest['shortcuts']) {
+                  if ($null -eq $shortcut -or $shortcut.Count -lt 2) {
+                    throw 'A shortcuts entry does not contain both an executable path and a display name.'
                   }
-                } elseif ($candidates.Count -eq 1) {
-                  $selectedExe = [string]$candidates[0]
-                } else {
-                  throw "Expected one primary application executable but found $($candidates.Count): $($candidates -join ', ')"
+                  $declaredPath = ([string]$shortcut[0]).Replace('/', '\')
+                  if (-not [string]::Equals($declaredPath, $selectedExe, [System.StringComparison]::OrdinalIgnoreCase)) {
+                    throw "Existing shortcut target '$declaredPath' differs from the verified primary executable '$selectedExe'."
+                  }
+                  $verifiedExisting++
                 }
-
-                if (@($exePaths | Where-Object { [string]::Equals([string]$_, [string]$selectedExe, [System.StringComparison]::OrdinalIgnoreCase) }).Count -eq 0) {
-                  throw "The selected shortcut path '$selectedExe' does not exist in the inspected archive."
-                }
-
+              } else {
                 $pair = [System.Collections.ArrayList]::new()
-                [void]$pair.Add([string]$selectedExe)
+                [void]$pair.Add($selectedExe)
                 [void]$pair.Add((Get-ShortcutDisplayName -Manifest $manifest -ManifestFile $manifestFile))
                 $shortcuts = [System.Collections.ArrayList]::new()
                 [void]$shortcuts.Add($pair)
@@ -175,41 +280,10 @@ jobs:
                 Write-Host "@@SHORTCUT@@|$($manifestFile.Name)|$selectedExe|$($shortcuts[0][1])|ADDED"
               }
 
-              foreach ($shortcut in $manifest['shortcuts']) {
-                if ($null -eq $shortcut -or $shortcut.Count -lt 2) {
-                  throw 'A shortcuts entry does not contain both an executable path and a display name.'
-                }
-                $declaredPath = ([string]$shortcut[0]).Replace('/', '\')
-                if (@($archiveFiles | Where-Object { [string]::Equals([string]$_, $declaredPath, [System.StringComparison]::OrdinalIgnoreCase) }).Count -eq 0) {
-                  throw "Declared shortcut target '$declaredPath' is missing from the current archive."
-                }
-                $verifiedExisting++
-              }
-
-              if (($manifest.Keys -contains 'bin') -and $null -ne $manifest['bin']) {
-                $binEntries = @()
-                if ($manifest['bin'] -is [string]) {
-                  $binEntries = @([string]$manifest['bin'])
-                } else {
-                  foreach ($entry in $manifest['bin']) {
-                    if ($entry -is [string]) { $binEntries += [string]$entry }
-                    elseif ($entry -is [System.Array] -and $entry.Count -gt 0) { $binEntries += [string]$entry[0] }
-                    elseif ($entry -is [System.Collections.IDictionary] -and ($entry.Keys -contains 'path')) { $binEntries += [string]$entry['path'] }
-                  }
-                }
-                foreach ($binPath in $binEntries) {
-                  $normalizedBin = ([string]$binPath).Replace('/', '\')
-                  if ($normalizedBin -match '[\$%]') { continue }
-                  if (@($archiveFiles | Where-Object { [string]::Equals([string]$_, $normalizedBin, [System.StringComparison]::OrdinalIgnoreCase) }).Count -eq 0) {
-                    throw "Declared bin path '$normalizedBin' is missing from the current archive."
-                  }
-                }
-              }
-
               if (($manifest.Keys -contains 'notes') -and $null -ne $manifest['notes']) {
                 if ($manifest['notes'] -is [string]) {
                   if ([string]$manifest['notes'] -match '(?i)SHA-256 and archive contents are not yet verified') {
-                    $manifest['notes'] = 'SHA-256 has not been verified; the archive contents and shortcut target have been checked.'
+                    $manifest['notes'] = 'SHA-256 has not been verified; archive contents and the shortcut target have been checked.'
                     $fileChanged = $true
                     $revisedNotes++
                   }
@@ -217,7 +291,7 @@ jobs:
                   $notes = $manifest['notes']
                   for ($i = 0; $i -lt $notes.Count; $i++) {
                     if ([string]$notes[$i] -match '(?i)SHA-256 and archive contents are not yet verified') {
-                      $notes[$i] = 'SHA-256 has not been verified; the archive contents and shortcut target have been checked.'
+                      $notes[$i] = 'SHA-256 has not been verified; archive contents and the shortcut target have been checked.'
                       $manifest['notes'] = $notes
                       $fileChanged = $true
                       $revisedNotes++
@@ -243,15 +317,13 @@ jobs:
               $message = $_.Exception.Message -replace '[\r\n|]', ' '
               $failures.Add("$relativePath : $message")
               Write-Host "@@FAIL@@|$relativePath|$message"
-            } finally {
-              Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
             }
           }
 
-          Write-Host "@@SUMMARY@@|manifests=$($manifestFiles.Count)|added_shortcuts=$addedShortcuts|verified_shortcuts=$verifiedExisting|revised_notes=$revisedNotes|changed_files=$($changedFiles.Count)|failures=$($failures.Count)"
+          Write-Host "@@SUMMARY@@|manifests=$($manifestFiles.Count)|added_shortcuts=$addedShortcuts|verified_existing=$verifiedExisting|revised_notes=$revisedNotes|changed_files=$($changedFiles.Count)|failures=$($failures.Count)"
           if ($failures.Count -gt 0) {
             $failures | ForEach-Object { Write-Error $_ }
-            throw 'Shortcut repair was not committed because at least one manifest failed archive validation.'
+            throw 'Shortcut repair was not committed because at least one manifest failed validation.'
           }
 
           if ($changedFiles.Count -gt 0) {
