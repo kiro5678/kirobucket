@@ -23,6 +23,8 @@ Use the project's official release page, repository, documentation, and release 
 2. Inspect the actual Windows asset names and architecture. Verify the exact URL, release tag, and available checksum/digest.
 3. Determine what the downloaded file actually is: a portable archive, an installer, an Inno Setup installer, an MSI, or a standalone executable. An `.exe` extension does not prove that a file is portable.
 4. Verify the archive or installer contents before choosing `bin`, `shortcuts`, `extract_dir`, `innosetup`, `depends`, or installer extraction options. Never guess internal paths or executable names.
+5. For portable GUI applications, inventory the current archive and add a `shortcuts` entry for the main application executable. Exclude helper tools, bundled runtimes, redistributable installers, and command-line dependencies (for example FFmpeg) from Start Menu shortcuts. Keep the shortcut target and display name grounded in the verified package.
+6. Archive-path validation can only check `bin` or `shortcuts` paths that a manifest already declares; a manifest with no launch entries can pass without exposing its GUI executable. When auditing a group of manifests, inventory the archives and report missing shortcut declarations as well as incorrect declared paths.
 5. Preserve the application's real settings/data location. Add `persist` only for the correct data directory or files. Migration logic must not delete or overwrite the old data; copy only when appropriate and preserve the original if copying fails.
 
 Do not copy an existing manifest blindly. Use it as a reference only after verifying it against the current release and current Scoop behavior.
