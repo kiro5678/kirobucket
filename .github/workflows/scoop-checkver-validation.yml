@@ -43,7 +43,7 @@ jobs:
           $source = Get-Content -LiteralPath $checkver -Raw
           $needle = '    $wc.Headers.Add(''Referer'', (strip_filename $url))'
           $replacement = @'
-              if (($url -match '^https://api\\.github\\.com/') -and $GitHubToken -and -not ($wc.Headers.AllKeys -contains 'Authorization')) {
+              if (($url -match '^https://api\.github\.com/') -and $GitHubToken -and -not ($wc.Headers.AllKeys -contains 'Authorization')) {
                   $wc.Headers.Add('Authorization', "Bearer $GitHubToken")
                   $wc.Headers.Add('X-GitHub-Api-Version', '2022-11-28')
               }
