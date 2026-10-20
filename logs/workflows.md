@@ -288,3 +288,12 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Run 38685089644 — repository-wide checkver validation failed on GitHub API rate limits (HTTP 403) during the all-manifest sweep. It logged `pulse.json` as checked but showed no Pulse-specific failure; the targeted validation above reported Pulse checkver success.
 - The GitHub workflows validate JSON/schema, archive layout, hashes, checkver, and Scoop tests, but they do not execute UAC prompts or perform a full service install/update/uninstall on a real Windows machine. The lifecycle hooks were checked against upstream's documented `--stop`, `--install-start`, and `--uninstall` commands; end-to-end installation behavior still needs a runtime test on Windows.
 
+## 2026-10-20
+
+### Excavator API rate-limit and MuMuPlayer checkver correction
+- [Excavator run 39372547015 — failed](https://github.com/kiro5678/kirobucket/actions/runs/39372547015/job/118463413112). The job logged multiple GitHub REST API `403 rate limit exceeded` responses; the fatal MuMuPlayer checkver script then reported that no international release was found.
+- The upstream releases API now uses tags such as `win-6.8.5` rather than the old `win-global-offline-6.8.5` pattern. The current `win-6.8.5` release (published 2026-10-13) contains the expected overseas NX-main and MUMU15 installer assets, so requiring the obsolete tag prefix was brittle.
+- Updated the custom checkver scripts in `mumuplayer.json`, `mumuplayer-android15.json`, and `mumuplayer-online.json` to add an optional Bearer authorization header from `GITHUB_TOKEN`, while preserving local use when the variable is absent.
+- Updated the NX-main and Android 15 lookups to select the newest release containing the matching international installer asset, independent of the tag name. The online-installer lookup already searched assets across releases; it now also uses the optional authorization header.
+- Updated `docs/manifest-authoring.md` with a general rule to authenticate custom GitHub API checkver calls when a workflow token is available and to filter mixed releases by the intended asset.
+- The upstream release-list was inspected to confirm the current expected assets. This fixes the identified failure path, but the prior failed run has not been re-executed against the new commit; a successful Excavator run is still required to confirm the workflow end to end.
