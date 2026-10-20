@@ -1,10 +1,10 @@
 {
-    "version": "3.20.5",
+    "version": "3.20.7",
     "description": "An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver.",
     "homepage": "https://github.com/tnodir/fort",
     "license": "GPL-3.0-only",
-    "url": "https://github.com/tnodir/fort/releases/download/v3.20.5/FortFirewall-3.20.5-windows10-x86_64.exe",
-    "hash": "b3563d5c4dcd2123c822eb2556681a2415cf5295e66f247ef90f7cab02937176",
+    "url": "https://github.com/tnodir/fort/releases/download/v3.20.7/FortFirewall-3.20.7-windows10-x86_64.exe",
+    "hash": "1eb6be3b7c38c987ee7007524bf46b545e94fccc1a6714034fb1dd058e2e86e2",
     "innosetup": true,
     "checkver": {
         "github": "https://github.com/tnodir/fort"
