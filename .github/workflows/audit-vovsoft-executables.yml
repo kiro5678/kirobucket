@@ -43,6 +43,7 @@ jobs:
           foreach ($manifestFile in $manifestFiles) {
             $index++
             $archivePath = Join-Path $downloadRoot ("archive-{0}.zip" -f $index)
+            $manifest = $null
             try {
               $manifest = Get-Content -LiteralPath $manifestFile.FullName -Raw | ConvertFrom-Json
               $url = [string]$manifest.url
@@ -50,7 +51,7 @@ jobs:
                 throw 'No root-level download URL.'
               }
               $url = $url.Replace('$version', [string]$manifest.version)
-              if ($url -match '\\{version\\}|\\{slug\\}') {
+              if ($url -match '\{version\}|\{slug\}') {
                 throw "Unresolved URL template: $url"
               }
               Write-Host "Downloading $($manifestFile.Name) ($($manifest.version))"
@@ -72,15 +73,16 @@ jobs:
                 }
               }
               if ($null -ne $current) { $records += [PSCustomObject]$current }
-              $exePaths = @($records | Where-Object { -not $_.Folder -and $_.Path -match '(?i)\\.exe$' } | ForEach-Object { $_.Path } | Sort-Object -Unique)
+              $exePaths = @($records | Where-Object { -not $_.Folder -and $_.Path -match '(?i)\.exe$' } | ForEach-Object { $_.Path } | Sort-Object -Unique)
               $status = 'OK'
               if ($exePaths.Count -eq 0) { $status = 'NO_EXE'; $noExe++ } else { $ok++ }
               $safePaths = $exePaths -join ';'
               Write-Host "@@AUDIT@@|$($manifestFile.Name)|$($manifest.version)|$status|$safePaths"
             } catch {
               $failed++
-              $message = $_.Exception.Message.Replace('|', '/').Replace("`r", ' ').Replace("`n", ' ')
-              Write-Host "@@AUDIT@@|$($manifestFile.Name)|$([string]$manifest.version)|ERROR|$message"
+              $message = $_.Exception.Message -replace '[\r\n|]', ' '
+              $version = if ($null -ne $manifest) { [string]$manifest.version } else { '' }
+              Write-Host "@@AUDIT@@|$($manifestFile.Name)|$version|ERROR|$message"
             } finally {
               Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
             }
