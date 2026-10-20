@@ -1,11 +1,6 @@
 name: Manual Scoop Install Path Diagnostic
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - "bucket/vovsoft-ip-to-country-converter.json"
   workflow_dispatch:
     inputs:
       manifest:
@@ -38,7 +33,7 @@ jobs:
       - name: Validate manifest and capture pre-install state
         id: prepare
         env:
-          MANIFEST_INPUT: ${{ inputs.manifest || 'bucket/vovsoft-ip-to-country-converter.json' }}
+          MANIFEST_INPUT: ${{ inputs.manifest }}
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
