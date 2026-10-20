@@ -79,7 +79,7 @@ jobs:
               Write-Host "@@AUDIT@@|$($manifestFile.Name)|$($manifest.version)|$status|$safePaths"
             } catch {
               $failed++
-              $message = $_.Exception.Message.Replace('|', '/').Replace("`r", ' ').Replace("`n', ' ')
+              $message = $_.Exception.Message.Replace('|', '/').Replace("`r", ' ').Replace("`n", ' ')
               Write-Host "@@AUDIT@@|$($manifestFile.Name)|$([string]$manifest.version)|ERROR|$message"
             } finally {
               Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
