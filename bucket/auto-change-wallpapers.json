@@ -3,15 +3,15 @@
     "description": "Portable edition of Vovsoft Auto Change Wallpapers.",
     "homepage": "https://vovsoft.com/software/auto-change-wallpapers/",
     "license": "Proprietary",
-    "url": "https://cdn.vovsoft.com/auto-change-wallpapers-portable.zip?v=1.4",
+    "url": "https://vovsoft.com/files/auto-change-wallpapers-portable.zip?v=1.4",
     "checkver": {
-        "url": "https://vovsoft.com/software/auto-change-wallpapers/",
+        "url": "https://vovsoft.com/download/auto-change-wallpapers-portable/",
         "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
-        "url": "https://cdn.vovsoft.com/auto-change-wallpapers-portable.zip?v=$version"
+        "url": "https://vovsoft.com/files/auto-change-wallpapers-portable.zip?v=$version"
     },
     "notes": [
-        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+        "SHA-256 and archive contents are not yet verified; inspect the ZIP and confirm the executable path before considering this manifest production-ready."
     ]
 }

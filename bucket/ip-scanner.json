@@ -5,13 +5,13 @@
     "license": "Proprietary",
     "url": "https://vovsoft.com/files/ip-scanner-portable.zip?v=1.1",
     "checkver": {
-        "url": "https://vovsoft.com/software/ip-scanner/",
+        "url": "https://vovsoft.com/download/ip-scanner-portable/",
         "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://vovsoft.com/files/ip-scanner-portable.zip?v=$version"
     },
     "notes": [
-        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+        "SHA-256 and archive contents are not yet verified; inspect the ZIP and confirm the executable path before considering this manifest production-ready."
     ]
 }

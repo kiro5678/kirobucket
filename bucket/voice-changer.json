@@ -5,13 +5,13 @@
     "license": "Proprietary",
     "url": "https://vovsoft.com/files/voice-changer-portable.zip?v=1.4",
     "checkver": {
-        "url": "https://vovsoft.com/software/voice-changer/",
+        "url": "https://vovsoft.com/download/voice-changer-portable/",
         "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://vovsoft.com/files/voice-changer-portable.zip?v=$version"
     },
     "notes": [
-        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+        "SHA-256 and archive contents are not yet verified; inspect the ZIP and confirm the executable path before considering this manifest production-ready."
     ]
 }

@@ -5,13 +5,13 @@
     "license": "Proprietary",
     "url": "https://vovsoft.com/files/webcam-motion-detector-portable.zip?v=1.0",
     "checkver": {
-        "url": "https://vovsoft.com/software/webcam-motion-detector/",
+        "url": "https://vovsoft.com/download/webcam-motion-detector-portable/",
         "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://vovsoft.com/files/webcam-motion-detector-portable.zip?v=$version"
     },
     "notes": [
-        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+        "SHA-256 and archive contents are not yet verified; inspect the ZIP and confirm the executable path before considering this manifest production-ready."
     ]
 }

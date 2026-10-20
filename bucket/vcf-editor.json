@@ -5,13 +5,13 @@
     "license": "Proprietary",
     "url": "https://vovsoft.com/files/vcf-editor-portable.zip?v=3.3",
     "checkver": {
-        "url": "https://vovsoft.com/software/vcf-editor/",
+        "url": "https://vovsoft.com/download/vcf-editor-portable/",
         "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://vovsoft.com/files/vcf-editor-portable.zip?v=$version"
     },
     "notes": [
-        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+        "SHA-256 and archive contents are not yet verified; inspect the ZIP and confirm the executable path before considering this manifest production-ready."
     ]
 }

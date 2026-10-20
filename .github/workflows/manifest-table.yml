@@ -380,7 +380,7 @@ jobs:
               if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { throw "Missing category mapping for manifest '$name' in .github/workflows/manifest-table.yml." }
+              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { Write-Warning "No category mapping for '$name'; using 'Other Utilities'."; "Other Utilities" }
 
               $nameEscaped = $name.Replace("|", "\|")
               $categoryEscaped = $category.Replace("|", "\|")

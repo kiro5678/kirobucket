@@ -5,13 +5,13 @@
     "license": "Proprietary",
     "url": "https://vovsoft.com/files/photos-to-video-portable.zip?v=2.6",
     "checkver": {
-        "url": "https://vovsoft.com/software/photos-to-video/",
+        "url": "https://vovsoft.com/download/photos-to-video-portable/",
         "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://vovsoft.com/files/photos-to-video-portable.zip?v=$version"
     },
     "notes": [
-        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+        "SHA-256 and archive contents are not yet verified; inspect the ZIP and confirm the executable path before considering this manifest production-ready."
     ]
 }

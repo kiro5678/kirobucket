@@ -3,16 +3,16 @@
     "description": "A lightweight utility for synchronizing the Windows clock with NTP servers.",
     "homepage": "https://vovsoft.com/software/time-sync/",
     "license": "Freeware",
-    "url": "https://cdn.vovsoft.com/time-sync-portable.zip?v=3.2",
+    "url": "https://vovsoft.com/files/time-sync-portable.zip?v=3.2",
     "checkver": {
-        "url": "https://vovsoft.com/software/time-sync/",
+        "url": "https://vovsoft.com/download/time-sync-portable/",
         "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
-        "url": "https://cdn.vovsoft.com/time-sync-portable.zip?v=$version"
+        "url": "https://vovsoft.com/files/time-sync-portable.zip?v=$version"
     },
     "notes": [
-        "Current version checked against the official product and portable-download pages."
+        "Official portable version and download page list version 3.2; SHA-256 has not been verified."
     ],
     "bin": "timesync.exe",
     "shortcuts": [
