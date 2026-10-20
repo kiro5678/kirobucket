@@ -49,7 +49,7 @@ jobs:
                   if isinstance(shortcut, list) and len(shortcut) >= 2 and isinstance(shortcut[1], str):
                       checked_shortcuts += 1
                       name = shortcut[1]
-                      if re.match(r"(?i)^vovsoft(?:\\s|$)", name):
+                      if re.match(r"(?i)^vovsoft(?:\s|$)", name):
                           already_prefixed += 1
                           continue
                       shortcut[1] = "Vovsoft " + name
@@ -57,14 +57,14 @@ jobs:
                   elif isinstance(shortcut, dict) and isinstance(shortcut.get("name"), str):
                       checked_shortcuts += 1
                       name = shortcut["name"]
-                      if re.match(r"(?i)^vovsoft(?:\\s|$)", name):
+                      if re.match(r"(?i)^vovsoft(?:\s|$)", name):
                           already_prefixed += 1
                           continue
                       shortcut["name"] = "Vovsoft " + name
                       file_changed = True
 
               if file_changed:
-                  path.write_text(json.dumps(data, indent=4, ensure_ascii=False) + "\\n", encoding="utf-8", newline="\\n")
+                  path.write_text(json.dumps(data, indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
                   changed.append(str(path))
 
           print(f"Vovsoft manifests checked: {len(manifests)}")
@@ -74,7 +74,6 @@ jobs:
           for path in changed:
               print(f"UPDATED: {path}")
 
-          # Remove this one-time workflow as part of the same commit.
           Path(".github/workflows/prefix-vovsoft-shortcut-names.yml").unlink(missing_ok=True)
           PY
 
