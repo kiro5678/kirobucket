@@ -1,0 +1,100 @@
+name: Apply Vovsoft key.txt persistence
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/apply-vovsoft-key-persist.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  persist-key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Add key.txt persistence to all Vovsoft manifests
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import sys
+
+          bucket = Path("bucket")
+          manifests = sorted(bucket.glob("vovsoft-*.json"))
+          if len(manifests) != 174:
+              raise SystemExit(f"Expected 174 Vovsoft manifests, found {len(manifests)}; refusing to make partial changes.")
+
+          create_key = r'if (-not (Test-Path -LiteralPath "$dir\key.txt" -PathType Leaf)) { New-Item -ItemType File -Path "$dir\key.txt" | Out-Null }'
+          updates = []
+          details = []
+
+          for path in manifests:
+              original_text = path.read_text(encoding="utf-8-sig")
+              data = json.loads(original_text)
+
+              persisted = data.get("persist")
+              if persisted is None:
+                  persisted_items = []
+              elif isinstance(persisted, str):
+                  persisted_items = [persisted]
+              elif isinstance(persisted, list):
+                  persisted_items = list(persisted)
+              else:
+                  raise SystemExit(f"Unsupported persist format in {path}: {type(persisted).__name__}")
+
+              has_key = any(
+                  item == "key.txt" or (isinstance(item, list) and len(item) == 2 and item[0] == "key.txt" and item[1] == "key.txt")
+                  for item in persisted_items
+              )
+              if not has_key:
+                  persisted_items.append("key.txt")
+
+              hook = data.get("pre_install")
+              if hook is None:
+                  hook = [create_key]
+              elif isinstance(hook, str):
+                  hook = [hook] if create_key in hook else [hook, create_key]
+              elif isinstance(hook, list):
+                  if not any(isinstance(line, str) and create_key in line for line in hook):
+                      hook = [*hook, create_key]
+              else:
+                  raise SystemExit(f"Unsupported pre_install format in {path}: {type(hook).__name__}")
+
+              data["pre_install"] = hook
+              data["persist"] = "key.txt" if persisted is None or persisted_items == ["key.txt"] else persisted_items
+
+              new_text = json.dumps(data, indent=4, ensure_ascii=False) + "\n"
+              if new_text != original_text:
+                  updates.append((path, new_text))
+              details.append({"path": str(path), "persist": data["persist"], "pre_install_added": create_key in json.dumps(hook)})
+
+          for path, content in updates:
+              path.write_text(content, encoding="utf-8", newline="\n")
+
+          print(f"Updated {len(updates)} manifests out of {len(manifests)}.")
+          print(f"Manifests with key.txt persisted: {len(details)}.")
+          print(f"Manifests whose pre_install creates key.txt when absent: {sum(d['pre_install_added'] for d in details)}.")
+          print("\n".join(d["path"] for d in details))
+
+          # This one-time workflow removes itself as part of the same commit.
+          Path(".github/workflows/apply-vovsoft-key-persist.yml").unlink(missing_ok=True)
+          PY
+
+      - name: Commit and push manifest changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A bucket .github/workflows/apply-vovsoft-key-persist.yml
+          git commit -m "Persist key.txt for all Vovsoft manifests"
+          git push origin HEAD:master
