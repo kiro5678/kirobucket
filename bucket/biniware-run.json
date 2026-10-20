@@ -14,7 +14,7 @@
     ],
     "checkver": {
         "url": "https://biniware.com/brun",
-        "regex": "Current version[^\\d]*(\\d+(?:\\.\\d+){3})"
+        "regex": "(?is)Current version[\\s\\S]{0,500}?(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)"
     },
     "autoupdate": {
         "url": "https://biniware.com/download/brun/v4/brun.exe"
