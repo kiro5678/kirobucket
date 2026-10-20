@@ -220,7 +220,6 @@ Generated automatically from the manifests in the bucket directory.
 | [activitywatch](bucket/activitywatch.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source automated time tracker. |
 | [activitywatch-tauri](bucket/activitywatch-tauri.json) | Time Tracking & Focus | 0.14.1 | 2026-10-10 | [Homepage](https://activitywatch.net/) | Open-source time tracker with a Tauri desktop application. |
 | [cuttherope-dx](bucket/cuttherope-dx.json) | Games & Game Utilities | 2.50.1 | 2026-10-10 | [Homepage](https://github.com/yell0wsuit/cuttherope-dx) | Open-source remake of Cut the Rope for Windows and other platforms. |
-| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.4 | 2026-10-10 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-10 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
 | [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs and automatic subtitles. |
@@ -249,7 +248,6 @@ Generated automatically from the manifests in the bucket directory.
 | [flyphotos](bucket/flyphotos.json) | Images & Photos | 2.7.4 | 2026-10-13 | [Homepage](https://github.com/riyasy/FlyPhotos) | Fast and modern photo viewer for Windows. |
 | [glowz-dock](bucket/glowz-dock.json) | Windows Customization | 1.2.1 | 2026-10-13 | [Homepage](https://github.com/Suraween/GlowZ-Dock) | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). |
 | [hdsentinel-portable](bucket/hdsentinel-portable.json) | System Monitoring & Hardware | 6.40 | 2026-10-13 | [Homepage](https://www.hdsentinel.com/) | Hard disk and SSD monitoring, health analysis, testing and repair tool. |
-| [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.216.2 | 2026-10-13 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-10-13 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
 | [nightlight-launcher](bucket/nightlight-launcher.json) | Games & Game Utilities | 5.2.9 | 2026-10-13 | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) | Electron game launcher for managing a Steam library and launching games. |
 | [nixthis](bucket/nixthis.json) | Windows Privacy & Tweaks | 0.42.2 | 2026-10-13 | [Homepage](https://github.com/builtbybel/NixThis) | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. |
@@ -309,6 +307,8 @@ Generated automatically from the manifests in the bucket directory.
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20332 | 2026-10-18 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [spotlight-dimmer](bucket/spotlight-dimmer.json) | Windows Customization | 0.9.1 | 2026-10-18 | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) | Windows utility that dims inactive displays or regions to spotlight the active window. |
 | [yt-dlp-gui](bucket/yt-dlp-gui.json) | Download Managers | 1.0.0 | 2026-10-18 | [Homepage](https://github.com/imsyy/yt-dlp-gui) | Desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. |
+| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.4 | 2026-10-20 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
+| [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.216.2 | 2026-10-20 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |
 | [mumuplayer-android15](bucket/mumuplayer-android15.json) | Emulators & Compatibility | 15.8.5.5750 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest |
 | [mumuplayer-online](bucket/mumuplayer-online.json) | Emulators & Compatibility | 6.0.2 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | MuMuPlayer international online installer for installing its available Android engines |

@@ -272,7 +272,7 @@ Generated automatically from the manifests in the bucket directory.
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | Windows Customization | 2026-08-22 | 2026-09-29 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |
 | [lively](bucket/lively.json) | Windows Customization | 2.2.1.0 | 2026-10-04 | [Homepage](https://livelywallpaper.net/) | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. |
-| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.4 | 2026-10-10 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
+| [livewallpaper](bucket/livewallpaper.json) | Windows Customization | 4.0.1-alpha.4 | 2026-10-20 | [Homepage](https://github.com/GiantappMan/livewallpaper) | Dynamic wallpaper client for Windows |
 | [nofences](bucket/nofences.json) | Windows Customization | 1.8 | 2026-09-29 | [Homepage](https://github.com/Twometer/NoFences) | Open-source alternative to Fences for organizing the Windows desktop. |
 | [nomeiryoui](bucket/nomeiryoui.json) | Windows Customization | 3.5.1 | 2026-09-29 | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) | Windows utility for changing system UI fonts and font sizes. |
 | [open-shell](bucket/open-shell.json) | Windows Customization | 4.4.198 | 2026-09-29 | [Homepage](https://github.com/Open-Shell/Open-Shell-Menu) | A collection of utilities bringing back classic features to Windows. |
@@ -301,7 +301,7 @@ Generated automatically from the manifests in the bucket directory.
 | [gtweak](bucket/gtweak.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
 | [gtweak-exe](bucket/gtweak-exe.json) | Windows Privacy & Tweaks | 5.5.6 | 2026-09-30 | [Homepage](https://github.com/Greedeks/GTweak) | Portable Windows tweaking and customization tool. |
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.9.0 | 2026-10-18 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
-| [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.216.2 | 2026-10-13 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
+| [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.216.2 | 2026-10-20 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.6 | 2026-10-11 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [nixthis](bucket/nixthis.json) | Windows Privacy & Tweaks | 0.42.2 | 2026-10-13 | [Homepage](https://github.com/builtbybel/NixThis) | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. |
 | [optimizerduck](bucket/optimizerduck.json) | Windows Privacy & Tweaks | 2.29.0 | 2026-10-07 | [Homepage](https://github.com/itsfatduck/optimizerDuck) | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. |
