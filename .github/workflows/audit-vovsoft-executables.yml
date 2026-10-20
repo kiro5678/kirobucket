@@ -1,0 +1,92 @@
+name: Temporary Vovsoft executable audit
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/audit-vovsoft-executables.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Inventory Vovsoft portable executables
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Inspect current Vovsoft archive contents
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $sevenZipPath = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZipPath -PathType Leaf)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if ($command) { $sevenZipPath = $command.Source }
+          }
+          if (-not (Test-Path -LiteralPath $sevenZipPath -PathType Leaf)) {
+            throw '7-Zip was not found on the runner.'
+          }
+
+          $manifestFiles = @(Get-ChildItem -LiteralPath 'bucket' -Filter 'vovsoft-*.json' -File | Sort-Object Name)
+          $downloadRoot = Join-Path $env:RUNNER_TEMP 'vovsoft-archive-audit'
+          New-Item -ItemType Directory -Path $downloadRoot -Force | Out-Null
+          $ok = 0
+          $noExe = 0
+          $failed = 0
+          $index = 0
+
+          foreach ($manifestFile in $manifestFiles) {
+            $index++
+            $archivePath = Join-Path $downloadRoot ("archive-{0}.zip" -f $index)
+            try {
+              $manifest = Get-Content -LiteralPath $manifestFile.FullName -Raw | ConvertFrom-Json
+              $url = [string]$manifest.url
+              if ([string]::IsNullOrWhiteSpace($url)) {
+                throw 'No root-level download URL.'
+              }
+              $url = $url.Replace('$version', [string]$manifest.version)
+              if ($url -match '\\{version\\}|\\{slug\\}') {
+                throw "Unresolved URL template: $url"
+              }
+              Write-Host "Downloading $($manifestFile.Name) ($($manifest.version))"
+              Invoke-WebRequest -Uri $url -OutFile $archivePath -MaximumRedirection 10 -TimeoutSec 180
+
+              $listing = & $sevenZipPath l -slt $archivePath 2>&1
+              if ($LASTEXITCODE -ne 0) {
+                throw "7-Zip could not inspect downloaded asset: $url"
+              }
+              $records = @()
+              $current = $null
+              foreach ($lineObject in $listing) {
+                $line = [string]$lineObject
+                if ($line -match '^Path = (.*)$') {
+                  if ($null -ne $current) { $records += [PSCustomObject]$current }
+                  $current = [ordered]@{ Path = $Matches[1]; Folder = $false }
+                } elseif ($null -ne $current -and $line -match '^Folder = \+$') {
+                  $current.Folder = $true
+                }
+              }
+              if ($null -ne $current) { $records += [PSCustomObject]$current }
+              $exePaths = @($records | Where-Object { -not $_.Folder -and $_.Path -match '(?i)\\.exe$' } | ForEach-Object { $_.Path } | Sort-Object -Unique)
+              $status = 'OK'
+              if ($exePaths.Count -eq 0) { $status = 'NO_EXE'; $noExe++ } else { $ok++ }
+              $safePaths = $exePaths -join ';'
+              Write-Host "@@AUDIT@@|$($manifestFile.Name)|$($manifest.version)|$status|$safePaths"
+            } catch {
+              $failed++
+              $message = $_.Exception.Message.Replace('|', '/').Replace("`r", ' ').Replace("`n', ' ')
+              Write-Host "@@AUDIT@@|$($manifestFile.Name)|$([string]$manifest.version)|ERROR|$message"
+            } finally {
+              Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          Write-Host "@@SUMMARY@@|manifests=$($manifestFiles.Count)|with_exe=$ok|no_exe=$noExe|errors=$failed"
+          if ($failed -gt 0) {
+            Write-Warning "$failed archive(s) could not be inspected. The report above identifies each affected manifest."
+          }
