@@ -116,6 +116,7 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 ## 5. Installer, portable, and archive rules
 
 - Portable archives should be installed from the verified portable asset directly where possible. Do not select a setup installer just because it is easier to find.
+- Do not trust a `.7z` extension alone to prove that a release is a portable app archive. Some projects publish self-extracting Bundle installers under archive-looking extensions. Inspect the actual payload; if it is a setup executable, follow the project's official package-manager instructions and verified silent switch, document its external install/data paths, and do not declare `bin` or shortcuts under `$dir` when the installer places them elsewhere.
 - Use `innosetup: true` and `innounp` only after confirming the asset is genuinely an Inno Setup installer and that extraction is the intended installation method.
 - Never append `#/dl.7z` to an `.exe` or another URL unless the URL is intentionally handled as an archive and that exact extraction behavior has been verified.
 - Set `extract_dir` to the exact directory present in the archive. Confirm the path and capitalization from the actual archive listing. If the root directory is version-dependent, update both the current value and `autoupdate.extract_dir`.

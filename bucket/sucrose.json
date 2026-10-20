@@ -1,29 +1,29 @@
 {
     "version": "26.7.5.0",
-    "description": "Highly customizable live wallpaper application for Windows.",
+    "description": "Sucrose Wallpaper Engine for Windows (stable channel; official per-user Bundle installer).",
     "homepage": "https://github.com/Taiizor/Sucrose",
     "license": "GPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Taiizor/Sucrose/releases/download/v26.7.5.0/Sucrose_Bundle_.NET_Framework_4.8_x64_26.7.5.0.7z",
-            "hash": "f36804548b0062be6845b4852287f4d872d59e7100303d040cf4eb4e9b2403e7"
+            "url": "https://github.com/Taiizor/Sucrose/releases/download/v26.7.5.0/Sucrose_Bundle_.NET_Framework_4.8_x64_26.7.5.0.exe",
+            "hash": "3ee62580ded7840e68e6314b1fc47433122c913d6f0c047de7c40cad7dfd048c",
+            "installer": {
+                "script": "Start-Process \"$dir\\Sucrose_Bundle_.NET_Framework_4.8_x64_$version.exe\" -ArgumentList '/s' -Wait"
+            }
         }
     },
-    "bin": "Sucrose.Launcher.exe",
-    "shortcuts": [
-        [
-            "Sucrose.Launcher.exe",
-            "Sucrose"
-        ]
-    ],
     "checkver": {
         "github": "https://github.com/Taiizor/Sucrose"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/Taiizor/Sucrose/releases/download/v$version/Sucrose_Bundle_.NET_Framework_4.8_x64_$version.7z"
+                "url": "https://github.com/Taiizor/Sucrose/releases/download/v$version/Sucrose_Bundle_.NET_Framework_4.8_x64_$version.exe"
             }
         }
-    }
+    },
+    "uninstaller": {
+        "script": "Start-Process (Get-ItemProperty HKCU:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Sucrose).UninstallString -Wait"
+    },
+    "notes": "Official per-user Bundle installer, not a portable archive. It installs to %LOCALAPPDATA%\\Sucrose and creates its own shortcuts. The stable and nightly manifests use the same per-user installation location and should not be expected to coexist side by side."
 }
