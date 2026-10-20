@@ -25,9 +25,15 @@
         ]
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/Taiizor/Sucrose/releases?per_page=100",
-        "jsonpath": "$[?(@.prerelease==true)].tag_name",
-        "regex": "v([0-9.]+)"
+        "script": [
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/Taiizor/Sucrose/releases?per_page=100' -Headers $headers",
+            "$release = $releases | Where-Object { $_.prerelease -eq $true -and $_.tag_name -match '^v[\\d.]+$' } | Select-Object -First 1",
+            "if (-not $release) { throw 'No Sucrose pre-release with a numbered version tag was found.' }",
+            "Write-Output $release.tag_name"
+        ],
+        "regex": "^v(?<version>[\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {
