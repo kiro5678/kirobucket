@@ -43,6 +43,51 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 - For non-GitHub releases, use a reliable official release/download page, JSON API, XML feed, or a script. Use a regular expression or JSONPath that matches the real response and captures the intended version only.
 - When a manifest intentionally tracks a mutable GitHub release channel or tag (for example, `PREVIEW-DEV`) and its autoupdate URL points to that same tag, make `checkver` query that exact tag's release API endpoint rather than `/releases/latest`. Conversely, when selecting an asset family across multiple releases, query enough releases and apply the version regex to the full asset list; querying only the newest release can fail when that release uses another asset naming scheme.
 - For `checkver.script` requests to GitHub's REST API, send `Authorization: Bearer $env:GITHUB_TOKEN` when `GITHUB_TOKEN` is available, while retaining an unauthenticated fallback for local use. In GitHub Actions workflows that run checkver directly, explicitly pass `GITHUB_TOKEN: ${{ github.token }}` in that step's environment; the variable is not automatically exported to every `run` step. Do not misreport API request failures or rate limiting as proof that no release exists. When releases mix platforms or channels, select the newest release containing the intended asset instead of relying on a stale tag prefix.
+- In GitHub API mode, Scoop's built-in `checkver.github` reads `tag_name` by default, so its regex must match the tag value itself (for example, `^v(?<version>[\d.]+)# Manifest Authoring and Maintenance Rules
+
+This is the repository's mandatory reference for creating, changing, troubleshooting, or reviewing any Scoop manifest. Read it before working on manifests. When a real failure reveals a missing rule, update this document in the same task so the lesson is not lost.
+
+## 1. Non-negotiable rule: automatic updates must work
+
+A manifest is not finished merely because the current version installs. By default, every manifest must support automatic version and download updates.
+
+- Configure a working `checkver` that detects the intended release channel and extracts the version correctly.
+- Configure `autoupdate` templates for the download URL and every version-dependent field, including `extract_dir` when the archive's root folder changes with the version.
+- Ensure the hash will be refreshed correctly by the current Scoop updater. Never leave an old fixed hash in place while allowing the URL to move to a new version.
+- Test the entire version → URL → hash update path with Scoop's actual `checkver.ps1 -Update`. A successful version lookup alone does **not** prove that automatic updating works.
+- `-Update` only exercises the URL/hash update path when the upstream version is newer. To test templates when the manifest already matches upstream, use `checkver.ps1 -ForceUpdate` against a disposable copy; never force-update the working bucket checkout because Scoop will rewrite the manifest.
+- If upstream genuinely provides no reliable automatic version source, investigate the official API, release feed, or a custom `checkver.script` before considering a manual-only manifest. State the limitation explicitly rather than silently omitting update support.
+
+`autoupdate` is a template, not a background scheduler. GitHub updates the repository manifest only when an updater such as the repository's Excavator workflow runs successfully and commits the result. User machines receive the updated manifest after their bucket is pulled with `scoop update`.
+
+## 2. Research the upstream package before writing JSON
+
+Use the project's official release page, repository, documentation, and release API as the source of truth.
+
+1. Identify the latest intended stable release. Do not accidentally use a pre-release, development build, unrelated tag, or stale release.
+2. Inspect the actual Windows asset names and architecture. Verify the exact URL, release tag, and available checksum/digest.
+3. Determine what the downloaded file actually is: a portable archive, an installer, an Inno Setup installer, an MSI, or a standalone executable. An `.exe` extension does not prove that a file is portable.
+4. Verify the archive or installer contents before choosing `bin`, `shortcuts`, `extract_dir`, `innosetup`, `depends`, or installer extraction options. Never guess internal paths or executable names.
+5. Preserve the application's real settings/data location. Add `persist` only for the correct data directory or files. Migration logic must not delete or overwrite the old data; copy only when appropriate and preserve the original if copying fails.
+
+Do not copy an existing manifest blindly. Use it as a reference only after verifying it against the current release and current Scoop behavior.
+
+- When a canonical upstream repository or download page returns 404, verify whether the project has officially moved and whether the new location has real releases/assets. Do not replace a missing source with an unverified fork or hard-code a fake `checkver` result just to make validation pass. If no verifiable canonical download/update source remains, remove the obsolete manifest or report it as blocked.
+
+## 3. Version detection: `checkver`
+
+- Choose a version source that reliably follows the intended release channel.
+- When a project publishes separate release streams for different operating systems, do not blindly use `/releases/latest` for a platform-specific manifest. Select the intended platform's tag or asset family from the releases API/page, then validate that `checkver` chooses the newest matching release rather than another OS's newer version.
+- For GitHub releases, prefer the explicit current syntax:
+  ```json
+  "checkver": {
+      "github": "https://github.com/OWNER/REPOSITORY"
+  }
+  ```
+  Use the actual upstream owner and repository. Do not point it at this bucket or a fork unless that fork is the true source.
+- For non-GitHub releases, use a reliable official release/download page, JSON API, XML feed, or a script. Use a regular expression or JSONPath that matches the real response and captures the intended version only.
+- When a manifest intentionally tracks a mutable GitHub release channel or tag (for example, `PREVIEW-DEV`) and its autoupdate URL points to that same tag, make `checkver` query that exact tag's release API endpoint rather than `/releases/latest`. Conversely, when selecting an asset family across multiple releases, query enough releases and apply the version regex to the full asset list; querying only the newest release can fail when that release uses another asset naming scheme.
+), not a release-page URL fragment such as `releases/tag/v...`. If the upstream's releases are all marked prerelease, `/releases/latest` can return 404; query the releases list or a verified channel endpoint instead, and select only releases that contain the intended asset.
 - If `checkver` uses JSONPath, make sure the configured source actually returns JSON. With GitHub, the repository URL normally makes Scoop read the HTML `releases/latest` page; use an explicit API URL such as `https://api.github.com/repos/OWNER/REPOSITORY/releases/latest` when parsing a JSON response. Never combine an HTML source with `jsonpath`/`jp` and assume it will work.
 - Make sure the extracted version matches the values used in `autoupdate`.
 - Scoop's `checkver.github` mode automatically supplies a default version regex when no regex is set, including when its value is an API URL. If a JSONPath selects a non-version field such as a release name or `updated_at`, that implicit regex can cause a false no-match. For such API lookups, use an explicit `checkver.url` with `jsonpath` and define a matching regex/replacement as needed; don't assume an API URL under `github` disables GitHub defaults.

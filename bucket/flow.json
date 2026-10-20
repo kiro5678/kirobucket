@@ -1,6 +1,6 @@
 {
     "version": "0.7.0",
-    "description": "A powerful, minimalistic, cross-platform flowchart and diagram editor",
+    "description": "Open-source event, calendar, and time management app for Windows.",
     "homepage": "https://github.com/LinwoodDev/Flow",
     "license": "AGPL-3.0-only",
     "architecture": {
@@ -21,7 +21,15 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/LinwoodDev/Flow"
+        "script": [
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/LinwoodDev/Flow/releases?per_page=100' -Headers $headers",
+            "$release = $releases | Where-Object { $_.tag_name -match '^v[\\d.]+$' -and ($_.assets | Where-Object { $_.name -eq 'linwood-flow-windows-x86_64.zip' } | Select-Object -First 1) } | Select-Object -First 1",
+            "if (-not $release) { throw 'No numbered Flow release containing the Windows x64 ZIP was found.' }",
+            "Write-Output $release.tag_name"
+        ],
+        "regex": "^v(?<version>[\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {

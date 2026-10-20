@@ -29,7 +29,7 @@
     ],
     "checkver": {
         "github": "https://github.com/mucommander/mucommander",
-        "regex": "tag/([\\d.-]+)"
+        "regex": "^(?<version>[\\d.-]+)$"
     },
     "autoupdate": {
         "architecture": {
