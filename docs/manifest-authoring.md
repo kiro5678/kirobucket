@@ -99,6 +99,8 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 
 - Prefer native `jsonpath` plus `regex`/`replace` when those fields can extract both the release tag and app version; reserve `checkver.script` for cases the built-in fields cannot express. This reduces duplicate requests and makes normal version checks easier to debug.
 
+- For an upstream whose homepage visibly identifies the latest release, the official homepage can serve as a simpler `checkver.url` fallback when its API endpoint fails inconsistently across PowerShell hosts. Use a conservative regex against the official release label and validate the extracted version with Scoop before relying on it.
+
 ## 4. Automatic URL and hash updates
 
 - Put the current, verified download URL and SHA-256 in the applicable manifest architecture.

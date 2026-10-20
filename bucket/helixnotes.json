@@ -18,8 +18,8 @@
         ]
     ],
     "checkver": {
-        "url": "https://gitlab.com/api/v4/projects/ArkHost%2FHelixNotes/releases/permalink/latest",
-        "regex": "\"tag_name\":\"v([0-9.]+)\""
+        "url": "https://helixnotes.com/",
+        "regex": "Latest release v(?<version>[\\d.]+)"
     },
     "autoupdate": {
         "url": "https://download.helixnotes.com/releases/v$version/HelixNotes_$version_x64-setup.exe"
