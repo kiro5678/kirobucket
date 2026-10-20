@@ -17,5 +17,12 @@
     "pre_install": [
         "if (-not (Test-Path -LiteralPath \"$dir\\key.txt\" -PathType Leaf)) { New-Item -ItemType File -Path \"$dir\\key.txt\" | Out-Null }"
     ],
-    "persist": "key.txt"
+    "persist": "key.txt",
+    "bin": "ipconverter.exe",
+    "shortcuts": [
+        [
+            "ipconverter.exe",
+            "Vovsoft IP to Country Converter"
+        ]
+    ]
 }
