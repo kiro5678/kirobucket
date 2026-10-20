@@ -25,11 +25,12 @@ Use the project's official release page, repository, documentation, and release 
 4. Verify the archive or installer contents before choosing `bin`, `shortcuts`, `extract_dir`, `innosetup`, `depends`, or installer extraction options. Never guess internal paths or executable names.
 5. For portable GUI applications, inventory the current archive and add a `shortcuts` entry for the main application executable. Exclude helper tools, bundled runtimes, redistributable installers, and command-line dependencies (for example FFmpeg) from Start Menu shortcuts. Keep the shortcut target and display name grounded in the verified package.
 6. Archive-path validation can only check `bin` or `shortcuts` paths that a manifest already declares; a manifest with no launch entries can pass without exposing its GUI executable. When auditing a group of manifests, inventory the archives and report missing shortcut declarations as well as incorrect declared paths.
-5. Preserve the application's real settings/data location. Add `persist` only for the correct data directory or files. Migration logic must not delete or overwrite the old data; copy only when appropriate and preserve the original if copying fails.
+7. Preserve the application's real settings/data location. Add `persist` only for the correct data directory or files. Migration logic must not delete or overwrite the old data; copy only when appropriate and preserve the original if copying fails.
 
 Do not copy an existing manifest blindly. Use it as a reference only after verifying it against the current release and current Scoop behavior.
 
 - When a canonical upstream repository or download page returns 404, verify whether the project has officially moved and whether the new location has real releases/assets. Do not replace a missing source with an unverified fork or hard-code a fake `checkver` result just to make validation pass. If no verifiable canonical download/update source remains, remove the obsolete manifest or report it as blocked.
+- If an upstream repository is renamed, moved, or rebranded, update `checkver`, download, homepage, and `autoupdate` URLs to the current canonical repository. Scope the version regex to the release line whose asset names and installation behavior the manifest actually supports; do not switch a legacy manifest to a new major line until the new assets, hashes, installation method, `bin`, and shortcuts have been verified. Keep a separate manifest when the upstream distribution has changed materially.
 
 ## 3. Version detection: `checkver`
 
