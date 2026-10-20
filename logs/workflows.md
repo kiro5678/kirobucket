@@ -318,3 +318,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - The official [HelixNotes homepage](https://helixnotes.com/) currently displays `Latest release v1.3.6`, matching the existing manifest version and download URL. Switched `checkver` to the homepage and a regex for that release label, avoiding the GitLab API endpoint that failed under pwsh.
 - Updated `docs/manifest-authoring.md` with guidance on using an official homepage release label as a fallback when the upstream API is unreliable, and validating the captured version.
 - A repository-wide checkver workflow was triggered by this documentation update; it must finish successfully in both PowerShell and pwsh before the fix is considered validated. The pinned version, installer URL and hash were otherwise left unchanged.
+
+
+### Repository-wide checkver — API rate-limit failures on five manifests
+- [Validation run 39469049101](https://github.com/kiro5678/kirobucket/actions/runs/39469049101) checked 306 manifests. Windows PowerShell passed, and the pwsh job failed on `spotlight-dimmer.json`, `sucrose-nightly.json`, `tiez-clipboard.json`, `tiro-notes.json`, and `translumo.json`.
+- The five errors were all GitHub REST API HTTP 403 rate-limit responses from URL-based `checkver` requests. The workflow already passed `GITHUB_TOKEN`, but Scoop's built-in URL/JSONPath path did not attach it to those requests. The errors therefore did not establish that releases were missing.
+- Converted those five manifests to custom `checkver.script` lookups that send `Authorization: Bearer $env:GITHUB_TOKEN` when available and retain an anonymous fallback for local use. The scripts preserve each intended release channel: Windows-tagged Spotlight Dimmer releases, Sucrose pre-releases, TieZ portable Windows ZIP assets, Tiro Notes releases with the Windows x64 ZIP, and Translumo's latest release tag.
+- Added a rule to `docs/manifest-authoring.md` explaining that built-in `checkver.url`/JSONPath requests do not automatically use the workflow token and that HTTP 403 rate limits should be fixed as authentication problems, not treated as missing releases.
+- Validation status: these changes have been committed and need a fresh repository-wide run in both PowerShell and pwsh to confirm that the five checks and the full sweep pass.
