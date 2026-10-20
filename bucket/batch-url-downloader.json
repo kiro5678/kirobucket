@@ -1,0 +1,17 @@
+{
+    "version": "6.4",
+    "description": "Portable edition of Vovsoft Batch URL Downloader.",
+    "homepage": "https://vovsoft.com/software/batch-url-downloader/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/batch-url-downloader-portable.zip?v=6.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/batch-url-downloader/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/batch-url-downloader-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

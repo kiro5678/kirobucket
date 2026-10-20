@@ -1,0 +1,17 @@
+{
+    "version": "3.4",
+    "description": "Portable edition of Vovsoft Picture Downloader.",
+    "homepage": "https://vovsoft.com/software/picture-downloader/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/picture-downloader-portable.zip?v=3.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/picture-downloader/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/picture-downloader-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

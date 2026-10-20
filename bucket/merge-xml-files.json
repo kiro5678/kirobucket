@@ -1,0 +1,17 @@
+{
+    "version": "1.5",
+    "description": "Portable edition of Vovsoft Merge XML Files.",
+    "homepage": "https://vovsoft.com/software/merge-xml-files/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/merge-xml-files-portable.zip?v=1.5",
+    "checkver": {
+        "url": "https://vovsoft.com/software/merge-xml-files/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/merge-xml-files-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

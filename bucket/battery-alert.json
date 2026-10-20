@@ -1,0 +1,17 @@
+{
+    "version": "1.2",
+    "description": "Portable edition of Vovsoft Battery Alert.",
+    "homepage": "https://vovsoft.com/software/battery-alert/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/battery-alert-portable.zip?v=1.2",
+    "checkver": {
+        "url": "https://vovsoft.com/software/battery-alert/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/battery-alert-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

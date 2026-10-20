@@ -1,0 +1,17 @@
+{
+    "version": "5.4",
+    "description": "Portable edition of Vovsoft Search Text In Files.",
+    "homepage": "https://vovsoft.com/software/search-text-in-files/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/search-text-in-files-portable.zip?v=5.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/search-text-in-files/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/search-text-in-files-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

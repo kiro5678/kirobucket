@@ -1,0 +1,17 @@
+{
+    "version": "1.2",
+    "description": "Portable edition of Vovsoft Rich Text Editor.",
+    "homepage": "https://vovsoft.com/software/rich-text-editor/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/rich-text-editor-portable.zip?v=1.2",
+    "checkver": {
+        "url": "https://vovsoft.com/software/rich-text-editor/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/rich-text-editor-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

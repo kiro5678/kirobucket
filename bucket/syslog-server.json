@@ -1,0 +1,17 @@
+{
+    "version": "2.4",
+    "description": "Portable edition of Vovsoft Syslog Server.",
+    "homepage": "https://vovsoft.com/software/syslog-server/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/syslog-server-portable.zip?v=2.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/syslog-server/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/syslog-server-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

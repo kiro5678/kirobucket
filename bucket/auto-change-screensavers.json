@@ -1,0 +1,17 @@
+{
+    "version": "2.2",
+    "description": "Portable edition of Vovsoft Auto Change Screensavers.",
+    "homepage": "https://vovsoft.com/software/auto-change-screensavers/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/auto-change-screensavers-portable.zip?v=2.2",
+    "checkver": {
+        "url": "https://vovsoft.com/software/auto-change-screensavers/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/auto-change-screensavers-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

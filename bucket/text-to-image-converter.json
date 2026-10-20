@@ -1,0 +1,17 @@
+{
+    "version": "2.3",
+    "description": "Portable edition of Vovsoft Text to Image Converter.",
+    "homepage": "https://vovsoft.com/software/text-to-image-converter/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/text-to-image-converter-portable.zip?v=2.3",
+    "checkver": {
+        "url": "https://vovsoft.com/software/text-to-image-converter/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/text-to-image-converter-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "version": "6.6",
+    "description": "Portable edition of Vovsoft HTTP Requester.",
+    "homepage": "https://vovsoft.com/software/http-requester/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/http-requester-portable.zip?v=6.6",
+    "checkver": {
+        "url": "https://vovsoft.com/software/http-requester/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/http-requester-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

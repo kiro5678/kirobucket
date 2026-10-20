@@ -1,0 +1,17 @@
+{
+    "version": "2.1",
+    "description": "Portable edition of Vovsoft Download Mailbox Emails.",
+    "homepage": "https://vovsoft.com/software/download-mailbox-emails/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/download-mailbox-emails-portable.zip?v=2.1",
+    "checkver": {
+        "url": "https://vovsoft.com/software/download-mailbox-emails/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/download-mailbox-emails-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

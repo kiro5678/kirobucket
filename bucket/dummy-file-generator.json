@@ -1,0 +1,17 @@
+{
+    "version": "2.0",
+    "description": "Portable edition of Vovsoft Dummy File Generator.",
+    "homepage": "https://vovsoft.com/software/dummy-file-generator/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/dummy-file-generator-portable.zip?v=2.0",
+    "checkver": {
+        "url": "https://vovsoft.com/software/dummy-file-generator/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/dummy-file-generator-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

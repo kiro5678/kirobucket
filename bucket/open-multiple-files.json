@@ -1,0 +1,17 @@
+{
+    "version": "3.3",
+    "description": "Portable edition of Vovsoft Open Multiple Files.",
+    "homepage": "https://vovsoft.com/software/open-multiple-files/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/open-multiple-files-portable.zip?v=3.3",
+    "checkver": {
+        "url": "https://vovsoft.com/software/open-multiple-files/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/open-multiple-files-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "version": "2.7",
+    "description": "Portable edition of Vovsoft URL Extractor.",
+    "homepage": "https://vovsoft.com/software/url-extractor/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/url-extractor-portable.zip?v=2.7",
+    "checkver": {
+        "url": "https://vovsoft.com/software/url-extractor/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/url-extractor-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

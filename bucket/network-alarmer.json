@@ -1,0 +1,17 @@
+{
+    "version": "5.2",
+    "description": "Portable edition of Vovsoft Network Alarmer.",
+    "homepage": "https://vovsoft.com/software/network-alarmer/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/network-alarmer-portable.zip?v=5.2",
+    "checkver": {
+        "url": "https://vovsoft.com/software/network-alarmer/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/network-alarmer-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

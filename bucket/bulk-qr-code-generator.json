@@ -1,0 +1,17 @@
+{
+    "version": "2.6",
+    "description": "Portable edition of Vovsoft Bulk QR Code Generator.",
+    "homepage": "https://vovsoft.com/software/bulk-qr-code-generator/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/bulk-qr-code-generator-portable.zip?v=2.6",
+    "checkver": {
+        "url": "https://vovsoft.com/software/bulk-qr-code-generator/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/bulk-qr-code-generator-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

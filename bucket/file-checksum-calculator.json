@@ -1,0 +1,17 @@
+{
+    "version": "2.5",
+    "description": "Portable edition of Vovsoft File Checksum Calculator.",
+    "homepage": "https://vovsoft.com/software/file-checksum-calculator/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/file-checksum-calculator-portable.zip?v=2.5",
+    "checkver": {
+        "url": "https://vovsoft.com/software/file-checksum-calculator/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/file-checksum-calculator-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

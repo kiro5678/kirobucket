@@ -1,0 +1,17 @@
+{
+    "version": "4.7",
+    "description": "Portable edition of Vovsoft Text to MP3 Converter.",
+    "homepage": "https://vovsoft.com/software/text-to-mp3-converter/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/text-to-mp3-converter-portable.zip?v=4.7",
+    "checkver": {
+        "url": "https://vovsoft.com/software/text-to-mp3-converter/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/text-to-mp3-converter-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

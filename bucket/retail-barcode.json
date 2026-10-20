@@ -1,0 +1,17 @@
+{
+    "version": "5.8",
+    "description": "Portable edition of Vovsoft Retail Barcode.",
+    "homepage": "https://vovsoft.com/software/retail-barcode/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/retail-barcode-portable.zip?v=5.8",
+    "checkver": {
+        "url": "https://vovsoft.com/software/retail-barcode/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/retail-barcode-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

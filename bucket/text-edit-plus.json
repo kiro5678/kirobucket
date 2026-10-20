@@ -1,0 +1,17 @@
+{
+    "version": "16.7",
+    "description": "Portable edition of Vovsoft Text Edit Plus.",
+    "homepage": "https://vovsoft.com/software/text-edit-plus/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/text-edit-plus-portable.zip?v=16.7",
+    "checkver": {
+        "url": "https://vovsoft.com/software/text-edit-plus/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/text-edit-plus-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

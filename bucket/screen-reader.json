@@ -1,0 +1,17 @@
+{
+    "version": "1.5",
+    "description": "Portable edition of Vovsoft Screen Reader.",
+    "homepage": "https://vovsoft.com/software/screen-reader/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/screen-reader-portable.zip?v=1.5",
+    "checkver": {
+        "url": "https://vovsoft.com/software/screen-reader/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/screen-reader-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

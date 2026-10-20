@@ -1,0 +1,17 @@
+{
+    "version": "6.0",
+    "description": "Portable edition of Vovsoft Speech to Text Converter.",
+    "homepage": "https://vovsoft.com/software/speech-to-text-converter/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/speech-to-text-converter-portable.zip?v=6.0",
+    "checkver": {
+        "url": "https://vovsoft.com/software/speech-to-text-converter/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/speech-to-text-converter-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "version": "3.0",
+    "description": "Portable edition of Vovsoft Subtitle Translator.",
+    "homepage": "https://vovsoft.com/software/subtitle-translator/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/subtitle-translator-portable.zip?v=3.0",
+    "checkver": {
+        "url": "https://vovsoft.com/software/subtitle-translator/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/subtitle-translator-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

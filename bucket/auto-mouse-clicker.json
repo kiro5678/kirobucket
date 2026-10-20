@@ -1,0 +1,17 @@
+{
+    "version": "3.2",
+    "description": "Portable edition of Vovsoft Auto Mouse Clicker.",
+    "homepage": "https://vovsoft.com/software/auto-mouse-clicker/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/auto-mouse-clicker-portable.zip?v=3.2",
+    "checkver": {
+        "url": "https://vovsoft.com/software/auto-mouse-clicker/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/auto-mouse-clicker-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

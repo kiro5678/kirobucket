@@ -1,0 +1,17 @@
+{
+    "version": "1.6",
+    "description": "Portable edition of Vovsoft Visual Notes.",
+    "homepage": "https://vovsoft.com/software/visual-notes/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/visual-notes-portable.zip?v=1.6",
+    "checkver": {
+        "url": "https://vovsoft.com/software/visual-notes/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/visual-notes-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

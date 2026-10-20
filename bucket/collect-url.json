@@ -1,0 +1,17 @@
+{
+    "version": "4.2",
+    "description": "Portable edition of Vovsoft Collect URL.",
+    "homepage": "https://vovsoft.com/software/collect-url/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/collect-url-portable.zip?v=4.2",
+    "checkver": {
+        "url": "https://vovsoft.com/software/collect-url/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/collect-url-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

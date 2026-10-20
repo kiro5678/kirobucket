@@ -1,0 +1,17 @@
+{
+    "version": "2.4",
+    "description": "Portable edition of Vovsoft Batch Image Resizer.",
+    "homepage": "https://vovsoft.com/software/batch-image-resizer/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/batch-image-resizer-portable.zip?v=2.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/batch-image-resizer/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/batch-image-resizer-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

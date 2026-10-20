@@ -1,0 +1,17 @@
+{
+    "version": "5.3",
+    "description": "Portable edition of Vovsoft Prevent Disk Sleep.",
+    "homepage": "https://vovsoft.com/software/prevent-disk-sleep/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/prevent-disk-sleep-portable.zip?v=5.3",
+    "checkver": {
+        "url": "https://vovsoft.com/software/prevent-disk-sleep/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/prevent-disk-sleep-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

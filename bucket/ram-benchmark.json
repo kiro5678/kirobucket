@@ -1,0 +1,17 @@
+{
+    "version": "1.6",
+    "description": "Portable edition of Vovsoft RAM Benchmark.",
+    "homepage": "https://vovsoft.com/software/ram-benchmark/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/ram-benchmark-portable.zip?v=1.6",
+    "checkver": {
+        "url": "https://vovsoft.com/software/ram-benchmark/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/ram-benchmark-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

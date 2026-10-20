@@ -1,0 +1,17 @@
+{
+    "version": "1.0",
+    "description": "Portable edition of Vovsoft VCF Splitter.",
+    "homepage": "https://vovsoft.com/software/vcf-splitter/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/vcf-splitter-portable.zip?v=1.0",
+    "checkver": {
+        "url": "https://vovsoft.com/software/vcf-splitter/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/vcf-splitter-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

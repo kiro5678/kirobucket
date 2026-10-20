@@ -1,0 +1,17 @@
+{
+    "version": "1.0",
+    "description": "Portable edition of Vovsoft Webcam Motion Detector.",
+    "homepage": "https://vovsoft.com/software/webcam-motion-detector/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/webcam-motion-detector-portable.zip?v=1.0",
+    "checkver": {
+        "url": "https://vovsoft.com/software/webcam-motion-detector/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/webcam-motion-detector-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

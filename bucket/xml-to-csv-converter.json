@@ -1,0 +1,17 @@
+{
+    "version": "1.4",
+    "description": "Portable edition of Vovsoft XML to CSV Converter.",
+    "homepage": "https://vovsoft.com/software/xml-to-csv-converter/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/xml-to-csv-converter-portable.zip?v=1.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/xml-to-csv-converter/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/xml-to-csv-converter-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

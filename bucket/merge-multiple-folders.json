@@ -1,0 +1,17 @@
+{
+    "version": "2.4",
+    "description": "Portable edition of Vovsoft Merge Multiple Folders.",
+    "homepage": "https://vovsoft.com/software/merge-multiple-folders/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/merge-multiple-folders-portable.zip?v=2.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/merge-multiple-folders/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/merge-multiple-folders-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "version": "5.4",
+    "description": "Portable edition of Vovsoft AI Requester.",
+    "homepage": "https://vovsoft.com/software/ai-requester/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/ai-requester-portable.zip?v=5.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/ai-requester/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/ai-requester-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

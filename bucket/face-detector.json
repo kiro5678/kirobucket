@@ -1,0 +1,17 @@
+{
+    "version": "1.1",
+    "description": "Portable edition of Vovsoft Face Detector.",
+    "homepage": "https://vovsoft.com/software/face-detector/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/face-detector-portable.zip?v=1.1",
+    "checkver": {
+        "url": "https://vovsoft.com/software/face-detector/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/face-detector-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

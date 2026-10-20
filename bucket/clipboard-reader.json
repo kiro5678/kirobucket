@@ -1,0 +1,17 @@
+{
+    "version": "1.4",
+    "description": "Portable edition of Vovsoft Clipboard Reader.",
+    "homepage": "https://vovsoft.com/software/clipboard-reader/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/clipboard-reader-portable.zip?v=1.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/clipboard-reader/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/clipboard-reader-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

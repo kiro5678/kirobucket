@@ -1,0 +1,17 @@
+{
+    "version": "1.2",
+    "description": "Portable edition of Vovsoft Text to PDF Converter.",
+    "homepage": "https://vovsoft.com/software/text-to-pdf-converter/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/text-to-pdf-converter-portable.zip?v=1.2",
+    "checkver": {
+        "url": "https://vovsoft.com/software/text-to-pdf-converter/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/text-to-pdf-converter-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

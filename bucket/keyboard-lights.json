@@ -1,0 +1,17 @@
+{
+    "version": "5.4",
+    "description": "Portable edition of Vovsoft Keyboard Lights.",
+    "homepage": "https://vovsoft.com/software/keyboard-lights/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/keyboard-lights-portable.zip?v=5.4",
+    "checkver": {
+        "url": "https://vovsoft.com/software/keyboard-lights/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/keyboard-lights-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

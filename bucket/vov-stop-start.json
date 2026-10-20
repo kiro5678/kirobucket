@@ -1,0 +1,17 @@
+{
+    "version": "2.0",
+    "description": "Portable edition of Vovsoft Vov Stop Start.",
+    "homepage": "https://vovsoft.com/software/vov-stop-start/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/vov-stop-start-portable.zip?v=2.0",
+    "checkver": {
+        "url": "https://vovsoft.com/software/vov-stop-start/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/vov-stop-start-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

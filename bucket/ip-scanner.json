@@ -1,0 +1,17 @@
+{
+    "version": "1.1",
+    "description": "Portable edition of Vovsoft IP Scanner.",
+    "homepage": "https://vovsoft.com/software/ip-scanner/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/ip-scanner-portable.zip?v=1.1",
+    "checkver": {
+        "url": "https://vovsoft.com/software/ip-scanner/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/ip-scanner-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

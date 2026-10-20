@@ -1,0 +1,17 @@
+{
+    "version": "7.6",
+    "description": "Portable edition of Vovsoft Copy Files Into Multiple Folders.",
+    "homepage": "https://vovsoft.com/software/copy-files-into-multiple-folders/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/copy-files-into-multiple-folders-portable.zip?v=7.6",
+    "checkver": {
+        "url": "https://vovsoft.com/software/copy-files-into-multiple-folders/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/copy-files-into-multiple-folders-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

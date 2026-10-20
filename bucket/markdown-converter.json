@@ -1,0 +1,17 @@
+{
+    "version": "1.3",
+    "description": "Portable edition of Vovsoft Markdown Converter.",
+    "homepage": "https://vovsoft.com/software/markdown-converter/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/markdown-converter-portable.zip?v=1.3",
+    "checkver": {
+        "url": "https://vovsoft.com/software/markdown-converter/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/markdown-converter-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}

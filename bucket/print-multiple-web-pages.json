@@ -1,0 +1,17 @@
+{
+    "version": "2.8",
+    "description": "Portable edition of Vovsoft Print Multiple Web Pages.",
+    "homepage": "https://vovsoft.com/software/print-multiple-web-pages/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/print-multiple-web-pages-portable.zip?v=2.8",
+    "checkver": {
+        "url": "https://vovsoft.com/software/print-multiple-web-pages/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/print-multiple-web-pages-portable.zip?v=$version"
+    },
+    "notes": [
+        "SHA-256 is not pinned yet. The archive contents and executable path still need validation."
+    ]
+}
