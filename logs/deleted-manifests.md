@@ -1,6 +1,6 @@
 # Deleted, Retired, Renamed, and Consolidated Manifests
 
-**Audit date:** 2026-10-20  
+**Audit date:** 2026-10-20
 **Source:** Git history and the current `master` bucket inventory.
 
 This document records manifest paths that were deleted, renamed, or consolidated. A deleted manifest does **not** automatically mean the application itself was removed from the bucket. The status below distinguishes retired entries from entries with a current replacement. Dates are taken from the relevant commits (UTC).
