@@ -35,6 +35,7 @@ Generated automatically from the manifests in the bucket directory.
 | [bulk-crap-uninstaller](bucket/bulk-crap-uninstaller.json) | File Management | 6.3.0 | 2026-09-29 | [Homepage](https://www.bcuninstaller.com/) | Bulk program uninstaller with advanced automation |
 | [butterfly](bucket/butterfly.json) | Notes & Knowledge | 2.6.1 | 2026-10-15 | [Homepage](https://github.com/LinwoodDev/Butterfly) | A powerful, minimalistic, cross-platform note-taking app |
 | [butterfly-nightly](bucket/butterfly-nightly.json) | Notes & Knowledge | 2026.10.08.1622 | 2026-10-13 | [Homepage](https://github.com/LinwoodDev/Butterfly) | A powerful, minimalistic, cross-platform note-taking app (nightly build) |
+| [c-cleaner-plus](bucket/c-cleaner-plus.json) | Other Utilities | 0.8.0 | 2026-10-21 | [Homepage](https://github.com/Kiowx/c_cleaner_plus) | Windows cleanup utility with large-file scanning, advanced cleanup, forced uninstall, and scheduled tasks. |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
 | [cedro-modern-dock](bucket/cedro-modern-dock.json) | Windows Customization | 1.2.0 | 2026-10-13 | [Homepage](https://github.com/Cedro-Software/cedro-modern-dock) | Modern application dock for Windows. |
 | [chocolateygui](bucket/chocolateygui.json) | Package Management | 3.3.0 | 2026-09-29 | [Homepage](https://github.com/chocolatey/ChocolateyGUI) | Graphical user interface for Chocolatey. |

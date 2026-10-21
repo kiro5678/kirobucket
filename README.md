@@ -40,6 +40,7 @@ This table is generated automatically from the manifests currently available in 
 | --- | --- | --- | --- | --- | --- |
 | [air-server-np](bucket/air-server-np.json) | Other Utilities | 5.7.2 | 2026-10-21 | [Homepage](https://www.airserver.com) | AirServer is the most advanced screen mirroring receiver for Mac and PC. |
 | [backup-start-menu-layout](bucket/backup-start-menu-layout.json) | Other Utilities | 1.6 | 2026-10-21 | [Homepage](https://www.sordum.org/backup-start-menu-layout) | A simple app that allows users to backup and restore their StartMenu layout. |
+| [c-cleaner-plus](bucket/c-cleaner-plus.json) | Other Utilities | 0.8.0 | 2026-10-21 | [Homepage](https://github.com/Kiowx/c_cleaner_plus) | Windows cleanup utility with large-file scanning, advanced cleanup, forced uninstall, and scheduled tasks. |
 | [ctrtool](bucket/ctrtool.json) | Other Utilities | 1.3.0 | 2026-10-21 | [Homepage](https://github.com/3DSGuy/Project_CTR) | General purpose reading/extraction tool for Nintendo 3DS file formats. |
 | [deskdrop](bucket/deskdrop.json) | Clipboard & Text | 1.3.3 | 2026-10-21 | [Homepage](https://github.com/ChinmayyK/Link-All) | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. |
 | [dgreadiness](bucket/dgreadiness.json) | Other Utilities | 3.6 | 2026-10-21 | [Homepage](https://www.microsoft.com/en-us/download/details.aspx?id=53337) | Device Guard and Credential Guard hardware readiness tool |
