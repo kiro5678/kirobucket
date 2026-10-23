@@ -541,4 +541,5 @@ Generated automatically from the manifests in the bucket directory.
 | [winhance](bucket/winhance.json) | Windows Privacy & Tweaks | 26.06.12 | 2026-09-29 | [Homepage](https://github.com/memstechtips/Winhance) | Windows enhancement, debloating, optimization and customization utility |
 | [winscript](bucket/winscript.json) | Windows Privacy & Tweaks | 2.27.1 | 2026-10-11 | [Homepage](https://winscript.cc/) | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. |
 | [winzenith](bucket/winzenith.json) | Windows Privacy & Tweaks | 1.3.5 | 2026-10-10 | [Homepage](https://winzenith.github.io/) | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. |
+| [patchlight](bucket/patchlight.json) | Windows Update & Management | 0.5.2 | 2026-10-23 | [Homepage](https://github.com/G4SBO/PatchLight) | Windows 11 update monitor that checks pending updates against Microsoft's known issues and pauses affected updates. |
 
