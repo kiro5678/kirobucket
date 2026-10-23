@@ -6,6 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [keyboardsounds](bucket/keyboardsounds.json) | Keyboard & Language | 2.4.3 | 2026-10-24 | [Homepage](https://keyboardsounds.net/) | Desktop app that plays customizable mechanical keyboard and mouse sounds, with sound profiles and per-application rules. |
 | [keyboardsounds-pro](bucket/keyboardsounds-pro.json) | Keyboard & Language | 0.3.2 | 2026-10-24 | [Homepage](https://keyboardsounds.pro/) | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. |
 | [mechvibes](bucket/mechvibes.json) | Keyboard & Language | 2.3.4 | 2026-10-24 | [Homepage](https://mechvibes.com) | Play mechanical keyboard sounds as you type, with customizable sound packs. |
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
