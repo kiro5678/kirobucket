@@ -123,7 +123,6 @@ Generated automatically from the manifests in the bucket directory.
 | [fluent-sensors](bucket/fluent-sensors.json) | System Monitoring & Hardware | 1.7.0 | 2026-10-06 | [Homepage](https://github.com/cechout/fluent-sensors) | Native Windows hardware monitoring app. |
 | [fluentcleaner](bucket/fluentcleaner.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Windows privacy cleaner and system cleanup utility. |
 | [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-10-13 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
-| [fluentstore](bucket/fluentstore.json) | Package Management | 0.4.0-beta | 2026-10-20 | [Homepage](https://github.com/yoshiask/FluentStore) | Unifying frontend for Windows app stores and package managers. |
 | [fluenttweaker](bucket/fluenttweaker.json) | Windows Privacy & Tweaks | 26.06.02 | 2026-10-20 | [Homepage](https://github.com/builtbybel/FluentTweaker) | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. |
 | [flycast](bucket/flycast.json) | Emulators & Compatibility | 2.7 | 2026-09-29 | [Homepage](https://github.com/flyinghead/flycast) | Multiplatform Sega Dreamcast, Naomi, Naomi 2 and Atomiswave emulator. |
 | [flyoobe](bucket/flyoobe.json) | Windows Privacy & Tweaks | 3.03.100 | 2026-09-29 | [Homepage](https://github.com/builtbybel/Flyoobe) | Windows setup, customization, debloating, and system management utility. |
@@ -174,7 +173,7 @@ Generated automatically from the manifests in the bucket directory.
 | [lynxoptimizer](bucket/lynxoptimizer.json) | Windows Privacy & Tweaks | 0.216.2 | 2026-10-20 | [Homepage](https://github.com/caxzy/LynxOptimizer) | Windows system optimization utility. |
 | [makerom](bucket/makerom.json) | Other Utilities | 0.19.0 | 2026-10-21 | [Homepage](https://github.com/3DSGuy/Project_CTR) | A CLI tool to create CTR (Nintendo 3DS) ROM images. |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.2.0 | 2026-10-20 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
-| [markra](bucket/markra.json) | Notes & Knowledge | 2.13.1 | 2026-10-20 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
+| [markra](bucket/markra.json) | Notes & Knowledge | 2.14.0 | 2026-10-23 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Productivity & Launchers | 6719 | 2026-10-12 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.6 | 2026-10-11 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
@@ -247,7 +246,7 @@ Generated automatically from the manifests in the bucket directory.
 | [pyinstxtractor-ng](bucket/pyinstxtractor-ng.json) | Other Utilities | 2026.07.03 | 2026-10-21 | [Homepage](https://github.com/pyinstxtractor/pyinstxtractor-ng) | pyinstxtractor-ng is a tool to extract the contents of a Pyinstaller generated executable file. |
 | [qbittorrent](bucket/qbittorrent.json) | Download Managers | 5.3.0 | 2026-10-20 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). |
 | [qbittorrent-lt20](bucket/qbittorrent-lt20.json) | Download Managers | 5.2.4 | 2026-09-29 | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). |
-| [qq-pet](bucket/qq-pet.json) | Other Utilities | 0.7.3 | 2026-10-22 | [Homepage](https://pet.ankio.net/) | QQ 宠物跨平台复刻，基于 Arctic Penguin T800 逆向重建。 |
+| [qq-pet](bucket/qq-pet.json) | Other Utilities | 0.7.4 | 2026-10-23 | [Homepage](https://pet.ankio.net/) | QQ 宠物跨平台复刻，基于 Arctic Penguin T800 逆向重建。 |
 | [quanto-flx](bucket/quanto-flx.json) | Other Utilities | 2.00.1110 | 2026-10-21 | [Homepage](https://github.com/stevehsudrawing/quantoflx) | A desktop customization tool based on Rainmeter |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.3.0 | 2026-10-17 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
 | [quickpanel](bucket/quickpanel.json) | Productivity & Launchers | 1.0.12 | 2026-09-29 | [Homepage](https://github.com/lucasgiusiano/QuickPanel) | A floating Windows panel for launching web apps in native WebView2 windows. |
@@ -299,7 +298,7 @@ Generated automatically from the manifests in the bucket directory.
 | [sukut](bucket/sukut.json) | Other Utilities | 0.2.33 | 2026-10-23 | [Homepage](https://github.com/altarafiya/Sukut) | Windows x64 audio utility that filters music from app audio to focus on speech. |
 | [super-productivity](bucket/super-productivity.json) | Productivity & Launchers | 19.2.0 | 2026-10-11 | [Homepage](https://github.com/super-productivity/super-productivity) | A task management and time tracking application for personal productivity. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.7 | 2026-10-21 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
-| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.79 | 2026-10-22 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.82 | 2026-10-23 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [systeminformer](bucket/systeminformer.json) | System Monitoring & Hardware | 4.0.26241.138 | 2026-09-29 | [Homepage](https://systeminformer.com/) | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. |
 | [tabame](bucket/tabame.json) | Productivity & Launchers | 2.2.0 | 2026-10-21 | [Homepage](https://github.com/Far-Se/tabame) | Windows taskbar replacement with a launcher, QuickMenu, and plugins. |
 | [tagstudio](bucket/tagstudio.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
