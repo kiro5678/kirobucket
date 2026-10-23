@@ -164,6 +164,7 @@ jobs:
               "keyboardsounds" = "Keyboard & Language"
               "keyboardsounds-pro" = "Keyboard & Language"
               "mechvibes" = "Keyboard & Language"
+              "monkeysounds" = "Keyboard & Language"
               "komorebi" = "Windows Customization"
               "komorebi-nightly" = "Windows Customization"
               "kudu" = "Windows Privacy & Tweaks"
