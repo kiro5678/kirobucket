@@ -1,6 +1,6 @@
 {
     "version": "3.12.0",
-    "description": "The official desktop app for Endstate, for restoring apps and settings from a portable file.",
+    "description": "Endstate desktop app payload extracted without running the setup installer.",
     "homepage": "https://github.com/Artexis10/endstate-gui",
     "license": "Apache-2.0",
     "architecture": {
