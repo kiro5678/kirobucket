@@ -162,6 +162,7 @@ jobs:
               "imfile" = "Download Managers"
               "keyboard-language-fix" = "Keyboard & Language"
               "keyboardsounds-pro" = "Keyboard & Language"
+              "mechvibes" = "Keyboard & Language"
               "komorebi" = "Windows Customization"
               "komorebi-nightly" = "Windows Customization"
               "kudu" = "Windows Privacy & Tweaks"
