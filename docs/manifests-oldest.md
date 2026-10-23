@@ -543,4 +543,5 @@ Generated automatically from the manifests in the bucket directory.
 | [veracrypt](bucket/veracrypt.json) | Security | 1.26.29 | 2026-10-23 | [Homepage](https://veracrypt.io/) | Open-source disk encryption software for creating and mounting encrypted volumes. |
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 2.0.1 | 2026-10-23 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [keyboardsounds-pro](bucket/keyboardsounds-pro.json) | Keyboard & Language | 0.3.2 | 2026-10-24 | [Homepage](https://keyboardsounds.pro/) | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. |
+| [mechvibes](bucket/mechvibes.json) | Keyboard & Language | 2.3.4 | 2026-10-24 | [Homepage](https://mechvibes.com) | Play mechanical keyboard sounds as you type, with customizable sound packs. |
 

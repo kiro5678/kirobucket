@@ -7,6 +7,7 @@ Generated automatically from the manifests in the bucket directory.
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [keyboardsounds-pro](bucket/keyboardsounds-pro.json) | Keyboard & Language | 0.3.2 | 2026-10-24 | [Homepage](https://keyboardsounds.pro/) | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. |
+| [mechvibes](bucket/mechvibes.json) | Keyboard & Language | 2.3.4 | 2026-10-24 | [Homepage](https://mechvibes.com) | Play mechanical keyboard sounds as you type, with customizable sound packs. |
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
 | [desktoptools](bucket/desktoptools.json) | Productivity & Launchers | 1.2.9 | 2026-10-23 | [Homepage](https://github.com/vg2222/DesktopTools) | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. |
 | [drift](bucket/drift.json) | Media & Audio/Video | 0.8.0 | 2026-10-23 | [Homepage](https://github.com/CutWire-Studios/Drift) | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). |
