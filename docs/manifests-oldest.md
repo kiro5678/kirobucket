@@ -535,6 +535,7 @@ Generated automatically from the manifests in the bucket directory.
 | [drift](bucket/drift.json) | Media & Audio/Video | 0.8.0 | 2026-10-23 | [Homepage](https://github.com/CutWire-Studios/Drift) | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). |
 | [endstate](bucket/endstate.json) | Other Utilities | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
 | [filee](bucket/filee.json) | File Management | 2.0.0 | 2026-10-23 | [Homepage](https://github.com/KnifeLemon/Filee) | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. |
+| [fluentstore](bucket/fluentstore.json) | Package Management | 0.4.0-beta | 2026-10-23 | [Homepage](https://github.com/yoshiask/FluentStore) | Beta frontend for Windows app stores and package managers, including Microsoft Store, WinGet, and Chocolatey. |
 | [markra](bucket/markra.json) | Notes & Knowledge | 2.14.0 | 2026-10-23 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
 | [qq-pet](bucket/qq-pet.json) | Other Utilities | 0.7.4 | 2026-10-23 | [Homepage](https://pet.ankio.net/) | QQ 宠物跨平台复刻，基于 Arctic Penguin T800 逆向重建。 |
 | [sukut](bucket/sukut.json) | Other Utilities | 0.2.33 | 2026-10-23 | [Homepage](https://github.com/altarafiya/Sukut) | Windows x64 audio utility that filters music from app audio to focus on speech. |

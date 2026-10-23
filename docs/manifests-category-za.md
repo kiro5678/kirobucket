@@ -132,6 +132,7 @@ Generated automatically from the manifests in the bucket directory.
 | [smol](bucket/smol.json) | PDF & Documents | 1.0.0 | 2026-09-29 | [Homepage](https://github.com/Metwalley/Smol) | Fast native Windows desktop app for compressing videos, audio, images, and PDFs. |
 | [0install-win](bucket/0install-win.json) | Package Management | 2.29.3 | 2026-09-29 | [Homepage](https://0install.net/) | Decentralized software installation system for Windows with a GUI and OS integrations. |
 | [chocolateygui](bucket/chocolateygui.json) | Package Management | 3.3.0 | 2026-09-29 | [Homepage](https://github.com/chocolatey/ChocolateyGUI) | Graphical user interface for Chocolatey. |
+| [fluentstore](bucket/fluentstore.json) | Package Management | 0.4.0-beta | 2026-10-23 | [Homepage](https://github.com/yoshiask/FluentStore) | Beta frontend for Windows app stores and package managers, including Microsoft Store, WinGet, and Chocolatey. |
 | [komi-store](bucket/komi-store.json) | Package Management | 1.9.3 | 2026-10-22 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [local-desktop-store](bucket/local-desktop-store.json) | Package Management | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) | Private GitHub-based desktop application store and installer |
 | [rscoop](bucket/rscoop.json) | Package Management | 1.11.0 | 2026-09-30 | [Homepage](https://github.com/AmarBego/Rscoop) | A graphical user interface for Scoop package manager |
