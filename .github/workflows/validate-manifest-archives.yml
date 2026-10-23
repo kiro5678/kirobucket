@@ -367,6 +367,59 @@ jobs:
                     continue
                   }
 
+                  # MSI files are not ordinary archives: 7-Zip shows internal File table IDs,
+                  # not their installed names or directory layout. Mirror Scoop's MSI extraction
+                  # mode (msiexec /a) into a disposable runner directory, without registering or
+                  # installing the product, then validate the actual extracted paths.
+                  if ($pathPart.EndsWith('.msi')) {
+                    $msiExtractRoot = Join-Path $env:RUNNER_TEMP "manifest-msi-$downloadCounter"
+                    $msiTargetRoot = Join-Path $msiExtractRoot 'SourceDir'
+                    New-Item -ItemType Directory -Path $msiExtractRoot -Force | Out-Null
+
+                    $msiOutput = @(& msiexec.exe /a $archivePath /qn "TARGETDIR=$msiTargetRoot" 2>&1)
+                    $msiExitCode = $LASTEXITCODE
+                    if ($msiExitCode -notin @(0, 3010)) {
+                      $msiDetails = ($msiOutput | Select-Object -Last 8) -join ' '
+                      throw "$relativePath ($($archConfig.Name)): MSI administrative extraction failed with exit code $msiExitCode. $msiDetails"
+                    }
+
+                    if (-not (Test-Path -LiteralPath $msiTargetRoot -PathType Container)) {
+                      throw "$relativePath ($($archConfig.Name)): MSI extraction did not create TARGETDIR '$msiTargetRoot'."
+                    }
+
+                    $msiFiles = @(Get-ChildItem -LiteralPath $msiTargetRoot -File -Recurse -ErrorAction Stop)
+                    if ($msiFiles.Count -eq 0) {
+                      throw "$relativePath ($($archConfig.Name)): MSI administrative extraction completed but produced no files."
+                    }
+
+                    $msiRelativePaths = @($msiFiles | ForEach-Object {
+                      [System.IO.Path]::GetRelativePath($msiTargetRoot, $_.FullName).Replace('\', '/')
+                    })
+
+                    if (-not [string]::IsNullOrWhiteSpace($extractDir)) {
+                      $prefix = ConvertTo-ArchivePath $extractDir
+                      $prefixWithSlash = "$prefix/"
+                      $matchingPaths = @($msiRelativePaths | Where-Object {
+                        $_.StartsWith($prefixWithSlash, [System.StringComparison]::OrdinalIgnoreCase)
+                      })
+                      if ($matchingPaths.Count -eq 0) {
+                        $sample = ($msiRelativePaths | Select-Object -First 20) -join ', '
+                        throw "$relativePath ($($archConfig.Name)): extract_dir '$extractDir' does not exist in the actual MSI extraction. First extracted paths: $sample"
+                      }
+                      $archiveFiles += @($matchingPaths | ForEach-Object { $_.Substring($prefixWithSlash.Length) })
+                      Write-Host "$relativePath ($($archConfig.Name)): MSI extract_dir '$extractDir' exists in the extracted files."
+                    } else {
+                      $archiveFiles += $msiRelativePaths
+                    }
+
+                    Write-Host "$relativePath ($($archConfig.Name)): MSI administrative extraction produced $($msiFiles.Count) file(s)."
+                    $inspectableArchives++
+                    $archiveOrdinal++
+                    Remove-Item -LiteralPath $msiExtractRoot -Recurse -Force -ErrorAction SilentlyContinue
+                    Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
+                    continue
+                  }
+
                   $listing = & $sevenZipPath l -slt $archivePath 2>&1
                   if ($LASTEXITCODE -ne 0) {
                     throw "$relativePath ($($archConfig.Name)): the asset could not be listed as an archive. URL: $downloadUrl"
