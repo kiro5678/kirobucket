@@ -537,4 +537,5 @@ Generated automatically from the manifests in the bucket directory.
 | [ublockdnsclient](bucket/ublockdnsclient.json) | Network & DNS | 0.3.4 | 2026-10-22 | [Homepage](https://github.com/ugzv/ublockdnsclient) | Cross-platform system DNS client for uBlockDNS with device-wide ad and tracker blocking. |
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
 | [endstate](bucket/endstate.json) | Other Utilities | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
+| [sukut](bucket/sukut.json) | Other Utilities | 0.2.33 | 2026-10-23 | [Homepage](https://github.com/altarafiya/Sukut) | Windows audio utility that filters music from app audio to focus on speech. |
 
