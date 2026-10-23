@@ -1,0 +1,32 @@
+{
+    "version": "2.0.0",
+    "description": "Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats.",
+    "homepage": "https://github.com/KnifeLemon/Filee",
+    "license": "MIT",
+    "url": "https://github.com/KnifeLemon/Filee/releases/download/v2.0.0/Filee-2.0.0-win-Portable.zip",
+    "hash": "6f46d1f584143d2fc3fcfec69698e3859befba5b1d51aea412315bb0f562720e",
+    "bin": [
+        "Filee.exe",
+        [
+            "cli\\filee.cmd",
+            "filee"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "Filee.exe",
+            "Filee"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/KnifeLemon/Filee",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/KnifeLemon/Filee/releases/download/v$version/Filee-$version-win-Portable.zip"
+    },
+    "notes": [
+        "Uses the official Windows portable ZIP; the setup installer is not executed. This does not add Filee's Explorer menu, file associations, startup integration, or a system-wide PATH entry.",
+        "By default, settings are stored under %APPDATA%\\Filee and downloaded optional conversion engines under %LOCALAPPDATA%\\Filee\\engines. These locations are outside the Scoop app directory and are not moved to D: automatically."
+    ]
+}
