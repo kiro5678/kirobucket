@@ -264,7 +264,8 @@ jobs:
                   }
 
                   $pathPart = $uri.AbsolutePath.ToLowerInvariant()
-                  $looksLikeArchive = $pathPart -match '\.(zip|7z|rar|cab|tar|tgz|txz|tbz2|msi|nupkg|whl|jar|war|vsix|xpi|apk)$' -or $pathPart -match '\.tar\.(gz|xz|bz2)$'
+                  $isForced7zip = $uri.Fragment -match '(?i)^#/dl\.7z$'
+                  $looksLikeArchive = $isForced7zip -or ($pathPart -match '\.(zip|7z|rar|cab|tar|tgz|txz|tbz2|msi|nupkg|whl|jar|war|vsix|xpi|apk)$') -or ($pathPart -match '\.tar\.(gz|xz|bz2)$')
                   $extractDir = ''
                   if ($extractDirs.Count -eq 1) {
                     $extractDir = $extractDirs[0]
@@ -282,6 +283,9 @@ jobs:
                   }
 
                   $extension = [System.IO.Path]::GetExtension($uri.AbsolutePath)
+                  if ($isForced7zip) {
+                    $extension = '.7z'
+                  }
                   if ([string]::IsNullOrWhiteSpace($extension) -or $extension -notmatch '^\.[a-z0-9]{1,8}$') {
                     $extension = '.archive'
                   }
