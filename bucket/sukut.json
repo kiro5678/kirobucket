@@ -1,6 +1,6 @@
 {
     "version": "0.2.33",
-    "description": "Windows audio utility that filters music from app audio to focus on speech.",
+    "description": "Windows x64 audio utility that filters music from app audio to focus on speech.",
     "homepage": "https://github.com/altarafiya/Sukut",
     "license": {
         "identifier": "Proprietary",
