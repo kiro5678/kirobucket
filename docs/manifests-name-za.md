@@ -370,6 +370,7 @@ Generated automatically from the manifests in the bucket directory.
 | [motrix-next](bucket/motrix-next.json) | Download Managers | 3.9.9 | 2026-10-21 | [Homepage](https://github.com/AnInsomniacy/rayburst) | Legacy Motrix Next 3.x download manager for HTTP, FTP, BitTorrent and Magnet links. |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.0 | 2026-10-23 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
 | [MORT](bucket/MORT.json) | Translation & OCR | 1.320 | 2026-10-13 | [Homepage](https://github.com/kmonkeyhead/MORT) | Real-time game translator with OCR and machine translation. |
+| [monkeysounds](bucket/monkeysounds.json) | Keyboard & Language | 1.0.0.0 | 2026-10-24 | [Homepage](https://github.com/NSTechBytes/MonkeySounds) | Portable Windows app that plays mechanical keyboard and mouse click sounds system-wide, with built-in and custom sound profiles. |
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.6 | 2026-10-11 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Productivity & Launchers | 6719 | 2026-10-12 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
