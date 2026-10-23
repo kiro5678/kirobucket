@@ -5,8 +5,8 @@
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Artexis10/endstate-gui/releases/download/gui-v3.12.0/Endstate_3.12.0_x64_en-US.msi",
-            "hash": "e07d84c58b9c4063ce35c0dff4246470cc17bde7d145891c1f824f35a7524bf0"
+            "url": "https://github.com/Artexis10/endstate-gui/releases/download/gui-v3.12.0/Endstate_3.12.0_x64-setup.exe#/dl.7z",
+            "hash": "9574b4b770d88b13ea21cb8b5b44f7dc0617d32a50612a912c90a17af8835868"
         }
     },
     "bin": "Endstate.exe",
@@ -23,13 +23,12 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/Artexis10/endstate-gui/releases/download/gui-v$version/Endstate_$version_x64_en-US.msi"
+                "url": "https://github.com/Artexis10/endstate-gui/releases/download/gui-v$version/Endstate_$version_x64-setup.exe#/dl.7z"
             }
         }
     },
-    "extract_dir": "Program Files/Endstate",
     "notes": [
-        "Scoop extracts the MSI payload without running the product installer.",
+        "The NSIS setup payload is extracted with 7-Zip; the setup program is not executed.",
         "Installer-managed registry entries, file associations, and protocol registrations are not created."
     ]
 }
