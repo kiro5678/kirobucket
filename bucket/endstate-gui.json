@@ -27,5 +27,9 @@
             }
         }
     },
-    "extract_dir": "Program Files/Endstate"
+    "extract_dir": "Program Files/Endstate",
+    "notes": [
+        "Scoop extracts the MSI payload without running the product installer.",
+        "Installer-managed registry entries, file associations, and protocol registrations are not created."
+    ]
 }
