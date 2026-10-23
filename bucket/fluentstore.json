@@ -7,6 +7,7 @@
         "64bit": {
             "url": "https://github.com/yoshiask/FluentStore/releases/download/v0.4.0-beta/FluentStoreBeta_Installer_x64.exe",
             "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+            "extract_dir": "__hash-probe__",
             "installer": {
                 "file": "FluentStoreBeta_Installer_x64.exe"
             },
