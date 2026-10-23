@@ -263,7 +263,6 @@ Generated automatically from the manifests in the bucket directory.
 | [cooldesk](bucket/cooldesk.json) | Windows Customization | 2.0.16 | 2026-10-20 | [Homepage](https://github.com/abhayraghuwanshi/cooldesk-extension) | Desktop organization tool with customizable boxes, dock, workspaces, and application management. |
 | [cooldesk-msi](bucket/cooldesk-msi.json) | Windows Customization | 2.0.16 | 2026-10-20 | [Homepage](https://github.com/abhayraghuwanshi/cooldesk-extension) | Desktop organization tool with customizable boxes, dock, workspaces, and application management. |
 | [ds4windows](bucket/ds4windows.json) | Games & Game Utilities | 4.0.2.3 | 2026-10-20 | [Homepage](https://github.com/hbashton/DS4Windows) | DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable) |
-| [endstate-gui](bucket/endstate-gui.json) | Sync & Backup | 3.12.0 | 2026-10-20 | [Homepage](https://github.com/Artexis10/endstate-gui) | The official desktop app for Endstate, for restoring apps and settings from a portable file. |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.5.0 | 2026-10-20 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
 | [flow](bucket/flow.json) | Productivity & Launchers | 0.7.0 | 2026-10-20 | [Homepage](https://github.com/LinwoodDev/Flow) | Open-source event, calendar, and time management app for Windows. |
 | [fluentstore](bucket/fluentstore.json) | Package Management | 0.4.0-beta | 2026-10-20 | [Homepage](https://github.com/yoshiask/FluentStore) | Unifying frontend for Windows app stores and package managers. |
@@ -537,4 +536,5 @@ Generated automatically from the manifests in the bucket directory.
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.79 | 2026-10-22 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
 | [ublockdnsclient](bucket/ublockdnsclient.json) | Network & DNS | 0.3.4 | 2026-10-22 | [Homepage](https://github.com/ugzv/ublockdnsclient) | Cross-platform system DNS client for uBlockDNS with device-wide ad and tracker blocking. |
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
+| [endstate-gui](bucket/endstate-gui.json) | Sync & Backup | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | The official desktop app for Endstate, for restoring apps and settings from a portable file. |
 
