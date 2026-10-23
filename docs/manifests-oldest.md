@@ -538,5 +538,6 @@ Generated automatically from the manifests in the bucket directory.
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
 | [drift](bucket/drift.json) | Media & Audio/Video | 0.8.0 | 2026-10-23 | [Homepage](https://github.com/CutWire-Studios/Drift) | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). |
 | [endstate](bucket/endstate.json) | Other Utilities | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
+| [filee](bucket/filee.json) | Other Utilities | 2.0.0 | 2026-10-23 | [Homepage](https://github.com/KnifeLemon/Filee) | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. |
 | [sukut](bucket/sukut.json) | Other Utilities | 0.2.33 | 2026-10-23 | [Homepage](https://github.com/altarafiya/Sukut) | Windows x64 audio utility that filters music from app audio to focus on speech. |
 
