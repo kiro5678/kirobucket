@@ -15,6 +15,7 @@ Generated automatically from the manifests in the bucket directory.
 | [qq-pet](bucket/qq-pet.json) | Other Utilities | 0.7.4 | 2026-10-23 | [Homepage](https://pet.ankio.net/) | QQ 宠物跨平台复刻，基于 Arctic Penguin T800 逆向重建。 |
 | [sukut](bucket/sukut.json) | Other Utilities | 0.2.33 | 2026-10-23 | [Homepage](https://github.com/altarafiya/Sukut) | Windows x64 audio utility that filters music from app audio to focus on speech. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.130.82 | 2026-10-23 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [veracrypt](bucket/veracrypt.json) | Other Utilities | 1.26.29 | 2026-10-23 | [Homepage](https://veracrypt.io/) | Open-source disk encryption software for creating and mounting encrypted volumes. |
 | [freetoken-desktop.beta](bucket/freetoken-desktop.beta.json) | Other Utilities | 0.2.0-beta.24 | 2026-10-22 | [Homepage](https://www.flashml.ai) | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. |
 | [komi-store](bucket/komi-store.json) | Package Management | 1.9.3 | 2026-10-22 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [powershell-np](bucket/powershell-np.json) | Other Utilities | 7.6.8 | 2026-10-22 | [Homepage](https://github.com/PowerShell/PowerShell) | PowerShell Core, the cross-platform task automation and configuration management framework/tool. |

@@ -336,6 +336,7 @@ Generated automatically from the manifests in the bucket directory.
 | [varia](bucket/varia.json) | Download Managers | 2026.8.5-1 | 2026-09-30 | [Homepage](https://github.com/giantpinkrobots/varia) | Download manager for files, torrents and videos. |
 | [vcardix](bucket/vcardix.json) | File Management | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vcardix) | Contact manager and converter for vCard, CSV, and JSON files. |
 | [ventic](bucket/ventic.json) | Media & Audio/Video | 0.5.0 | 2026-09-29 | [Homepage](https://github.com/ventic/ventic) | A media library and BitTorrent player for the desktop and Android TV. |
+| [veracrypt](bucket/veracrypt.json) | Other Utilities | 1.26.29 | 2026-10-23 | [Homepage](https://veracrypt.io/) | Open-source disk encryption software for creating and mounting encrypted volumes. |
 | [video2x](bucket/video2x.json) | Other Utilities | 6.4.0 | 2026-10-21 | [Homepage](https://github.com/k4yt3x/video2x) | A Machine learning-based lossless video super resolution framework |
 | [vimera](bucket/vimera.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
 | [viola](bucket/viola.json) | Other Utilities | 0.2.10 | 2026-09-29 | [Homepage](https://github.com/nmcmil/Viola-Downloads) | Native desktop web browser. |

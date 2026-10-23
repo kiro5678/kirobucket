@@ -200,6 +200,7 @@ Generated automatically from the manifests in the bucket directory.
 | [uefitool](bucket/uefitool.json) | Other Utilities | A75 | 2026-10-21 | [Homepage](https://github.com/LongSoft/UEFITool) | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. |
 | [uesave](bucket/uesave.json) | Other Utilities | 0.7.1 | 2026-10-21 | [Homepage](https://github.com/trumank/uesave-rs) | A library for reading and writing Unreal Engine save files |
 | [ultraiso.cns](bucket/ultraiso.cns.json) | Other Utilities | 9.7.6.3860 | 2026-10-21 | [Homepage](https://www.ezbsystems.com/ultraiso/) | CD/DVD image file editing tool |
+| [veracrypt](bucket/veracrypt.json) | Other Utilities | 1.26.29 | 2026-10-23 | [Homepage](https://veracrypt.io/) | Open-source disk encryption software for creating and mounting encrypted volumes. |
 | [video2x](bucket/video2x.json) | Other Utilities | 6.4.0 | 2026-10-21 | [Homepage](https://github.com/k4yt3x/video2x) | A Machine learning-based lossless video super resolution framework |
 | [viola](bucket/viola.json) | Other Utilities | 0.2.10 | 2026-09-29 | [Homepage](https://github.com/nmcmil/Viola-Downloads) | Native desktop web browser. |
 | [virustotal-context-menu](bucket/virustotal-context-menu.json) | Other Utilities | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/Genbox/VirusTotalContextMenu) | Portable Windows context-menu utility for scanning files with VirusTotal |
