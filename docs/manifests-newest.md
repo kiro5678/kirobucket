@@ -7,7 +7,7 @@ Generated automatically from the manifests in the bucket directory.
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
-| [endstate-gui](bucket/endstate-gui.json) | Sync & Backup | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
+| [endstate](bucket/endstate.json) | Other Utilities | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
 | [freetoken-desktop.beta](bucket/freetoken-desktop.beta.json) | Other Utilities | 0.2.0-beta.24 | 2026-10-22 | [Homepage](https://www.flashml.ai) | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. |
 | [komi-store](bucket/komi-store.json) | Package Management | 1.9.3 | 2026-10-22 | [Homepage](https://github.com/komi-store/komi-store) | Cross-platform app store for GitHub releases. |
 | [powershell-np](bucket/powershell-np.json) | Other Utilities | 7.6.8 | 2026-10-22 | [Homepage](https://github.com/PowerShell/PowerShell) | PowerShell Core, the cross-platform task automation and configuration management framework/tool. |

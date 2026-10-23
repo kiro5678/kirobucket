@@ -106,7 +106,7 @@ Generated automatically from the manifests in the bucket directory.
 | [encryphix](bucket/encryphix.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/encryphix) | AES-256 file and folder encryption utility for Windows. |
 | [endfield-gacha](bucket/endfield-gacha.json) | Other Utilities | 0.7.1 | 2026-10-21 | [Homepage](https://github.com/bhaoo/endfield-gacha) | 一个《明日方舟：终末地》寻访记录统计与分析工具 |
 | [endfield-logs](bucket/endfield-logs.json) | Other Utilities | 1.2.1 | 2026-10-21 | [Homepage](https://github.com/deepdarkssj/ZMDLogs) | "Arknights: Endfield" combat analysis tool based on NpCup packet capture analysis |
-| [endstate-gui](bucket/endstate-gui.json) | Sync & Backup | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
+| [endstate](bucket/endstate.json) | Other Utilities | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
 | [everything-cmdpal](bucket/everything-cmdpal.json) | File Management | 0.9.26030.0 | 2026-09-29 | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) | Everything search extension for PowerToys Command Palette |
 | [fancywm](bucket/fancywm.json) | Windows Customization | 2.19.0 | 2026-09-29 | [Homepage](https://github.com/FancyWM/fancywm) | Windows tiling window manager designed for power users. |
 | [fancywm-msix-cert](bucket/fancywm-msix-cert.json) | Windows Customization | 2.19.0 | 2026-09-29 | [Homepage](https://github.com/FancyWM/fancywm) | FancyWM MSIX signing certificate (download only; for MSIX installation). |

@@ -177,6 +177,7 @@ Generated automatically from the manifests in the bucket directory.
 | [easylpac](bucket/easylpac.json) | Other Utilities | 0.8.1.1 | 2026-10-21 | [Homepage](https://github.com/creamlike1024/EasyLPAC) | lpac GUI Frontend |
 | [endfield-gacha](bucket/endfield-gacha.json) | Other Utilities | 0.7.1 | 2026-10-21 | [Homepage](https://github.com/bhaoo/endfield-gacha) | 一个《明日方舟：终末地》寻访记录统计与分析工具 |
 | [endfield-logs](bucket/endfield-logs.json) | Other Utilities | 1.2.1 | 2026-10-21 | [Homepage](https://github.com/deepdarkssj/ZMDLogs) | "Arknights: Endfield" combat analysis tool based on NpCup packet capture analysis |
+| [endstate](bucket/endstate.json) | Other Utilities | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
 | [firelink](bucket/firelink.json) | Other Utilities | 1.5.0 | 2026-10-20 | [Homepage](https://github.com/nimbold/Firelink) | Firelink |
 | [freetoken-desktop.beta](bucket/freetoken-desktop.beta.json) | Other Utilities | 0.2.0-beta.24 | 2026-10-22 | [Homepage](https://www.flashml.ai) | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. |
 | [go-away-edge-installer](bucket/go-away-edge-installer.json) | Other Utilities | 2.0.3 | 2026-10-21 | [Homepage](https://github.com/valnoxy/GoAwayEdge) | GoAwayEdge is designed for those who, like me, aren’t fans of Microsoft Edge or Windows Copilot. |
@@ -443,7 +444,6 @@ Generated automatically from the manifests in the bucket directory.
 | [compactgui](bucket/compactgui.json) | Storage & Disk Tools | 4.0.0-beta.10 | 2026-09-29 | [Homepage](https://github.com/IridiumIO/CompactGUI) | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
 | [diskgeek](bucket/diskgeek.json) | Storage & Disk Tools | 1.1.1 | 2026-09-29 | [Homepage](https://github.com/techygeekshome/DiskGeek) | A free, self-contained disk space analyser for Windows. |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.2.0 | 2026-10-20 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
-| [endstate-gui](bucket/endstate-gui.json) | Sync & Backup | 3.12.0 | 2026-10-23 | [Homepage](https://github.com/Artexis10/endstate-gui) | Endstate desktop app payload extracted without running the setup installer. |
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.13. | 2026-10-16 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
 | [syncthing](bucket/syncthing.json) | Sync & Backup | 2.1.7 | 2026-10-21 | [Homepage](https://syncthing.net/) | Open Source Continuous File Synchronization. |
 | [clickmonitorddc](bucket/clickmonitorddc.json) | System Monitoring & Hardware | 7.2 | 2026-09-29 | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. |
