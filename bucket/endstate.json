@@ -9,10 +9,10 @@
             "hash": "9574b4b770d88b13ea21cb8b5b44f7dc0617d32a50612a912c90a17af8835868"
         }
     },
-    "bin": "Endstate.exe",
+    "bin": "endstate-gui.exe",
     "shortcuts": [
         [
-            "Endstate.exe",
+            "endstate-gui.exe",
             "Endstate"
         ]
     ],
