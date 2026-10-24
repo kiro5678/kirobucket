@@ -375,6 +375,7 @@ Generated automatically from the manifests in the bucket directory.
 | [minimal-firewall](bucket/minimal-firewall.json) | Windows Privacy & Tweaks | 2.8.6 | 2026-10-11 | [Homepage](https://github.com/deminimis/minimalfirewall) | A lightweight frontend for Windows Firewall. |
 | [meshnotes](bucket/meshnotes.json) | Notes & Knowledge | 0.4.1 | 2026-09-29 | [Homepage](https://github.com/meshnotes/meshnotes) | Open-source local-first note-taking application with LAN synchronization. |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Productivity & Launchers | 6719 | 2026-10-12 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
+| [mechvibes-dx](bucket/mechvibes-dx.json) | Keyboard & Language | 0.8.4 | 2026-10-24 | [Homepage](https://github.com/hainguyents13/mechvibes-dx) | Low-latency mechanical keyboard and mouse sound simulator with customizable soundpacks. |
 | [mechvibes](bucket/mechvibes.json) | Keyboard & Language | 2.3.4 | 2026-10-24 | [Homepage](https://mechvibes.com) | Play mechanical keyboard sounds as you type, with customizable sound packs. |
 | [markra](bucket/markra.json) | Notes & Knowledge | 2.14.0 | 2026-10-23 | [Homepage](https://github.com/markrahq/markra) | Cross-platform Markdown editor and workspace for local-first notes. |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.2.0 | 2026-10-20 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
