@@ -349,6 +349,6 @@ The repository CI remains responsible for validating manifest syntax and schema 
 
 ### UniGetUI global-data manifest
 - Renamed `bucket/unigetui.json` to `bucket/unigetuiglobal.json` to distinguish regular per-user data storage from the separate portable manifest.
-- Added a post-install migration that copies existing `Settings` contents from prior UniGetUI Scoop locations into `%LOCALAPPDATA%\UniGetUI` only when destination entries are absent; original source data is not deleted and existing per-user data is not overwritten.
+- Removed the post-install migration of existing `Settings` contents from prior UniGetUI Scoop locations; installation no longer copies legacy settings into `%LOCALAPPDATA%\UniGetUI`. The hook only removes `ForceUniGetUIPortable` so UniGetUI uses its normal per-user data directory.
 - Removed `ForceUniGetUIPortable` from the installed ZIP so UniGetUI uses its normal per-user data directory instead of storing active configuration and caches inside Scoop.
 - Kept `bucket/unigetui-portable.json` as the separate portable variant and updated the manifest category mapping and category documentation.
