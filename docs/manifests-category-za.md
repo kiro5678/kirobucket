@@ -425,7 +425,7 @@ Generated automatically from the manifests in the bucket directory.
 | [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.27 | 2026-10-23 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [ncspot](bucket/ncspot.json) | Media & Audio/Video | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [opennow](bucket/opennow.json) | Media & Audio/Video | 0.5.5 | 2026-09-29 | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) | An open-source GeForce NOW desktop client. |
-| [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.0.0 | 2026-10-03 | [Homepage](https://github.com/getopenscreen/openscreen) | Open source screen recording application for Windows. |
+| [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.1.2 | 2026-10-24 | [Homepage](https://getopenscreen.com/) | Open-source screen recording and video editing tool for creating polished demos. |
 | [quick-audio-recorder](bucket/quick-audio-recorder.json) | Media & Audio/Video | 1.3.0 | 2026-10-17 | [Homepage](https://github.com/lukmay/QuickAudioRecorder) | A minimalist Windows audio recorder for microphone, system audio, or both. |
 | [recordly](bucket/recordly.json) | Media & Audio/Video | 1.4.0 | 2026-09-29 | [Homepage](https://github.com/webadderallorg/Recordly) | Open-source screen recorder and editor for polished demo videos. |
 | [screenbox](bucket/screenbox.json) | Media & Audio/Video | 0.23.0 | 2026-10-05 | [Homepage](https://github.com/huynhsontung/Screenbox) | LibVLC-based media player for the Universal Windows Platform. |
@@ -498,7 +498,7 @@ Generated automatically from the manifests in the bucket directory.
 | [zexor](bucket/zexor.json) | File Management | 1.15 | 2026-09-29 | [Homepage](https://github.com/metalbug/Zexor) | Visual Windows file manager with instant previews and the proprietary .zex container format. |
 | [dgvoodoo2](bucket/dgvoodoo2.json) | Emulators & Compatibility | 2.87.4 | 2026-09-29 | [Homepage](https://github.com/dege-diosg/dgVoodoo2) | Glide/DirectX implementation on D3D11/12 for running old games on modern Windows. |
 | [die-engine](bucket/die-engine.json) | Emulators & Compatibility | 3.21 | 2026-09-29 | [Homepage](https://github.com/horsicq/DIE-engine) | Detect It Easy - file type, compiler, packer, protector, and binary analysis tool |
-| [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.8-2 | 2026-09-29 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
+| [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.9-1 | 2026-10-24 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.9.8700.25 | 2026-10-13 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
 | [flycast](bucket/flycast.json) | Emulators & Compatibility | 2.7 | 2026-09-29 | [Homepage](https://github.com/flyinghead/flycast) | Multiplatform Sega Dreamcast, Naomi, Naomi 2 and Atomiswave emulator. |
 | [mumuplayer](bucket/mumuplayer.json) | Emulators & Compatibility | 1.8.5.5748 | 2026-10-20 | [Homepage](https://www.mumuplayer.com/) | Android emulator for Windows (NX main engine) |

@@ -321,7 +321,7 @@ Generated automatically from the manifests in the bucket directory.
 | [optimizerduck](bucket/optimizerduck.json) | Windows Privacy & Tweaks | 2.29.0 | 2026-10-07 | [Homepage](https://github.com/itsfatduck/optimizerDuck) | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. |
 | [openzfs-np](bucket/openzfs-np.json) | Other Utilities | 2.4.1rc17b | 2026-10-21 | [Homepage](https://github.com/openzfsonwindows/openzfs) | The open source port of OpenZFS on Windows |
 | [openspeedy](bucket/openspeedy.json) | Other Utilities | 3.3.17 | 2026-10-18 | [Homepage](https://github.com/game1024/OpenSpeedy) | A Windows utility that speeds up games and applications by modifying process timing. |
-| [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.0.0 | 2026-10-03 | [Homepage](https://github.com/getopenscreen/openscreen) | Open source screen recording application for Windows. |
+| [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.1.2 | 2026-10-24 | [Homepage](https://getopenscreen.com/) | Open-source screen recording and video editing tool for creating polished demos. |
 | [openrgb](bucket/openrgb.json) | Windows Customization | 1.1 | 2026-10-17 | [Homepage](https://openrgb.org) | RGB lighting control that does not depend on manufacturer software. |
 | [opennow](bucket/opennow.json) | Media & Audio/Video | 0.5.5 | 2026-09-29 | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) | An open-source GeForce NOW desktop client. |
 | [opennetmeter](bucket/opennetmeter.json) | Network & DNS | 0.15.0 | 2026-09-29 | [Homepage](https://github.com/Ashfaaq18/OpenNetMeter) | A simple program to monitor your network/data usage. |
@@ -457,7 +457,7 @@ Generated automatically from the manifests in the bucket directory.
 | [easy-context-menu](bucket/easy-context-menu.json) | Other Utilities | 1.6 | 2026-10-21 | [Homepage](https://www.sordum.org/easy-context-menu) | A simple app for editing the context menu. |
 | [dynamicwin](bucket/dynamicwin.json) | Windows Customization | 2.0.3 | 2026-10-18 | [Homepage](https://github.com/FlorianButz/DynamicWin) | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. |
 | [dxwrapper](bucket/dxwrapper.json) | Emulators & Compatibility | 1.9.8700.25 | 2026-10-13 | [Homepage](https://github.com/elishacloud/dxwrapper) | DirectX compatibility wrapper for older Windows games. |
-| [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.8-2 | 2026-09-29 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
+| [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.9-1 | 2026-10-24 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
 | [dude](bucket/dude.json) | File Management | 2.0763.579 | 2026-09-29 | [Homepage](https://github.com/PJDude/dude) | Disk usage analyzer and file browser for Windows. |
 | [ds4windows-prerelease](bucket/ds4windows-prerelease.json) | Games & Game Utilities | 4.6.7 | 2026-10-13 | [Homepage](https://github.com/hbashton/DS4Windows) | DualShock 4, DualSense, and other controller remapping tool for Windows (pre-release portable) |
 | [ds4windows](bucket/ds4windows.json) | Games & Game Utilities | 4.0.2.3 | 2026-10-20 | [Homepage](https://github.com/hbashton/DS4Windows) | DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable) |

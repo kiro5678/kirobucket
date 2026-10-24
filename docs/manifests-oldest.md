@@ -54,7 +54,6 @@ Generated automatically from the manifests in the bucket directory.
 | [dpscreenocr](bucket/dpscreenocr.json) | Translation & OCR | 1.5.1 | 2026-09-29 | [Homepage](https://danpla.github.io/dpscreenocr/) | A free and open-source program to recognize text on the screen. |
 | [dragwin](bucket/dragwin.json) | Windows Customization | 1.1.6 | 2026-09-29 | [Homepage](https://github.com/PinchToDebug/DragWin) | Move and resize Windows without holding Alt or Control. |
 | [dude](bucket/dude.json) | File Management | 2.0763.579 | 2026-09-29 | [Homepage](https://github.com/PJDude/dude) | Disk usage analyzer and file browser for Windows. |
-| [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.8-2 | 2026-09-29 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
 | [ecopaste-nightly](bucket/ecopaste-nightly.json) | Clipboard & Text | 1.1.1-nightly.20260813.1 | 2026-09-29 | [Homepage](https://github.com/EcoPasteHub/EcoPaste) | Open-source clipboard manager for Windows and macOS. Nightly build. |
 | [edge-drop](bucket/edge-drop.json) | Clipboard & Text | 0.3.2 | 2026-09-29 | [Homepage](https://github.com/Deepender25/Edge-Drop) | Clipboard manager that lives on the left edge of your screen. |
 | [everything-cmdpal](bucket/everything-cmdpal.json) | File Management | 0.9.26030.0 | 2026-09-29 | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) | Everything search extension for PowerToys Command Palette |
@@ -161,7 +160,6 @@ Generated automatically from the manifests in the bucket directory.
 | [savestate](bucket/savestate.json) | Games & Game Utilities | 3.1 | 2026-10-01 | [Homepage](https://github.com/Matteo842/SaveState) | Back up and restore video game saves, with Steam detection and emulator support. |
 | [tagstudio](bucket/tagstudio.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
 | [tagstudio-x86_64](bucket/tagstudio-x86_64.json) | Images & Photos | 9.6.4 | 2026-10-02 | [Homepage](https://github.com/TagStudioDev/TagStudio) | A user-focused photo and file management system. |
-| [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.0.0 | 2026-10-03 | [Homepage](https://github.com/getopenscreen/openscreen) | Open source screen recording application for Windows. |
 | [rightclicktools](bucket/rightclicktools.json) | Windows Customization | 2.0.4 | 2026-10-03 | [Homepage](https://github.com/LesFerch/RightClickTools) | A set of powerful tools and shortcuts for the Windows Explorer context menu. |
 | [tonkatsu-box](bucket/tonkatsu-box.json) | Games & Game Utilities | 0.45.0 | 2026-10-03 | [Homepage](https://github.com/hacan359/tonkatsu_box) | Personal collection manager for games, movies, TV shows, anime, visual novels, manga, books, music and podcasts. |
 | [clipper](bucket/clipper.json) | Clipboard & Text | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
@@ -543,10 +541,12 @@ Generated automatically from the manifests in the bucket directory.
 | [veracrypt](bucket/veracrypt.json) | Security | 1.26.29 | 2026-10-23 | [Homepage](https://veracrypt.io/) | Open-source disk encryption software for creating and mounting encrypted volumes. |
 | [zinc](bucket/zinc.json) | Notes & Knowledge | 2.0.1 | 2026-10-23 | [Homepage](https://zincnotes.com/) | Offline-first notes app with local Wi-Fi sync between desktop and mobile. |
 | [aerial](bucket/aerial.json) | Windows Customization | 1.3.0 | 2026-10-24 | [Homepage](https://github.com/OrangeJedi/Aerial) | Apple TV-style Windows screen saver with aerial videos, local video playback, and configurable overlays. |
+| [dxvk-gplall](bucket/dxvk-gplall.json) | Emulators & Compatibility | 2.6.9-1 | 2026-10-24 | [Homepage](https://github.com/Digger1955/dxvk-gplall) | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. |
 | [keyboardsounds](bucket/keyboardsounds.json) | Keyboard & Language | 2.4.3 | 2026-10-24 | [Homepage](https://keyboardsounds.net/) | Desktop app that plays customizable mechanical keyboard and mouse sounds, with sound profiles and per-application rules. |
 | [keyboardsounds-pro](bucket/keyboardsounds-pro.json) | Keyboard & Language | 0.3.2 | 2026-10-24 | [Homepage](https://keyboardsounds.pro/) | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. |
 | [mechvibes](bucket/mechvibes.json) | Keyboard & Language | 2.3.4 | 2026-10-24 | [Homepage](https://mechvibes.com) | Play mechanical keyboard sounds as you type, with customizable sound packs. |
 | [mechvibes-dx](bucket/mechvibes-dx.json) | Keyboard & Language | 0.8.4 | 2026-10-24 | [Homepage](https://github.com/hainguyents13/mechvibes-dx) | Low-latency mechanical keyboard and mouse sound simulator with customizable soundpacks. |
 | [monkeysounds](bucket/monkeysounds.json) | Keyboard & Language | 1.0.0.0 | 2026-10-24 | [Homepage](https://github.com/NSTechBytes/MonkeySounds) | Portable Windows app that plays mechanical keyboard and mouse click sounds system-wide, with built-in and custom sound profiles. |
 | [mousefx-generator](bucket/mousefx-generator.json) | Windows Customization | 1.1.0 | 2026-10-24 | [Homepage](https://github.com/os4ma31/MouseFX-Generator) | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. |
+| [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.1.2 | 2026-10-24 | [Homepage](https://getopenscreen.com/) | Open-source screen recording and video editing tool for creating polished demos. |
 
