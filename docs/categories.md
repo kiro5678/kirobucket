@@ -257,7 +257,7 @@ This document groups all manifests in the bucket by their primary purpose. The c
 | [local-desktop-store](../bucket/local-desktop-store.json) | 0.3.2 | Private GitHub-based desktop application store and installer | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) |
 | [rscoop](../bucket/rscoop.json) | 1.10.1 | A graphical user interface for Scoop package manager | [Homepage](https://github.com/AmarBego/Rscoop) |
 | [unigetui-portable](../bucket/unigetui-portable.json) | 2026.3.0 | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. | [Homepage](https://devolutions.net/unigetui/) |
-| [unigetuiglobal](../bucket/unigetuiglobal.json) | 2026.3.0 | Graphical interface for Windows package managers. | [Homepage](https://github.com/Devolutions/UniGetUI) |
+| [unigetuiglobal](../bucket/unigetuiglobal.json) | 2026.3.2 | UniGetUI package-manager GUI with settings and application data stored in the user's LocalAppData profile outside Scoop. | [Homepage](https://devolutions.net/unigetui/) |
 
 ## PDF & Documents
 

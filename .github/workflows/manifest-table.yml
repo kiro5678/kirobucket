@@ -346,7 +346,7 @@ jobs:
               "screenbox" = "Media & Audio/Video"
               "tabame" = "Productivity & Launchers"
               "timescribe" = "Time Tracking & Focus"
-              "unigetui" = "Package Management"
+              "unigetuiglobal" = "Package Management"
               "vcardix" = "File Management"
               "vimera" = "Security"
               "voicestudio" = "Media & Audio/Video"
