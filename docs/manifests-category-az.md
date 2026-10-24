@@ -484,6 +484,7 @@ Generated automatically from the manifests in the bucket directory.
 | [rstgametranslation](bucket/rstgametranslation.json) | Translation & OCR | 6.1 | 2026-10-22 | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) | Real-time game screen OCR and translation tool. |
 | [translumo](bucket/translumo.json) | Translation & OCR | 1.1.0 | 2026-10-20 | [Homepage](https://github.com/ramjke/Translumo) | Advanced real-time screen translator. |
 | [trayweather](bucket/trayweather.json) | Weather & Information | 1.37.2 | 2026-09-29 | [Homepage](https://github.com/FelixdelasPozas/TrayWeather) | A lightweight weather application that runs in the Windows system tray. |
+| [aerial](bucket/aerial.json) | Windows Customization | 1.3.0 | 2026-10-24 | [Homepage](https://github.com/OrangeJedi/Aerial) | Apple TV-style Windows screen saver with aerial videos, local video playback, and configurable overlays. |
 | [aero-dock](bucket/aero-dock.json) | Windows Customization | 1.3.2 | 2026-09-29 | [Homepage](https://github.com/TheAgencyMGE/aero-dock) | A lightweight Windows dock with a portable mode. |
 | [cedro-modern-dock](bucket/cedro-modern-dock.json) | Windows Customization | 1.2.0 | 2026-10-13 | [Homepage](https://github.com/Cedro-Software/cedro-modern-dock) | Modern application dock for Windows. |
 | [clockwork-orange](bucket/clockwork-orange.json) | Windows Customization | 4.7.1 | 2026-10-20 | [Homepage](https://github.com/ushineko/clockwork-orange) | Cross-platform wallpaper manager for Windows, Linux, and macOS. |
