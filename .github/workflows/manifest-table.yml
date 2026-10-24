@@ -42,6 +42,7 @@ jobs:
               "activitywatch" = "Time Tracking & Focus"
               "activitywatch-tauri" = "Time Tracking & Focus"
               "adb-device-manager" = "Android & Device Tools"
+              "aerial" = "Windows Customization"
               "aero-dock" = "Windows Customization"
               "agaric" = "Notes & Knowledge"
               "aifilesorter" = "File Management"
