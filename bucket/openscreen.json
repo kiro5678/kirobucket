@@ -27,7 +27,7 @@
                 "url": "https://github.com/getopenscreen/openscreen/releases/download/v$version/Openscreen.Setup.$version-x64.exe#/dl.7z",
                 "hash": {
                     "url": "https://api.github.com/repos/getopenscreen/openscreen/releases/tags/v$version",
-                    "regex": "\"name\"\\s*:\\s*\"Openscreen\\.Setup\\.$version-x64\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+                    "regex": "\"name\"\\s*:\\s*\"Openscreen\\.Setup\\.[\\d.]+-x64\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
                 }
             }
         }
