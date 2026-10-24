@@ -345,3 +345,10 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Both manifests now explicitly note that the official installer installs to the user's profile and that stable and nightly manifests share the same per-user path, so they are not side-by-side installations.
 - Updated the authoring rules to warn that a `.7z` extension alone does not prove the payload is a portable archive or match the paths declared in a manifest.
 - The manifest/schema and archive validation workflows must complete against this correction before calling it fully verified; the installer was not run interactively on a user's PC.
+## 2026-10-24
+
+### UniGetUI global-data manifest
+- Renamed `bucket/unigetui.json` to `bucket/unigetuiglobal.json` to distinguish regular per-user data storage from the separate portable manifest.
+- Added a post-install migration that copies existing `Settings` contents from prior UniGetUI Scoop locations into `%LOCALAPPDATA%\UniGetUI` only when destination entries are absent; original source data is not deleted and existing per-user data is not overwritten.
+- Removed `ForceUniGetUIPortable` from the installed ZIP so UniGetUI uses its normal per-user data directory instead of storing active configuration and caches inside Scoop.
+- Kept `bucket/unigetui-portable.json` as the separate portable variant and updated the manifest category mapping and category documentation.
