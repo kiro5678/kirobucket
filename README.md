@@ -389,7 +389,7 @@ This table is generated automatically from the manifests currently available in 
 | [xyplorer](bucket/xyplorer.json) | File Management | 28.40.0600 | 2026-10-13 | [Homepage](https://www.xyplorer.com/) | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. |
 | [yamira](bucket/yamira.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
 | [zafuse](bucket/zafuse.json) | Developer & Technical Tools | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
-| [fxsound-beta](bucket/fxsound-beta.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-12 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
+| [fxsound](bucket/fxsound.json) | Media & Audio/Video | 1.2.16.0 | 2026-09-17 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [merkuro-calendar](bucket/merkuro-calendar.json) | Productivity & Launchers | 6719 | 2026-10-12 | [Homepage](https://apps.kde.org/merkuro.calendar/) | Calendar application for managing tasks and events |
 | [allplayer](bucket/allplayer.json) | Media & Audio/Video | 9.6 | 2026-10-11 | [Homepage](https://allplayer.com/) | Free multimedia player with built-in codecs and automatic subtitles. |
 | [driverstoreexplorer](bucket/driverstoreexplorer.json) | System Monitoring & Hardware | 1.0.36 | 2026-10-11 | [Homepage](https://github.com/lostindark/DriverStoreExplorer) | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. |
