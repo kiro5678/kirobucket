@@ -1,0 +1,25 @@
+{
+    "version": "4.6.2",
+    "description": "Taskbar-style information bar with system monitoring, calendar, weather and developer tools.",
+    "homepage": "https://www.mitec.cz/wp/mib/",
+    "license": "Freeware",
+    "url": "https://www.mitec.cz/wp/files/InfoBar_Setup.exe",
+    "shortcuts": [
+        [
+            "InfoBar.exe",
+            "MiTeC InfoBar"
+        ]
+    ],
+    "notes": [
+        "The official download page does not publish a static SHA-256 checksum for this file. Scoop's archive validation will check the archive layout, but a trusted checksum still needs to be added if one becomes available.",
+        "The vendor limits freeware use to private, educational and non-commercial purposes; review the product license before commercial use."
+    ],
+    "innosetup": true,
+    "checkver": {
+        "url": "https://www.mitec.cz/wp/mib/",
+        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)\\s*\\|"
+    },
+    "autoupdate": {
+        "url": "https://www.mitec.cz/wp/files/InfoBar_Setup.exe"
+    }
+}
