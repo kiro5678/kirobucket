@@ -11,11 +11,11 @@
     ],
     "checkver": {
         "script": [
-            "$html = (Invoke-WebRequest -Uri 'https://www.grc.com/wmf/wmf.htm' -UseBasicParsing).Content",
+            "$html = (Invoke-WebRequest -Uri 'https://www.grc.com/freeupdated.htm' -UseBasicParsing).Content",
             "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace($html, '<[^>]+>', ' '))",
             "$text = [regex]::Replace($text, '\\s+', ' ')",
-            "$match = [regex]::Match($text, '(?is)File stats for:\\s*MouseTrapCmd.{0,1800}?Last\\s+Updated:\\s*Size:\\s*[\\d.,]+\\s*[kKmM]?\\s+(?<date>[A-Za-z]{3}\\s+\\d{1,2},\\s+\\d{4})\\s+at\\b')",
-            "if (-not $match.Success) { throw 'Unable to read the published Last Updated date for MouseTrapCmd.' }",
+            "$match = [regex]::Match($text, '(?is)MouseTrapCmd.{0,1200}?Last\\s+Updated:\\s*Size:\\s*[\\d.,]+\\s*[kKmM]?\\s+(?<date>[A-Za-z]{3}\\s+\\d{1,2},\\s+\\d{4})\\s+at\\b')",
+            "if (-not $match.Success) { throw 'Unable to read the MouseTrapCmd last-updated date from GRC freeware listing.' }",
             "[DateTime]::ParseExact($match.Groups['date'].Value, 'MMM d, yyyy', [Globalization.CultureInfo]::InvariantCulture).ToString('yyyy.MM.dd')"
         ],
         "regex": "(?<version>\\d{4}\\.\\d{2}\\.\\d{2})"
