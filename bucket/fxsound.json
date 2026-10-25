@@ -14,15 +14,7 @@
         }
     },
     "pre_install": [
-        "if (!(is_admin)) { throw 'FxSound requires administrator rights to install.' }",
-        "$setup = Join-Path $dir $fname",
-        "$extractArgs = '/extract \"' + $dir + '\"'",
-        "$extract = Start-Process -FilePath $setup -Wait -ArgumentList $extractArgs -PassThru",
-        "if ($extract.ExitCode -ne 0) { throw ('FxSound payload extraction failed with exit code ' + $extract.ExitCode + '.') }",
-        "$msi = Join-Path $dir 'fxsound.x64.msi'",
-        "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw 'FxSound x64 MSI was not extracted.' }",
-        "$cab = Join-Path $dir 'fxsound1.cab'",
-        "if (!(Test-Path -LiteralPath $cab -PathType Leaf)) { throw 'FxSound cabinet file was not extracted.' }"
+        "if (!(is_admin)) { throw 'FxSound requires administrator rights to install.' }"
     ],
     "installer": {
         "args": [
@@ -33,10 +25,7 @@
         ]
     },
     "post_install": [
-        "Remove-Item -LiteralPath (Join-Path $dir $fname) -Force -ErrorAction SilentlyContinue",
-        "$cab = Join-Path $dir 'fxsound1.cab'",
-        "Remove-Item -LiteralPath $cab -Force -ErrorAction Stop",
-        "if (Test-Path -LiteralPath $cab) { throw 'FxSound CAB file could not be removed after successful installation.' }"
+        "Remove-Item -LiteralPath (Join-Path $dir $fname) -Force -ErrorAction SilentlyContinue"
     ],
     "pre_uninstall": [
         "if (!(is_admin)) { throw 'FxSound requires administrator rights to uninstall.' }",
@@ -44,14 +33,16 @@
     ],
     "uninstaller": {
         "script": [
-            "$msi = Join-Path $dir 'fxsound.x64.msi'",
-            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw 'FxSound MSI is missing from the Scoop version directory; refusing to uninstall a different registration.' }",
+            "$uninstallPaths = @('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*','HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*')",
+            "$entry = Get-ItemProperty -Path $uninstallPaths -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -eq 'FxSound' } | Select-Object -First 1",
+            "if (!$entry) { throw 'FxSound MSI registration was not found; refusing to uninstall an unknown product.' }",
+            "$productCode = [string]$entry.PSChildName",
+            "if ($productCode -notmatch '^\\{[0-9A-Fa-f-]{36}\\}$') { throw ('Unexpected FxSound MSI product code: ' + $productCode) }",
             "$driver = Get-CimInstance Win32_PnPSignedDriver -ErrorAction SilentlyContinue | Where-Object { $_.DeviceName -eq 'FxSound Audio Enhancer' -and $_.InfName -match '^oem\\d+\\.inf$' } | Select-Object -First 1",
             "$infName = if ($driver) { [string]$driver.InfName } else { $null }",
-            "$arguments = '/x \"' + $msi + '\" /qn REBOOT=ReallySuppress /norestart'",
+            "$arguments = '/x ' + $productCode + ' /qn REBOOT=ReallySuppress /norestart'",
             "$process = Start-Process -FilePath 'msiexec.exe' -Wait -ArgumentList $arguments -PassThru",
             "if ($process.ExitCode -notin @(0, 3010)) { throw ('FxSound MSI uninstall failed with exit code ' + $process.ExitCode + '.') }",
-            "$uninstallPaths = @('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*','HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*')",
             "$remainingFxSound = Get-ItemProperty -Path $uninstallPaths -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -eq 'FxSound' }",
             "if ($remainingFxSound) {",
             "    Write-Host 'Another FxSound installation remains registered; leaving the shared system audio driver in place.'",
@@ -84,10 +75,10 @@
     },
     "notes": [
         "Tracks the latest official FxSound Beta build; it may be newer than the stable release.",
-        "Uses the official FxSound installer and extracts its MSI/CAB payload into the versioned Scoop directory.",
+        "Runs the official FxSound installer directly without manually extracting its MSI/CAB payload into the Scoop directory.",
         "The application files are installed in the versioned Scoop directory via APPDIR=$dir.",
         "The FxSound virtual audio driver is installed system-wide; this is not a fully portable installation.",
-        "The extracted MSI is retained in the versioned Scoop directory so uninstall uses this package's own MSI; the CAB is deleted after successful installation.",
+        "Uninstall uses the MSI product code registered by Windows Installer, then removes the FxSound driver package if no other FxSound installation remains.",
         "Install and uninstall require an elevated PowerShell session. Close FxSound before uninstalling."
     ]
 }
