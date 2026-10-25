@@ -38,14 +38,45 @@ This table is generated automatically from the manifests currently available in 
 <a id="manifests-newest"></a>
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [amcacheparser](bucket/amcacheparser.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parser for Windows Amcache.hve forensic artifacts. |
+| [appcompatcacheparser](bucket/appcompatcacheparser.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parser for Windows AppCompatCache (ShimCache) artifacts. |
+| [bstrings](bucket/bstrings.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Search files for strings using built-in regular-expression patterns. |
 | [clipcascade](bucket/clipcascade.json) | Clipboard & Text | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
+| [evtxecmd](bucket/evtxecmd.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parse Windows EVTX event logs into standardized CSV, JSON, or XML output. |
+| [ezviewer](bucket/ezviewer.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | View common document, text, spreadsheet, HTML, and PDF formats; inspect unsupported files in a hex editor. |
 | [filee](bucket/filee.json) | File Management | 2.1.0 | 2026-10-25 | [Homepage](https://github.com/KnifeLemon/Filee) | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. |
 | [fxsound](bucket/fxsound.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-25 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows (latest Beta). |
+| [get-zimmerman-tools](bucket/get-zimmerman-tools.json) | Other Utilities | 2026.10.23 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | PowerShell downloader and updater for Eric Zimmerman's forensic tools. |
+| [hasher](bucket/hasher.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | GUI utility for calculating file hashes. |
+| [iis-geolocate](bucket/iis-geolocate.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Geolocate IP addresses found in IIS logs and identify unique or invalid entries. |
+| [jlecmd](bucket/jlecmd.json) | Other Utilities | 2026.10.3 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Command-line parser for Windows Jump List artifacts. |
+| [jumplist-explorer](bucket/jumplist-explorer.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | GUI for viewing Windows Jump Lists. |
+| [kape](bucket/kape.json) | Other Utilities | 0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/KapeDocs/) | Kroll Artifact Parser and Extractor for targeted forensic collection and processing. |
+| [lecmd](bucket/lecmd.json) | Other Utilities | 2026.10.2 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Command-line parser for Windows LNK shortcut files. |
+| [mftecmd](bucket/mftecmd.json) | Other Utilities | 2026.10.4 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parser for NTFS $MFT, $Boot, $J, $SDS, $I30, and $LogFile artifacts. |
+| [mftexplorer](bucket/mftexplorer.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Graphical viewer for NTFS $MFT data. |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.1 | 2026-10-25 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
 | [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.1.2 | 2026-10-25 | [Homepage](https://getopenscreen.com/) | Open-source screen recording and video editing tool for creating polished demos. |
 | [PdfCraftTool](bucket/PdfCraftTool.json) | PDF & Documents | 2026.10.25-6090725 | 2026-10-25 | [Homepage](https://github.com/PDFCraftTool/pdfcraft) | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. |
+| [pecmd](bucket/pecmd.json) | Other Utilities | 2026.10.2 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parser for Windows Prefetch files. |
+| [rbcmd](bucket/rbcmd.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parser for Windows Recycle Bin INFO2 and $I artifacts. |
+| [recentfilecacheparser](bucket/recentfilecacheparser.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parser for RecentFileCache forensic artifacts. |
+| [recmd](bucket/recmd.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Command-line Windows Registry searching and examination tool. |
+| [registry-explorer](bucket/registry-explorer.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | GUI for examining Windows Registry hives, including multi-hive searches and locked hive files. |
+| [rla](bucket/rla.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Replay Registry transaction logs and update hives to a clean state. |
+| [sbecmd](bucket/sbecmd.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Command-line exporter for Windows ShellBags artifacts. |
+| [sdb-explorer](bucket/sdb-explorer.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | GUI for exploring Windows Shim databases. |
+| [shellbags-explorer](bucket/shellbags-explorer.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | GUI for browsing Windows ShellBags artifacts. |
+| [sqlecmd](bucket/sqlecmd.json) | Other Utilities | 2026.10.1 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Find and process SQLite databases using artifact maps. |
+| [srumecmd](bucket/srumecmd.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parse SRUDB.dat and optional SOFTWARE-hive data. |
+| [sumecmd](bucket/sumecmd.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parse Microsoft Windows User Access Log artifacts. |
+| [timeapp](bucket/timeapp.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | GUI for local and UTC time, stopwatch, countdowns, and timestamp conversion. |
+| [timeline-explorer](bucket/timeline-explorer.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | GUI for filtering, grouping, sorting, and reviewing CSV and Excel data. |
 | [tockler](bucket/tockler.json) | Time Tracking & Focus | 4.0.21 | 2026-10-25 | [Homepage](https://github.com/MayGo/tockler) | An application that tracks your time by monitoring your active window title and idle time. |
+| [vscmount](bucket/vscmount.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Mount Windows Volume Shadow Copies to a drive letter. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-25 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
+| [wxtcmd](bucket/wxtcmd.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Parser for Windows 10/11 Timeline database artifacts. |
+| [xwfim](bucket/xwfim.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Installation manager for X-Ways Forensics. |
 | [aerial](bucket/aerial.json) | Windows Customization | 1.3.0 | 2026-10-24 | [Homepage](https://github.com/OrangeJedi/Aerial) | Apple TV-style Windows screen saver with aerial videos, local video playback, and configurable overlays. |
 | [agaric](bucket/agaric.json) | Notes & Knowledge | 0.21.0 | 2026-10-24 | [Homepage](https://github.com/jfolcini/agaric) | A local-first, block-based note-taking app for Windows, macOS, Linux, and Android. |
 | [butterfly-nightly](bucket/butterfly-nightly.json) | Notes & Knowledge | 2026.10.24.1034 | 2026-10-24 | [Homepage](https://github.com/LinwoodDev/Butterfly) | A powerful, minimalistic, cross-platform note-taking app (nightly build) |
