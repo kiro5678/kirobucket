@@ -127,7 +127,7 @@ Generated automatically from the manifests in the bucket directory.
 | [blur](bucket/blur.json) | Media & Audio/Video | 2.45 | 2026-09-29 | [Homepage](https://github.com/f0e/blur) | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. |
 | [drift](bucket/drift.json) | Media & Audio/Video | 0.8.0 | 2026-10-23 | [Homepage](https://github.com/CutWire-Studios/Drift) | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). |
 | [fastcast](bucket/fastcast.json) | Media & Audio/Video | 0.9.2 | 2026-09-29 | [Homepage](https://github.com/CalvinSturm/FastCast-releases) | Native Windows screen recorder and live streaming app. |
-| [fxsound](bucket/fxsound.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-25 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
+| [fxsound](bucket/fxsound.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-25 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows (latest Beta). |
 | [haruna](bucket/haruna.json) | Media & Audio/Video | 1944 | 2026-10-04 | [Homepage](https://haruna.kde.org/) | An open source media player built with Qt/QML and libmpv |
 | [moviebox-tui](bucket/moviebox-tui.json) | Media & Audio/Video | 0.1.27 | 2026-10-23 | [Homepage](https://github.com/mesamirh/MovieBox-Tui) | Terminal client for watching and downloading movies, TV shows, anime, and live TV. |
 | [ncspot](bucket/ncspot.json) | Media & Audio/Video | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
