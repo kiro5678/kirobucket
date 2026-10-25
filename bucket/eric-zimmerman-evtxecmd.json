@@ -15,5 +15,6 @@
     },
     "autoupdate": {
         "url": "https://download.ericzimmermanstools.com/net/EvtxECmd.zip"
-    }
+    },
+    "extract_dir": "EvtxeCmd"
 }

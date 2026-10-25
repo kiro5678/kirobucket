@@ -20,5 +20,6 @@
     },
     "autoupdate": {
         "url": "https://download.ericzimmermanstools.com/net/ShellBagsExplorer.zip"
-    }
+    },
+    "extract_dir": "ShellBagsExplorer"
 }

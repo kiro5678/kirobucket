@@ -15,5 +15,6 @@
     },
     "autoupdate": {
         "url": "https://download.ericzimmermanstools.com/net/SQLECmd.zip"
-    }
+    },
+    "extract_dir": "SQLECmd"
 }

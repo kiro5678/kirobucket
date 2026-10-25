@@ -15,5 +15,6 @@
     },
     "autoupdate": {
         "url": "https://download.ericzimmermanstools.com/net/iisGeolocate.zip"
-    }
+    },
+    "extract_dir": "iisGeolocate"
 }

@@ -15,5 +15,6 @@
     },
     "autoupdate": {
         "url": "https://download.ericzimmermanstools.com/net/RECmd.zip"
-    }
+    },
+    "extract_dir": "RECmd"
 }
