@@ -146,7 +146,6 @@ Generated automatically from the manifests in the bucket directory.
 | [backup-start-menu-layout](bucket/backup-start-menu-layout.json) | Other Utilities | 1.6 | 2026-10-21 | [Homepage](https://www.sordum.org/backup-start-menu-layout) | A simple app that allows users to backup and restore their StartMenu layout. |
 | [c-cleaner-plus](bucket/c-cleaner-plus.json) | Other Utilities | 0.8.0 | 2026-10-21 | [Homepage](https://github.com/Kiowx/c_cleaner_plus) | Windows cleanup utility with large-file scanning, advanced cleanup, forced uninstall, and scheduled tasks. |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
-| [clipcascade](bucket/clipcascade.json) | Other Utilities | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [ctrtool](bucket/ctrtool.json) | Other Utilities | 1.3.0 | 2026-10-21 | [Homepage](https://github.com/3DSGuy/Project_CTR) | General purpose reading/extraction tool for Nintendo 3DS file formats. |
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
@@ -526,6 +525,7 @@ Generated automatically from the manifests in the bucket directory.
 | [zafuse](bucket/zafuse.json) | Developer & Technical Tools | 26.12 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/zafuse) | INI file analysis tool for finding inconsistencies across configuration files. |
 | [beetroot-portable](bucket/beetroot-portable.json) | Clipboard & Text | 1.6.7 | 2026-09-29 | [Homepage](https://github.com/mnardit/beetroot-releases) | Clipboard manager for Windows with AI transforms, OCR, and fuzzy search |
 | [clipangel](bucket/clipangel.json) | Clipboard & Text | 2.23 | 2026-09-29 | [Homepage](https://sourceforge.net/projects/clip-angel/) | Clipboard history capture and paste tool. |
+| [clipcascade](bucket/clipcascade.json) | Clipboard & Text | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
 | [clipper](bucket/clipper.json) | Clipboard & Text | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
 | [clipto](bucket/clipto.json) | Clipboard & Text | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
 | [cliptype](bucket/cliptype.json) | Clipboard & Text | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ClipType) | Clipboard injector that types clipboard contents using native keystrokes |

@@ -6,7 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
-| [clipcascade](bucket/clipcascade.json) | Other Utilities | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
+| [clipcascade](bucket/clipcascade.json) | Clipboard & Text | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
 | [filee](bucket/filee.json) | File Management | 2.1.0 | 2026-10-25 | [Homepage](https://github.com/KnifeLemon/Filee) | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. |
 | [fxsound](bucket/fxsound.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-25 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.1 | 2026-10-25 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
