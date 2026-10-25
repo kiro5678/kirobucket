@@ -88,6 +88,16 @@ jobs:
           $current = Join-Path $appRoot "current"
           $exe = Join-Path $current "FxSound.exe"
           $setup = Join-Path $current "fxsound_setup.exe"
+          $msi = Join-Path $current "fxsound.x64.msi"
+          $cab = Join-Path $current "fxsound1.cab"
+
+          if (!(Test-Path $msi -PathType Leaf)) {
+              throw "FxSound MSI was not retained in the Scoop version directory for uninstall: $msi"
+          }
+
+          if (Test-Path $cab -PathType Leaf) {
+              throw "FxSound CAB should have been deleted after successful installation: $cab"
+          }
 
           if (!(Test-Path $exe -PathType Leaf)) {
               throw "FxSound.exe was not installed under Scoop: $exe"
