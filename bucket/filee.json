@@ -1,10 +1,10 @@
 {
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats.",
     "homepage": "https://github.com/KnifeLemon/Filee",
     "license": "MIT",
-    "url": "https://github.com/KnifeLemon/Filee/releases/download/v2.0.0/Filee-2.0.0-win-Portable.zip",
-    "hash": "6f46d1f584143d2fc3fcfec69698e3859befba5b1d51aea412315bb0f562720e",
+    "url": "https://github.com/KnifeLemon/Filee/releases/download/v2.1.0/Filee-2.1.0-win-Portable.zip",
+    "hash": "a12bfb08ae6a86a1dd9127089a74d8f22b785f7cb7a0ed3b898af01b4159c2b4",
     "bin": [
         "Filee.exe",
         [
