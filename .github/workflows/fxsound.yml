@@ -358,25 +358,48 @@ jobs:
               throw "Scoop FxSound directory still exists: $appRoot"
           }
 
-          $device = Get-PnpDevice -ErrorAction SilentlyContinue |
-              Where-Object {
-                  $_.FriendlyName -match "FxSound Audio Enhancer" -or
-                  $_.InstanceId -match "FXVAD"
+          $driverFile = Join-Path $env:WINDIR "System32\drivers\fxvad.sys"
+          $deadline = (Get-Date).AddSeconds(20)
+          do {
+              $device = Get-PnpDevice -ErrorAction SilentlyContinue |
+                  Where-Object {
+                      $_.FriendlyName -match "FxSound Audio Enhancer" -or
+                      $_.InstanceId -match "FXVAD"
+                  }
+
+              $service = Get-CimInstance Win32_SystemDriver -ErrorAction SilentlyContinue |
+                  Where-Object { $_.Name -eq "FXVAD" } |
+                  Select-Object -First 1
+
+              $driverStore = pnputil /enum-drivers 2>$null | Out-String
+              $driverFileExists = Test-Path $driverFile -PathType Leaf
+
+              if (!$device -and !$service -and !$driverFileExists -and $driverStore -notmatch "(?im)fxvad") {
+                  break
               }
+
+              Start-Sleep -Seconds 2
+          } while ((Get-Date) -lt $deadline)
 
           if ($device) {
               $device | Format-Table Status, Class, FriendlyName, InstanceId -AutoSize
               throw "FxSound virtual audio device is still installed after uninstall."
           }
 
-          $driverFile = Join-Path $env:WINDIR "System32\drivers\fxvad.sys"
-          if (Test-Path $driverFile) {
-              throw "FxSound driver file still exists after uninstall: $driverFile"
+          if ($service) {
+              $service | Format-List Name, State, Started, PathName
+              throw "FxSound FXVAD driver service is still registered after uninstall."
           }
 
-          $driverStore = pnputil /enum-drivers 2>$null | Out-String
           if ($driverStore -match "(?im)fxvad") {
+              Write-Host "FxSound-related driver package remains in the Driver Store:"
+              Write-Host $driverStore
               throw "FxSound driver package is still present in the Windows Driver Store."
           }
 
-          Write-Host "FxSound application, virtual audio device, and driver package were removed."
+          if (Test-Path $driverFile -PathType Leaf) {
+              Get-Item -LiteralPath $driverFile | Format-List FullName, Length, LastWriteTime
+              throw "FxSound driver file still exists after uninstall: $driverFile"
+          }
+
+          Write-Host "FxSound application, virtual audio device, service, and driver package were removed."
