@@ -193,13 +193,18 @@ jobs:
 
           Write-Host "fxdiag completed successfully. Functional driver validation continues with the Windows service, WASAPI endpoint, and real audio stream test."
 
-      - name: Start FxSound and enable processing
+      - name: Start FxSound and check audio activation support
+        id: audio
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
 
           $current = Join-Path $env:USERPROFILE "scoop\apps\fxsound\current"
           $exe = Join-Path $current "FxSound.exe"
+
+          Add-Type -TypeDefinition 'using System.Runtime.InteropServices; public static class FxSoundSessionMetrics { [DllImport("user32.dll")] public static extern int GetSystemMetrics(int nIndex); }'
+          $isRemoteSession = [FxSoundSessionMetrics]::GetSystemMetrics(0x1000) -ne 0
+          Write-Host "Windows remote session (SM_REMOTESESSION): $isRemoteSession"
 
           Get-Process -Name FxSound -ErrorAction SilentlyContinue |
               Stop-Process -Force -ErrorAction SilentlyContinue
@@ -212,7 +217,12 @@ jobs:
               throw "FxSound process did not start."
           }
 
-          & $exe --power=1
+          if (!$isRemoteSession) {
+              & $exe --power=1
+          }
+          else {
+              Write-Host "Skipping --power=1 because FxSound disables processing changes in remote sessions."
+          }
 
           $statusPath = Join-Path $env:APPDATA "FxSound\status.json"
           $deadline = (Get-Date).AddSeconds(20)
@@ -261,18 +271,35 @@ jobs:
           $status = Get-Content $statusPath -Raw | ConvertFrom-Json
           $status | ConvertTo-Json -Depth 10
 
+          $outputDeviceCount = @($status.output_devices).Count
+          Write-Host "FxSound real output device count: $outputDeviceCount"
+
+          if ($isRemoteSession) {
+              Write-Host "::notice::Skipping audio activation and render testing because FxSound disables processing in Windows remote sessions."
+              "test=skipped" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+              return
+          }
+
+          if ($outputDeviceCount -eq 0) {
+              Write-Host "::notice::Skipping audio activation and render testing because this runner has no real output device available to FxSound."
+              "test=skipped" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+              return
+          }
+
           if ($status.power -ne $true) {
-              throw "FxSound processing could not be enabled. Current power state: $($status.power)"
+              throw "FxSound processing could not be enabled despite an available output device. Current power state: $($status.power)"
           }
 
           if ([string]::IsNullOrWhiteSpace([string]$status.selected_output)) {
-              throw "FxSound has no selected output device."
+              throw "FxSound has output devices but no selected output device."
           }
 
           Write-Host "FxSound selected output: $($status.selected_output)"
           Write-Host "FxSound processing power: $($status.power)"
+          "test=enabled" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 
       - name: Exercise FxSound audio render path
+        if: steps.audio.outputs.test != 'skipped'
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
