@@ -69,6 +69,7 @@ jobs:
               "chocolateygui" = "Package Management"
               "clickmonitorddc" = "System Monitoring & Hardware"
               "clipangel" = "Clipboard & Text"
+              "clipcascade" = "Clipboard & Text"
               "cliptype" = "Clipboard & Text"
               "clockwork-orange" = "Windows Customization"
               "clustercut" = "Clipboard & Text"
