@@ -4,7 +4,6 @@
     "homepage": "https://www.grc.com/bootable.htm",
     "license": "Freeware",
     "url": "https://www.grc.com/files/bootable.zip",
-    "extract_dir": ".",
     "shortcuts": [
         [
             "bootable.exe",
