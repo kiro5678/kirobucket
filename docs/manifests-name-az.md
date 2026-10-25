@@ -272,6 +272,7 @@ Generated automatically from the manifests in the bucket directory.
 | [nat-type-tester](bucket/nat-type-tester.json) | Other Utilities | 10.0.10 | 2026-10-21 | [Homepage](https://github.com/HMBSbige/NatTypeTester) | Test the NAT type of the current network (STUN) |
 | [ncspot](bucket/ncspot.json) | Media & Audio/Video | 1.5.0 | 2026-10-04 | [Homepage](https://github.com/hrkfdn/ncspot) | ncurses Spotify client written in Rust |
 | [net-max](bucket/net-max.json) | Network & DNS | 1.0.1 | 2026-09-29 | [Homepage](https://github.com/anwaremad/NetMax) | A professional Windows desktop network monitoring application. |
+| [net-merge](bucket/net-merge.json) | Other Utilities | 0.3.5 | 2026-10-25 | [Homepage](https://github.com/rohit267/net-merge) | Balance network traffic across multiple Wi-Fi, Ethernet, and tethered connections on Windows. |
 | [netronome](bucket/netronome.json) | Network & DNS | 0.16.0 | 2026-10-05 | [Homepage](https://github.com/autobrr/netronome) | Modern network speed testing and monitoring tool built with Go and React. |
 | [netspeedtray](bucket/netspeedtray.json) | Network & DNS | 2.1.7 | 2026-09-29 | [Homepage](https://github.com/erez-c137/NetSpeedTray) | Live network speeds, CPU/GPU stats, temperatures, and power draw on the Windows taskbar. |
 | [nettime](bucket/nettime.json) | Network & DNS | 3.14 | 2026-09-29 | [Homepage](https://www.timesynctool.com/) | Simple Network Time Protocol (SNTP) client for Windows that synchronizes the system clock. |
