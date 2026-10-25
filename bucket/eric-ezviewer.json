@@ -1,13 +1,13 @@
 {
     "version": "2026.10.0",
-    "description": "Eric Zimmerman's MFTExplorer: Graphical viewer for NTFS $MFT data.",
+    "description": "Eric Zimmerman's EZViewer: View common document, text, spreadsheet, HTML, and PDF formats; other files can be examined in a hex editor.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
-    "url": "https://download.ericzimmermanstools.com/net/MFTExplorer.zip",
+    "url": "https://download.ericzimmermanstools.com/net/EZViewer.zip",
     "shortcuts": [
         [
-            "MFTExplorer.exe",
-            "EricZimmerman MFTExplorer"
+            "EZViewer.exe",
+            "Eric EZViewer"
         ]
     ],
     "notes": [
@@ -16,10 +16,10 @@
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",
-        "regex": "\\[(?<version>\\d{4}\\.\\d+\\.\\d+)\\]\\(https://download\\.ericzimmermanstools\\.com/net/MFTExplorer\\.zip\\)"
+        "regex": "\\[(?<version>\\d{4}\\.\\d+\\.\\d+)\\]\\(https://download\\.ericzimmermanstools\\.com/net/EZViewer\\.zip\\)"
     },
     "autoupdate": {
-        "url": "https://download.ericzimmermanstools.com/net/MFTExplorer.zip"
+        "url": "https://download.ericzimmermanstools.com/net/EZViewer.zip"
     },
-    "extract_dir": "MFTExplorer"
+    "extract_dir": "EZViewer"
 }

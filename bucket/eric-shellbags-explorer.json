@@ -1,13 +1,13 @@
 {
     "version": "2026.10.1",
-    "description": "Eric Zimmerman's JumpList Explorer: GUI for viewing Windows Jump Lists.",
+    "description": "Eric Zimmerman's ShellBags Explorer: GUI for browsing Windows ShellBags artifacts.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
-    "url": "https://download.ericzimmermanstools.com/net/JumpListExplorer.zip",
+    "url": "https://download.ericzimmermanstools.com/net/ShellBagsExplorer.zip",
     "shortcuts": [
         [
-            "JumpListExplorer.exe",
-            "EricZimmerman JumpList Explorer"
+            "ShellBagsExplorer.exe",
+            "Eric ShellBags Explorer"
         ]
     ],
     "notes": [
@@ -16,10 +16,10 @@
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",
-        "regex": "\\[(?<version>\\d{4}\\.\\d+\\.\\d+)\\]\\(https://download\\.ericzimmermanstools\\.com/net/JumpListExplorer\\.zip\\)"
+        "regex": "\\[(?<version>\\d{4}\\.\\d+\\.\\d+)\\]\\(https://download\\.ericzimmermanstools\\.com/net/ShellBagsExplorer\\.zip\\)"
     },
     "autoupdate": {
-        "url": "https://download.ericzimmermanstools.com/net/JumpListExplorer.zip"
+        "url": "https://download.ericzimmermanstools.com/net/ShellBagsExplorer.zip"
     },
-    "extract_dir": "JumpListExplorer"
+    "extract_dir": "ShellBagsExplorer"
 }

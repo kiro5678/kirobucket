@@ -1,13 +1,13 @@
 {
     "version": "2026.10.0",
-    "description": "Eric Zimmerman's TimeApp: GUI for local and UTC time, stopwatch, countdowns, and timestamp conversion.",
+    "description": "Eric Zimmerman's MFTExplorer: Graphical viewer for NTFS $MFT data.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
-    "url": "https://download.ericzimmermanstools.com/net/TimeApp.zip",
+    "url": "https://download.ericzimmermanstools.com/net/MFTExplorer.zip",
     "shortcuts": [
         [
-            "TimeApp.exe",
-            "EricZimmerman TimeApp"
+            "MFTExplorer.exe",
+            "Eric MFTExplorer"
         ]
     ],
     "notes": [
@@ -16,9 +16,10 @@
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",
-        "regex": "\\[(?<version>\\d{4}\\.\\d+\\.\\d+)\\]\\(https://download\\.ericzimmermanstools\\.com/net/TimeApp\\.zip\\)"
+        "regex": "\\[(?<version>\\d{4}\\.\\d+\\.\\d+)\\]\\(https://download\\.ericzimmermanstools\\.com/net/MFTExplorer\\.zip\\)"
     },
     "autoupdate": {
-        "url": "https://download.ericzimmermanstools.com/net/TimeApp.zip"
-    }
+        "url": "https://download.ericzimmermanstools.com/net/MFTExplorer.zip"
+    },
+    "extract_dir": "MFTExplorer"
 }
