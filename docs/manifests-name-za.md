@@ -513,6 +513,7 @@ Generated automatically from the manifests in the bucket directory.
 | [cliptype](bucket/cliptype.json) | Clipboard & Text | 2.0.0 | 2026-09-29 | [Homepage](https://github.com/ahmedthebest31/ClipType) | Clipboard injector that types clipboard contents using native keystrokes |
 | [clipto](bucket/clipto.json) | Clipboard & Text | 7.2.17 | 2026-10-04 | [Homepage](https://clipto.pro/) | Cross-platform clipboard manager and notes app |
 | [clipper](bucket/clipper.json) | Clipboard & Text | 0.24.3 | 2026-10-04 | [Homepage](https://github.com/windoze/clipper) | Clipboard manager with local and network synchronization. |
+| [clipcascade](bucket/clipcascade.json) | Other Utilities | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
 | [clipangel](bucket/clipangel.json) | Clipboard & Text | 2.23 | 2026-09-29 | [Homepage](https://sourceforge.net/projects/clip-angel/) | Clipboard history capture and paste tool. |
 | [clickmonitorddc](bucket/clickmonitorddc.json) | System Monitoring & Hardware | 7.2 | 2026-09-29 | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. |
 | [chocolateygui](bucket/chocolateygui.json) | Package Management | 3.3.0 | 2026-09-29 | [Homepage](https://github.com/chocolatey/ChocolateyGUI) | Graphical user interface for Chocolatey. |
