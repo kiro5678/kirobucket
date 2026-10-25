@@ -193,7 +193,7 @@ This document groups all manifests in the bucket by their primary purpose. The c
 | [allplayer](../bucket/allplayer.json) | 9.6 | Free multimedia player with built-in codecs and automatic subtitle support. | [Homepage](https://allplayer.com/) |
 | [blur](../bucket/blur.json) | 2.45 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. | [Homepage](https://github.com/f0e/blur) |
 | [fastcast](../bucket/fastcast.json) | 0.9.2 | Native Windows screen recorder and live streaming app. | [Homepage](https://github.com/CalvinSturm/FastCast-releases) |
-| [fxsound-beta](../bucket/fxsound-beta.json) | 1.2.15.0 | Audio enhancer and sound equalizer for Windows. | [Homepage](https://github.com/fxsound2/fxsound-app) |
+| [fxsound](../bucket/fxsound.json) | 1.2.17.0 | Audio enhancer and sound equalizer for Windows. | [Homepage](https://github.com/fxsound2/fxsound-app) |
 | [moviebox-tui](../bucket/moviebox-tui.json) | 0.1.25 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. | [Homepage](https://github.com/mesamirh/MovieBox-Tui) |
 | [opennow](../bucket/opennow.json) | 0.5.5 | An open-source GeForce NOW desktop client. | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) |
 | [openscreen](../bucket/openscreen.json) | 1.13.0 | Open source screen recording application for Windows. | [Homepage](https://github.com/getopenscreen/openscreen) |
