@@ -43,9 +43,19 @@
         "script": [
             "$msi = Join-Path $dir 'fxsound.x64.msi'",
             "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw 'FxSound MSI is missing from the Scoop version directory; refusing to uninstall a different registration.' }",
+            "$driver = Get-CimInstance Win32_PnPSignedDriver -ErrorAction SilentlyContinue | Where-Object { $_.DeviceName -eq 'FxSound Audio Enhancer' -and $_.InfName -match '^oem\\d+\\.inf$' } | Select-Object -First 1",
+            "$infName = if ($driver) { [string]$driver.InfName } else { $null }",
             "$arguments = '/x \"' + $msi + '\" /qn REBOOT=ReallySuppress /norestart'",
             "$process = Start-Process -FilePath 'msiexec.exe' -Wait -ArgumentList $arguments -PassThru",
-            "if ($process.ExitCode -notin @(0, 3010)) { throw ('FxSound MSI uninstall failed with exit code ' + $process.ExitCode + '.') }"
+            "if ($process.ExitCode -notin @(0, 3010)) { throw ('FxSound MSI uninstall failed with exit code ' + $process.ExitCode + '.') }",
+            "$uninstallPaths = @('HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*','HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*')",
+            "$remainingFxSound = Get-ItemProperty -Path $uninstallPaths -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -eq 'FxSound' }",
+            "if ($remainingFxSound) {",
+            "    Write-Host 'Another FxSound installation remains registered; leaving the shared system audio driver in place.'",
+            "} elseif ($infName) {",
+            "    $delete = Start-Process -FilePath 'pnputil.exe' -Wait -ArgumentList @('/delete-driver', $infName, '/uninstall', '/force') -PassThru",
+            "    if ($delete.ExitCode -notin @(0, 3010)) { throw ('FxSound driver package removal failed with exit code ' + $delete.ExitCode + '.') }",
+            "}"
         ]
     },
     "bin": "FxSound.exe",
