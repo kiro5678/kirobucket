@@ -33,7 +33,10 @@
         ]
     },
     "post_install": [
-        "Remove-Item -LiteralPath (Join-Path $dir $fname) -Force -ErrorAction SilentlyContinue"
+        "Remove-Item -LiteralPath (Join-Path $dir $fname) -Force -ErrorAction SilentlyContinue",
+        "$cab = Join-Path $dir 'fxsound1.cab'",
+        "Remove-Item -LiteralPath $cab -Force -ErrorAction Stop",
+        "if (Test-Path -LiteralPath $cab) { throw 'FxSound CAB file could not be removed after successful installation.' }"
     ],
     "pre_uninstall": [
         "if (!(is_admin)) { throw 'FxSound requires administrator rights to uninstall.' }",
@@ -84,7 +87,7 @@
         "Uses the official FxSound installer and extracts its MSI/CAB payload into the versioned Scoop directory.",
         "The application files are installed in the versioned Scoop directory via APPDIR=$dir.",
         "The FxSound virtual audio driver is installed system-wide; this is not a fully portable installation.",
-        "The extracted MSI and CAB are retained in the versioned Scoop directory so uninstall uses this package's own MSI.",
+        "The extracted MSI is retained in the versioned Scoop directory so uninstall uses this package's own MSI; the CAB is deleted after successful installation.",
         "Install and uninstall require an elevated PowerShell session. Close FxSound before uninstalling."
     ]
 }
