@@ -204,7 +204,7 @@ jobs:
           Get-Process -Name FxSound -ErrorAction SilentlyContinue |
               Stop-Process -Force -ErrorAction SilentlyContinue
 
-          Start-Process -FilePath $exe -ArgumentList '--run_minimized'
+          Start-Process -FilePath $exe -WorkingDirectory $current -ArgumentList '--run_minimized'
           Start-Sleep -Seconds 4
 
           $process = Get-Process -Name FxSound -ErrorAction SilentlyContinue
@@ -213,12 +213,49 @@ jobs:
           }
 
           & $exe --power=1
-          Start-Sleep -Seconds 2
-          & $exe --status
 
           $statusPath = Join-Path $env:APPDATA "FxSound\status.json"
+          $deadline = (Get-Date).AddSeconds(20)
+          while ((Get-Date) -lt $deadline) {
+              & $exe --status
+              if (Test-Path $statusPath -PathType Leaf) {
+                  break
+              }
+
+              $process = Get-Process -Name FxSound -ErrorAction SilentlyContinue
+              if (!$process) {
+                  break
+              }
+
+              Start-Sleep -Seconds 2
+          }
+
           if (!(Test-Path $statusPath -PathType Leaf)) {
-              throw "FxSound status.json was not created."
+              Write-Host "FxSound status file was not created. APPDATA=$env:APPDATA"
+              Write-Host "FxSound processes:"
+              Get-Process -Name FxSound -ErrorAction SilentlyContinue | Format-List Id, StartTime, Path
+              Write-Host "Windows audio endpoints:"
+              Get-PnpDevice -Class AudioEndpoint -ErrorAction SilentlyContinue |
+                  Format-Table Status, FriendlyName, InstanceId -AutoSize
+              Get-CimInstance Win32_SoundDevice -ErrorAction SilentlyContinue |
+                  Format-Table Status, Name, PNPDeviceID -AutoSize
+
+              $logRoots = @(
+                  (Join-Path $env:APPDATA "FxSound"),
+                  (Join-Path $env:LOCALAPPDATA "FxSound"),
+                  (Join-Path $env:LOCALAPPDATA "FxSound logs")
+              )
+              foreach ($root in $logRoots) {
+                  if (Test-Path $root -PathType Container) {
+                      Get-ChildItem -LiteralPath $root -Filter "*.log" -File -Recurse -ErrorAction SilentlyContinue |
+                          ForEach-Object {
+                              Write-Host "FxSound log: $($_.FullName)"
+                              Get-Content -LiteralPath $_.FullName -Tail 100 -ErrorAction SilentlyContinue
+                          }
+                  }
+              }
+
+              throw "FxSound status.json was not created after retrying the CLI status request."
           }
 
           $status = Get-Content $statusPath -Raw | ConvertFrom-Json
