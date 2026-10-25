@@ -40,7 +40,7 @@ This table is generated automatically from the manifests currently available in 
 | --- | --- | --- | --- | --- | --- |
 | [clipcascade](bucket/clipcascade.json) | Clipboard & Text | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
 | [filee](bucket/filee.json) | File Management | 2.1.0 | 2026-10-25 | [Homepage](https://github.com/KnifeLemon/Filee) | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. |
-| [fxsound](bucket/fxsound.json) | Media & Audio/Video | 1.2.16.0 | 2026-10-25 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows. |
+| [fxsound](bucket/fxsound.json) | Media & Audio/Video | 1.2.17.0 | 2026-10-25 | [Homepage](https://github.com/fxsound2/fxsound-app) | Audio enhancer and sound equalizer for Windows (latest Beta). |
 | [motrix](bucket/motrix.json) | Download Managers | 2.0.1 | 2026-10-25 | [Homepage](https://github.com/agalwood/Motrix) | Open-source download manager powered by aria2. |
 | [openscreen](bucket/openscreen.json) | Media & Audio/Video | 2.1.2 | 2026-10-25 | [Homepage](https://getopenscreen.com/) | Open-source screen recording and video editing tool for creating polished demos. |
 | [PdfCraftTool](bucket/PdfCraftTool.json) | PDF & Documents | 2026.10.25-6090725 | 2026-10-25 | [Homepage](https://github.com/PDFCraftTool/pdfcraft) | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. |
