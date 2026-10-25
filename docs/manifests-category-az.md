@@ -172,6 +172,7 @@ Generated automatically from the manifests in the bucket directory.
 | [znote](bucket/znote.json) | Notes & Knowledge | 4.9.3 | 2026-09-29 | [Homepage](https://github.com/alagrede/znote-app) | Markdown-based note-taking app for developers. |
 | [air-server-np](bucket/air-server-np.json) | Other Utilities | 5.7.2 | 2026-10-21 | [Homepage](https://www.airserver.com) | AirServer is the most advanced screen mirroring receiver for Mac and PC. |
 | [backup-start-menu-layout](bucket/backup-start-menu-layout.json) | Other Utilities | 1.6 | 2026-10-21 | [Homepage](https://www.sordum.org/backup-start-menu-layout) | A simple app that allows users to backup and restore their StartMenu layout. |
+| [belarc-advisor](bucket/belarc-advisor.json) | Other Utilities | 13.1.0.0 | 2026-10-25 | [Homepage](https://www.belarc.com/products/belarc-advisor) | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. |
 | [c-cleaner-plus](bucket/c-cleaner-plus.json) | Other Utilities | 0.8.0 | 2026-10-21 | [Homepage](https://github.com/Kiowx/c_cleaner_plus) | Windows cleanup utility with large-file scanning, advanced cleanup, forced uninstall, and scheduled tasks. |
 | [c2flux](bucket/c2flux.json) | Other Utilities | 1.4.1 | 2026-09-29 | [Homepage](https://github.com/UncleRiot/c2flux) | c2flux |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.1 | 2026-09-29 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |

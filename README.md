@@ -38,6 +38,7 @@ This table is generated automatically from the manifests currently available in 
 <a id="manifests-newest"></a>
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [belarc-advisor](bucket/belarc-advisor.json) | Other Utilities | 13.1.0.0 | 2026-10-25 | [Homepage](https://www.belarc.com/products/belarc-advisor) | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. |
 | [clipcascade](bucket/clipcascade.json) | Clipboard & Text | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
 | [compactgui](bucket/compactgui.json) | Storage & Disk Tools | 4.0.0-beta.12 | 2026-10-25 | [Homepage](https://github.com/IridiumIO/CompactGUI) | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
 | [eric-amcacheparser](bucket/eric-amcacheparser.json) | Other Utilities | 2026.10.0 | 2026-10-25 | [Homepage](https://ericzimmerman.github.io/) | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. |
