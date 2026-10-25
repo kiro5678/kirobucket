@@ -33,25 +33,44 @@ jobs:
           Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
           "$env:USERPROFILE\scoop\shims" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Validate manifest and checkver
+      - name: Validate manifest and stable release metadata
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
           $manifest = Join-Path $env:GITHUB_WORKSPACE "bucket\fxsound.json"
           $json = Get-Content $manifest -Raw | ConvertFrom-Json
 
-          $releasePage = (Invoke-WebRequest -Uri "https://github.com/fxsound2/fxsound-app/releases" -UseBasicParsing).Content
-          $match = [regex]::Match($releasePage, 'Version ([\d.]+) \(Beta\)')
-          if (!$match.Success) {
-              throw "Could not detect the current FxSound Beta version on the official releases page."
+          $x64Info = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/fxsound2/fxsound-app/latest/release/updates.txt" -UseBasicParsing).Content
+          $arm64Info = (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/fxsound2/fxsound-app/latest/release/arm64/updates.txt" -UseBasicParsing).Content
+
+          $x64Version = [regex]::Match($x64Info, '(?m)^ProductVersion\s*=\s*([\d.]+)\s*$')
+          $arm64Version = [regex]::Match($arm64Info, '(?m)^ProductVersion\s*=\s*([\d.]+)\s*$')
+          $x64Hash = [regex]::Match($x64Info, '(?m)^SHA256\s*=\s*([A-Fa-f0-9]{64})\s*$')
+          $arm64Hash = [regex]::Match($arm64Info, '(?m)^SHA256\s*=\s*([A-Fa-f0-9]{64})\s*$')
+
+          if (!$x64Version.Success -or !$arm64Version.Success -or !$x64Hash.Success -or !$arm64Hash.Success) {
+              throw "Could not read the official stable FxSound version and SHA-256 values."
           }
 
-          $latestBeta = $match.Groups[1].Value
-          Write-Host "Official FxSound Beta version: $latestBeta"
-
-          if ($latestBeta -ne $json.version) {
-              throw "Manifest version $($json.version) does not match the official FxSound Beta version $latestBeta."
+          $latestStable = $x64Version.Groups[1].Value
+          if ($latestStable -ne $arm64Version.Groups[1].Value) {
+              throw "Official x64 and ARM64 stable versions do not match."
           }
+
+          Write-Host "Official FxSound stable version: $latestStable"
+          if ($latestStable -ne $json.version) {
+              throw "Manifest version $($json.version) does not match the official stable version $latestStable."
+          }
+
+          if ($json.architecture.'64bit'.hash -ine $x64Hash.Groups[1].Value) {
+              throw "Manifest x64 SHA-256 does not match the official stable metadata."
+          }
+
+          if ($json.architecture.arm64.hash -ine $arm64Hash.Groups[1].Value) {
+              throw "Manifest ARM64 SHA-256 does not match the official stable metadata."
+          }
+
+          Write-Host "Official stable x64 and ARM64 SHA-256 values match the manifest."
 
       - name: Install FxSound from local manifest
         shell: pwsh
