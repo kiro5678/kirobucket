@@ -1,18 +1,18 @@
 {
     "version": "2026.10.0",
-    "description": "GUI for local and UTC time, stopwatch, countdowns, and timestamp conversion.",
+    "description": "Eric Zimmerman's TimeApp: GUI for local and UTC time, stopwatch, countdowns, and timestamp conversion.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
     "url": "https://download.ericzimmermanstools.com/net/TimeApp.zip",
     "shortcuts": [
         [
             "TimeApp.exe",
-            "TimeApp"
+            "Eric Zimmerman TimeApp"
         ]
     ],
     "notes": [
         "Requires the .NET 10 Desktop Runtime.",
-        "The upstream site does not publish a static SHA256 checksum for this archive. The initial manifest omits hash; Scoop may warn until a hash is populated."
+        "The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated."
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",

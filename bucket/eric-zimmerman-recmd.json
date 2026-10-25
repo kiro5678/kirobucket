@@ -1,13 +1,13 @@
 {
     "version": "2026.10.1",
-    "description": "Command-line Windows Registry searching and examination tool.",
+    "description": "Eric Zimmerman's RECmd: Command-line Windows Registry searching and examination tool.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
     "url": "https://download.ericzimmermanstools.com/net/RECmd.zip",
     "bin": "RECmd.exe",
     "notes": [
         "Requires the .NET 10 Runtime.",
-        "The upstream site does not publish a static SHA256 checksum for this archive. The initial manifest omits hash; Scoop may warn until a hash is populated."
+        "The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated."
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",

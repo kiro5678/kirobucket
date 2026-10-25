@@ -1,13 +1,13 @@
 {
     "version": "2026.10.0",
-    "description": "Parse Microsoft Windows User Access Log artifacts.",
+    "description": "Eric Zimmerman's SumECmd: Parse Microsoft Windows User Access Log artifacts.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
     "url": "https://download.ericzimmermanstools.com/net/SumECmd.zip",
     "bin": "SumECmd.exe",
     "notes": [
         "Requires the .NET 10 Runtime.",
-        "The upstream site does not publish a static SHA256 checksum for this archive. The initial manifest omits hash; Scoop may warn until a hash is populated."
+        "The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated."
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",

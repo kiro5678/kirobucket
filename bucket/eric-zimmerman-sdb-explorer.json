@@ -1,18 +1,18 @@
 {
     "version": "2026.10.0",
-    "description": "GUI for exploring Windows Shim databases.",
+    "description": "Eric Zimmerman's SDB Explorer: GUI for exploring Windows Shim databases.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
     "url": "https://download.ericzimmermanstools.com/net/SDBExplorer.zip",
     "shortcuts": [
         [
             "SDBExplorer.exe",
-            "SDB Explorer"
+            "Eric Zimmerman SDB Explorer"
         ]
     ],
     "notes": [
         "Requires the .NET 10 Desktop Runtime.",
-        "The upstream site does not publish a static SHA256 checksum for this archive. The initial manifest omits hash; Scoop may warn until a hash is populated."
+        "The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated."
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",
