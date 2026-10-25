@@ -1,16 +1,16 @@
 {
-    "version": "1.2.16.0",
-    "description": "Audio enhancer and sound equalizer for Windows.",
+    "version": "1.2.17.0",
+    "description": "Audio enhancer and sound equalizer for Windows (latest Beta).",
     "homepage": "https://github.com/fxsound2/fxsound-app",
     "license": "AGPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/fxsound2/fxsound-app/raw/refs/tags/v1.2.16.0/release/fxsound_setup.exe",
-            "hash": "3e4c6aead03e1dd9f093de4ff9842b8d7ed9487f8b033a87c3ab83e5f65ca710"
+            "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe",
+            "hash": "cac67c030fd1d9bbaff5cbe19e7d3d874275cf6913e1adcc7f52521697397464"
         },
         "arm64": {
-            "url": "https://github.com/fxsound2/fxsound-app/raw/refs/tags/v1.2.16.0/release/arm64/fxsound_setup.arm64.exe",
-            "hash": "a60e8e73e98e1ddcd4d90deeb53297258d22708efa155fa3479182b648b83a35"
+            "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.arm64.exe",
+            "hash": "72484711a9a9d903b03e6898429024aa25aa2a49643034e95074ff1272762120"
         }
     },
     "pre_install": [
@@ -52,24 +52,25 @@
     "shortcuts": [
         [
             "FxSound.exe",
-            "FxSound"
+            "FxSound Beta"
         ]
     ],
     "checkver": {
-        "url": "https://raw.githubusercontent.com/fxsound2/fxsound-app/latest/release/updates.txt",
+        "url": "https://raw.githubusercontent.com/fxsound2/fxsound-app/beta/release/updates.txt",
         "regex": "ProductVersion = ([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/fxsound2/fxsound-app/raw/refs/tags/v$version/release/fxsound_setup.exe"
+                "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.exe"
             },
             "arm64": {
-                "url": "https://github.com/fxsound2/fxsound-app/raw/refs/tags/v$version/release/arm64/fxsound_setup.arm64.exe"
+                "url": "https://github.com/fxsound2/fxsound-app/releases/download/beta/fxsound_setup.arm64.exe"
             }
         }
     },
     "notes": [
+        "Tracks the latest official FxSound Beta build; it may be newer than the stable release.",
         "Uses the official FxSound installer and extracts its MSI/CAB payload into the versioned Scoop directory.",
         "The application files are installed in the versioned Scoop directory via APPDIR=$dir.",
         "The FxSound virtual audio driver is installed system-wide; this is not a fully portable installation.",
