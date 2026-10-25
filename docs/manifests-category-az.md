@@ -525,7 +525,7 @@ Generated automatically from the manifests in the bucket directory.
 | [veracrypt](bucket/veracrypt.json) | Security | 1.26.29 | 2026-10-23 | [Homepage](https://veracrypt.io/) | Open-source disk encryption software for creating and mounting encrypted volumes. |
 | [vimera](bucket/vimera.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/vimera) | File and text hash analysis and verification tool for Windows. |
 | [yamira](bucket/yamira.json) | Security | 26.11 | 2026-10-13 | [Homepage](https://github.com/turkaysoft/yamira) | USB drive protection tool for Windows. |
-| [compactgui](bucket/compactgui.json) | Storage & Disk Tools | 4.0.0-beta.10 | 2026-09-29 | [Homepage](https://github.com/IridiumIO/CompactGUI) | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
+| [compactgui](bucket/compactgui.json) | Storage & Disk Tools | 4.0.0-beta.12 | 2026-10-25 | [Homepage](https://github.com/IridiumIO/CompactGUI) | Reduce the space taken up by games and programs on disk by using native Windows APIs. |
 | [diskgeek](bucket/diskgeek.json) | Storage & Disk Tools | 1.1.1 | 2026-09-29 | [Homepage](https://github.com/techygeekshome/DiskGeek) | A free, self-contained disk space analyser for Windows. |
 | [mangodisk](bucket/mangodisk.json) | Storage & Disk Tools | 1.2.0 | 2026-10-20 | [Homepage](https://github.com/harry0703/MangoDisk) | Disk cleanup, storage analysis, and system optimization for Windows. |
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.13. | 2026-10-16 | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
