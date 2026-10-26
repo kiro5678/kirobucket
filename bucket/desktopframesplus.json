@@ -21,5 +21,6 @@
             "url": "https://api.github.com/repos/limbo666/DesktopFramesPlus/releases/tags/$version",
             "regex": "\"name\"\\s*:\\s*\"Desktop\\.Frames\\+\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
         }
-    }
+    },
+    "extract_dir": "Desktop Frames+"
 }
