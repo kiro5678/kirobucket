@@ -10,7 +10,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary pur
 | Browsers & Communication | 4 | [View](#browsers-communication) |
 | Clipboard & Text | 29 | [View](#clipboard-text) |
 | Developer & Technical Tools | 41 | [View](#developer-technical-tools) |
-| Download Managers | 16 | [View](#download-managers) |
+| Download Managers | 15 | [View](#download-managers) |
 | Emulators & Compatibility | 14 | [View](#emulators-compatibility) |
 | File Management | 53 | [View](#file-management) |
 | Forensics & Diagnostics | 31 | [View](#forensics-diagnostics) |
@@ -29,6 +29,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary pur
 | System Monitoring & Hardware | 41 | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 10 | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | [View](#translation-ocr) |
+| Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 53 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 28 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 2 | [View](#windows-update-management) |
@@ -154,7 +155,6 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary pur
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
 | [qbittorrent-lt20](../bucket/qbittorrent-lt20.json) | 5.2.4 | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). | [Homepage](https://www.qbittorrent.org) |
 | [rqbit](../bucket/rqbit.json) | 9.0.1 | A BitTorrent client with a desktop GUI, HTTP API and Web UI. | [Homepage](https://github.com/ikatson/rqbit) |
-| [spotlight-downloader](../bucket/spotlight-downloader.json) | 2.0.1 | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. | [Homepage](https://github.com/ORelio/Spotlight-Downloader) |
 | [varia](../bucket/varia.json) | 2026.8.5-1 | Download manager for files, torrents and videos. | [Homepage](https://github.com/giantpinkrobots/varia) |
 | [vovsoft-batch-url-downloader](../bucket/vovsoft-batch-url-downloader.json) | 6.4 | Portable edition of Vovsoft Batch URL Downloader. | [Homepage](https://vovsoft.com/software/batch-url-downloader/) |
 | [vovsoft-download-mailbox-emails](../bucket/vovsoft-download-mailbox-emails.json) | 2.1 | Portable edition of Vovsoft Download Mailbox Emails. | [Homepage](https://vovsoft.com/software/download-mailbox-emails/) |
@@ -687,6 +687,12 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary pur
 | [vovsoft-speech-to-text-converter](../bucket/vovsoft-speech-to-text-converter.json) | 6.0 | Portable edition of Vovsoft Speech to Text Converter. | [Homepage](https://vovsoft.com/software/speech-to-text-converter/) |
 | [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
 
+## Weather & Information
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [trayweather](../bucket/trayweather.json) | 1.37.2 | A lightweight weather application that runs in the Windows system tray. | [Homepage](https://github.com/FelixdelasPozas/TrayWeather) |
+
 ## Windows Customization
 
 | Manifest | Version | Description | Homepage |
@@ -727,6 +733,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary pur
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |
 | [shuffle-paper](../bucket/shuffle-paper.json) | 0.4.0 | Privacy-friendly wallpaper shuffle and rotation utility for Windows | [Homepage](https://github.com/jcsm/ShufflePaper) |
 | [spotlight-dimmer](../bucket/spotlight-dimmer.json) | 0.9.1 | Windows utility that dims inactive displays or regions to spotlight the active window. | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) |
+| [spotlight-downloader](../bucket/spotlight-downloader.json) | 2.0.1 | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. | [Homepage](https://github.com/ORelio/Spotlight-Downloader) |
 | [spotlightsaver](../bucket/spotlightsaver.json) | 7.0.0 | Saves Windows 10/11 Spotlight wallpapers to a local folder. | [Homepage](https://github.com/depthbomb/SpotlightSaver) |
 | [sucrose](../bucket/sucrose.json) | 26.7.5.0 | Sucrose Wallpaper Engine for Windows (stable channel; official per-user Bundle installer). | [Homepage](https://github.com/Taiizor/Sucrose) |
 | [sucrose-nightly](../bucket/sucrose-nightly.json) | 26.10.5.0 | Sucrose Wallpaper Engine for Windows (nightly/pre-release channel; official per-user Bundle installer). | [Homepage](https://github.com/Taiizor/Sucrose) |
@@ -734,7 +741,6 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary pur
 | [takeoff-launcher-portable](../bucket/takeoff-launcher-portable.json) | 1.0.4 | Focused, lightweight native Windows application launcher (portable) | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
 | [translucenttb](../bucket/translucenttb.json) | 2026.2 | Lightweight utility for customizing the Windows taskbar appearance. | [Homepage](https://github.com/TranslucentTB/TranslucentTB) |
 | [traytoolbar](../bucket/traytoolbar.json) | 1.8.4 | Custom toolbar for the Windows taskbar replacement menu. | [Homepage](https://github.com/brondavies/TrayToolbar) |
-| [trayweather](../bucket/trayweather.json) | 1.37.2 | A lightweight weather application that runs in the Windows system tray. | [Homepage](https://github.com/FelixdelasPozas/TrayWeather) |
 | [ttf-stix2](../bucket/ttf-stix2.json) | v2.13b171 | OpenType Unicode fonts for Scientific, Technical, and Mathematical texts | [Homepage](https://github.com/stipub/stixfonts) |
 | [vovsoft-auto-change-screensavers](../bucket/vovsoft-auto-change-screensavers.json) | 2.2 | Portable edition of Vovsoft Auto Change Screensavers. | [Homepage](https://vovsoft.com/software/auto-change-screensavers/) |
 | [vovsoft-auto-change-wallpapers](../bucket/vovsoft-auto-change-wallpapers.json) | 1.4 | Portable edition of Vovsoft Auto Change Wallpapers. | [Homepage](https://vovsoft.com/software/auto-change-wallpapers/) |
