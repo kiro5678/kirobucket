@@ -1,12 +1,12 @@
 {
-    "version": "1.01.112",
+    "version": "1.02.142",
     "description": "Windows debloater for reviewing privacy tweaks, system settings, and installed apps",
     "homepage": "https://github.com/builtbybel/Bloatynosy",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/builtbybel/Bloatynosy/releases/latest/download/BloatynosyOrigin-1.01.112.zip",
-            "hash": "2a6a583577d4f82d39e6a5b9a5edd7e50aff49dae6212a49b3230f0e9875c70d"
+            "url": "https://github.com/builtbybel/Bloatynosy/releases/download/1.02.142/Bloatynosy-1.02.142.zip",
+            "hash": "8abbd47d5049a67aece062b1d28f1904e9264e93cfc210f407ed46c120792f8e"
         }
     },
     "pre_install": [
@@ -22,12 +22,16 @@
     ],
     "checkver": {
         "url": "https://api.github.com/repos/builtbybel/Bloatynosy/releases/latest",
-        "regex": "BloatynosyOrigin-([\\d.]+)\\.zip"
+        "regex": "Bloatynosy-([\\d.]+)\\.zip"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/builtbybel/Bloatynosy/releases/latest/download/BloatynosyOrigin-$version.zip"
+                "url": "https://github.com/builtbybel/Bloatynosy/releases/download/$version/Bloatynosy-$version.zip",
+                "hash": {
+                    "url": "https://api.github.com/repos/builtbybel/Bloatynosy/releases/tags/$version",
+                    "regex": "\"name\"\\s*:\\s*\"Bloatynosy-$version\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+                }
             }
         }
     },
