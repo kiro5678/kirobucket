@@ -342,6 +342,7 @@ Generated automatically from the manifests in the bucket directory.
 | [nvidia-icat](bucket/nvidia-icat.json) | Other Utilities | 0.6.17 | 2026-10-21 | [Homepage](https://www.nvidia.com/en-us/geforce/technologies/icat/) | Image Comparison & Analysis Tool (ICAT) |
 | [nvidia-desktop-graphic-driver-np](bucket/nvidia-desktop-graphic-driver-np.json) | Other Utilities | 621.01 | 2026-10-21 | [Homepage](https://www.nvidia.com/Download/index.aspx) | NVIDIA display driver (DCH) |
 | [npcap-np](bucket/npcap-np.json) | Other Utilities | 1.90 | 2026-10-21 | [Homepage](https://npcap.com/) | A packet capture (and sending) library for Microsoft Windows. |
+| [npackd](bucket/npackd.json) | Other Utilities | 1.27.1 | 2026-10-26 | [Homepage](https://www.npackd.org) | Windows package manager for finding, installing, updating, and uninstalling software. |
 | [nomina](bucket/nomina.json) | File Management | 1.1 | 2026-09-29 | [Homepage](https://github.com/esmail-mkh/Nomina) | Advanced batch file and folder renamer for Windows. |
 | [nomeiryoui](bucket/nomeiryoui.json) | Windows Customization | 3.5.1 | 2026-09-29 | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) | Windows utility for changing system UI fonts and font sizes. |
 | [nofences](bucket/nofences.json) | Windows Customization | 1.8 | 2026-09-29 | [Homepage](https://github.com/Twometer/NoFences) | Open-source alternative to Fences for organizing the Windows desktop. |
