@@ -804,12 +804,6 @@ jobs:
               $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
 
               $addedDate = if ([string]::IsNullOrWhiteSpace([string]$item.AddedDate)) { "—" } else { [string]$item.AddedDate }
-              $nameEscaped = $item.Name.Replace("|", "\|")
-              $categoryEscaped = $item.Category.Replace("|", "\|")
-              $versionEscaped = $item.Version.Replace("|", "\|")
-              $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
-              $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
-              $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
 
               [PSCustomObject]@{
                   Name = $item.Name
