@@ -50,6 +50,7 @@ Generated automatically from the manifests in the bucket directory.
 | [vovsoft-keyboard-soundboard](bucket/vovsoft-keyboard-soundboard.json) | Other Utilities | 2.1 | 2026-10-26 | [Homepage](https://vovsoft.com/software/keyboard-soundboard/) | Portable edition of Vovsoft Keyboard Soundboard. |
 | [vovsoft-website-file-collector](bucket/vovsoft-website-file-collector.json) | Other Utilities | 1.8 | 2026-10-26 | [Homepage](https://vovsoft.com/software/website-file-collector/) | Portable edition of Vovsoft Website File Collector. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.8 | 2026-10-26 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
+| [winpinmenu](bucket/winpinmenu.json) | Other Utilities | 0.1.1 | 2026-10-26 | [Homepage](https://github.com/hatelamers/WinPinMenu) | Portable menu for pinning folders and Quick Launch-style menus to the Windows taskbar. |
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.8 | 2026-10-26 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.1 | 2026-10-26 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |
 | [zexor](bucket/zexor.json) | File Management | 1.16.0 | 2026-10-26 | [Homepage](https://github.com/metalbug/Zexor) | Visual Windows file manager with instant previews and the proprietary .zex container format. |
