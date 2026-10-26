@@ -20,7 +20,7 @@
         "url": "https://api.github.com/repos/Antalogy/releases/releases",
         "jsonpath": "$[*].tag_name",
         "regex": "(?<version>\\d+(?:\\.\\d+)+)",
-        "reverse": true
+        "reverse": false
     },
     "autoupdate": {
         "architecture": {
