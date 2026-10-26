@@ -20,9 +20,6 @@
             "imFile"
         ]
     ],
-    "checkver": {
-        "github": "https://github.com/imfile-io/imfile-desktop"
-    },
     "autoupdate": {
         "architecture": {
             "64bit": {
