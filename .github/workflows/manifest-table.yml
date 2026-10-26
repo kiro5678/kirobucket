@@ -11,7 +11,7 @@ on:
 
 concurrency:
   group: manifest-table-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -530,7 +530,108 @@ jobs:
           }
 
           $script:upstreamCache = @{}
-          $manifests = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
+          function ConvertTo-DateOnly {
+              param([object]$Value)
+              if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) {
+                  return ""
+              }
+              try {
+                  return ([DateTimeOffset]::Parse([string]$Value)).UtcDateTime.ToString("yyyy-MM-dd")
+              } catch {
+                  return ""
+              }
+          }
+
+          function Get-GitHubRepoCandidate {
+              param([object]$Manifest)
+
+              $candidates = [System.Collections.Generic.List[string]]::new()
+              if ($null -ne $Manifest.checkver) {
+                  if ($Manifest.checkver.github -is [string]) {
+                      $candidates.Add("REPO::" + $Manifest.checkver.github.Trim())
+                  }
+                  if ($Manifest.checkver.url -is [string]) {
+                      $candidates.Add($Manifest.checkver.url.Trim())
+                  }
+              }
+              if ($Manifest.homepage -is [string]) {
+                  $candidates.Add($Manifest.homepage.Trim())
+              }
+              if ($Manifest.url -is [string]) {
+                  $candidates.Add($Manifest.url.Trim())
+              } elseif ($Manifest.url -is [array]) {
+                  foreach ($value in $Manifest.url) {
+                      if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                  }
+              }
+              if ($null -ne $Manifest.architecture) {
+                  foreach ($arch in $Manifest.architecture.PSObject.Properties) {
+                      if ($null -eq $arch.Value.url) { continue }
+                      if ($arch.Value.url -is [string]) {
+                          $candidates.Add($arch.Value.url.Trim())
+                      } elseif ($arch.Value.url -is [array]) {
+                          foreach ($value in $arch.Value.url) {
+                              if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                          }
+                      }
+                  }
+              }
+
+              foreach ($candidate in $candidates) {
+                  if ($candidate -match '(?i)api\.github\.com/repos/([^/\s?#]+)/([^/\s?#]+)') {
+                      $owner = $Matches[1]
+                      $repo = $Matches[2] -replace '\.git$', ''
+                      return "$owner/$repo"
+                  }
+                  if ($candidate -match '(?i)github\.com/([^/\s?#]+)/([^/\s?#]+)') {
+                      $owner = $Matches[1]
+                      $repo = $Matches[2] -replace '\.git$', ''
+                      if ($repo -notmatch '^(issues|pulls|actions|settings|marketplace|sponsors)$') {
+                          return "$owner/$repo"
+                      }
+                  }
+                  if ($candidate -match '^REPO::([^/\s]+)/([^/\s?#]+)$') {
+                      $owner = $Matches[1]
+                      $repo = $Matches[2] -replace '\.git$', ''
+                      return "$owner/$repo"
+                  }
+              }
+              return ""
+          }
+
+          function Get-DownloadUrlFromManifest {
+              param([object]$Manifest)
+
+              $candidates = [System.Collections.Generic.List[string]]::new()
+              if ($Manifest.url -is [string]) {
+                  $candidates.Add($Manifest.url.Trim())
+              } elseif ($Manifest.url -is [array]) {
+                  foreach ($value in $Manifest.url) {
+                      if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                  }
+              }
+              if ($null -ne $Manifest.architecture) {
+                  foreach ($arch in $Manifest.architecture.PSObject.Properties) {
+                      if ($null -eq $arch.Value.url) { continue }
+                      if ($arch.Value.url -is [string]) {
+                          $candidates.Add($arch.Value.url.Trim())
+                      } elseif ($arch.Value.url -is [array]) {
+                          foreach ($value in $arch.Value.url) {
+                              if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                          }
+                      }
+                  }
+              }
+              foreach ($candidate in $candidates) {
+                  if (-not [string]::IsNullOrWhiteSpace($candidate) -and $candidate -notmatch '\$(version|architecture|arch)') {
+                      return $candidate
+                  }
+              }
+              return ""
+          }
+
+          $manifestData = [System.Collections.Generic.List[object]]::new()
+          foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
               $raw = Get-Content -Path $file.FullName -Raw
               $json = $null
@@ -553,58 +654,140 @@ jobs:
                   } else {
                       ""
                   }
-
                   $repo = Get-GitHubRepoCandidate $json
-                  $upstreamInfo = if (-not [string]::IsNullOrWhiteSpace($repo)) {
-                      Get-GitHubUpstreamInfo $repo
-                  } else {
-                      $null
-                  }
-
-                  $date = if ($null -ne $upstreamInfo -and -not [string]::IsNullOrWhiteSpace($upstreamInfo.ReleaseDate)) {
-                      $upstreamInfo.ReleaseDate
-                  } else {
-                      ""
-                  }
-
-                  if ([string]::IsNullOrWhiteSpace($date)) {
-                      $date = Get-DownloadLastModifiedDate (Get-DownloadUrlFromManifest $json)
-                  }
-                  if ([string]::IsNullOrWhiteSpace($date) -and $null -ne $upstreamInfo) {
-                      $date = $upstreamInfo.RepositoryDate
-                  }
+                  $downloadUrl = Get-DownloadUrlFromManifest $json
               } else {
                   $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
                   $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
                   $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
                   $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
                   $homepage = ""
-                  $date = ""
+                  $repo = ""
+                  $downloadUrl = ""
               }
-
-              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
               $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { Write-Warning "No category mapping for '$name'; using 'Other Utilities'."; "Other Utilities" }
+              $manifestData.Add([PSCustomObject]@{
+                  Name = $name
+                  RelativePath = $relativePath
+                  Version = $version
+                  Description = $description
+                  Homepage = $homepage
+                  Category = $category
+                  Repo = $repo
+                  DownloadUrl = $downloadUrl
+              })
+          }
 
-              $nameEscaped = $name.Replace("|", "\|")
-              $categoryEscaped = $category.Replace("|", "\|")
-              $versionEscaped = $version.Replace("|", "\|")
-              $descriptionEscaped = $description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
-              $homepageEscaped = $homepage.Replace("|", "\|").Replace(")", "%29")
+          # Query each upstream GitHub repository once, in parallel. Use published releases,
+          # not commit dates from the bucket manifest. The bounded parallelism avoids serial waits.
+          $githubRepos = @(
+              $manifestData |
+                  Where-Object { -not [string]::IsNullOrWhiteSpace($_.Repo) } |
+                  Select-Object -ExpandProperty Repo -Unique
+          )
+          Write-Host "Looking up published releases for $($githubRepos.Count) unique GitHub repositories."
+          $upstreamRecords = @(
+              $githubRepos | ForEach-Object -Parallel {
+                  $repo = [string]$_
+                  $releaseDate = ""
+                  $headers = @{
+                      Accept = "application/vnd.github+json"
+                      "X-GitHub-Api-Version" = "2022-11-28"
+                      "User-Agent" = "kirobucket-manifest-table"
+                  }
+                  if (-not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+                      $headers.Authorization = "Bearer $($env:GH_TOKEN)"
+                  }
+                  try {
+                      $releases = @(Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases?per_page=10" -Headers $headers -TimeoutSec 15 -ErrorAction Stop)
+                      $published = @(
+                          $releases |
+                              Where-Object { -not $_.draft -and -not [string]::IsNullOrWhiteSpace([string]$_.published_at) } |
+                              Sort-Object @{ Expression = { [DateTimeOffset]::Parse([string]$_.published_at) }; Descending = $true }
+                      )
+                      if ($published.Count -gt 0) {
+                          $releaseDate = ([DateTimeOffset]::Parse([string]$published[0].published_at)).UtcDateTime.ToString("yyyy-MM-dd")
+                      }
+                  } catch {
+                      Write-Verbose "No release metadata for $repo : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{
+                      Repository = $repo
+                      ReleaseDate = $releaseDate
+                  }
+              } -ThrottleLimit 20
+          )
 
-              $homepageCell = if ([string]::IsNullOrWhiteSpace($homepage)) {
-                  "—"
-              } else {
-                  "[Homepage]($homepageEscaped)"
+          $upstreamCache = @{}
+          foreach ($record in $upstreamRecords) {
+              $upstreamCache[$record.Repository] = [string]$record.ReleaseDate
+          }
+
+          # If GitHub has no published release date, probe the actual download asset's
+          # Last-Modified header in parallel. Never use manifest commit timestamps.
+          $urlsToProbe = [System.Collections.Generic.List[string]]::new()
+          foreach ($item in $manifestData) {
+              $hasReleaseDate = $false
+              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
+                  $hasReleaseDate = -not [string]::IsNullOrWhiteSpace([string]$upstreamCache[$item.Repo])
               }
+              if (-not $hasReleaseDate -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
+                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
+                  if ($cleanUrl -match '^https://') { $urlsToProbe.Add($cleanUrl) }
+              }
+          }
+
+          $downloadDates = @{}
+          $uniqueDownloadUrls = @($urlsToProbe | Sort-Object -Unique)
+          Write-Host "Checking Last-Modified on $($uniqueDownloadUrls.Count) download URL(s) without release dates."
+          $downloadDateRecords = @(
+              $uniqueDownloadUrls | ForEach-Object -Parallel {
+                  $url = [string]$_
+                  $date = ""
+                  try {
+                      $response = Invoke-WebRequest -Uri $url -Method Head -MaximumRedirection 10 -TimeoutSec 12 -ErrorAction Stop
+                      $lastModified = $response.Headers["Last-Modified"]
+                      if (-not [string]::IsNullOrWhiteSpace([string]$lastModified)) {
+                          $date = ([DateTimeOffset]::Parse([string]$lastModified)).UtcDateTime.ToString("yyyy-MM-dd")
+                      }
+                  } catch {
+                      Write-Verbose "No Last-Modified header for $url : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{ Url = $url; Date = $date }
+              } -ThrottleLimit 20
+          )
+          foreach ($record in $downloadDateRecords) {
+              $downloadDates[$record.Url] = [string]$record.Date
+          }
+
+          $manifests = foreach ($item in $manifestData) {
+              $date = ""
+              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
+                  $date = [string]$upstreamCache[$item.Repo]
+              }
+              if ([string]::IsNullOrWhiteSpace($date) -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
+                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
+                  if ($downloadDates.ContainsKey($cleanUrl)) {
+                      $date = [string]$downloadDates[$cleanUrl]
+                  }
+              }
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $nameEscaped = $item.Name.Replace("|", "\|")
+              $categoryEscaped = $item.Category.Replace("|", "\|")
+              $versionEscaped = $item.Version.Replace("|", "\|")
+              $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
 
               [PSCustomObject]@{
-                  Name = $name
-                  Category = $category
+                  Name = $item.Name
+                  Category = $item.Category
                   Date = $date
-                  Homepage = $homepage
-                  Row = "| [$nameEscaped]($relativePath) | $categoryEscaped | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+                  Homepage = $item.Homepage
+                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
               }
           }
 
@@ -630,7 +813,7 @@ jobs:
                   ""
                   "## $Title"
                   ""
-                  "Generated from bucket manifests and upstream program metadata. The date prefers the latest published GitHub release, then the download's Last-Modified date, then upstream repository activity. A dash means no reliable date was available."
+                  "Generated from bucket manifests and upstream program metadata. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means neither date was available."
                   ""
                   "| Name | Category | Version | PROGRAM UPDATE | Homepage | Description |"
                   "| --- | --- | --- | --- | --- | --- |"
@@ -654,7 +837,7 @@ jobs:
           $table = @(
               "## Manifests"
               ""
-              "The package version and description come from the bucket manifests. Program Update uses the latest published upstream release date when available, falling back to the download's Last-Modified date and then upstream repository activity. A dash means no reliable date was available."
+              "The package version and description come from the bucket manifests. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means neither date was available."
               ""
               $start
               '<a id="manifests-newest"></a>'
