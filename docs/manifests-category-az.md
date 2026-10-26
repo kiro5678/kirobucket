@@ -606,7 +606,7 @@ Generated automatically from the manifests in the bucket directory.
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-25 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [wingodarktray](bucket/wingodarktray.json) | Windows Customization | 2.3.1 | 2026-09-29 | [Homepage](https://github.com/5mdt/WinGoDarkTray) | System tray app for toggling Windows light and dark themes. |
 | [anti-yandex](bucket/anti-yandex.json) | Windows Privacy & Tweaks | 1.3 | 2026-09-29 | [Homepage](https://github.com/TheCawa/AntiYandex) | Utility for finding and removing Yandex Browser files and registry entries |
-| [bloatynosy](bucket/bloatynosy.json) | Windows Privacy & Tweaks | 1.01.112 | 2026-10-21 | [Homepage](https://github.com/builtbybel/Bloatynosy) | Windows debloater for reviewing privacy tweaks, system settings, and installed apps |
+| [bloatynosy](bucket/bloatynosy.json) | Windows Privacy & Tweaks | 1.02.142 | 2026-10-26 | [Homepage](https://github.com/builtbybel/Bloatynosy) | Windows debloater for reviewing privacy tweaks, system settings, and installed apps |
 | [crapfixer](bucket/crapfixer.json) | Windows Privacy & Tweaks | 2.01.41 | 2026-09-29 | [Homepage](https://github.com/builtbybel/CrapFixer) | Windows tweaking, privacy, and app removal utility. |
 | [fluentcleaner](bucket/fluentcleaner.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Windows privacy cleaner and system cleanup utility. |
 | [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-10-13 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |

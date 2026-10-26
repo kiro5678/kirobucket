@@ -8,7 +8,7 @@ Generated automatically from the manifests in the bucket directory.
 | --- | --- | --- | --- | --- | --- |
 | [patchlight](bucket/patchlight.json) | Windows Update & Management | 0.5.2 | 2026-10-23 | [Homepage](https://github.com/G4SBO/PatchLight) | Windows 11 update monitor that checks pending updates against Microsoft's known issues and pauses affected updates. |
 | [anti-yandex](bucket/anti-yandex.json) | Windows Privacy & Tweaks | 1.3 | 2026-09-29 | [Homepage](https://github.com/TheCawa/AntiYandex) | Utility for finding and removing Yandex Browser files and registry entries |
-| [bloatynosy](bucket/bloatynosy.json) | Windows Privacy & Tweaks | 1.01.112 | 2026-10-21 | [Homepage](https://github.com/builtbybel/Bloatynosy) | Windows debloater for reviewing privacy tweaks, system settings, and installed apps |
+| [bloatynosy](bucket/bloatynosy.json) | Windows Privacy & Tweaks | 1.02.142 | 2026-10-26 | [Homepage](https://github.com/builtbybel/Bloatynosy) | Windows debloater for reviewing privacy tweaks, system settings, and installed apps |
 | [crapfixer](bucket/crapfixer.json) | Windows Privacy & Tweaks | 2.01.41 | 2026-09-29 | [Homepage](https://github.com/builtbybel/CrapFixer) | Windows tweaking, privacy, and app removal utility. |
 | [fluentcleaner](bucket/fluentcleaner.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-09-29 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Windows privacy cleaner and system cleanup utility. |
 | [fluentcleaner-classic](bucket/fluentcleaner-classic.json) | Windows Privacy & Tweaks | 26.09.01 | 2026-10-13 | [Homepage](https://github.com/builtbybel/FluentCleaner) | Classic WinForms edition of FluentCleaner for Windows. |
