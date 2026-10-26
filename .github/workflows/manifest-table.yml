@@ -29,6 +29,8 @@ jobs:
 
       - name: Generate manifest views
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
 
@@ -357,6 +359,177 @@ jobs:
               "zafuse" = "Developer & Technical Tools"
           }
 
+          function ConvertTo-DateOnly {
+              param([object]$Value)
+              if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) {
+                  return ""
+              }
+              try {
+                  return ([DateTimeOffset]::Parse([string]$Value)).UtcDateTime.ToString("yyyy-MM-dd")
+              } catch {
+                  return ""
+              }
+          }
+
+          function Get-GitHubRepoCandidate {
+              param([object]$Manifest)
+
+              $candidates = [System.Collections.Generic.List[string]]::new()
+              if ($null -ne $Manifest.checkver) {
+                  if ($Manifest.checkver.github -is [string]) {
+                      $candidates.Add("REPO::" + $Manifest.checkver.github.Trim())
+                  }
+                  if ($Manifest.checkver.url -is [string]) {
+                      $candidates.Add($Manifest.checkver.url.Trim())
+                  }
+              }
+              if ($Manifest.homepage -is [string]) {
+                  $candidates.Add($Manifest.homepage.Trim())
+              }
+              if ($Manifest.url -is [string]) {
+                  $candidates.Add($Manifest.url.Trim())
+              } elseif ($Manifest.url -is [array]) {
+                  foreach ($value in $Manifest.url) {
+                      if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                  }
+              }
+              if ($null -ne $Manifest.architecture) {
+                  foreach ($arch in $Manifest.architecture.PSObject.Properties) {
+                      if ($null -ne $arch.Value.url) {
+                          if ($arch.Value.url -is [string]) {
+                              $candidates.Add($arch.Value.url.Trim())
+                          } elseif ($arch.Value.url -is [array]) {
+                              foreach ($value in $arch.Value.url) {
+                                  if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                              }
+                          }
+                      }
+                  }
+              }
+
+              foreach ($candidate in $candidates) {
+                  if ($candidate -match '^REPO::([^/\s]+)/([^/\s?#]+)$') {
+                      $owner = $Matches[1]
+                      $repo = $Matches[2] -replace '\.git$', ''
+                      return "$owner/$repo"
+                  }
+                  if ($candidate -match '(?i)api\.github\.com/repos/([^/\s?#]+)/([^/\s?#]+)') {
+                      $owner = $Matches[1]
+                      $repo = $Matches[2] -replace '\.git$', ''
+                      return "$owner/$repo"
+                  }
+                  if ($candidate -match '(?i)github\.com/([^/\s?#]+)/([^/\s?#]+)') {
+                      $owner = $Matches[1]
+                      $repo = $Matches[2] -replace '\.git$', ''
+                      if ($repo -notmatch '^(issues|pulls|actions|settings|marketplace|sponsors)$') {
+                          return "$owner/$repo"
+                      }
+                  }
+              }
+              return ""
+          }
+
+          function Get-DownloadUrlFromManifest {
+              param([object]$Manifest)
+
+              $candidates = [System.Collections.Generic.List[string]]::new()
+              if ($Manifest.url -is [string]) {
+                  $candidates.Add($Manifest.url.Trim())
+              } elseif ($Manifest.url -is [array]) {
+                  foreach ($value in $Manifest.url) {
+                      if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                  }
+              }
+              if ($null -ne $Manifest.architecture) {
+                  foreach ($arch in $Manifest.architecture.PSObject.Properties) {
+                      if ($null -eq $arch.Value.url) { continue }
+                      if ($arch.Value.url -is [string]) {
+                          $candidates.Add($arch.Value.url.Trim())
+                      } elseif ($arch.Value.url -is [array]) {
+                          foreach ($value in $arch.Value.url) {
+                              if ($value -is [string]) { $candidates.Add($value.Trim()) }
+                          }
+                      }
+                  }
+              }
+              foreach ($candidate in $candidates) {
+                  if (-not [string]::IsNullOrWhiteSpace($candidate) -and $candidate -notmatch '\$(version|architecture|arch)') {
+                      return $candidate
+                  }
+              }
+              return ""
+          }
+
+          function Get-GitHubUpstreamInfo {
+              param([string]$Repository)
+
+              if ($script:upstreamCache.ContainsKey($Repository)) {
+                  return $script:upstreamCache[$Repository]
+              }
+
+              $releaseDate = ""
+              $repositoryDate = ""
+              $headers = @{
+                  Accept = "application/vnd.github+json"
+                  "X-GitHub-Api-Version" = "2022-11-28"
+                  "User-Agent" = "kirobucket-manifest-table"
+              }
+              if (-not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+                  $headers.Authorization = "Bearer $($env:GH_TOKEN)"
+              }
+
+              try {
+                  $releaseUrl = "https://api.github.com/repos/$Repository/releases?per_page=100"
+                  $releases = @(Invoke-RestMethod -Uri $releaseUrl -Headers $headers -TimeoutSec 20 -ErrorAction Stop)
+                  $publishedReleases = @(
+                      $releases |
+                          Where-Object { -not $_.draft -and -not [string]::IsNullOrWhiteSpace([string]$_.published_at) } |
+                          Sort-Object @{ Expression = { [DateTimeOffset]::Parse([string]$_.published_at) }; Descending = $true }
+                  )
+                  if ($publishedReleases.Count -gt 0) {
+                      $releaseDate = ConvertTo-DateOnly $publishedReleases[0].published_at
+                  }
+              } catch {
+                  Write-Verbose "Could not read GitHub releases for $Repository : $($_.Exception.Message)"
+              }
+
+              if ([string]::IsNullOrWhiteSpace($releaseDate)) {
+                  try {
+                      $repositoryData = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repository" -Headers $headers -TimeoutSec 20 -ErrorAction Stop
+                      $repositoryDate = ConvertTo-DateOnly $repositoryData.pushed_at
+                  } catch {
+                      Write-Verbose "Could not read GitHub repository activity for $Repository : $($_.Exception.Message)"
+                  }
+              }
+
+              $info = [PSCustomObject]@{
+                  ReleaseDate = $releaseDate
+                  RepositoryDate = $repositoryDate
+              }
+              $script:upstreamCache[$Repository] = $info
+              return $info
+          }
+
+          function Get-DownloadLastModifiedDate {
+              param([string]$DownloadUrl)
+
+              if ([string]::IsNullOrWhiteSpace($DownloadUrl)) {
+                  return ""
+              }
+              $cleanUrl = ($DownloadUrl -split '#', 2)[0]
+              if ($cleanUrl -notmatch '^https://') {
+                  return ""
+              }
+              try {
+                  $response = Invoke-WebRequest -Uri $cleanUrl -Method Head -MaximumRedirection 10 -TimeoutSec 15 -ErrorAction Stop
+                  return ConvertTo-DateOnly $response.Headers["Last-Modified"]
+              } catch {
+                  Write-Verbose "Could not read Last-Modified for $cleanUrl : $($_.Exception.Message)"
+                  return ""
+              }
+          }
+
+          $script:upstreamCache = @{}
           $manifests = foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
               $raw = Get-Content -Path $file.FullName -Raw
@@ -380,15 +553,35 @@ jobs:
                   } else {
                       ""
                   }
+
+                  $repo = Get-GitHubRepoCandidate $json
+                  $upstreamInfo = if (-not [string]::IsNullOrWhiteSpace($repo)) {
+                      Get-GitHubUpstreamInfo $repo
+                  } else {
+                      $null
+                  }
+
+                  $date = if ($null -ne $upstreamInfo -and -not [string]::IsNullOrWhiteSpace($upstreamInfo.ReleaseDate)) {
+                      $upstreamInfo.ReleaseDate
+                  } else {
+                      ""
+                  }
+
+                  if ([string]::IsNullOrWhiteSpace($date)) {
+                      $date = Get-DownloadLastModifiedDate (Get-DownloadUrlFromManifest $json)
+                  }
+                  if ([string]::IsNullOrWhiteSpace($date) -and $null -ne $upstreamInfo) {
+                      $date = $upstreamInfo.RepositoryDate
+                  }
               } else {
                   $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
                   $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
                   $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
                   $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
                   $homepage = ""
+                  $date = ""
               }
 
-              $date = (& git log -1 --format=%cs -- $relativePath).Trim()
               if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
@@ -437,9 +630,9 @@ jobs:
                   ""
                   "## $Title"
                   ""
-                  "Generated automatically from the manifests in the bucket directory."
+                  "Generated from bucket manifests and upstream program metadata. The date prefers the latest published GitHub release, then the download's Last-Modified date, then upstream repository activity. A dash means no reliable date was available."
                   ""
-                  "| Name | Category | Version | LAST UPDATE | Homepage | Description |"
+                  "| Name | Category | Version | PROGRAM UPDATE | Homepage | Description |"
                   "| --- | --- | --- | --- | --- | --- |"
                   ($Items | ForEach-Object { $_.Row })
                   ""
@@ -461,11 +654,11 @@ jobs:
           $table = @(
               "## Manifests"
               ""
-              "This table is generated automatically from the manifests currently available in the bucket directory."
+              "The package version and description come from the bucket manifests. Program Update uses the latest published upstream release date when available, falling back to the download's Last-Modified date and then upstream repository activity. A dash means no reliable date was available."
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
               "| --- | --- | --- | --- | --- | --- |"
               ($newest | ForEach-Object { $_.Row })
               $end
