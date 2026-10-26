@@ -1,0 +1,126 @@
+name: Calculate SHA-256 for Download URLs
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/calculate-sha256.yml"
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "Direct HTTPS download URL(s). Separate multiple URLs with a newline or comma; leave empty to hash the WinPinMenu release ZIPs."
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  calculate:
+    name: Download files and calculate SHA-256
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Download files and calculate hashes
+        id: hashes
+        shell: pwsh
+        env:
+          URLS_INPUT: ${{ inputs.urls }}
+          DEFAULT_URLS: |
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-x64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-ARM64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-X86.zip
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $urlText = $env:URLS_INPUT
+          if ([string]::IsNullOrWhiteSpace($urlText)) {
+            $urlText = $env:DEFAULT_URLS
+            Write-Host 'No URLs were provided; hashing the default WinPinMenu 0.1.1 ZIPs.'
+          }
+
+          $urls = @(
+            [regex]::Split($urlText, '[\r\n,;]+') |
+              ForEach-Object { $_.Trim() } |
+              Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+          )
+
+          if ($urls.Count -lt 1) {
+            throw 'Provide at least one direct HTTPS download URL.'
+          }
+          if ($urls.Count -gt 20) {
+            throw "A maximum of 20 URLs is allowed per run. Received: $($urls.Count)"
+          }
+
+          $outputDir = Join-Path $env:RUNNER_TEMP 'sha256-results'
+          New-Item -ItemType Directory -Path $outputDir -Force | Out-Null
+          $results = [System.Collections.Generic.List[object]]::new()
+
+          for ($i = 0; $i -lt $urls.Count; $i++) {
+            $url = $urls[$i]
+            $uri = $null
+            if (-not [Uri]::TryCreate($url, [UriKind]::Absolute, [ref]$uri) -or $uri.Scheme -ne 'https') {
+              throw "Only absolute HTTPS URLs are allowed. Invalid URL: $url"
+            }
+
+            $leafName = [System.IO.Path]::GetFileName($uri.AbsolutePath)
+            if ([string]::IsNullOrWhiteSpace($leafName)) {
+              $leafName = "download-$($i + 1).bin"
+            }
+            $fileName = '{0:D2}-{1}' -f ($i + 1), $leafName
+            $destination = Join-Path $outputDir $fileName
+
+            Write-Host ''
+            Write-Host "[$($i + 1)/$($urls.Count)] Downloading: $url"
+            Invoke-WebRequest -Uri $url -OutFile $destination -TimeoutSec 300
+
+            $file = Get-Item -LiteralPath $destination
+            $hash = (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash.ToLowerInvariant()
+            $result = [PSCustomObject]@{
+              URL = $url
+              File = $fileName
+              SizeBytes = [long]$file.Length
+              SHA256 = $hash
+            }
+            $results.Add($result)
+
+            Write-Host "File: $fileName"
+            Write-Host "Size: $($file.Length) bytes"
+            Write-Host "SHA256: $hash"
+          }
+
+          $csvPath = Join-Path $outputDir 'sha256-results.csv'
+          $txtPath = Join-Path $outputDir 'sha256-results.txt'
+          $results | Export-Csv -LiteralPath $csvPath -NoTypeInformation -Encoding utf8
+          $results | ForEach-Object {
+            "$($_.SHA256)  $($_.URL)"
+          } | Set-Content -LiteralPath $txtPath -Encoding utf8
+
+          @(
+            '# SHA-256 results'
+            ''
+            '| File | Size (bytes) | SHA-256 | URL |'
+            '|---|---:|---|---|'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+          foreach ($result in $results) {
+            $safeFile = $result.File.Replace('|', '\|')
+            $safeUrl = $result.URL.Replace('|', '%7C')
+            "| $safeFile | $($result.SizeBytes) | $($result.SHA256) | $safeUrl |" |
+              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          }
+
+          Write-Host ''
+          Write-Host "Results saved to: $txtPath"
+          Write-Host "Processed $($results.Count) file(s)."
+
+      - name: Upload hash results
+        uses: actions/upload-artifact@v4
+        with:
+          name: sha256-results
+          path: ${{ runner.temp }}/sha256-results/
+          if-no-files-found: error
+          retention-days: 14
