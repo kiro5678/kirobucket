@@ -38,6 +38,7 @@ This table is generated automatically from the manifests currently available in 
 <a id="manifests-newest"></a>
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | LAST UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [antalogy](bucket/antalogy.json) | Notes & Knowledge | 0.95.0 | 2026-10-26 | [Homepage](https://antalogy.com/) | AI-ready desktop word processor for Markdown with a Word-like interface, local-first architecture, and an optional OpenAI-compatible AI assistant. |
 | [npackd](bucket/npackd.json) | Other Utilities | 1.27.1 | 2026-10-26 | [Homepage](https://www.npackd.org) | Windows package manager for finding, installing, updating, and uninstalling software. |
 | [spotlight-downloader](bucket/spotlight-downloader.json) | Other Utilities | 2.0.1 | 2026-10-26 | [Homepage](https://github.com/ORelio/Spotlight-Downloader) | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. |
 | [belarc-advisor](bucket/belarc-advisor.json) | Other Utilities | 13.1.0.0 | 2026-10-25 | [Homepage](https://www.belarc.com/products/belarc-advisor) | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. |
@@ -523,7 +524,6 @@ This table is generated automatically from the manifests currently available in 
 | [aifilesorter](bucket/aifilesorter.json) | File Management | 1.9.2 | 2026-09-29 | [Homepage](https://github.com/hyperfield/ai-file-sorter) | Local AI file organization with categorization and rename suggestions. |
 | [am-downloader](bucket/am-downloader.json) | Download Managers | 1.3.3 | 2026-09-29 | [Homepage](https://github.com/antikmozib/AM-Downloader) | A modern download manager for Windows. |
 | [amule](bucket/amule.json) | Network & DNS | 3.0.0 | 2026-09-29 | [Homepage](https://www.amule-project.net/) | A free and open-source peer-to-peer file sharing client. |
-| [antalogy](bucket/antalogy.json) | Notes & Knowledge | 0.95.0 | 2026-09-29 | [Homepage](https://antalogy.com/) | AI-ready desktop word processor for Markdown with a Word-like interface, local-first architecture, and an optional OpenAI-compatible AI assistant. |
 | [anti-yandex](bucket/anti-yandex.json) | Windows Privacy & Tweaks | 1.3 | 2026-09-29 | [Homepage](https://github.com/TheCawa/AntiYandex) | Utility for finding and removing Yandex Browser files and registry entries |
 | [babyshark](bucket/babyshark.json) | Network & DNS | 0.3.0 | 2026-09-29 | [Homepage](https://github.com/vignesh07/babyshark) | Wireshark made easy in your terminal. |
 | [bargozin](bucket/bargozin.json) | Network & DNS | 0.2.0 | 2026-09-29 | [Homepage](https://github.com/403unlocker/bargozin-desktop) | DNS and network testing tool - Test URL accessibility, download speeds, and Docker registries across multiple DNS servers |
