@@ -11,7 +11,7 @@
             "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
             "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
             "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/ORelio/Spotlight-Downloader/releases?per_page=100' -Headers $headers",
-            "$release = $releases | Where-Object { $tag = $_.tag_name; $assetName = 'SpotlightDL-' + $tag.TrimStart('v') + '.zip'; $tag -match '^v2\\.\\d+\\.\\d+$' -and ($_.assets.name -contains $assetName) } | Select-Object -First 1",
+            "$release = $releases | Where-Object { $tag = [string]$_.tag_name; $assetName = 'SpotlightDL-' + $tag.Substring(1) + '.zip'; $tag -match '^v2\\.\\d+\\.\\d+$' -and (($_.assets | ForEach-Object { $_.name }) -contains $assetName) } | Select-Object -First 1",
             "if (-not $release) { throw 'No stable Spotlight Downloader v2 release with its matching ZIP was found.' }",
             "Write-Output $release.tag_name"
         ],
