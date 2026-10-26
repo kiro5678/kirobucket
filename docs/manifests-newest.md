@@ -6,6 +6,7 @@ Generated automatically from the manifests in the bucket directory.
 
 | Name | Category | Version | LAST UPDATE | Homepage | Description |
 | --- | --- | --- | --- | --- | --- |
+| [spotlight-downloader](bucket/spotlight-downloader.json) | Other Utilities | 2.0.1 | 2026-10-26 | [Homepage](https://github.com/ORelio/Spotlight-Downloader) | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. |
 | [belarc-advisor](bucket/belarc-advisor.json) | Other Utilities | 13.1.0.0 | 2026-10-25 | [Homepage](https://www.belarc.com/products/belarc-advisor) | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. |
 | [clipcascade](bucket/clipcascade.json) | Clipboard & Text | 3.3.1 | 2026-10-25 | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. |
 | [compactgui](bucket/compactgui.json) | Storage & Disk Tools | 4.0.0-beta.12 | 2026-10-25 | [Homepage](https://github.com/IridiumIO/CompactGUI) | Reduce the space taken up by games and programs on disk by using native Windows APIs. |

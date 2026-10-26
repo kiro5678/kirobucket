@@ -625,4 +625,5 @@ Generated automatically from the manifests in the bucket directory.
 | [PdfCraftTool](bucket/PdfCraftTool.json) | PDF & Documents | 2026.10.25-6090725 | 2026-10-25 | [Homepage](https://github.com/PDFCraftTool/pdfcraft) | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. |
 | [tockler](bucket/tockler.json) | Time Tracking & Focus | 4.0.21 | 2026-10-25 | [Homepage](https://github.com/MayGo/tockler) | An application that tracks your time by monitoring your active window title and idle time. |
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.7 | 2026-10-25 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
+| [spotlight-downloader](bucket/spotlight-downloader.json) | Other Utilities | 2.0.1 | 2026-10-26 | [Homepage](https://github.com/ORelio/Spotlight-Downloader) | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. |
 
