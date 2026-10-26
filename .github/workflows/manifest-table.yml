@@ -630,9 +630,29 @@ jobs:
               return ""
           }
 
+          function Get-ManifestAddedDate {
+              param([string]$RelativePath)
+
+              # Follow renames and return the oldest commit that introduced this manifest.
+              # Later edits and repairs do not change the original add date.
+              $history = @(& git log --follow --diff-filter=A --format=%cs -- $RelativePath 2>$null)
+              if ($LASTEXITCODE -ne 0 -or $history.Count -eq 0) {
+                  Write-Warning "Could not determine the original add date for $RelativePath."
+                  return "—"
+              }
+
+              $addedDate = [string]($history | Select-Object -Last 1)
+              if ($addedDate -match '^\d{4}-\d{2}-\d{2}$') {
+                  return $addedDate
+              }
+              Write-Warning "Git returned an invalid add date for $RelativePath."
+              return "—"
+          }
+
           $manifestData = [System.Collections.Generic.List[object]]::new()
           foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
               $relativePath = "bucket/$($file.Name)"
+              $addedDate = Get-ManifestAddedDate $relativePath
               $raw = Get-Content -Path $file.FullName -Raw
               $json = $null
 
@@ -675,6 +695,7 @@ jobs:
                   Description = $description
                   Homepage = $homepage
                   Category = $category
+                  AddedDate = $addedDate
                   Repo = $repo
                   DownloadUrl = $downloadUrl
               })
@@ -782,21 +803,35 @@ jobs:
               $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
               $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
 
+              $addedDate = if ([string]::IsNullOrWhiteSpace([string]$item.AddedDate)) { "—" } else { [string]$item.AddedDate }
+              $nameEscaped = $item.Name.Replace("|", "\|")
+              $categoryEscaped = $item.Category.Replace("|", "\|")
+              $versionEscaped = $item.Version.Replace("|", "\|")
+              $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
+
               [PSCustomObject]@{
                   Name = $item.Name
                   Category = $item.Category
+                  Added = $addedDate
                   Date = $date
                   Homepage = $item.Homepage
-                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $date | $homepageCell | $descriptionEscaped |"
+                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
               }
           }
 
           $dateValue = {
               if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
           }
+          $addedDateValue = {
+              if ($_.Added -eq "—") { [datetime]::MinValue } else { [datetime]$_.Added }
+          }
 
           $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
           $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $addedNewest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $true }, Name
+          $addedOldest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $false }, Name
           $nameAz = $manifests | Sort-Object Name
           $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
           $categoryAz = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $false }, Name
@@ -813,10 +848,10 @@ jobs:
                   ""
                   "## $Title"
                   ""
-                  "Generated from bucket manifests and upstream program metadata. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means neither date was available."
+                  "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
                   ""
-                  "| Name | Category | Version | PROGRAM UPDATE | Homepage | Description |"
-                  "| --- | --- | --- | --- | --- | --- |"
+                  "| Name | Category | Version | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- | --- | --- |"
                   ($Items | ForEach-Object { $_.Row })
                   ""
               ) -join [Environment]::NewLine
@@ -827,6 +862,8 @@ jobs:
 
           Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-newest.md") -Value (New-View "Manifest additions — newest first" $addedNewest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-oldest.md") -Value (New-View "Manifest additions — oldest first" $addedOldest) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-category-az.md") -Value (New-View "Category A-Z" $categoryAz) -Encoding utf8NoBOM
@@ -837,12 +874,12 @@ jobs:
           $table = @(
               "## Manifests"
               ""
-              "The package version and description come from the bucket manifests. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means neither date was available."
+              "Manifest Added shows the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
-              "| --- | --- | --- | --- | --- | --- |"
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- | --- | --- |"
               ($newest | ForEach-Object { $_.Row })
               $end
           ) -join [Environment]::NewLine
