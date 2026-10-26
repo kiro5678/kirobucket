@@ -29,7 +29,9 @@ jobs:
         env:
           URLS_INPUT: ${{ inputs.urls }}
           DEFAULT_URLS: |
-            https://cdn.kde.org/ci-builds/pim/kalarm/master/windows/kalarm-master-3573-windows-cl-msvc2022-x86_64.7z
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-x64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-ARM64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-X86.zip
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
@@ -37,7 +39,7 @@ jobs:
           $urlText = $env:URLS_INPUT
           if ([string]::IsNullOrWhiteSpace($urlText)) {
             $urlText = $env:DEFAULT_URLS
-            Write-Host 'No URLs were provided; hashing the current KAlarm 3573 Windows x64 archive.'
+            Write-Host 'No URLs were provided; hashing the default WinPinMenu 0.1.1 ZIPs.'
           }
 
           $urls = @(
