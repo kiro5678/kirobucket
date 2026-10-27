@@ -6,9 +6,9 @@
         "identifier": "Freeware",
         "url": "https://www.sordum.org/eula/"
     },
-    "url": "https://www.sordum.org/files/downloads.php?dns-lock#/dl.7z",
+    "url": "https://www.sordum.org/files/download/dns-lock/DNS-Lock.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/downloads.php?dns-lock#/dl.7z"
+        "url": "https://www.sordum.org/files/download/dns-lock/DNS-Lock.zip"
     },
     "architecture": {
         "64bit": {
