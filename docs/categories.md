@@ -45,13 +45,15 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 46 | Functional | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
 
-**Total unique manifests: 798**
 
-Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
 | Aurelitec Suite | 5 | Publisher cross-list | [View](#aurelitec-suite) |
 | ComputerSluggish Suite | 1 | Publisher cross-list | [View](#computersluggish-suite) |
 | Funk.eu Suite | 7 | Publisher cross-list | [View](#funk-eu-suite) |
 | Neuber Suite | 2 | Publisher cross-list | [View](#neuber-suite) |
+
+**Total unique manifests: 813**
+
+Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
 
 ## Android & Device Tools
 
