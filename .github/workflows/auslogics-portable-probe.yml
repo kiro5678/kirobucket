@@ -1,0 +1,398 @@
+name: Auslogics Portable Probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/auslogics-portable-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download official ZIP and probe extraction
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $zipPath = Join-Path $root 'auslogics-disk-defrag-setup.zip'
+          $zipDir = Join-Path $root 'zip-contents'
+          $payloadDir = Join-Path $root 'extracted-installer'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-probe-report.md'
+          New-Item -ItemType Directory -Force -Path $root, $zipDir, $payloadDir | Out-Null
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics Disk Defrag Portable Probe')
+          $lines.Add('')
+          $lines.Add('- Source: https://static.auslogics.com/en/disk-defrag/auslogics-disk-defrag-setup.zip')
+          $lines.Add('- Method: inspect the official ZIP, then try extracting the contained installer without running it.')
+          $lines.Add('- This workflow does not publish application binaries.')
+          Invoke-WebRequest -Uri 'https://static.auslogics.com/en/disk-defrag/auslogics-disk-defrag-setup.zip' -OutFile $zipPath
+          $lines.Add("- ZIP SHA-256: $((Get-FileHash $zipPath -Algorithm SHA256).Hash)")
+          Expand-Archive -LiteralPath $zipPath -DestinationPath $zipDir -Force
+          $zipFiles = @(Get-ChildItem -LiteralPath $zipDir -File -Recurse)
+          $lines.Add('')
+          $lines.Add('## ZIP contents')
+          foreach ($f in $zipFiles) {
+            $lines.Add("- $($f.FullName.Substring($zipDir.Length).TrimStart('\','/')) | $($f.Length) bytes | SHA-256 $((Get-FileHash $f.FullName -Algorithm SHA256).Hash)")
+          }
+          $installers = @($zipFiles | Where-Object { $_.Extension -in @('.exe','.msi') } | Sort-Object FullName)
+          $lines.Add('')
+          $lines.Add("Installer candidates: $($installers.Count)")
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          $extractExit = $null
+          if ($installers.Count -gt 0 -and $sevenZip -and $installers[0].Extension -eq '.exe') {
+            $candidate = $installers[0]
+            $listing = (& $sevenZip l $candidate.FullName 2>&1 | Out-String)
+            $lines.Add('')
+            $lines.Add('## 7-Zip installer listing')
+            $lines.Add('\`\`\`text')
+            $lines.Add(($listing -split "`r?`n" | Select-Object -First 160) -join "`n")
+            $lines.Add('\`\`\`')
+            $output = (& $sevenZip x $candidate.FullName "-o$payloadDir" -y 2>&1 | Out-String)
+            $extractExit = $LASTEXITCODE
+            $lines.Add('')
+            $lines.Add("7-Zip extraction exit code: $extractExit")
+            $lines.Add('\`\`\`text')
+            $lines.Add(($output -split "`r?`n" | Select-Object -Last 80) -join "`n")
+            $lines.Add('\`\`\`')
+          } else {
+            $lines.Add('')
+            $lines.Add("- Extraction skipped. 7-Zip available: $([bool]$sevenZip); EXE candidate count: $(@($installers | Where-Object Extension -eq '.exe').Count)")
+          }
+          $payload = @(Get-ChildItem -LiteralPath $payloadDir -File -Recurse -ErrorAction SilentlyContinue)
+          $lines.Add('')
+          $lines.Add('## Extracted payload inventory')
+          $lines.Add("- Files found: $($payload.Count)")
+          foreach ($f in $payload) {
+            $lines.Add("- $($f.FullName.Substring($payloadDir.Length).TrimStart('\','/')) | $($f.Length) bytes | SHA-256 $((Get-FileHash $f.FullName -Algorithm SHA256).Hash)")
+          }
+          $appExes = @($payload | Where-Object { $_.Extension -eq '.exe' -and $_.Name -notmatch '^(?i:setup|install|uninstall|unins)' })
+          $lines.Add('')
+          $lines.Add('## Initial result')
+          $lines.Add("- Potential application EXE files after extraction: $($appExes.Count)")
+          if ($appExes.Count -gt 0) {
+            $lines.Add('Extraction may have exposed an application payload. The paths must be checked before writing a Scoop manifest.')
+          } else {
+            $lines.Add('No likely application executable was exposed. The next step is a publisher-verified, directed installation in a disposable runner, followed by inspection of the installed files.')
+          }
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
+      - name: Fallback install after unsuccessful extraction
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $zipDir = Join-Path $root 'zip-contents'
+          $payloadDir = Join-Path $root 'extracted-installer'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-install-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics Disk Defrag installation fallback')
+          $lines.Add('')
+          $candidatePayload = @(Get-ChildItem -LiteralPath $payloadDir -File -Recurse -ErrorAction SilentlyContinue |
+            Where-Object { $_.Extension -eq '.exe' -and $_.Name -notmatch '^(?i:setup|install|uninstall|unins)' })
+          if ($candidatePayload.Count -gt 0) {
+            $lines.Add("Skipped installation because extraction exposed $($candidatePayload.Count) potential application EXE file(s).")
+            Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+            Get-Content -LiteralPath $report
+            exit 0
+          }
+
+          $installer = Get-ChildItem -LiteralPath $zipDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $installer) {
+            $lines.Add('Skipped installation: no EXE installer was found in the downloaded official ZIP.')
+            Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+            Get-Content -LiteralPath $report
+            exit 0
+          }
+
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer.FullName
+          $fileInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer.FullName)
+          $lines.Add("- Installer: $($installer.FullName)")
+          $lines.Add("- File SHA-256: $((Get-FileHash -LiteralPath $installer.FullName -Algorithm SHA256).Hash)")
+          $lines.Add("- Authenticode status: $($signature.Status)")
+          $lines.Add("- Signer: $($signature.SignerCertificate.Subject)")
+          $lines.Add("- Product name: $($fileInfo.ProductName)")
+          $lines.Add("- Product version: $($fileInfo.ProductVersion)")
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch '(?i)Auslogics' -or $fileInfo.ProductName -notmatch '(?i)Auslogics Disk Defrag') {
+            $lines.Add('Refused to execute the installer because the publisher signature or product metadata did not match Auslogics Disk Defrag.')
+            Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+            Get-Content -LiteralPath $report
+            exit 0
+          }
+
+          $installDir = Join-Path $root 'installed'
+          New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+          $arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR=`"$installDir`""
+          $lines.Add("- Requested isolated install directory: $installDir")
+          $lines.Add("- Arguments: $arguments")
+          try {
+            $process = Start-Process -FilePath $installer.FullName -ArgumentList $arguments -PassThru
+            if (-not $process.WaitForExit(180000)) {
+              $lines.Add('Installer did not exit within 180 seconds; checking for the app process that may have been opened by setup.')
+              $installRoot = [System.IO.Path]::GetFullPath($installDir)
+              $appProcesses = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+                $_.ExecutablePath -and $_.ExecutablePath.StartsWith($installRoot, [System.StringComparison]::OrdinalIgnoreCase) -and $_.ProcessId -ne $process.Id
+              })
+              foreach ($appProcess in $appProcesses) {
+                Stop-Process -Id $appProcess.ProcessId -Force -ErrorAction SilentlyContinue
+              }
+              Start-Sleep -Seconds 3
+              if (-not $process.HasExited) {
+                $process.Kill()
+                $process.WaitForExit(10000) | Out-Null
+                $lines.Add('Installer process timed out and was terminated on the disposable runner.')
+              } else {
+                $lines.Add("- Installer exit code after closing the app process: $($process.ExitCode)")
+              }
+            } else {
+              $lines.Add("- Installer exit code: $($process.ExitCode)")
+            }
+          } catch {
+            $lines.Add("- Installer launch error: $($_.Exception.Message)")
+          }
+
+          $roots = @(
+            $installDir,
+            (Join-Path $env:ProgramFiles 'Auslogics'),
+            (Join-Path ([Environment]::GetFolderPath('ProgramFilesX86')) 'Auslogics'),
+            (Join-Path $env:ProgramData 'Auslogics')
+          ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -Unique
+          $files = @()
+          foreach ($dir in $roots) {
+            $lines.Add("- Inventory root: $dir")
+            $files += @(Get-ChildItem -LiteralPath $dir -File -Recurse -ErrorAction SilentlyContinue)
+          }
+          $files = @($files | Sort-Object FullName -Unique)
+          $lines.Add('')
+          $lines.Add("## Inventory: $($files.Count) file(s)")
+          foreach ($f in $files) {
+            $lines.Add("- $($f.FullName) | $($f.Length) bytes | SHA-256 $((Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash)")
+          }
+          $lines.Add('')
+          $lines.Add('## Executable candidates')
+          $exes = @($files | Where-Object { $_.Extension -eq '.exe' })
+          foreach ($f in $exes) { $lines.Add("- $($f.FullName)") }
+          if ($exes.Count -eq 0) { $lines.Add('- None found in the candidate locations.') }
+          $lines.Add('')
+          $lines.Add('This step only inventories the installed application. It does not assume that the installed directory itself is a portable package and does not create or publish application binaries.')
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
+      - name: Inspect official portable-version helper UI
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Add-Type -AssemblyName UIAutomationClient
+          Add-Type -AssemblyName UIAutomationTypes
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $installDir = Join-Path $root 'installed'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-portable-helper-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics official portable helper UI inspection')
+          $lines.Add('')
+          $helper = Join-Path $installDir 'TabMakePortable.exe'
+          if (-not (Test-Path -LiteralPath $helper)) {
+            $lines.Add('TabMakePortable.exe was not present in the isolated installation. No helper was launched.')
+            Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+            Get-Content -LiteralPath $report
+            exit 0
+          }
+
+          $signature = Get-AuthenticodeSignature -LiteralPath $helper
+          $lines.Add("- Helper SHA-256: $((Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash)")
+          $lines.Add("- Helper signature status: $($signature.Status)")
+          $lines.Add("- Helper signer: $($signature.SignerCertificate.Subject)")
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch '(?i)Auslogics') {
+            $lines.Add('Refused to launch the helper because its Authenticode signature did not validate as Auslogics-signed.')
+            Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+            Get-Content -LiteralPath $report
+            exit 0
+          }
+
+          $process = Start-Process -FilePath $helper -WorkingDirectory $installDir -PassThru
+          $lines.Add("- Process ID: $($process.Id)")
+          $deadline = (Get-Date).AddSeconds(20)
+          $windows = @()
+          while ((Get-Date) -lt $deadline) {
+            $windows = @([System.Windows.Automation.AutomationElement]::RootElement.FindAll(
+              [System.Windows.Automation.TreeScope]::Children,
+              [System.Windows.Automation.Condition]::TrueCondition
+            ) | Where-Object {
+              try { $_.Current.ProcessId -eq $process.Id } catch { $false }
+            })
+            if ($windows.Count -gt 0) { break }
+            Start-Sleep -Milliseconds 500
+          }
+
+          $lines.Add("- Top-level windows found for helper process: $($windows.Count)")
+          $dump = {
+            param($element, $depth, $maxDepth, $lines)
+            if ($depth -gt $maxDepth) { return }
+            try {
+              $name = $element.Current.Name
+              $type = $element.Current.ControlType.ProgrammaticName
+              $automationId = $element.Current.AutomationId
+              $className = $element.Current.ClassName
+              $line = ('  ' * $depth) + "- type=$type; name=$name; automationId=$automationId; class=$className"
+              $lines.Add($line)
+              if ($depth -lt $maxDepth) {
+                $children = $element.FindAll(
+                  [System.Windows.Automation.TreeScope]::Children,
+                  [System.Windows.Automation.Condition]::TrueCondition
+                )
+                foreach ($child in $children) { & $script:dump $child ($depth + 1) $maxDepth $lines }
+              }
+            } catch {
+              $lines.Add(('  ' * $depth) + '- element inspection error: ' + $_.Exception.Message)
+            }
+          }
+          $script:dump = $dump
+          foreach ($window in $windows) { & $dump $window 0 4 $lines }
+
+          $lines.Add('')
+          $lines.Add('No buttons were clicked in this pass. The helper was launched only to discover its official UI and available controls. The portable binaries themselves are not uploaded.')
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+          try {
+            if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+          } catch {}
+
+      - name: Inspect main Disk Defrag portable page controls
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Add-Type -AssemblyName UIAutomationClient
+          Add-Type -AssemblyName UIAutomationTypes
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $installDir = Join-Path $root 'installed'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-main-ui-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics Disk Defrag main UI inspection')
+          $mainPath = Join-Path $installDir 'DiskDefrag.exe'
+          if (-not (Test-Path -LiteralPath $mainPath)) {
+            $lines.Add('DiskDefrag.exe was not found in the isolated install directory.')
+          } else {
+            $p = Start-Process -FilePath $mainPath -WorkingDirectory $installDir -PassThru
+            $lines.Add("- Process ID: $($p.Id)")
+            $deadline = (Get-Date).AddSeconds(15)
+            $windows = @()
+            while ((Get-Date) -lt $deadline) {
+              $windows = @([System.Windows.Automation.AutomationElement]::RootElement.FindAll(
+                [System.Windows.Automation.TreeScope]::Children,
+                [System.Windows.Automation.Condition]::TrueCondition
+              ) | Where-Object { try { $_.Current.ProcessId -eq $p.Id } catch { $false } })
+              if ($windows.Count -gt 0) { break }
+              Start-Sleep -Milliseconds 500
+            }
+            $lines.Add("- UI Automation top-level windows for DiskDefrag.exe: $($windows.Count)")
+            try {
+              $proc = Get-Process -Id $p.Id -ErrorAction Stop
+              $lines.Add("- MainWindowTitle: $($proc.MainWindowTitle)")
+              $lines.Add("- MainWindowHandle: $($proc.MainWindowHandle)")
+            } catch {}
+            foreach ($win in $windows) {
+              $lines.Add("- Window: $($win.Current.Name); class=$($win.Current.ClassName)")
+              $queue = [System.Collections.Generic.Queue[object]]::new()
+              $queue.Enqueue([pscustomobject]@{ Element = $win; Depth = 0 })
+              $visited = 0
+              while ($queue.Count -gt 0 -and $visited -lt 300) {
+                $item = $queue.Dequeue()
+                $element = $item.Element
+                $depth = $item.Depth
+                $visited++
+                try {
+                  $name = $element.Current.Name
+                  $type = $element.Current.ControlType.ProgrammaticName
+                  $automationId = $element.Current.AutomationId
+                  $className = $element.Current.ClassName
+                  $lines.Add(('  ' * $depth) + "- type=$type; name=$name; automationId=$automationId; class=$className")
+                  if ($name -match '(?i)portable|save|open folder|browse|next|finish') {
+                    $lines.Add(('  ' * $depth) + '  ^ interesting text/control candidate')
+                  }
+                } catch {}
+                if ($depth -lt 4) {
+                  try {
+                    $children = $element.FindAll(
+                      [System.Windows.Automation.TreeScope]::Children,
+                      [System.Windows.Automation.Condition]::TrueCondition
+                    )
+                    $limit = [Math]::Min($children.Count, 25)
+                    for ($i = 0; $i -lt $limit; $i++) {
+                      $queue.Enqueue([pscustomobject]@{ Element = $children.Item($i); Depth = $depth + 1 })
+                    }
+                    if ($children.Count -gt $limit) {
+                      $lines.Add(('  ' * ($depth + 1)) + "- Truncated $($children.Count - $limit) direct controls")
+                    }
+                  } catch {}
+                }
+              }
+              $lines.Add("- Bounded UI traversal visited $visited elements.")
+            }
+            try { if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } } catch {}
+          }
+          $lines.Add('')
+          $lines.Add('No portable files are uploaded. This report is for inspecting the official UI controls only.')
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
+      - name: Inspect portable helper embedded strings
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $helper = Join-Path $root 'installed\TabMakePortable.exe'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-helper-strings-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# TabMakePortable.exe embedded string inspection')
+          if (-not (Test-Path -LiteralPath $helper)) {
+            $lines.Add('TabMakePortable.exe was not found. No binary was inspected.')
+          } else {
+            $bytes = [System.IO.File]::ReadAllBytes($helper)
+            $lines.Add("- File SHA-256: $((Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash)")
+            $filters = '(?i)portable|create|save|folder|directory|destination|target|command.?line|command|usage|parameter|argument|switch|output|select|browse|path|help|/silent|/dir|/save'
+            foreach ($encoding in @(
+              [pscustomobject]@{ Name = 'ASCII'; Text = [System.Text.Encoding]::ASCII.GetString($bytes) },
+              [pscustomobject]@{ Name = 'UTF-16LE'; Text = [System.Text.Encoding]::Unicode.GetString($bytes) }
+            )) {
+              $matches = [regex]::Matches($encoding.Text, '[\x20-\x7E]{5,}') |
+                ForEach-Object { $_.Value.Trim() } |
+                Where-Object { $_ -match $filters } |
+                Select-Object -Unique -First 160
+              $lines.Add('')
+              $lines.Add("## $($encoding.Name) candidate strings")
+              if (@($matches).Count -eq 0) { $lines.Add('- No relevant strings found.') }
+              foreach ($match in $matches) { $lines.Add("- $match") }
+            }
+          }
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
+      - name: Upload diagnostic report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: auslogics-portable-probe-report
+          path: |
+            auslogics-probe-report.md
+            auslogics-install-report.md
+            auslogics-portable-helper-report.md
+            auslogics-main-ui-report.md
+            auslogics-helper-strings-report.md
+          if-no-files-found: warn
+          retention-days: 7
