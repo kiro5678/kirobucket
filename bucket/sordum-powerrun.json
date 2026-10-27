@@ -3,7 +3,7 @@
     "description": "PowerRun (Run with highest privileges) 可以使用TrustedInstaller/System的权限来启动一些程序 ",
     "homepage": "https://www.sordum.org/9416/powerrun-v1-9-run-with-highest-privileges/",
     "license": "Freeware",
-    "url": "https://www.sordum.org/files/download/power-run/PowerRun_v1.8.zip",
+    "url": "https://www.sordum.org/files/downloads.php?power-run#/dl.zip",
     "extract_dir": "PowerRun",
     "architecture": {
         "32bit": {
@@ -38,9 +38,9 @@
     "persist": "PowerRun.ini",
     "checkver": {
         "url": "https://www.sordum.org/downloads/?power-run",
-        "regex": "PowerRun v([\\d.]+)</title>"
+        "regex": "PowerRun v([\\d.]+)"
     },
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/power-run/PowerRun_v$version.zip"
+        "url": "https://www.sordum.org/files/downloads.php?power-run#/dl.zip"
     }
 }
