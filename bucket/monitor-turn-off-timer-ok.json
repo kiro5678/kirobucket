@@ -11,13 +11,13 @@
     },
     "bin": [
         [
-            "Monitor.Turn.Off.Timer.OK.exe",
+            "MtOff_OK.exe",
             "MonitorTurnOffTimerOK"
         ]
     ],
     "shortcuts": [
         [
-            "Monitor.Turn.Off.Timer.OK.exe",
+            "MtOff_OK.exe",
             "SoftwareOK - Monitor.Turn.Off.Timer.OK"
         ]
     ],

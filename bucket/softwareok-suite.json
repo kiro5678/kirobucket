@@ -560,11 +560,11 @@
             "ColorConsole"
         ],
         [
-            "favoritenfreund\\FavoritenFreund.exe",
+            "favoritenfreund\\FF.exe",
             "FavoritenFreund"
         ],
         [
-            "monitor-turn-off-timer-ok\\Monitor.Turn.Off.Timer.OK.exe",
+            "monitor-turn-off-timer-ok\\MtOff_OK.exe",
             "MonitorTurnOffTimerOK"
         ]
     ],
@@ -878,11 +878,11 @@
             "SoftwareOK Suite - ColorConsole"
         ],
         [
-            "favoritenfreund\\FavoritenFreund.exe",
+            "favoritenfreund\\FF.exe",
             "SoftwareOK Suite - FavoritenFreund"
         ],
         [
-            "monitor-turn-off-timer-ok\\Monitor.Turn.Off.Timer.OK.exe",
+            "monitor-turn-off-timer-ok\\MtOff_OK.exe",
             "SoftwareOK Suite - Monitor.Turn.Off.Timer.OK"
         ]
     ],

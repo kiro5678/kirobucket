@@ -11,13 +11,13 @@
     },
     "bin": [
         [
-            "FavoritenFreund.exe",
+            "FF.exe",
             "FavoritenFreund"
         ]
     ],
     "shortcuts": [
         [
-            "FavoritenFreund.exe",
+            "FF.exe",
             "SoftwareOK - FavoritenFreund"
         ]
     ],
