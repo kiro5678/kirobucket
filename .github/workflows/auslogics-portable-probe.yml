@@ -191,6 +191,86 @@ jobs:
           Set-Content -LiteralPath $report -Value $lines -Encoding utf8
           Get-Content -LiteralPath $report
 
+      - name: Inspect official portable-version helper UI
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Add-Type -AssemblyName UIAutomationClient
+          Add-Type -AssemblyName UIAutomationTypes
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $installDir = Join-Path $root 'installed'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-portable-helper-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics official portable helper UI inspection')
+          $lines.Add('')
+          $helper = Join-Path $installDir 'TabMakePortable.exe'
+          if (-not (Test-Path -LiteralPath $helper)) {
+            $lines.Add('TabMakePortable.exe was not present in the isolated installation. No helper was launched.')
+            Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+            Get-Content -LiteralPath $report
+            exit 0
+          }
+
+          $signature = Get-AuthenticodeSignature -LiteralPath $helper
+          $lines.Add("- Helper SHA-256: $((Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash)")
+          $lines.Add("- Helper signature status: $($signature.Status)")
+          $lines.Add("- Helper signer: $($signature.SignerCertificate.Subject)")
+          if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch '(?i)Auslogics') {
+            $lines.Add('Refused to launch the helper because its Authenticode signature did not validate as Auslogics-signed.')
+            Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+            Get-Content -LiteralPath $report
+            exit 0
+          }
+
+          $process = Start-Process -FilePath $helper -WorkingDirectory $installDir -PassThru
+          $lines.Add("- Process ID: $($process.Id)")
+          $deadline = (Get-Date).AddSeconds(20)
+          $windows = @()
+          while ((Get-Date) -lt $deadline) {
+            $windows = @([System.Windows.Automation.AutomationElement]::RootElement.FindAll(
+              [System.Windows.Automation.TreeScope]::Children,
+              [System.Windows.Automation.Condition]::TrueCondition
+            ) | Where-Object {
+              try { $_.Current.ProcessId -eq $process.Id } catch { $false }
+            })
+            if ($windows.Count -gt 0) { break }
+            Start-Sleep -Milliseconds 500
+          }
+
+          $lines.Add("- Top-level windows found for helper process: $($windows.Count)")
+          $dump = {
+            param($element, $depth, $maxDepth, $lines)
+            if ($depth -gt $maxDepth) { return }
+            try {
+              $name = $element.Current.Name
+              $type = $element.Current.ControlType.ProgrammaticName
+              $automationId = $element.Current.AutomationId
+              $className = $element.Current.ClassName
+              $line = ('  ' * $depth) + "- type=$type; name=$name; automationId=$automationId; class=$className"
+              $lines.Add($line)
+              if ($depth -lt $maxDepth) {
+                $children = $element.FindAll(
+                  [System.Windows.Automation.TreeScope]::Children,
+                  [System.Windows.Automation.Condition]::TrueCondition
+                )
+                foreach ($child in $children) { & $script:dump $child ($depth + 1) $maxDepth $lines }
+              }
+            } catch {
+              $lines.Add(('  ' * $depth) + '- element inspection error: ' + $_.Exception.Message)
+            }
+          }
+          $script:dump = $dump
+          foreach ($window in $windows) { & $dump $window 0 4 $lines }
+
+          $lines.Add('')
+          $lines.Add('No buttons were clicked in this pass. The helper was launched only to discover its official UI and available controls. The portable binaries themselves are not uploaded.')
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+          try {
+            if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+          } catch {}
+
       - name: Upload diagnostic report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -199,5 +279,6 @@ jobs:
           path: |
             auslogics-probe-report.md
             auslogics-install-report.md
+            auslogics-portable-helper-report.md
           if-no-files-found: warn
           retention-days: 7
