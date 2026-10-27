@@ -350,6 +350,39 @@ jobs:
           Set-Content -LiteralPath $report -Value $lines -Encoding utf8
           Get-Content -LiteralPath $report
 
+      - name: Inspect portable helper embedded strings
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $helper = Join-Path $root 'installed\TabMakePortable.exe'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-helper-strings-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# TabMakePortable.exe embedded string inspection')
+          if (-not (Test-Path -LiteralPath $helper)) {
+            $lines.Add('TabMakePortable.exe was not found. No binary was inspected.')
+          } else {
+            $bytes = [System.IO.File]::ReadAllBytes($helper)
+            $lines.Add("- File SHA-256: $((Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash)")
+            $filters = '(?i)portable|create|save|folder|directory|destination|target|command.?line|command|usage|parameter|argument|switch|output|select|browse|path|help|/silent|/dir|/save'
+            foreach ($encoding in @(
+              [pscustomobject]@{ Name = 'ASCII'; Text = [System.Text.Encoding]::ASCII.GetString($bytes) },
+              [pscustomobject]@{ Name = 'UTF-16LE'; Text = [System.Text.Encoding]::Unicode.GetString($bytes) }
+            )) {
+              $matches = [regex]::Matches($encoding.Text, '[\x20-\x7E]{5,}') |
+                ForEach-Object { $_.Value.Trim() } |
+                Where-Object { $_ -match $filters } |
+                Select-Object -Unique -First 160
+              $lines.Add('')
+              $lines.Add("## $($encoding.Name) candidate strings")
+              if (@($matches).Count -eq 0) { $lines.Add('- No relevant strings found.') }
+              foreach ($match in $matches) { $lines.Add("- $match") }
+            }
+          }
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
       - name: Upload diagnostic report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -360,5 +393,6 @@ jobs:
             auslogics-install-report.md
             auslogics-portable-helper-report.md
             auslogics-main-ui-report.md
+            auslogics-helper-strings-report.md
           if-no-files-found: warn
           retention-days: 7
