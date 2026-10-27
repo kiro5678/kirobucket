@@ -8,7 +8,8 @@
     },
     "url": "https://www.sordum.org/files/download/dns-lock/DNS-Lock.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/dns-lock/DNS-Lock.zip"
+        "url": "https://www.sordum.org/files/download/dns-lock/DNS-Lock.zip",
+        "extract_dir": "DNS-Lock"
     },
     "architecture": {
         "64bit": {
@@ -44,5 +45,6 @@
     "checkver": {
         "url": "https://www.sordum.org/9432/dns-lock-v1-5/",
         "regex": "Dns Lock v([\\d.]+)"
-    }
+    },
+    "extract_dir": "DNS-Lock"
 }

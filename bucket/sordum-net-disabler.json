@@ -8,7 +8,8 @@
     },
     "url": "https://www.sordum.org/files/download/net-disabler/NetDisabler.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/net-disabler/NetDisabler.zip"
+        "url": "https://www.sordum.org/files/download/net-disabler/NetDisabler.zip",
+        "extract_dir": "NetDisabler"
     },
     "architecture": {
         "64bit": {
@@ -44,5 +45,6 @@
     "checkver": {
         "url": "https://www.sordum.org/9660/net-disabler-v1-2/",
         "regex": "Net Disabler v([\\d.]+)"
-    }
+    },
+    "extract_dir": "NetDisabler"
 }

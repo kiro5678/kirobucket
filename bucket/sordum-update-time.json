@@ -8,7 +8,8 @@
     },
     "url": "https://www.sordum.org/files/download/update-time/UpdateTime.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/update-time/UpdateTime.zip"
+        "url": "https://www.sordum.org/files/download/update-time/UpdateTime.zip",
+        "extract_dir": "UpdateTime"
     },
     "architecture": {
         "64bit": {
@@ -43,5 +44,6 @@
     "checkver": {
         "url": "https://www.sordum.org/9203/update-time-v1-4/",
         "regex": "Update Time v([\\d.]+)"
-    }
+    },
+    "extract_dir": "UpdateTime"
 }

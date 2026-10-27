@@ -8,7 +8,8 @@
     },
     "url": "https://www.sordum.org/files/download/show-desktop-icons/sDeskIcon.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/show-desktop-icons/sDeskIcon.zip"
+        "url": "https://www.sordum.org/files/download/show-desktop-icons/sDeskIcon.zip",
+        "extract_dir": "sDeskIcon"
     },
     "architecture": {
         "64bit": {
@@ -43,5 +44,6 @@
     "checkver": {
         "url": "https://www.sordum.org/9341/show-desktop-icons-v1-2/",
         "regex": "Show Desktop Icons v([\\d.]+)"
-    }
+    },
+    "extract_dir": "sDeskIcon"
 }

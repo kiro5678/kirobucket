@@ -8,20 +8,21 @@
     },
     "url": "https://www.sordum.org/files/download/classic-shut-down/cShutdown.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/classic-shut-down/cShutdown.zip"
+        "url": "https://www.sordum.org/files/download/classic-shut-down/cShutdown.zip",
+        "extract_dir": "cShutdown"
     },
-    "bin": [
-        [
-            "Shutdown.exe",
-            "SordumClassicShutdown"
-        ]
-    ],
     "checkver": {
         "url": "https://www.sordum.org/9205/classic-shut-down-v1-2/",
         "regex": "Classic Shut Down v([\\d.]+)"
     },
     "architecture": {
         "64bit": {
+            "bin": [
+                [
+                    "cShutdown_x64.exe",
+                    "SordumClassicShutdown"
+                ]
+            ],
             "shortcuts": [
                 [
                     "cShutdown_x64.exe",
@@ -30,6 +31,12 @@
             ]
         },
         "32bit": {
+            "bin": [
+                [
+                    "cShutdown.exe",
+                    "SordumClassicShutdown"
+                ]
+            ],
             "shortcuts": [
                 [
                     "cShutdown.exe",
@@ -37,5 +44,6 @@
                 ]
             ]
         }
-    }
+    },
+    "extract_dir": "cShutdown"
 }

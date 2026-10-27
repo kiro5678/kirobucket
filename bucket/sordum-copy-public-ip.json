@@ -8,7 +8,8 @@
     },
     "url": "https://www.sordum.org/files/download/copy-public-ip/CopyIP.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/copy-public-ip/CopyIP.zip"
+        "url": "https://www.sordum.org/files/download/copy-public-ip/CopyIP.zip",
+        "extract_dir": "CopyIP"
     },
     "architecture": {
         "64bit": {
@@ -44,5 +45,6 @@
     "checkver": {
         "url": "https://www.sordum.org/9201/",
         "regex": "Copy Public IP v([\\d.]+)"
-    }
+    },
+    "extract_dir": "CopyIP"
 }
