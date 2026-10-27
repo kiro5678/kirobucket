@@ -1,0 +1,25 @@
+{
+    "version": "1.1.7.0",
+    "description": "Identifies processes locking files or folders and helps release handles that prevent access.",
+    "homepage": "https://computersluggish.com/cs-easy-unlocker/",
+    "license": "Freemium",
+    "url": "https://downloads.computersluggish.com/CSEasyUnlocker.exe",
+    "checkver": {
+        "url": "https://computersluggish.com/downloads/cs-easy-unlocker/",
+        "regex": "(?i)Current\\s+version:\\s*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://downloads.computersluggish.com/CSEasyUnlocker.exe"
+    },
+    "bin": "CSEasyUnlocker.exe",
+    "shortcuts": [
+        [
+            "CSEasyUnlocker.exe",
+            "ComputerSluggish CS Easy Unlocker"
+        ]
+    ],
+    "notes": [
+        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
+        "The publisher labels this download as the portable version with no installation required."
+    ]
+}
