@@ -433,6 +433,21 @@ jobs:
               "ef-startup-manager" = "Windows Privacy & Tweaks"
               "ef-system-monitor" = "System Monitoring & Hardware"
               "ef-talk-scriber" = "Media & Audio/Video"
+              "aurelitec-cinemadrape" = "Productivity & Launchers"
+              "aurelitec-injuredpixels" = "System Monitoring & Hardware"
+              "aurelitec-pixelhealer" = "System Monitoring & Hardware"
+              "aurelitec-thumbico" = "Images & Photos"
+              "aurelitec-portmarks" = "Browsers & Communication"
+              "neuber-security-task-manager" = "System Monitoring & Hardware"
+              "neuber-fonttwister" = "Images & Photos"
+              "computersluggish-cs-easy-unlocker" = "File Management"
+              "funk-smf" = "File Management"
+              "funk-hmw" = "Windows Privacy & Tweaks"
+              "funk-hrc" = "Windows Customization"
+              "funk-cop" = "Images & Photos"
+              "funk-icu" = "Windows Customization"
+              "funk-bic" = "Images & Photos"
+              "funk-ssd" = "Media & Audio/Video"
           }
 
           function ConvertTo-DateOnly {
