@@ -1,0 +1,24 @@
+{
+    "version": "1.5.0.30",
+    "description": "Portable display utility that attempts to recover stuck or hot pixels.",
+    "homepage": "https://www.aurelitec.com/pixelhealer/",
+    "license": "Freeware",
+    "url": "https://download.aurelitec.com/pixelhealer/windows/pixelhealer-portable.zip",
+    "checkver": {
+        "url": "https://www.aurelitec.com/pixelhealer/download/",
+        "regex": "(?i)Version\\s+(?<version>\\d+(?:\\.\\d+){3})"
+    },
+    "autoupdate": {
+        "url": "https://download.aurelitec.com/pixelhealer/windows/pixelhealer-portable.zip"
+    },
+    "shortcuts": [
+        [
+            "PixelHealer.exe",
+            "Aurelitec PixelHealer"
+        ]
+    ],
+    "notes": [
+        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
+        "The publisher documents this as a portable ZIP with no installation required."
+    ]
+}
