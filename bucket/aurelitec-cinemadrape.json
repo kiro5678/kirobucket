@@ -1,0 +1,24 @@
+{
+    "version": "2.2.0",
+    "description": "Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions.",
+    "homepage": "https://www.aurelitec.com/cinemadrape/",
+    "license": "GPL-3.0",
+    "url": "https://github.com/aurelitec/cinemadrape/releases/download/v2.2.0/CinemaDrape-2.2.0-windows-x64-portable.zip",
+    "checkver": {
+        "github": "https://github.com/aurelitec/cinemadrape",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/aurelitec/cinemadrape/releases/download/v$version/CinemaDrape-$version-windows-x64-portable.zip"
+    },
+    "shortcuts": [
+        [
+            "CinemaDrape.exe",
+            "Aurelitec CinemaDrape"
+        ]
+    ],
+    "notes": [
+        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
+        "Portable archive is published by the project's official GitHub repository."
+    ]
+}
