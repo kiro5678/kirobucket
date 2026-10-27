@@ -1,23 +1,28 @@
 # KiroBucket Categories
 
-This document lists every JSON manifest in `bucket/`, grouped by its primary functional category. **SoftwareOK Suite** and **Vovsoft Suite** are publisher cross-lists: their entries also remain in their functional categories.
+This document lists every JSON manifest in `bucket/`, grouped by its primary functional category. Publisher suites are cross-lists by developer/vendor; their entries also remain in their functional categories.
 
 ## Category Index
 
 | Category | Manifests | Type | Link |
 | --- | ---: | --- | --- |
 | Android & Device Tools | 10 | Functional | [View](#android-device-tools) |
+| Auslogics Suite | 15 | Publisher cross-list | [View](#auslogics-suite) |
 | Browsers & Communication | 5 | Functional | [View](#browsers-communication) |
+| ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
 | Clipboard & Text | 33 | Functional | [View](#clipboard-text) |
 | Developer & Technical Tools | 41 | Functional | [View](#developer-technical-tools) |
 | Download Managers | 16 | Functional | [View](#download-managers) |
 | Emulators & Compatibility | 14 | Functional | [View](#emulators-compatibility) |
+| Eric Zimmerman Suite | 31 | Publisher cross-list | [View](#eric-zimmerman-suite) |
 | File Management | 63 | Functional | [View](#file-management) |
 | Forensics & Diagnostics | 31 | Functional | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 18 | Functional | [View](#games-game-utilities) |
+| GRC Suite | 18 | Publisher cross-list | [View](#grc-suite) |
 | Images & Photos | 48 | Functional | [View](#images-photos) |
 | Keyboard & Language | 14 | Functional | [View](#keyboard-language) |
 | Media & Audio/Video | 43 | Functional | [View](#media-audio-video) |
+| MiTeC Suite | 22 | Publisher cross-list | [View](#mitec-suite) |
 | Network & DNS | 41 | Functional | [View](#network-dns) |
 | Notes & Knowledge | 20 | Functional | [View](#notes-knowledge) |
 | Other Utilities | 1 | Functional | [View](#other-utilities) |
@@ -1172,3 +1177,134 @@ Publisher index of 174 Vovsoft manifests. Each entry is also listed under its fu
 | [vovsoft-xls-to-csv-converter](../bucket/vovsoft-xls-to-csv-converter.json) | 2.3 | Portable edition of Vovsoft XLS to CSV Converter. | [Homepage](https://vovsoft.com/software/xls-to-csv-converter/) |
 | [vovsoft-xml-to-csv-converter](../bucket/vovsoft-xml-to-csv-converter.json) | 1.4 | Portable edition of Vovsoft XML to CSV Converter. | [Homepage](https://vovsoft.com/software/xml-to-csv-converter/) |
 
+
+
+## Auslogics Suite
+
+Publisher cross-list of 15 manifests associated with Auslogics. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | 1.23.0.4 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
+| [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
+| [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | 14.2.0.6 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
+| [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
+| [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
+| [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
+| [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
+| [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
+| [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
+| [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | 11.2.0.6 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
+| [Auslogics-registry-defrag](../bucket/Auslogics-registry-defrag.json) | 15.2.0.6 | Windows registry defragmentation utility | [Homepage](https://www.auslogics.com/en/software/registry-defrag/) |
+| [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
+| [Auslogics-system-information](../bucket/Auslogics-system-information.json) | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
+| [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
+| [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | 5.2.0.6 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
+
+
+## ChemTable Suite
+
+Publisher cross-list of 5 manifests associated with ChemTable. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [autorun-organizer](../bucket/autorun-organizer.json) | 7.02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
+| [files-inspector](../bucket/files-inspector.json) | 4.55 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
+| [reg-organizer](../bucket/reg-organizer.json) | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [reg-organizer-portable](../bucket/reg-organizer-portable.json) | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [soft-organizer](../bucket/soft-organizer.json) | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
+
+
+## Eric Zimmerman Suite
+
+Publisher cross-list of 31 manifests associated with Eric Zimmerman. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [eric-amcacheparser](../bucket/eric-amcacheparser.json) | 2026.10.1 | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-appcompatcacheparser](../bucket/eric-appcompatcacheparser.json) | 2026.10.1 | Eric Zimmerman's AppCompatCacheParser: Parser for Windows AppCompatCache (ShimCache) artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-bstrings](../bucket/eric-bstrings.json) | 2026.10.1 | Eric Zimmerman's bstrings: Search files for strings using built-in regular-expression patterns. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-evtxecmd](../bucket/eric-evtxecmd.json) | 2026.10.2 | Eric Zimmerman's EvtxECmd: Parse Windows EVTX event logs into standardized CSV, JSON, or XML output. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-ezviewer](../bucket/eric-ezviewer.json) | 2026.10.0 | Eric Zimmerman's EZViewer: View common document, text, spreadsheet, HTML, and PDF formats; other files can be examined in a hex editor. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-get-tools](../bucket/eric-get-tools.json) | 2026.10.23 | Eric Zimmerman's Get-ZimmermanTools: PowerShell downloader and updater for his forensic tools. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-hasher](../bucket/eric-hasher.json) | 2026.10.0 | Eric Zimmerman's Hasher: GUI utility for calculating file hashes. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-iis-geolocate](../bucket/eric-iis-geolocate.json) | 2026.10.1 | Eric Zimmerman's iisGeoLocate: Geolocate IP addresses found in IIS logs and identify unique or invalid entries. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-jlecmd](../bucket/eric-jlecmd.json) | 2026.10.5 | Eric Zimmerman's JLECmd: Command-line parser for Windows Jump List artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-jumplist-explorer](../bucket/eric-jumplist-explorer.json) | 2026.10.1 | Eric Zimmerman's JumpList Explorer: GUI for viewing Windows Jump Lists. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-kape](../bucket/eric-kape.json) | 2023.11.13.1945 | Eric Zimmerman's KAPE: Kroll Artifact Parser and Extractor for targeted forensic collection and processing. | [Homepage](https://ericzimmerman.github.io/KapeDocs/) |
+| [eric-lecmd](../bucket/eric-lecmd.json) | 2026.10.3 | Eric Zimmerman's LECmd: Command-line parser for Windows LNK shortcut files. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-mftecmd](../bucket/eric-mftecmd.json) | 2026.10.6 | Eric Zimmerman's MFTECmd: Parser for NTFS $MFT, $Boot, $J, $SDS, $I30, and $LogFile artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-mftexplorer](../bucket/eric-mftexplorer.json) | 2026.10.0 | Eric Zimmerman's MFTExplorer: Graphical viewer for NTFS $MFT data. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-pecmd](../bucket/eric-pecmd.json) | 2026.10.3 | Eric Zimmerman's PECmd: Parser for Windows Prefetch files. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-rbcmd](../bucket/eric-rbcmd.json) | 2026.10.1 | Eric Zimmerman's RBCmd: Parser for Windows Recycle Bin INFO2 and $I artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-recentfilecacheparser](../bucket/eric-recentfilecacheparser.json) | 2026.10.2 | Eric Zimmerman's RecentFileCacheParser: Parser for RecentFileCache forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-recmd](../bucket/eric-recmd.json) | 2026.10.2 | Eric Zimmerman's RECmd: Command-line Windows Registry searching and examination tool. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-registry-explorer](../bucket/eric-registry-explorer.json) | 2026.10.1 | Eric Zimmerman's Registry Explorer: GUI for examining Windows Registry hives, including multi-hive searches and locked hive files. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-rla](../bucket/eric-rla.json) | 2026.10.1 | Eric Zimmerman's RLA: Replay Registry transaction logs and update hives to a clean state. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sbecmd](../bucket/eric-sbecmd.json) | 2026.10.2 | Eric Zimmerman's SBECmd: Command-line exporter for Windows ShellBags artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sdb-explorer](../bucket/eric-sdb-explorer.json) | 2026.10.0 | Eric Zimmerman's SDB Explorer: GUI for exploring Windows Shim databases. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-shellbags-explorer](../bucket/eric-shellbags-explorer.json) | 2026.10.1 | Eric Zimmerman's ShellBags Explorer: GUI for browsing Windows ShellBags artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sqlecmd](../bucket/eric-sqlecmd.json) | 2026.10.3 | Eric Zimmerman's SQLECmd: Find and process SQLite databases using artifact maps. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-srumecmd](../bucket/eric-srumecmd.json) | 2026.10.1 | Eric Zimmerman's SrumECmd: Parse SRUDB.dat and optional SOFTWARE-hive data. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sumecmd](../bucket/eric-sumecmd.json) | 2026.10.1 | Eric Zimmerman's SumECmd: Parse Microsoft Windows User Access Log artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-timeapp](../bucket/eric-timeapp.json) | 2026.10.0 | Eric Zimmerman's TimeApp: GUI for local and UTC time, stopwatch, countdowns, and timestamp conversion. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-timeline-explorer](../bucket/eric-timeline-explorer.json) | 2026.10.0 | Eric Zimmerman's Timeline Explorer: GUI for filtering, grouping, sorting, and reviewing CSV and Excel data. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-vscmount](../bucket/eric-vscmount.json) | 2026.10.0 | Eric Zimmerman's VSCMount: Mount Windows Volume Shadow Copies to a drive letter. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-wxtcmd](../bucket/eric-wxtcmd.json) | 2026.10.1 | Eric Zimmerman's WxTCmd: Parser for Windows 10/11 Timeline database artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-xwfim](../bucket/eric-xwfim.json) | 2026.10.1 | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. | [Homepage](https://ericzimmerman.github.io/) |
+
+
+## GRC Suite
+
+Publisher cross-list of 18 manifests associated with GRC. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [grc-bootable](../bucket/grc-bootable.json) | 2024.04.21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
+| [grc-clickey](../bucket/grc-clickey.json) | 2005.10.29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
+| [grc-dcombobulator](../bucket/grc-dcombobulator.json) | 2004.05.24 | GRC DCOMbobulator: Legacy utility for checking and enabling/disabling the historical Windows DCOM vulnerability mitigation. | [Homepage](https://www.grc.com/freeware/dcom.htm) |
+| [grc-id-serve](../bucket/grc-id-serve.json) | 2003.08.26 | GRC ID Serve: Identifies web-server software and version information exposed by an Internet server. | [Homepage](https://www.grc.com/id/idserve.htm) |
+| [grc-incontrol](../bucket/grc-incontrol.json) | 2022.02.13 | GRC InControl: Controls Windows 10/11 feature updates while allowing monthly security updates. | [Homepage](https://www.grc.com/incontrol.htm) |
+| [grc-initdisk](../bucket/grc-initdisk.json) | 2020.12.19 | GRC InitDisk: Command-line USB formatter that can create a FAT-formatted and optionally FreeDOS-bootable drive. | [Homepage](https://www.grc.com/initdisk.htm) |
+| [grc-inspectre](../bucket/grc-inspectre.json) | 2018.01.15 | GRC InSpectre: Legacy Meltdown/Spectre mitigation and performance diagnostic for older Windows systems. | [Homepage](https://www.grc.com/inspectre.htm) |
+| [grc-isbootsecure](../bucket/grc-isbootsecure.json) | 2026.10.01 | GRC IsBootSecure: Checks whether Windows booted in UEFI mode, whether Secure Boot is enabled, and whether the firmware Platform Key is known to be unsafe. | [Homepage](https://www.grc.com/isbootsecure.htm) |
+| [grc-leaktest](../bucket/grc-leaktest.json) | 2008.03.13 | GRC LeakTest: Legacy outbound-firewall leakage test utility. | [Homepage](https://www.grc.com/lt/leaktest.htm) |
+| [grc-mousetrap](../bucket/grc-mousetrap.json) | 2006.01.19 | GRC MouseTrap: Reports whether a Windows system or Wine environment is vulnerable to the historical WMF/MICE metafile execution issue. | [Homepage](https://www.grc.com/wmf/wmf.htm) |
+| [grc-mousetrapcmd](../bucket/grc-mousetrapcmd.json) | 2006.01.19 | GRC MouseTrapCmd: Command-line variant of GRC MouseTrap for checking the historical WMF/MICE metafile execution issue. | [Homepage](https://www.grc.com/wmf/wmf.htm) |
+| [grc-never10](../bucket/grc-never10.json) | 2019.04.21 | GRC Never10: Legacy utility for controlling the Windows 7/8.1 upgrade offer to Windows 10. | [Homepage](https://www.grc.com/never10.htm) |
+| [grc-readspeed](../bucket/grc-readspeed.json) | 2020.12.24 | GRC ReadSpeed: Creates a bootable DOS USB device to run GRC's precise mass-storage read-performance benchmark. | [Homepage](https://www.grc.com/readspeed.htm) |
+| [grc-securable](../bucket/grc-securable.json) | 2013.02.22 | GRC SecurAble: Reports processor support for 64-bit instructions, hardware DEP/NX, and virtualization. | [Homepage](https://www.grc.com/securable.htm) |
+| [grc-shoot-the-messenger](../bucket/grc-shoot-the-messenger.json) | 2003.04.26 | GRC Shoot The Messenger: Legacy utility for managing the Windows Messenger Service on older Windows releases. | [Homepage](https://www.grc.com/stm/shootthemessenger.htm) |
+| [grc-unplug-n-pray](../bucket/grc-unplug-n-pray.json) | 2001.12.28 | GRC UnPlug n' Pray: Legacy utility for checking and enabling/disabling the historical Windows UPnP service. | [Homepage](https://www.grc.com/unpnp/unpnp.htm) |
+| [grc-validrive](../bucket/grc-validrive.json) | 2023.10.06 | GRC ValiDrive: Spot-checks USB mass-storage drives to detect fraudulent capacity and failed read/write storage. | [Homepage](https://www.grc.com/validrive.htm) |
+| [grc-wizmo](../bucket/grc-wizmo.json) | 2008.06.25 | GRC Wizmo: Command-line Windows utility for display power, screen savers, audio control, shutdown, and other desktop commands. | [Homepage](https://www.grc.com/wizmo/wizmo.htm) |
+
+
+## MiTeC Suite
+
+Publisher cross-list of 22 manifests associated with MiTeC. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [mitec-certificate-generator](../bucket/mitec-certificate-generator.json) | 1.0.0 | Creates self-signed X.509 certificates in PEM/CER and PKCS#12 PFX formats. | [Homepage](https://www.mitec.cz/wp/cg/) |
+| [mitec-certificate-information](../bucket/mitec-certificate-information.json) | 1.5.0 | Viewer for certificates and digitally signed files, including executable, MSI, XML and PDF files. | [Homepage](https://www.mitec.cz/wp/mci/) |
+| [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | 8.4.0 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
+| [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
+| [mitec-hexedit](../bucket/mitec-hexedit.json) | 7.1.0 | Hexadecimal editor with data inspector, calculator, file compare, memory dump and disk dump tools. | [Homepage](https://www.mitec.cz/wp/mhex/) |
+| [mitec-infobar](../bucket/mitec-infobar.json) | 4.6.2 | Taskbar-style information bar with system monitoring, calendar, weather and developer tools. | [Homepage](https://www.mitec.cz/wp/mib/) |
+| [mitec-interbase-query](../bucket/mitec-interbase-query.json) | 9.5.0 | Database management tool for InterBase 6+ and Firebird 1.5+. | [Homepage](https://www.mitec.cz/wp/mibq/) |
+| [mitec-json-viewer](../bucket/mitec-json-viewer.json) | 3.2.2 | JSON and BSON viewer and editor. | [Homepage](https://www.mitec.cz/wp/mjsonv/) |
+| [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
+| [mitec-network-scanner](../bucket/mitec-network-scanner.json) | 6.1.0 | Network discovery and scanning utility for hosts, ports, shares, services, SNMP and Active Directory. | [Homepage](https://www.mitec.cz/wp/mns/) |
+| [mitec-ole-com-explorer](../bucket/mitec-ole-com-explorer.json) | 1.4.0 | OLE/COM object explorer and Type Library viewer. | [Homepage](https://www.mitec.cz/wp/molexp/) |
+| [mitec-paradox-data-editor](../bucket/mitec-paradox-data-editor.json) | 3.7.0 | Viewer and editor for Paradox tables, with repair and maintenance features. | [Homepage](https://www.mitec.cz/wp/mpde/) |
+| [mitec-project-maker](../bucket/mitec-project-maker.json) | 1.9.0 | Automates batch Delphi project builds, code signing and executable version information patching. | [Homepage](https://www.mitec.cz/wp/pm/) |
+| [mitec-smbios-explorer](../bucket/mitec-smbios-explorer.json) | 1.8.0 | SMBIOS explorer and analyzer for firmware and hardware inventory. | [Homepage](https://www.mitec.cz/wp/smbe/) |
+| [mitec-sqlite-query](../bucket/mitec-sqlite-query.json) | 3.2.0 | SQLite 3 database management and query tool. | [Homepage](https://www.mitec.cz/wp/msqliteq/) |
+| [mitec-structured-storage-viewer](../bucket/mitec-structured-storage-viewer.json) | 4.1.2 | Viewer and manager for Microsoft OLE structured-storage files. | [Homepage](https://www.mitec.cz/wp/mssv/) |
+| [mitec-system-information-extra](../bucket/mitec-system-information-extra.json) | 16.0.0 | System information utility for inspecting computer hardware and software, with report export. | [Homepage](https://www.mitec.cz/wp/msix/) |
+| [mitec-tapi-monitor](../bucket/mitec-tapi-monitor.json) | 1.2.0 | Monitors TAPI lines, telephones, service providers and call events. | [Homepage](https://www.mitec.cz/wp/mtapimon/) |
+| [mitec-task-manager-deluxe](../bucket/mitec-task-manager-deluxe.json) | 5.1.1 | Portable advanced replacement for Windows Task Manager, with process, service, network, disk, GPU and system monitoring. | [Homepage](https://www.mitec.cz/wp/tmx/) |
+| [mitec-uuid-generator](../bucket/mitec-uuid-generator.json) | 1.0.0 | Generates and decodes UUID values. | [Homepage](https://www.mitec.cz/wp/uuid/) |
+| [mitec-windows-registry-recovery](../bucket/mitec-windows-registry-recovery.json) | 3.1.3 | Reads offline Windows Registry hives and extracts configuration information; also provides live Registry backup. | [Homepage](https://www.mitec.cz/wp/mwrr/) |
+| [mitec-xml-viewer](../bucket/mitec-xml-viewer.json) | 6.5.0 | XML viewer with structured browsing and export features. | [Homepage](https://www.mitec.cz/wp/mxmlv/) |
