@@ -38,7 +38,6 @@ Manifest Added shows the date a manifest first entered this bucket's Git history
 <a id="manifests-newest"></a>
 | Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- | --- |
-| [kvrt](bucket/kvrt.json) | Other Utilities | 20.0.8.0 | 2026-10-21 | 2026-10-27 | [Homepage](https://www.kaspersky.com/downloads/free-virus-removal-tool) | Kaspersky Virus Removal Tool |
 | [mucommander-nightly](bucket/mucommander-nightly.json) | File Management | 1.6.3 | 2026-09-29 | 2026-10-27 | [Homepage](https://www.mucommander.com) | Dual-pane file manager (nightly build). |
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20410 | 2026-09-29 | 2026-10-27 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [eric-xwfim](bucket/eric-xwfim.json) | Other Utilities | 2026.10.1 | 2026-10-25 | 2026-10-26 | [Homepage](https://ericzimmerman.github.io/) | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. |
@@ -674,11 +673,13 @@ Manifest Added shows the date a manifest first entered this bucket's Git history
 | [cstatus](bucket/cstatus.json) | Network & DNS | 1.2.7.1 | 2026-09-29 | — | [Homepage](https://www.hnsoft.pt/cstatus) | Free network monitoring and scanning tool for Windows |
 | [freefilesync](bucket/freefilesync.json) | Sync & Backup | 14.13. | 2026-09-29 | — | [Homepage](https://freefilesync.org/) | Folder comparison and synchronization software for backups and file synchronization. |
 | [haruna](bucket/haruna.json) | Media & Audio/Video | 1944 | 2026-10-04 | — | [Homepage](https://haruna.kde.org/) | An open source media player built with Qt/QML and libmpv |
+| [kvrt](bucket/kvrt.json) | Other Utilities | 20.0.8.0 | 2026-10-21 | — | [Homepage](https://www.kaspersky.com/downloads/free-virus-removal-tool) | Kaspersky Virus Removal Tool |
 | [nglide](bucket/nglide.json) | Emulators & Compatibility | 2.10 | 2026-09-29 | — | [Homepage](https://www.zeus-software.com/games/nglide) | 3Dfx Voodoo Glide wrapper for playing Glide games using modern graphics APIs. |
 | [nirlauncher.schinese](bucket/nirlauncher.schinese.json) | Other Utilities | 1.30.26 | 2026-10-21 | — | [Homepage](https://launcher.nirsoft.net/) | Most of NirSoft utilities are translated to other languages by volunteers from around the world. In the following section, you can download all translations of the desired language in one zip file, and extract them into NirSoft folder with all other utilities. After you do that, you'll be able to use the utilities of NirSoft in your preferred language, as long as there is a translation file for the utility that you use. |
 | [qbittorrent](bucket/qbittorrent.json) | Download Managers | 5.3.0 | 2026-09-29 | — | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). |
 | [qbittorrent-lt20](bucket/qbittorrent-lt20.json) | Download Managers | 5.2.4 | 2026-09-29 | — | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). |
 | [qq-pet](bucket/qq-pet.json) | Other Utilities | 0.7.4 | 2026-10-21 | — | [Homepage](https://pet.ankio.net/) | QQ 宠物跨平台复刻，基于 Arctic Penguin T800 逆向重建。 |
+| [softwareok-suite](bucket/softwareok-suite.json) | Other Utilities | 1.0 | 2026-10-27 | — | [Homepage](https://www.softwareok.com/?seite=Faq) | Meta-package for SoftwareOK utilities that already have Scoop manifests; not the full catalog. |
 | [ttf-stix2](bucket/ttf-stix2.json) | Other Utilities | v2.13b171 | 2026-10-21 | — | [Homepage](https://github.com/stipub/stixfonts) | OpenType Unicode fonts for Scientific, Technical, and Mathematical texts |
 | [zint](bucket/zint.json) | Other Utilities | 2.16.0 | 2026-10-21 | — | [Homepage](https://sourceforge.net/projects/zint/) | Zint is a suite of programs to allow easy encoding of data in any of the wide range of public domain barcode standards and to allow integration of this capability into your own programs. |
 <!-- KIROBUCKET-MANIFEST-TABLE-END -->
