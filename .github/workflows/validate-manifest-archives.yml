@@ -243,6 +243,7 @@ jobs:
                   continue
                 }
                 $extractDirs = @(Get-StringItems $config['extract_dir'])
+                $extractToDirs = @(Get-StringItems $config['extract_to'])
                 $hashItems = @(Get-StringItems $config['hash'])
                 $archiveFiles = @()
                 $inspectableArchives = 0
@@ -271,6 +272,10 @@ jobs:
                     $extractDir = $extractDirs[0]
                   } elseif ($archiveOrdinal -lt $extractDirs.Count) {
                     $extractDir = $extractDirs[$archiveOrdinal]
+                  }
+                  $extractTo = ''
+                  if ($archiveOrdinal -lt $extractToDirs.Count) {
+                    $extractTo = $extractToDirs[$archiveOrdinal]
                   }
                   $pathExtension = [System.IO.Path]::GetExtension($uri.AbsolutePath)
                   $isKnownInstaller = $pathPart -match '\.(exe|msix|msixbundle|appx|appxbundle)$'
@@ -336,7 +341,8 @@ jobs:
                       throw "$relativePath ($($archConfig.Name)): innounp succeeded but extracted no files from the Inno Setup app directory."
                     }
                     $archiveFiles += @($innoFiles | ForEach-Object {
-                      [System.IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\', '/')
+                      $relative = [System.IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\', '/')
+                      if ($extractTo) { "$extractTo/$relative" } else { $relative }
                     })
                     $exeDetails = @($innoFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
                       $relative = [System.IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\', '/')
@@ -416,12 +422,15 @@ jobs:
                     $prefixWithSlash = "$prefix/"
                     foreach ($entry in $normalizedEntries) {
                       if (-not $entry.Folder -and $entry.Path.StartsWith($prefixWithSlash, [System.StringComparison]::OrdinalIgnoreCase)) {
-                        $archiveFiles += $entry.Path.Substring($prefixWithSlash.Length)
+                        $relative = $entry.Path.Substring($prefixWithSlash.Length)
+                        if ($extractTo) { $archiveFiles += "$extractTo/$relative" } else { $archiveFiles += $relative }
                       }
                     }
                     Write-Host "extract_dir '$extractDir' exists in the archive."
                   } else {
-                    $archiveFiles += @($normalizedEntries | Where-Object { -not $_.Folder } | ForEach-Object { $_.Path })
+                    $archiveFiles += @($normalizedEntries | Where-Object { -not $_.Folder } | ForEach-Object {
+                      if ($extractTo) { "$extractTo/$($_.Path)" } else { $_.Path }
+                    })
                   }
                   $inspectableArchives++
                   $archiveOrdinal++
