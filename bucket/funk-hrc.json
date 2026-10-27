@@ -1,0 +1,24 @@
+{
+    "version": "2.1",
+    "description": "Tray utility for assigning hotkeys to switch between display resolutions.",
+    "homepage": "https://funk.eu/hrc/",
+    "license": "CC-BY-NC-SA-3.0",
+    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=167",
+    "checkver": {
+        "url": "https://funk.eu/hrc/",
+        "regex": "(?i)HRC\\s*[–-]\\s*HotKey Resolution Changer\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+    },
+    "autoupdate": {
+        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=167"
+    },
+    "shortcuts": [
+        [
+            "HRC.exe",
+            "Funk.eu HotKey Resolution Changer"
+        ]
+    ],
+    "notes": [
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
+        "The publisher specifies the Creative Commons BY-NC-SA 3.0 license and requires attribution/link-back."
+    ]
+}
