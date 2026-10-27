@@ -16,8 +16,20 @@
         }
     },
     "checkver": {
-        "url": "https://efsoftware.com/dw/e.htm",
-        "regex": "href=\"/cw/e\\.htm\" class=l>EF&nbsp;Commander</a></td><td align=right>([\\d.]+)&nbsp;"
+        "script": [
+            "$response = Invoke-WebRequest -Uri 'https://efsoftware.com/dw/e.htm' -UseBasicParsing",
+            "$html = [string]$response.Content",
+            "$needle = 'href=\"/cw/e.htm\"'",
+            "$start = $html.IndexOf($needle, [System.StringComparison]::OrdinalIgnoreCase)",
+            "if ($start -lt 0) { throw 'Could not locate EF Commander in the official EFSoftware download page.' }",
+            "$rowEnd = $html.IndexOf('</tr>', $start, [System.StringComparison]::OrdinalIgnoreCase)",
+            "if ($rowEnd -lt 0) { throw 'Could not isolate the EF Commander version row.' }",
+            "$row = $html.Substring($start, $rowEnd - $start)",
+            "$match = [regex]::Match($row, 'align=right>\\s*(?<version>\\d+\\.\\d+)')",
+            "if (-not $match.Success) { throw 'Could not parse the EF Commander version from the official download page.' }",
+            "$match.Groups['version'].Value"
+        ],
+        "regex": "(?<version>\\d+\\.\\d+)"
     },
     "autoupdate": {
         "architecture": {

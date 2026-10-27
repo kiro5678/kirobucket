@@ -16,8 +16,20 @@
         }
     },
     "checkver": {
-        "url": "https://efsoftware.com/dw/e.htm",
-        "regex": "href=\"/mm/e\\.htm\" class=l>EF&nbsp;Mailbox&nbsp;Manager</a></td><td align=right>([\\d.]+)&nbsp;"
+        "script": [
+            "$response = Invoke-WebRequest -Uri 'https://efsoftware.com/dw/e.htm' -UseBasicParsing",
+            "$html = [string]$response.Content",
+            "$needle = 'href=\"/mm/e.htm\"'",
+            "$start = $html.IndexOf($needle, [System.StringComparison]::OrdinalIgnoreCase)",
+            "if ($start -lt 0) { throw 'Could not locate EF Mailbox Manager in the official EFSoftware download page.' }",
+            "$rowEnd = $html.IndexOf('</tr>', $start, [System.StringComparison]::OrdinalIgnoreCase)",
+            "if ($rowEnd -lt 0) { throw 'Could not isolate the EF Mailbox Manager version row.' }",
+            "$row = $html.Substring($start, $rowEnd - $start)",
+            "$match = [regex]::Match($row, 'align=right>\\s*(?<version>\\d+\\.\\d+)')",
+            "if (-not $match.Success) { throw 'Could not parse the EF Mailbox Manager version from the official download page.' }",
+            "$match.Groups['version'].Value"
+        ],
+        "regex": "(?<version>\\d+\\.\\d+)"
     },
     "autoupdate": {
         "architecture": {
