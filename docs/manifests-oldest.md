@@ -589,9 +589,7 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [nixthis](bucket/nixthis.json) | Windows Privacy & Tweaks | 0.42.2 | 2026-10-13 | 2026-10-04 | [Homepage](https://github.com/builtbybel/NixThis) | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. |
 | [scanner](bucket/scanner.json) | PDF & Documents | 4.0.2.0 | 2026-10-04 | 2026-10-04 | [Homepage](https://github.com/simon-knuth/scanner) | An all-in-one scanner app for Windows |
 | [vovsoft-http-requester](bucket/vovsoft-http-requester.json) | Other Utilities | 6.6 | 2026-10-21 | 2026-10-04 | [Homepage](https://vovsoft.com/software/http-requester/) | Portable edition of Vovsoft HTTP Requester. |
-| [vovsoft-merge-audio-files](bucket/vovsoft-merge-audio-files.json) | Other Utilities | 1.3 | 2026-10-21 | 2026-10-04 | [Homepage](https://vovsoft.com/software/merge-audio-files/) | Portable utility for merging multiple audio files into one track. |
 | [vovsoft-text-to-mp3-converter](bucket/vovsoft-text-to-mp3-converter.json) | Other Utilities | 4.7 | 2026-10-21 | 2026-10-04 | [Homepage](https://vovsoft.com/software/text-to-mp3-converter/) | Portable edition of Vovsoft Text to MP3 Converter. |
-| [zexor](bucket/zexor.json) | File Management | 1.16.0 | 2026-09-29 | 2026-10-04 | [Homepage](https://github.com/metalbug/Zexor) | Visual Windows file manager with instant previews and the proprietary .zex container format. |
 | [fluent-sensors](bucket/fluent-sensors.json) | System Monitoring & Hardware | 1.7.0 | 2026-09-29 | 2026-10-05 | [Homepage](https://github.com/cechout/fluent-sensors) | Native Windows hardware monitoring app. |
 | [netronome](bucket/netronome.json) | Network & DNS | 0.16.0 | 2026-09-29 | 2026-10-05 | [Homepage](https://github.com/autobrr/netronome) | Modern network speed testing and monitoring tool built with Go and React. |
 | [onedrive-np](bucket/onedrive-np.json) | Other Utilities | 26.183.0920.0005 | 2026-10-21 | 2026-10-05 | [Homepage](https://oneclient.sfx.ms) | Microsoft OneDrive. Save your photos and files to OneDrive and access them from any device, anywhere. |
@@ -787,6 +785,7 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.8 | 2026-09-29 | 2026-10-25 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.8 | 2026-09-29 | 2026-10-25 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.1 | 2026-09-29 | 2026-10-25 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |
+| [zexor](bucket/zexor.json) | File Management | 1.16.0 | 2026-09-29 | 2026-10-25 | [Homepage](https://github.com/metalbug/Zexor) | Visual Windows file manager with instant previews and the proprietary .zex container format. |
 | [appgroup](bucket/appgroup.json) | Other Utilities | 1.6.0 | 2026-10-27 | 2026-10-26 | [Homepage](https://github.com/iandiv/AppGroup) | Organize, customize, and launch app groups from the Windows taskbar. |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.2 | 2026-09-29 | 2026-10-26 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [eric-xwfim](bucket/eric-xwfim.json) | Other Utilities | 2026.10.1 | 2026-10-25 | 2026-10-26 | [Homepage](https://ericzimmerman.github.io/) | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. |
@@ -803,5 +802,6 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [rpcs3](bucket/rpcs3.json) | Emulators & Compatibility | 0.0.43-20410 | 2026-09-29 | 2026-10-27 | [Homepage](https://rpcs3.net/) | Open-source PlayStation 3 emulator and debugger. |
 | [scrcpy-gui-simonaking](bucket/scrcpy-gui-simonaking.json) | Android & Device Tools | 2.5.0 | 2026-09-29 | 2026-10-27 | [Homepage](https://github.com/SimonAKing/scrcpy-gui) | Modern desktop GUI for scrcpy with bundled scrcpy and ADB. |
 | [sysmanager](bucket/sysmanager.json) | System Monitoring & Hardware | 1.131.3 | 2026-09-29 | 2026-10-27 | [Homepage](https://github.com/laurentiu021/SystemManager) | Modern Windows system monitoring and management toolkit. |
+| [vovsoft-merge-audio-files](bucket/vovsoft-merge-audio-files.json) | Other Utilities | 1.3 | 2026-10-21 | 2026-10-27 | [Homepage](https://vovsoft.com/software/merge-audio-files/) | Portable utility for merging multiple audio files into one track. |
 | [vynody](bucket/vynody.json) | Other Utilities | 2.23.5 | 2026-10-21 | 2026-10-27 | [Homepage](https://axel10.github.io/vynody_site/) | A visually appealing and feature-rich Flutter music player |
 
