@@ -93,6 +93,10 @@ jobs:
             }
 
             $manifest = Get-Content -LiteralPath $sourcePath -Raw | ConvertFrom-Json -AsHashtable
+            if ($relativePath -ieq 'bucket/softwareok-suite.json') {
+              Write-Host 'Skipping automatic-update validation for the pinned multi-program bundle; the bundled apps have separate update manifests.'
+              continue
+            }
             if (-not $manifest.ContainsKey('checkver')) {
               $failures += "$relativePath : missing checkver; cannot verify automatic updates."
               Write-Host "FAILED: $relativePath - missing checkver." -ForegroundColor Red
