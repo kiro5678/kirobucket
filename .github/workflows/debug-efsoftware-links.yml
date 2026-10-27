@@ -1,0 +1,38 @@
+name: Temporary EFSoftware Link Inspection
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  inspect:
+    if: contains(github.event.head_commit.message, '[debug-ef-links]')
+    runs-on: windows-latest
+    steps:
+      - name: List official EFSoftware file links
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $uri = 'https://efsoftware.com/dw/e.htm'
+          $response = Invoke-WebRequest -Uri $uri -Headers @{ 'User-Agent' = 'Mozilla/5.0' }
+          $html = [string]$response.Content
+          Write-Output ('PAGE_STATUS=' + [int]$response.StatusCode)
+          Write-Output ('PAGE_BYTES=' + $html.Length)
+          $pattern = '(?is)<a\b[^>]*href\s*=\s*["'']([^"'']+)["''][^>]*>(.*?)</a>'
+          foreach ($match in [regex]::Matches($html, $pattern)) {
+            $href = [System.Net.WebUtility]::HtmlDecode($match.Groups[1].Value).Trim()
+            $label = [regex]::Replace($match.Groups[2].Value, '(?is)<[^>]+>', ' ')
+            $label = [System.Net.WebUtility]::HtmlDecode(($label -replace '\s+', ' ')).Trim()
+            if ($href -match '(?i)(download|files|portable|\.zip|\.exe|\.7z|\.rar|\.msi|\.cab)' -or $label -match '(?i)(portable|Windows 64|Windows 32|web installer|download)') {
+              Write-Output ('LINK | ' + $label + ' | ' + $href)
+            }
+          }
+          Write-Output '---PRODUCT PAGE LINKS---'
+          foreach ($match in [regex]::Matches($html, '(?is)<a\b[^>]*href\s*=\s*["'']([^"'']+)["''][^>]*>(.*?)</a>')) {
+            $href = [System.Net.WebUtility]::HtmlDecode($match.Groups[1].Value).Trim()
+            $label = [regex]::Replace($match.Groups[2].Value, '(?is)<[^>]+>', ' ')
+            $label = [System.Net.WebUtility]::HtmlDecode(($label -replace '\s+', ' ')).Trim()
+            if ($href -match '^/(cw|as|cm|dm|mp|fc|fi|mm|mr|pm|su|sm|ts|cf)/') {
+              Write-Output ('PAGE | ' + $label + ' | ' + $href)
+            }
+          }
