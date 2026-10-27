@@ -8,7 +8,7 @@
     },
     "url": "https://www.sordum.org/files/download/runastool/RunAsTool.zip",
     "hash": "8667d925712b463a39024108a9ba4da4d1c598f9502e2be1fa87050df786f13a",
-    "extract_dir": "RunAsTool",
+    "extract_dir": "RunAsTool_v1.7",
     "architecture": {
         "64bit": {
             "pre_install": "Remove-Item \"$dir\\RunAsTool.exe\" | Out-Null; Rename-Item \"$dir\\RunAsTool_x64.exe\" 'RunAsTool.exe' | Out-Null"
@@ -27,6 +27,7 @@
     "persist": "RunAsTool.ini",
     "checkver": "RunAsTool\\sv([\\d.]+)",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/runastool/RunAsTool.zip"
+        "url": "https://www.sordum.org/files/download/runastool/RunAsTool.zip",
+        "extract_dir": "RunAsTool_v$version"
     }
 }

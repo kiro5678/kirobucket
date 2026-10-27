@@ -7,7 +7,7 @@
     },
     "homepage": "https://www.sordum.org/simple-vhd-manager",
     "url": "https://www.sordum.org/files/download/simple-vhd-manager/VhdManager.zip",
-    "hash": "90bb2f1e5287b4ac0958d726b89db40f39fde429e465e2d5d098caede5bcbafa",
+    "hash": "1a30d4dd14325fb73f38523da32c237b044fe10cff14927fdf9e41291acb333f",
     "extract_dir": "VHD_manager_v1.5",
     "architecture": {
         "64bit": {

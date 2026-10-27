@@ -6,7 +6,7 @@
         "identifier": "Freeware",
         "url": "https://www.sordum.org/eula/"
     },
-    "url": "https://www.sordum.org/files/dns-angel/DnsAngel.zip",
+    "url": "https://www.sordum.org/files/download/dns-angel/DnsAngel.zip",
     "extract_dir": "DnsAngel",
     "shortcuts": [
         [
@@ -17,6 +17,6 @@
     "persist": "DnsAngel.ini",
     "checkver": "Dns Angel\\s*v([\\d.]+)",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/dns-angel/DnsAngel.zip"
+        "url": "https://www.sordum.org/files/download/dns-angel/DnsAngel.zip"
     }
 }
