@@ -27,7 +27,5 @@
     "autoupdate": {
         "url": "https://downloads.auslogics.com/en/registry-cleaner/auslogics-registry-cleaner-setup.exe"
     },
-    "notes": [
-        "Scoop uses Inno Setup extraction to unpack the official installer into the application directory; the installer is not executed."
-    ]
+    "notes": "Scoop uses Inno Setup extraction to unpack the official installer into the application directory; the installer is not executed."
 }
