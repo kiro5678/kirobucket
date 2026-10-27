@@ -66,6 +66,7 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [pulse](bucket/pulse.json) | System Monitoring & Hardware | 1.6.0 | 2026-09-29 | 2026-10-24 | [Homepage](https://github.com/Regncreative/Pulse) | Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService. |
 | [screenbox](bucket/screenbox.json) | Media & Audio/Video | 0.24.0 | 2026-10-05 | 2026-10-24 | [Homepage](https://github.com/huynhsontung/Screenbox) | LibVLC-based media player for the Universal Windows Platform. |
 | [selfphotos](bucket/selfphotos.json) | Images & Photos | 0.9.0 | 2026-09-29 | 2026-10-24 | [Homepage](https://selfphotos.com/) | Cross-platform photo and video management desktop app with local-first privacy. |
+| [softwareok-suite](bucket/softwareok-suite.json) | Other Utilities | 2026.10.27 | 2026-10-27 | 2026-10-24 | [Homepage](https://www.softwareok.com/?seite=Faq) | Combined x64 portable collection of 28 SoftwareOK utilities in one Scoop installation. |
 | [uefitool](bucket/uefitool.json) | Other Utilities | A76 | 2026-10-21 | 2026-10-24 | [Homepage](https://github.com/LongSoft/UEFITool) | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. |
 | [aerial](bucket/aerial.json) | Windows Customization | 1.3.0 | 2026-10-24 | 2026-10-23 | [Homepage](https://github.com/OrangeJedi/Aerial) | Apple TV-style Windows screen saver with aerial videos, local video playback, and configurable overlays. |
 | [crosspaste](bucket/crosspaste.json) | Clipboard & Text | 2.3.0.2767 | 2026-09-29 | 2026-10-23 | [Homepage](https://crosspaste.com/en/) | Universal pasteboard across devices. |
@@ -667,7 +668,6 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [qbittorrent](bucket/qbittorrent.json) | Download Managers | 5.3.0 | 2026-09-29 | — | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). |
 | [qbittorrent-lt20](bucket/qbittorrent-lt20.json) | Download Managers | 5.2.4 | 2026-09-29 | — | [Homepage](https://www.qbittorrent.org) | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). |
 | [qq-pet](bucket/qq-pet.json) | Other Utilities | 0.7.4 | 2026-10-21 | — | [Homepage](https://pet.ankio.net/) | QQ 宠物跨平台复刻，基于 Arctic Penguin T800 逆向重建。 |
-| [softwareok-suite](bucket/softwareok-suite.json) | Other Utilities | 1.1 | 2026-10-27 | — | [Homepage](https://www.softwareok.com/?seite=Faq) | Meta-package that installs a curated collection of 28 SoftwareOK utilities through their individual Scoop manifests. |
 | [ttf-stix2](bucket/ttf-stix2.json) | Other Utilities | v2.13b171 | 2026-10-21 | — | [Homepage](https://github.com/stipub/stixfonts) | OpenType Unicode fonts for Scientific, Technical, and Mathematical texts |
 | [zint](bucket/zint.json) | Other Utilities | 2.16.0 | 2026-10-21 | — | [Homepage](https://sourceforge.net/projects/zint/) | Zint is a suite of programs to allow easy encoding of data in any of the wide range of public domain barcode standards and to allow integration of this capability into your own programs. |
 
