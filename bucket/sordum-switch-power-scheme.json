@@ -8,7 +8,8 @@
     },
     "url": "https://www.sordum.org/files/download/switch-power-scheme/SwitchPowerScheme.zip",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/switch-power-scheme/SwitchPowerScheme.zip"
+        "url": "https://www.sordum.org/files/download/switch-power-scheme/SwitchPowerScheme.zip",
+        "extract_dir": "SwitchPowerScheme_v$version"
     },
     "architecture": {
         "64bit": {
@@ -43,5 +44,6 @@
     "checkver": {
         "url": "https://www.sordum.org/12818/switch-power-scheme-v1-3/",
         "regex": "Switch Power Scheme v([\\d.]+)"
-    }
+    },
+    "extract_dir": "SwitchPowerScheme_v1.3"
 }

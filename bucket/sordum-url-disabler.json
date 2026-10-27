@@ -6,9 +6,9 @@
         "identifier": "Freeware",
         "url": "https://www.sordum.org/eula/"
     },
-    "url": "https://www.sordum.org/files/downloads.php?url-disabler#/dl.zip",
+    "url": "https://www.sordum.org/files/downloads.php?url-disabler#/dl.7z",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/downloads.php?url-disabler#/dl.zip"
+        "url": "https://www.sordum.org/files/downloads.php?url-disabler#/dl.7z"
     },
     "architecture": {
         "64bit": {
