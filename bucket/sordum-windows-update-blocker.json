@@ -19,6 +19,5 @@
     "checkver": "Blocker v([\\d.]+)",
     "autoupdate": {
         "url": "https://www.sordum.org/files/downloads.php?st-windows-update-blocker#/Wub.zip"
-    },
-    "hash": "dfcb60c452e10a6264fc358fa0df472948b4fb29bac809c184cfc6e7f3b27205"
+    }
 }
