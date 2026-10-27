@@ -2,7 +2,7 @@
     "version": "2.5.0.30",
     "description": "Creates small portable HTML files for storing and opening individual bookmarks.",
     "homepage": "https://www.aurelitec.com/portmarks/",
-    "license": "Freeware",
+    "license": "MIT",
     "url": "https://download.aurelitec.com/htmtied/windows/htmtied-portable.zip",
     "checkver": {
         "url": "https://www.aurelitec.com/portmarks/download/",
