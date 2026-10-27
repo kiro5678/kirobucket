@@ -139,8 +139,27 @@ jobs:
           $lines.Add("- Requested isolated install directory: $installDir")
           $lines.Add("- Arguments: $arguments")
           try {
-            $process = Start-Process -FilePath $installer.FullName -ArgumentList $arguments -Wait -PassThru
-            $lines.Add("- Installer exit code: $($process.ExitCode)")
+            $process = Start-Process -FilePath $installer.FullName -ArgumentList $arguments -PassThru
+            if (-not $process.WaitForExit(180000)) {
+              $lines.Add('Installer did not exit within 180 seconds; checking for the app process that may have been opened by setup.')
+              $installRoot = [System.IO.Path]::GetFullPath($installDir)
+              $appProcesses = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+                $_.ExecutablePath -and $_.ExecutablePath.StartsWith($installRoot, [System.StringComparison]::OrdinalIgnoreCase) -and $_.ProcessId -ne $process.Id
+              })
+              foreach ($appProcess in $appProcesses) {
+                Stop-Process -Id $appProcess.ProcessId -Force -ErrorAction SilentlyContinue
+              }
+              Start-Sleep -Seconds 3
+              if (-not $process.HasExited) {
+                $process.Kill()
+                $process.WaitForExit(10000) | Out-Null
+                $lines.Add('Installer process timed out and was terminated on the disposable runner.')
+              } else {
+                $lines.Add("- Installer exit code after closing the app process: $($process.ExitCode)")
+              }
+            } else {
+              $lines.Add("- Installer exit code: $($process.ExitCode)")
+            }
           } catch {
             $lines.Add("- Installer launch error: $($_.Exception.Message)")
           }
@@ -148,6 +167,7 @@ jobs:
           $roots = @(
             $installDir,
             (Join-Path $env:ProgramFiles 'Auslogics'),
+            (Join-Path ([Environment]::GetFolderPath('ProgramFilesX86')) 'Auslogics'),
             (Join-Path $env:ProgramData 'Auslogics')
           ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -Unique
           $files = @()
