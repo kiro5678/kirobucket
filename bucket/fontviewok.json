@@ -1,0 +1,44 @@
+{
+    "version": "9.33",
+    "description": "Create a quick visual overview of installed fonts.",
+    "homepage": "https://www.softwareok.com/?Download=FontViewOK",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.softwareok.com/?seite=Freeware/FontViewOK/Eula"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/FontViewOK_Portable_x64.zip",
+            "hash": "7e2d13ea698a67caa72506f4f4da03d24930c2cb7f3158f14cef1ce48031a066"
+        }
+    },
+    "bin": [
+        [
+            "FontViewOK_x64_p.exe",
+            "FontViewOK"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "FontViewOK_x64_p.exe",
+            "FontViewOK"
+        ]
+    ],
+    "pre_install": "if (-not (Test-Path \"$persist_dir\\SoftwareOK_Program.ini\")) { New-Item -Path \"$dir\\SoftwareOK_Program.ini\" -ItemType File | Out-Null }",
+    "persist": "SoftwareOK_Program.ini",
+    "checkver": {
+        "url": "https://www.softwareok.com/?Download=FontViewOK",
+        "regex": "Download FontViewOK ([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.softwareok.com/Download/FontViewOK_Portable_x64.zip"
+            }
+        },
+        "hash": {
+            "url": "https://www.softwareok.com/?Download=FontViewOK",
+            "regex": "$basename.*?$sha256<"
+        }
+    }
+}
