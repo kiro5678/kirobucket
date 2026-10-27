@@ -1,6 +1,6 @@
 {
-    "version": "2026.10.27.1",
-    "description": "Combined x64 portable collection of 29 SoftwareOK utilities in one Scoop installation.",
+    "version": "2026.10.27.2",
+    "description": "Combined portable collection of 79 SoftwareOK utilities in one Scoop installation.",
     "homepage": "https://www.softwareok.com/?seite=Faq",
     "license": "Freeware",
     "architecture": {
@@ -34,7 +34,57 @@
                 "https://www.softwareok.com/Download/ProcessKO_x64.zip",
                 "https://www.softwareok.com/Download/OneLoupe_x64.zip",
                 "https://www.softwareok.com/Download/Office.Files.Images.zip",
-                "https://www.softwareok.com/Download/Run-Command_x64_Portable.zip"
+                "https://www.softwareok.com/Download/Run-Command_x64_Portable.zip",
+                "https://www.softwareok.com/Download/Find.Same.Images.OK_Portable_x64.zip",
+                "https://www.softwareok.com/Download/AutoPowerOptionsOK_Portable.zip",
+                "https://www.softwareok.com/Download/ShortDoorNote_x64_Portable.zip",
+                "https://www.softwareok.com/Download/GetWindowText_x64.zip",
+                "https://www.softwareok.com/Download/DesktopNoteOK_x64_Portable.zip",
+                "https://www.softwareok.com/Download/PreventTurnOff_x64_Portable.zip",
+                "https://www.softwareok.com/Download/QuickMemoryTestOK_x64.zip",
+                "https://www.softwareok.com/Download/BlankAndSecure_x64.zip",
+                "https://www.softwareok.com/Download/OK.Its.Raining.Men_x64_Portable.zip",
+                "https://www.softwareok.com/Download/DesktopDigitalClock_x64_Portable.zip",
+                "https://www.softwareok.com/Download/ExperienceIndexOK_x64_Portable.zip",
+                "https://www.softwareok.com/Download/CoronaKO_x64.zip",
+                "https://www.softwareok.com/Download/12-Ants_x64_Portable.zip",
+                "https://www.softwareok.com/Download/Delete.On.Reboot_x64.zip",
+                "https://www.softwareok.com/Download/FlyOutNotePad.zip",
+                "https://www.softwareok.com/Download/DesktopClock3D_x64.zip",
+                "https://www.softwareok.com/Download/Print.Test.Page.OK_x64_Portable.zip",
+                "https://www.softwareok.com/Download/LauschAngriff.zip",
+                "https://www.softwareok.com/Download/DesktopSchneeFree.zip",
+                "https://www.softwareok.com/Download/WinPing_Portable_x64.zip",
+                "https://www.softwareok.com/Download/3D.Benchmark.OK_x64.zip",
+                "https://www.softwareok.com/Download/Desktop.Calendar.Tray.OK_Portable.zip",
+                "https://www.softwareok.com/Download/4ur-Windows-8-Mouse-Balls_x64_Portable.zip",
+                "https://www.softwareok.com/Download/MultiClipBoardSlots.zip",
+                "https://www.softwareok.com/Download/KeepMouseSpeedOK_Portable.zip",
+                "https://www.softwareok.com/Download/TraceRouteOK_x64.zip",
+                "https://www.softwareok.com/Download/SolitaireOK.zip",
+                "https://www.softwareok.com/Download/Film.Strip.Explorer_Portable_x64.zip",
+                "https://www.softwareok.com/Download/StressMyPC.zip",
+                "https://www.softwareok.com/Download/MagicMouseMove_Portable.zip",
+                "https://www.softwareok.com/Download/OnlyStopWatch_Portable_x64.zip",
+                "https://www.softwareok.com/Download/MineSweeperOK.zip",
+                "https://www.softwareok.com/Download/ClassicDesktopClock_x64_Portable.zip",
+                "https://www.softwareok.com/Download/NonCompressibleFiles_x64_Portable.zip",
+                "https://www.softwareok.com/Download/Bitte.Wenden_Portable.zip",
+                "https://www.softwareok.com/Download/PhotoResizerOK_x64.zip",
+                "https://www.softwareok.com/Download/MatriX.CoronaKO_x64.zip",
+                "https://www.softwareok.com/Download/DesktopSnowOK_x64.zip",
+                "https://www.softwareok.com/Download/IsMyTouchScreenOK_x64.zip",
+                "https://www.softwareok.com/Download/GetPixelColor_Portable_x64.zip",
+                "https://www.softwareok.com/Download/FreeCellOK.zip",
+                "https://www.softwareok.com/Download/SmartTextCrypter.zip",
+                "https://www.softwareok.com/Download/Zigarettenschachtel-Spruch.zip",
+                "https://www.softwareok.com/Download/CpuFrequenz_Portable.zip",
+                "https://www.softwareok.com/Download/IsMyHdOK_x64.zip",
+                "https://www.softwareok.com/Download/MagicMouseTrails_x64_Portable.zip",
+                "https://www.softwareok.com/Download/DesktopImages3D_x64.zip",
+                "https://www.softwareok.com/Download/ColorConsole_x64_Portable.zip",
+                "https://www.softwareok.com/Download/FavoritenFreund.zip",
+                "https://www.softwareok.com/Download/Monitor.Turn.Off.Timer.OK.zip"
             ],
             "hash": [
                 "e6185083898ec28d18fc8ddf1d4f39f9b4cd633ed3c8ab880bb344960ba52a68",
@@ -65,7 +115,57 @@
                 "19679c7b0abead49bf93316638fac9e170fd855e03840cefb17bea8f4e9db9be",
                 "8f8b4b0a27e8d7acb7275e63f24461c5273a467a09a9d6988dcf45ac4f362d0d",
                 "0afdc0c208706d172e4466e6f14ddae30a84375b456268d763487ba54ce02faa",
-                "7fe98842f5c8788e19554cecf4ea92908caeb61c095eb5bee21326c775f67d85"
+                "7fe98842f5c8788e19554cecf4ea92908caeb61c095eb5bee21326c775f67d85",
+                "7778b94c0306e1ab74134e57480ae9cd6de45a63dbe9111f25d162ac828fa74a",
+                "c048b4499316ede3e654d50b081ea1a56ea7501e7fe65b3e81931d2282f2d6f1",
+                "ede1755495a9269a500dccfdc3daeed7050d83eb606746e9e08954b6455cfdd1",
+                "4fe46327914160680d439ef8362d5f9fe9e2e8c1f1eacf91fcc9ef811fa4dc42",
+                "03fcb4661a8b336af915b1ff2f7e9cb5d606be4b5d111a01a28c3b6ab1a2f349",
+                "a4da526c128513c57d7d15e60b73c8e49bc412ec7feb641ecfee42dc4a8f9424",
+                "c47d9a4eae6576a3994214ad9db56ade23ccead73dff00b5647eda58550c60ea",
+                "4f12a33525ed4a66e4fa081b2170c5db962e1329dd7f1a565e2a8d7bd46a1b1e",
+                "ea1f5a810171293fec32b4f6491be309cfbb388a579c7996e0c37857017c1b48",
+                "32dfb2bb67c1aff2a1e7c4a8b815ce762d4b7b08e7f220701df43c445ea1c114",
+                "51be650e19a7e66678fc144458839b2d385a81640090fb5bcbc7fc1119d7d4d2",
+                "41083f31cba7f27c4782237e637e7b634c721c5d2e74c851f8cb83b731afd7c5",
+                "90b43b99d768b1f7fcdddb4a2f1b7e6b2b8a6430088d9bd4c118ad7b492e01f0",
+                "09c1e6eddd25c06a96486a2929c06926cc112df995339030ef73fec7ec3efcbe",
+                "c33059c2cb7311bccf1e4bf36bf59c24777ff6d90d1d835a060a3e9834214d7c",
+                "d619de123a4c20fc6721432a3e4da67048846593df738ec0b07bbc2e3b1d6b11",
+                "47a97f86b2a6d656ad194bf0741293a2257c43d376b48f39f3900a631d50d714",
+                "a55644bf5d25d0f00bee4c5245f9282ecae155b546caf69c45f918bc89135e60",
+                "b1411e8661fbe58e775c16daba85b6a01c8f87e57aeee5ea949957c18b34465a",
+                "9a8dba5422907b2a26667e53a02cbe8884db3bf0aa26b082ba9727dafd5aad7d",
+                "80eceacc27b10da1075f702d247e4d3ae1710f6b58f446de4fb6a0227ada5347",
+                "74296d91fcbe5e5f50c8cb8a3b4a9cc2ca5a4c5ca1e1ebab5b3ee7b66fd50c40",
+                "8e86749ba0817e8582de3a207ec3f4599c9fe5c54b9cb9b9756b12791d3e788b",
+                "17fc3efc56f5d959dacb3afaaa8947a127145544446934a362821686fd5d0d77",
+                "5e47eb1a52a73cabbcfd097e6a6524daa254090bfb8cfbb95e445cb02ce4d169",
+                "740ed0d2fe7fbbf627e436ca0ff14c12b3dafa59b3b8c71f6200dfa7db79f484",
+                "1185e9721037a5dd8ec03a0c47e68e7d1031f54f29f4b7625a9b72d0f56fac78",
+                "591e7c143338c6d8f539be569e02f94a1e3f1688dd3ab31e4c2a7fe322206dcc",
+                "3e55de238b2749566a6bf8a4508b658d2358c9da568daea887cb61b3d6826682",
+                "d1243d1347845bf34877ac41b1f54e263dfefb3582581e4935743c6f6dc27368",
+                "14d38425cf1def5dd38edfa3c945747655d6bcb63a55d89c8e2b2c855bc27a85",
+                "8aa4e542ca8d17fd11b45ed9a6e3ccb9b52a6d2c131d2fe091ac2d50f46beaea",
+                "797f7d78703294418459af5c9bd7bbef22949bb76841daa7b1b0fb4232afabcf",
+                "8556ffbef2138ac71c465c7219f084e7d44c03b12c3589a6a5ac16149656328d",
+                "0f56af8d43330045cd7ccea470a5971fbd6bc90936046c6d17e8ffeb8e9ccca4",
+                "5644c8ca109f039e3dcd4b70cc09655f10f45d2f8554022d1a7dcff8745fa6a8",
+                "57f6d64020c63be87eaec6ec774317a1400d867f81ad6d82bb37ec71cfb55a1b",
+                "7b38485a225ddb37e92fa64e0615fc1f155c6ce5109952b4bcd956f169304a00",
+                "4622ce9f36dce639ae9033a6d94c9250534a30c6a4126962145b82fd9e36600f",
+                "506b3bcf3ba8f8a4a704c53ba91bb5b03e996822aa8153dc97ac81876537cc8f",
+                "fc39c6f82ad7d396aadf17b659ba98d339406574259d45f12e275807a954668f",
+                "e75eefbbee8556be41d67f3baa8ab3d46da2f29c6651a59f6b519406c0d6d5c8",
+                "8f5e8d9f91b39a817dc742cf72b22ab41ed98773b6ddacd755a6422b87563f0e",
+                "95882dfca959d481639984b70345bf7790cb4e049b32935c04a34eee9fdc8c71",
+                "8e38ccfecf3e9c4f02353713859835de8e24bfcf490fa29577061f7395c542f1",
+                "3b0d8f95dd25369142908247a26ca62d8f79c80d0f0c3a76022c707b015bf2e2",
+                "d6b6b9be7e4446c168dc8de629e6975c23882446c3644834ebccfa3094204438",
+                "0000000000000000000000000000000000000000000000000000000000000000",
+                "0000000000000000000000000000000000000000000000000000000000000000",
+                "0000000000000000000000000000000000000000000000000000000000000000"
             ]
         }
     },
@@ -98,7 +198,57 @@
         "processko",
         "oneloupe",
         "office-files-images",
-        "run-command"
+        "run-command",
+        "find-same-images-ok",
+        "auto-power-options-ok",
+        "short-door-note",
+        "get-window-text",
+        "desktop-note-ok",
+        "prevent-turn-off",
+        "quick-memory-test-ok",
+        "blank-and-secure",
+        "ok-its-raining-men",
+        "desktop-digital-clock",
+        "experience-index-ok",
+        "corona-ko",
+        "12-ants",
+        "delete-on-reboot",
+        "flyout-notepad",
+        "desktop-clock-3d",
+        "print-test-page-ok",
+        "lauschangriff",
+        "desktop-schnee-free",
+        "win-ping",
+        "3d-benchmark-ok",
+        "desktop-calendar-tray-ok",
+        "4ur-windows-8-mouse-balls",
+        "multi-clipboard-slots",
+        "keep-mouse-speed-ok",
+        "traceroute-ok",
+        "solitaire-ok",
+        "film-strip-explorer",
+        "stress-mypc",
+        "magic-mouse-move",
+        "only-stopwatch",
+        "minesweeper-ok",
+        "classic-desktop-clock",
+        "noncompressible-files",
+        "bitte-wenden",
+        "photo-resizer-ok",
+        "matrix-coronako",
+        "desktop-snow-ok",
+        "is-my-touch-screen-ok",
+        "get-pixel-color",
+        "freecell-ok",
+        "smarttextcrypter",
+        "zigarettenschachtel-spruch",
+        "cpu-frequenz",
+        "is-my-hd-ok",
+        "magic-mouse-trails",
+        "desktop-images-3d",
+        "colorconsole",
+        "favoritenfreund",
+        "monitor-turn-off-timer-ok"
     ],
     "bin": [
         [
@@ -216,6 +366,206 @@
         [
             "run-command\\Run-Command_x64_p.exe",
             "Run-Command"
+        ],
+        [
+            "find-same-images-ok\\Find.Same.Images.OK\\FSI_OK_x64.exe",
+            "FindSameImagesOK"
+        ],
+        [
+            "auto-power-options-ok\\APO-OK_p.exe",
+            "AutoPowerOptionsOK"
+        ],
+        [
+            "short-door-note\\ShortDoorNote_Portable.exe",
+            "ShortDoorNote"
+        ],
+        [
+            "get-window-text\\GetWindowText_x64.exe",
+            "GetWindowText"
+        ],
+        [
+            "desktop-note-ok\\DesktopNoteOK_x64_Portable.exe",
+            "DesktopNoteOK"
+        ],
+        [
+            "prevent-turn-off\\PreventTurnOff_x64_p.exe",
+            "PreventTurnOff"
+        ],
+        [
+            "quick-memory-test-ok\\QuickMemoryTestOK_x64_p.exe",
+            "QuickMemoryTestOK"
+        ],
+        [
+            "blank-and-secure\\BlankAndSecure_x64.exe",
+            "BlankAndSecure"
+        ],
+        [
+            "ok-its-raining-men\\OK.Its.Raining.Men_x64_p.exe",
+            "OKItsRainingMen"
+        ],
+        [
+            "desktop-digital-clock\\DesktopDigitalClock_x64_P.exe",
+            "DesktopDigitalClock"
+        ],
+        [
+            "experience-index-ok\\ExperienceIndexOK_x64_p.exe",
+            "ExperienceIndexOK"
+        ],
+        [
+            "corona-ko\\CoronaKO_x64.exe",
+            "CoronaKO"
+        ],
+        [
+            "12-ants\\12-Ants_x64_p.exe",
+            "12-Ants"
+        ],
+        [
+            "delete-on-reboot\\Delete.On.Reboot_x64.exe",
+            "DeleteOnReboot"
+        ],
+        [
+            "flyout-notepad\\FlyOutNotePad.exe",
+            "FlyOutNotePad"
+        ],
+        [
+            "desktop-clock-3d\\DesktopClock3D_x64.exe",
+            "DesktopClock3D"
+        ],
+        [
+            "print-test-page-ok\\Print.Test.Page.OK_Portable.exe",
+            "PrintTestPageOK"
+        ],
+        [
+            "lauschangriff\\LauschAngriff.exe",
+            "LauschAngriff"
+        ],
+        [
+            "desktop-schnee-free\\DesktopSchneeFree.exe",
+            "DesktopSchneeFree"
+        ],
+        [
+            "win-ping\\WinPing_x64_p.exe",
+            "WinPing"
+        ],
+        [
+            "3d-benchmark-ok\\3D.Benchmark.OK_x64.exe",
+            "3DBenchmarkOK"
+        ],
+        [
+            "desktop-calendar-tray-ok\\DCT_OK_p.exe",
+            "DesktopCalendarTrayOK"
+        ],
+        [
+            "4ur-windows-8-mouse-balls\\4ur-Windows-8-Mouse-Balls_x64_p.exe",
+            "4urWindows8MouseBalls"
+        ],
+        [
+            "multi-clipboard-slots\\MultiClipBoardSlots.exe",
+            "MultiClipBoardSlots"
+        ],
+        [
+            "keep-mouse-speed-ok\\KMS_OK_p.exe",
+            "KeepMouseSpeedOK"
+        ],
+        [
+            "traceroute-ok\\TraceRouteOK_x64.exe",
+            "TraceRouteOK"
+        ],
+        [
+            "solitaire-ok\\SolitaireOK.exe",
+            "SolitaireOK"
+        ],
+        [
+            "film-strip-explorer\\Film.Strip.Explorer\\Film.Strip.Explorer_x64.exe",
+            "FilmStripExplorer"
+        ],
+        [
+            "stress-mypc\\StressMyPC.exe",
+            "StressMyPC"
+        ],
+        [
+            "magic-mouse-move\\MagicMouseMove_p.exe",
+            "MagicMouseMove"
+        ],
+        [
+            "only-stopwatch\\OnlyStopWatch_x64_p.exe",
+            "OnlyStopWatch"
+        ],
+        [
+            "minesweeper-ok\\MineSweeperOK.exe",
+            "MineSweeperOK"
+        ],
+        [
+            "classic-desktop-clock\\CDC_x64_P.exe",
+            "ClassicDesktopClock"
+        ],
+        [
+            "noncompressible-files\\NonCompressibleFiles_x64_p.exe",
+            "NonCompressibleFiles"
+        ],
+        [
+            "bitte-wenden\\Bitte.Wenden_p.exe",
+            "BitteWenden"
+        ],
+        [
+            "photo-resizer-ok\\PhotoResizerOK_x64.exe",
+            "PhotoResizerOK"
+        ],
+        [
+            "matrix-coronako\\MatriX.CoronaKO_x64.exe",
+            "MatriXCoronaKO"
+        ],
+        [
+            "desktop-snow-ok\\DesktopSnowOK_x64.exe",
+            "DesktopSnowOK"
+        ],
+        [
+            "is-my-touch-screen-ok\\IsMyTouchScreenOK_x64.exe",
+            "IsMyTouchScreenOK"
+        ],
+        [
+            "get-pixel-color\\GetPixelColor_x64_p.exe",
+            "GetPixelColor"
+        ],
+        [
+            "freecell-ok\\FreeCellOK.exe",
+            "FreeCellOK"
+        ],
+        [
+            "smarttextcrypter\\SmartTextCrypter.exe",
+            "SmartTextCrypter"
+        ],
+        [
+            "zigarettenschachtel-spruch\\ZSS.exe",
+            "ZigarettenschachtelSpruch"
+        ],
+        [
+            "cpu-frequenz\\CpuFrequenz_Portable.exe",
+            "CpuFrequenz"
+        ],
+        [
+            "is-my-hd-ok\\IsMyHdOK_x64.exe",
+            "IsMyHdOK"
+        ],
+        [
+            "magic-mouse-trails\\MagicMouseTrails_p.exe",
+            "MagicMouseTrails"
+        ],
+        [
+            "desktop-images-3d\\DesktopImages3D_x64.exe",
+            "DesktopImages3D"
+        ],
+        [
+            "colorconsole\\ColorConsole_x64_p.exe",
+            "ColorConsole"
+        ],
+        [
+            "favoritenfreund\\FavoritenFreund.exe",
+            "FavoritenFreund"
+        ],
+        [
+            "monitor-turn-off-timer-ok\\Monitor.Turn.Off.Timer.OK.exe",
+            "MonitorTurnOffTimerOK"
         ]
     ],
     "shortcuts": [
@@ -334,6 +684,206 @@
         [
             "run-command\\Run-Command_x64_p.exe",
             "Run-Command (SoftwareOK)"
+        ],
+        [
+            "find-same-images-ok\\Find.Same.Images.OK\\FSI_OK_x64.exe",
+            "Find.Same.Images.OK (SoftwareOK)"
+        ],
+        [
+            "auto-power-options-ok\\APO-OK_p.exe",
+            "AutoPowerOptionsOK (SoftwareOK)"
+        ],
+        [
+            "short-door-note\\ShortDoorNote_Portable.exe",
+            "ShortDoorNote (SoftwareOK)"
+        ],
+        [
+            "get-window-text\\GetWindowText_x64.exe",
+            "GetWindowText (SoftwareOK)"
+        ],
+        [
+            "desktop-note-ok\\DesktopNoteOK_x64_Portable.exe",
+            "DesktopNoteOK (SoftwareOK)"
+        ],
+        [
+            "prevent-turn-off\\PreventTurnOff_x64_p.exe",
+            "PreventTurnOff (SoftwareOK)"
+        ],
+        [
+            "quick-memory-test-ok\\QuickMemoryTestOK_x64_p.exe",
+            "QuickMemoryTestOK (SoftwareOK)"
+        ],
+        [
+            "blank-and-secure\\BlankAndSecure_x64.exe",
+            "Blank And Secure (SoftwareOK)"
+        ],
+        [
+            "ok-its-raining-men\\OK.Its.Raining.Men_x64_p.exe",
+            "OK.It's.Raining.Men (SoftwareOK)"
+        ],
+        [
+            "desktop-digital-clock\\DesktopDigitalClock_x64_P.exe",
+            "DesktopDigitalClock (SoftwareOK)"
+        ],
+        [
+            "experience-index-ok\\ExperienceIndexOK_x64_p.exe",
+            "ExperienceIndexOK (SoftwareOK)"
+        ],
+        [
+            "corona-ko\\CoronaKO_x64.exe",
+            "CoronaKO (SoftwareOK)"
+        ],
+        [
+            "12-ants\\12-Ants_x64_p.exe",
+            "12-Ants (SoftwareOK)"
+        ],
+        [
+            "delete-on-reboot\\Delete.On.Reboot_x64.exe",
+            "Delete.On.Reboot (SoftwareOK)"
+        ],
+        [
+            "flyout-notepad\\FlyOutNotePad.exe",
+            "FlyOutNotePad (SoftwareOK)"
+        ],
+        [
+            "desktop-clock-3d\\DesktopClock3D_x64.exe",
+            "DesktopClock3D (SoftwareOK)"
+        ],
+        [
+            "print-test-page-ok\\Print.Test.Page.OK_Portable.exe",
+            "Print.Test.Page.OK (SoftwareOK)"
+        ],
+        [
+            "lauschangriff\\LauschAngriff.exe",
+            "LauschAngriff (SoftwareOK)"
+        ],
+        [
+            "desktop-schnee-free\\DesktopSchneeFree.exe",
+            "DesktopSchneeFree (SoftwareOK)"
+        ],
+        [
+            "win-ping\\WinPing_x64_p.exe",
+            "WinPing (SoftwareOK)"
+        ],
+        [
+            "3d-benchmark-ok\\3D.Benchmark.OK_x64.exe",
+            "3D.Benchmark.OK (SoftwareOK)"
+        ],
+        [
+            "desktop-calendar-tray-ok\\DCT_OK_p.exe",
+            "Desktop.Calendar.Tray.OK (SoftwareOK)"
+        ],
+        [
+            "4ur-windows-8-mouse-balls\\4ur-Windows-8-Mouse-Balls_x64_p.exe",
+            "4ur-Windows-8-Mouse-Balls (SoftwareOK)"
+        ],
+        [
+            "multi-clipboard-slots\\MultiClipBoardSlots.exe",
+            "MultiClipBoardSlots (SoftwareOK)"
+        ],
+        [
+            "keep-mouse-speed-ok\\KMS_OK_p.exe",
+            "KeepMouseSpeedOK (SoftwareOK)"
+        ],
+        [
+            "traceroute-ok\\TraceRouteOK_x64.exe",
+            "TraceRouteOK (SoftwareOK)"
+        ],
+        [
+            "solitaire-ok\\SolitaireOK.exe",
+            "SolitaireOK (SoftwareOK)"
+        ],
+        [
+            "film-strip-explorer\\Film.Strip.Explorer\\Film.Strip.Explorer_x64.exe",
+            "Film.Strip.Explorer (SoftwareOK)"
+        ],
+        [
+            "stress-mypc\\StressMyPC.exe",
+            "StressMyPC (SoftwareOK)"
+        ],
+        [
+            "magic-mouse-move\\MagicMouseMove_p.exe",
+            "MagicMouseMove (SoftwareOK)"
+        ],
+        [
+            "only-stopwatch\\OnlyStopWatch_x64_p.exe",
+            "OnlyStopWatch (SoftwareOK)"
+        ],
+        [
+            "minesweeper-ok\\MineSweeperOK.exe",
+            "MineSweeperOK (SoftwareOK)"
+        ],
+        [
+            "classic-desktop-clock\\CDC_x64_P.exe",
+            "ClassicDesktopClock (SoftwareOK)"
+        ],
+        [
+            "noncompressible-files\\NonCompressibleFiles_x64_p.exe",
+            "NonCompressibleFiles (SoftwareOK)"
+        ],
+        [
+            "bitte-wenden\\Bitte.Wenden_p.exe",
+            "Bitte.Wenden (SoftwareOK)"
+        ],
+        [
+            "photo-resizer-ok\\PhotoResizerOK_x64.exe",
+            "PhotoResizerOK (SoftwareOK)"
+        ],
+        [
+            "matrix-coronako\\MatriX.CoronaKO_x64.exe",
+            "MatriX.CoronaKO (SoftwareOK)"
+        ],
+        [
+            "desktop-snow-ok\\DesktopSnowOK_x64.exe",
+            "DesktopSnowOK (SoftwareOK)"
+        ],
+        [
+            "is-my-touch-screen-ok\\IsMyTouchScreenOK_x64.exe",
+            "IsMyTouchScreenOK (SoftwareOK)"
+        ],
+        [
+            "get-pixel-color\\GetPixelColor_x64_p.exe",
+            "GetPixelColor (SoftwareOK)"
+        ],
+        [
+            "freecell-ok\\FreeCellOK.exe",
+            "FreeCellOK (SoftwareOK)"
+        ],
+        [
+            "smarttextcrypter\\SmartTextCrypter.exe",
+            "SmartTextCrypter (SoftwareOK)"
+        ],
+        [
+            "zigarettenschachtel-spruch\\ZSS.exe",
+            "Zigarettenschachtel-Spruch (SoftwareOK)"
+        ],
+        [
+            "cpu-frequenz\\CpuFrequenz_Portable.exe",
+            "CpuFrequenz (SoftwareOK)"
+        ],
+        [
+            "is-my-hd-ok\\IsMyHdOK_x64.exe",
+            "IsMyHdOK (SoftwareOK)"
+        ],
+        [
+            "magic-mouse-trails\\MagicMouseTrails_p.exe",
+            "MagicMouseTrails (SoftwareOK)"
+        ],
+        [
+            "desktop-images-3d\\DesktopImages3D_x64.exe",
+            "DesktopImages3D (SoftwareOK)"
+        ],
+        [
+            "colorconsole\\ColorConsole_x64_p.exe",
+            "ColorConsole (SoftwareOK)"
+        ],
+        [
+            "favoritenfreund\\FavoritenFreund.exe",
+            "FavoritenFreund (SoftwareOK)"
+        ],
+        [
+            "monitor-turn-off-timer-ok\\Monitor.Turn.Off.Timer.OK.exe",
+            "Monitor.Turn.Off.Timer.OK (SoftwareOK)"
         ]
     ],
     "persist": [
@@ -346,9 +896,10 @@
         "run-command\\Run-Command.ini"
     ],
     "notes": [
-        "Each program is extracted into its own subfolder inside this single Scoop package.",
-        "The bundle is a pinned snapshot; individual manifests in this bucket track the included programs separately.",
-        "This curated bundle does not include every SoftwareOK application."
+        "Includes the complete 77-program SoftwareOK Downloads index, plus MediaPlayerOK and the additional Monitor.Turn.Off.Timer.OK tool.",
+        "Each archive is extracted into its own subfolder inside this single Scoop package.",
+        "The URLs and hashes are based on SoftwareOK's official download pages; the archive-validation workflow verifies hashes and executable paths.",
+        "ColorConsole, FavoritenFreund, and Monitor.Turn.Off.Timer.OK did not publish SHA-256 values on their official pages; their archive hashes are being independently verified."
     ],
     "pre_install": [
         "if (-not (Test-Path \"$persist_dir\\run-command\\Run-Command.ini\")) { New-Item -Path \"$dir\\run-command\\Run-Command.ini\" -ItemType File | Out-Null }"
