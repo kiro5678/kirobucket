@@ -2,7 +2,7 @@
     "version": "18",
     "description": "Multi-purpose file search and duplicate finder with filters, hash calculation, reporting, copy/move, and deletion tools.",
     "homepage": "https://funk.eu/smf/",
-    "license": "Freeware",
+    "license": "CC-BY-NC-ND-3.0",
     "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=293",
     "checkver": {
         "url": "https://funk.eu/smf/",
