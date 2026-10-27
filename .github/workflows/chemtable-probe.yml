@@ -1,0 +1,100 @@
+name: ChemTable Official Download Probe
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/chemtable-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download and inspect official ChemTable packages without running installers
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'chemtable-probe'
+          New-Item -ItemType Directory -Force -Path $root | Out-Null
+          $report = Join-Path $env:GITHUB_WORKSPACE 'chemtable-probe-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# ChemTable installer inspection')
+          $lines.Add('')
+          $lines.Add('Downloads use the official files.chemtable.com host. No application installer was executed.')
+          $lines.Add('')
+
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }
+          $helperZip = Join-Path $root 'innounp-2.zip'
+          $helperRoot = Join-Path $root 'innounp-helper'
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip' -OutFile $helperZip -TimeoutSec 120
+          $helperHash = (Get-FileHash -LiteralPath $helperZip -Algorithm SHA256).Hash
+          if ($helperHash -ine '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd') { throw "innounp helper hash mismatch: $helperHash" }
+          New-Item -ItemType Directory -Force -Path $helperRoot | Out-Null
+          & $sevenZip x $helperZip "-o$helperRoot" '-y' | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw 'Could not extract verified innounp helper.' }
+          $innounp = Get-ChildItem -LiteralPath $helperRoot -Filter innounp.exe -File -Recurse | Select-Object -First 1
+          if (-not $innounp) { throw 'innounp.exe not found in the verified helper archive.' }
+
+          $apps = @(
+            [pscustomobject]@{ Name='Reg Organizer'; Slug='reg-organizer'; File='reg-organizer-setup.exe'; Version='9.96'; Page='https://www.chemtable.com/organizer.htm'; Url='https://files.chemtable.com/ro/reg-organizer-setup.exe' },
+            [pscustomobject]@{ Name='Reg Organizer Portable'; Slug='reg-organizer-portable'; File='reg-organizer-portable-setup.exe'; Version='9.96'; Page='https://www.chemtable.com/organizer.htm'; Url='https://files.chemtable.com/ro/portable/reg-organizer-portable-setup.exe' },
+            [pscustomobject]@{ Name='Soft Organizer'; Slug='soft-organizer'; File='soft-organizer-setup.exe'; Version='10.50'; Page='https://www.chemtable.com/soft-organizer.htm'; Url='https://files.chemtable.com/so/soft-organizer-setup.exe' },
+            [pscustomobject]@{ Name='Files Inspector'; Slug='files-inspector'; File='files-inspector-setup.exe'; Version='4.55'; Page='https://www.chemtable.com/files-inspector.htm'; Url='https://files.chemtable.com/fi/files-inspector-setup.exe' },
+            [pscustomobject]@{ Name='Autorun Organizer'; Slug='autorun-organizer'; File='autorun-organizer-setup.exe'; Version='7.02'; Page='https://www.chemtable.com/autorun-organizer.htm'; Url='https://files.chemtable.com/ao/autorun-organizer-setup.exe' }
+          )
+
+          foreach ($app in $apps) {
+            $lines.Add("## $($app.Name)")
+            $lines.Add("- Official page: $($app.Page)")
+            $lines.Add("- Download URL: $($app.Url)")
+            $installer = Join-Path $root $app.File
+            try {
+              Invoke-WebRequest -Uri $app.Url -OutFile $installer -TimeoutSec 180
+              $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+              $sig = Get-AuthenticodeSignature -LiteralPath $installer
+              $hash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash
+              $lines.Add("- Download succeeded; size=$((Get-Item -LiteralPath $installer).Length) bytes")
+              $lines.Add("- SHA-256: $hash")
+              $lines.Add("- File version: $($vi.FileVersion)")
+              $lines.Add("- Product name: $($vi.ProductName)")
+              $lines.Add("- Authenticode status: $($sig.Status)")
+              $lines.Add("- Signer: $($sig.SignerCertificate.Subject)")
+              $payload = Join-Path $root ($app.Slug + '-payload')
+              New-Item -ItemType Directory -Force -Path $payload | Out-Null
+              $output = & $innounp.FullName '-x' "-d$payload" $installer '-y' '-c{app}' 2>&1
+              $code = $LASTEXITCODE
+              $lines.Add("- Inno extraction exit code: $code")
+              if ($code -eq 0) {
+                $files = @(Get-ChildItem -LiteralPath $payload -File -Recurse)
+                $lines.Add("- Extracted app files: $($files.Count)")
+                foreach ($exe in @($files | Where-Object Extension -eq '.exe' | Sort-Object FullName)) {
+                  $evi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+                  $rel = $exe.FullName.Substring($payload.Length).TrimStart('\','/')
+                  $lines.Add("- EXE: $rel | size=$($exe.Length) | product=$($evi.ProductName) | description=$($evi.FileDescription) | original=$($evi.OriginalFilename) | version=$($evi.ProductVersion)")
+                }
+              } else {
+                $lines.Add('- Inno extraction failed. 7-Zip listing is included for format identification.')
+                $list = & $sevenZip l $installer 2>&1
+                foreach ($line in @($list | Select-Object -First 30)) { $lines.Add("- 7z: $line") }
+                foreach ($line in @($output | Select-Object -Last 10)) { $lines.Add("- innounp: $line") }
+              }
+            } catch {
+              $lines.Add("- ERROR: $($_.Exception.Message)")
+            }
+            $lines.Add('')
+          }
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
+      - name: Upload inspection report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: chemtable-probe-report
+          path: chemtable-probe-report.md
+          if-no-files-found: warn
+          retention-days: 3
