@@ -1,0 +1,27 @@
+{
+    "version": "6",
+    "description": "Saves and restores Windows desktop icon layouts after display changes or icons being rearranged.",
+    "homepage": "https://funk.eu/icu-icon-configuration-utility/",
+    "license": "Freeware",
+    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=243",
+    "checkver": {
+        "url": "https://funk.eu/icu-icon-configuration-utility/",
+        "regex": "(?i)ICU\\s*[–-]\\s*Icon Configuration Utility\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+    },
+    "autoupdate": {
+        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=243"
+    },
+    "shortcuts": [
+        [
+            "icu_64bit.exe",
+            "Funk.eu Icon Configuration Utility"
+        ]
+    ],
+    "persist": [
+        "ICU"
+    ],
+    "notes": [
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
+        "The publisher documents the ICU settings subdirectory beside the executable; that directory is persisted."
+    ]
+}
