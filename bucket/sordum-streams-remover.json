@@ -12,13 +12,13 @@
     },
     "bin": [
         [
-            "StreamsRemover.exe",
+            "sRemover.exe",
             "SordumStreamsRemover"
         ]
     ],
     "shortcuts": [
         [
-            "StreamsRemover.exe",
+            "sRemover.exe",
             "Sordum - Streams Remover"
         ]
     ],

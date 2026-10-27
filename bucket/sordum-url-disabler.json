@@ -8,7 +8,8 @@
     },
     "url": "https://www.sordum.org/files/downloads.php?url-disabler#/dl.7z",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/downloads.php?url-disabler#/dl.7z"
+        "url": "https://www.sordum.org/files/downloads.php?url-disabler#/dl.7z",
+        "extract_dir": "UrlDisabler"
     },
     "architecture": {
         "64bit": {
@@ -44,5 +45,6 @@
     "checkver": {
         "url": "https://www.sordum.org/13075/url-disabler-v1-4/",
         "regex": "URL Disabler v([\\d.]+)"
-    }
+    },
+    "extract_dir": "UrlDisabler"
 }
