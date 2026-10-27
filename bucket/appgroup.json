@@ -18,7 +18,7 @@
         ]
     ],
     "checkver": {
-        "github": "iandiv/AppGroup",
+        "github": "https://github.com/iandiv/AppGroup",
         "regex": "v(?<version>[\\d.]+)"
     },
     "autoupdate": {
