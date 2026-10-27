@@ -1,0 +1,25 @@
+{
+    "version": "2026.10.27.1",
+    "description": "Turn off the monitor using a timer.",
+    "homepage": "https://www.softwareok.com/?Download=Monitor.Turn.Off.Timer.OK",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/Monitor.Turn.Off.Timer.OK.zip",
+            "hash": "b2c17510068953f23dc482e179961fff5ee1689fccbec3041d39f5857382aa40"
+        }
+    },
+    "bin": [
+        [
+            "Monitor.Turn.Off.Timer.OK.exe",
+            "MonitorTurnOffTimerOK"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "Monitor.Turn.Off.Timer.OK.exe",
+            "SoftwareOK - Monitor.Turn.Off.Timer.OK"
+        ]
+    ],
+    "notes": "The publisher's download page does not show a product version; this dated version is a manifest revision."
+}
