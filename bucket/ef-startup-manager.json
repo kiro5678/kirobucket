@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Manages programs that launch with Windows and can control startup order and delays.",
+    "homepage": "https://efsoftware.com/su/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/su",
+            "extract_dir": "ef_startup_manager_64",
+            "shortcuts": [
+                [
+                    "EFSUM.EXE",
+                    "EF StartUp Manager"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/su/e\\.htm\" class=l>EF&nbsp;StartUp&nbsp;Manager</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/su",
+                "extract_dir": "ef_startup_manager_64"
+            }
+        }
+    }
+}

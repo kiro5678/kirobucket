@@ -420,6 +420,19 @@ jobs:
               "sordum-window-topmost-control" = "Windows Customization"
               "sordum-windows-settings-blocker" = "Windows Privacy & Tweaks"
               "sordum-windows-update-blocker" = "Windows Update & Management"
+              "ef-commander" = "File Management"
+              "ef-autosync" = "Sync & Backup"
+              "ef-checksum-manager" = "Security"
+              "ef-duplicate-files-manager" = "File Management"
+              "ef-duplicate-mp3-finder" = "Media & Audio/Video"
+              "ef-file-catalog" = "File Management"
+              "ef-find" = "File Management"
+              "ef-mailbox-manager" = "Browsers & Communication"
+              "ef-multi-file-renamer" = "File Management"
+              "ef-process-manager" = "System Monitoring & Hardware"
+              "ef-startup-manager" = "Windows Privacy & Tweaks"
+              "ef-system-monitor" = "System Monitoring & Hardware"
+              "ef-talk-scriber" = "Media & Audio/Video"
           }
 
           function ConvertTo-DateOnly {

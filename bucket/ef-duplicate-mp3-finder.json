@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA.",
+    "homepage": "https://efsoftware.com/d3/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/d3",
+            "extract_dir": "ef_duplicate_mp3_finder_64",
+            "shortcuts": [
+                [
+                    "EFD3F.EXE",
+                    "EF Duplicate MP3 Finder"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/d3/e\\.htm\" class=l>EF&nbsp;Duplicate&nbsp;MP3&nbsp;Finder</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/d3",
+                "extract_dir": "ef_duplicate_mp3_finder_64"
+            }
+        }
+    }
+}

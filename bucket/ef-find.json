@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Searches for files, text, hexadecimal sequences, and regular expressions, including inside supported archives.",
+    "homepage": "https://efsoftware.com/fn/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/fn",
+            "extract_dir": "ef_find_64",
+            "shortcuts": [
+                [
+                    "EFFind.exe",
+                    "EF Find"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/fn/e\\.htm\" class=l>EF&nbsp;Find</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/fn",
+                "extract_dir": "ef_find_64"
+            }
+        }
+    }
+}

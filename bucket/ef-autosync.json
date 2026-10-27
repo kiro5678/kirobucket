@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Portable utility for synchronizing files and folders between PCs, USB flash drives, external drives, and other storage.",
+    "homepage": "https://efsoftware.com/as/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/as",
+            "extract_dir": "ef_autosync_64",
+            "shortcuts": [
+                [
+                    "EFAS.EXE",
+                    "EF AutoSync"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/as/e\\.htm\" class=l>EF&nbsp;AutoSync</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/as",
+                "extract_dir": "ef_autosync_64"
+            }
+        }
+    }
+}

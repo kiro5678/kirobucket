@@ -8,20 +8,21 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | --- | ---: | --- | --- |
 | Android & Device Tools | 10 | Functional | [View](#android-device-tools) |
 | Auslogics Suite | 15 | Publisher cross-list | [View](#auslogics-suite) |
-| Browsers & Communication | 5 | Functional | [View](#browsers-communication) |
+| Browsers & Communication | 6 | Functional | [View](#browsers-communication) |
 | ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
 | Clipboard & Text | 33 | Functional | [View](#clipboard-text) |
 | Developer & Technical Tools | 43 | Functional | [View](#developer-technical-tools) |
 | Download Managers | 16 | Functional | [View](#download-managers) |
+| EFSoftware Suite | 13 | Publisher cross-list | [View](#efsoftware-suite) |
 | Emulators & Compatibility | 15 | Functional | [View](#emulators-compatibility) |
 | Eric Zimmerman Suite | 31 | Publisher cross-list | [View](#eric-zimmerman-suite) |
-| File Management | 64 | Functional | [View](#file-management) |
+| File Management | 69 | Functional | [View](#file-management) |
 | Forensics & Diagnostics | 31 | Functional | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | Functional | [View](#games-game-utilities) |
 | GRC Suite | 18 | Publisher cross-list | [View](#grc-suite) |
 | Images & Photos | 48 | Functional | [View](#images-photos) |
 | Keyboard & Language | 15 | Functional | [View](#keyboard-language) |
-| Media & Audio/Video | 43 | Functional | [View](#media-audio-video) |
+| Media & Audio/Video | 45 | Functional | [View](#media-audio-video) |
 | MiTeC Suite | 22 | Publisher cross-list | [View](#mitec-suite) |
 | Network & DNS | 51 | Functional | [View](#network-dns) |
 | Notes & Knowledge | 20 | Functional | [View](#notes-knowledge) |
@@ -29,21 +30,22 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Package Management | 13 | Functional | [View](#package-management) |
 | PDF & Documents | 29 | Functional | [View](#pdf-documents) |
 | Productivity & Launchers | 29 | Functional | [View](#productivity-launchers) |
-| Security | 40 | Functional | [View](#security) |
+| Security | 41 | Functional | [View](#security) |
 | SoftwareOK Suite | 81 | Publisher cross-list | [View](#softwareok-suite) |
 | Sordum Suite | 63 | Publisher cross-list | [View](#sordum-suite) |
 | Storage & Disk Tools | 23 | Functional | [View](#storage-disk-tools) |
-| Sync & Backup | 10 | Functional | [View](#sync-backup) |
-| System Monitoring & Hardware | 61 | Functional | [View](#system-monitoring-hardware) |
+| Sync & Backup | 11 | Functional | [View](#sync-backup) |
+| System Monitoring & Hardware | 63 | Functional | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | Functional | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | Functional | [View](#translation-ocr) |
+| Türkaysoft Suite | 8 | Publisher cross-list | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
 | Weather & Information | 1 | Functional | [View](#weather-information) |
 | Windows Customization | 90 | Functional | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 44 | Functional | [View](#windows-privacy-tweaks) |
+| Windows Privacy & Tweaks | 45 | Functional | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
 
-**Total unique manifests: 785**
+**Total unique manifests: 798**
 
 Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
 
@@ -68,6 +70,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | --- | --- | --- | --- |
 | [belarc-advisor](../bucket/belarc-advisor.json) | 13.1 | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. | [Homepage](https://www.belarc.com/products/belarc-advisor) |
 | [biscuit](../bucket/biscuit.json) | 2.2.1 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
+| [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | 26.10 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
 | [viola](../bucket/viola.json) | 0.2.10 | Native desktop web browser. | [Homepage](https://github.com/nmcmil/Viola-Downloads) |
 | [zapzap](../bucket/zapzap.json) | 7.5.1 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafatosta/zapzap) |
@@ -219,6 +222,11 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [dirprintok](../bucket/dirprintok.json) | 7.69 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
 | [doublecmd](../bucket/doublecmd.json) | 1.2.9 | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
 | [dude](../bucket/dude.json) | 2.0763.579 | Disk usage analyzer and file browser for Windows. | [Homepage](https://github.com/PJDude/dude) |
+| [ef-commander](../bucket/ef-commander.json) | 26.10 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
+| [ef-duplicate-files-manager](../bucket/ef-duplicate-files-manager.json) | 26.10 | Finds duplicate files by name, size, or content, including files inside supported archives. | [Homepage](https://efsoftware.com/dm/e.htm) |
+| [ef-file-catalog](../bucket/ef-file-catalog.json) | 26.10 | Catalogs disks and directories for offline browsing and searching, with support for compressed archives. | [Homepage](https://efsoftware.com/fc/e.htm) |
+| [ef-find](../bucket/ef-find.json) | 26.10 | Searches for files, text, hexadecimal sequences, and regular expressions, including inside supported archives. | [Homepage](https://efsoftware.com/fn/e.htm) |
+| [ef-multi-file-renamer](../bucket/ef-multi-file-renamer.json) | 26.10 | Batch-renames files and directories using reusable rules, filters, and a real-time preview. | [Homepage](https://efsoftware.com/mr/e.htm) |
 | [everything-cmdpal](../bucket/everything-cmdpal.json) | 0.9.26030.0 | Everything search extension for PowerToys Command Palette | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) |
 | [filee](../bucket/filee.json) | 2.1.0 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
 | [filepilot](../bucket/filepilot.json) | 1.0.7 | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. | [Homepage](https://github.com/qup1010/FilePilot) |
@@ -408,6 +416,8 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [allplayer](../bucket/allplayer.json) | 9.6 | Free multimedia player with built-in codecs and automatic subtitles. | [Homepage](https://allplayer.com/) |
 | [blur](../bucket/blur.json) | 2.45 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. | [Homepage](https://github.com/f0e/blur) |
 | [drift](../bucket/drift.json) | 0.8.0 | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). | [Homepage](https://github.com/CutWire-Studios/Drift) |
+| [ef-duplicate-mp3-finder](../bucket/ef-duplicate-mp3-finder.json) | 26.10 | Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA. | [Homepage](https://efsoftware.com/d3/e.htm) |
+| [ef-talk-scriber](../bucket/ef-talk-scriber.json) | 26.10 | Combines a text editor and audio player to support keyboard-driven transcription of recordings. | [Homepage](https://efsoftware.com/ts/e.htm) |
 | [fastcast](../bucket/fastcast.json) | 0.9.2 | Native Windows screen recorder and live streaming app. | [Homepage](https://github.com/CalvinSturm/FastCast-releases) |
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
 | [haruna](../bucket/haruna.json) | 1944 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
@@ -633,6 +643,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [crowdsec](../bucket/crowdsec.json) | 1.8.2 | Open-source security engine that detects and responds to malicious behavior. | [Homepage](https://github.com/crowdsecurity/crowdsec) |
 | [dgreadiness](../bucket/dgreadiness.json) | 3.6 | Device Guard and Credential Guard hardware readiness tool | [Homepage](https://www.microsoft.com/en-us/download/details.aspx?id=53337) |
 | [easylpac](../bucket/easylpac.json) | 0.8.1.1 | lpac GUI Frontend | [Homepage](https://github.com/creamlike1024/EasyLPAC) |
+| [ef-checksum-manager](../bucket/ef-checksum-manager.json) | 26.10 | Creates and verifies file checksums, including SFV/CRC32, MD5, BLAKE3, and SHA-family formats. | [Homepage](https://efsoftware.com/cm/e.htm) |
 | [encryphix](../bucket/encryphix.json) | 26.11 | AES-256 file and folder encryption utility for Windows. | [Homepage](https://github.com/turkaysoft/encryphix) |
 | [fort](../bucket/fort.json) | 3.20.8 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
 | [grc-leaktest](../bucket/grc-leaktest.json) | 2008.03.13 | GRC LeakTest: Legacy outbound-firewall leakage test utility. | [Homepage](https://www.grc.com/lt/leaktest.htm) |
@@ -701,6 +712,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | --- | --- | --- | --- |
 | [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
 | [backup-start-menu-layout](../bucket/backup-start-menu-layout.json) | 1.6 | A simple app that allows users to backup and restore their StartMenu layout. | [Homepage](https://www.sordum.org/backup-start-menu-layout) |
+| [ef-autosync](../bucket/ef-autosync.json) | 26.10 | Portable utility for synchronizing files and folders between PCs, USB flash drives, external drives, and other storage. | [Homepage](https://efsoftware.com/as/e.htm) |
 | [endstate](../bucket/endstate.json) | 3.13.1 | Endstate desktop app payload extracted without running the setup installer. | [Homepage](https://github.com/Artexis10/endstate-gui) |
 | [freefilesync](../bucket/freefilesync.json) | 14.13. | Folder comparison and synchronization software for backups and file synchronization. | [Homepage](https://freefilesync.org/) |
 | [mitec-windows-registry-recovery](../bucket/mitec-windows-registry-recovery.json) | 3.1.3 | Reads offline Windows Registry hives and extracts configuration information; also provides live Registry backup. | [Homepage](https://www.mitec.cz/wp/mwrr/) |
@@ -721,6 +733,8 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [clickmonitorddc](../bucket/clickmonitorddc.json) | 7.2 | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) |
 | [cpu-frequenz](../bucket/cpu-frequenz.json) | 4.55 | Display CPU frequency information. | [Homepage](https://www.softwareok.com/?Download=CpuFrequenz) |
 | [driverstoreexplorer](../bucket/driverstoreexplorer.json) | 1.0.36 | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. | [Homepage](https://github.com/lostindark/DriverStoreExplorer) |
+| [ef-process-manager](../bucket/ef-process-manager.json) | 26.10 | Inspects running processes and loaded modules, closes or terminates processes, and displays system details. | [Homepage](https://efsoftware.com/pm/e.htm) |
+| [ef-system-monitor](../bucket/ef-system-monitor.json) | 26.10 | Monitors local and remote system resources and performance, including CPU, memory, disks, and other metrics. | [Homepage](https://efsoftware.com/sm/e.htm) |
 | [experience-index-ok](../bucket/experience-index-ok.json) | 4.77 | View and run Windows performance index measurements. | [Homepage](https://www.softwareok.com/?Download=ExperienceIndexOK) |
 | [fluent-sensors](../bucket/fluent-sensors.json) | 1.7.0 | Native Windows hardware monitoring app. | [Homepage](https://github.com/cechout/fluent-sensors) |
 | [freetoken-desktop.beta](../bucket/freetoken-desktop.beta.json) | 0.2.0-beta.25 | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. | [Homepage](https://www.flashml.ai) |
@@ -929,6 +943,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [crapfixer](../bucket/crapfixer.json) | 2.01.41 | Windows tweaking, privacy, and app removal utility. | [Homepage](https://github.com/builtbybel/CrapFixer) |
 | [dont-sleep](../bucket/dont-sleep.json) | 10.22 | Prevent Windows from shutting down, sleeping, hibernating, or restarting. | [Homepage](https://www.softwareok.com/?Download=DontSleep) |
 | [easy-context-menu](../bucket/easy-context-menu.json) | 1.6 | A simple app for editing the context menu. | [Homepage](https://www.sordum.org/easy-context-menu) |
+| [ef-startup-manager](../bucket/ef-startup-manager.json) | 26.10 | Manages programs that launch with Windows and can control startup order and delays. | [Homepage](https://efsoftware.com/su/e.htm) |
 | [fluentcleaner](../bucket/fluentcleaner.json) | 26.09.01 | Windows privacy cleaner and system cleanup utility. | [Homepage](https://github.com/builtbybel/FluentCleaner) |
 | [fluentcleaner-classic](../bucket/fluentcleaner-classic.json) | 26.09.01 | Classic WinForms edition of FluentCleaner for Windows. | [Homepage](https://github.com/builtbybel/FluentCleaner) |
 | [fluenttweaker](../bucket/fluenttweaker.json) | 26.06.02 | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. | [Homepage](https://github.com/builtbybel/FluentTweaker) |
@@ -1369,7 +1384,7 @@ Publisher cross-list of 174 manifests associated with Vovsoft. Each entry is als
 
 ## Sordum Suite
 
-Publisher cross-list of 63 Sordum utility manifests. Each entry is also listed under its functional category above.
+Publisher cross-list of 63 manifests associated with Sordum. Each entry is also listed under its functional category above.
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
@@ -1436,4 +1451,39 @@ Publisher cross-list of 63 Sordum utility manifests. Each entry is also listed u
 | [sordum-window-topmost-control](../bucket/sordum-window-topmost-control.json) | 1.3 | Portable utility for keeping selected windows always on top. | [Homepage](https://www.sordum.org/9182/window-topmost-control-v1-3/) |
 | [sordum-windows-settings-blocker](../bucket/sordum-windows-settings-blocker.json) | 1.2 | To stop users from changing settings in Windows 11 and 10 you can try our portable freeware Windows Settings Blocker Application. | [Homepage](https://www.sordum.org/11128/windows-settings-blocker-v1-2/) |
 | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1.8 | Sordum's Windows Update Blocker. A freeware that helps you to completely disable or enable Automatic Updates on your Windows system | [Homepage](https://www.sordum.org/9470/windows-update-blocker-v1-8/) |
+
+## EFSoftware Suite
+
+Publisher cross-list of 13 manifests associated with EFSoftware. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [ef-commander](../bucket/ef-commander.json) | 26.10 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
+| [ef-autosync](../bucket/ef-autosync.json) | 26.10 | Portable utility for synchronizing files and folders between PCs, USB flash drives, external drives, and other storage. | [Homepage](https://efsoftware.com/as/e.htm) |
+| [ef-checksum-manager](../bucket/ef-checksum-manager.json) | 26.10 | Creates and verifies file checksums, including SFV/CRC32, MD5, BLAKE3, and SHA-family formats. | [Homepage](https://efsoftware.com/cm/e.htm) |
+| [ef-duplicate-files-manager](../bucket/ef-duplicate-files-manager.json) | 26.10 | Finds duplicate files by name, size, or content, including files inside supported archives. | [Homepage](https://efsoftware.com/dm/e.htm) |
+| [ef-duplicate-mp3-finder](../bucket/ef-duplicate-mp3-finder.json) | 26.10 | Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA. | [Homepage](https://efsoftware.com/d3/e.htm) |
+| [ef-file-catalog](../bucket/ef-file-catalog.json) | 26.10 | Catalogs disks and directories for offline browsing and searching, with support for compressed archives. | [Homepage](https://efsoftware.com/fc/e.htm) |
+| [ef-find](../bucket/ef-find.json) | 26.10 | Searches for files, text, hexadecimal sequences, and regular expressions, including inside supported archives. | [Homepage](https://efsoftware.com/fn/e.htm) |
+| [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | 26.10 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
+| [ef-multi-file-renamer](../bucket/ef-multi-file-renamer.json) | 26.10 | Batch-renames files and directories using reusable rules, filters, and a real-time preview. | [Homepage](https://efsoftware.com/mr/e.htm) |
+| [ef-process-manager](../bucket/ef-process-manager.json) | 26.10 | Inspects running processes and loaded modules, closes or terminates processes, and displays system details. | [Homepage](https://efsoftware.com/pm/e.htm) |
+| [ef-startup-manager](../bucket/ef-startup-manager.json) | 26.10 | Manages programs that launch with Windows and can control startup order and delays. | [Homepage](https://efsoftware.com/su/e.htm) |
+| [ef-system-monitor](../bucket/ef-system-monitor.json) | 26.10 | Monitors local and remote system resources and performance, including CPU, memory, disks, and other metrics. | [Homepage](https://efsoftware.com/sm/e.htm) |
+| [ef-talk-scriber](../bucket/ef-talk-scriber.json) | 26.10 | Combines a text editor and audio player to support keyboard-driven transcription of recordings. | [Homepage](https://efsoftware.com/ts/e.htm) |
+
+## Türkaysoft Suite
+
+Publisher cross-list of 8 manifests associated with Türkaysoft. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [astel](../bucket/astel.json) | 26.11 | Encrypted password manager for Windows. | [Homepage](https://github.com/turkaysoft/astel) |
+| [encryphix](../bucket/encryphix.json) | 26.11 | AES-256 file and folder encryption utility for Windows. | [Homepage](https://github.com/turkaysoft/encryphix) |
+| [turkaysoft-glow](../bucket/turkaysoft-glow.json) | 26.14 | Advanced system analysis software for Windows. | [Homepage](https://github.com/turkaysoft/glow) |
+| [vcardix](../bucket/vcardix.json) | 26.11 | Contact manager and converter for vCard, CSV, and JSON files. | [Homepage](https://github.com/turkaysoft/vcardix) |
+| [vimera](../bucket/vimera.json) | 26.11 | File and text hash analysis and verification tool for Windows. | [Homepage](https://github.com/turkaysoft/vimera) |
+| [walpa](../bucket/walpa.json) | 26.10 | Lossless raster icon recoloring tool for Windows. | [Homepage](https://github.com/turkaysoft/walpa) |
+| [yamira](../bucket/yamira.json) | 26.11 | USB drive protection tool for Windows. | [Homepage](https://github.com/turkaysoft/yamira) |
+| [zafuse](../bucket/zafuse.json) | 26.12 | INI file analysis tool for finding inconsistencies across configuration files. | [Homepage](https://github.com/turkaysoft/zafuse) |
 

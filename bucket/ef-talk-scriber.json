@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Combines a text editor and audio player to support keyboard-driven transcription of recordings.",
+    "homepage": "https://efsoftware.com/ts/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/ts",
+            "extract_dir": "ef_talk_scriber_64",
+            "shortcuts": [
+                [
+                    "EFTS.EXE",
+                    "EF Talk Scriber"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/ts/e\\.htm\" class=l>EF&nbsp;Talk&nbsp;Scriber</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/ts",
+                "extract_dir": "ef_talk_scriber_64"
+            }
+        }
+    }
+}

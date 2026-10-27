@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages.",
+    "homepage": "https://efsoftware.com/mm/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/mm",
+            "extract_dir": "ef_mailbox_manager_64",
+            "shortcuts": [
+                [
+                    "EFMM.EXE",
+                    "EF Mailbox Manager"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/mm/e\\.htm\" class=l>EF&nbsp;Mailbox&nbsp;Manager</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/mm",
+                "extract_dir": "ef_mailbox_manager_64"
+            }
+        }
+    }
+}

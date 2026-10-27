@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Inspects running processes and loaded modules, closes or terminates processes, and displays system details.",
+    "homepage": "https://efsoftware.com/pm/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/pm",
+            "extract_dir": "ef_process_manager_64",
+            "shortcuts": [
+                [
+                    "EFPrcMan.exe",
+                    "EF Process Manager"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/pm/e\\.htm\" class=l>EF&nbsp;Process&nbsp;Manager</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/pm",
+                "extract_dir": "ef_process_manager_64"
+            }
+        }
+    }
+}

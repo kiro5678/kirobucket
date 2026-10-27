@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools.",
+    "homepage": "https://efsoftware.com/cw/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/cw",
+            "extract_dir": "ef_commander_64",
+            "shortcuts": [
+                [
+                    "EFCW.EXE",
+                    "EF Commander"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/cw/e\\.htm\" class=l>EF&nbsp;Commander</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/cw",
+                "extract_dir": "ef_commander_64"
+            }
+        }
+    }
+}

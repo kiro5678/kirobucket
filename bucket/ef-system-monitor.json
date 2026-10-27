@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Monitors local and remote system resources and performance, including CPU, memory, disks, and other metrics.",
+    "homepage": "https://efsoftware.com/sm/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/sm",
+            "extract_dir": "ef_system_monitor_64",
+            "shortcuts": [
+                [
+                    "EFSysMon.exe",
+                    "EF System Monitor"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/sm/e\\.htm\" class=l>EF&nbsp;System&nbsp;Monitor</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/sm",
+                "extract_dir": "ef_system_monitor_64"
+            }
+        }
+    }
+}

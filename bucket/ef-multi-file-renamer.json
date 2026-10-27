@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Batch-renames files and directories using reusable rules, filters, and a real-time preview.",
+    "homepage": "https://efsoftware.com/mr/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/mr",
+            "extract_dir": "ef_multi_file_renamer_64",
+            "shortcuts": [
+                [
+                    "EFMR.EXE",
+                    "EF Multi File Renamer"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/mr/e\\.htm\" class=l>EF&nbsp;Multi&nbsp;File&nbsp;Renamer</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/mr",
+                "extract_dir": "ef_multi_file_renamer_64"
+            }
+        }
+    }
+}

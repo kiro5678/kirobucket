@@ -1,0 +1,30 @@
+{
+    "version": "26.10",
+    "description": "Catalogs disks and directories for offline browsing and searching, with support for compressed archives.",
+    "homepage": "https://efsoftware.com/fc/e.htm",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://efsoftware.com/_p4/fc",
+            "extract_dir": "ef_file_catalog_64",
+            "shortcuts": [
+                [
+                    "EFCat.exe",
+                    "EF File Catalog"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://efsoftware.com/dw/e.htm",
+        "regex": "href=\"/fc/e\\.htm\" class=l>EF&nbsp;File&nbsp;Catalog</a></td><td align=right>([\\d.]+)&nbsp;"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://efsoftware.com/_p4/fc",
+                "extract_dir": "ef_file_catalog_64"
+            }
+        }
+    }
+}
