@@ -1,6 +1,6 @@
 {
-    "version": "2026.10.27",
-    "description": "Combined x64 portable collection of 28 SoftwareOK utilities in one Scoop installation.",
+    "version": "2026.10.27.1",
+    "description": "Combined x64 portable collection of 29 SoftwareOK utilities in one Scoop installation.",
     "homepage": "https://www.softwareok.com/?seite=Faq",
     "license": "Freeware",
     "architecture": {
@@ -33,7 +33,8 @@
                 "https://www.softwareok.com/Download/AlwaysMouseWheel_Portable_x64.zip",
                 "https://www.softwareok.com/Download/ProcessKO_x64.zip",
                 "https://www.softwareok.com/Download/OneLoupe_x64.zip",
-                "https://www.softwareok.com/Download/Office.Files.Images.zip"
+                "https://www.softwareok.com/Download/Office.Files.Images.zip",
+                "https://www.softwareok.com/Download/Run-Command_x64_Portable.zip"
             ],
             "hash": [
                 "e6185083898ec28d18fc8ddf1d4f39f9b4cd633ed3c8ab880bb344960ba52a68",
@@ -63,7 +64,8 @@
                 "5d302c6fa166d38189e92678d48f1a905353e916673f7a37adfac9cd269c89ef",
                 "19679c7b0abead49bf93316638fac9e170fd855e03840cefb17bea8f4e9db9be",
                 "8f8b4b0a27e8d7acb7275e63f24461c5273a467a09a9d6988dcf45ac4f362d0d",
-                "0afdc0c208706d172e4466e6f14ddae30a84375b456268d763487ba54ce02faa"
+                "0afdc0c208706d172e4466e6f14ddae30a84375b456268d763487ba54ce02faa",
+                "7fe98842f5c8788e19554cecf4ea92908caeb61c095eb5bee21326c775f67d85"
             ]
         }
     },
@@ -95,7 +97,8 @@
         "alwaysmousewheel",
         "processko",
         "oneloupe",
-        "office-files-images"
+        "office-files-images",
+        "run-command"
     ],
     "bin": [
         [
@@ -209,6 +212,10 @@
         [
             "office-files-images\\Office.Files.Images.exe",
             "OfficeFilesImages"
+        ],
+        [
+            "run-command\\Run-Command_x64_p.exe",
+            "Run-Command"
         ]
     ],
     "shortcuts": [
@@ -323,6 +330,10 @@
         [
             "office-files-images\\Office.Files.Images.exe",
             "Office.Files.Images (SoftwareOK)"
+        ],
+        [
+            "run-command\\Run-Command_x64_p.exe",
+            "Run-Command (SoftwareOK)"
         ]
     ],
     "persist": [
@@ -331,11 +342,15 @@
         "q-dir\\Q-Dir\\Q-Dir.ini",
         "meinplatz\\MeinPlatz\\MeinPlatz.ini",
         "quicktextpaste\\QuickTextPaste.ini",
-        "new-file-time\\NewFileTime.ini"
+        "new-file-time\\NewFileTime.ini",
+        "run-command\\Run-Command.ini"
     ],
     "notes": [
         "Each program is extracted into its own subfolder inside this single Scoop package.",
         "The bundle is a pinned snapshot; individual manifests in this bucket track the included programs separately.",
         "This curated bundle does not include every SoftwareOK application."
+    ],
+    "pre_install": [
+        "if (-not (Test-Path \"$persist_dir\\run-command\\Run-Command.ini\")) { New-Item -Path \"$dir\\run-command\\Run-Command.ini\" -ItemType File | Out-Null }"
     ]
 }
