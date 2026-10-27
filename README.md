@@ -30,6 +30,10 @@ https://github.com/ScoopInstaller/BucketTemplate
 
 
 
+## Software by developer and function
+
+See [the source-site software catalog](docs/software-by-developer.md) for a developer-grouped index, with each app's primary function and manifest link. The [category index](docs/categories.md) lists manifests by function and publisher suite.
+
 ## Manifests
 
 Manifest Added shows the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable.
