@@ -1,0 +1,24 @@
+{
+    "version": "1.5",
+    "description": "Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails.",
+    "homepage": "https://www.neuber.com/twister/",
+    "license": "Shareware",
+    "url": "https://www.neuber.com/download/FontTwister.zip",
+    "checkver": {
+        "url": "https://www.neuber.com/twister/update.html",
+        "regex": "(?i)FontTwister\\s+(?<version>\\d+(?:\\.\\d+)?)\\s*\\(latest\\)"
+    },
+    "autoupdate": {
+        "url": "https://www.neuber.com/download/FontTwister.zip"
+    },
+    "shortcuts": [
+        [
+            "FontTwister.exe",
+            "Neuber FontTwister"
+        ]
+    ],
+    "notes": [
+        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
+        "The publisher documents the ZIP as a no-install portable download; version 1.5 is the latest version currently listed."
+    ]
+}
