@@ -1,0 +1,40 @@
+{
+    "version": "8.66",
+    "description": "Scan disk usage and visualize space occupied by files and folders.",
+    "homepage": "https://www.softwareok.com/?Download=MeinPlatz",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/MeinPlatz_Portable_x64.zip",
+            "hash": "919cb98271408a0762c0a831121dc75018c4f1217d2162d5605f96bf7144670e"
+        }
+    },
+    "bin": [
+        [
+            "MeinPlatz\\MeinPlatz.exe",
+            "MeinPlatz"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "MeinPlatz\\MeinPlatz.exe",
+            "SoftwareOK - MeinPlatz"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.softwareok.com/?Download=MeinPlatz",
+        "regex": "MeinPlatz (?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.softwareok.com/Download/MeinPlatz_Portable_x64.zip"
+            }
+        },
+        "hash": {
+            "url": "https://www.softwareok.com/?Download=MeinPlatz",
+            "regex": "$basename.*?$sha256<"
+        }
+    },
+    "persist": "MeinPlatz\\MeinPlatz.ini"
+}

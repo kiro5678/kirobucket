@@ -1,0 +1,44 @@
+{
+    "version": "12.82",
+    "description": "Quad-pane file manager for Windows.",
+    "homepage": "https://www.softwareok.com/?Download=Q-Dir",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/Q-Dir_Portable_x64.zip",
+            "hash": "e6185083898ec28d18fc8ddf1d4f39f9b4cd633ed3c8ab880bb344960ba52a68"
+        }
+    },
+    "bin": [
+        [
+            "Q-Dir\\Q-Dir_x64.exe",
+            "QDir"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "Q-Dir\\Q-Dir_x64.exe",
+            "SoftwareOK - Q-Dir"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.softwareok.com/?Download=Q-Dir",
+        "regex": "Q-Dir (?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.softwareok.com/Download/Q-Dir_Portable_x64.zip"
+            }
+        },
+        "hash": {
+            "url": "https://www.softwareok.com/?Download=Q-Dir",
+            "regex": "$basename.*?$sha256<"
+        }
+    },
+    "persist": [
+        "Q-Dir\\Favoriten",
+        "Q-Dir\\start.qdr",
+        "Q-Dir\\Q-Dir.ini"
+    ]
+}

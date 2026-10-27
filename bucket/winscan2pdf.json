@@ -1,0 +1,39 @@
+{
+    "version": "9.79",
+    "description": "Save scanned documents as PDF files.",
+    "homepage": "https://www.softwareok.com/?Download=WinScan2PDF",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/WinScan2PDF_Portable.zip",
+            "hash": "fc90aadc403a7a496607d21a233b5bcad2e359e17c1f46e1914e0ca9c16ed6be"
+        }
+    },
+    "bin": [
+        [
+            "WinScan2PDF_p.exe",
+            "WinScan2PDF"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "WinScan2PDF_p.exe",
+            "SoftwareOK - WinScan2PDF"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.softwareok.com/?Download=WinScan2PDF",
+        "regex": "WinScan2PDF (?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.softwareok.com/Download/WinScan2PDF_Portable.zip"
+            }
+        },
+        "hash": {
+            "url": "https://www.softwareok.com/?Download=WinScan2PDF",
+            "regex": "$basename.*?$sha256<"
+        }
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "version": "9.61",
+    "description": "Paste predefined text using keyboard shortcuts.",
+    "homepage": "https://www.softwareok.com/?Download=QuickTextPaste",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/QuickTextPaste_x64_Portable.zip",
+            "hash": "14d3dfd2092eb5b62cb0fdc25260f568506fdd3aacaa29f75e5b5b3d87ce440d"
+        }
+    },
+    "bin": [
+        [
+            "QuickTextPaste_x64_p.exe",
+            "QuickTextPaste"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "QuickTextPaste_x64_p.exe",
+            "SoftwareOK - QuickTextPaste"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.softwareok.com/?Download=QuickTextPaste",
+        "regex": "QuickTextPaste (?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.softwareok.com/Download/QuickTextPaste_x64_Portable.zip"
+            }
+        },
+        "hash": {
+            "url": "https://www.softwareok.com/?Download=QuickTextPaste",
+            "regex": "$basename.*?$sha256<"
+        }
+    },
+    "persist": "QuickTextPaste.ini"
+}

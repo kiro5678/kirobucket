@@ -1,0 +1,39 @@
+{
+    "version": "3.55",
+    "description": "Safely eject drives and open or close optical drives.",
+    "homepage": "https://www.softwareok.com/?Download=OpenCloseDriveEject",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/OpenCloseDriveEject_x64.zip",
+            "hash": "c3ef64ddf575d39f664e30f92e152978f63d4aa565d1ac809ed3d36efba04e1e"
+        }
+    },
+    "bin": [
+        [
+            "OpenCloseDriveEject_x64.exe",
+            "OpenCloseDriveEject"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "OpenCloseDriveEject_x64.exe",
+            "SoftwareOK - OpenCloseDriveEject"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.softwareok.com/?Download=OpenCloseDriveEject",
+        "regex": "OpenCloseDriveEject (?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.softwareok.com/Download/OpenCloseDriveEject_x64.zip"
+            }
+        },
+        "hash": {
+            "url": "https://www.softwareok.com/?Download=OpenCloseDriveEject",
+            "regex": "$basename.*?$sha256<"
+        }
+    }
+}
