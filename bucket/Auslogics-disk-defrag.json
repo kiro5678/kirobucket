@@ -27,7 +27,5 @@
     "autoupdate": {
         "url": "https://downloads.auslogics.com/en/disk-defrag/auslogics-disk-defrag-setup.exe"
     },
-    "notes": [
-        "Scoop uses Inno Setup extraction to unpack the official installer into the application directory; the installer is not executed."
-    ]
+    "notes": "Scoop uses Inno Setup extraction to unpack the official installer into the application directory; the installer is not executed."
 }
