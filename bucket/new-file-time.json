@@ -13,7 +13,7 @@
             "shortcuts": [
                 [
                     "NewFileTime.exe",
-                    "SoftwareOK - SoftwareOK Suite - NewFileTime"
+                    "SoftwareOK - NewFileTime"
                 ]
             ],
             "bin": "NewFileTime.exe"
@@ -24,7 +24,7 @@
             "shortcuts": [
                 [
                     "NewFileTime_x64.exe",
-                    "SoftwareOK - SoftwareOK Suite - NewFileTime"
+                    "SoftwareOK - NewFileTime"
                 ]
             ],
             "bin": [
