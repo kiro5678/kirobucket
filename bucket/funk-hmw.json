@@ -1,0 +1,27 @@
+{
+    "version": "4",
+    "description": "Portable utility for hiding selected Windows applications and windows.",
+    "homepage": "https://funk.eu/hmw/",
+    "license": "Freeware",
+    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=288",
+    "checkver": {
+        "url": "https://funk.eu/hmw/",
+        "regex": "(?i)HMW\\s*[–-]\\s*Hide my Windows\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+    },
+    "autoupdate": {
+        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=288"
+    },
+    "shortcuts": [
+        [
+            "HMW.exe",
+            "Funk.eu Hide my Windows"
+        ]
+    ],
+    "persist": [
+        "hmw.ini"
+    ],
+    "notes": [
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
+        "Settings are stored in hmw.ini and are persisted across Scoop updates."
+    ]
+}
