@@ -307,22 +307,41 @@ jobs:
             } catch {}
             foreach ($win in $windows) {
               $lines.Add("- Window: $($win.Current.Name); class=$($win.Current.ClassName)")
-              try {
-                $controls = $win.FindAll(
-                  [System.Windows.Automation.TreeScope]::Descendants,
-                  [System.Windows.Automation.Condition]::TrueCondition
-                )
-                $limit = [Math]::Min($controls.Count, 250)
-                $lines.Add("- Descendant controls exposed: $($controls.Count); reporting first $limit")
-                for ($i = 0; $i -lt $limit; $i++) {
-                  $control = $controls.Item($i)
+              $queue = [System.Collections.Generic.Queue[object]]::new()
+              $queue.Enqueue([pscustomobject]@{ Element = $win; Depth = 0 })
+              $visited = 0
+              while ($queue.Count -gt 0 -and $visited -lt 300) {
+                $item = $queue.Dequeue()
+                $element = $item.Element
+                $depth = $item.Depth
+                $visited++
+                try {
+                  $name = $element.Current.Name
+                  $type = $element.Current.ControlType.ProgrammaticName
+                  $automationId = $element.Current.AutomationId
+                  $className = $element.Current.ClassName
+                  $lines.Add(('  ' * $depth) + "- type=$type; name=$name; automationId=$automationId; class=$className")
+                  if ($name -match '(?i)portable|save|open folder|browse|next|finish') {
+                    $lines.Add(('  ' * $depth) + '  ^ interesting text/control candidate')
+                  }
+                } catch {}
+                if ($depth -lt 4) {
                   try {
-                    $lines.Add("  - type=$($control.Current.ControlType.ProgrammaticName); name=$($control.Current.Name); automationId=$($control.Current.AutomationId); class=$($control.Current.ClassName)")
+                    $children = $element.FindAll(
+                      [System.Windows.Automation.TreeScope]::Children,
+                      [System.Windows.Automation.Condition]::TrueCondition
+                    )
+                    $limit = [Math]::Min($children.Count, 25)
+                    for ($i = 0; $i -lt $limit; $i++) {
+                      $queue.Enqueue([pscustomobject]@{ Element = $children.Item($i); Depth = $depth + 1 })
+                    }
+                    if ($children.Count -gt $limit) {
+                      $lines.Add(('  ' * ($depth + 1)) + "- Truncated $($children.Count - $limit) direct controls")
+                    }
                   } catch {}
                 }
-              } catch {
-                $lines.Add("- Control inspection failed: $($_.Exception.Message)")
               }
+              $lines.Add("- Bounded UI traversal visited $visited elements.")
             }
             try { if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } } catch {}
           }
