@@ -8,7 +8,7 @@
     },
     "url": "https://www.sordum.org/files/download/webcam-on-off/WebcamOnOff.zip",
     "hash": "f452c13d5f81ac63c9123bee7f9d4a6c9af8a1bdbb2ea54cbce0c21014eadaa4",
-    "extract_dir": "Webcam_on_off_v1.4",
+    "extract_dir": "WebcamOnOff_v1.4",
     "bin": "WebCam.exe",
     "shortcuts": [
         [
@@ -20,6 +20,6 @@
     "checkver": "WebCam\\sOn-Off\\sv([\\d.]+)",
     "autoupdate": {
         "url": "https://www.sordum.org/files/download/webcam-on-off/WebcamOnOff.zip",
-        "extract_dir": "Webcam_on_off_v$version"
+        "extract_dir": "WebcamOnOff_v$version"
     }
 }

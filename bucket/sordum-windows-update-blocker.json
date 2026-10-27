@@ -6,7 +6,7 @@
         "identifier": "Freeware",
         "url": "https://www.sordum.org/eula/"
     },
-    "url": "https://www.sordum.org/files/download/windows-update-blocker/Wub.zip",
+    "url": "https://www.sordum.org/files/windows-update-blocker/Wub.zip",
     "extract_dir": "Wub",
     "bin": "Wub.exe",
     "shortcuts": [
@@ -18,6 +18,6 @@
     "persist": "Wub.ini",
     "checkver": "Blocker v([\\d.]+)",
     "autoupdate": {
-        "url": "https://www.sordum.org/files/download/windows-update-blocker/Wub.zip"
+        "url": "https://www.sordum.org/files/windows-update-blocker/Wub.zip"
     }
 }
