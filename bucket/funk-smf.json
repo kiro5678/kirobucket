@@ -1,0 +1,24 @@
+{
+    "version": "18",
+    "description": "Multi-purpose file search and duplicate finder with filters, hash calculation, reporting, copy/move, and deletion tools.",
+    "homepage": "https://funk.eu/smf/",
+    "license": "Freeware",
+    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=293",
+    "checkver": {
+        "url": "https://funk.eu/smf/",
+        "regex": "(?i)SMF\\s*[–-]\\s*Search my Files\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+    },
+    "autoupdate": {
+        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=293"
+    },
+    "shortcuts": [
+        [
+            "SMF.exe",
+            "Funk.eu SMF – Search my Files"
+        ]
+    ],
+    "notes": [
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
+        "The download page marks this entry as the x64 executable archive."
+    ]
+}
