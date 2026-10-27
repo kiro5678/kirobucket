@@ -6,10 +6,10 @@
     "url": "https://downloads.auslogics.com/en/video-grabber/auslogics-video-grabber-setup.exe",
     "hash": "8E9B18D813954061157D0495B6075EB219F3B561568A98EAA5BCFAB2E23B5686",
     "innosetup": true,
-    "bin": "VideoGrabber.exe",
+    "bin": "VideoGrabber,1.exe",
     "shortcuts": [
         [
-            "VideoGrabber.exe",
+            "VideoGrabber,1.exe",
             "Auslogics Video Grabber"
         ]
     ],
