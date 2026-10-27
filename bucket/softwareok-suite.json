@@ -1,5 +1,5 @@
 {
-    "version": "2026.10.27.2",
+    "version": "2026.10.27.3",
     "description": "Combined portable collection of 79 SoftwareOK utilities in one Scoop installation.",
     "homepage": "https://www.softwareok.com/?seite=Faq",
     "license": "Freeware",
@@ -896,10 +896,9 @@
         "run-command\\Run-Command.ini"
     ],
     "notes": [
-        "Includes the complete 77-program SoftwareOK Downloads index, plus MediaPlayerOK and the additional Monitor.Turn.Off.Timer.OK tool.",
+        "Includes all 77 programs listed in the official SoftwareOK Downloads index, plus MediaPlayerOK and Monitor.Turn.Off.Timer.OK.",
         "Each archive is extracted into its own subfolder inside this single Scoop package.",
-        "The URLs and hashes are based on SoftwareOK's official download pages; the archive-validation workflow verifies hashes and executable paths.",
-        "ColorConsole, FavoritenFreund, and Monitor.Turn.Off.Timer.OK did not publish SHA-256 values on their official pages; their archive hashes are being independently verified."
+        "Archive URLs, executable paths, and SHA-256 checksums are being checked by the repository's archive-validation workflow."
     ],
     "pre_install": [
         "if (-not (Test-Path \"$persist_dir\\run-command\\Run-Command.ini\")) { New-Item -Path \"$dir\\run-command\\Run-Command.ini\" -ItemType File | Out-Null }"
