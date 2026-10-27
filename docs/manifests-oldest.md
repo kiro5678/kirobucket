@@ -712,6 +712,7 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [windhawk](bucket/windhawk.json) | Windows Customization | 2.0.0-alpha.8 | 2026-09-29 | 2026-10-25 | [Homepage](https://windhawk.net/) | Customization framework for Windows programs. |
 | [wox](bucket/wox.json) | Productivity & Launchers | 2.4.8 | 2026-09-29 | 2026-10-25 | [Homepage](https://github.com/Wox-launcher/Wox) | A fully native, open-source launcher for Windows, macOS, and Linux. |
 | [xfetch](bucket/xfetch.json) | Other Utilities | 1.0.1 | 2026-09-29 | 2026-10-25 | [Homepage](https://xfetch-cli.github.io/web/) | A customizable system information fetch tool. |
+| [appgroup](bucket/appgroup.json) | Other Utilities | 1.6.0 | 2026-10-27 | 2026-10-26 | [Homepage](https://github.com/iandiv/AppGroup) | Organize, customize, and launch app groups from the Windows taskbar. |
 | [crowdsec](bucket/crowdsec.json) | Other Utilities | 1.8.2 | 2026-09-29 | 2026-10-26 | [Homepage](https://github.com/crowdsecurity/crowdsec) | Open-source security engine that detects and responds to malicious behavior. |
 | [eric-xwfim](bucket/eric-xwfim.json) | Other Utilities | 2026.10.1 | 2026-10-25 | 2026-10-26 | [Homepage](https://ericzimmerman.github.io/) | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. |
 | [magic-mouse-trails](bucket/magic-mouse-trails.json) | Other Utilities | 4.51 | 2026-10-27 | 2026-10-26 | [Homepage](https://www.softwareok.com/?Download=MagicMouseTrails) | Display customizable mouse trails. |
