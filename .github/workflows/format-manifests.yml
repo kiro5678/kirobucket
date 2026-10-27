@@ -76,15 +76,35 @@ jobs:
               throw "Could not commit normalized manifests."
             }
 
-            git fetch origin master
-            git rebase origin/master
-            if ($LASTEXITCODE -ne 0) {
-              throw "Could not rebase normalization changes onto the latest master."
+            $maxPushAttempts = 5
+            $pushed = $false
+
+            for ($attempt = 1; $attempt -le $maxPushAttempts; $attempt++) {
+              git fetch origin master
+              if ($LASTEXITCODE -ne 0) {
+                throw "Could not fetch the latest master before pushing normalized manifests."
+              }
+
+              git rebase origin/master
+              if ($LASTEXITCODE -ne 0) {
+                git rebase --abort 2>$null
+                throw "Could not rebase normalization changes onto the latest master. Check for concurrent edits to bucket manifests."
+              }
+
+              git push origin HEAD:master
+              if ($LASTEXITCODE -eq 0) {
+                $pushed = $true
+                break
+              }
+
+              if ($attempt -lt $maxPushAttempts) {
+                Write-Warning "master changed during the push; fetching and rebasing again (attempt $attempt of $maxPushAttempts)."
+                Start-Sleep -Seconds 1
+              }
             }
 
-            git push origin HEAD:master
-            if ($LASTEXITCODE -ne 0) {
-              throw "Could not push normalized manifests."
+            if (-not $pushed) {
+              throw "Could not push normalized manifests after $maxPushAttempts attempts because master kept changing."
             }
 
             "changed=true" >> $env:GITHUB_OUTPUT
