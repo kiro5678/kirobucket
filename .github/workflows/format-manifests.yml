@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "bucket/**"
+      - ".github/workflows/format-manifests.yml"
   workflow_dispatch:
 
 permissions:
