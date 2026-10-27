@@ -7,7 +7,7 @@
         "url": "https://www.sordum.org/eula/"
     },
     "url": "https://www.sordum.org/files/download/fix-print-spooler/FixPrintSpooler_v1.3.zip",
-    "hash": "2041c5a849263ae105698348fd0746c7d8a9a3ee7edd3dc9527a9670ba6d0ad4",
+    "hash": "1b6105676f4104e0b1afe617f96b3dc887d4d351467e3e6f6c38452caa28da67",
     "extract_dir": "FixPrintSpooler_v1.3",
     "pre_install": [
         "if ($architecture -eq '32bit') {Remove-Item \"$dir\\FixSpooler_x64.exe\"}",
