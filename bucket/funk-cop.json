@@ -1,0 +1,23 @@
+{
+    "version": "0.0.3.5",
+    "description": "Screen color picker with multiple color-code formats, magnifier, clipboard copy, and a built-in color chart.",
+    "homepage": "https://funk.eu/cop/",
+    "license": "Freeware",
+    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=47",
+    "checkver": {
+        "url": "https://funk.eu/cop/",
+        "regex": "(?i)COP\\s*[–-]\\s*Color Picker\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+    },
+    "autoupdate": {
+        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=47"
+    },
+    "shortcuts": [
+        [
+            "COP.exe",
+            "Funk.eu Color Picker"
+        ]
+    ],
+    "notes": [
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned."
+    ]
+}
