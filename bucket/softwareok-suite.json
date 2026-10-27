@@ -1,42 +1,341 @@
 {
-    "version": "1.1",
-    "description": "Meta-package that installs a curated collection of 28 SoftwareOK utilities through their individual Scoop manifests.",
+    "version": "2026.10.27",
+    "description": "Combined x64 portable collection of 28 SoftwareOK utilities in one Scoop installation.",
     "homepage": "https://www.softwareok.com/?seite=Faq",
     "license": "Freeware",
-    "depends": [
-        "extras/q-dir",
-        "extras/meinplatz",
-        "extras/dont-sleep",
-        "extras/winscan2pdf",
-        "extras/quicktextpaste",
-        "extras/openclosedriveeject",
-        "kirobucket/new-file-time",
-        "kirobucket/is-my-lcd-ok",
-        "kirobucket/dirprintok",
-        "kirobucket/fontviewok",
-        "kirobucket/theaeroclock",
-        "kirobucket/desktopok",
-        "kirobucket/ramagic",
-        "kirobucket/winbin2iso",
-        "kirobucket/is-my-memory-ok",
-        "kirobucket/stressthegpu",
-        "kirobucket/brightness-manager-ok",
-        "kirobucket/paintokay",
-        "kirobucket/mediaplayerok",
-        "kirobucket/static-desktop-ruler",
-        "kirobucket/thisismyfile",
-        "kirobucket/autohide-desktop-icons",
-        "kirobucket/autohide-mouse-cursor",
-        "kirobucket/pointerstick",
-        "kirobucket/alwaysmousewheel",
-        "kirobucket/processko",
-        "kirobucket/oneloupe",
-        "kirobucket/office-files-images"
+    "architecture": {
+        "64bit": {
+            "url": [
+                "https://www.softwareok.com/Download/Q-Dir_Portable_x64.zip",
+                "https://www.softwareok.com/Download/MeinPlatz_Portable_x64.zip",
+                "https://www.softwareok.com/Download/DontSleep_x64.zip",
+                "https://www.softwareok.com/Download/WinScan2PDF_Portable.zip",
+                "https://www.softwareok.com/Download/QuickTextPaste_x64_Portable.zip",
+                "https://www.softwareok.com/Download/OpenCloseDriveEject_x64.zip",
+                "https://www.softwareok.com/Download/NewFileTime_x64.zip",
+                "https://www.softwareok.com/Download/IsMyLcdOK_x64.zip",
+                "https://www.softwareok.com/Download/DirPrintOK_Portable_x64.zip",
+                "https://www.softwareok.com/Download/FontViewOK_Portable_x64.zip",
+                "https://www.softwareok.com/Download/TheAeroClock_x64.zip",
+                "https://www.softwareok.com/Download/DesktopOK_x64.zip",
+                "https://www.softwareok.com/Download/RAMagic.zip",
+                "https://www.softwareok.com/Download/WinBin2Iso_Portable_x64.zip",
+                "https://www.softwareok.com/Download/IsMyMemoryOK_x64.zip",
+                "https://www.softwareok.com/Download/StressTheGPU_x64.zip",
+                "https://www.softwareok.com/Download/Brightness.Manager.OK_Portable.zip",
+                "https://www.softwareok.com/Download/PaintOkay.zip",
+                "https://www.softwareok.com/Download/MediaPlayerOK.zip",
+                "https://www.softwareok.com/Download/StaticDesktopRuler.zip",
+                "https://www.softwareok.com/Download/ThisIsMyFile_x64.zip",
+                "https://www.softwareok.com/Download/AutoHideDesktopIcons_Portable.zip",
+                "https://www.softwareok.com/Download/AutoHideMouseCursor_x64_Portable.zip",
+                "https://www.softwareok.com/Download/PointerStick_x64.zip",
+                "https://www.softwareok.com/Download/AlwaysMouseWheel_Portable_x64.zip",
+                "https://www.softwareok.com/Download/ProcessKO_x64.zip",
+                "https://www.softwareok.com/Download/OneLoupe_x64.zip",
+                "https://www.softwareok.com/Download/Office.Files.Images.zip"
+            ],
+            "hash": [
+                "e6185083898ec28d18fc8ddf1d4f39f9b4cd633ed3c8ab880bb344960ba52a68",
+                "919cb98271408a0762c0a831121dc75018c4f1217d2162d5605f96bf7144670e",
+                "243652c2f4c24544a7e4cba70a111640669979c45b03fda27f84097cfb60771c",
+                "fc90aadc403a7a496607d21a233b5bcad2e359e17c1f46e1914e0ca9c16ed6be",
+                "14d3dfd2092eb5b62cb0fdc25260f568506fdd3aacaa29f75e5b5b3d87ce440d",
+                "c3ef64ddf575d39f664e30f92e152978f63d4aa565d1ac809ed3d36efba04e1e",
+                "443091f5463f48be939ae16dbd1413aa4cd2dfdd250a14f618e6b73d19d53304",
+                "5b67541c0db43124539509071aa56a4c59621b6249abb043f8c1c5c31750553b",
+                "c4602a35094af9bda82ac37a0af3cad813e90e62f037f9cbc3079bb92f8fd65d",
+                "7e2d13ea698a67caa72506f4f4da03d24930c2cb7f3158f14cef1ce48031a066",
+                "d0f984953a1fc752149800b67cabf2d6215c087e16a06095a0c834ab123878d8",
+                "f5e922433b51f7b7fd7c71f63f47abc49c2658be9a712d298e28ea116e5a621d",
+                "1f311abfe8281f6f0998ba3956795fae6ce37889b6fa6105119e77acf1320512",
+                "3ef615d6257e8c02c15bac473df788c3919a621acf8eb98305e97e534897c23e",
+                "1ad9a626de4c69ca4f733b58ea0b4d8fdf0b09ac23e0377f1919acc13635b7f0",
+                "d087a568c599f9f50ce6f3e69eb1c1efc794cd4d37abeb007c5ca535666ed7f8",
+                "4d546bf91bfb81a1ec1cab953b7a5d9de9e96dbcc61a0b8d2f53283ef375ba04",
+                "f9119d10bab94ed027e99f734bbf1e24c54590d00d82052ce8916a455007555b",
+                "6a940e41fa8df081bd9ddc54f612694c170b8c02d953bdd87ed8e7b2e5246b45",
+                "18d379adfac1669259a46bfba4d01536e76c9ede696a62fa4849bbdedea186fd",
+                "c9b5d1bbd3ad296c39ac55749a7c29fb22d688aa414afd85677960c58a6a79c0",
+                "075bcaa641611885935adffac95ce421b0897f7a4865661e7eae308ed7431bcd",
+                "76e0509bab997ecc2c1bc1d995b8097a1a0dae06c1ec7401afe5b7305d4d725d",
+                "0c508b373da2b55193a7125240869e292826b6cc4782f415fe910fba56993ccb",
+                "5d302c6fa166d38189e92678d48f1a905353e916673f7a37adfac9cd269c89ef",
+                "19679c7b0abead49bf93316638fac9e170fd855e03840cefb17bea8f4e9db9be",
+                "8f8b4b0a27e8d7acb7275e63f24461c5273a467a09a9d6988dcf45ac4f362d0d",
+                "0afdc0c208706d172e4466e6f14ddae30a84375b456268d763487ba54ce02faa"
+            ]
+        }
+    },
+    "extract_to": [
+        "q-dir",
+        "meinplatz",
+        "dont-sleep",
+        "winscan2pdf",
+        "quicktextpaste",
+        "openclosedriveeject",
+        "new-file-time",
+        "is-my-lcd-ok",
+        "dirprintok",
+        "fontviewok",
+        "theaeroclock",
+        "desktopok",
+        "ramagic",
+        "winbin2iso",
+        "is-my-memory-ok",
+        "stressthegpu",
+        "brightness-manager-ok",
+        "paintokay",
+        "mediaplayerok",
+        "static-desktop-ruler",
+        "thisismyfile",
+        "autohide-desktop-icons",
+        "autohide-mouse-cursor",
+        "pointerstick",
+        "alwaysmousewheel",
+        "processko",
+        "oneloupe",
+        "office-files-images"
+    ],
+    "bin": [
+        [
+            "q-dir\\Q-Dir\\Q-Dir_x64.exe",
+            "Q-Dir"
+        ],
+        [
+            "meinplatz\\MeinPlatz\\MeinPlatz.exe",
+            "MeinPlatz"
+        ],
+        [
+            "dont-sleep\\DontSleep_x64.exe",
+            "DontSleep"
+        ],
+        [
+            "winscan2pdf\\WinScan2PDF_p.exe",
+            "WinScan2PDF"
+        ],
+        [
+            "quicktextpaste\\QuickTextPaste_x64_p.exe",
+            "QuickTextPaste"
+        ],
+        [
+            "openclosedriveeject\\OpenCloseDriveEject_x64.exe",
+            "OpenCloseDriveEject"
+        ],
+        [
+            "new-file-time\\NewFileTime_x64.exe",
+            "NewFileTime"
+        ],
+        [
+            "is-my-lcd-ok\\IsMyLcdOK_x64.exe",
+            "IsMyLcdOK"
+        ],
+        [
+            "dirprintok\\DirPrintOK\\DirPrintOK_x64.exe",
+            "DirPrintOK"
+        ],
+        [
+            "fontviewok\\FontViewOK_x64_p.exe",
+            "FontViewOK"
+        ],
+        [
+            "theaeroclock\\TheAeroClock_x64.exe",
+            "TheAeroClock"
+        ],
+        [
+            "desktopok\\DesktopOK_x64.exe",
+            "DesktopOK"
+        ],
+        [
+            "ramagic\\RAMagic.exe",
+            "RAMagic"
+        ],
+        [
+            "winbin2iso\\WinBin2Iso_x64_p.exe",
+            "WinBin2Iso"
+        ],
+        [
+            "is-my-memory-ok\\IsMyMemoryOK_x64.exe",
+            "IsMyMemoryOK"
+        ],
+        [
+            "stressthegpu\\StressTheGPU_x64.exe",
+            "StressTheGPU"
+        ],
+        [
+            "brightness-manager-ok\\Brightness.Manager.OK_p.exe",
+            "BrightnessManagerOK"
+        ],
+        [
+            "paintokay\\PaintOkay.exe",
+            "PaintOkay"
+        ],
+        [
+            "mediaplayerok\\MediaPlayerOK.exe",
+            "MediaPlayerOK"
+        ],
+        [
+            "static-desktop-ruler\\StaticDesktopRuler.exe",
+            "StaticDesktopRuler"
+        ],
+        [
+            "thisismyfile\\ThisIsMyFile_x64.exe",
+            "ThisIsMyFile"
+        ],
+        [
+            "autohide-desktop-icons\\AutoHideDesktopIcons_p.exe",
+            "AutoHideDesktopIcons"
+        ],
+        [
+            "autohide-mouse-cursor\\AutoHideMouseCursor_x64_p.exe",
+            "AutoHideMouseCursor"
+        ],
+        [
+            "pointerstick\\PointerStick_x64.exe",
+            "PointerStick"
+        ],
+        [
+            "alwaysmousewheel\\AlwaysMouseWheel_x64_p.exe",
+            "AlwaysMouseWheel"
+        ],
+        [
+            "processko\\ProcessKO_x64.exe",
+            "ProcessKO"
+        ],
+        [
+            "oneloupe\\OneLoupe_x64.exe",
+            "OneLoupe"
+        ],
+        [
+            "office-files-images\\Office.Files.Images.exe",
+            "OfficeFilesImages"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "q-dir\\Q-Dir\\Q-Dir_x64.exe",
+            "Q-Dir (SoftwareOK)"
+        ],
+        [
+            "meinplatz\\MeinPlatz\\MeinPlatz.exe",
+            "MeinPlatz (SoftwareOK)"
+        ],
+        [
+            "dont-sleep\\DontSleep_x64.exe",
+            "Don't Sleep (SoftwareOK)"
+        ],
+        [
+            "winscan2pdf\\WinScan2PDF_p.exe",
+            "WinScan2PDF (SoftwareOK)"
+        ],
+        [
+            "quicktextpaste\\QuickTextPaste_x64_p.exe",
+            "QuickTextPaste (SoftwareOK)"
+        ],
+        [
+            "openclosedriveeject\\OpenCloseDriveEject_x64.exe",
+            "OpenCloseDriveEject (SoftwareOK)"
+        ],
+        [
+            "new-file-time\\NewFileTime_x64.exe",
+            "NewFileTime (SoftwareOK)"
+        ],
+        [
+            "is-my-lcd-ok\\IsMyLcdOK_x64.exe",
+            "IsMyLcdOK (SoftwareOK)"
+        ],
+        [
+            "dirprintok\\DirPrintOK\\DirPrintOK_x64.exe",
+            "DirPrintOK (SoftwareOK)"
+        ],
+        [
+            "fontviewok\\FontViewOK_x64_p.exe",
+            "FontViewOK (SoftwareOK)"
+        ],
+        [
+            "theaeroclock\\TheAeroClock_x64.exe",
+            "TheAeroClock (SoftwareOK)"
+        ],
+        [
+            "desktopok\\DesktopOK_x64.exe",
+            "DesktopOK (SoftwareOK)"
+        ],
+        [
+            "ramagic\\RAMagic.exe",
+            "RAMagic (SoftwareOK)"
+        ],
+        [
+            "winbin2iso\\WinBin2Iso_x64_p.exe",
+            "WinBin2Iso (SoftwareOK)"
+        ],
+        [
+            "is-my-memory-ok\\IsMyMemoryOK_x64.exe",
+            "IsMyMemoryOK (SoftwareOK)"
+        ],
+        [
+            "stressthegpu\\StressTheGPU_x64.exe",
+            "StressTheGPU (SoftwareOK)"
+        ],
+        [
+            "brightness-manager-ok\\Brightness.Manager.OK_p.exe",
+            "Brightness.Manager.OK (SoftwareOK)"
+        ],
+        [
+            "paintokay\\PaintOkay.exe",
+            "PaintOkay (SoftwareOK)"
+        ],
+        [
+            "mediaplayerok\\MediaPlayerOK.exe",
+            "MediaPlayerOK (SoftwareOK)"
+        ],
+        [
+            "static-desktop-ruler\\StaticDesktopRuler.exe",
+            "StaticDesktopRuler (SoftwareOK)"
+        ],
+        [
+            "thisismyfile\\ThisIsMyFile_x64.exe",
+            "ThisIsMyFile (SoftwareOK)"
+        ],
+        [
+            "autohide-desktop-icons\\AutoHideDesktopIcons_p.exe",
+            "AutoHideDesktopIcons (SoftwareOK)"
+        ],
+        [
+            "autohide-mouse-cursor\\AutoHideMouseCursor_x64_p.exe",
+            "AutoHideMouseCursor (SoftwareOK)"
+        ],
+        [
+            "pointerstick\\PointerStick_x64.exe",
+            "PointerStick (SoftwareOK)"
+        ],
+        [
+            "alwaysmousewheel\\AlwaysMouseWheel_x64_p.exe",
+            "AlwaysMouseWheel (SoftwareOK)"
+        ],
+        [
+            "processko\\ProcessKO_x64.exe",
+            "ProcessKO (SoftwareOK)"
+        ],
+        [
+            "oneloupe\\OneLoupe_x64.exe",
+            "OneLoupe (SoftwareOK)"
+        ],
+        [
+            "office-files-images\\Office.Files.Images.exe",
+            "Office.Files.Images (SoftwareOK)"
+        ]
+    ],
+    "persist": [
+        "q-dir\\Q-Dir\\Favoriten",
+        "q-dir\\Q-Dir\\start.qdr",
+        "q-dir\\Q-Dir\\Q-Dir.ini",
+        "meinplatz\\MeinPlatz\\MeinPlatz.ini",
+        "quicktextpaste\\QuickTextPaste.ini",
+        "new-file-time\\NewFileTime.ini"
     ],
     "notes": [
-        "Requires the extras bucket. Add it before installing with: scoop bucket add extras",
-        "This is a curated collection, not the full SoftwareOK catalog.",
-        "The programs are installed as separate Scoop apps; this manifest does not combine them into one archive.",
-        "Uninstalling softwareok-suite does not uninstall its dependencies."
+        "Each program is extracted into its own subfolder inside this single Scoop package.",
+        "The bundle is a pinned snapshot; individual manifests in this bucket track the included programs separately.",
+        "This curated bundle does not include every SoftwareOK application."
     ]
 }
