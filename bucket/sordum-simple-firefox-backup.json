@@ -6,7 +6,7 @@
         "identifier": "Freeware",
         "url": "https://www.sordum.org/eula/"
     },
-    "url": "https://www.sordum.org/files/downloads.php?simple-firefox-backup#/dl.zip",
+    "url": "https://www.sordum.org/files/downloads.php?simple-firefox-backup#/dl.7z",
     "hash": "53e879e53339ace248c29a87067426cbd4608e7a09c307315f55617bb4b1e88f",
     "extract_dir": "fBackup",
     "shortcuts": [
@@ -35,6 +35,6 @@
         "regex": "Simple Firefox Backup v([\\d.]+)"
     },
     "autoupdate": {
-        "url": "https://www.sordum.org/files/downloads.php?simple-firefox-backup#/dl.zip"
+        "url": "https://www.sordum.org/files/downloads.php?simple-firefox-backup#/dl.7z"
     }
 }
