@@ -13,7 +13,7 @@
             "shortcuts": [
                 [
                     "IsMyLcdOK.exe",
-                    "IsMyLcdOK"
+                    "SoftwareOK - SoftwareOK Suite - IsMyLcdOK"
                 ]
             ],
             "bin": "IsMyLcdOK.exe"
@@ -24,7 +24,7 @@
             "shortcuts": [
                 [
                     "IsMyLcdOK_x64.exe",
-                    "IsMyLcdOK"
+                    "SoftwareOK - SoftwareOK Suite - IsMyLcdOK"
                 ]
             ],
             "bin": [
