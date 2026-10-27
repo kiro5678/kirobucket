@@ -1,0 +1,30 @@
+{
+    "version": "3.2c",
+    "description": "Process-inspection utility showing running processes, file paths, descriptions, and security-risk indicators; trialware.",
+    "homepage": "https://www.neuber.com/taskmanager/",
+    "license": "Shareware",
+    "url": "https://www.neuber.com/download/SecurityTaskManager_Setup.zip",
+    "checkver": {
+        "script": [
+            "$page = [string](Invoke-WebRequest -Uri 'https://www.neuber.com/' -UseBasicParsing).Content",
+            "$text = [regex]::Replace($page, '<[^>]+>', ' ')",
+            "$match = [regex]::Match($text, '(?is)Security\\s+Task\\s+Manager\\s+AI\\s+version\\s+(?<version>\\d+\\.\\d+[a-z]?)')",
+            "if (-not $match.Success) { throw 'Could not find the current Security Task Manager version on the official Neuber website.' }",
+            "$match.Groups['version'].Value"
+        ],
+        "regex": "(?<version>\\d+\\.\\d+[a-z]?)"
+    },
+    "autoupdate": {
+        "url": "https://www.neuber.com/download/SecurityTaskManager_Setup.zip"
+    },
+    "shortcuts": [
+        [
+            "SecurityTaskManager.exe",
+            "Neuber Security Task Manager"
+        ]
+    ],
+    "notes": [
+        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
+        "The official download page identifies this ZIP as the portable version; the product is a 30-day trial."
+    ]
+}
