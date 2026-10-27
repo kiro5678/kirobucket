@@ -1,0 +1,23 @@
+{
+    "version": "4",
+    "description": "Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options.",
+    "homepage": "https://funk.eu/ssd/",
+    "license": "Freeware",
+    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=234",
+    "checkver": {
+        "url": "https://funk.eu/ssd/",
+        "regex": "(?i)SSD\\s*[–-]\\s*Set Sound Device\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+    },
+    "autoupdate": {
+        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=234"
+    },
+    "shortcuts": [
+        [
+            "SSD.exe",
+            "Funk.eu Set Sound Device"
+        ]
+    ],
+    "notes": [
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned."
+    ]
+}
