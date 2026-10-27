@@ -271,6 +271,66 @@ jobs:
             if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
           } catch {}
 
+      - name: Inspect main Disk Defrag portable page controls
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Add-Type -AssemblyName UIAutomationClient
+          Add-Type -AssemblyName UIAutomationTypes
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $installDir = Join-Path $root 'installed'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-main-ui-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics Disk Defrag main UI inspection')
+          $mainPath = Join-Path $installDir 'DiskDefrag.exe'
+          if (-not (Test-Path -LiteralPath $mainPath)) {
+            $lines.Add('DiskDefrag.exe was not found in the isolated install directory.')
+          } else {
+            $p = Start-Process -FilePath $mainPath -WorkingDirectory $installDir -PassThru
+            $lines.Add("- Process ID: $($p.Id)")
+            $deadline = (Get-Date).AddSeconds(15)
+            $windows = @()
+            while ((Get-Date) -lt $deadline) {
+              $windows = @([System.Windows.Automation.AutomationElement]::RootElement.FindAll(
+                [System.Windows.Automation.TreeScope]::Children,
+                [System.Windows.Automation.Condition]::TrueCondition
+              ) | Where-Object { try { $_.Current.ProcessId -eq $p.Id } catch { $false } })
+              if ($windows.Count -gt 0) { break }
+              Start-Sleep -Milliseconds 500
+            }
+            $lines.Add("- UI Automation top-level windows for DiskDefrag.exe: $($windows.Count)")
+            try {
+              $proc = Get-Process -Id $p.Id -ErrorAction Stop
+              $lines.Add("- MainWindowTitle: $($proc.MainWindowTitle)")
+              $lines.Add("- MainWindowHandle: $($proc.MainWindowHandle)")
+            } catch {}
+            foreach ($win in $windows) {
+              $lines.Add("- Window: $($win.Current.Name); class=$($win.Current.ClassName)")
+              try {
+                $controls = $win.FindAll(
+                  [System.Windows.Automation.TreeScope]::Descendants,
+                  [System.Windows.Automation.Condition]::TrueCondition
+                )
+                $limit = [Math]::Min($controls.Count, 250)
+                $lines.Add("- Descendant controls exposed: $($controls.Count); reporting first $limit")
+                for ($i = 0; $i -lt $limit; $i++) {
+                  $control = $controls.Item($i)
+                  try {
+                    $lines.Add("  - type=$($control.Current.ControlType.ProgrammaticName); name=$($control.Current.Name); automationId=$($control.Current.AutomationId); class=$($control.Current.ClassName)")
+                  } catch {}
+                }
+              } catch {
+                $lines.Add("- Control inspection failed: $($_.Exception.Message)")
+              }
+            }
+            try { if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue } } catch {}
+          }
+          $lines.Add('')
+          $lines.Add('No portable files are uploaded. This report is for inspecting the official UI controls only.')
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
       - name: Upload diagnostic report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -280,5 +340,6 @@ jobs:
             auslogics-probe-report.md
             auslogics-install-report.md
             auslogics-portable-helper-report.md
+            auslogics-main-ui-report.md
           if-no-files-found: warn
           retention-days: 7
