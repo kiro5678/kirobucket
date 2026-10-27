@@ -275,7 +275,7 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [komorebi](bucket/komorebi.json) | Windows Customization | 0.1.41 | 2026-09-29 | 2026-05-03 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows |
 | [komorebi-nightly](bucket/komorebi-nightly.json) | Windows Customization | 2026-08-22 | 2026-09-29 | 2026-10-25 | [Homepage](https://github.com/LGUG2Z/komorebi) | A tiling window manager for Windows (nightly builds) |
 | [kudu](bucket/kudu.json) | Windows Privacy & Tweaks | 3.10.0 | 2026-09-29 | 2026-10-21 | [Homepage](https://github.com/AdventDevInc/kudu) | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. |
-| [kvrt](bucket/kvrt.json) | Other Utilities | 20.0.8.0 | 2026-10-21 | — | [Homepage](https://www.kaspersky.com/downloads/free-virus-removal-tool) | Kaspersky Virus Removal Tool |
+| [kvrt](bucket/kvrt.json) | Other Utilities | 20.0.8.0 | 2026-10-21 | 2026-10-27 | [Homepage](https://www.kaspersky.com/downloads/free-virus-removal-tool) | Kaspersky Virus Removal Tool |
 | [langover](bucket/langover.json) | Keyboard & Language | 1.2.1 | 2026-09-29 | 2026-03-03 | [Homepage](https://github.com/nachlib/LangOver) | Portable Windows utility for converting text between Hebrew and English keyboard layouts. |
 | [lapis](bucket/lapis.json) | Notes & Knowledge | 3.0.1 | 2026-09-29 | 2026-09-16 | [Homepage](https://github.com/zexadev/lapisnote) | Local-first note-taking app with AI assistant and peer-to-peer sync. |
 | [lauschangriff](bucket/lauschangriff.json) | Other Utilities | 2.51 | 2026-10-27 | 2021-05-15 | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) | Portable utility from SoftwareOK. |
