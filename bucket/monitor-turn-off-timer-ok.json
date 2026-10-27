@@ -1,5 +1,5 @@
 {
-    "version": "2026.10.27.1",
+    "version": "2018.07.30",
     "description": "Turn off the monitor using a timer.",
     "homepage": "https://www.softwareok.com/?Download=Monitor.Turn.Off.Timer.OK",
     "license": "Freeware",
@@ -21,7 +21,7 @@
             "SoftwareOK - Monitor.Turn.Off.Timer.OK"
         ]
     ],
-    "notes": "The publisher does not display a release version. checkver derives the version from the download archive's Last-Modified HTTP header; autoupdate computes the archive SHA-256 if the publisher does not provide a checksum.",
+    "notes": "The publisher does not display a release version. The manifest uses the archive's Last-Modified HTTP date as its version and computes SHA-256 directly from the downloaded archive during autoupdate.",
     "checkver": {
         "url": "https://www.softwareok.com/?Download=Monitor.Turn.Off.Timer.OK",
         "script": "$downloadUrl = 'https://www.softwareok.com/Download/Monitor.Turn.Off.Timer.OK.zip'; $request = [System.Net.WebRequest]::Create($downloadUrl); $request.Method = 'HEAD'; $response = $request.GetResponse(); try { $modified = $response.Headers['Last-Modified']; if ([string]::IsNullOrWhiteSpace($modified)) { throw 'The archive has no Last-Modified HTTP header.' }; [DateTime]::Parse($modified).ToUniversalTime().ToString('yyyy.MM.dd') } finally { $response.Close() }",
@@ -33,9 +33,6 @@
                 "url": "https://www.softwareok.com/Download/Monitor.Turn.Off.Timer.OK.zip"
             }
         },
-        "hash": {
-            "url": "https://www.softwareok.com/?Download=Monitor.Turn.Off.Timer.OK",
-            "regex": "$basename.*?$sha256<"
-        }
+        "hash": {}
     }
 }
