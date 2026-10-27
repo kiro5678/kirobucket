@@ -21,7 +21,7 @@
     "shortcuts": [
         [
             "WinBin2Iso_x64_p.exe",
-            "WinBin2Iso"
+            "SoftwareOK - SoftwareOK Suite - WinBin2Iso"
         ]
     ],
     "pre_install": "if (-not (Test-Path \"$persist_dir\\SoftwareOK_Program.ini\")) { New-Item -Path \"$dir\\SoftwareOK_Program.ini\" -ItemType File | Out-Null }",
