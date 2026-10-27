@@ -8,7 +8,7 @@
     },
     "url": "https://www.sordum.org/files/download/ask-admin/AskAdmin.zip",
     "extract_dir": "AskAdmin",
-    "hash": "4995c93e0f712d299116cbdb2db8a6a933796784d497f93e8a0136f3d26102f8",
+    "hash": "3c644b4034fc303ff0769854183180fa1e513bb2b642b58c45b832b7f81c95a2",
     "architecture": {
         "64bit": {
             "pre_install": "Remove-Item \"$dir\\AskAdmin.exe\" | Out-Null; Rename-Item \"$dir\\AskAdmin_x64.exe\" 'AskAdmin.exe' | Out-Null"
