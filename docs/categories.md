@@ -11,38 +11,39 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Browsers & Communication | 5 | Functional | [View](#browsers-communication) |
 | ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
 | Clipboard & Text | 33 | Functional | [View](#clipboard-text) |
-| Developer & Technical Tools | 41 | Functional | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 43 | Functional | [View](#developer-technical-tools) |
 | Download Managers | 16 | Functional | [View](#download-managers) |
-| Emulators & Compatibility | 14 | Functional | [View](#emulators-compatibility) |
+| Emulators & Compatibility | 15 | Functional | [View](#emulators-compatibility) |
 | Eric Zimmerman Suite | 31 | Publisher cross-list | [View](#eric-zimmerman-suite) |
-| File Management | 63 | Functional | [View](#file-management) |
+| File Management | 64 | Functional | [View](#file-management) |
 | Forensics & Diagnostics | 31 | Functional | [View](#forensics-diagnostics) |
-| Games & Game Utilities | 18 | Functional | [View](#games-game-utilities) |
+| Games & Game Utilities | 19 | Functional | [View](#games-game-utilities) |
 | GRC Suite | 18 | Publisher cross-list | [View](#grc-suite) |
 | Images & Photos | 48 | Functional | [View](#images-photos) |
-| Keyboard & Language | 14 | Functional | [View](#keyboard-language) |
+| Keyboard & Language | 15 | Functional | [View](#keyboard-language) |
 | Media & Audio/Video | 43 | Functional | [View](#media-audio-video) |
 | MiTeC Suite | 22 | Publisher cross-list | [View](#mitec-suite) |
-| Network & DNS | 41 | Functional | [View](#network-dns) |
+| Network & DNS | 51 | Functional | [View](#network-dns) |
 | Notes & Knowledge | 20 | Functional | [View](#notes-knowledge) |
 | Other Utilities | 1 | Functional | [View](#other-utilities) |
-| Package Management | 12 | Functional | [View](#package-management) |
+| Package Management | 13 | Functional | [View](#package-management) |
 | PDF & Documents | 29 | Functional | [View](#pdf-documents) |
 | Productivity & Launchers | 29 | Functional | [View](#productivity-launchers) |
-| Security | 27 | Functional | [View](#security) |
+| Security | 40 | Functional | [View](#security) |
 | SoftwareOK Suite | 81 | Publisher cross-list | [View](#softwareok-suite) |
-| Storage & Disk Tools | 20 | Functional | [View](#storage-disk-tools) |
-| Sync & Backup | 8 | Functional | [View](#sync-backup) |
-| System Monitoring & Hardware | 55 | Functional | [View](#system-monitoring-hardware) |
+| Sordum Suite | 63 | Publisher cross-list | [View](#sordum-suite) |
+| Storage & Disk Tools | 23 | Functional | [View](#storage-disk-tools) |
+| Sync & Backup | 10 | Functional | [View](#sync-backup) |
+| System Monitoring & Hardware | 61 | Functional | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | Functional | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | Functional | [View](#translation-ocr) |
 | Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
 | Weather & Information | 1 | Functional | [View](#weather-information) |
-| Windows Customization | 77 | Functional | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 38 | Functional | [View](#windows-privacy-tweaks) |
-| Windows Update & Management | 2 | Functional | [View](#windows-update-management) |
+| Windows Customization | 90 | Functional | [View](#windows-customization) |
+| Windows Privacy & Tweaks | 44 | Functional | [View](#windows-privacy-tweaks) |
+| Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
 
-**Total unique manifests: 722**
+**Total unique manifests: 785**
 
 Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
 
@@ -132,6 +133,8 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [paseo](../bucket/paseo.json) | 0.13.2 | Voice-controlled development environment for local AI coding agents. | [Homepage](https://paseo.sh) |
 | [powershell-np](../bucket/powershell-np.json) | 7.6.9 | PowerShell Core, the cross-platform task automation and configuration management framework/tool. | [Homepage](https://github.com/PowerShell/PowerShell) |
 | [pyinstxtractor-ng](../bucket/pyinstxtractor-ng.json) | 2026.07.03 | pyinstxtractor-ng is a tool to extract the contents of a Pyinstaller generated executable file. | [Homepage](https://github.com/pyinstxtractor/pyinstxtractor-ng) |
+| [sordum-reg-converter](../bucket/sordum-reg-converter.json) | 1.2 | Reg Converter is a portable freeware utility to convert .reg data to .bat, .vbs, or .au3. (RegConverter可以将.reg文件转换为.bat，.vbs或.au3。这对于需要管理员权限才能合并到注册表中的文件或无人参与的自动化安装时特别有用。) | [Homepage](https://www.sordum.org/8478/reg-converter-v1-2/) |
+| [sordum-registry-key-jumper](../bucket/sordum-registry-key-jumper.json) | 1.3 | A tool that helps the user navigate to a user-defined registry key with minimal effort. | [Homepage](https://www.sordum.org/registry-key-jumper) |
 | [vovsoft-ai-automator](../bucket/vovsoft-ai-automator.json) | 1.5 | Portable edition of Vovsoft AI Automator. | [Homepage](https://vovsoft.com/software/ai-automator/) |
 | [vovsoft-ai-requester](../bucket/vovsoft-ai-requester.json) | 5.4 | Portable edition of Vovsoft AI Requester. | [Homepage](https://vovsoft.com/software/ai-requester/) |
 | [vovsoft-executable-bit-scanner](../bucket/vovsoft-executable-bit-scanner.json) | 1.0 | Portable edition of Vovsoft Executable Bit Scanner. | [Homepage](https://vovsoft.com/software/executable-bit-scanner/) |
@@ -194,6 +197,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [rpcs3](../bucket/rpcs3.json) | 0.0.43-20410 | Open-source PlayStation 3 emulator and debugger. | [Homepage](https://rpcs3.net/) |
 | [ruffle](../bucket/ruffle.json) | 0.7.1 | Flash Player emulator and SWF player written in Rust. | [Homepage](https://ruffle.rs/) |
 | [ruffle-nightly](../bucket/ruffle-nightly.json) | 2026-09-04 | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. | [Homepage](https://ruffle.rs/) |
+| [sordum-qemu-simple-boot](../bucket/sordum-qemu-simple-boot.json) | 1.3 | Sordum's Qemu Simple Boot. Quickly test images in Qemu. | [Homepage](https://www.sordum.org/7763/qemu-simple-boot-v1-3/) |
 
 ## File Management
 
@@ -237,6 +241,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [q-dir](../bucket/q-dir.json) | 12.82 | Quad-pane file manager for Windows. | [Homepage](https://www.softwareok.com/?Download=Q-Dir) |
 | [restart-explorer](../bucket/restart-explorer.json) | 1.7 | A small tool for restarting the Windows File Explorer. | [Homepage](https://www.sordum.org/restart-explorer) |
 | [sigma-file-manager](../bucket/sigma-file-manager.json) | 2.2.0 | A modern cross-platform file manager with a powerful interface. | [Homepage](https://github.com/aleksey-hoffman/sigma-file-manager) |
+| [sordum-streams-remover](../bucket/sordum-streams-remover.json) | 1.0 | Utility for removing Zone.Identifier alternate data streams from downloaded Windows files. | [Homepage](https://www.sordum.org/11263/streams-remover-v1-0/) |
 | [spacedrive](../bucket/spacedrive.json) | 2.0.0-alpha.2 | Open source cross-platform file explorer. | [Homepage](https://github.com/spacedriveapp/spacedrive) |
 | [thisismyfile](../bucket/thisismyfile.json) | 4.51 | Unlock or delete locked and protected files. | [Homepage](https://www.softwareok.com/?Download=ThisIsMyFile) |
 | [vcardix](../bucket/vcardix.json) | 26.11 | Contact manager and converter for vCard, CSV, and JSON files. | [Homepage](https://github.com/turkaysoft/vcardix) |
@@ -318,6 +323,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [openspeedy](../bucket/openspeedy.json) | 3.3.17 | A Windows utility that speeds up games and applications by modifying process timing. | [Homepage](https://github.com/game1024/OpenSpeedy) |
 | [savestate](../bucket/savestate.json) | 3.1 | Back up and restore video game saves, with Steam detection and emulator support. | [Homepage](https://github.com/Matteo842/SaveState) |
 | [solitaire-ok](../bucket/solitaire-ok.json) | 1.26 | Play Solitaire on Windows. | [Homepage](https://www.softwareok.com/?Download=SolitaireOK) |
+| [sordum-bpuzzle](../bucket/sordum-bpuzzle.json) | 1.2 | Portable sliding-tile puzzle game with multiple difficulty levels. | [Homepage](https://www.sordum.org/8058/bpuzzle-v1-2/) |
 | [tcno-acc-switcher](../bucket/tcno-acc-switcher.json) | 4.0.8 | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) |
 | [tonkatsu-box](../bucket/tonkatsu-box.json) | 0.45.0 | Personal collection manager for games, movies, TV shows, anime, visual novels, manga, books, music and podcasts. | [Homepage](https://github.com/hacan359/tonkatsu_box) |
 | [uesave](../bucket/uesave.json) | 0.7.1 | A library for reading and writing Unreal Engine save files | [Homepage](https://github.com/trumank/uesave-rs) |
@@ -390,6 +396,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [mechvibes-dx](../bucket/mechvibes-dx.json) | 0.8.4 | Low-latency mechanical keyboard and mouse sound simulator with customizable soundpacks. | [Homepage](https://github.com/hainguyents13/mechvibes-dx) |
 | [monkeysounds](../bucket/monkeysounds.json) | 1.0.0.0 | Portable Windows app that plays mechanical keyboard and mouse click sounds system-wide, with built-in and custom sound profiles. | [Homepage](https://github.com/NSTechBytes/MonkeySounds) |
 | [poltertype](../bucket/poltertype.json) | 0.38.2 | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. | [Homepage](https://github.com/Just-Code-NET/PolterType) |
+| [sordum-send-windows-key](../bucket/sordum-send-windows-key.json) | 1.1 | SendKeys methode allows you to send keystrokes just as if you had manually typed them on the keyboard . | [Homepage](https://www.sordum.org/12894/send-windows-key-v1-1/) |
 | [vovsoft-keyboard-lights](../bucket/vovsoft-keyboard-lights.json) | 5.4 | Portable edition of Vovsoft Keyboard Lights. | [Homepage](https://vovsoft.com/software/keyboard-lights/) |
 | [vovsoft-keyboard-soundboard](../bucket/vovsoft-keyboard-soundboard.json) | 2.1 | Portable edition of Vovsoft Keyboard Soundboard. | [Homepage](https://vovsoft.com/software/keyboard-soundboard/) |
 | [vovsoft-keystroke-visualizer](../bucket/vovsoft-keystroke-visualizer.json) | 3.4 | Portable edition of Vovsoft Keystroke Visualizer. | [Homepage](https://vovsoft.com/software/keystroke-visualizer/) |
@@ -464,6 +471,16 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [network-profile-name-changer](../bucket/network-profile-name-changer.json) | 1.4 | It is still possible to edit network profile names to make them more descriptive but the only effective way to Rename or remove the connections in Windows is by using the registry editor. | [Homepage](https://www.sordum.org/network-profile-name-changer) |
 | [npcap-np](../bucket/npcap-np.json) | 1.90 | A packet capture (and sending) library for Microsoft Windows. | [Homepage](https://npcap.com/) |
 | [opennetmeter](../bucket/opennetmeter.json) | 0.15.0 | A simple program to monitor your network/data usage. | [Homepage](https://github.com/Ashfaaq18/OpenNetMeter) |
+| [sordum-6to4-remover](../bucket/sordum-6to4-remover.json) | 1.2 | Utility for removing unwanted Microsoft 6to4 tunnel adapters from Windows. | [Homepage](https://www.sordum.org/6423/tunnel-adapter-microsoft-6to4-adapter-remover/) |
+| [sordum-bluelife-hosts-editor](../bucket/sordum-bluelife-hosts-editor.json) | 1.6 | A simple app that allows for easy changes to the hosts file. | [Homepage](https://www.sordum.org/bluelifehosts-editor) |
+| [sordum-copy-public-ip](../bucket/sordum-copy-public-ip.json) | 1.4 | Portable utility that displays the public IP address and copies it to the clipboard. | [Homepage](https://www.sordum.org/9201/) |
+| [sordum-dns-angel](../bucket/sordum-dns-angel.json) | 1.8 | Sordum's DNS Angel. Filter and block vast and uncensored content on the internet. | [Homepage](https://www.sordum.org/8127/dns-angel-v1-8/) |
+| [sordum-dns-jumper](../bucket/sordum-dns-jumper.json) | 2.3 | Quickly and easily change IPv4 and IPv6 DNS settings. | [Homepage](https://www.sordum.org/dns-jumper/) |
+| [sordum-dns-lock](../bucket/sordum-dns-lock.json) | 1.5 | Utility that protects configured IPv4 and IPv6 DNS addresses from being changed by other software. | [Homepage](https://www.sordum.org/9432/dns-lock-v1-5/) |
+| [sordum-net-disabler](../bucket/sordum-net-disabler.json) | 1.2 | Portable utility to disable and re-enable Internet connectivity using network adapter, DNS, proxy, or Windows Firewall methods. | [Homepage](https://www.sordum.org/9660/net-disabler-v1-2/) |
+| [sordum-network-profile-name-changer](../bucket/sordum-network-profile-name-changer.json) | 1.4 | It is still possible to edit network profile names to make them more descriptive but the only effective way to Rename or remove the connections in Windows is by using the registry editor. | [Homepage](https://www.sordum.org/network-profile-name-changer) |
+| [sordum-router-default-passwords](../bucket/sordum-router-default-passwords.json) | 1.1 | Find the IP address, default Username, and default Password of your router. | [Homepage](https://www.sordum.org/10411/router-default-password-v1-1/) |
+| [sordum-wifi-filter-tool](../bucket/sordum-wifi-filter-tool.json) | 1.2 | Wi-Fi Filter Tool is a lightweight application that allows you to hide unknown wireless networks (SSID) from the list of available networks. | [Homepage](https://www.sordum.org/16523/wi-fi-filter-tool-v1-2/) |
 | [traceroute-ok](../bucket/traceroute-ok.json) | 3.55 | Trace network routes to hosts. | [Homepage](https://www.softwareok.com/?Download=TraceRouteOK) |
 | [ubiquiti-wifiman-desktop](../bucket/ubiquiti-wifiman-desktop.json) | 1.2.8 | Desktop application for discovering UniFi devices, Wi-Fi scanning, speed testing, and Teleport VPN | [Homepage](https://ui.com/download/app/wifiman-desktop) |
 | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | 1.2.8 | Desktop application for discovering UniFi devices, Wi-Fi scanning, speed testing, and Teleport VPN | [Homepage](https://ui.com/download/app/wifiman-desktop) |
@@ -531,6 +548,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [npackd](../bucket/npackd.json) | 1.27.1 | Windows package manager for finding, installing, updating, and uninstalling software. | [Homepage](https://www.npackd.org) |
 | [rscoop](../bucket/rscoop.json) | 1.11.0 | A graphical user interface for Scoop package manager | [Homepage](https://github.com/AmarBego/Rscoop) |
 | [soft-organizer](../bucket/soft-organizer.json) | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
+| [sordum-store-apps-tool](../bucket/sordum-store-apps-tool.json) | 1.1 | The Microsoft Store app comes built into Windows and allows you to download and install dozens of apps and games. | [Homepage](https://www.sordum.org/store-apps-tool) |
 | [store-apps-tool](../bucket/store-apps-tool.json) | 1.1 | The Microsoft Store app comes built into Windows and allows you to download and install dozens of apps and games. | [Homepage](https://www.sordum.org/store-apps-tool) |
 | [unigetui-portable](../bucket/unigetui-portable.json) | 2026.3.2 | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. | [Homepage](https://devolutions.net/unigetui/) |
 | [unigetuiglobal](../bucket/unigetuiglobal.json) | 2026.3.2 | UniGetUI package-manager GUI configured to keep settings and application data in the user's LocalAppData profile, outside the Scoop installation directory. | [Homepage](https://devolutions.net/unigetui/) |
@@ -627,6 +645,19 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [permissionscope](../bucket/permissionscope.json) | 1.0.1 | Windows utility for inspecting and explaining file and folder permissions. | [Homepage](https://github.com/MukaSanches/PermissionScope) |
 | [sandboxie-plus](../bucket/sandboxie-plus.json) | 1.18.8 | Sandboxie Plus sandboxing software for Windows. | [Homepage](https://github.com/sandboxie-plus/Sandboxie) |
 | [smarttextcrypter](../bucket/smarttextcrypter.json) | 1.04 | Encrypt and decrypt text. | [Homepage](https://www.softwareok.com/?Download=SmartTextCrypter) |
+| [sordum-askadmin](../bucket/sordum-askadmin.json) | 2.1 | Block access to chosen applications, files, and folder contents. | [Homepage](https://www.sordum.org/7941/askadmin-v2-1/) |
+| [sordum-bluelife-keyfreeze](../bucket/sordum-bluelife-keyfreeze.json) | 1.4 | A free Windows application that blocks your keyboard and mouse without “locking” the screen. | [Homepage](https://www.sordum.org/7921/bluelife-keyfreeze-v1-4-block-keyboard-and-mouse/) |
+| [sordum-defender-exclusion-tool](../bucket/sordum-defender-exclusion-tool.json) | 1.4 | Sordum's Defender Exclusion Tool. Add/Remove exclusions to Windows Defender. | [Homepage](https://www.sordum.org/10636/defender-exclusion-tool-v1-4/) |
+| [sordum-firewall-app-blocker](../bucket/sordum-firewall-app-blocker.json) | 1.9 | Use Windows Firewall to block or unblock certain applications. | [Homepage](https://www.sordum.org/firewall-app-blocker) |
+| [sordum-ntfs-drive-protection](../bucket/sordum-ntfs-drive-protection.json) | 1.5 | Protect your removable drives, preventing malware from creating its needed autorun.inf file. | [Homepage](https://www.sordum.org/8117/ntfs-drive-protection-v1-5/) |
+| [sordum-password-generator](../bucket/sordum-password-generator.json) | 2020.10.23 | Portable random password generator. The upstream page does not publish a semantic version; this manifest uses its published release date. | [Homepage](https://www.sordum.org/10946/sordum-random-password-generator/) |
+| [sordum-powerrun](../bucket/sordum-powerrun.json) | 1.9 | PowerRun (Run with highest privileges) 可以使用TrustedInstaller/System的权限来启动一些程序 | [Homepage](https://www.sordum.org/9416/powerrun-v1-9-run-with-highest-privileges/) |
+| [sordum-ratool](../bucket/sordum-ratool.json) | 1.4 | Removable Access Tool (a.k.a. Ratool) is a freeware application which aids in the control of external storage devices such as USB flash drives. | [Homepage](https://www.sordum.org/8104/ratool-v1-4-removable-access-tool/) |
+| [sordum-runastool](../bucket/sordum-runastool.json) | 1.7 | A simple app that allows users to run a specific program with administrator privileges without the need to enter the administrator password. | [Homepage](https://www.sordum.org/runastool) |
+| [sordum-simple-run-blocker](../bucket/sordum-simple-run-blocker.json) | 1.5 | Portable utility for blocking selected Windows applications, with a whitelist mode. | [Homepage](https://www.sordum.org/8486/simple-run-blocker-v1-5/) |
+| [sordum-skip-uac-prompt](../bucket/sordum-skip-uac-prompt.json) | 1.4 | This utility also allows you to enable or disable UAC for the apps of your choosing without entirely deactivating UAC systemwide. | [Homepage](https://www.sordum.org/16219/skip-uac-prompt-v1-4/) |
+| [sordum-url-disabler](../bucket/sordum-url-disabler.json) | 1.4 | Portable utility for blocking URLs in supported browsers, including Chrome, Firefox, Edge, Brave, and Yandex. | [Homepage](https://www.sordum.org/13075/url-disabler-v1-4/) |
+| [sordum-webcam-on-off](../bucket/sordum-webcam-on-off.json) | 1.4 | A simple app that allows you to turn your webcam on or off. | [Homepage](https://www.sordum.org/webcam-on-off) |
 | [veracrypt](../bucket/veracrypt.json) | 1.26.30 | Open-source disk encryption software for creating and mounting encrypted volumes. | [Homepage](https://veracrypt.io/) |
 | [vimera](../bucket/vimera.json) | 26.11 | File and text hash analysis and verification tool for Windows. | [Homepage](https://github.com/turkaysoft/vimera) |
 | [virustotal-context-menu](../bucket/virustotal-context-menu.json) | 2.0.0 | Portable Windows context-menu utility for scanning files with VirusTotal | [Homepage](https://github.com/Genbox/VirusTotalContextMenu) |
@@ -657,6 +688,9 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [openclosedriveeject](../bucket/openclosedriveeject.json) | 3.55 | Safely eject drives and open or close optical drives. | [Homepage](https://www.softwareok.com/?Download=OpenCloseDriveEject) |
 | [openzfs-np](../bucket/openzfs-np.json) | 2.4.1rc17b | The open source port of OpenZFS on Windows | [Homepage](https://github.com/openzfsonwindows/openzfs) |
 | [simple-vhd-manager](../bucket/simple-vhd-manager.json) | 1.5 | This software is designed to simplify operations such as creating VHD and VHDX files, adding them to boot menu and Automatically mounting at system startup. Partial ISO support is also available. | [Homepage](https://www.sordum.org/simple-vhd-manager) |
+| [sordum-drive-letter-changer](../bucket/sordum-drive-letter-changer.json) | 1.4 | A simple app that allows you to change the letter of your hard drives. | [Homepage](https://www.sordum.org/drive-letter-changer) |
+| [sordum-show-disk-partition-style](../bucket/sordum-show-disk-partition-style.json) | 1.1 | A simple app for showing disk partion style. | [Homepage](https://www.sordum.org/show-disk-partition-style) |
+| [sordum-simple-vhd-manager](../bucket/sordum-simple-vhd-manager.json) | 1.5 | This software is designed to simplify operations such as creating VHD and VHDX files, adding them to boot menu and Automatically mounting at system startup. Partial ISO support is also available. | [Homepage](https://www.sordum.org/simple-vhd-manager) |
 | [vovsoft-disk-benchmark](../bucket/vovsoft-disk-benchmark.json) | 2.0 | Portable edition of Vovsoft Disk Benchmark. | [Homepage](https://vovsoft.com/software/disk-benchmark/) |
 | [vovsoft-disk-monitor-gadget](../bucket/vovsoft-disk-monitor-gadget.json) | 2.1 | Portable edition of Vovsoft Disk Monitor Gadget. | [Homepage](https://vovsoft.com/software/disk-monitor-gadget/) |
 | [vovsoft-prevent-disk-sleep](../bucket/vovsoft-prevent-disk-sleep.json) | 5.3 | Portable edition of Vovsoft Prevent Disk Sleep. | [Homepage](https://vovsoft.com/software/prevent-disk-sleep/) |
@@ -671,6 +705,8 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [freefilesync](../bucket/freefilesync.json) | 14.13. | Folder comparison and synchronization software for backups and file synchronization. | [Homepage](https://freefilesync.org/) |
 | [mitec-windows-registry-recovery](../bucket/mitec-windows-registry-recovery.json) | 3.1.3 | Reads offline Windows Registry hives and extracts configuration information; also provides live Registry backup. | [Homepage](https://www.mitec.cz/wp/mwrr/) |
 | [onedrive-np](../bucket/onedrive-np.json) | 26.183.0920.0005 | Microsoft OneDrive. Save your photos and files to OneDrive and access them from any device, anywhere. | [Homepage](https://oneclient.sfx.ms) |
+| [sordum-backup-start-menu-layout](../bucket/sordum-backup-start-menu-layout.json) | 1.6 | A simple app that allows users to backup and restore their StartMenu layout. | [Homepage](https://www.sordum.org/backup-start-menu-layout) |
+| [sordum-simple-firefox-backup](../bucket/sordum-simple-firefox-backup.json) | 1.2 | Simple Firefox Backup is a lightweight application that helps users create backup copies of their Mozilla Firefox data. | [Homepage](https://www.sordum.org/12298/simple-firefox-backup-v1-2/) |
 | [stimesync](../bucket/stimesync.json) | 1.0.1 | Simple SNTP atomic clock time sync GUI app for Windows. | [Homepage](https://github.com/setsumi/stimesync) |
 | [syncthing](../bucket/syncthing.json) | 2.1.7 | Open Source Continuous File Synchronization. | [Homepage](https://syncthing.net/) |
 
@@ -715,6 +751,12 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [quick-memory-test-ok](../bucket/quick-memory-test-ok.json) | 5.55 | Test memory for errors. | [Homepage](https://www.softwareok.com/?Download=QuickMemoryTestOK) |
 | [ramagic](../bucket/ramagic.json) | 1.33 | Clear outdated working sets and standby cache to free RAM. | [Homepage](https://www.softwareok.com/?Download=RAMagic) |
 | [rigsight](../bucket/rigsight.json) | 0.36.0 | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. | [Homepage](https://github.com/b0llu/Rigsight) |
+| [sordum-bluetooth-version-finder](../bucket/sordum-bluetooth-version-finder.json) | 1.7 | Free software that shows the Bluetooth version in Windows 11 and 10. | [Homepage](https://www.sordum.org/10772/bluetooth-version-finder-v1-7/) |
+| [sordum-find-prime-numbers](../bucket/sordum-find-prime-numbers.json) | 1.1 | Portable benchmark that tests CPU performance by searching for prime numbers across a selected range. | [Homepage](https://www.sordum.org/9207/find-prime-numbers-v1-1/) |
+| [sordum-monitor-off](../bucket/sordum-monitor-off.json) | 1.1 | MonitorOff (Screen Turns Off) | [Homepage](https://www.sordum.org/10104/sordum-monitor-off-v1-1/) |
+| [sordum-reduce-memory](../bucket/sordum-reduce-memory.json) | 1.7 | A small tool for freeing up RAM memory. | [Homepage](https://www.sordum.org/reduce-memory/) |
+| [sordum-switch-power-scheme](../bucket/sordum-switch-power-scheme.json) | 1.3 | Portable utility for switching, importing, exporting, and managing Windows power plans. | [Homepage](https://www.sordum.org/12818/switch-power-scheme-v1-3/) |
+| [sordum-update-time](../bucket/sordum-update-time.json) | 1.4 | Portable utility for synchronizing and correcting the Windows system date and time. | [Homepage](https://www.sordum.org/9203/update-time-v1-4/) |
 | [stress-mypc](../bucket/stress-mypc.json) | 5.88 | Stress-test PC components. | [Homepage](https://www.softwareok.com/?Download=StressMyPC) |
 | [stressthegpu](../bucket/stressthegpu.json) | 1.44 | Portable GPU stress tester and benchmark. | [Homepage](https://www.softwareok.com/?Download=StressTheGPU) |
 | [sysmanager](../bucket/sysmanager.json) | 1.131.3 | Modern Windows system monitoring and management toolkit. | [Homepage](https://github.com/laurentiu021/SystemManager) |
@@ -836,6 +878,19 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [rebuild-shell-icon-cache](../bucket/rebuild-shell-icon-cache.json) | 1.3 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |
 | [shuffle-paper](../bucket/shuffle-paper.json) | 0.4.0 | Privacy-friendly wallpaper shuffle and rotation utility for Windows | [Homepage](https://github.com/jcsm/ShufflePaper) |
+| [sordum-classic-shut-down](../bucket/sordum-classic-shut-down.json) | 1.2 | Portable utility that restores a convenient interface for the classic Windows shutdown options. | [Homepage](https://www.sordum.org/9205/classic-shut-down-v1-2/) |
+| [sordum-desktop-ini-editor](../bucket/sordum-desktop-ini-editor.json) | 1.2 | A simple app that allows users to edit the desktop.ini file in thier folders. | [Homepage](https://www.sordum.org/desktop-ini-editor) |
+| [sordum-easy-context-menu](../bucket/sordum-easy-context-menu.json) | 1.6 | A simple app for editing the context menu. | [Homepage](https://www.sordum.org/easy-context-menu) |
+| [sordum-folder-painter](../bucket/sordum-folder-painter.json) | 1.3 | Allows you to change the icon color of a chosen folder to any color you like | [Homepage](https://www.sordum.org/folder-painter) |
+| [sordum-mouse-settings-changer](../bucket/sordum-mouse-settings-changer.json) | 1.2 | Command-line utility for changing Windows mouse settings from a script without opening Mouse Properties. | [Homepage](https://www.sordum.org/13237/mouse-settings-changer-v1-2/) |
+| [sordum-no-mouse-wheel-zoom](../bucket/sordum-no-mouse-wheel-zoom.json) | 1.1 | Background tray utility that prevents unwanted Ctrl+mouse-wheel zooming in Windows applications. | [Homepage](https://www.sordum.org/12939/no-mouse-wheel-zoom-v1-1/) |
+| [sordum-rebuild-shell-icon-cache](../bucket/sordum-rebuild-shell-icon-cache.json) | 1.3 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
+| [sordum-reicon](../bucket/sordum-reicon.json) | 2.3 | A simple app that allows users to backup and restore their Desktop Icon layout. | [Homepage](https://www.sordum.org/reicon) |
+| [sordum-restart-explorer](../bucket/sordum-restart-explorer.json) | 1.7 | A small tool for restarting the Windows File Explorer. | [Homepage](https://www.sordum.org/restart-explorer) |
+| [sordum-sendto-menu-editor](../bucket/sordum-sendto-menu-editor.json) | 1.3 | A simple app that helps users manage the shortcuts present in the Windows “Send To” Menu. | [Homepage](https://www.sordum.org/sendto-menu-editor) |
+| [sordum-show-desktop-icons](../bucket/sordum-show-desktop-icons.json) | 1.2 | Portable utility for showing or hiding common Windows desktop icons. | [Homepage](https://www.sordum.org/9341/show-desktop-icons-v1-2/) |
+| [sordum-win11-classic-context-menu](../bucket/sordum-win11-classic-context-menu.json) | 1.2 | An application that allows Windows 11 users to revert back to the classic Windows 10 context menu. | [Homepage](https://www.sordum.org/windows-11-classic-context-menu) |
+| [sordum-window-topmost-control](../bucket/sordum-window-topmost-control.json) | 1.3 | Portable utility for keeping selected windows always on top. | [Homepage](https://www.sordum.org/9182/window-topmost-control-v1-3/) |
 | [spotlight-dimmer](../bucket/spotlight-dimmer.json) | 0.9.1 | Windows utility that dims inactive displays or regions to spotlight the active window. | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) |
 | [spotlight-downloader](../bucket/spotlight-downloader.json) | 2.0.1 | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. | [Homepage](https://github.com/ORelio/Spotlight-Downloader) |
 | [spotlightsaver](../bucket/spotlightsaver.json) | 7.0.0 | Saves Windows 10/11 Spotlight wallpapers to a local folder. | [Homepage](https://github.com/depthbomb/SpotlightSaver) |
@@ -895,6 +950,12 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [reg-organizer-portable](../bucket/reg-organizer-portable.json) | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
 | [regalyzer](../bucket/regalyzer.json) | 2.0.2.24 | Registry editor with background search, regular-expression search, bookmarks, and hive snapshots. | [Homepage](https://www.safer-networking.org/products/regalyzer/) |
 | [registry-finder](../bucket/registry-finder.json) | 2.63.0.0 | Registry Finder is an improved replacement for the built-in Windows registry editor | [Homepage](https://registry-finder.com/) |
+| [sordum-easy-service-optimizer](../bucket/sordum-easy-service-optimizer.json) | 1.2 | A portable freeware to optimize services for almost all Windows versions (except for Win 98 and before). | [Homepage](https://www.sordum.org/easy-service-optimizer) |
+| [sordum-edge-blocker](../bucket/sordum-edge-blocker.json) | 2.1 | block edge | [Homepage](https://www.sordum.org/9312/edge-blocker-v2-1/) |
+| [sordum-hibernate-enable-or-disable](../bucket/sordum-hibernate-enable-or-disable.json) | 1.5 | A very simple portable Utility to Disable or Enable Hibernation. | [Homepage](https://www.sordum.org/9502/hibernate-enable-or-disable-v1-5/) |
+| [sordum-hide-from-uninstall-list](../bucket/sordum-hide-from-uninstall-list.json) | 1.1 | A tiny utility designed to help you mask applications in the Add/Remove Programs of Windows. | [Homepage](https://www.sordum.org/hide-from-uninstall-list) |
+| [sordum-temp-cleaner](../bucket/sordum-temp-cleaner.json) | 1.3 | Sordum's Temp Cleaner | [Homepage](https://www.sordum.org/9190/temp-cleaner-v1-3/) |
+| [sordum-windows-settings-blocker](../bucket/sordum-windows-settings-blocker.json) | 1.2 | To stop users from changing settings in Windows 11 and 10 you can try our portable freeware Windows Settings Blocker Application. | [Homepage](https://www.sordum.org/11128/windows-settings-blocker-v1-2/) |
 | [sparkle](../bucket/sparkle.json) | 2.25.0 | Windows debloat and optimization tool. | [Homepage](https://getsparkle.net) |
 | [ultimate-settings-panel](../bucket/ultimate-settings-panel.json) | 8.0.4 | 250+ Windows settings, tools, diagnostics and commands in one searchable panel. | [Homepage](https://github.com/techygeekshome/Ultimate-Settings-Panel) |
 | [winhance](../bucket/winhance.json) | 26.06.12 | Windows enhancement, debloating, optimization and customization utility | [Homepage](https://github.com/memstechtips/Winhance) |
@@ -907,10 +968,139 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | --- | --- | --- | --- |
 | [dism-tools](../bucket/dism-tools.json) | v0.8.1_upd1 | DISMTools is a front-end for DISM that lets you manage your Windows Imaging (WIM) files and a whole lot more. | [Homepage](https://github.com/CodingWonders/DISMTools) |
 | [patchlight](../bucket/patchlight.json) | 0.5.2 | Windows 11 update monitor that checks pending updates against Microsoft's known issues and pauses affected updates. | [Homepage](https://github.com/G4SBO/PatchLight) |
+| [sordum-fix-print-spooler](../bucket/sordum-fix-print-spooler.json) | 1.3 | A small tool for fixing or disabling the Print Spooler service in Windows. | [Homepage](https://www.sordum.org/fix-print-spooler) |
+| [sordum-safe-mode-launcher](../bucket/sordum-safe-mode-launcher.json) | 1.1 | Safe Mode Launcher is a freeware GUI app to restart your computer in Safe Mode. | [Homepage](https://www.sordum.org/12964/safe-mode-launcher-v1-1/) |
+| [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1.8 | Sordum's Windows Update Blocker. A freeware that helps you to completely disable or enable Automatic Updates on your Windows system | [Homepage](https://www.sordum.org/9470/windows-update-blocker-v1-8/) |
+
+## Auslogics Suite
+
+Publisher cross-list of 15 manifests associated with Auslogics. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | 1.23.0.4 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
+| [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
+| [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | 14.2.0.6 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
+| [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
+| [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
+| [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
+| [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
+| [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
+| [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
+| [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | 11.2.0.6 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
+| [Auslogics-registry-defrag](../bucket/Auslogics-registry-defrag.json) | 15.2.0.6 | Windows registry defragmentation utility | [Homepage](https://www.auslogics.com/en/software/registry-defrag/) |
+| [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
+| [Auslogics-system-information](../bucket/Auslogics-system-information.json) | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
+| [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
+| [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | 5.2.0.6 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
+
+## ChemTable Suite
+
+Publisher cross-list of 5 manifests associated with ChemTable. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [autorun-organizer](../bucket/autorun-organizer.json) | 7.02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
+| [files-inspector](../bucket/files-inspector.json) | 4.55 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
+| [reg-organizer](../bucket/reg-organizer.json) | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [reg-organizer-portable](../bucket/reg-organizer-portable.json) | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [soft-organizer](../bucket/soft-organizer.json) | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
+
+## Eric Zimmerman Suite
+
+Publisher cross-list of 31 manifests associated with Eric Zimmerman. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [eric-amcacheparser](../bucket/eric-amcacheparser.json) | 2026.10.1 | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-appcompatcacheparser](../bucket/eric-appcompatcacheparser.json) | 2026.10.1 | Eric Zimmerman's AppCompatCacheParser: Parser for Windows AppCompatCache (ShimCache) artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-bstrings](../bucket/eric-bstrings.json) | 2026.10.1 | Eric Zimmerman's bstrings: Search files for strings using built-in regular-expression patterns. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-evtxecmd](../bucket/eric-evtxecmd.json) | 2026.10.2 | Eric Zimmerman's EvtxECmd: Parse Windows EVTX event logs into standardized CSV, JSON, or XML output. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-ezviewer](../bucket/eric-ezviewer.json) | 2026.10.0 | Eric Zimmerman's EZViewer: View common document, text, spreadsheet, HTML, and PDF formats; other files can be examined in a hex editor. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-get-tools](../bucket/eric-get-tools.json) | 2026.10.23 | Eric Zimmerman's Get-ZimmermanTools: PowerShell downloader and updater for his forensic tools. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-hasher](../bucket/eric-hasher.json) | 2026.10.0 | Eric Zimmerman's Hasher: GUI utility for calculating file hashes. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-iis-geolocate](../bucket/eric-iis-geolocate.json) | 2026.10.1 | Eric Zimmerman's iisGeoLocate: Geolocate IP addresses found in IIS logs and identify unique or invalid entries. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-jlecmd](../bucket/eric-jlecmd.json) | 2026.10.5 | Eric Zimmerman's JLECmd: Command-line parser for Windows Jump List artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-jumplist-explorer](../bucket/eric-jumplist-explorer.json) | 2026.10.1 | Eric Zimmerman's JumpList Explorer: GUI for viewing Windows Jump Lists. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-kape](../bucket/eric-kape.json) | 2023.11.13.1945 | Eric Zimmerman's KAPE: Kroll Artifact Parser and Extractor for targeted forensic collection and processing. | [Homepage](https://ericzimmerman.github.io/KapeDocs/) |
+| [eric-lecmd](../bucket/eric-lecmd.json) | 2026.10.3 | Eric Zimmerman's LECmd: Command-line parser for Windows LNK shortcut files. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-mftecmd](../bucket/eric-mftecmd.json) | 2026.10.6 | Eric Zimmerman's MFTECmd: Parser for NTFS $MFT, $Boot, $J, $SDS, $I30, and $LogFile artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-mftexplorer](../bucket/eric-mftexplorer.json) | 2026.10.0 | Eric Zimmerman's MFTExplorer: Graphical viewer for NTFS $MFT data. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-pecmd](../bucket/eric-pecmd.json) | 2026.10.3 | Eric Zimmerman's PECmd: Parser for Windows Prefetch files. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-rbcmd](../bucket/eric-rbcmd.json) | 2026.10.1 | Eric Zimmerman's RBCmd: Parser for Windows Recycle Bin INFO2 and $I artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-recentfilecacheparser](../bucket/eric-recentfilecacheparser.json) | 2026.10.2 | Eric Zimmerman's RecentFileCacheParser: Parser for RecentFileCache forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-recmd](../bucket/eric-recmd.json) | 2026.10.2 | Eric Zimmerman's RECmd: Command-line Windows Registry searching and examination tool. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-registry-explorer](../bucket/eric-registry-explorer.json) | 2026.10.1 | Eric Zimmerman's Registry Explorer: GUI for examining Windows Registry hives, including multi-hive searches and locked hive files. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-rla](../bucket/eric-rla.json) | 2026.10.1 | Eric Zimmerman's RLA: Replay Registry transaction logs and update hives to a clean state. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sbecmd](../bucket/eric-sbecmd.json) | 2026.10.2 | Eric Zimmerman's SBECmd: Command-line exporter for Windows ShellBags artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sdb-explorer](../bucket/eric-sdb-explorer.json) | 2026.10.0 | Eric Zimmerman's SDB Explorer: GUI for exploring Windows Shim databases. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-shellbags-explorer](../bucket/eric-shellbags-explorer.json) | 2026.10.1 | Eric Zimmerman's ShellBags Explorer: GUI for browsing Windows ShellBags artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sqlecmd](../bucket/eric-sqlecmd.json) | 2026.10.3 | Eric Zimmerman's SQLECmd: Find and process SQLite databases using artifact maps. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-srumecmd](../bucket/eric-srumecmd.json) | 2026.10.1 | Eric Zimmerman's SrumECmd: Parse SRUDB.dat and optional SOFTWARE-hive data. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-sumecmd](../bucket/eric-sumecmd.json) | 2026.10.1 | Eric Zimmerman's SumECmd: Parse Microsoft Windows User Access Log artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-timeapp](../bucket/eric-timeapp.json) | 2026.10.0 | Eric Zimmerman's TimeApp: GUI for local and UTC time, stopwatch, countdowns, and timestamp conversion. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-timeline-explorer](../bucket/eric-timeline-explorer.json) | 2026.10.0 | Eric Zimmerman's Timeline Explorer: GUI for filtering, grouping, sorting, and reviewing CSV and Excel data. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-vscmount](../bucket/eric-vscmount.json) | 2026.10.0 | Eric Zimmerman's VSCMount: Mount Windows Volume Shadow Copies to a drive letter. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-wxtcmd](../bucket/eric-wxtcmd.json) | 2026.10.1 | Eric Zimmerman's WxTCmd: Parser for Windows 10/11 Timeline database artifacts. | [Homepage](https://ericzimmerman.github.io/) |
+| [eric-xwfim](../bucket/eric-xwfim.json) | 2026.10.1 | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. | [Homepage](https://ericzimmerman.github.io/) |
+
+## GRC Suite
+
+Publisher cross-list of 18 manifests associated with GRC. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [grc-bootable](../bucket/grc-bootable.json) | 2024.04.21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
+| [grc-clickey](../bucket/grc-clickey.json) | 2005.10.29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
+| [grc-dcombobulator](../bucket/grc-dcombobulator.json) | 2004.05.24 | GRC DCOMbobulator: Legacy utility for checking and enabling/disabling the historical Windows DCOM vulnerability mitigation. | [Homepage](https://www.grc.com/freeware/dcom.htm) |
+| [grc-id-serve](../bucket/grc-id-serve.json) | 2003.08.26 | GRC ID Serve: Identifies web-server software and version information exposed by an Internet server. | [Homepage](https://www.grc.com/id/idserve.htm) |
+| [grc-incontrol](../bucket/grc-incontrol.json) | 2022.02.13 | GRC InControl: Controls Windows 10/11 feature updates while allowing monthly security updates. | [Homepage](https://www.grc.com/incontrol.htm) |
+| [grc-initdisk](../bucket/grc-initdisk.json) | 2020.12.19 | GRC InitDisk: Command-line USB formatter that can create a FAT-formatted and optionally FreeDOS-bootable drive. | [Homepage](https://www.grc.com/initdisk.htm) |
+| [grc-inspectre](../bucket/grc-inspectre.json) | 2018.01.15 | GRC InSpectre: Legacy Meltdown/Spectre mitigation and performance diagnostic for older Windows systems. | [Homepage](https://www.grc.com/inspectre.htm) |
+| [grc-isbootsecure](../bucket/grc-isbootsecure.json) | 2026.10.01 | GRC IsBootSecure: Checks whether Windows booted in UEFI mode, whether Secure Boot is enabled, and whether the firmware Platform Key is known to be unsafe. | [Homepage](https://www.grc.com/isbootsecure.htm) |
+| [grc-leaktest](../bucket/grc-leaktest.json) | 2008.03.13 | GRC LeakTest: Legacy outbound-firewall leakage test utility. | [Homepage](https://www.grc.com/lt/leaktest.htm) |
+| [grc-mousetrap](../bucket/grc-mousetrap.json) | 2006.01.19 | GRC MouseTrap: Reports whether a Windows system or Wine environment is vulnerable to the historical WMF/MICE metafile execution issue. | [Homepage](https://www.grc.com/wmf/wmf.htm) |
+| [grc-mousetrapcmd](../bucket/grc-mousetrapcmd.json) | 2006.01.19 | GRC MouseTrapCmd: Command-line variant of GRC MouseTrap for checking the historical WMF/MICE metafile execution issue. | [Homepage](https://www.grc.com/wmf/wmf.htm) |
+| [grc-never10](../bucket/grc-never10.json) | 2019.04.21 | GRC Never10: Legacy utility for controlling the Windows 7/8.1 upgrade offer to Windows 10. | [Homepage](https://www.grc.com/never10.htm) |
+| [grc-readspeed](../bucket/grc-readspeed.json) | 2020.12.24 | GRC ReadSpeed: Creates a bootable DOS USB device to run GRC's precise mass-storage read-performance benchmark. | [Homepage](https://www.grc.com/readspeed.htm) |
+| [grc-securable](../bucket/grc-securable.json) | 2013.02.22 | GRC SecurAble: Reports processor support for 64-bit instructions, hardware DEP/NX, and virtualization. | [Homepage](https://www.grc.com/securable.htm) |
+| [grc-shoot-the-messenger](../bucket/grc-shoot-the-messenger.json) | 2003.04.26 | GRC Shoot The Messenger: Legacy utility for managing the Windows Messenger Service on older Windows releases. | [Homepage](https://www.grc.com/stm/shootthemessenger.htm) |
+| [grc-unplug-n-pray](../bucket/grc-unplug-n-pray.json) | 2001.12.28 | GRC UnPlug n' Pray: Legacy utility for checking and enabling/disabling the historical Windows UPnP service. | [Homepage](https://www.grc.com/unpnp/unpnp.htm) |
+| [grc-validrive](../bucket/grc-validrive.json) | 2023.10.06 | GRC ValiDrive: Spot-checks USB mass-storage drives to detect fraudulent capacity and failed read/write storage. | [Homepage](https://www.grc.com/validrive.htm) |
+| [grc-wizmo](../bucket/grc-wizmo.json) | 2008.06.25 | GRC Wizmo: Command-line Windows utility for display power, screen savers, audio control, shutdown, and other desktop commands. | [Homepage](https://www.grc.com/wizmo/wizmo.htm) |
+
+## MiTeC Suite
+
+Publisher cross-list of 22 manifests associated with MiTeC. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [mitec-certificate-generator](../bucket/mitec-certificate-generator.json) | 1.0.0 | Creates self-signed X.509 certificates in PEM/CER and PKCS#12 PFX formats. | [Homepage](https://www.mitec.cz/wp/cg/) |
+| [mitec-certificate-information](../bucket/mitec-certificate-information.json) | 1.5.0 | Viewer for certificates and digitally signed files, including executable, MSI, XML and PDF files. | [Homepage](https://www.mitec.cz/wp/mci/) |
+| [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | 8.4.0 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
+| [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
+| [mitec-hexedit](../bucket/mitec-hexedit.json) | 7.1.0 | Hexadecimal editor with data inspector, calculator, file compare, memory dump and disk dump tools. | [Homepage](https://www.mitec.cz/wp/mhex/) |
+| [mitec-infobar](../bucket/mitec-infobar.json) | 4.6.2 | Taskbar-style information bar with system monitoring, calendar, weather and developer tools. | [Homepage](https://www.mitec.cz/wp/mib/) |
+| [mitec-interbase-query](../bucket/mitec-interbase-query.json) | 9.5.0 | Database management tool for InterBase 6+ and Firebird 1.5+. | [Homepage](https://www.mitec.cz/wp/mibq/) |
+| [mitec-json-viewer](../bucket/mitec-json-viewer.json) | 3.2.2 | JSON and BSON viewer and editor. | [Homepage](https://www.mitec.cz/wp/mjsonv/) |
+| [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
+| [mitec-network-scanner](../bucket/mitec-network-scanner.json) | 6.1.0 | Network discovery and scanning utility for hosts, ports, shares, services, SNMP and Active Directory. | [Homepage](https://www.mitec.cz/wp/mns/) |
+| [mitec-ole-com-explorer](../bucket/mitec-ole-com-explorer.json) | 1.4.0 | OLE/COM object explorer and Type Library viewer. | [Homepage](https://www.mitec.cz/wp/molexp/) |
+| [mitec-paradox-data-editor](../bucket/mitec-paradox-data-editor.json) | 3.7.0 | Viewer and editor for Paradox tables, with repair and maintenance features. | [Homepage](https://www.mitec.cz/wp/mpde/) |
+| [mitec-project-maker](../bucket/mitec-project-maker.json) | 1.9.0 | Automates batch Delphi project builds, code signing and executable version information patching. | [Homepage](https://www.mitec.cz/wp/pm/) |
+| [mitec-smbios-explorer](../bucket/mitec-smbios-explorer.json) | 1.8.0 | SMBIOS explorer and analyzer for firmware and hardware inventory. | [Homepage](https://www.mitec.cz/wp/smbe/) |
+| [mitec-sqlite-query](../bucket/mitec-sqlite-query.json) | 3.2.0 | SQLite 3 database management and query tool. | [Homepage](https://www.mitec.cz/wp/msqliteq/) |
+| [mitec-structured-storage-viewer](../bucket/mitec-structured-storage-viewer.json) | 4.1.2 | Viewer and manager for Microsoft OLE structured-storage files. | [Homepage](https://www.mitec.cz/wp/mssv/) |
+| [mitec-system-information-extra](../bucket/mitec-system-information-extra.json) | 16.0.0 | System information utility for inspecting computer hardware and software, with report export. | [Homepage](https://www.mitec.cz/wp/msix/) |
+| [mitec-tapi-monitor](../bucket/mitec-tapi-monitor.json) | 1.2.0 | Monitors TAPI lines, telephones, service providers and call events. | [Homepage](https://www.mitec.cz/wp/mtapimon/) |
+| [mitec-task-manager-deluxe](../bucket/mitec-task-manager-deluxe.json) | 5.1.1 | Portable advanced replacement for Windows Task Manager, with process, service, network, disk, GPU and system monitoring. | [Homepage](https://www.mitec.cz/wp/tmx/) |
+| [mitec-uuid-generator](../bucket/mitec-uuid-generator.json) | 1.0.0 | Generates and decodes UUID values. | [Homepage](https://www.mitec.cz/wp/uuid/) |
+| [mitec-windows-registry-recovery](../bucket/mitec-windows-registry-recovery.json) | 3.1.3 | Reads offline Windows Registry hives and extracts configuration information; also provides live Registry backup. | [Homepage](https://www.mitec.cz/wp/mwrr/) |
+| [mitec-xml-viewer](../bucket/mitec-xml-viewer.json) | 6.5.0 | XML viewer with structured browsing and export features. | [Homepage](https://www.mitec.cz/wp/mxmlv/) |
 
 ## SoftwareOK Suite
 
-Publisher index of 81 SoftwareOK manifests. Each entry is also listed under its functional category above.
+Publisher cross-list of 81 manifests associated with SoftwareOK. Each entry is also listed under its functional category above.
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
@@ -998,7 +1188,7 @@ Publisher index of 81 SoftwareOK manifests. Each entry is also listed under its 
 
 ## Vovsoft Suite
 
-Publisher index of 174 Vovsoft manifests. Each entry is also listed under its functional category above.
+Publisher cross-list of 174 manifests associated with Vovsoft. Each entry is also listed under its functional category above.
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
@@ -1177,134 +1367,73 @@ Publisher index of 174 Vovsoft manifests. Each entry is also listed under its fu
 | [vovsoft-xls-to-csv-converter](../bucket/vovsoft-xls-to-csv-converter.json) | 2.3 | Portable edition of Vovsoft XLS to CSV Converter. | [Homepage](https://vovsoft.com/software/xls-to-csv-converter/) |
 | [vovsoft-xml-to-csv-converter](../bucket/vovsoft-xml-to-csv-converter.json) | 1.4 | Portable edition of Vovsoft XML to CSV Converter. | [Homepage](https://vovsoft.com/software/xml-to-csv-converter/) |
 
+## Sordum Suite
 
-
-## Auslogics Suite
-
-Publisher cross-list of 15 manifests associated with Auslogics. Each entry is also listed under its functional category above.
+Publisher cross-list of 63 Sordum utility manifests. Each entry is also listed under its functional category above.
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
-| [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | 1.23.0.4 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
-| [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
-| [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | 14.2.0.6 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
-| [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
-| [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
-| [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
-| [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
-| [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
-| [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
-| [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | 11.2.0.6 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
-| [Auslogics-registry-defrag](../bucket/Auslogics-registry-defrag.json) | 15.2.0.6 | Windows registry defragmentation utility | [Homepage](https://www.auslogics.com/en/software/registry-defrag/) |
-| [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
-| [Auslogics-system-information](../bucket/Auslogics-system-information.json) | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
-| [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
-| [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | 5.2.0.6 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
+| [sordum-6to4-remover](../bucket/sordum-6to4-remover.json) | 1.2 | Utility for removing unwanted Microsoft 6to4 tunnel adapters from Windows. | [Homepage](https://www.sordum.org/6423/tunnel-adapter-microsoft-6to4-adapter-remover/) |
+| [sordum-askadmin](../bucket/sordum-askadmin.json) | 2.1 | Block access to chosen applications, files, and folder contents. | [Homepage](https://www.sordum.org/7941/askadmin-v2-1/) |
+| [sordum-backup-start-menu-layout](../bucket/sordum-backup-start-menu-layout.json) | 1.6 | A simple app that allows users to backup and restore their StartMenu layout. | [Homepage](https://www.sordum.org/backup-start-menu-layout) |
+| [sordum-bluelife-hosts-editor](../bucket/sordum-bluelife-hosts-editor.json) | 1.6 | A simple app that allows for easy changes to the hosts file. | [Homepage](https://www.sordum.org/bluelifehosts-editor) |
+| [sordum-bluelife-keyfreeze](../bucket/sordum-bluelife-keyfreeze.json) | 1.4 | A free Windows application that blocks your keyboard and mouse without “locking” the screen. | [Homepage](https://www.sordum.org/7921/bluelife-keyfreeze-v1-4-block-keyboard-and-mouse/) |
+| [sordum-bluetooth-version-finder](../bucket/sordum-bluetooth-version-finder.json) | 1.7 | Free software that shows the Bluetooth version in Windows 11 and 10. | [Homepage](https://www.sordum.org/10772/bluetooth-version-finder-v1-7/) |
+| [sordum-bpuzzle](../bucket/sordum-bpuzzle.json) | 1.2 | Portable sliding-tile puzzle game with multiple difficulty levels. | [Homepage](https://www.sordum.org/8058/bpuzzle-v1-2/) |
+| [sordum-classic-shut-down](../bucket/sordum-classic-shut-down.json) | 1.2 | Portable utility that restores a convenient interface for the classic Windows shutdown options. | [Homepage](https://www.sordum.org/9205/classic-shut-down-v1-2/) |
+| [sordum-copy-public-ip](../bucket/sordum-copy-public-ip.json) | 1.4 | Portable utility that displays the public IP address and copies it to the clipboard. | [Homepage](https://www.sordum.org/9201/) |
+| [sordum-defender-exclusion-tool](../bucket/sordum-defender-exclusion-tool.json) | 1.4 | Sordum's Defender Exclusion Tool. Add/Remove exclusions to Windows Defender. | [Homepage](https://www.sordum.org/10636/defender-exclusion-tool-v1-4/) |
+| [sordum-desktop-ini-editor](../bucket/sordum-desktop-ini-editor.json) | 1.2 | A simple app that allows users to edit the desktop.ini file in thier folders. | [Homepage](https://www.sordum.org/desktop-ini-editor) |
+| [sordum-dns-angel](../bucket/sordum-dns-angel.json) | 1.8 | Sordum's DNS Angel. Filter and block vast and uncensored content on the internet. | [Homepage](https://www.sordum.org/8127/dns-angel-v1-8/) |
+| [sordum-dns-jumper](../bucket/sordum-dns-jumper.json) | 2.3 | Quickly and easily change IPv4 and IPv6 DNS settings. | [Homepage](https://www.sordum.org/dns-jumper/) |
+| [sordum-dns-lock](../bucket/sordum-dns-lock.json) | 1.5 | Utility that protects configured IPv4 and IPv6 DNS addresses from being changed by other software. | [Homepage](https://www.sordum.org/9432/dns-lock-v1-5/) |
+| [sordum-drive-letter-changer](../bucket/sordum-drive-letter-changer.json) | 1.4 | A simple app that allows you to change the letter of your hard drives. | [Homepage](https://www.sordum.org/drive-letter-changer) |
+| [sordum-easy-context-menu](../bucket/sordum-easy-context-menu.json) | 1.6 | A simple app for editing the context menu. | [Homepage](https://www.sordum.org/easy-context-menu) |
+| [sordum-easy-service-optimizer](../bucket/sordum-easy-service-optimizer.json) | 1.2 | A portable freeware to optimize services for almost all Windows versions (except for Win 98 and before). | [Homepage](https://www.sordum.org/easy-service-optimizer) |
+| [sordum-edge-blocker](../bucket/sordum-edge-blocker.json) | 2.1 | block edge | [Homepage](https://www.sordum.org/9312/edge-blocker-v2-1/) |
+| [sordum-find-prime-numbers](../bucket/sordum-find-prime-numbers.json) | 1.1 | Portable benchmark that tests CPU performance by searching for prime numbers across a selected range. | [Homepage](https://www.sordum.org/9207/find-prime-numbers-v1-1/) |
+| [sordum-firewall-app-blocker](../bucket/sordum-firewall-app-blocker.json) | 1.9 | Use Windows Firewall to block or unblock certain applications. | [Homepage](https://www.sordum.org/firewall-app-blocker) |
+| [sordum-fix-print-spooler](../bucket/sordum-fix-print-spooler.json) | 1.3 | A small tool for fixing or disabling the Print Spooler service in Windows. | [Homepage](https://www.sordum.org/fix-print-spooler) |
+| [sordum-folder-painter](../bucket/sordum-folder-painter.json) | 1.3 | Allows you to change the icon color of a chosen folder to any color you like | [Homepage](https://www.sordum.org/folder-painter) |
+| [sordum-hibernate-enable-or-disable](../bucket/sordum-hibernate-enable-or-disable.json) | 1.5 | A very simple portable Utility to Disable or Enable Hibernation. | [Homepage](https://www.sordum.org/9502/hibernate-enable-or-disable-v1-5/) |
+| [sordum-hide-from-uninstall-list](../bucket/sordum-hide-from-uninstall-list.json) | 1.1 | A tiny utility designed to help you mask applications in the Add/Remove Programs of Windows. | [Homepage](https://www.sordum.org/hide-from-uninstall-list) |
+| [sordum-monitor-off](../bucket/sordum-monitor-off.json) | 1.1 | MonitorOff (Screen Turns Off) | [Homepage](https://www.sordum.org/10104/sordum-monitor-off-v1-1/) |
+| [sordum-mouse-settings-changer](../bucket/sordum-mouse-settings-changer.json) | 1.2 | Command-line utility for changing Windows mouse settings from a script without opening Mouse Properties. | [Homepage](https://www.sordum.org/13237/mouse-settings-changer-v1-2/) |
+| [sordum-net-disabler](../bucket/sordum-net-disabler.json) | 1.2 | Portable utility to disable and re-enable Internet connectivity using network adapter, DNS, proxy, or Windows Firewall methods. | [Homepage](https://www.sordum.org/9660/net-disabler-v1-2/) |
+| [sordum-network-profile-name-changer](../bucket/sordum-network-profile-name-changer.json) | 1.4 | It is still possible to edit network profile names to make them more descriptive but the only effective way to Rename or remove the connections in Windows is by using the registry editor. | [Homepage](https://www.sordum.org/network-profile-name-changer) |
+| [sordum-no-mouse-wheel-zoom](../bucket/sordum-no-mouse-wheel-zoom.json) | 1.1 | Background tray utility that prevents unwanted Ctrl+mouse-wheel zooming in Windows applications. | [Homepage](https://www.sordum.org/12939/no-mouse-wheel-zoom-v1-1/) |
+| [sordum-ntfs-drive-protection](../bucket/sordum-ntfs-drive-protection.json) | 1.5 | Protect your removable drives, preventing malware from creating its needed autorun.inf file. | [Homepage](https://www.sordum.org/8117/ntfs-drive-protection-v1-5/) |
+| [sordum-password-generator](../bucket/sordum-password-generator.json) | 2020.10.23 | Portable random password generator. The upstream page does not publish a semantic version; this manifest uses its published release date. | [Homepage](https://www.sordum.org/10946/sordum-random-password-generator/) |
+| [sordum-powerrun](../bucket/sordum-powerrun.json) | 1.9 | PowerRun (Run with highest privileges) 可以使用TrustedInstaller/System的权限来启动一些程序 | [Homepage](https://www.sordum.org/9416/powerrun-v1-9-run-with-highest-privileges/) |
+| [sordum-qemu-simple-boot](../bucket/sordum-qemu-simple-boot.json) | 1.3 | Sordum's Qemu Simple Boot. Quickly test images in Qemu. | [Homepage](https://www.sordum.org/7763/qemu-simple-boot-v1-3/) |
+| [sordum-ratool](../bucket/sordum-ratool.json) | 1.4 | Removable Access Tool (a.k.a. Ratool) is a freeware application which aids in the control of external storage devices such as USB flash drives. | [Homepage](https://www.sordum.org/8104/ratool-v1-4-removable-access-tool/) |
+| [sordum-rebuild-shell-icon-cache](../bucket/sordum-rebuild-shell-icon-cache.json) | 1.3 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
+| [sordum-reduce-memory](../bucket/sordum-reduce-memory.json) | 1.7 | A small tool for freeing up RAM memory. | [Homepage](https://www.sordum.org/reduce-memory/) |
+| [sordum-reg-converter](../bucket/sordum-reg-converter.json) | 1.2 | Reg Converter is a portable freeware utility to convert .reg data to .bat, .vbs, or .au3. (RegConverter可以将.reg文件转换为.bat，.vbs或.au3。这对于需要管理员权限才能合并到注册表中的文件或无人参与的自动化安装时特别有用。) | [Homepage](https://www.sordum.org/8478/reg-converter-v1-2/) |
+| [sordum-registry-key-jumper](../bucket/sordum-registry-key-jumper.json) | 1.3 | A tool that helps the user navigate to a user-defined registry key with minimal effort. | [Homepage](https://www.sordum.org/registry-key-jumper) |
+| [sordum-reicon](../bucket/sordum-reicon.json) | 2.3 | A simple app that allows users to backup and restore their Desktop Icon layout. | [Homepage](https://www.sordum.org/reicon) |
+| [sordum-restart-explorer](../bucket/sordum-restart-explorer.json) | 1.7 | A small tool for restarting the Windows File Explorer. | [Homepage](https://www.sordum.org/restart-explorer) |
+| [sordum-router-default-passwords](../bucket/sordum-router-default-passwords.json) | 1.1 | Find the IP address, default Username, and default Password of your router. | [Homepage](https://www.sordum.org/10411/router-default-password-v1-1/) |
+| [sordum-runastool](../bucket/sordum-runastool.json) | 1.7 | A simple app that allows users to run a specific program with administrator privileges without the need to enter the administrator password. | [Homepage](https://www.sordum.org/runastool) |
+| [sordum-safe-mode-launcher](../bucket/sordum-safe-mode-launcher.json) | 1.1 | Safe Mode Launcher is a freeware GUI app to restart your computer in Safe Mode. | [Homepage](https://www.sordum.org/12964/safe-mode-launcher-v1-1/) |
+| [sordum-send-windows-key](../bucket/sordum-send-windows-key.json) | 1.1 | SendKeys methode allows you to send keystrokes just as if you had manually typed them on the keyboard . | [Homepage](https://www.sordum.org/12894/send-windows-key-v1-1/) |
+| [sordum-sendto-menu-editor](../bucket/sordum-sendto-menu-editor.json) | 1.3 | A simple app that helps users manage the shortcuts present in the Windows “Send To” Menu. | [Homepage](https://www.sordum.org/sendto-menu-editor) |
+| [sordum-show-desktop-icons](../bucket/sordum-show-desktop-icons.json) | 1.2 | Portable utility for showing or hiding common Windows desktop icons. | [Homepage](https://www.sordum.org/9341/show-desktop-icons-v1-2/) |
+| [sordum-show-disk-partition-style](../bucket/sordum-show-disk-partition-style.json) | 1.1 | A simple app for showing disk partion style. | [Homepage](https://www.sordum.org/show-disk-partition-style) |
+| [sordum-simple-firefox-backup](../bucket/sordum-simple-firefox-backup.json) | 1.2 | Simple Firefox Backup is a lightweight application that helps users create backup copies of their Mozilla Firefox data. | [Homepage](https://www.sordum.org/12298/simple-firefox-backup-v1-2/) |
+| [sordum-simple-run-blocker](../bucket/sordum-simple-run-blocker.json) | 1.5 | Portable utility for blocking selected Windows applications, with a whitelist mode. | [Homepage](https://www.sordum.org/8486/simple-run-blocker-v1-5/) |
+| [sordum-simple-vhd-manager](../bucket/sordum-simple-vhd-manager.json) | 1.5 | This software is designed to simplify operations such as creating VHD and VHDX files, adding them to boot menu and Automatically mounting at system startup. Partial ISO support is also available. | [Homepage](https://www.sordum.org/simple-vhd-manager) |
+| [sordum-skip-uac-prompt](../bucket/sordum-skip-uac-prompt.json) | 1.4 | This utility also allows you to enable or disable UAC for the apps of your choosing without entirely deactivating UAC systemwide. | [Homepage](https://www.sordum.org/16219/skip-uac-prompt-v1-4/) |
+| [sordum-store-apps-tool](../bucket/sordum-store-apps-tool.json) | 1.1 | The Microsoft Store app comes built into Windows and allows you to download and install dozens of apps and games. | [Homepage](https://www.sordum.org/store-apps-tool) |
+| [sordum-streams-remover](../bucket/sordum-streams-remover.json) | 1.0 | Utility for removing Zone.Identifier alternate data streams from downloaded Windows files. | [Homepage](https://www.sordum.org/11263/streams-remover-v1-0/) |
+| [sordum-switch-power-scheme](../bucket/sordum-switch-power-scheme.json) | 1.3 | Portable utility for switching, importing, exporting, and managing Windows power plans. | [Homepage](https://www.sordum.org/12818/switch-power-scheme-v1-3/) |
+| [sordum-temp-cleaner](../bucket/sordum-temp-cleaner.json) | 1.3 | Sordum's Temp Cleaner | [Homepage](https://www.sordum.org/9190/temp-cleaner-v1-3/) |
+| [sordum-update-time](../bucket/sordum-update-time.json) | 1.4 | Portable utility for synchronizing and correcting the Windows system date and time. | [Homepage](https://www.sordum.org/9203/update-time-v1-4/) |
+| [sordum-url-disabler](../bucket/sordum-url-disabler.json) | 1.4 | Portable utility for blocking URLs in supported browsers, including Chrome, Firefox, Edge, Brave, and Yandex. | [Homepage](https://www.sordum.org/13075/url-disabler-v1-4/) |
+| [sordum-webcam-on-off](../bucket/sordum-webcam-on-off.json) | 1.4 | A simple app that allows you to turn your webcam on or off. | [Homepage](https://www.sordum.org/webcam-on-off) |
+| [sordum-wifi-filter-tool](../bucket/sordum-wifi-filter-tool.json) | 1.2 | Wi-Fi Filter Tool is a lightweight application that allows you to hide unknown wireless networks (SSID) from the list of available networks. | [Homepage](https://www.sordum.org/16523/wi-fi-filter-tool-v1-2/) |
+| [sordum-win11-classic-context-menu](../bucket/sordum-win11-classic-context-menu.json) | 1.2 | An application that allows Windows 11 users to revert back to the classic Windows 10 context menu. | [Homepage](https://www.sordum.org/windows-11-classic-context-menu) |
+| [sordum-window-topmost-control](../bucket/sordum-window-topmost-control.json) | 1.3 | Portable utility for keeping selected windows always on top. | [Homepage](https://www.sordum.org/9182/window-topmost-control-v1-3/) |
+| [sordum-windows-settings-blocker](../bucket/sordum-windows-settings-blocker.json) | 1.2 | To stop users from changing settings in Windows 11 and 10 you can try our portable freeware Windows Settings Blocker Application. | [Homepage](https://www.sordum.org/11128/windows-settings-blocker-v1-2/) |
+| [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1.8 | Sordum's Windows Update Blocker. A freeware that helps you to completely disable or enable Automatic Updates on your Windows system | [Homepage](https://www.sordum.org/9470/windows-update-blocker-v1-8/) |
 
-
-## ChemTable Suite
-
-Publisher cross-list of 5 manifests associated with ChemTable. Each entry is also listed under its functional category above.
-
-| Manifest | Version | Description | Homepage |
-| --- | --- | --- | --- |
-| [autorun-organizer](../bucket/autorun-organizer.json) | 7.02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
-| [files-inspector](../bucket/files-inspector.json) | 4.55 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
-| [reg-organizer](../bucket/reg-organizer.json) | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
-| [reg-organizer-portable](../bucket/reg-organizer-portable.json) | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
-| [soft-organizer](../bucket/soft-organizer.json) | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
-
-
-## Eric Zimmerman Suite
-
-Publisher cross-list of 31 manifests associated with Eric Zimmerman. Each entry is also listed under its functional category above.
-
-| Manifest | Version | Description | Homepage |
-| --- | --- | --- | --- |
-| [eric-amcacheparser](../bucket/eric-amcacheparser.json) | 2026.10.1 | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-appcompatcacheparser](../bucket/eric-appcompatcacheparser.json) | 2026.10.1 | Eric Zimmerman's AppCompatCacheParser: Parser for Windows AppCompatCache (ShimCache) artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-bstrings](../bucket/eric-bstrings.json) | 2026.10.1 | Eric Zimmerman's bstrings: Search files for strings using built-in regular-expression patterns. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-evtxecmd](../bucket/eric-evtxecmd.json) | 2026.10.2 | Eric Zimmerman's EvtxECmd: Parse Windows EVTX event logs into standardized CSV, JSON, or XML output. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-ezviewer](../bucket/eric-ezviewer.json) | 2026.10.0 | Eric Zimmerman's EZViewer: View common document, text, spreadsheet, HTML, and PDF formats; other files can be examined in a hex editor. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-get-tools](../bucket/eric-get-tools.json) | 2026.10.23 | Eric Zimmerman's Get-ZimmermanTools: PowerShell downloader and updater for his forensic tools. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-hasher](../bucket/eric-hasher.json) | 2026.10.0 | Eric Zimmerman's Hasher: GUI utility for calculating file hashes. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-iis-geolocate](../bucket/eric-iis-geolocate.json) | 2026.10.1 | Eric Zimmerman's iisGeoLocate: Geolocate IP addresses found in IIS logs and identify unique or invalid entries. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-jlecmd](../bucket/eric-jlecmd.json) | 2026.10.5 | Eric Zimmerman's JLECmd: Command-line parser for Windows Jump List artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-jumplist-explorer](../bucket/eric-jumplist-explorer.json) | 2026.10.1 | Eric Zimmerman's JumpList Explorer: GUI for viewing Windows Jump Lists. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-kape](../bucket/eric-kape.json) | 2023.11.13.1945 | Eric Zimmerman's KAPE: Kroll Artifact Parser and Extractor for targeted forensic collection and processing. | [Homepage](https://ericzimmerman.github.io/KapeDocs/) |
-| [eric-lecmd](../bucket/eric-lecmd.json) | 2026.10.3 | Eric Zimmerman's LECmd: Command-line parser for Windows LNK shortcut files. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-mftecmd](../bucket/eric-mftecmd.json) | 2026.10.6 | Eric Zimmerman's MFTECmd: Parser for NTFS $MFT, $Boot, $J, $SDS, $I30, and $LogFile artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-mftexplorer](../bucket/eric-mftexplorer.json) | 2026.10.0 | Eric Zimmerman's MFTExplorer: Graphical viewer for NTFS $MFT data. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-pecmd](../bucket/eric-pecmd.json) | 2026.10.3 | Eric Zimmerman's PECmd: Parser for Windows Prefetch files. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-rbcmd](../bucket/eric-rbcmd.json) | 2026.10.1 | Eric Zimmerman's RBCmd: Parser for Windows Recycle Bin INFO2 and $I artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-recentfilecacheparser](../bucket/eric-recentfilecacheparser.json) | 2026.10.2 | Eric Zimmerman's RecentFileCacheParser: Parser for RecentFileCache forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-recmd](../bucket/eric-recmd.json) | 2026.10.2 | Eric Zimmerman's RECmd: Command-line Windows Registry searching and examination tool. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-registry-explorer](../bucket/eric-registry-explorer.json) | 2026.10.1 | Eric Zimmerman's Registry Explorer: GUI for examining Windows Registry hives, including multi-hive searches and locked hive files. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-rla](../bucket/eric-rla.json) | 2026.10.1 | Eric Zimmerman's RLA: Replay Registry transaction logs and update hives to a clean state. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-sbecmd](../bucket/eric-sbecmd.json) | 2026.10.2 | Eric Zimmerman's SBECmd: Command-line exporter for Windows ShellBags artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-sdb-explorer](../bucket/eric-sdb-explorer.json) | 2026.10.0 | Eric Zimmerman's SDB Explorer: GUI for exploring Windows Shim databases. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-shellbags-explorer](../bucket/eric-shellbags-explorer.json) | 2026.10.1 | Eric Zimmerman's ShellBags Explorer: GUI for browsing Windows ShellBags artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-sqlecmd](../bucket/eric-sqlecmd.json) | 2026.10.3 | Eric Zimmerman's SQLECmd: Find and process SQLite databases using artifact maps. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-srumecmd](../bucket/eric-srumecmd.json) | 2026.10.1 | Eric Zimmerman's SrumECmd: Parse SRUDB.dat and optional SOFTWARE-hive data. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-sumecmd](../bucket/eric-sumecmd.json) | 2026.10.1 | Eric Zimmerman's SumECmd: Parse Microsoft Windows User Access Log artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-timeapp](../bucket/eric-timeapp.json) | 2026.10.0 | Eric Zimmerman's TimeApp: GUI for local and UTC time, stopwatch, countdowns, and timestamp conversion. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-timeline-explorer](../bucket/eric-timeline-explorer.json) | 2026.10.0 | Eric Zimmerman's Timeline Explorer: GUI for filtering, grouping, sorting, and reviewing CSV and Excel data. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-vscmount](../bucket/eric-vscmount.json) | 2026.10.0 | Eric Zimmerman's VSCMount: Mount Windows Volume Shadow Copies to a drive letter. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-wxtcmd](../bucket/eric-wxtcmd.json) | 2026.10.1 | Eric Zimmerman's WxTCmd: Parser for Windows 10/11 Timeline database artifacts. | [Homepage](https://ericzimmerman.github.io/) |
-| [eric-xwfim](../bucket/eric-xwfim.json) | 2026.10.1 | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. | [Homepage](https://ericzimmerman.github.io/) |
-
-
-## GRC Suite
-
-Publisher cross-list of 18 manifests associated with GRC. Each entry is also listed under its functional category above.
-
-| Manifest | Version | Description | Homepage |
-| --- | --- | --- | --- |
-| [grc-bootable](../bucket/grc-bootable.json) | 2024.04.21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
-| [grc-clickey](../bucket/grc-clickey.json) | 2005.10.29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
-| [grc-dcombobulator](../bucket/grc-dcombobulator.json) | 2004.05.24 | GRC DCOMbobulator: Legacy utility for checking and enabling/disabling the historical Windows DCOM vulnerability mitigation. | [Homepage](https://www.grc.com/freeware/dcom.htm) |
-| [grc-id-serve](../bucket/grc-id-serve.json) | 2003.08.26 | GRC ID Serve: Identifies web-server software and version information exposed by an Internet server. | [Homepage](https://www.grc.com/id/idserve.htm) |
-| [grc-incontrol](../bucket/grc-incontrol.json) | 2022.02.13 | GRC InControl: Controls Windows 10/11 feature updates while allowing monthly security updates. | [Homepage](https://www.grc.com/incontrol.htm) |
-| [grc-initdisk](../bucket/grc-initdisk.json) | 2020.12.19 | GRC InitDisk: Command-line USB formatter that can create a FAT-formatted and optionally FreeDOS-bootable drive. | [Homepage](https://www.grc.com/initdisk.htm) |
-| [grc-inspectre](../bucket/grc-inspectre.json) | 2018.01.15 | GRC InSpectre: Legacy Meltdown/Spectre mitigation and performance diagnostic for older Windows systems. | [Homepage](https://www.grc.com/inspectre.htm) |
-| [grc-isbootsecure](../bucket/grc-isbootsecure.json) | 2026.10.01 | GRC IsBootSecure: Checks whether Windows booted in UEFI mode, whether Secure Boot is enabled, and whether the firmware Platform Key is known to be unsafe. | [Homepage](https://www.grc.com/isbootsecure.htm) |
-| [grc-leaktest](../bucket/grc-leaktest.json) | 2008.03.13 | GRC LeakTest: Legacy outbound-firewall leakage test utility. | [Homepage](https://www.grc.com/lt/leaktest.htm) |
-| [grc-mousetrap](../bucket/grc-mousetrap.json) | 2006.01.19 | GRC MouseTrap: Reports whether a Windows system or Wine environment is vulnerable to the historical WMF/MICE metafile execution issue. | [Homepage](https://www.grc.com/wmf/wmf.htm) |
-| [grc-mousetrapcmd](../bucket/grc-mousetrapcmd.json) | 2006.01.19 | GRC MouseTrapCmd: Command-line variant of GRC MouseTrap for checking the historical WMF/MICE metafile execution issue. | [Homepage](https://www.grc.com/wmf/wmf.htm) |
-| [grc-never10](../bucket/grc-never10.json) | 2019.04.21 | GRC Never10: Legacy utility for controlling the Windows 7/8.1 upgrade offer to Windows 10. | [Homepage](https://www.grc.com/never10.htm) |
-| [grc-readspeed](../bucket/grc-readspeed.json) | 2020.12.24 | GRC ReadSpeed: Creates a bootable DOS USB device to run GRC's precise mass-storage read-performance benchmark. | [Homepage](https://www.grc.com/readspeed.htm) |
-| [grc-securable](../bucket/grc-securable.json) | 2013.02.22 | GRC SecurAble: Reports processor support for 64-bit instructions, hardware DEP/NX, and virtualization. | [Homepage](https://www.grc.com/securable.htm) |
-| [grc-shoot-the-messenger](../bucket/grc-shoot-the-messenger.json) | 2003.04.26 | GRC Shoot The Messenger: Legacy utility for managing the Windows Messenger Service on older Windows releases. | [Homepage](https://www.grc.com/stm/shootthemessenger.htm) |
-| [grc-unplug-n-pray](../bucket/grc-unplug-n-pray.json) | 2001.12.28 | GRC UnPlug n' Pray: Legacy utility for checking and enabling/disabling the historical Windows UPnP service. | [Homepage](https://www.grc.com/unpnp/unpnp.htm) |
-| [grc-validrive](../bucket/grc-validrive.json) | 2023.10.06 | GRC ValiDrive: Spot-checks USB mass-storage drives to detect fraudulent capacity and failed read/write storage. | [Homepage](https://www.grc.com/validrive.htm) |
-| [grc-wizmo](../bucket/grc-wizmo.json) | 2008.06.25 | GRC Wizmo: Command-line Windows utility for display power, screen savers, audio control, shutdown, and other desktop commands. | [Homepage](https://www.grc.com/wizmo/wizmo.htm) |
-
-
-## MiTeC Suite
-
-Publisher cross-list of 22 manifests associated with MiTeC. Each entry is also listed under its functional category above.
-
-| Manifest | Version | Description | Homepage |
-| --- | --- | --- | --- |
-| [mitec-certificate-generator](../bucket/mitec-certificate-generator.json) | 1.0.0 | Creates self-signed X.509 certificates in PEM/CER and PKCS#12 PFX formats. | [Homepage](https://www.mitec.cz/wp/cg/) |
-| [mitec-certificate-information](../bucket/mitec-certificate-information.json) | 1.5.0 | Viewer for certificates and digitally signed files, including executable, MSI, XML and PDF files. | [Homepage](https://www.mitec.cz/wp/mci/) |
-| [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | 8.4.0 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
-| [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
-| [mitec-hexedit](../bucket/mitec-hexedit.json) | 7.1.0 | Hexadecimal editor with data inspector, calculator, file compare, memory dump and disk dump tools. | [Homepage](https://www.mitec.cz/wp/mhex/) |
-| [mitec-infobar](../bucket/mitec-infobar.json) | 4.6.2 | Taskbar-style information bar with system monitoring, calendar, weather and developer tools. | [Homepage](https://www.mitec.cz/wp/mib/) |
-| [mitec-interbase-query](../bucket/mitec-interbase-query.json) | 9.5.0 | Database management tool for InterBase 6+ and Firebird 1.5+. | [Homepage](https://www.mitec.cz/wp/mibq/) |
-| [mitec-json-viewer](../bucket/mitec-json-viewer.json) | 3.2.2 | JSON and BSON viewer and editor. | [Homepage](https://www.mitec.cz/wp/mjsonv/) |
-| [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
-| [mitec-network-scanner](../bucket/mitec-network-scanner.json) | 6.1.0 | Network discovery and scanning utility for hosts, ports, shares, services, SNMP and Active Directory. | [Homepage](https://www.mitec.cz/wp/mns/) |
-| [mitec-ole-com-explorer](../bucket/mitec-ole-com-explorer.json) | 1.4.0 | OLE/COM object explorer and Type Library viewer. | [Homepage](https://www.mitec.cz/wp/molexp/) |
-| [mitec-paradox-data-editor](../bucket/mitec-paradox-data-editor.json) | 3.7.0 | Viewer and editor for Paradox tables, with repair and maintenance features. | [Homepage](https://www.mitec.cz/wp/mpde/) |
-| [mitec-project-maker](../bucket/mitec-project-maker.json) | 1.9.0 | Automates batch Delphi project builds, code signing and executable version information patching. | [Homepage](https://www.mitec.cz/wp/pm/) |
-| [mitec-smbios-explorer](../bucket/mitec-smbios-explorer.json) | 1.8.0 | SMBIOS explorer and analyzer for firmware and hardware inventory. | [Homepage](https://www.mitec.cz/wp/smbe/) |
-| [mitec-sqlite-query](../bucket/mitec-sqlite-query.json) | 3.2.0 | SQLite 3 database management and query tool. | [Homepage](https://www.mitec.cz/wp/msqliteq/) |
-| [mitec-structured-storage-viewer](../bucket/mitec-structured-storage-viewer.json) | 4.1.2 | Viewer and manager for Microsoft OLE structured-storage files. | [Homepage](https://www.mitec.cz/wp/mssv/) |
-| [mitec-system-information-extra](../bucket/mitec-system-information-extra.json) | 16.0.0 | System information utility for inspecting computer hardware and software, with report export. | [Homepage](https://www.mitec.cz/wp/msix/) |
-| [mitec-tapi-monitor](../bucket/mitec-tapi-monitor.json) | 1.2.0 | Monitors TAPI lines, telephones, service providers and call events. | [Homepage](https://www.mitec.cz/wp/mtapimon/) |
-| [mitec-task-manager-deluxe](../bucket/mitec-task-manager-deluxe.json) | 5.1.1 | Portable advanced replacement for Windows Task Manager, with process, service, network, disk, GPU and system monitoring. | [Homepage](https://www.mitec.cz/wp/tmx/) |
-| [mitec-uuid-generator](../bucket/mitec-uuid-generator.json) | 1.0.0 | Generates and decodes UUID values. | [Homepage](https://www.mitec.cz/wp/uuid/) |
-| [mitec-windows-registry-recovery](../bucket/mitec-windows-registry-recovery.json) | 3.1.3 | Reads offline Windows Registry hives and extracts configuration information; also provides live Registry backup. | [Homepage](https://www.mitec.cz/wp/mwrr/) |
-| [mitec-xml-viewer](../bucket/mitec-xml-viewer.json) | 6.5.0 | XML viewer with structured browsing and export features. | [Homepage](https://www.mitec.cz/wp/mxmlv/) |
