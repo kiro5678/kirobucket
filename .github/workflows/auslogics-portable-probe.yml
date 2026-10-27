@@ -1,0 +1,99 @@
+name: Auslogics Portable Probe
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/auslogics-portable-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download official ZIP and probe extraction
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-probe'
+          $zipPath = Join-Path $root 'auslogics-disk-defrag-setup.zip'
+          $zipDir = Join-Path $root 'zip-contents'
+          $payloadDir = Join-Path $root 'extracted-installer'
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-probe-report.md'
+          New-Item -ItemType Directory -Force -Path $root, $zipDir, $payloadDir | Out-Null
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics Disk Defrag Portable Probe')
+          $lines.Add('')
+          $lines.Add('- Source: https://static.auslogics.com/en/disk-defrag/auslogics-disk-defrag-setup.zip')
+          $lines.Add('- Method: inspect the official ZIP, then try extracting the contained installer without running it.')
+          $lines.Add('- This workflow does not publish application binaries.')
+          Invoke-WebRequest -Uri 'https://static.auslogics.com/en/disk-defrag/auslogics-disk-defrag-setup.zip' -OutFile $zipPath
+          $lines.Add("- ZIP SHA-256: $((Get-FileHash $zipPath -Algorithm SHA256).Hash)")
+          Expand-Archive -LiteralPath $zipPath -DestinationPath $zipDir -Force
+          $zipFiles = @(Get-ChildItem -LiteralPath $zipDir -File -Recurse)
+          $lines.Add('')
+          $lines.Add('## ZIP contents')
+          foreach ($f in $zipFiles) {
+            $lines.Add("- $($f.FullName.Substring($zipDir.Length).TrimStart('\','/')) | $($f.Length) bytes | SHA-256 $((Get-FileHash $f.FullName -Algorithm SHA256).Hash)")
+          }
+          $installers = @($zipFiles | Where-Object { $_.Extension -in @('.exe','.msi') } | Sort-Object FullName)
+          $lines.Add('')
+          $lines.Add("Installer candidates: $($installers.Count)")
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          $extractExit = $null
+          if ($installers.Count -gt 0 -and $sevenZip -and $installers[0].Extension -eq '.exe') {
+            $candidate = $installers[0]
+            $listing = (& $sevenZip l $candidate.FullName 2>&1 | Out-String)
+            $lines.Add('')
+            $lines.Add('## 7-Zip installer listing')
+            $lines.Add('\`\`\`text')
+            $lines.Add(($listing -split "`r?`n" | Select-Object -First 160) -join "`n")
+            $lines.Add('\`\`\`')
+            $output = (& $sevenZip x $candidate.FullName "-o$payloadDir" -y 2>&1 | Out-String)
+            $extractExit = $LASTEXITCODE
+            $lines.Add('')
+            $lines.Add("7-Zip extraction exit code: $extractExit")
+            $lines.Add('\`\`\`text')
+            $lines.Add(($output -split "`r?`n" | Select-Object -Last 80) -join "`n")
+            $lines.Add('\`\`\`')
+          } else {
+            $lines.Add('')
+            $lines.Add("- Extraction skipped. 7-Zip available: $([bool]$sevenZip); EXE candidate count: $(@($installers | Where-Object Extension -eq '.exe').Count)")
+          }
+          $payload = @(Get-ChildItem -LiteralPath $payloadDir -File -Recurse -ErrorAction SilentlyContinue)
+          $lines.Add('')
+          $lines.Add('## Extracted payload inventory')
+          $lines.Add("- Files found: $($payload.Count)")
+          foreach ($f in $payload) {
+            $lines.Add("- $($f.FullName.Substring($payloadDir.Length).TrimStart('\','/')) | $($f.Length) bytes | SHA-256 $((Get-FileHash $f.FullName -Algorithm SHA256).Hash)")
+          }
+          $appExes = @($payload | Where-Object { $_.Extension -eq '.exe' -and $_.Name -notmatch '^(?i:setup|install|uninstall|unins)' })
+          $lines.Add('')
+          $lines.Add('## Initial result')
+          $lines.Add("- Potential application EXE files after extraction: $($appExes.Count)")
+          if ($appExes.Count -gt 0) {
+            $lines.Add('Extraction may have exposed an application payload. The paths must be checked before writing a Scoop manifest.')
+          } else {
+            $lines.Add('No likely application executable was exposed. The next step is a publisher-verified, directed installation in a disposable runner, followed by inspection of the installed files.')
+          }
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
+      - name: Upload diagnostic report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: auslogics-portable-probe-report
+          path: auslogics-probe-report.md
+          if-no-files-found: warn
+          retention-days: 7
