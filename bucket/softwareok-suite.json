@@ -1,11 +1,8 @@
 {
-    "version": "1.0",
-    "description": "Meta-package for SoftwareOK utilities that already have Scoop manifests; not the full catalog.",
+    "version": "1.1",
+    "description": "Meta-package that installs a curated collection of 28 SoftwareOK utilities through their individual Scoop manifests.",
     "homepage": "https://www.softwareok.com/?seite=Faq",
-    "license": {
-        "identifier": "Freeware",
-        "url": "https://www.softwareok.com/?faq=5&seite=faq-SoftwareOK"
-    },
+    "license": "Freeware",
     "depends": [
         "extras/q-dir",
         "extras/meinplatz",
@@ -14,11 +11,32 @@
         "extras/quicktextpaste",
         "extras/openclosedriveeject",
         "kirobucket/new-file-time",
-        "kirobucket/is-my-lcd-ok"
+        "kirobucket/is-my-lcd-ok",
+        "kirobucket/dirprintok",
+        "kirobucket/fontviewok",
+        "kirobucket/theaeroclock",
+        "kirobucket/desktopok",
+        "kirobucket/ramagic",
+        "kirobucket/winbin2iso",
+        "kirobucket/is-my-memory-ok",
+        "kirobucket/stressthegpu",
+        "kirobucket/brightness-manager-ok",
+        "kirobucket/paintokay",
+        "kirobucket/mediaplayerok",
+        "kirobucket/static-desktop-ruler",
+        "kirobucket/thisismyfile",
+        "kirobucket/autohide-desktop-icons",
+        "kirobucket/autohide-mouse-cursor",
+        "kirobucket/pointerstick",
+        "kirobucket/alwaysmousewheel",
+        "kirobucket/processko",
+        "kirobucket/oneloupe",
+        "kirobucket/office-files-images"
     ],
     "notes": [
         "Requires the extras bucket. Add it before installing with: scoop bucket add extras",
-        "This bundle includes only SoftwareOK programs that already have Scoop manifests.",
+        "This is a curated collection, not the full SoftwareOK catalog.",
+        "The programs are installed as separate Scoop apps; this manifest does not combine them into one archive.",
         "Uninstalling softwareok-suite does not uninstall its dependencies."
     ]
 }
