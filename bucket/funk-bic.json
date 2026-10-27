@@ -1,0 +1,27 @@
+{
+    "version": "2",
+    "description": "Batch-crops images from a folder and saves cropped outputs to a separate directory.",
+    "homepage": "https://funk.eu/bic-batch-image-cropper/",
+    "license": "CC-BY-NC-ND-3.0",
+    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=271",
+    "checkver": {
+        "url": "https://funk.eu/bic-batch-image-cropper/",
+        "regex": "(?i)BIC\\s*[–-]\\s*Batch-Image-Cropper\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+    },
+    "autoupdate": {
+        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=271"
+    },
+    "shortcuts": [
+        [
+            "BIC.exe",
+            "Funk.eu Batch-Image-Cropper"
+        ]
+    ],
+    "persist": [
+        "BIC.ini"
+    ],
+    "notes": [
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
+        "The publisher specifies Creative Commons BY-NC-ND 3.0; the application's settings file BIC.ini is persisted."
+    ]
+}
