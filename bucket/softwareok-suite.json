@@ -1,0 +1,24 @@
+{
+    "version": "1.0",
+    "description": "Meta-package for SoftwareOK utilities that already have Scoop manifests; not the full catalog.",
+    "homepage": "https://www.softwareok.com/?seite=Faq",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.softwareok.com/?faq=5&seite=faq-SoftwareOK"
+    },
+    "depends": [
+        "extras/q-dir",
+        "extras/meinplatz",
+        "extras/dont-sleep",
+        "extras/winscan2pdf",
+        "extras/quicktextpaste",
+        "extras/openclosedriveeject",
+        "kirobucket/new-file-time",
+        "kirobucket/is-my-lcd-ok"
+    ],
+    "notes": [
+        "Requires the extras bucket. Add it before installing with: scoop bucket add extras",
+        "This bundle includes only SoftwareOK programs that already have Scoop manifests.",
+        "Uninstalling softwareok-suite does not uninstall its dependencies."
+    ]
+}
