@@ -1,0 +1,44 @@
+{
+    "version": "1.22",
+    "description": "Clear outdated working sets and standby cache to free RAM.",
+    "homepage": "https://www.softwareok.com/?Download=RAMagic",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.softwareok.com/?seite=Microsoft/RAMagic/Eula"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://www.softwareok.com/Download/RAMagic.zip",
+            "hash": "1f311abfe8281f6f0998ba3956795fae6ce37889b6fa6105119e77acf1320512"
+        }
+    },
+    "bin": [
+        [
+            "RAMagic.exe",
+            "RAMagic"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "RAMagic.exe",
+            "RAMagic"
+        ]
+    ],
+    "pre_install": "if (-not (Test-Path \"$persist_dir\\SoftwareOK_Program.ini\")) { New-Item -Path \"$dir\\SoftwareOK_Program.ini\" -ItemType File | Out-Null }",
+    "persist": "SoftwareOK_Program.ini",
+    "checkver": {
+        "url": "https://www.softwareok.com/?Download=RAMagic",
+        "regex": "Download RAMagic ([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.softwareok.com/Download/RAMagic.zip"
+            }
+        },
+        "hash": {
+            "url": "https://www.softwareok.com/?Download=RAMagic",
+            "regex": "$basename.*?$sha256<"
+        }
+    }
+}
