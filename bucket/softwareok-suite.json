@@ -1,6 +1,6 @@
 {
-    "version": "2026.10.27.4",
-    "description": "Combined portable collection of all 79 SoftwareOK Downloads-index programs, plus the extra Monitor.Turn.Off.Timer.OK tool.",
+    "version": "2026.10.27.5",
+    "description": "Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK.",
     "homepage": "https://www.softwareok.com/?seite=Faq",
     "license": "Freeware",
     "architecture": {
@@ -84,8 +84,7 @@
                 "https://www.softwareok.com/Download/DesktopImages3D_x64.zip",
                 "https://www.softwareok.com/Download/ColorConsole_x64_Portable.zip",
                 "https://www.softwareok.com/Download/FavoritenFreund.zip",
-                "https://www.softwareok.com/Download/Monitor.Turn.Off.Timer.OK.zip",
-                "https://www.softwareok.com/Download/FlyOutBriefcase.zip"
+                "https://www.softwareok.com/Download/Monitor.Turn.Off.Timer.OK.zip"
             ],
             "hash": [
                 "e6185083898ec28d18fc8ddf1d4f39f9b4cd633ed3c8ab880bb344960ba52a68",
@@ -166,8 +165,7 @@
                 "d6b6b9be7e4446c168dc8de629e6975c23882446c3644834ebccfa3094204438",
                 "adc75a8f59f644d95ab92c05e7e50a326dce09db5456ac24229665047c5296ee",
                 "e094f38846f0808d42801799c2ec2915f135a2f7502c2b8d94e69e50a0b78eb7",
-                "b2c17510068953f23dc482e179961fff5ee1689fccbec3041d39f5857382aa40",
-                "0000000000000000000000000000000000000000000000000000000000000000"
+                "b2c17510068953f23dc482e179961fff5ee1689fccbec3041d39f5857382aa40"
             ]
         }
     },
@@ -250,8 +248,7 @@
         "desktop-images-3d",
         "colorconsole",
         "favoritenfreund",
-        "monitor-turn-off-timer-ok",
-        "flyout-briefcase"
+        "monitor-turn-off-timer-ok"
     ],
     "bin": [
         [
@@ -569,10 +566,6 @@
         [
             "monitor-turn-off-timer-ok\\Monitor.Turn.Off.Timer.OK.exe",
             "MonitorTurnOffTimerOK"
-        ],
-        [
-            "flyout-briefcase\\FlyOutBriefcase.exe",
-            "FlyOutBriefcase"
         ]
     ],
     "shortcuts": [
@@ -891,10 +884,6 @@
         [
             "monitor-turn-off-timer-ok\\Monitor.Turn.Off.Timer.OK.exe",
             "Monitor.Turn.Off.Timer.OK (SoftwareOK)"
-        ],
-        [
-            "flyout-briefcase\\FlyOutBriefcase.exe",
-            "FlyOutBriefcase (SoftwareOK)"
         ]
     ],
     "persist": [
@@ -907,9 +896,9 @@
         "run-command\\Run-Command.ini"
     ],
     "notes": [
-        "Includes every entry on SoftwareOK's official Downloads index, plus Monitor.Turn.Off.Timer.OK. FlyOutBriefcase is the site's first test/Beta version.",
+        "Includes the 78 downloadable entries from SoftwareOK's official 79-item Downloads index, plus Monitor.Turn.Off.Timer.OK. FlyOutBriefcase is excluded because its official download endpoint currently returns HTTP 404.",
         "Each archive is extracted into its own subfolder inside this single Scoop package.",
-        "Archive URLs, executable paths, and SHA-256 checksums are checked by the repository's archive-validation workflow."
+        "Archive URLs, executable paths, and SHA-256 checksums are verified by the repository's archive-validation workflow."
     ],
     "pre_install": [
         "if (-not (Test-Path \"$persist_dir\\run-command\\Run-Command.ini\")) { New-Item -Path \"$dir\\run-command\\Run-Command.ini\" -ItemType File | Out-Null }"
