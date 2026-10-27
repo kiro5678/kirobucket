@@ -1,0 +1,111 @@
+name: Auslogics Remaining Products Probe
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/auslogics-remaining-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - name: Download, verify, and inspect remaining official products
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:RUNNER_TEMP 'auslogics-remaining-probe'
+          New-Item -ItemType Directory -Force -Path $root | Out-Null
+          $report = Join-Path $env:GITHUB_WORKSPACE 'auslogics-remaining-report.md'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add('# Auslogics remaining-products inspection')
+          $lines.Add('')
+          $lines.Add('Downloads are restricted to official Auslogics download hosts. Installers are executed only in this disposable GitHub-hosted Windows runner, after validating the Auslogics Authenticode signer.')
+          $lines.Add('')
+
+          $apps = @(
+            [pscustomobject]@{ Name='BoostSpeed'; Slug='boost-speed'; File='auslogics-boost-speed-setup.exe'; Product='Auslogics BoostSpeed'; Url='https://downloads.auslogics.com/en/boost-speed/auslogics-boost-speed-setup.exe' },
+            [pscustomobject]@{ Name='Driver Updater'; Slug='driver-updater'; File='auslogics-driver-updater-setup.exe'; Product='Auslogics Driver Updater'; Url='https://downloads.auslogics.com/en/driver-updater/auslogics-driver-updater-setup.exe' },
+            [pscustomobject]@{ Name='ChillMate'; Slug='chillmate'; File='auslogics-chillmate-setup.exe'; Product='Auslogics ChillMate'; Url='https://downloads.auslogics.com/en/chillmate/auslogics-chillmate-setup.exe' },
+            [pscustomobject]@{ Name='Duplicate File Finder'; Slug='duplicate-file-finder'; File='auslogics-duplicate-file-finder-setup.exe'; Product='Auslogics Duplicate File Finder'; Url='https://downloads.auslogics.com/en/duplicate-file-finder/auslogics-duplicate-file-finder-setup.exe' },
+            [pscustomobject]@{ Name='Disk Defrag Ultimate'; Slug='disk-defrag-ultimate'; File='auslogics-disk-defrag-ultimate-setup.exe'; Product='Auslogics Disk Defrag Ultimate'; Url='https://downloads.auslogics.com/en/disk-defrag-ultimate/auslogics-disk-defrag-ultimate-setup.exe' },
+            [pscustomobject]@{ Name='Anti-Malware'; Slug='anti-malware'; File='auslogics-anti-malware-setup.exe'; Product='Auslogics Anti-Malware'; Url='https://downloads.auslogics.com/en/anti-malware/auslogics-anti-malware-setup.exe' },
+            [pscustomobject]@{ Name='File Recovery'; Slug='file-recovery'; File='auslogics-file-recovery-setup.exe'; Product='Auslogics File Recovery'; Url='https://downloads.auslogics.com/en/file-recovery/auslogics-file-recovery-setup.exe' },
+            [pscustomobject]@{ Name='Video Grabber'; Slug='video-grabber'; File='auslogics-video-grabber-setup.exe'; Product='Auslogics Video Grabber'; Url='https://downloads.auslogics.com/en/video-grabber/auslogics-video-grabber-setup.exe' },
+            [pscustomobject]@{ Name='Windows Slimmer'; Slug='windows-slimmer'; File='auslogics-windows-slimmer-setup.exe'; Product='Auslogics Windows Slimmer'; Url='https://downloads.auslogics.com/en/windows-slimmer/auslogics-windows-slimmer-setup.exe' },
+            [pscustomobject]@{ Name='System Information'; Slug='system-information'; File='auslogics-system-information-setup.exe'; Product='Auslogics System Information'; Url='https://downloads.auslogics.com/en/system-information/auslogics-system-information-setup.exe' },
+            [pscustomobject]@{ Name='Registry Defrag'; Slug='registry-defrag'; File='auslogics-registry-defrag-setup.exe'; Product='Auslogics Registry Defrag'; Url='https://downloads.auslogics.com/en/registry-defrag/auslogics-registry-defrag-setup.exe' }
+          )
+
+          foreach ($app in $apps) {
+            $lines.Add("## $($app.Name)")
+            $lines.Add("- Official download: $($app.Url)")
+            $installer = Join-Path $root $app.File
+            $installDir = Join-Path $root ($app.Slug + '-installed')
+            try {
+              Invoke-WebRequest -Uri $app.Url -OutFile $installer
+              $fileInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+              $signature = Get-AuthenticodeSignature -LiteralPath $installer
+              $lines.Add("- Download: success")
+              $lines.Add("- Size: $((Get-Item -LiteralPath $installer).Length) bytes")
+              $lines.Add("- SHA-256: $((Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash)")
+              $lines.Add("- Installer product name: $($fileInfo.ProductName)")
+              $lines.Add("- Installer product version: $($fileInfo.ProductVersion)")
+              $lines.Add("- Authenticode status: $($signature.Status)")
+              $lines.Add("- Authenticode signer: $($signature.SignerCertificate.Subject)")
+              if ($signature.Status -ne 'Valid' -or $signature.SignerCertificate.Subject -notmatch '(?i)Auslogics') {
+                $lines.Add('- Installation skipped: Authenticode signature was not valid and Auslogics-signed.')
+                $lines.Add('')
+                continue
+              }
+
+              New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+              $arguments = "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR=`"$installDir`""
+              $process = Start-Process -FilePath $installer -ArgumentList $arguments -PassThru
+              if (-not $process.WaitForExit(90000)) {
+                $installRoot = [System.IO.Path]::GetFullPath($installDir)
+                $appProcesses = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+                  $_.ExecutablePath -and $_.ExecutablePath.StartsWith($installRoot, [System.StringComparison]::OrdinalIgnoreCase) -and $_.ProcessId -ne $process.Id
+                })
+                foreach ($child in $appProcesses) { Stop-Process -Id $child.ProcessId -Force -ErrorAction SilentlyContinue }
+                Start-Sleep -Seconds 2
+                if (-not $process.HasExited) {
+                  $process.Kill()
+                  $process.WaitForExit(10000) | Out-Null
+                  $lines.Add('- Setup exceeded 90 seconds; setup and app processes were stopped on the disposable runner.')
+                } else {
+                  $lines.Add("- Installer exit code after closing the app: $($process.ExitCode)")
+                }
+              } else {
+                $lines.Add("- Installer exit code: $($process.ExitCode)")
+              }
+
+              $files = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -ErrorAction SilentlyContinue)
+              $exes = @($files | Where-Object Extension -eq '.exe' | Sort-Object FullName)
+              $lines.Add("- Files in isolated target folder: $($files.Count)")
+              $lines.Add("- EXE candidates: $($exes.Count)")
+              foreach ($exe in $exes) {
+                $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+                $relative = $exe.FullName.Substring($installDir.Length).TrimStart('\','/')
+                $lines.Add("- EXE: $relative | FileVersion=$($version.FileVersion) | ProductName=$($version.ProductName)")
+              }
+            } catch {
+              $lines.Add("- ERROR: $($_.Exception.Message)")
+            }
+            $lines.Add('')
+          }
+
+          Set-Content -LiteralPath $report -Value $lines -Encoding utf8
+          Get-Content -LiteralPath $report
+
+      - name: Upload inventory report only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: auslogics-remaining-report
+          path: auslogics-remaining-report.md
+          if-no-files-found: warn
+          retention-days: 3
