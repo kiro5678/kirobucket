@@ -12,9 +12,7 @@
             "MiTeC Interbase Query"
         ]
     ],
-    "notes": [
-        "The official download page does not publish a static SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download. Refresh the hash if the upstream file changes."
-    ],
+    "notes": "The official download page does not publish a static SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download. Refresh the hash if the upstream file changes.",
     "checkver": {
         "url": "https://www.mitec.cz/wp/mibq/",
         "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
