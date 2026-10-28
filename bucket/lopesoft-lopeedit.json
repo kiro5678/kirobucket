@@ -4,7 +4,7 @@
     "homepage": "https://www.lopesoft.com/index.php/en/products/lopeedit",
     "license": "Proprietary",
     "url": "https://lopesoft.com/lopeedit/LopeEdit-portable.exe#/dl.7z",
-    "hash": "ac42b90e36346e4e217c7fabf3fbac43",
+    "hash": "md5:ac42b90e36346e4e217c7fabf3fbac43",
     "post_install": "Remove-Item \"$dir\\`$PLUGINSDIR\" -Recurse",
     "shortcuts": [
         [
