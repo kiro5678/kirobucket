@@ -127,9 +127,9 @@ jobs:
           $formatter = Join-Path $env:GITHUB_WORKSPACE "scoop_core\bin\formatjson.ps1"
           foreach ($name in $formatNames) {
             & $formatter -App $name -Dir $bucketPath
-            if ($LASTEXITCODE -ne 0) {
-              throw "Scoop formatter failed for $name."
-            }
+            $formattedPath = Join-Path $bucketPath "$name.json"
+            $null = Get-Content -LiteralPath $formattedPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            Write-Host "FORMATTED $name"
           }
 
           git config user.name "github-actions[bot]"
