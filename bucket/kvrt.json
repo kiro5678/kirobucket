@@ -22,5 +22,11 @@
     },
     "autoupdate": {
         "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe"
-    }
+    },
+    "pre_install": [
+        "$exe = Join-Path $dir 'KVRT.exe'",
+        "$signature = Get-AuthenticodeSignature -FilePath $exe",
+        "if ($signature.Status -ne 'Valid') { throw \"KVRT.exe has no valid Authenticode signature (status: $($signature.Status)). Refusing to install.\" }",
+        "if ($null -eq $signature.SignerCertificate -or $signature.SignerCertificate.Subject -notmatch '(?i)Kaspersky') { throw 'KVRT.exe is not signed by Kaspersky. Refusing to install.' }"
+    ]
 }
