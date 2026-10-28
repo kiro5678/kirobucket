@@ -448,6 +448,8 @@ jobs:
               "funk-icu" = "Windows Customization"
               "funk-bic" = "Images & Photos"
               "funk-ssd" = "Media & Audio/Video"
+              "lopesoft-filemenu-tools" = "Windows Customization"
+              "lopesoft-lopeedit" = "Developer & Technical Tools"
           }
 
           function ConvertTo-DateOnly {
