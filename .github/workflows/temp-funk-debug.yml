@@ -1,0 +1,70 @@
+name: Temporary Funk Download Debug
+
+on:
+  push:
+    branches:
+      - manifests/neuber-aurelitec-computersluggish-funk-2026-10
+    paths:
+      - ".github/workflows/temp-funk-debug.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  debug-downloads:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout bucket branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: manifests/neuber-aurelitec-computersluggish-funk-2026-10
+      - name: Test Funk download URLs using Scoop-style requests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Continue"
+          $items = @(
+            @{ name = "funk-bic"; id = 271; page = "https://funk.eu/bic-batch-image-cropper/" },
+            @{ name = "funk-cop"; id = 47; page = "https://funk.eu/cop/" },
+            @{ name = "funk-hmw"; id = 288; page = "https://funk.eu/hmw/" },
+            @{ name = "funk-hrc"; id = 167; page = "https://funk.eu/hrc/" },
+            @{ name = "funk-icu"; id = 243; page = "https://funk.eu/icu-icon-configuration-utility/" },
+            @{ name = "funk-smf"; id = 293; page = "https://funk.eu/smf/" },
+            @{ name = "funk-ssd"; id = 234; page = "https://funk.eu/ssd/" }
+          )
+          $scoopUA = "Scoop/1.0 (+http://scoop.sh/) PowerShell/$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor) (Windows NT $([System.Environment]::OSVersion.Version.Major).$([System.Environment]::OSVersion.Version.Minor); Win64; x64; Core)"
+          foreach ($item in $items) {
+            $url = "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=$($item.id)"
+            Write-Host "DEBUG_START $($item.name) $url"
+            foreach ($case in @(
+              @{name="scoop-referrer"; ua=$scoopUA; ref="https://funk.eu/wp-content/plugins/download-monitor/"},
+              @{name="scoop-no-referrer"; ua=$scoopUA; ref=$null},
+              @{name="browser-product-referrer"; ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0.0.0 Safari/537.36"; ref=$item.page}
+            )) {
+              $req = [Net.WebRequest]::Create($url)
+              $req.UserAgent = $case.ua
+              $req.Timeout = 30000
+              if ($case.ref) { $req.Referer = $case.ref }
+              try {
+                $res = $req.GetResponse()
+                $stream = $res.GetResponseStream()
+                $ms = [System.IO.MemoryStream]::new()
+                $stream.CopyTo($ms)
+                $bytes = $ms.ToArray()
+                $hash = [System.BitConverter]::ToString([Security.Cryptography.SHA256]::HashData($bytes)).Replace("-", "").ToLowerInvariant()
+                $sigCount = [Math]::Min(8, $bytes.Length)
+                $signature = if ($sigCount -gt 0) { [System.BitConverter]::ToString($bytes[0..($sigCount-1)]).Replace("-", "") } else { "" }
+                Write-Host "DEBUG_RESULT $($item.name) $($case.name) STATUS=$([int]$res.StatusCode) TYPE=$($res.ContentType) LENGTH=$($bytes.Length) FINAL=$($res.ResponseUri.AbsoluteUri) SIGNATURE=$signature SHA256=$hash"
+                $res.Dispose(); $stream.Dispose(); $ms.Dispose()
+              } catch {
+                $e = $_.Exception
+                $response = $e.Response
+                if ($response) {
+                  $location = $response.Headers["Location"]
+                  Write-Host "DEBUG_ERROR $($item.name) $($case.name) MESSAGE=$($e.Message) STATUS=$([int]$response.StatusCode) TYPE=$($response.ContentType) LOCATION=$location URI=$($response.ResponseUri.AbsoluteUri)"
+                  try { $response.Dispose() } catch {}
+                } else {
+                  Write-Host "DEBUG_ERROR $($item.name) $($case.name) MESSAGE=$($e.Message)"
+                }
+              }
+            }
+          }
