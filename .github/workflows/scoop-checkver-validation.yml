@@ -35,28 +35,6 @@ jobs:
           repository: ScoopInstaller/Scoop
           path: scoop_core
 
-      - name: Enable authenticated GitHub API requests in Scoop checkver
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
-          $source = Get-Content -LiteralPath $checkver -Raw
-          $needle = '    $wc.Headers.Add(''Referer'', (strip_filename $url))'
-          $replacement = @'
-              if (($url -match '^https://api\.github\.com/') -and $GitHubToken -and -not ($wc.Headers.AllKeys -contains 'Authorization')) {
-                  $wc.Headers.Add('Authorization', "Bearer $GitHubToken")
-                  $wc.Headers.Add('X-GitHub-Api-Version', '2022-11-28')
-              }
-              $wc.Headers.Add('Referer', (strip_filename $url))
-          '@
-
-          if ([regex]::Matches($source, [regex]::Escape($needle)).Count -ne 1) {
-            throw 'Could not uniquely locate the Referer header line in Scoop checkver.ps1; the upstream script may have changed.'
-          }
-
-          $source = $source.Replace($needle, $replacement.TrimEnd())
-          Set-Content -LiteralPath $checkver -Value $source -Encoding utf8 -NoNewline
-
       - name: Validate every manifest with checkver
         env:
           GITHUB_TOKEN: ${{ github.token }}
