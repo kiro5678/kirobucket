@@ -16,24 +16,12 @@
     ],
     "checkver": {
         "script": [
-            "$url = 'https://api-router.kaspersky-labs.com/downloads/search/v4/b2c?productcodes=3875874&businesspurposes=Update&sites=https%3A%2F%2Fwww.kaspersky.com'",
-            "$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'; 'Accept' = 'application/json, text/plain, */*'; 'Referer' = 'https://www.kaspersky.com/downloads/free-virus-removal-tool' }",
-            "$response = @()",
-            "for ($attempt = 1; $attempt -le 3; $attempt++) {",
-            "    try {",
-            "        $response = @(Invoke-RestMethod -Uri $url -Headers $headers -TimeoutSec 30 -ErrorAction Stop)",
-            "        if ($response.Count -gt 0) { break }",
-            "        throw 'Kaspersky version API returned an empty response.'",
-            "    } catch {",
-            "        if ($attempt -eq 3) { throw \"Kaspersky version API failed after $attempt attempts: $($_.Exception.Message)\" }",
-            "        Start-Sleep -Seconds (2 * $attempt)",
-            "    }",
-            "}",
-            "$obj = $response[0].response.Windows.kvrt.Build.'https://www.kaspersky.com'.Kaspersky.'20'.'en-INT,ru-INT'",
-            "if ($null -eq $obj) { throw 'Kaspersky version API did not return the expected KVRT metadata.' }",
-            "$version = '{0}.{1}.{2}.{3}' -f $obj.VersionNumberMajor,$obj.VersionNumberMinor,$obj.VersionNumberBuild,$obj.VersionNumberRevision",
-            "if ($version -notmatch '^\\d+(?:\\.\\d+){3}$') { throw \"Kaspersky returned an invalid KVRT version: $version\" }",
-            "$version"
+            "$url = 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml'",
+            "$response = Invoke-WebRequest -Uri $url -TimeoutSec 30 -UseBasicParsing -ErrorAction Stop",
+            "$xml = [string]$response.Content",
+            "$match = [regex]::Match($xml, '(?i)(?<version>\\d+(?:\\.\\d+){3})')",
+            "if (-not $match.Success) { throw 'The official KVRT XML did not contain a four-part version.' }",
+            "$match.Groups['version'].Value"
         ],
         "regex": "^(?<version>\\d+(?:\\.\\d+){3})$"
     },
