@@ -153,6 +153,7 @@ jobs:
           if ($skipped.Count -gt 0) {
             $skipped | Format-Table -AutoSize
             Write-Warning 'Skipped checks are not claimed as passed; upstream metadata could not be reached.'
+            exit 0
           } else {
             Write-Host 'All selected manifests passed checkver validation.' -ForegroundColor Green
           }
