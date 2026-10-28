@@ -26,12 +26,12 @@
             "$userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'",
             "function Get-KvrtMetadata {",
             "    param([string]$SourceUrl, [int]$TimeoutSeconds = 60)",
-            "    $null = & curl.exe --silent --show-error --location --max-time $TimeoutSeconds --user-agent $userAgent --cookie $cookieJar --cookie-jar $cookieJar --output $xmlPath $SourceUrl 2>$null",
+            "    $null = & curl.exe --fail --silent --show-error --location --max-time $TimeoutSeconds --user-agent $userAgent --cookie $cookieJar --cookie-jar $cookieJar --output $xmlPath $SourceUrl 2>$null",
             "    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $xmlPath)) { return $null }",
             "    $body = [System.IO.File]::ReadAllText($xmlPath)",
-            "    $versionMatch = [regex]::Match($body, '(?i)version\\s*=\\s*\\"(?<version>\\d+(?:\\.\\d+){3})\\"')",
-            "    $stampMatch = [regex]::Match($body, '(?i)databases_timestamp\\s*=\\s*\\"(?<stamp>\\d{12})\\"')",
-            "    if (-not $versionMatch.Success -or -not $stampMatch.Success) { return $null }",
+            "$versionMatch = [regex]::Match($body, '(?i)version\\s*=\\s*\"(?<version>\\d+(?:\\.\\d+){3})\"')",
+            "    $versionMatch = [regex]::Match($body, '(?i)version\\s*=\\s*\"(?<version>\\d+(?:\\.\\d+){3})\"')",
+            "    $stampMatch = [regex]::Match($body, '(?i)databases_timestamp\\s*=\\s*\"(?<stamp>\\d{12})\"')",
             "    return [pscustomobject]@{ Version = $versionMatch.Groups['version'].Value; Stamp = $stampMatch.Groups['stamp'].Value }",
             "}",
             "try {",
@@ -61,7 +61,7 @@
     "pre_install": [
         "$exe = Join-Path $dir 'KVRT.exe'",
         "$signature = Get-AuthenticodeSignature -FilePath $exe",
-        "if ($signature.Status -ne 'Valid') { throw \\"KVRT.exe has no valid Authenticode signature (status: $($signature.Status)). Refusing to install.\\" }",
+        "if ($signature.Status -ne 'Valid') { throw \"KVRT.exe has no valid Authenticode signature (status: $($signature.Status)). Refusing to install.\" }",
         "if ($null -eq $signature.SignerCertificate -or $signature.SignerCertificate.Subject -notmatch '(?i)Kaspersky') { throw 'KVRT.exe is not signed by Kaspersky. Refusing to install.' }"
     ]
 }
