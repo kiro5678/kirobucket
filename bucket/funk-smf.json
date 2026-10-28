@@ -6,7 +6,7 @@
     "url": "https://funk.eu/downloads/smf/SMF_v18_x64.exe.zip",
     "checkver": {
         "url": "https://funk.eu/smf/",
-        "regex": "(?i)SMF\\s*[–-]\\s*Search my Files\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+        "regex": "(?is)SMF.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
         "url": "https://funk.eu/downloads/smf/SMF_v18_x64.exe.zip"
