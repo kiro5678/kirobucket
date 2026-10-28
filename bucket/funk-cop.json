@@ -6,7 +6,7 @@
     "url": "https://funk.eu/downloads/cop/COP_v0_0_0_3_5.exe.zip",
     "checkver": {
         "url": "https://funk.eu/cop/",
-        "regex": "(?i)COP\\s*[–-]\\s*Color Picker\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+        "regex": "(?is)COP.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
         "url": "https://funk.eu/downloads/cop/COP_v0_0_0_3_5.exe.zip"
