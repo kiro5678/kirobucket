@@ -138,3 +138,33 @@ jobs:
             exit 1
           }
           Write-Host 'All selected manifests passed checkver validation.' -ForegroundColor Green
+      - name: Temporary hash diagnostics
+        if: always()
+        run: |
+          $names = @('funk-bic','funk-cop','funk-hmw','funk-hrc','funk-icu','funk-smf','funk-ssd')
+          $root = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\bucket'
+          $tempRoot = Join-Path $env:RUNNER_TEMP 'scoop-hash-diagnostics'
+          New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
+          foreach ($name in $names) {
+            $path = Join-Path $root "$name.json"
+            if (-not (Test-Path -LiteralPath $path)) { continue }
+            $manifest = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+            $downloads = @()
+            if ($manifest.url -is [string]) { $downloads += [PSCustomObject]@{ Arch = 'default'; Url = $manifest.url } }
+            if ($manifest.architecture) {
+              foreach ($arch in $manifest.architecture.PSObject.Properties) {
+                if ($arch.Value.url -is [string]) { $downloads += [PSCustomObject]@{ Arch = $arch.Name; Url = $arch.Value.url } }
+              }
+            }
+            foreach ($download in $downloads) {
+              $dest = Join-Path $tempRoot "$name-$($download.Arch).bin"
+              try {
+                Invoke-WebRequest -Uri $download.Url -OutFile $dest -TimeoutSec 180 -MaximumRedirection 10 -UseBasicParsing -ErrorAction Stop
+                $hash = (Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant()
+                Write-Host "HASH_RESULT|$name|$($download.Arch)|$hash|$($download.Url)"
+              } catch {
+                Write-Host "HASH_FAIL|$name|$($download.Arch)|$($download.Url)|$($_.Exception.Message)"
+              }
+            }
+          }
+
