@@ -42,10 +42,10 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
 | Weather & Information | 1 | Functional | [View](#weather-information) |
 | Windows Customization | 90 | Functional | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 45 | Functional | [View](#windows-privacy-tweaks) |
+| Windows Privacy & Tweaks | 46 | Functional | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
 
-**Total unique manifests: 798**
+**Total unique manifests: 799**
 
 Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
 
@@ -975,6 +975,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [ultimate-settings-panel](../bucket/ultimate-settings-panel.json) | 8.0.4 | 250+ Windows settings, tools, diagnostics and commands in one searchable panel. | [Homepage](https://github.com/techygeekshome/Ultimate-Settings-Panel) |
 | [winhance](../bucket/winhance.json) | 26.06.12 | Windows enhancement, debloating, optimization and customization utility | [Homepage](https://github.com/memstechtips/Winhance) |
 | [winscript](../bucket/winscript.json) | 2.27.1 | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. | [Homepage](https://winscript.cc/) |
+| [winutil](../bucket/winutil.json) | 26.10.07 | Windows utility for installing programs, applying system tweaks, troubleshooting, and configuring Windows updates. | [Homepage](https://winutil.christitus.com/) |
 | [winzenith](../bucket/winzenith.json) | 1.3.5 | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. | [Homepage](https://winzenith.github.io/) |
 
 ## Windows Update & Management
