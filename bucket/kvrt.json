@@ -1,7 +1,7 @@
 {
-    "version": "20.0.14.0",
+    "version": "20.0.14.0.202608100708",
     "description": "Kaspersky Virus Removal Tool",
-    "homepage": "https://www.kaspersky.com/downloads/free-virus-removal-tool",
+    "homepage": "https://me.kaspersky.com/downloads/free-virus-removal-tool",
     "license": {
         "identifier": "Freeware",
         "url": "https://www.kaspersky.com/end-user-license-agreement"
@@ -11,36 +11,49 @@
     "shortcuts": [
         [
             "KVRT.exe",
-            "KVRT"
+            "Kaspersky Virus Removal Tool",
+            "-accepteula"
         ]
     ],
     "checkver": {
         "script": [
-            "$urls = @('https://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml', 'http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml')",
-            "$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36'; 'Accept' = 'application/xml, text/xml, */*'; 'Referer' = 'https://www.kaspersky.com/downloads/free-virus-removal-tool' }",
-            "$xml = $null",
-            "$errors = @()",
-            "foreach ($sourceUrl in $urls) {",
-            "    for ($attempt = 1; $attempt -le 2; $attempt++) {",
-            "        try {",
-            "            $response = Invoke-WebRequest -Uri $sourceUrl -Headers $headers -TimeoutSec 15 -UseBasicParsing -ErrorAction Stop",
-            "            $candidate = [string]$response.Content",
-            "            if ([string]::IsNullOrWhiteSpace($candidate)) { throw 'The official KVRT XML response was empty.' }",
-            "            $xml = $candidate",
-            "            break",
-            "        } catch {",
-            "            $errors += \"$sourceUrl (attempt $attempt): $($_.Exception.Message)\"",
-            "            if ($attempt -lt 2) { Start-Sleep -Seconds 2 }",
+            "$ErrorActionPreference = 'Stop'",
+            "$xmlUrl = 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml'",
+            "$tempDir = [System.IO.Path]::GetTempPath()",
+            "$id = [guid]::NewGuid().ToString('N')",
+            "$cookieJar = Join-Path $tempDir ('kvrt-' + $id + '.cookies')",
+            "$xmlPath = Join-Path $tempDir ('kvrt-' + $id + '.xml')",
+            "$userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'",
+            "function Get-KvrtMetadata {",
+            "    param([string]$SourceUrl, [int]$TimeoutSeconds = 60)",
+            "    $null = & curl.exe --silent --show-error --location --max-time $TimeoutSeconds --user-agent $userAgent --cookie $cookieJar --cookie-jar $cookieJar --output $xmlPath $SourceUrl 2>$null",
+            "    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $xmlPath)) { return $null }",
+            "    $body = [System.IO.File]::ReadAllText($xmlPath)",
+            "    $versionMatch = [regex]::Match($body, '(?i)version\\s*=\\s*\\"(?<version>\\d+(?:\\.\\d+){3})\\"')",
+            "    $stampMatch = [regex]::Match($body, '(?i)databases_timestamp\\s*=\\s*\\"(?<stamp>\\d{12})\\"')",
+            "    if (-not $versionMatch.Success -or -not $stampMatch.Success) { return $null }",
+            "    return [pscustomobject]@{ Version = $versionMatch.Groups['version'].Value; Stamp = $stampMatch.Groups['stamp'].Value }",
+            "}",
+            "try {",
+            "    $metadata = Get-KvrtMetadata -SourceUrl $xmlUrl -TimeoutSeconds 45",
+            "    if (-not $metadata) {",
+            "        for ($attempt = 1; $attempt -le 3 -and -not $metadata; $attempt++) {",
+            "            $archiveUrl = 'https://web.archive.org/save/' + $xmlUrl",
+            "            $metadata = Get-KvrtMetadata -SourceUrl $archiveUrl -TimeoutSeconds 120",
+            "            if (-not $metadata -and $attempt -lt 3) { Start-Sleep -Seconds 5 }",
             "        }",
             "    }",
-            "    if (-not [string]::IsNullOrWhiteSpace($xml)) { break }",
-            "}",
-            "if ([string]::IsNullOrWhiteSpace($xml)) { throw ('Could not retrieve official KVRT version metadata. ' + ($errors -join ' | ')) }",
-            "$match = [regex]::Match($xml, '(?i)(?<version>\\d+(?:\\.\\d+){3})')",
-            "if (-not $match.Success) { throw 'The official KVRT XML did not contain a four-part version.' }",
-            "$match.Groups['version'].Value"
+            "    if (-not $metadata) {",
+            "        $snapshotUrl = 'https://web.archive.org/web/2id_/' + $xmlUrl",
+            "        $metadata = Get-KvrtMetadata -SourceUrl $snapshotUrl -TimeoutSeconds 90",
+            "    }",
+            "    if (-not $metadata) { throw 'Could not retrieve version and database timestamp from Kaspersky KVRT metadata or the Wayback Machine.' }",
+            "    '{0}.{1}' -f $metadata.Version, $metadata.Stamp",
+            "} finally {",
+            "    Remove-Item -LiteralPath $cookieJar, $xmlPath -Force -ErrorAction SilentlyContinue",
+            "}"
         ],
-        "regex": "^(?<version>\\d+(?:\\.\\d+){3})$"
+        "regex": "^(?<version>\\d+(?:\\.\\d+){3}\\.\\d{12})$"
     },
     "autoupdate": {
         "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe"
@@ -48,7 +61,7 @@
     "pre_install": [
         "$exe = Join-Path $dir 'KVRT.exe'",
         "$signature = Get-AuthenticodeSignature -FilePath $exe",
-        "if ($signature.Status -ne 'Valid') { throw \"KVRT.exe has no valid Authenticode signature (status: $($signature.Status)). Refusing to install.\" }",
+        "if ($signature.Status -ne 'Valid') { throw \\"KVRT.exe has no valid Authenticode signature (status: $($signature.Status)). Refusing to install.\\" }",
         "if ($null -eq $signature.SignerCertificate -or $signature.SignerCertificate.Subject -notmatch '(?i)Kaspersky') { throw 'KVRT.exe is not signed by Kaspersky. Refusing to install.' }"
     ]
 }
