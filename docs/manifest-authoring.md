@@ -177,3 +177,5 @@ Replace `taskexplorer` with the manifest basename, without `.json`. Review every
 - [Scoop checkver implementation](https://github.com/ScoopInstaller/Scoop/blob/master/bin/checkver.ps1)
 - [Scoop autoupdate implementation](https://github.com/ScoopInstaller/Scoop/blob/master/lib/autoupdate.ps1)
 - [ScoopInstaller/GithubActions and Excavator](https://github.com/ScoopInstaller/GithubActions)
+
+- For version-history pages rendered as HTML tables, do not require a literal `|` after the version: the raw response may separate the version and date with HTML cell tags. Match the version near the `Version History` heading and validate it against the raw response.
