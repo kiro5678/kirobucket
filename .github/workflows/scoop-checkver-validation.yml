@@ -41,7 +41,11 @@ jobs:
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $source = Get-Content -LiteralPath $checkver -Raw
-          $needle = '    $wc.Headers.Add(''Referer'', (strip_filename $url))'
+          $pattern = '(?m)^\s*\$wc\.Headers\.Add\(''Referer'', \(strip_filename \$url\)\)\s*$'
+          $matches = [regex]::Matches($source, $pattern)
+          if ($matches.Count -ne 1) {
+            throw "Expected one Referer header line in Scoop checkver.ps1, found $($matches.Count)."
+          }
           $replacement = @'
               if (($url -match '^https://api\.github\.com/') -and $GitHubToken -and -not ($wc.Headers.AllKeys -contains 'Authorization')) {
                   $wc.Headers.Add('Authorization', "Bearer $GitHubToken")
@@ -49,12 +53,7 @@ jobs:
               }
               $wc.Headers.Add('Referer', (strip_filename $url))
           '@
-
-          if ([regex]::Matches($source, [regex]::Escape($needle)).Count -ne 1) {
-            throw 'Could not uniquely locate the Referer header line in Scoop checkver.ps1; the upstream script may have changed.'
-          }
-
-          $source = $source.Replace($needle, $replacement.TrimEnd())
+          $source = [regex]::Replace($source, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $replacement.TrimEnd() }, 1)
           Set-Content -LiteralPath $checkver -Value $source -Encoding utf8 -NoNewline
 
       - name: Validate every manifest with checkver
