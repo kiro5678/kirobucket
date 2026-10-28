@@ -18,13 +18,23 @@
     "checkver": {
         "script": [
             "$url = 'https://api-router.kaspersky-labs.com/downloads/search/v4/b2c?productcodes=3875874&businesspurposes=Update&sites=https%3A%2F%2Fwww.kaspersky.com'",
-            "$resp = Invoke-WebRequest -Uri $url",
-            "$json = $resp.Content | ConvertFrom-Json",
+            "$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/130.0 Safari/537.36'; 'Referer' = 'https://www.kaspersky.com/downloads/free-virus-removal-tool'; 'Accept' = 'application/json, text/plain, */*' }",
+            "$json = $null",
+            "for ($attempt = 1; $attempt -le 3 -and $null -eq $json; $attempt++) {",
+            "  try {",
+            "    $response = Invoke-WebRequest -Uri $url -Headers $headers -TimeoutSec 30 -UseBasicParsing",
+            "    $json = [string]$response.Content | ConvertFrom-Json",
+            "  } catch {",
+            "    if ($attempt -eq 3) { throw \"Kaspersky's official version API failed after 3 attempts: $($_.Exception.Message)\" }",
+            "    Start-Sleep -Seconds 2",
+            "  }",
+            "}",
             "$obj = $json[0].response.Windows.kvrt.Build.'https://www.kaspersky.com'.Kaspersky.'20'.'en-INT,ru-INT'",
+            "if ($null -eq $obj -or [string]::IsNullOrWhiteSpace([string]$obj.VersionNumberMajor)) { throw 'Kaspersky API response did not contain the KVRT version fields.' }",
             "$version = \"{0}.{1}.{2}.{3}\" -f $obj.VersionNumberMajor,$obj.VersionNumberMinor,$obj.VersionNumberBuild,$obj.VersionNumberRevision",
             "$version"
         ],
-        "regex": "(?<version>.+)"
+        "regex": "^(?<version>\\d+(?:\\.\\d+){3})$"
     },
     "autoupdate": {
         "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe"
