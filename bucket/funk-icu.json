@@ -6,7 +6,7 @@
     "url": "https://funk.eu/downloads/icu/ICU_v6_-_Exe.zip",
     "checkver": {
         "url": "https://funk.eu/icu-icon-configuration-utility/",
-        "regex": "(?i)ICU\\s*[–-]\\s*Icon Configuration Utility\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+        "regex": "(?is)ICU.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
         "url": "https://funk.eu/downloads/icu/ICU_v6_-_Exe.zip"
