@@ -17,11 +17,13 @@
     ],
     "checkver": {
         "script": [
-            "$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' }",
-            "$page = Invoke-WebRequest -Uri 'https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/' -Headers $headers -TimeoutSec 30",
-            "$match = [regex]::Match($page.Content, 'haruna-master-(?<version>\\d+)-windows-gcc-x86_64\\.7z')",
-            "if (-not $match.Success) { throw 'Could not find Haruna Windows x64 archive in the official KDE index.' }",
-            "Write-Output $match.Groups['version'].Value"
+            "$headers = @{ 'User-Agent' = 'Mozilla/5.0' }",
+            "$html = & curl.exe --fail --location --silent --show-error --max-time 30 --user-agent 'Mozilla/5.0' 'https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/'",
+            "if ($LASTEXITCODE -ne 0) { throw 'Could not download the official KDE Haruna index.' }",
+            "$matches = [regex]::Matches(($html -join \"`n\"), 'haruna-master-(\\d+)-windows-gcc-x86_64(?:\\.7z|\\.exe)')",
+            "if ($matches.Count -eq 0) { throw 'Could not find Haruna Windows x64 artifacts in the official KDE index.' }",
+            "$version = ($matches | ForEach-Object { [int]$_.Groups[1].Value } | Measure-Object -Maximum).Maximum",
+            "Write-Output $version"
         ],
         "regex": "^(?<version>\\d+)$"
     },
