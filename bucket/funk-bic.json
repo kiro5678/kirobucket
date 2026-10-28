@@ -20,7 +20,7 @@
     "persist": "BIC.ini",
     "hash": "00a8895d77a5416b48bfd3cb7f161188ed8630e49ca9efd82c65b0f7d15a6e2a",
     "notes": [
-        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. The publisher does not publish a SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download.",
         "The publisher specifies Creative Commons BY-NC-ND 3.0; the application's settings file BIC.ini is persisted.",
         "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
