@@ -180,3 +180,4 @@ Replace `taskexplorer` with the manifest basename, without `.json`. Review every
 
 - For version-history pages rendered as HTML tables, do not require a literal `|` after the version: the raw response may separate the version and date with HTML cell tags. Match the version near the `Version History` heading and validate it against the raw response.
 - For directory-index checkver scripts, test the raw response from the same request method used by Scoop. If PowerShell's default request receives a different response, use a browser-like User-Agent or `curl.exe`, and fail explicitly when no artifact filename is found.
+- If an upstream project has shut down and its official download assets return 404, do not replace them with an unverified third-party mirror. Remove the unusable manifest or restore it only after an official source is available.
