@@ -48,8 +48,8 @@ jobs:
             throw "Expected one Referer header line in Scoop checkver.ps1, found $($matches.Count)."
           }
           $replacement = @'
-              if (($url -match '^https://api\.github\.com/') -and $GitHubToken -and -not ($wc.Headers.AllKeys -contains 'Authorization')) {
-                  $wc.Headers.Add('Authorization', "Bearer $GitHubToken")
+              if (($url -match '^https://api\.github\.com/') -and $env:GITHUB_TOKEN -and -not ($wc.Headers.AllKeys -contains 'Authorization')) {
+                  $wc.Headers.Add('Authorization', "Bearer $env:GITHUB_TOKEN")
                   $wc.Headers.Add('X-GitHub-Api-Version', '2022-11-28')
               }
               $wc.Headers.Add('Referer', (strip_filename $url))
