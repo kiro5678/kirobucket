@@ -69,7 +69,7 @@ jobs:
           $failed = @()
           $skipped = @()
           $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
-          $upstreamBlockedPattern = '(?i)(HTTP (?:403|429|500|502|503|504|000)\b|curl exit (?:6|7|22|28|35|52|56|60)\b|Could not reach Kaspersky KVRT metadata or a usable Wayback snapshot)'
+          $upstreamBlockedPattern = '(?i)Could not reach Kaspersky KVRT metadata, a usable Wayback snapshot, or the community fallback manifest'
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch' -and [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
             throw 'Full-bucket checkver requires a repository secret named CHECKVER_GITHUB_TOKEN (a token that can read public GitHub repositories). Add it under Settings > Secrets and variables > Actions, then rerun workflow_dispatch.'
@@ -124,7 +124,7 @@ jobs:
             } catch {
               $errorDetails = "$($_.Exception.Message)`n$outputText"
               if ($manifest.BaseName -eq 'kvrt' -and $errorDetails -match $upstreamBlockedPattern) {
-                $skipped += [PSCustomObject]@{ Manifest = $manifest.Name; Reason = 'Kaspersky and Wayback metadata endpoints were unreachable from this GitHub Actions runner.' }
+                $skipped += [PSCustomObject]@{ Manifest = $manifest.Name; Reason = 'Kaspersky, Wayback, and community fallback metadata sources were unreachable from this GitHub Actions runner.' }
                 Write-Warning "SKIPPED: $($manifest.Name) could not retrieve upstream build metadata from this runner. This check is not counted as a pass."
                 if ($outputText) { Write-Host $outputText }
                 continue
