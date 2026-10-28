@@ -38,7 +38,7 @@ jobs:
 
       - name: Enable authenticated GitHub API requests in Scoop checkver
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $source = Get-Content -LiteralPath $checkver -Raw
@@ -56,9 +56,12 @@ jobs:
           '@
           $source = [regex]::Replace($source, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $replacement.TrimEnd() }, 1)
           Set-Content -LiteralPath $checkver -Value $source -Encoding utf8 -NoNewline
-      - name: Validate every manifest with checkver
+      - name: Validate changed manifests with checkver
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.before || '' }}
+          HEAD_SHA: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
           SCOOP_HOME: ${{ github.workspace }}\\scoop_core
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
@@ -66,54 +69,72 @@ jobs:
           $failed = @()
           $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
 
-          $manifests = Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse |
-            Sort-Object FullName
+          if ($env:EVENT_NAME -eq 'workflow_dispatch' -and [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
+            throw 'Full-bucket checkver requires a repository secret named CHECKVER_GITHUB_TOKEN (a token that can read public GitHub repositories). Add it under Settings > Secrets and variables > Actions, then rerun workflow_dispatch.'
+          }
 
-          Write-Host "Found $($manifests.Count) manifest(s)."
+          if ($env:EVENT_NAME -eq 'push') {
+            $baseSha = $env:BASE_SHA.Trim()
+            $headSha = $env:HEAD_SHA.Trim()
+            if ($baseSha -notmatch '^[0-9a-fA-F]{40}$' -or $headSha -notmatch '^[0-9a-fA-F]{40}$') {
+              throw 'Could not determine the push base and head commits for changed-manifest validation.'
+            }
+            $repoRoot = Split-Path $bucket -Parent
+            git -C $repoRoot cat-file -e "${baseSha}^{commit}" 2>$null
+            if ($LASTEXITCODE -ne 0) {
+              throw "Push base commit $baseSha is unavailable; cannot identify changed manifests."
+            }
+            $changedPaths = @(git -C $repoRoot diff --name-only $baseSha $headSha)
+            if ($LASTEXITCODE -ne 0) {
+              throw "Could not compare $baseSha with $headSha."
+            }
+            $changedManifests = @($changedPaths | Where-Object {
+              $_.Replace('\', '/') -match '^bucket/.+\.json$'
+            })
+            if ($changedManifests.Count -eq 0) {
+              Write-Host 'No bucket manifests changed in this push. Use workflow_dispatch to validate the full bucket.'
+              exit 0
+            }
+            $manifests = @($changedManifests | ForEach-Object {
+              Join-Path $repoRoot $_
+            } | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | ForEach-Object {
+              Get-Item -LiteralPath $_
+            } | Sort-Object FullName)
+          } else {
+            $manifests = @(Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse | Sort-Object FullName)
+          }
+
+          Write-Host "Found $($manifests.Count) manifest(s) to validate."
 
           foreach ($manifest in $manifests) {
             Write-Host ''
-            Write-Host "============================================================"
+            Write-Host '============================================================'
             Write-Host "Checking: $($manifest.Name)"
-            Write-Host "============================================================"
-
+            Write-Host '============================================================'
             $outputText = ''
-
             try {
-              # checkver.ps1 is a PowerShell script, not a native executable.
-              # Do not use $LASTEXITCODE to judge its result.
               $output = @(& $checkver -App $manifest.FullName -ThrowError *>&1 | ForEach-Object { "$_" })
               $outputText = $output -join [Environment]::NewLine
-
               if ($outputText -match $failurePattern) {
                 throw "Version detection failed: $($Matches[0])"
               }
-
               Write-Host "PASS: $($manifest.BaseName)" -ForegroundColor Green
-            }
-            catch {
-              $failed += [PSCustomObject]@{
-                Manifest = $manifest.Name
-                Error    = $_.Exception.Message
-              }
+            } catch {
+              $failed += [PSCustomObject]@{ Manifest = $manifest.Name; Error = $_.Exception.Message }
               Write-Host "FAILED: $($manifest.Name)" -ForegroundColor Red
               Write-Host $_.Exception.Message -ForegroundColor Red
-              if ($outputText) {
-                Write-Host $outputText
-              }
+              if ($outputText) { Write-Host $outputText }
             }
           }
 
           Write-Host ''
-          Write-Host "============================================================"
-          Write-Host "Checkver summary"
-          Write-Host "============================================================"
+          Write-Host '============================================================'
+          Write-Host 'Checkver summary'
+          Write-Host '============================================================'
           Write-Host "Checked: $($manifests.Count)"
           Write-Host "Failed:  $($failed.Count)"
-
           if ($failed.Count -gt 0) {
             $failed | Format-Table -AutoSize
             exit 1
           }
-
-          Write-Host "All manifests passed checkver validation." -ForegroundColor Green
+          Write-Host 'All selected manifests passed checkver validation.' -ForegroundColor Green
