@@ -32,6 +32,7 @@
         ],
         "regex": "^(?<version>\\d+(?:\\.\\d+)+)$"
     },
+    "notes": "Detects the version from the final installer URL returned by Microsoft's official OneDrive redirect.",
     "autoupdate": {
         "architecture": {
             "64bit": {
