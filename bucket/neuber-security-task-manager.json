@@ -6,13 +6,13 @@
     "url": "https://www.neuber.com/download/SecurityTaskManager_Setup.zip",
     "checkver": {
         "script": [
-            "$page = [string](Invoke-WebRequest -Uri 'https://www.neuber.com/' -UseBasicParsing).Content",
-            "$text = [regex]::Replace($page, '<[^>]+>', ' ')",
-            "$match = [regex]::Match($text, '(?is)Security\\s+Task\\s+Manager\\s+AI\\s+version\\s+(?<version>\\d+\\.\\d+[a-z]?)')",
-            "if (-not $match.Success) { throw 'Could not find the current Security Task Manager version on the official Neuber website.' }",
+            "$response = Invoke-WebRequest -Uri 'https://www.neuber.com/taskmanager/update.html' -UseBasicParsing",
+            "$html = [string]$response.Content",
+            "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace($html, '<[^>]+>', ' '))",
+            "$match = [regex]::Match($text, '(?is)Security\\s+Task\\s+Manager\\s+(?<version>\\d+\\.\\d+[a-z]?)\\s*\\(')",
+            "if (-not $match.Success) { throw 'Could not parse the latest Security Task Manager version from the official update page.' }",
             "$match.Groups['version'].Value"
-        ],
-        "regex": "(?<version>\\d+\\.\\d+[a-z]?)"
+        ]
     },
     "autoupdate": {
         "url": "https://www.neuber.com/download/SecurityTaskManager_Setup.zip"
