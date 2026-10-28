@@ -11,7 +11,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Browsers & Communication | 7 | Functional | [View](#browsers-communication) |
 | ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
 | Clipboard & Text | 33 | Functional | [View](#clipboard-text) |
-| Developer & Technical Tools | 43 | Functional | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 44 | Functional | [View](#developer-technical-tools) |
 | Download Managers | 16 | Functional | [View](#download-managers) |
 | EFSoftware Suite | 13 | Publisher cross-list | [View](#efsoftware-suite) |
 | Emulators & Compatibility | 15 | Functional | [View](#emulators-compatibility) |
@@ -41,7 +41,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Türkaysoft Suite | 8 | Publisher cross-list | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
 | Weather & Information | 1 | Functional | [View](#weather-information) |
-| Windows Customization | 92 | Functional | [View](#windows-customization) |
+| Windows Customization | 93 | Functional | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | Functional | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
 
@@ -51,7 +51,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Funk.eu Suite | 7 | Publisher cross-list | [View](#funk-eu-suite) |
 | Neuber Suite | 2 | Publisher cross-list | [View](#neuber-suite) |
 
-**Total unique manifests: 813**
+**Total unique manifests: 815**
 
 Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
 
@@ -128,6 +128,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [cmtrace](../bucket/cmtrace.json) | 1.6.3 | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. | [Homepage](https://cmtraceopen.com) |
 | [detect-it-easy](../bucket/detect-it-easy.json) | 3.10 | Tool for identifying packers, protectors, compilers, and file formats | [Homepage](https://github.com/horsicq/Detect-It-Easy) |
 | [firelink](../bucket/firelink.json) | 1.5.0 | Firelink | [Homepage](https://github.com/nimbold/Firelink) |
+| [lopesoft-lopeedit](../bucket/lopesoft-lopeedit.json) | 5.8.1 | Tabbed programmer's editor and Notepad replacement with syntax highlighting. | [Homepage](https://www.lopesoft.com/index.php/en/products/lopeedit) |
 | [makerom](../bucket/makerom.json) | 0.19.0 | A CLI tool to create CTR (Nintendo 3DS) ROM images. | [Homepage](https://github.com/3DSGuy/Project_CTR) |
 | [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | 8.4.0 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
 | [mitec-hexedit](../bucket/mitec-hexedit.json) | 7.1.0 | Hexadecimal editor with data inspector, calculator, file compare, memory dump and disk dump tools. | [Homepage](https://www.mitec.cz/wp/mhex/) |
@@ -894,6 +895,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [komorebi-nightly](../bucket/komorebi-nightly.json) | 2026-08-22 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
 | [lively](../bucket/lively.json) | 2.2.1.0 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
 | [livewallpaper](../bucket/livewallpaper.json) | 4.0.1-alpha.4 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
+| [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 8.6 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
 | [magic-mouse-move](../bucket/magic-mouse-move.json) | 1.04 | Move the mouse pointer automatically. | [Homepage](https://www.softwareok.com/?Download=MagicMouseMove) |
 | [magic-mouse-trails](../bucket/magic-mouse-trails.json) | 4.51 | Display customizable mouse trails. | [Homepage](https://www.softwareok.com/?Download=MagicMouseTrails) |
 | [mousefx-generator](../bucket/mousefx-generator.json) | 1.1.0 | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. | [Homepage](https://github.com/os4ma31/MouseFX-Generator) |
