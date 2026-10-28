@@ -27,12 +27,13 @@
     },
     "checkver": {
         "script": [
-            "$resp = Invoke-WebRequest -Uri 'https://www.airserver.com/download/windows/classic/x64' -MaximumRedirection 0 -SkipHttpErrorCheck -ErrorAction Ignore",
-            "$url = $resp.Headers.Location",
-            "$version = $url -split '/|-' -match '\\d+(\\.\\d+)+$'",
-            "Write-Output \"$version\""
+            "$url = & curl.exe --silent --show-error --head --max-redirs 0 --max-time 30 --output NUL --write-out '%{redirect_url}' 'https://www.airserver.com/download/windows/classic/x64'",
+            "if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($url)) { throw 'Could not retrieve the official AirServer download redirect.' }",
+            "$match = [regex]::Match($url, 'AirServer-(?<version>\\\\d+(?:\\\\.\\\\d+)+)-x64\\\\.msi')",
+            "if (-not $match.Success) { throw 'Could not detect the AirServer version from its official redirect URL.' }",
+            "$match.Groups['version'].Value"
         ],
-        "regex": "(?<version>.+)"
+        "regex": "^(?<version>\\\\d+(?:\\\\.\\\\d+)+)$"
     },
     "autoupdate": {
         "architecture": {
