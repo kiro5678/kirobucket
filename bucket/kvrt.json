@@ -76,7 +76,7 @@
     ],
     "notes": [
         "The manifest version combines Kaspersky's product version with the database timestamp (YYYYMMDDHHMM) from kvrt.xml to detect refreshed builds behind the unversioned latest download URL.",
-        "Version detection tries Kaspersky's official metadata first. If the endpoint blocks the CI runner, it tries the Internet Archive save endpoint, then an archived snapshot. The executable download URL remains on Kaspersky's official host.",
+        "Version detection tries Kaspersky's official metadata first, then the Internet Archive save endpoint and an archived snapshot if needed. If both metadata sources are unreachable in GitHub Actions, the check is reported as skipped rather than passed. The executable download remains on Kaspersky's official host.",
         "Installation is refused unless KVRT.exe has a valid Authenticode signature from Kaspersky."
     ]
 }
