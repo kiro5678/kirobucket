@@ -6,7 +6,7 @@
     "url": "https://funk.eu/downloads/hrc/HRC_-_HotKey_Resolution_Changer_v2_1.exe.zip",
     "checkver": {
         "url": "https://funk.eu/hrc/",
-        "regex": "(?i)HRC\\s*[–-]\\s*HotKey Resolution Changer\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+        "regex": "(?is)HRC.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
         "url": "https://funk.eu/downloads/hrc/HRC_-_HotKey_Resolution_Changer_v2_1.exe.zip"
