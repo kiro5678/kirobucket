@@ -65,7 +65,7 @@ jobs:
               throw "Could not compare $baseSha with $headSha."
             }
             $changedManifests = @($changedPaths | Where-Object {
-              $_.Replace('\\', '/') -match '^bucket/.+\.json$'
+              $_.Replace('\', '/') -match '^bucket/.+\.json$'
             })
             if ($changedManifests.Count -eq 0) {
               Write-Host 'No bucket manifests changed in this push. Use workflow_dispatch to validate the full bucket.'
