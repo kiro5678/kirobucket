@@ -86,7 +86,7 @@ jobs:
             }
 
             $sha256 = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
-            $manifest.hash = $sha256
+            $manifest | Add-Member -MemberType NoteProperty -Name hash -Value $sha256 -Force
 
             $existingNotes = @()
             if ($null -ne $manifest.notes) {
