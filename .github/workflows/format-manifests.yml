@@ -2,6 +2,8 @@ name: Normalize manifest newlines
 
 on:
   push:
+    branches:
+      - master
     paths:
       - "bucket/**"
       - ".github/workflows/format-manifests.yml"
