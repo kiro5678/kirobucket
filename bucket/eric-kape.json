@@ -19,9 +19,12 @@
     ],
     "checkver": {
         "script": [
-            "$response = Invoke-WebRequest -Uri 'https://kape.zip' -Method Head -MaximumRedirection 10",
-            "$lastModified = $response.Headers['Last-Modified']",
-            "if ([string]::IsNullOrWhiteSpace($lastModified)) { throw 'The KAPE download did not return a Last-Modified header.' }",
+            "$headers = & curl.exe --silent --show-error --location --head --max-time 45 --dump-header - 'https://kape.zip'",
+            "if ($LASTEXITCODE -ne 0 -or $null -eq $headers) { throw 'Could not read response headers from the official KAPE download.' }",
+            "$headerText = $headers -join \"`n\"",
+            "$matches = [regex]::Matches($headerText, '(?im)^Last-Modified:\\s*(?<date>[^\\r\\n]+)')",
+            "if ($matches.Count -eq 0) { throw 'The official KAPE download did not return a Last-Modified header.' }",
+            "$lastModified = $matches[$matches.Count - 1].Groups['date'].Value.Trim()",
             "[DateTime]::Parse($lastModified).ToUniversalTime().ToString('yyyy.MM.dd.HHmm', [Globalization.CultureInfo]::InvariantCulture)"
         ],
         "regex": "(?<version>\\d{4}\\.\\d{2}\\.\\d{2}\\.\\d{4})"
