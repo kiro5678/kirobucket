@@ -1,5 +1,5 @@
 {
-    "version": "1944",
+    "version": "1.8.1",
     "description": "An open source media player built with Qt/QML and libmpv",
     "homepage": "https://haruna.kde.org/",
     "license": "GPL-3.0-or-later",
@@ -17,25 +17,17 @@
     ],
     "checkver": {
         "script": [
-            "$headers = @{ 'User-Agent' = 'Mozilla/5.0' }",
-            "$html = & curl.exe --fail --location --silent --show-error --max-time 30 --user-agent 'Mozilla/5.0' 'https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/'",
-            "if ($LASTEXITCODE -ne 0) { throw 'Could not download the official KDE Haruna index.' }",
-            "$matches = [regex]::Matches(($html -join \"`n\"), 'haruna-master-(\\d+)-windows-gcc-x86_64(?:\\.7z|\\.exe)')",
-            "if ($matches.Count -eq 0) { throw 'Could not find Haruna Windows x64 artifacts in the official KDE index.' }",
-            "$version = ($matches | ForEach-Object { [int]$_.Groups[1].Value } | Measure-Object -Maximum).Maximum",
-            "Write-Output $version"
+            "$html = & curl.exe --fail --location --silent --show-error --max-time 30 --user-agent 'Mozilla/5.0' 'https://download.kde.org/stable/haruna/'",
+            "if ($LASTEXITCODE -ne 0) { throw 'Could not download the official KDE Haruna stable index.' }",
+            "$matches = [regex]::Matches(($html -join \"`n\"), 'href=\"(?<version>\\d+(?:\\.\\d+){1,2})/\"')",
+            "$versions = @($matches | ForEach-Object { [version]$_.Groups['version'].Value } | Sort-Object -Descending)",
+            "if ($versions.Count -eq 0) { throw 'Could not find a stable Haruna version in the official KDE index.' }",
+            "Write-Output $versions[0].ToString()"
         ],
-        "regex": "^(?<version>\\d+)$"
+        "regex": "^(?<version>\\d+(?:\\.\\d+){1,2})$"
     },
     "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/haruna-master-$version-windows-gcc-x86_64.7z",
-                "hash": {
-                    "url": "$url.sha256",
-                    "regex": "([a-f0-9]{64})"
-                }
-            }
-        }
-    }
+        "url": "https://download.kde.org/stable/haruna/$version/haruna-$version-windows-gcc-x86_64.7z"
+    },
+    "url": "https://download.kde.org/stable/haruna/1.8.1/haruna-1.8.1-windows-gcc-x86_64.7z"
 }
