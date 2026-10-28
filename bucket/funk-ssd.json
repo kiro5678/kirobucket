@@ -3,13 +3,13 @@
     "description": "Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options.",
     "homepage": "https://funk.eu/ssd/",
     "license": "Freeware",
-    "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=234",
+    "url": "https://funk.eu/downloads/ssd/SSD_v4.exe.zip",
     "checkver": {
         "url": "https://funk.eu/ssd/",
         "regex": "(?i)SSD\\s*[–-]\\s*Set Sound Device\\s+v(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
-        "url": "https://funk.eu/wp-content/plugins/download-monitor/download.php?id=234"
+        "url": "https://funk.eu/downloads/ssd/SSD_v4.exe.zip"
     },
     "shortcuts": [
         [
@@ -19,7 +19,7 @@
     ],
     "hash": "35ecf59387c689f485be5d81878e3e92670dfb8c120aeb77848a2fabfce8072d",
     "notes": [
-        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. The publisher does not publish a SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download.",
+        "This is the direct official ZIP URL resolved from the product page's Download Monitor link. The archive path is not version-templated and must be updated manually if the publisher changes it. The publisher does not publish a SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download.",
         "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
 }
