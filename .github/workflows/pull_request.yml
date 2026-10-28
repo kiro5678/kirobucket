@@ -2,7 +2,7 @@ name: Pull Requests
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize, reopened]
   issue_comment:
     types: [created]
 
@@ -18,5 +18,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Detect added manifests
+        id: detect
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $baseSha = $env:BASE_SHA.Trim()
+          $headSha = $env:HEAD_SHA.Trim()
+          if ($baseSha -notmatch '^[0-9a-fA-F]{40}
+ -or $headSha -notmatch '^[0-9a-fA-F]{40}
+) {
+            throw 'Could not determine the pull request base and head commits.'
+          }
+          git cat-file -e "${baseSha}^{commit}" 2>$null
+          if ($LASTEXITCODE -ne 0) { throw "Base commit $baseSha is unavailable." }
+          $changed = @(git diff --name-status $baseSha $headSha)
+          if ($LASTEXITCODE -ne 0) { throw 'Could not inspect pull request changes.' }
+          $added = @($changed | Where-Object { $_ -match '^A\s+bucket/.+\.json
+ })
+          Write-Host "Added manifest files: $($added.Count)"
+          $hasNewManifests = $added.Count -gt 0
+          "has_new_manifests=$($hasNewManifests.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
       - name: Run Pull Request Handler
+        if: github.event_name == 'issue_comment' || steps.detect.outputs.has_new_manifests == 'true'
         uses: ScoopInstaller/GithubActions@5bceeda181721d9d10a18fdcc3ddca6f33467ae6 # v3.0.0
