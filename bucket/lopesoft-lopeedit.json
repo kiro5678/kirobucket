@@ -1,0 +1,23 @@
+{
+    "version": "5.8.1",
+    "description": "Tabbed programmer's editor and Notepad replacement with syntax highlighting",
+    "homepage": "https://www.lopesoft.com/index.php/en/products/lopeedit",
+    "license": "Proprietary",
+    "url": "https://lopesoft.com/lopeedit/LopeEdit-portable.exe#/dl.7z",
+    "hash": "ac42b90e36346e4e217c7fabf3fbac43",
+    "post_install": "Remove-Item \"$dir\\`$PLUGINSDIR\" -Recurse",
+    "shortcuts": [
+        [
+            "LopeEdit.exe",
+            "LopeEdit"
+        ]
+    ],
+    "persist": "Data",
+    "checkver": {
+        "url": "https://www.lopesoft.com/index.php/en/download/lopeedit",
+        "regex": "LopeEdit Portable ([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://lopesoft.com/lopeedit/LopeEdit-portable.exe#/dl.7z"
+    }
+}
