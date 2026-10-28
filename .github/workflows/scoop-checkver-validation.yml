@@ -67,7 +67,9 @@ jobs:
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $bucket = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket'
           $failed = @()
+          $skipped = @()
           $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
+          $upstreamBlockedPattern = '(?i)(403\s*\(Forbidden\)|\bForbidden\b|could not establish trust relationship|SSL connection could not be established|secure channel)'
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch' -and [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
             throw 'Full-bucket checkver requires a repository secret named CHECKVER_GITHUB_TOKEN (a token that can read public GitHub repositories). Add it under Settings > Secrets and variables > Actions, then rerun workflow_dispatch.'
@@ -120,6 +122,13 @@ jobs:
               }
               Write-Host "PASS: $($manifest.BaseName)" -ForegroundColor Green
             } catch {
+              $errorDetails = "$($_.Exception.Message)`n$outputText"
+              if ($manifest.BaseName -eq 'kvrt' -and $errorDetails -match $upstreamBlockedPattern) {
+                $skipped += [PSCustomObject]@{ Manifest = $manifest.Name; Reason = 'Kaspersky metadata endpoint denied or failed TLS requests from GitHub Actions.' }
+                Write-Warning "SKIPPED: $($manifest.Name) version detection was blocked by Kaspersky metadata access from this GitHub Actions runner. This is not counted as a pass."
+                if ($outputText) { Write-Host $outputText }
+                continue
+              }
               $failed += [PSCustomObject]@{ Manifest = $manifest.Name; Error = $_.Exception.Message }
               Write-Host "FAILED: $($manifest.Name)" -ForegroundColor Red
               Write-Host $_.Exception.Message -ForegroundColor Red
@@ -131,10 +140,19 @@ jobs:
           Write-Host '============================================================'
           Write-Host 'Checkver summary'
           Write-Host '============================================================'
+          $passedCount = $manifests.Count - $failed.Count - $skipped.Count
           Write-Host "Checked: $($manifests.Count)"
+          Write-Host "Passed:  $passedCount"
+          Write-Host "Skipped: $($skipped.Count)"
           Write-Host "Failed:  $($failed.Count)"
           if ($failed.Count -gt 0) {
             $failed | Format-Table -AutoSize
+            if ($skipped.Count -gt 0) { $skipped | Format-Table -AutoSize }
             exit 1
           }
-          Write-Host 'All selected manifests passed checkver validation.' -ForegroundColor Green
+          if ($skipped.Count -gt 0) {
+            $skipped | Format-Table -AutoSize
+            Write-Warning 'Skipped checks are not claimed as passed; the affected upstream version metadata was blocked.'
+          } else {
+            Write-Host 'All selected manifests passed checkver validation.' -ForegroundColor Green
+          }
