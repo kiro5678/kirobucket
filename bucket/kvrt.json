@@ -7,7 +7,7 @@
         "url": "https://www.kaspersky.com/end-user-license-agreement"
     },
     "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe",
-    "hash": "004139063c099109cb075ccd6dad44debd3a10050dcefcb35bb15dc37a447267",
+    "hash": "ae2f719895c3404857de40bba42075c597c7bddecef03675ed62f856fa5dec20",
     "bin": "KVRT.exe",
     "shortcuts": [
         [
