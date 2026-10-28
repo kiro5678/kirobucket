@@ -12,7 +12,8 @@
             "$match = [regex]::Match($text, '(?i)Current\\s+version\\s*:\\s*(?<version>\\d+(?:\\.\\d+)+)')",
             "if (-not $match.Success) { throw 'Could not parse the current CS Easy Unlocker version from the official download page.' }",
             "$match.Groups['version'].Value"
-        ]
+        ],
+        "regex": "(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://downloads.computersluggish.com/CSEasyUnlocker.exe"
