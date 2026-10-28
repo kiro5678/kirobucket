@@ -5,7 +5,8 @@
     "license": "GPL-3.0-or-later",
     "architecture": {
         "64bit": {
-            "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/haruna-master-1944-windows-gcc-x86_64.7z"
+            "url": "https://download.kde.org/stable/haruna/1.8.1/haruna-1.8.1-windows-gcc-x86_64.7z",
+            "hash": "53e42bac6fc8b75c8fe5486c13e5cd0d565ac09d838d860cdf3db42069fd9ecc"
         }
     },
     "bin": "bin\\haruna.exe",
@@ -16,18 +17,17 @@
         ]
     ],
     "checkver": {
-        "script": [
-            "$html = & curl.exe --fail --location --silent --show-error --max-time 30 --user-agent 'Mozilla/5.0' 'https://download.kde.org/stable/haruna/'",
-            "if ($LASTEXITCODE -ne 0) { throw 'Could not download the official KDE Haruna stable index.' }",
-            "$matches = [regex]::Matches(($html -join \"`n\"), 'href=\"(?<version>\\d+(?:\\.\\d+){1,2})/\"')",
-            "$versions = @($matches | ForEach-Object { [version]$_.Groups['version'].Value } | Sort-Object -Descending)",
-            "if ($versions.Count -eq 0) { throw 'Could not find a stable Haruna version in the official KDE index.' }",
-            "Write-Output $versions[0].ToString()"
-        ],
-        "regex": "^(?<version>\\d+(?:\\.\\d+){1,2})$"
+        "url": "https://apps.kde.org/haruna/index.xml",
+        "regex": "<title>Release (?<version>[\\d.]+)"
     },
     "autoupdate": {
-        "url": "https://download.kde.org/stable/haruna/$version/haruna-$version-windows-gcc-x86_64.7z"
-    },
-    "url": "https://download.kde.org/stable/haruna/1.8.1/haruna-1.8.1-windows-gcc-x86_64.7z"
+        "architecture": {
+            "64bit": {
+                "url": "https://download.kde.org/stable/haruna/$version/haruna-$version-windows-gcc-x86_64.7z"
+            }
+        },
+        "hash": {
+            "url": "$url.sha256"
+        }
+    }
 }
