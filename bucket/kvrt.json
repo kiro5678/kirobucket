@@ -26,7 +26,8 @@
             "$userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'",
             "function Get-KvrtMetadata {",
             "    param([string]$SourceUrl, [int]$TimeoutSeconds = 60)",
-            "    $null = & curl.exe --fail --silent --show-error --location --max-time $TimeoutSeconds --user-agent $userAgent --cookie $cookieJar --cookie-jar $cookieJar --output $xmlPath $SourceUrl 2>$null",
+            "    Remove-Item -LiteralPath $xmlPath -Force -ErrorAction SilentlyContinue",
+            "    $null = & curl.exe --fail --silent --location --max-time $TimeoutSeconds --user-agent $userAgent --cookie $cookieJar --cookie-jar $cookieJar --output $xmlPath $SourceUrl 2>$null",
             "    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $xmlPath)) { return $null }",
             "    $body = [System.IO.File]::ReadAllText($xmlPath)",
             "    $versionMatch = [regex]::Match($body, '(?i)version\\s*=\\s*\"(?<version>\\d+(?:\\.\\d+){3})\"')",
@@ -63,5 +64,10 @@
         "$signature = Get-AuthenticodeSignature -FilePath $exe",
         "if ($signature.Status -ne 'Valid') { throw \"KVRT.exe has no valid Authenticode signature (status: $($signature.Status)). Refusing to install.\" }",
         "if ($null -eq $signature.SignerCertificate -or $signature.SignerCertificate.Subject -notmatch '(?i)Kaspersky') { throw 'KVRT.exe is not signed by Kaspersky. Refusing to install.' }"
+    ],
+    "notes": [
+        "The manifest version combines the KVRT product version with the 12-digit databases_timestamp from Kaspersky's kvrt.xml so Scoop can detect refreshed builds behind the unversioned latest download URL.",
+        "Version detection tries Kaspersky's official metadata first. If the endpoint blocks the CI runner, it tries the Internet Archive save endpoint, then an archived snapshot. The executable download URL remains on Kaspersky's official host.",
+        "Installation is refused unless KVRT.exe has a valid Authenticode signature from Kaspersky."
     ]
 }
