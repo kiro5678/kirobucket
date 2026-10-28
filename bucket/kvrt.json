@@ -16,14 +16,14 @@
     ],
     "checkver": {
         "script": [
-            "$urls = @('https://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml')",
+            "$urls = @('https://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml', 'http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.xml', 'http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml')",
             "$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0.0.0 Safari/537.36'; 'Accept' = 'application/xml, text/xml, */*'; 'Referer' = 'https://www.kaspersky.com/downloads/free-virus-removal-tool' }",
             "$xml = $null",
             "$errors = @()",
             "foreach ($sourceUrl in $urls) {",
             "    for ($attempt = 1; $attempt -le 2; $attempt++) {",
             "        try {",
-            "            $response = Invoke-WebRequest -Uri $sourceUrl -Headers $headers -TimeoutSec 30 -UseBasicParsing -ErrorAction Stop",
+            "            $response = Invoke-WebRequest -Uri $sourceUrl -Headers $headers -TimeoutSec 15 -UseBasicParsing -ErrorAction Stop",
             "            $candidate = [string]$response.Content",
             "            if ([string]::IsNullOrWhiteSpace($candidate)) { throw 'The official KVRT XML response was empty.' }",
             "            $xml = $candidate",
