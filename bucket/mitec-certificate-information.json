@@ -16,7 +16,7 @@
     ],
     "checkver": {
         "url": "https://www.mitec.cz/wp/mci/",
-        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)\\s*\\|"
+        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://www.mitec.cz/wp/files/CertInfo.zip"

@@ -16,8 +16,14 @@
         ]
     ],
     "checkver": {
-        "url": "https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/",
-        "regex": "haruna-master-([0-9]+)-windows-gcc-x86_64\\.7z"
+        "script": [
+            "$headers = @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36' }",
+            "$page = Invoke-WebRequest -Uri 'https://cdn.kde.org/ci-builds/multimedia/haruna/master/windows/' -Headers $headers -TimeoutSec 30",
+            "$match = [regex]::Match($page.Content, 'haruna-master-(?<version>\\d+)-windows-gcc-x86_64\\.7z')",
+            "if (-not $match.Success) { throw 'Could not find Haruna Windows x64 archive in the official KDE index.' }",
+            "Write-Output $match.Groups['version'].Value"
+        ],
+        "regex": "^(?<version>\\d+)$"
     },
     "autoupdate": {
         "architecture": {

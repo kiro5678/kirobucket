@@ -15,7 +15,7 @@
     ],
     "checkver": {
         "url": "https://www.mitec.cz/wp/mibq/",
-        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)\\s*\\|"
+        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://www.mitec.cz/wp/files/IBQ.zip"

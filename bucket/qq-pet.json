@@ -22,7 +22,9 @@
     ],
     "extract_to": "tmp",
     "checkver": {
-        "github": "https://github.com/AnkioTomas/qqpet"
+        "url": "https://api.github.com/repos/AnkioTomas/qqpet/tags?per_page=100",
+        "jsonpath": "$[0].name",
+        "regex": "^v?(?<version>[\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {

@@ -43,7 +43,7 @@
     },
     "checkver": {
         "url": "https://www.sordum.org/8058/bpuzzle-v1-2/",
-        "regex": "bPuzzle v([\\d.]+)"
+        "regex": "(?i)bPuzzle\\s+v([\\d.]+)"
     },
     "extract_dir": "bPuzzle"
 }

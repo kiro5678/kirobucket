@@ -15,7 +15,7 @@
     ],
     "checkver": {
         "url": "https://www.mitec.cz/wp/smbe/",
-        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)\\s*\\|"
+        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://www.mitec.cz/wp/files/SMBE.zip"
