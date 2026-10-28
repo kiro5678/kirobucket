@@ -38,7 +38,7 @@ jobs:
 
       - name: Enable authenticated GitHub API requests in Scoop checkver
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $source = Get-Content -LiteralPath $checkver -Raw
@@ -61,13 +61,17 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.before || '' }}
           HEAD_SHA: ${{ github.sha }}
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
           SCOOP_HOME: ${{ github.workspace }}\\scoop_core
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $bucket = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket'
           $failed = @()
           $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
+
+          if ($env:EVENT_NAME -eq 'workflow_dispatch' -and [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
+            throw 'Full-bucket checkver requires a repository secret named CHECKVER_GITHUB_TOKEN (a token that can read public GitHub repositories). Add it under Settings > Secrets and variables > Actions, then rerun workflow_dispatch.'
+          }
 
           if ($env:EVENT_NAME -eq 'push') {
             $baseSha = $env:BASE_SHA.Trim()
