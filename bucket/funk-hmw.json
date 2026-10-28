@@ -6,7 +6,7 @@
     "url": "https://funk.eu/downloads/hmw/HMW_v4_x64.exe.zip",
     "checkver": {
         "url": "https://funk.eu/hmw/",
-        "regex": "(?i)HMW\\s*[–-]\\s*Hide my Windows\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+        "regex": "(?is)HMW.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
         "url": "https://funk.eu/downloads/hmw/HMW_v4_x64.exe.zip"
