@@ -28,6 +28,6 @@
         "regex": "^(?<version>\\S+)\\s(?<tag>\\S+)$"
     },
     "autoupdate": {
-        "url": "https://github.com/openzfsonwindows/openzfs/releases/download/zfswin-$matchTag/OpenZFSOnWindows-debug-$version.exe#/setup.exe"
+        "url": "https://github.com/openzfsonwindows/openzfs/releases/download/zfswin-$tag/OpenZFSOnWindows-debug-$version.exe#/setup.exe"
     }
 }
