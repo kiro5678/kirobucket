@@ -33,7 +33,7 @@
             "if (-not $match.Success) { throw \"Could not detect the AirServer version from its final official URL: $url\" }",
             "$match.Groups['version'].Value"
         ],
-        "regex": "^(?<version>\\\\d+(?:\\\\.\\\\d+)+)$"
+        "regex": "^(?<version>\\d+(?:\\.\\d+)+)$"
     },
     "autoupdate": {
         "architecture": {
