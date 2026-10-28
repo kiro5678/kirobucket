@@ -6,7 +6,7 @@
     "url": "https://funk.eu/downloads/ssd/SSD_v4.exe.zip",
     "checkver": {
         "url": "https://funk.eu/ssd/",
-        "regex": "(?i)SSD\\s*[–-]\\s*Set Sound Device\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+        "regex": "(?is)SSD.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
         "url": "https://funk.eu/downloads/ssd/SSD_v4.exe.zip"
