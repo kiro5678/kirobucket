@@ -5,8 +5,14 @@
     "license": "Shareware",
     "url": "https://www.neuber.com/download/FontTwister.zip",
     "checkver": {
-        "url": "https://www.neuber.com/twister/update.html",
-        "regex": "(?i)FontTwister\\s+(?<version>\\d+(?:\\.\\d+)?)\\s*\\(latest\\)"
+        "script": [
+            "$response = Invoke-WebRequest -Uri 'https://www.neuber.com/twister/update.html' -UseBasicParsing",
+            "$html = [string]$response.Content",
+            "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace($html, '<[^>]+>', ' '))",
+            "$match = [regex]::Match($text, '(?is)FontTwister\\s+(?<version>\\d+(?:\\.\\d+)*)\\s*\\(latest\\)')",
+            "if (-not $match.Success) { throw 'Could not parse the latest FontTwister version from the official update page.' }",
+            "$match.Groups['version'].Value"
+        ]
     },
     "autoupdate": {
         "url": "https://www.neuber.com/download/FontTwister.zip"
