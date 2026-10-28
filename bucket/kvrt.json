@@ -15,9 +15,7 @@
         ]
     ],
     "checkver": {
-        "script": [
-            "Write-Output 'nightly'"
-        ],
+        "script": "Write-Output 'nightly'",
         "regex": "^(?<version>nightly)$"
     },
     "autoupdate": {
