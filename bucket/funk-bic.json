@@ -6,7 +6,7 @@
     "url": "https://funk.eu/downloads/BIC/BIC_v2_x64.exe.zip",
     "checkver": {
         "url": "https://funk.eu/bic-batch-image-cropper/",
-        "regex": "(?i)BIC\\s*[–-]\\s*Batch-Image-Cropper\\s+v(?<version>\\d+(?:\\.\\d+)*)"
+        "regex": "(?is)BIC.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
     },
     "autoupdate": {
         "url": "https://funk.eu/downloads/BIC/BIC_v2_x64.exe.zip"
