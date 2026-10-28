@@ -12,7 +12,8 @@
             "$match = [regex]::Match($text, '(?is)Security\\s+Task\\s+Manager\\s+(?<version>\\d+\\.\\d+[a-z]?)\\s*\\(')",
             "if (-not $match.Success) { throw 'Could not parse the latest Security Task Manager version from the official update page.' }",
             "$match.Groups['version'].Value"
-        ]
+        ],
+        "regex": "(?<version>\\d+\\.\\d+[a-z]?)"
     },
     "autoupdate": {
         "url": "https://www.neuber.com/download/SecurityTaskManager_Setup.zip"
