@@ -17,7 +17,9 @@
             "Funk.eu Set Sound Device"
         ]
     ],
+    "hash": "35ecf59387c689f485be5d81878e3e92670dfb8c120aeb77848a2fabfce8072d",
     "notes": [
-        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned."
+        "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
+        "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
 }

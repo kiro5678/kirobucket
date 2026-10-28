@@ -17,8 +17,10 @@
             "Funk.eu SMF – Search my Files"
         ]
     ],
+    "hash": "e30aa8c932146fae963ffcf0fca96f692be39205b1f2bb207bc22642dfc7dbcf",
     "notes": [
         "The publisher uses an opaque Download Monitor file ID instead of a versioned URL. This manifest points to the official file ID currently linked from the product page; if the publisher changes that ID for a later release, url/autoupdate must be updated manually. SHA-256 is not published and is not pinned.",
-        "The download page marks this entry as the x64 executable archive."
+        "The download page marks this entry as the x64 executable archive.",
+        "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
 }

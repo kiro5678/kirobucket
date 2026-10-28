@@ -25,8 +25,9 @@
             "ComputerSluggish CS Easy Unlocker"
         ]
     ],
+    "hash": "d9a67d888df9210f870ffc7ec5f5f600f3344618eebc47506237ce82bd82ff3d",
     "notes": [
-        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
-        "The publisher labels this download as the portable version with no installation required."
+        "The publisher labels this download as the portable version with no installation required.",
+        "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
 }

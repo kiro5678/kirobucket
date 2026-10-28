@@ -24,8 +24,9 @@
             "Neuber Security Task Manager"
         ]
     ],
+    "hash": "a9a8dbdbac43c82aa5a64a08d46f01bddb345b8de25db33e36f407f30def44ab",
     "notes": [
-        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
-        "The official download page identifies this ZIP as the portable version; the product is a 30-day trial."
+        "The official download page identifies this ZIP as the portable version; the product is a 30-day trial.",
+        "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
 }

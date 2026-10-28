@@ -24,8 +24,9 @@
             "Neuber FontTwister"
         ]
     ],
+    "hash": "89cad30aea22f1346097a149b2119998d5178c3f69dc2bfd0d99f16934fc14cf",
     "notes": [
-        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
-        "The publisher documents the ZIP as a no-install portable download; version 1.5 is the latest version currently listed."
+        "The publisher documents the ZIP as a no-install portable download; version 1.5 is the latest version currently listed.",
+        "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
 }

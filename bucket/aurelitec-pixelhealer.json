@@ -17,8 +17,9 @@
             "Aurelitec PixelHealer"
         ]
     ],
+    "hash": "a794b622dd185f51fe2a2945bda1edcee828481b5b8e9075caf72d5afa876369",
     "notes": [
-        "Upstream does not publish a SHA-256 digest; the checksum is not pinned in this manifest.",
-        "The publisher documents this as a portable ZIP with no installation required."
+        "The publisher documents this as a portable ZIP with no installation required.",
+        "SHA-256 was calculated from the current official download; refresh it if the upstream file changes."
     ]
 }
