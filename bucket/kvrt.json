@@ -34,7 +34,6 @@
             "        $kvrtFetchErrors.Add(('{0}: HTTP {1}, curl exit {2}' -f $SourceUrl, ([string]$status).Trim(), $curlExitCode))",
             "        return $null",
             "    }",
-            "    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $xmlPath)) { return $null }",
             "    $body = [System.IO.File]::ReadAllText($xmlPath)",
             "    $versionMatch = [regex]::Match($body, '(?i)version\\s*=\\s*\"(?<version>\\d+(?:\\.\\d+){3})\"')",
             "    $stampMatch = [regex]::Match($body, '(?i)databases_timestamp\\s*=\\s*\"(?<stamp>\\d{12})\"')",
