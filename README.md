@@ -13,10 +13,10 @@ First, make sure Scoop is installed on your system.
 
 Add KiroBucket:
 
-scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
+"scoop bucket add kirobucket https://github.com/kiro5678/kirobucket"
 
 To remove KiroBucket:
-scoop bucket rm kirobucket
+"scoop bucket rm kirobucket"
 
 If you like the project, don’t forget to support me by giving it a star.
 
