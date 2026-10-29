@@ -28,8 +28,9 @@
         ".mucommander"
     ],
     "checkver": {
-        "github": "https://github.com/mucommander/mucommander",
-        "regex": "^(?<version>[\\d.-]+)$"
+        "url": "https://api.github.com/repos/mucommander/mucommander/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^(?<version>\\d+(?:\\.\\d+)*-\\d+)$"
     },
     "autoupdate": {
         "architecture": {
