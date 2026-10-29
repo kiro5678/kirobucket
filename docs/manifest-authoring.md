@@ -133,22 +133,22 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 
 ## Manifest pipeline and automatic validation
 
-The `.github/workflows/manifest-pipeline.yml` workflow starts automatically when a push to `master` changes files under `bucket/`. It detects changed root-level manifest JSON files (including uppercase `.JSON` extensions) and processes the existing changed manifests sequentially. When a manifest is deleted, the pipeline regenerates the README and manifest indexes without trying to validate a file that no longer exists.
+The `.github/workflows/manifest-pipeline.yml` workflow is manually triggered. Select **Manifest Pipeline**, enter one manifest already committed to `master` such as `bucket/taskexplorer.json`, and run it. It processes the selected manifest through the validation stages in order, stopping when a stage fails or times out.
 
-The pipeline also remains manually runnable from GitHub Actions. Select **Manifest Pipeline**, enter a manifest already committed to `master` such as `bucket/taskexplorer.json`, and leave `force_update` enabled unless you intentionally want to skip the forced autoupdate-template test.
+The pipeline requires a manifest path that already exists on `master`. Leave `force_update` enabled unless you intentionally want to skip the forced autoupdate-template test.
 
 For each changed manifest, the orchestrator dispatches and waits for these stages in order:
 
 1. `format-manifests.yml` normalizes the selected manifest only.
 2. `scoop-checkver-validation.yml` checks version detection for that manifest.
 3. `validate-manifest-archives.yml` checks downloadable assets, hashes, and archive paths.
-4. `fxsound.yml` is included for `bucket/fxsound.json`. For an automatic push, the pipeline waits for the standalone FxSound run triggered by that same push rather than starting a duplicate test; a manual pipeline run dispatches the test directly.
+4. `fxsound.yml` is included when the selected manifest is `bucket/fxsound.json`. The orchestrator dispatches the standalone FxSound test and waits for it to finish.
 5. `scoop-autoupdate-validation.yml` checks automatic-update templates in an isolated copy. The orchestrator forces this check by default.
 6. `ci.yml` runs the repository's standard test suite in Windows PowerShell and PowerShell 7.
 
 After all required validation stages pass, `manifest-table.yml` regenerates the README and manifest indexes. It also runs when a manifest deletion needs the indexes refreshed. The orchestrator stops at the first failed or timed-out validation stage.
 
-The child validation workflows remain manually dispatchable so the orchestrator can sequence them. The main Manifest Pipeline is push-triggered for changes under `bucket/` and remains available for manual runs. FxSound retains its existing push and pull-request triggers.
+The child validation workflows remain manually dispatchable so the orchestrator can sequence them. The main Manifest Pipeline is manual-only. FxSound, Excavator, and KVRT verification are also manual-only; the issue and pull-request handlers remain event-driven because they respond to issue/PR events, not direct manifest changes.
 
 ## 6. Required validation before considering work complete
 
@@ -164,9 +164,9 @@ Run the relevant checks from a disposable checkout or working copy where practic
 8. **Live automatic update:** inspect the latest successful Excavator run in relation to the upstream release publication time. A scheduled workflow can be delayed or missed; if necessary, manually dispatch Excavator and inspect whether it detects and commits the update.
 
 The repository currently has these related workflows:
-- `.github/workflows/excavator.yml`: scheduled/manual manifest updater; requires write permission to commit changes.
+- `.github/workflows/excavator.yml`: manual manifest updater; requires write permission to commit changes. It first seeds missing SHA-256 values for the targeted Eric Zimmerman manifests, then runs checkver and fails on update errors.
 - `.github/workflows/scoop-checkver-validation.yml`: validates version detection for every manifest; it does not by itself prove that update templates work.
-- `.github/workflows/validate-manifest-archives.yml`: validates downloadable assets, hashes, and archive paths, then dispatches the checked manifest paths to autoupdate validation.
+- `.github/workflows/validate-manifest-archives.yml`: validates downloadable assets, hashes, and archive paths. The main Manifest Pipeline dispatches autoupdate validation after this stage succeeds.
 - `.github/workflows/scoop-autoupdate-validation.yml`: tests only the archive-validated manifest(s) against an isolated copy with Scoop's `checkver.ps1 -Update`. If there is no newer upstream version, it reports that the URL/hash path was not exercised rather than falsely claiming a full test. Manually dispatch it with `force_update=true` to exercise URL/hash templates even when the current version is already up to date.
 - `.github/workflows/ci.yml`: general manifest tests.
 
