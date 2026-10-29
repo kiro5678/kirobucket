@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Manifest to create/update and validate, e.g. bucket/taskexplorer.json"
+        description: "Manifest already committed to master that you want to validate, e.g. bucket/taskexplorer.json"
         required: true
         type: string
       force_update:
@@ -128,7 +128,7 @@ jobs:
             throw "Timed out waiting for $WorkflowFile to complete within 45 minutes."
           }
 
-          Start-And-WaitWorkflow -WorkflowFile 'format-manifests.yml'
+          Start-And-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
           Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
           Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
 
