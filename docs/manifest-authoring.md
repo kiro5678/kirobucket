@@ -131,6 +131,22 @@ Do not copy an existing manifest blindly. Use it as a reference only after verif
 - For an app that requires a Windows service, first verify whether the upstream GUI provides an explicit in-app install/repair action. If it does, do not register the service during a fresh Scoop install; let the app perform the first-time installation after the user requests it. During Scoop updates, stop and refresh/restart the service only when it was already registered for this Scoop-managed installation. On uninstall, remove the service only when its registered executable belongs to this installation, and do so before Scoop deletes that executable. If upstream provides no in-app install flow, handle the full service lifecycle deliberately. In all cases, guard against overwriting or removing a service registered by another installation, and refuse update/uninstall while the GUI is running if that would leave the service or files inconsistent.
 - If an official payload bundles a prerequisite installer (for example, a VC++ redistributable), do not launch it automatically from a Scoop hook when the package is expected not to trigger elevation for prerequisites. Remove the temporary payload, document the dependency and how it affects the app if absent, and leave installation to the user or the application's own explicit setup flow. Do not leave transient installer payloads in the installed app directory unless needed at runtime. Document machine-wide dependencies that remain after Scoop uninstall.
 
+## Manual manifest pipeline
+
+After adding or editing a manifest, commit it to `master`, then open GitHub Actions and run **Manual Manifest Pipeline** with `bucket/<manifest>.json` as the input. This workflow validates an already-committed manifest; it does not create or edit the manifest content itself.
+
+The orchestrator dispatches and waits for each existing workflow in order:
+
+1. `format-manifests.yml` normalizes the selected manifest only.
+2. `scoop-checkver-validation.yml` checks version detection for that manifest.
+3. `validate-manifest-archives.yml` checks its downloadable assets, hashes, and archive paths.
+4. `fxsound.yml` runs only when the selected manifest is `bucket/fxsound.json`.
+5. `scoop-autoupdate-validation.yml` checks automatic-update templates in an isolated copy. The orchestrator forces this check by default; disable `force_update` only when you intentionally do not want a forced template test.
+6. `ci.yml` runs the repository's standard test suite in Windows PowerShell and PowerShell 7.
+7. `manifest-table.yml` regenerates README and manifest indexes after all required tests pass.
+
+The orchestrator stops at the first failed or timed-out stage. Each child workflow file remains in the repository and can also be run manually on its own. The pipeline-related workflows no longer start from manifest `push` events or `repository_dispatch`, preventing formatter/table commits from starting duplicate validation chains.
+
 ## 6. Required validation before considering work complete
 
 Run the relevant checks from a disposable checkout or working copy where practical, and inspect the resulting diff.
