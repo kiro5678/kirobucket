@@ -13,7 +13,7 @@
     "extract_dir": "RECmd",
     "notes": [
         "Requires the .NET 10 Runtime.",
-        "The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated."
+        "The upstream site does not publish a static SHA-256 checksum. The initial checksum is calculated from its official archive; Scoop recalculates it when updating the manifest."
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",
