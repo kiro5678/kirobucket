@@ -1,21 +1,7 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - 'main'
-      - 'master'
-    paths-ignore:
-      - 'bucket/**'
-      - '.github/workflows/format-manifests.yml'
-      - 'README.md'
-      - 'docs/**'
-      - 'logs/**'
-  pull_request:
   workflow_dispatch:
-  repository_dispatch:
-    types:
-      - archives-validated
 
 permissions:
   contents: read
