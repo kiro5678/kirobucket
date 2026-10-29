@@ -47,7 +47,7 @@ jobs:
       - name: Identify packer and installer framework with Detect It Easy
         shell: pwsh
         env:
-          GITHUB_TOKEN: \${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
           $installer = Join-Path $env:RUNNER_TEMP "MuMu-setup-nxmain-V1.8.5.5748-overseas-1013104356.exe"
