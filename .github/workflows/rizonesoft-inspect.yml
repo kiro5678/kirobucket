@@ -135,6 +135,7 @@ jobs:
               $files = Get-ChildItem -LiteralPath $target -Recurse -File -ErrorAction SilentlyContinue
               Write-Host "ExtractedFileCount=$($files.Count)"
               if ($name -eq 'rizonesoft-office') {
+                $files | Where-Object { $_.Extension -ieq '.exe' -and $_.DirectoryName -eq (Join-Path $target '{app}') } | ForEach-Object { Write-Host "OFFICE_ROOT_EXECUTABLE=$($_.Name)" }
                 $files | Where-Object { $_.Extension -ieq '.exe' -and $_.FullName.Substring($target.Length) -match '(?i)(office|rizone|write|grid|stage|flow|plan|mail|suite|launcher|start)' } | ForEach-Object { Write-Host "OFFICE_EXECUTABLE=$($_.FullName.Substring($target.Length).TrimStart('\','/'))" }
                 $script = Join-Path $target 'install_script.iss'
                 if (Test-Path $script) {
