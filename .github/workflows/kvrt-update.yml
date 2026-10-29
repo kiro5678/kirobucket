@@ -5,13 +5,7 @@ on:
   schedule:
     - cron: '23 4 1 */2 *'
   workflow_dispatch:
-  # Allows testing this workflow on the open manifest-fix branch before merge.
-  push:
-    branches:
-      - fix/checkver-errors-20261028
-    paths:
-      - '.github/workflows/kvrt-update.yml'
-      - 'bucket/kvrt.json'
+  # This workflow only verifies and publishes a backup; it never rewrites the Scoop manifest.
 
 permissions:
   contents: write
@@ -38,7 +32,6 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/kvrt.json'
           $exePath = Join-Path $env:RUNNER_TEMP 'KVRT.exe'
           $xmlPath = Join-Path $env:RUNNER_TEMP 'kvrt.xml'
           $cookieJar = Join-Path $env:RUNNER_TEMP 'kvrt.cookies'
@@ -46,10 +39,6 @@ jobs:
           $exeUrl = 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe'
           $userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
           $diagnostics = [System.Collections.Generic.List[string]]::new()
-
-          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-            throw "KVRT manifest was not found: $manifestPath"
-          }
 
           function Invoke-KvrtCurl {
             param(
@@ -239,28 +228,7 @@ jobs:
           ) | ForEach-Object {
             [System.IO.File]::AppendAllText($env:GITHUB_OUTPUT,$_ + [Environment]::NewLine,[System.Text.UTF8Encoding]::new($false))
           }
-          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -AsHashtable
-          $oldVersion = [string]$manifest.version
-          $manifest.version = $newVersion
-
-          $notes = [System.Collections.Generic.List[string]]::new()
-          if ($null -ne $manifest.notes) {
-            if ($manifest.notes -is [string]) {
-              $notes.Add([string]$manifest.notes)
-            } else {
-              foreach ($note in @($manifest.notes)) {
-                if (-not [string]::IsNullOrWhiteSpace([string]$note)) { $notes.Add([string]$note) }
-              }
-            }
-          }
-          $keptNotes = @($notes | Where-Object { $_ -notmatch '^Last verified by KVRT updater:' })
-          $keptNotes += "Last verified by KVRT updater: $verifiedAt UTC; product/database version $newVersion; SHA-256 $sha256 (audit record only: official /latest/ URL is mutable, so this hash is not pinned as Scoop's install hash)."
-          $manifest.notes = @($keptNotes)
-
-          $json = $manifest | ConvertTo-Json -Depth 100
-          [System.IO.File]::WriteAllText($manifestPath,$json + [Environment]::NewLine,[System.Text.UTF8Encoding]::new($false))
-          Write-Host "Manifest version: $oldVersion -> $newVersion"
-
+          Write-Host "Verified KVRT build $newVersion; bucket/kvrt.json remains unchanged."
           @(
             '## KVRT verification'
             ''
@@ -300,21 +268,3 @@ jobs:
           overwrite_files: true
           make_latest: false
 
-      - name: Commit manifest update if changed
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- bucket/kvrt.json
-          git diff --cached --quiet
-          $diffExitCode = $LASTEXITCODE
-          if ($diffExitCode -eq 0) {
-            Write-Host 'KVRT manifest is already up to date; no commit is needed.'
-            exit 0
-          }
-          if ($diffExitCode -ne 1) { throw 'Could not inspect the staged KVRT manifest.' }
-          git commit -m 'kvrt: verify latest build and refresh manifest'
-          if ($LASTEXITCODE -ne 0) { throw 'Could not commit the KVRT manifest update.' }
-          git push origin "HEAD:refs/heads/$env:GITHUB_REF_NAME"
-          if ($LASTEXITCODE -ne 0) { throw "Could not push the KVRT manifest update to branch $env:GITHUB_REF_NAME." }

@@ -1,35 +1,32 @@
 {
-  "version": "20.0.14.0.202610290704",
-  "description": "Kaspersky Virus Removal Tool",
-  "homepage": "https://www.kaspersky.com/downloads/free-virus-removal-tool",
-  "license": {
-    "identifier": "Freeware",
-    "url": "https://www.kaspersky.com/end-user-license-agreement"
-  },
-  "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe",
-  "hash": "004139063c099109cb075ccd6dad44debd3a10050dcefcb35bb15dc37a447267",
-  "bin": "KVRT.exe",
-  "shortcuts": [
-    [
-      "KVRT.exe",
-      "KVRT"
-    ]
-  ],
-  "checkver": {
-    "script": [
-      "$url = 'https://api-router.kaspersky-labs.com/downloads/search/v4/b2c?productcodes=3875874&businesspurposes=Update&sites=https%3A%2F%2Fwww.kaspersky.com'",
-      "$resp = Invoke-WebRequest -Uri $url",
-      "$json = $resp.Content | ConvertFrom-Json",
-      "$obj = $json[0].response.Windows.kvrt.Build.'https://www.kaspersky.com'.Kaspersky.'20'.'en-INT,ru-INT'",
-      "$version = \"{0}.{1}.{2}.{3}\" -f $obj.VersionNumberMajor,$obj.VersionNumberMinor,$obj.VersionNumberBuild,$obj.VersionNumberRevision",
-      "$version"
+    "version": "20.0.8.0",
+    "description": "Kaspersky Virus Removal Tool",
+    "homepage": "https://www.kaspersky.com/downloads/free-virus-removal-tool",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.kaspersky.com/end-user-license-agreement"
+    },
+    "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe",
+    "hash": "004139063c099109cb075ccd6dad44debd3a10050dcefcb35bb15dc37a447267",
+    "bin": "KVRT.exe",
+    "shortcuts": [
+        [
+            "KVRT.exe",
+            "KVRT"
+        ]
     ],
-    "regex": "(?<version>.+)"
-  },
-  "autoupdate": {
-    "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe"
-  },
-  "notes": [
-    "Last verified by KVRT updater: 2026-10-29 09:55 UTC; product/database version 20.0.14.0.202610290704; SHA-256 4e294a9290061a342c280cdfcc34a4d57907c8e9513f0cb27b7ef09e6b6e6a8f (audit record only: official /latest/ URL is mutable, so this hash is not pinned as Scoop's install hash)."
-  ]
+    "checkver": {
+        "script": [
+            "$url = 'https://api-router.kaspersky-labs.com/downloads/search/v4/b2c?productcodes=3875874&businesspurposes=Update&sites=https%3A%2F%2Fwww.kaspersky.com'",
+            "$resp = Invoke-WebRequest -Uri $url",
+            "$json = $resp.Content | ConvertFrom-Json",
+            "$obj = $json[0].response.Windows.kvrt.Build.'https://www.kaspersky.com'.Kaspersky.'20'.'en-INT,ru-INT'",
+            "$version = \"{0}.{1}.{2}.{3}\" -f $obj.VersionNumberMajor,$obj.VersionNumberMinor,$obj.VersionNumberBuild,$obj.VersionNumberRevision",
+            "$version"
+        ],
+        "regex": "(?<version>.+)"
+    },
+    "autoupdate": {
+        "url": "https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe"
+    }
 }
