@@ -466,7 +466,7 @@ jobs:
           }
 
           $report = @(
-            "Detect It Easy API Inspector"
+            "Multi-Engine Installer Type Inspector"
             "============================"
             "Detect It Easy release: $env:DIE_RELEASE"
             "Source host: $env:SOURCE_HOST"
@@ -498,6 +498,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: detect-it-easy-report
+          name: installer-type-inspection-report
           path: ${{ runner.temp }}/detect-it-easy-api/*.txt
           if-no-files-found: ignore
