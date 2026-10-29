@@ -1,9 +1,6 @@
 name: Validate manifest archives
 
 on:
-  repository_dispatch:
-    types:
-      - manifests-normalized
   workflow_dispatch:
     inputs:
       manifest:
@@ -501,51 +498,3 @@ jobs:
           "validated_manifests=$validatedManifestsJson" >> $env:GITHUB_OUTPUT
           "validated_head_sha=$validatedHeadSha" >> $env:GITHUB_OUTPUT
 
-      - name: Trigger Scoop autoupdate validation
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          HEAD_SHA: ${{ steps.archive_validation.outputs.validated_head_sha }}
-          MANIFESTS_JSON: ${{ steps.archive_validation.outputs.validated_manifests }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          if ([string]::IsNullOrWhiteSpace($env:MANIFESTS_JSON)) {
-            throw 'Archive validation did not produce its validated manifest list.'
-          }
-          $manifestList = @(ConvertFrom-Json -InputObject $env:MANIFESTS_JSON)
-          if ($manifestList.Count -eq 0) {
-            Write-Host 'No manifests were changed; autoupdate validation will not be dispatched.'
-            exit 0
-          }
-          $headers = @{
-            Accept = 'application/vnd.github+json'
-            Authorization = "Bearer $env:GH_TOKEN"
-            'X-GitHub-Api-Version' = '2022-11-28'
-          }
-          $body = @{
-            event_type = 'manifests-archives-validated'
-            client_payload = @{
-              manifests = [object[]]$manifestList
-              head_sha = $env:HEAD_SHA
-            }
-          } | ConvertTo-Json -Depth 5
-          Write-Host "Dispatching autoupdate validation for $($manifestList.Count) manifest(s): $($manifestList -join ', ')"
-          Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$env:REPOSITORY/dispatches" -Headers $headers -ContentType 'application/json' -Body $body
-
-      - name: Trigger CI after archive validation
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $headers = @{
-            Accept = 'application/vnd.github+json'
-            Authorization = "Bearer $env:GH_TOKEN"
-            'X-GitHub-Api-Version' = '2022-11-28'
-          }
-          $body = @{
-            event_type = 'archives-validated'
-          } | ConvertTo-Json -Depth 3
-          Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$env:REPOSITORY/dispatches" -Headers $headers -ContentType 'application/json' -Body $body
