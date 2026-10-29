@@ -105,10 +105,14 @@ jobs:
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             foreach ($manifestPath in $changedPaths) {
               git add -- $manifestPath
+              if ($LASTEXITCODE -ne 0) { throw "git add failed for $manifestPath." }
             }
             git commit -m 'Seed hashes for Eric Zimmerman manifests'
+            if ($LASTEXITCODE -ne 0) { throw 'Could not commit the seeded hashes.' }
             git pull --rebase origin master
+            if ($LASTEXITCODE -ne 0) { throw 'Could not rebase the seeded hashes onto master.' }
             git push origin HEAD:master
+            if ($LASTEXITCODE -ne 0) { throw 'Could not push the seeded hashes to master.' }
           } else {
             Write-Host 'All targeted Eric Zimmerman manifests already contain hashes and corrected notes.'
           }
