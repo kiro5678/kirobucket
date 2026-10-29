@@ -1,11 +1,7 @@
 name: Update and verify KVRT
 
 on:
-  # Runs at 04:23 UTC every two months, starting in January.
-  schedule:
-    - cron: '23 4 1 */2 *'
   workflow_dispatch:
-  # This workflow only verifies and publishes a backup; it never rewrites the Scoop manifest.
 
 permissions:
   contents: write
