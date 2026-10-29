@@ -42,11 +42,11 @@ jobs:
             @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' }
           )
           $pages = @(
-            @{ Name = 'dvd-drive-repair'; Url = 'https://rizonesoft.com/gdm_downloads/dvd-drive-repair-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'carbon-cd'; Url = 'https://rizonesoft.com/gdm_downloads/carbon-cd-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+)' },
-            @{ Name = 'usb-repair'; Url = 'https://rizonesoft.com/gdm_downloads/usb-repair-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'pixel-repair'; Url = 'https://rizonesoft.com/gdm_downloads/pixel-repair-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'take-ownership'; Url = 'https://rizonesoft.com/gdm_downloads/take-ownership/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' }
+            @{ Name = 'dvd-drive-repair'; Url = 'https://rizonesoft.com/gdm_downloads/dvd-drive-repair-portable/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'carbon-cd'; Url = 'https://rizonesoft.com/gdm_downloads/carbon-cd-portable/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+)' },
+            @{ Name = 'usb-repair'; Url = 'https://rizonesoft.com/gdm_downloads/usb-repair-portable/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'pixel-repair'; Url = 'https://rizonesoft.com/gdm_downloads/pixel-repair-portable/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'take-ownership'; Url = 'https://rizonesoft.com/gdm_downloads/take-ownership/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' }
           )
           foreach ($page in $pages) {
             try {
@@ -61,14 +61,14 @@ jobs:
             }
           }
           $productPages = @(
-            @{ Name = 'firemin'; Url = 'https://rizonesoft.com/gdm_downloads/firemin/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'watermin'; Url = 'https://rizonesoft.com/gdm_downloads/watermin/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'chromin'; Url = 'https://rizonesoft.com/gdm_downloads/chromin/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'edgemin'; Url = 'https://rizonesoft.com/gdm_downloads/edgemin/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'complete-internet-repair'; Url = 'https://rizonesoft.com/gdm_downloads/complete-internet-repair/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'bios-beep-codes-viewer'; Url = 'https://rizonesoft.com/gdm_downloads/bios-beep-codes-viewer/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
-            @{ Name = 'rizonesoft-office'; Url = 'https://rizonesoft.com/gdm_downloads/rizonesoft-office/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d{4}\.\d+\.\d+\.\d+)' },
-            @{ Name = 'resolute'; Url = 'https://rizonesoft.com/gdm_downloads/resolute/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' }
+            @{ Name = 'firemin'; Url = 'https://rizonesoft.com/gdm_downloads/firemin/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'watermin'; Url = 'https://rizonesoft.com/gdm_downloads/watermin/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'chromin'; Url = 'https://rizonesoft.com/gdm_downloads/chromin/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'edgemin'; Url = 'https://rizonesoft.com/gdm_downloads/edgemin/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'complete-internet-repair'; Url = 'https://rizonesoft.com/gdm_downloads/complete-internet-repair/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'bios-beep-codes-viewer'; Url = 'https://rizonesoft.com/gdm_downloads/bios-beep-codes-viewer/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'rizonesoft-office'; Url = 'https://rizonesoft.com/gdm_downloads/rizonesoft-office/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d{4}\.\d+\.\d+\.\d+)' },
+            @{ Name = 'resolute'; Url = 'https://rizonesoft.com/gdm_downloads/resolute/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' }
           )
           foreach ($page in $productPages) {
             try {
