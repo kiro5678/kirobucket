@@ -1,11 +1,6 @@
 name: Inspect MuMuPlayer NXMAIN Installer
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - ".github/workflows/inspect-mumuplayer-installer.yml"
   workflow_dispatch:
 
 permissions:
