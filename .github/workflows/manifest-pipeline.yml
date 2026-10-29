@@ -96,13 +96,15 @@ jobs:
             while ([DateTimeOffset]::UtcNow -lt $deadline) {
               Start-Sleep -Seconds 8
               $current = Get-WorkflowRuns -WorkflowFile $WorkflowFile
-              foreach ($candidate in @($current.workflow_runs)) {
-                if ($knownIds -contains [string]$candidate.id) { continue }
-                $created = [DateTimeOffset]::Parse([string]$candidate.created_at)
-                if ($created -lt $dispatchStarted.AddSeconds(-10)) { continue }
-                if ($null -eq $childRun -or $created -gt [DateTimeOffset]::Parse([string]$childRun.created_at)) {
-                  $childRun = $candidate
-                }
+              if ($null -eq $childRun) {
+                $eligibleRuns = @($current.workflow_runs | Where-Object {
+                  ($knownIds -notcontains [string]$_.id) -and
+                  ([DateTimeOffset]::Parse([string]$_.created_at) -ge $dispatchStarted.AddSeconds(-10))
+                } | Sort-Object { [DateTimeOffset]::Parse([string]$_.created_at) } -Descending)
+                if ($eligibleRuns.Count -gt 0) { $childRun = $eligibleRuns[0] }
+              } else {
+                $refreshedRun = @($current.workflow_runs | Where-Object { [string]$_.id -eq [string]$childRun.id } | Select-Object -First 1)
+                if ($refreshedRun.Count -gt 0) { $childRun = $refreshedRun[0] }
               }
 
               if ($null -eq $childRun) { continue }
