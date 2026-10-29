@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: manual-manifest-pipeline-${{ github.ref }
+  group: manual-manifest-pipeline-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
         id: input
         shell: pwsh
         env:
-          MANIFEST_INPUT: ${{ inputs.manifest }
+          MANIFEST_INPUT: ${{ inputs.manifest }}
         run: |
           $ErrorActionPreference = 'Stop'
           $path = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
@@ -43,10 +43,10 @@ jobs:
       - name: Run required workflows sequentially
         shell: pwsh
         env:
-          GH_TOKEN: ${{ github.token }
-          GH_REPOSITORY: ${{ github.repository }
-          MANIFEST_PATH: ${{ steps.input.outputs.manifest }
-          FORCE_UPDATE: ${{ inputs.force_update }
+          GH_TOKEN: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+          MANIFEST_PATH: ${{ steps.input.outputs.manifest }}
+          FORCE_UPDATE: ${{ inputs.force_update }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
