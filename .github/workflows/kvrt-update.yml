@@ -229,24 +229,6 @@ jobs:
             "$sha256  KVRT.exe$([Environment]::NewLine)",
             [System.Text.UTF8Encoding]::new($false)
           )
-          $verificationText = @(
-            'KVRT backup verification record'
-            "Verified at (UTC): $verifiedAt UTC"
-            "Product/database version: $newVersion"
-            "Executable version: $embeddedVersion"
-            "Database timestamp: $($metadata.Stamp)"
-            "Downloaded file size: $($exeFile.Length) bytes"
-            "Authenticode status: $($signature.Status)"
-            "Signer: $($signature.SignerCertificate.Subject)"
-            "Executable download URL: $exeUrl"
-            "Metadata source: $($metadata.Source)"
-            "SHA-256: $sha256"
-          ) -join [Environment]::NewLine
-          [System.IO.File]::WriteAllText(
-            (Join-Path $releaseDir 'KVRT-verification.txt'),
-            $verificationText + [Environment]::NewLine,
-            [System.Text.UTF8Encoding]::new($false)
-          )
           @(
             "backup_tag=$backupTag"
             "backup_date=$backupDate"
@@ -310,11 +292,10 @@ jobs:
             - SHA-256: `${{ steps.kvrt.outputs.sha256 }}`
             - File size: `${{ steps.kvrt.outputs.size_bytes }}` bytes
 
-            The executable passed an MZ header check, a minimum file-size check, and Windows Authenticode signature validation for a Kaspersky signer before publication. The attached `KVRT-verification.txt` and `KVRT.exe.sha256` files provide the verification record and checksum.
+            The executable passed an MZ header check, a minimum file-size check, and Windows Authenticode signature validation for a Kaspersky signer before publication. The attached `KVRT.exe.sha256` file provides the checksum.
           files: |
             release-assets/KVRT.exe
             release-assets/KVRT.exe.sha256
-            release-assets/KVRT-verification.txt
           fail_on_unmatched_files: true
           overwrite_files: true
           make_latest: false
