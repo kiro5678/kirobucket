@@ -1,16 +1,6 @@
 name: FxSound Install Test
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - "bucket/fxsound.json"
-      - ".github/workflows/fxsound.yml"
-  pull_request:
-    paths:
-      - "bucket/fxsound.json"
-      - ".github/workflows/fxsound.yml"
   workflow_dispatch:
 
 permissions:
