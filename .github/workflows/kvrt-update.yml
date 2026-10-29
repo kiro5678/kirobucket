@@ -24,7 +24,7 @@ jobs:
   update:
     name: Download, verify, and refresh KVRT manifest
     runs-on: windows-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
 
     steps:
       - name: Checkout bucket
@@ -120,7 +120,9 @@ jobs:
           $downloadErrors = [System.Collections.Generic.List[string]]::new()
           foreach ($candidateUrl in $exeUrls) {
             Write-Host "Downloading KVRT.exe from $candidateUrl ..."
-            $candidateDownload = Invoke-KvrtCurl -Url $candidateUrl -OutputPath $exePath -TimeoutSeconds 600 -Retry
+            $candidateTimeout = 25
+            if ($candidateUrl -eq $exeUrls[0] -or $candidateUrl -eq $exeUrls[1]) { $candidateTimeout = 60 }
+            $candidateDownload = Invoke-KvrtCurl -Url $candidateUrl -OutputPath $exePath -TimeoutSeconds $candidateTimeout -Retry
             if ($candidateDownload.ExitCode -eq 0 -and $candidateDownload.Exists) {
               $download = $candidateDownload
               $exeUrl = $candidateUrl
@@ -129,7 +131,7 @@ jobs:
             $downloadErrors.Add(('{0}: HTTP {1}, curl exit {2}' -f $candidateUrl,$candidateDownload.Status,$candidateDownload.ExitCode))
           }
           if (-not $download) {
-            throw ('Could not download KVRT.exe from either official Kaspersky hostname. No manifest changes were made. Attempts: ' + ($downloadErrors -join ' | '))
+            throw ('Could not download KVRT.exe from any configured official Kaspersky endpoint. No manifest changes were made. Attempts: ' + ($downloadErrors -join ' | '))
           }
 
           
@@ -191,19 +193,18 @@ jobs:
 
           $metadata = $null
           foreach ($candidateXmlUrl in $xmlUrls) {
-            $metadata = Get-KvrtMetadata -SourceUrl $candidateXmlUrl -TimeoutSeconds 45
+            $metadata = Get-KvrtMetadata -SourceUrl $candidateXmlUrl -TimeoutSeconds 25
             if ($metadata) { break }
           }
-          foreach ($candidateXmlUrl in $xmlUrls) {
-            if ($metadata) { break }
+          if (-not $metadata) {
             for ($attempt = 1; $attempt -le 2 -and -not $metadata; $attempt++) {
-              Write-Host "Trying Internet Archive save endpoint for $candidateXmlUrl ($attempt/2)..."
-              $metadata = Get-KvrtMetadata -SourceUrl ('https://web.archive.org/save/' + $candidateXmlUrl) -TimeoutSeconds 90
+              Write-Host "Trying Internet Archive save endpoint for the primary KVRT metadata URL ($attempt/2)..."
+              $metadata = Get-KvrtMetadata -SourceUrl ('https://web.archive.org/save/' + $xmlUrl) -TimeoutSeconds 60
               if (-not $metadata -and $attempt -lt 2) { Start-Sleep -Seconds 5 }
             }
-            if (-not $metadata) {
-              $metadata = Get-KvrtMetadata -SourceUrl ('https://web.archive.org/web/2id_/' + $candidateXmlUrl) -TimeoutSeconds 90
-            }
+          }
+          if (-not $metadata) {
+            $metadata = Get-KvrtMetadata -SourceUrl ('https://web.archive.org/web/2id_/' + $xmlUrl) -TimeoutSeconds 60
           }
           if (-not $metadata) {
             throw ('Could not verify current KVRT metadata from official Kaspersky hosts or Internet Archive. No manifest changes were made. Attempts: ' + ($diagnostics -join ' | '))
