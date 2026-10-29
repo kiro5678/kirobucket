@@ -116,12 +116,6 @@ jobs:
 
           if ($skipped.Count -gt 0) {
             Write-Host ''
-            Write-Host 'Manifests skipped after checkver failure:' -ForegroundColor Yellow
-            $skipped | Format-Table -AutoSize
-          }
-
-          if ($skipped.Count -gt 0) {
-            Write-Host ''
             Write-Host 'Manifests skipped because checkver failed (not counted as passes):' -ForegroundColor Yellow
             $skipped | Format-Table -AutoSize
           }
