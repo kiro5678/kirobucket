@@ -27,7 +27,7 @@
     "persist": "PixRepair.ini",
     "checkver": {
         "url": "https://rizonesoft.com/gdm_downloads/pixel-repair-portable/",
-        "regex": "Version:\\s*(?<version>\\d+\\.\\d+\\.\\d+\\.(?<matchVersion>\\d+))"
+        "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d+\\.\\d+\\.\\d+\\.(?<matchVersion>\\d+))"
     },
     "autoupdate": {
         "url": "https://rizonesoft.com/?download_id=18322&gdm_process_download=1#/PixelRepair.zip",
