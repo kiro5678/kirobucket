@@ -97,6 +97,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPOSITORY: ${{ github.repository }}
           EVENT_NAME: ${{ github.event_name }}
+          PIPELINE_SHA: ${{ github.sha }}
           MANIFESTS: ${{ steps.input.outputs.manifests }}
           HAS_MANIFESTS: ${{ steps.input.outputs.has_manifests }}
           FORCE_UPDATE_INPUT: ${{ inputs.force_update }}
@@ -137,9 +138,45 @@ jobs:
           $summary.Add("")
 
           function Get-WorkflowRuns {
-            param([Parameter(Mandatory)][string]$WorkflowFile)
-            $uri = "$apiRoot/actions/workflows/$WorkflowFile/runs?branch=master&event=workflow_dispatch&per_page=100"
+            param(
+              [Parameter(Mandatory)][string]$WorkflowFile,
+              [string]$Event = 'workflow_dispatch'
+            )
+            $uri = "$apiRoot/actions/workflows/$WorkflowFile/runs?branch=master&event=$Event&per_page=100"
             Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -TimeoutSec 30 -ErrorAction Stop
+          }
+
+          function Wait-ForExistingWorkflow {
+            param(
+              [Parameter(Mandatory)][string]$WorkflowFile,
+              [Parameter(Mandatory)][string]$HeadSha
+            )
+
+            $deadline = [DateTimeOffset]::UtcNow.AddMinutes(45)
+            while ([DateTimeOffset]::UtcNow -lt $deadline) {
+              $runs = Get-WorkflowRuns -WorkflowFile $WorkflowFile -Event 'push'
+              $matchingRuns = @($runs.workflow_runs |
+                Where-Object { [string]$_.head_sha -eq $HeadSha } |
+                Sort-Object { [DateTimeOffset]::Parse([string]$_.created_at) } -Descending)
+
+              if ($matchingRuns.Count -gt 0) {
+                $run = $matchingRuns[0]
+                Write-Host "Existing push-triggered workflow run: $($run.html_url)"
+                if ($run.status -eq 'completed') {
+                  if ($run.conclusion -ne 'success') {
+                    $summary.Add("- FAILED: $WorkflowFile — conclusion: $($run.conclusion)")
+                    $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+                    throw "Push-triggered workflow $WorkflowFile failed with conclusion '$($run.conclusion)'."
+                  }
+                  $summary.Add("- PASS: $WorkflowFile — $($run.html_url)")
+                  return
+                }
+              }
+
+              Start-Sleep -Seconds 8
+            }
+
+            throw "Timed out waiting for push-triggered $WorkflowFile for commit $HeadSha."
           }
 
           function Start-And-WaitWorkflow {
@@ -211,7 +248,11 @@ jobs:
             Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
 
             if ($env:MANIFEST_PATH -ieq 'bucket/fxsound.json') {
-              Start-And-WaitWorkflow -WorkflowFile 'fxsound.yml'
+              if ($env:EVENT_NAME -eq 'push') {
+                Wait-ForExistingWorkflow -WorkflowFile 'fxsound.yml' -HeadSha $env:PIPELINE_SHA
+              } else {
+                Start-And-WaitWorkflow -WorkflowFile 'fxsound.yml'
+              }
             }
 
             Start-And-WaitWorkflow -WorkflowFile 'scoop-autoupdate-validation.yml' -Inputs @{
