@@ -1,5 +1,5 @@
 {
-    "version": "5.1.1",
+    "version": "5.2.0",
     "description": "Portable advanced replacement for Windows Task Manager, with process, service, network, disk, GPU and system monitoring.",
     "homepage": "https://www.mitec.cz/wp/tmx/",
     "license": {
@@ -20,5 +20,5 @@
     "autoupdate": {
         "url": "https://www.mitec.cz/wp/files/TMX.zip"
     },
-    "hash": "3dd111519325ecf18ed9202649c4f8740a2c195382cd4337fc701056d2234f3b"
+    "hash": "fec49591213f08f749f47e7dcc38ae48df2ddf9c53ccb4df500854e58a05daef"
 }
