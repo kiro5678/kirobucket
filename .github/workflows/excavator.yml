@@ -36,7 +36,7 @@ jobs:
           $lineEnding = "`n"
 
           foreach ($manifestName in $manifestNames) {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE ("bucket\\" + $manifestName + ".json")
+            $manifestPath = Join-Path (Join-Path $env:GITHUB_WORKSPACE 'bucket') ($manifestName + '.json')
             $originalText = [System.IO.File]::ReadAllText($manifestPath)
             $text = $originalText
             if ($text.Contains("`r`n")) { $lineEnding = "`r`n" }
