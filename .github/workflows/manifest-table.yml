@@ -1,12 +1,6 @@
 name: Update README Manifest Table
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - "bucket/**"
-      - ".github/workflows/manifest-table.yml"
   workflow_dispatch:
 
 concurrency:
