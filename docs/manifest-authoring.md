@@ -165,6 +165,7 @@ Run the relevant checks from a disposable checkout or working copy where practic
 
 The repository currently has these related workflows:
 - `.github/workflows/excavator.yml`: manual and scheduled manifest updater (every four hours); requires write permission to commit changes. It first seeds missing SHA-256 values for the targeted Eric Zimmerman manifests, then runs checkver and fails on update errors.
+- Important failure-handling detail: `THROW_ERROR: 1` makes exceptions raised by Scoop's update path fatal, but Scoop's `checkver.ps1` can log a regex no-match or failed source URL and continue to the next manifest. Therefore, a successful Excavator conclusion does not by itself prove that every manifest was checked; inspect `couldn't match`, `couldn't find new version`, `URL ... is not valid`, and HTTP 4xx/5xx messages in the run log.
 
 - When workflow code edits a manifest by matching a URL string, replace only the intended current `url` entry; the same URL may also appear under `autoupdate`. Re-parse the edited JSON and never write a fixed `hash` inside `autoupdate`; that section must remain a template.
 - `.github/workflows/scoop-checkver-validation.yml`: validates version detection for every manifest; it does not by itself prove that update templates work.
