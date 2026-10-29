@@ -2,7 +2,9 @@
     "version": "6.1.0",
     "description": "Network discovery and scanning utility for hosts, ports, shares, services, SNMP and Active Directory.",
     "homepage": "https://www.mitec.cz/wp/mns/",
-    "license": "Proprietary",
+    "license": {
+        "identifier": "Proprietary"
+    },
     "url": "https://www.mitec.cz/wp/files/NetScanner.zip",
     "shortcuts": [
         [
@@ -10,14 +12,13 @@
             "MiTeC Network Scanner"
         ]
     ],
-    "notes": [
-        "The official download page does not publish a static SHA-256 checksum for this file. Scoop's archive validation will check the archive layout, but a trusted checksum still needs to be added if one becomes available."
-    ],
+    "notes": "The official download page does not publish a static SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download. Refresh the hash if the upstream file changes.",
     "checkver": {
         "url": "https://www.mitec.cz/wp/mns/",
-        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)\\s*\\|"
+        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://www.mitec.cz/wp/files/NetScanner.zip"
-    }
+    },
+    "hash": "02fbf13ffcc8bfd3b3ef907b265cc4d2338309e99039f1384f2c6cd370995c66"
 }

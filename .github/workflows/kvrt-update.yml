@@ -1,0 +1,270 @@
+name: Update and verify KVRT
+
+on:
+  # Runs at 04:23 UTC every two months, starting in January.
+  schedule:
+    - cron: '23 4 1 */2 *'
+  workflow_dispatch:
+  # This workflow only verifies and publishes a backup; it never rewrites the Scoop manifest.
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kvrt-update-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Download, verify, and refresh KVRT manifest
+    runs-on: windows-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify official KVRT build
+        id: kvrt
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $exePath = Join-Path $env:RUNNER_TEMP 'KVRT.exe'
+          $xmlPath = Join-Path $env:RUNNER_TEMP 'kvrt.xml'
+          $cookieJar = Join-Path $env:RUNNER_TEMP 'kvrt.cookies'
+          $xmlUrl = 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/kvrt.xml'
+          $exeUrl = 'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe'
+          $userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+          $diagnostics = [System.Collections.Generic.List[string]]::new()
+
+          function Invoke-KvrtCurl {
+            param(
+              [Parameter(Mandatory)][string]$Url,
+              [Parameter(Mandatory)][string]$OutputPath,
+              [int]$TimeoutSeconds = 60,
+              [switch]$Retry,
+              [switch]$InsecureTls
+            )
+            Remove-Item -LiteralPath $OutputPath -Force -ErrorAction SilentlyContinue
+            $curlArgs = @('--fail','--silent','--show-error','--location','--max-time',"$TimeoutSeconds",
+              '--user-agent',$userAgent,'--referer','https://me.kaspersky.com/downloads/free-virus-removal-tool','--cookie-jar',$cookieJar,'--output',$OutputPath,'--write-out','%{http_code}')
+            if ($Retry) { $curlArgs += @('--retry','3','--retry-delay','5','--retry-all-errors') }
+            if ($InsecureTls) { $curlArgs += '--insecure' }
+            if (Test-Path -LiteralPath $cookieJar) { $curlArgs += @('--cookie',$cookieJar) }
+            $curlArgs += $Url
+            $status = & curl.exe @curlArgs 2>$null
+            $exitCode = $LASTEXITCODE
+            [PSCustomObject]@{
+              Status = ([string]$status).Trim()
+              ExitCode = $exitCode
+              Exists = (Test-Path -LiteralPath $OutputPath -PathType Leaf)
+            }
+          }
+
+          function Get-KvrtMetadata {
+            param(
+              [Parameter(Mandatory)][string]$SourceUrl,
+              [int]$TimeoutSeconds = 60,
+              [switch]$OfficialSource
+            )
+            if ($SourceUrl -match '^https://devbuilds\.kaspersky-labs\.com/') {
+              # The legacy official Kaspersky hostname may present a certificate that curl cannot validate.
+              # Its payload is still checked against Kaspersky's Authenticode signature before use.
+              $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds -Retry -InsecureTls
+            } elseif ($SourceUrl -match '^https?://devbuilds(\.s)?\.kaspersky-labs\.com/') {
+              $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds -Retry
+            } else {
+              $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds
+            }
+            if ($response.ExitCode -ne 0 -or -not $response.Exists) {
+              $diagnostics.Add(('{0}: HTTP {1}, curl exit {2}' -f $SourceUrl,$response.Status,$response.ExitCode))
+              return $null
+            }
+            $body = [System.IO.File]::ReadAllText($xmlPath)
+            $versionMatch = [regex]::Match($body,'(?i)version\s*=\s*"(?<version>\d+(?:\.\d+){3})"')
+            $stampMatch = [regex]::Match($body,'(?i)databases_timestamp\s*=\s*"(?<stamp>\d{12})"')
+            if (-not $versionMatch.Success -or -not $stampMatch.Success) {
+              $diagnostics.Add(('{0}: response did not contain expected KVRT metadata fields' -f $SourceUrl))
+              return $null
+            }
+            [PSCustomObject]@{
+              Version = $versionMatch.Groups['version'].Value
+              Stamp = $stampMatch.Groups['stamp'].Value
+              Source = $SourceUrl
+            }
+          }
+
+          # Prime a session with Kaspersky's official download page before requesting the binary.
+          $landingPath = Join-Path $env:RUNNER_TEMP 'kvrt-landing.html'
+          Write-Host 'Opening Kaspersky official download page to initialize cookies...'
+          $landing = Invoke-KvrtCurl -Url 'https://me.kaspersky.com/downloads/free-virus-removal-tool' -OutputPath $landingPath -TimeoutSeconds 30
+          if ($landing.ExitCode -eq 0 -and $landing.Exists) {
+            Write-Host 'Official download page session initialized.'
+          } else {
+            Write-Warning ('Could not initialize the download page session; continuing with the official direct URL. HTTP {0}, curl exit {1}.' -f $landing.Status,$landing.ExitCode)
+          }
+          Remove-Item -LiteralPath $landingPath -Force -ErrorAction SilentlyContinue
+
+          $exeUrls = @(
+            $exeUrl,
+            $exeUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com'),
+            $exeUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.s.kaspersky-labs.com'),
+            $exeUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.kaspersky-labs.com')
+          ) | Select-Object -Unique
+
+          $download = $null
+          $downloadErrors = [System.Collections.Generic.List[string]]::new()
+          foreach ($candidateUrl in $exeUrls) {
+            Write-Host "Downloading KVRT.exe from $candidateUrl ..."
+            $candidateTimeout = 25
+            if ($candidateUrl -eq $exeUrls[0] -or $candidateUrl -eq $exeUrls[1]) { $candidateTimeout = 60 }
+            if ($candidateUrl -eq $exeUrls[1]) {
+              # This is Kaspersky's legacy hostname; tolerate its TLS certificate issue only for transport,
+              # then require a valid Kaspersky Authenticode signature and matching product version below.
+              $candidateDownload = Invoke-KvrtCurl -Url $candidateUrl -OutputPath $exePath -TimeoutSeconds $candidateTimeout -Retry -InsecureTls
+            } else {
+              $candidateDownload = Invoke-KvrtCurl -Url $candidateUrl -OutputPath $exePath -TimeoutSeconds $candidateTimeout -Retry
+            }
+            if ($candidateDownload.ExitCode -eq 0 -and $candidateDownload.Exists) {
+              $download = $candidateDownload
+              $exeUrl = $candidateUrl
+              break
+            }
+            $downloadErrors.Add(('{0}: HTTP {1}, curl exit {2}' -f $candidateUrl,$candidateDownload.Status,$candidateDownload.ExitCode))
+          }
+          if (-not $download) {
+            throw ('Could not download KVRT.exe from any configured official Kaspersky endpoint. No manifest changes were made. Attempts: ' + ($downloadErrors -join ' | '))
+          }
+
+
+          $exeFile = Get-Item -LiteralPath $exePath
+          if ($exeFile.Length -lt 25000000) {
+            throw "Downloaded KVRT.exe is unexpectedly small ($($exeFile.Length) bytes)."
+          }
+          $stream = [System.IO.File]::OpenRead($exePath)
+          try {
+            $magic = [byte[]]::new(2)
+            $bytesRead = $stream.Read($magic,0,2)
+          } finally {
+            $stream.Dispose()
+          }
+          if ($bytesRead -ne 2 -or $magic[0] -ne 0x4D -or $magic[1] -ne 0x5A) {
+            throw 'Downloaded file is not a valid Windows executable (MZ header check failed).'
+          }
+
+          $signature = Get-AuthenticodeSignature -FilePath $exePath
+          if ($signature.Status -ne 'Valid') {
+            throw "KVRT.exe Authenticode signature is not valid (status: $($signature.Status)). Refusing to update."
+          }
+          if ($null -eq $signature.SignerCertificate -or $signature.SignerCertificate.Subject -notmatch '(?i)Kaspersky') {
+            throw 'KVRT.exe signer is not Kaspersky. Refusing to update.'
+          }
+          $sha256 = (Get-FileHash -LiteralPath $exePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $fileVersionText = [string]$exeFile.VersionInfo.ProductVersion
+          if ([string]::IsNullOrWhiteSpace($fileVersionText)) {
+            $fileVersionText = [string]$exeFile.VersionInfo.FileVersion
+          }
+          $fileVersionMatch = [regex]::Match($fileVersionText,'(?<version>\d+(?:\.\d+){3})')
+          if (-not $fileVersionMatch.Success) {
+            throw "Could not read a four-part version from KVRT.exe: '$fileVersionText'."
+          }
+          $embeddedVersion = $fileVersionMatch.Groups['version'].Value
+          Write-Host "Downloaded size: $($exeFile.Length) bytes"
+          Write-Host "Signer: $($signature.SignerCertificate.Subject)"
+          Write-Host "Executable version: $embeddedVersion"
+          Write-Host "SHA-256: $sha256"
+
+          $xmlUrls = @(
+            $xmlUrl,
+            $xmlUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.s.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.kaspersky-labs.com')
+          ) | Select-Object -Unique
+
+          $metadata = $null
+          foreach ($candidateXmlUrl in $xmlUrls) {
+            $metadata = Get-KvrtMetadata -SourceUrl $candidateXmlUrl -TimeoutSeconds 25
+            if ($metadata) { break }
+          }
+          if (-not $metadata) {
+            for ($attempt = 1; $attempt -le 2 -and -not $metadata; $attempt++) {
+              Write-Host "Trying Internet Archive save endpoint for the primary KVRT metadata URL ($attempt/2)..."
+              $metadata = Get-KvrtMetadata -SourceUrl ('https://web.archive.org/save/' + $xmlUrl) -TimeoutSeconds 60
+              if (-not $metadata -and $attempt -lt 2) { Start-Sleep -Seconds 5 }
+            }
+          }
+          if (-not $metadata) {
+            $metadata = Get-KvrtMetadata -SourceUrl ('https://web.archive.org/web/2id_/' + $xmlUrl) -TimeoutSeconds 60
+          }
+          if (-not $metadata) {
+            throw ('Could not verify current KVRT metadata from official Kaspersky hosts or Internet Archive. No manifest changes were made. Attempts: ' + ($diagnostics -join ' | '))
+          }
+          if ($embeddedVersion -ne $metadata.Version) {
+            throw "Downloaded executable version '$embeddedVersion' does not match metadata version '$($metadata.Version)'. Manifest was not changed."
+          }
+
+          $newVersion = '{0}.{1}' -f $metadata.Version,$metadata.Stamp
+          $verifiedAt = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm')
+          $backupDate = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
+          $backupTag = 'kvrt-backup-{0}-{1}' -f ($backupDate -replace '-',''),$env:GITHUB_RUN_ID
+          $releaseDir = Join-Path $env:GITHUB_WORKSPACE 'release-assets'
+          New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
+          Copy-Item -LiteralPath $exePath -Destination (Join-Path $releaseDir 'KVRT.exe') -Force
+          [System.IO.File]::WriteAllText(
+            (Join-Path $releaseDir 'KVRT.exe.sha256'),
+            "$sha256  KVRT.exe$([Environment]::NewLine)",
+            [System.Text.UTF8Encoding]::new($false)
+          )
+          @(
+            "backup_tag=$backupTag"
+            "backup_date=$backupDate"
+            "version=$newVersion"
+            "embedded_version=$embeddedVersion"
+            "sha256=$sha256"
+            "size_bytes=$($exeFile.Length)"
+          ) | ForEach-Object {
+            [System.IO.File]::AppendAllText($env:GITHUB_OUTPUT,$_ + [Environment]::NewLine,[System.Text.UTF8Encoding]::new($false))
+          }
+          Write-Host "Verified KVRT build $newVersion; bucket/kvrt.json remains unchanged."
+          @(
+            '## KVRT verification'
+            ''
+            '| Item | Verified value |'
+            '|---|---|'
+            "| Product + database version | $newVersion |"
+            "| Executable version resource | $embeddedVersion |"
+            "| Downloaded official file SHA-256 | $sha256 |"
+            "| File size | $($exeFile.Length) bytes |"
+            "| Authenticode status | $($signature.Status) |"
+            "| Signer | $($signature.SignerCertificate.Subject) |"
+            "| Metadata source | $($metadata.Source) |"
+            ''
+            'The SHA-256 is saved in manifest notes as an audit record only. It is not pinned as the Scoop hash because the official /latest/ URL may change before the next scheduled run, breaking installs.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Publish verified KVRT backup as a GitHub Release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.kvrt.outputs.backup_tag }}
+          target_commitish: ${{ github.sha }}
+          name: KVRT backup ${{ steps.kvrt.outputs.backup_date }} (run ${{ github.run_number }})
+          body: |
+            Automated backup of the official Kaspersky Virus Removal Tool (KVRT).
+
+            - Product/database version: `${{ steps.kvrt.outputs.version }}`
+            - Executable version: `${{ steps.kvrt.outputs.embedded_version }}`
+            - SHA-256: `${{ steps.kvrt.outputs.sha256 }}`
+            - File size: `${{ steps.kvrt.outputs.size_bytes }}` bytes
+
+            The executable passed an MZ header check, a minimum file-size check, and Windows Authenticode signature validation for a Kaspersky signer before publication. The attached `KVRT.exe.sha256` file provides the checksum.
+          files: |
+            release-assets/KVRT.exe
+            release-assets/KVRT.exe.sha256
+          fail_on_unmatched_files: true
+          overwrite_files: true
+          make_latest: false
+

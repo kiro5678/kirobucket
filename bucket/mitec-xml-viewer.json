@@ -10,14 +10,13 @@
             "MiTeC XML Viewer"
         ]
     ],
-    "notes": [
-        "The official download page does not publish a static SHA-256 checksum for this file. Scoop's archive validation will check the archive layout, but a trusted checksum still needs to be added if one becomes available."
-    ],
+    "notes": "The official download page does not publish a static SHA-256 checksum for this file. Scoop's archive validation will check the archive layout, but a trusted checksum still needs to be added if one becomes available.",
     "checkver": {
         "url": "https://www.mitec.cz/wp/mxmlv/",
-        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)\\s*\\|"
+        "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://www.mitec.cz/wp/files/XMLView.zip"
-    }
+    },
+    "hash": "c64a87ee9d26096d3a2efc63d2c1b38fb5440a825fa5b1bdc0d50cbb2d6b7960"
 }
