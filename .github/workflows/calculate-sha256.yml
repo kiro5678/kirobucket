@@ -1,11 +1,6 @@
 name: Calculate SHA-256 for Download URLs
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - ".github/workflows/calculate-sha256.yml"
   workflow_dispatch:
     inputs:
       urls:
