@@ -3,8 +3,13 @@
     "description": "Eric Zimmerman's RECmd: Command-line Windows Registry searching and examination tool.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
-    "url": "https://download.ericzimmermanstools.com/net/RECmd.zip",
+    "architecture": {
+        "64bit": {
+            "url": "https://download.ericzimmermanstools.com/net/RECmd.zip"
+        }
+    },
     "bin": "RECmd.exe",
+    "extract_dir": "RECmd",
     "notes": [
         "Requires the .NET 10 Runtime.",
         "The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated."
@@ -14,7 +19,10 @@
         "regex": "\\[(?<version>\\d{4}\\.\\d+\\.\\d+)\\]\\(https://download\\.ericzimmermanstools\\.com/net/RECmd\\.zip\\)"
     },
     "autoupdate": {
-        "url": "https://download.ericzimmermanstools.com/net/RECmd.zip"
-    },
-    "extract_dir": "RECmd"
+        "architecture": {
+            "64bit": {
+                "url": "https://download.ericzimmermanstools.com/net/RECmd.zip"
+            }
+        }
+    }
 }
