@@ -2,6 +2,11 @@ name: Normalize manifest newlines
 
 on:
   workflow_dispatch:
+    inputs:
+      manifest:
+        description: "Optional single manifest path under bucket/, e.g. bucket/taskexplorer.json. Leave empty to normalize all manifests."
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -23,6 +28,8 @@ jobs:
 
       - name: Normalize manifest endings
         shell: pwsh
+        env:
+          MANIFEST_INPUT: ${{ inputs.manifest || '' }}
         run: |
           $ErrorActionPreference = "Stop"
           git fetch origin master
@@ -30,7 +37,22 @@ jobs:
 
           $bucketPath = Join-Path $env:GITHUB_WORKSPACE "bucket"
 
-          Get-ChildItem -Path $bucketPath -Filter "*.json" -File -Recurse | ForEach-Object {
+          $manifestFiles = @()
+          $manifestInput = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
+          if (-not [string]::IsNullOrWhiteSpace($manifestInput)) {
+            if ($manifestInput -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
+              throw "Provide one manifest filename or bucket/filename.json. Received: $manifestInput"
+            }
+            $manifestPath = Join-Path $bucketPath $Matches.name
+            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+              throw "Manifest does not exist: bucket/$($Matches.name)"
+            }
+            $manifestFiles = @(Get-Item -LiteralPath $manifestPath)
+          } else {
+            $manifestFiles = @(Get-ChildItem -Path $bucketPath -Filter '*.json' -File -Recurse)
+          }
+
+          $manifestFiles | ForEach-Object {
             $fileBytes = [System.IO.File]::ReadAllBytes($_.FullName)
             $contentLength = $fileBytes.Length
 
