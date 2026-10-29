@@ -390,14 +390,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Re-read all `.github/workflows/*.yml` files through the GitHub connector. No incomplete `${{ ... }}` expressions were found in the current files. The manifest lifecycle workflows now expose manual triggers only; `issues.yml` and `pull_request.yml` remain event-driven because they handle issue/PR events, not manifest pushes.
 - Validation limitation: the linked runs refer to earlier commits and have no jobs/logs available from the current connector response. The corrected `manifest-pipeline.yml` has not yet been manually dispatched end-to-end; do not claim the orchestration passed until a new manual run completes successfully.
 
-## 2026-10-29 — Manifest Pipeline automatic trigger
+## 2026-10-29 — Temporary automatic-trigger experiment (superseded)
 
-- Changed `.github/workflows/manifest-pipeline.yml` to run automatically on pushes to `master` that change files under `bucket/`, while retaining the manual `workflow_dispatch` entry point.
-- The workflow detects changed root-level manifest JSON files case-insensitively and processes existing changed manifests in order. If a manifest was deleted, it skips validation for that missing file but still regenerates README and manifest indexes.
-- The orchestrator continues to run formatting, Checkver, archive validation, autoupdate-template validation, CI, and index generation in sequence; it stops at the first validation failure or timeout.
-- FxSound keeps its pre-existing push and pull-request triggers. When a push changes `bucket/fxsound.json`, the orchestrator waits for the matching push-triggered FxSound run instead of dispatching a duplicate test.
-- Relevant commits: [automatic trigger and changed-manifest discovery](https://github.com/kiro5678/kirobucket/commit/1100b54368f516534f564ea281a06b737adac2cd), [avoid duplicate FxSound tests](https://github.com/kiro5678/kirobucket/commit/eb2877d632c28c09fc627d18ef34b8089a0940e6), [case-insensitive selection and deletion handling](https://github.com/kiro5678/kirobucket/commit/4699bb5e430425dcfe439ea1352197c354704c3d).
-- Verification limitation: the final workflow was read back from `master`, expression delimiters were checked, and the automatic/manual trigger configuration was inspected. The workflow has not yet completed an end-to-end GitHub Actions run, so runtime success is not claimed.
+- A temporary revision enabled automatic `push` runs for `bucket/**` changes and retained manual `workflow_dispatch`. That configuration is historical and was later reverted because the user requested manual-only manifest orchestration.
+- The current `.github/workflows/manifest-pipeline.yml`, `excavator.yml`, `fxsound.yml`, and `kvrt-update.yml` are manual-only. The pipeline dispatches retained child workflows in order and stops when a validation stage fails.
+- The temporary automatic-trigger implementation and its related commits remain in Git history for traceability; they are not the current workflow configuration.
 
 ## 2026-10-29 — Excavator false-success and manifest update failures
 
