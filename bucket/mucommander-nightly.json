@@ -28,14 +28,40 @@
         ".mucommander"
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/mucommander/mucommander/releases/tags/nightly",
-        "jsonpath": "$..name",
-        "regex": "mucommander-([\\d.]+)-snapshot-portable-x86_64\\.zip"
+        "script": [
+            "$url = 'https://api.github.com/repos/mucommander/mucommander/releases/tags/nightly'",
+            "$headers = @{ Accept = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-checkver' }",
+            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$release = $null",
+            "for ($attempt = 1; $attempt -le 20; $attempt++) {",
+            "    try {",
+            "        $release = Invoke-RestMethod -Uri $url -Headers $headers -TimeoutSec 20 -ErrorAction Stop",
+            "        if ($release.tag_name -eq 'nightly') { break }",
+            "        $release = $null",
+            "    } catch {",
+            "        $release = $null",
+            "        if ($attempt -eq 20) { throw \"Official muCommander nightly release remained unavailable after $attempt attempts: $($_.Exception.Message)\" }",
+            "    }",
+            "    if ($attempt -lt 20) { Start-Sleep -Seconds 15 }",
+            "}",
+            "if ($null -eq $release -or $release.tag_name -ne 'nightly') { throw 'Official muCommander nightly release response did not contain tag_name=nightly.' }",
+            "$asset = $release.assets | Where-Object { $_.name -match '^mucommander-[\\d.]+-snapshot-portable-x86_64\\.zip$' } | Select-Object -First 1",
+            "if ($null -eq $asset) { throw 'Official muCommander nightly release does not contain the expected x86_64 portable ZIP asset.' }",
+            "$versionMatch = [regex]::Match([string]$asset.name, '^mucommander-(?<version>\\d+(?:\\.\\d+)+)-snapshot-portable-x86_64\\.zip$')",
+            "$commitMatch = [regex]::Match([string]$release.body, '(?i)nightly build from (?:commit )?(?<commit>[a-f0-9]{7,40})')",
+            "if (-not $versionMatch.Success) { throw 'Could not extract the app version from the official muCommander nightly ZIP filename.' }",
+            "if (-not $commitMatch.Success) { throw 'Could not extract the source commit from the official muCommander nightly release notes.' }",
+            "$version = $versionMatch.Groups['version'].Value",
+            "$build = $commitMatch.Groups['commit'].Value.Substring(0, 7).ToLowerInvariant()",
+            "\"$version|$build\""
+        ],
+        "regex": "^(?<version>\\d+(?:\\.\\d+)+)\\|(?<build>[a-fA-F0-9]{7})$",
+        "replace": "${version}-${build}"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/mucommander/mucommander/releases/download/nightly/mucommander-$version-snapshot-portable-x86_64.zip"
+                "url": "https://github.com/mucommander/mucommander/releases/download/nightly/mucommander-$matchVersion-snapshot-portable-x86_64.zip"
             }
         }
     }
