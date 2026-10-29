@@ -121,8 +121,21 @@ jobs:
               }
               Write-Host "PASS: $($manifest.BaseName)" -ForegroundColor Green
             } catch {
-              $skipped += [PSCustomObject]@{ Manifest = $manifest.Name; Reason = $_.Exception.Message }
-              Write-Warning "SKIPPED: $($manifest.Name) checkver failed; validation continues without failing the workflow."
+              $reason = $_.Exception.Message
+              if ($manifest.Name -ieq 'kvrt.json') {
+                $skipped += [PSCustomObject]@{
+                  Manifest = $manifest.Name
+                  Reason   = $reason
+                }
+                Write-Warning "SKIPPED: kvrt.json checkver failed; this exemption applies only to kvrt.json."
+              }
+              else {
+                $failed += [PSCustomObject]@{
+                  Manifest = $manifest.Name
+                  Reason   = $reason
+                }
+                Write-Host "FAIL: $($manifest.Name) checkver failed: $reason" -ForegroundColor Red
+              }
               if ($outputText) { Write-Host $outputText }
               continue
             }
@@ -132,11 +145,23 @@ jobs:
           Write-Host '============================================================'
           Write-Host 'Checkver summary'
           Write-Host '============================================================'
+          $passedCount = $manifests.Count - $failed.Count - $skipped.Count
           Write-Host "Checked: $($manifests.Count)"
+          Write-Host "Passed:  $passedCount"
           Write-Host "Skipped: $($skipped.Count)"
-          Write-Host "Failed:  0"
+          Write-Host "Failed:  $($failed.Count)"
+
           if ($skipped.Count -gt 0) {
-            Write-Host 'Manifests skipped because checkver failed (not counted as passes):' -ForegroundColor Yellow
+            Write-Host ''
+            Write-Host 'Only kvrt.json checkver failures are skipped:' -ForegroundColor Yellow
             $skipped | Format-Table -AutoSize
           }
-          Write-Host 'Checkver validation completed. Per-manifest checkver failures are reported as skipped and do not fail this workflow.' -ForegroundColor Green
+
+          if ($failed.Count -gt 0) {
+            Write-Host ''
+            Write-Host 'Checkver failures in manifests other than kvrt.json:' -ForegroundColor Red
+            $failed | Format-Table -AutoSize
+            exit 1
+          }
+
+          Write-Host 'Checkver validation completed. Only kvrt.json failures are skipped; any other manifest failure fails this workflow.' -ForegroundColor Green
