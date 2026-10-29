@@ -1,9 +1,6 @@
 name: Scoop Autoupdate Validation
 
 on:
-  repository_dispatch:
-    types:
-      - manifests-archives-validated
   workflow_dispatch:
     inputs:
       manifest:
