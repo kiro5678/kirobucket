@@ -36,7 +36,9 @@ jobs:
             @{ Name = 'watermin'; Url = 'https://downloads.rizonesoft.com/Firemin/Watermin_8535_Setup.exe' },
             @{ Name = 'chromin'; Url = 'https://downloads.rizonesoft.com/Firemin/Chromin_8535_Setup.exe' },
             @{ Name = 'edgemin'; Url = 'https://downloads.rizonesoft.com/Firemin/Edgemin_8522_Setup.exe' },
-            @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' }
+            @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' },
+            @{ Name = 'rizonesoft-office'; Url = 'https://rizonesoft.com/?download_id=18318&gdm_process_download=1' },
+            @{ Name = 'resolute'; Url = 'https://rizonesoft.com/?download_id=18329&gdm_process_download=1' }
           )
           New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP\rizone-inspect" | Out-Null
           foreach ($item in $items) {
@@ -51,15 +53,26 @@ jobs:
               Write-Host "SHA256=$hash"
               Write-Host "FinalResponseUri=$($response.BaseResponse.ResponseUri.AbsoluteUri)"
               Write-Host "ContentType=$($response.Headers['Content-Type'])"
-              Write-Host "FileVersion=$((Get-Item $file.FullName).VersionInfo.FileVersion)"
+              $vi = (Get-Item $file.FullName).VersionInfo
+              Write-Host "FileVersion=$($vi.FileVersion)"
+              Write-Host "ProductVersion=$($vi.ProductVersion)"
+              Write-Host "ProductName=$($vi.ProductName)"
+              Write-Host "FileDescription=$($vi.FileDescription)"
+              Write-Host "OriginalFilename=$($vi.OriginalFilename)"
               Write-Host "SignatureStatus=$($signature.Status)"
               Write-Host "SignatureSubject=$($signature.SignerCertificate.Subject)"
               $first = [System.IO.File]::ReadAllBytes($file.FullName)
               $head = [System.Text.Encoding]::ASCII.GetString($first, 0, [Math]::Min(8, $first.Length))
               Write-Host "Header=$head"
               if ($file.Length -gt 4 -and ($head.StartsWith('PK') -or $head.StartsWith('7z') -or $head.StartsWith('MZ'))) {
-                $listing = & 7z.exe l -slt $file.FullName 2>&1
-                $listing | Select-Object -First 90 | ForEach-Object { Write-Host $_ }
+                $listing = & 7z.exe l -ba $file.FullName 2>&1
+                $listing | Where-Object { $_ -match '\.(exe|dll|ini|cfg|json|reg|chm|dat)
+              }
+            } catch {
+              Write-Host "DOWNLOAD_OR_INSPECTION_FAILED=$($_.Exception.Message)"
+            }
+          }
+ } | ForEach-Object { Write-Host "PACKAGE_FILE=$_"}
               }
             } catch {
               Write-Host "DOWNLOAD_OR_INSPECTION_FAILED=$($_.Exception.Message)"
