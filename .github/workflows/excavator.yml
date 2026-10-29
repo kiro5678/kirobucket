@@ -78,12 +78,16 @@ jobs:
               $hash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
               Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
 
-              $urlLine = $indent + '"url": "' + $url + '",'
-              if (-not $text.Contains($urlLine)) {
+              $urlLineWithComma = $indent + '"url": "' + $url + '",'
+              $urlLineWithoutComma = $indent + '"url": "' + $url + '"'
+              $hashLine = $indent + '"hash": "' + $hash + '",'
+              if ($text.Contains($urlLineWithComma)) {
+                $text = $text.Replace($urlLineWithComma, $urlLineWithComma + $lineEnding + $hashLine)
+              } elseif ($text.Contains($urlLineWithoutComma)) {
+                $text = $text.Replace($urlLineWithoutComma, $urlLineWithoutComma + ',' + $lineEnding + $hashLine.TrimEnd(','))
+              } else {
                 throw "Could not identify the exact URL line in $manifestName.json; refusing to rewrite it."
               }
-              $hashLine = $indent + '"hash": "' + $hash + '",'
-              $text = $text.Replace($urlLine, $urlLine + $lineEnding + $hashLine)
               Write-Host "Calculated $manifestName SHA-256: $hash"
             }
 
