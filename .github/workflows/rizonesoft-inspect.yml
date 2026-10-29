@@ -1,0 +1,62 @@
+name: Temporary Rizonesoft Package Inspection
+
+on:
+  push:
+    branches:
+      - add-rizonesoft-manifests
+    paths:
+      - ".github/workflows/rizonesoft-inspect.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    steps:
+      - name: Download official assets and inspect package payloads
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $items = @(
+            @{ Name = 'notepad3-x64'; Url = 'https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_7.26.602.1/Notepad3_7.26.602.1_x64_Portable.zip' },
+            @{ Name = 'notepad3-x86'; Url = 'https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_7.26.602.1/Notepad3_7.26.602.1_x86_Portable.zip' },
+            @{ Name = 'dvd-drive-repair-portable'; Url = 'https://rizonesoft.com/?download_id=18316&gdm_process_download=1' },
+            @{ Name = 'carbon-cd-portable'; Url = 'https://downloads.rizonesoft.com/CarbonCD/CarbonCD108.zip' },
+            @{ Name = 'usb-repair-portable'; Url = 'https://rizonesoft.com/?download_id=18319&gdm_process_download=1' },
+            @{ Name = 'pixel-repair-portable'; Url = 'https://rizonesoft.com/?download_id=18322&gdm_process_download=1' },
+            @{ Name = 'take-ownership'; Url = 'https://rizonesoft.com/?download_id=18314&gdm_process_download=1' },
+            @{ Name = 'complete-internet-repair'; Url = 'https://rizonesoft.com/?download_id=18323&gdm_process_download=1' },
+            @{ Name = 'firemin'; Url = 'https://downloads.rizonesoft.com/Firemin/Firemin_8520_Setup.exe' },
+            @{ Name = 'watermin'; Url = 'https://downloads.rizonesoft.com/Firemin/Watermin_8535_Setup.exe' },
+            @{ Name = 'chromin'; Url = 'https://downloads.rizonesoft.com/Firemin/Chromin_8535_Setup.exe' },
+            @{ Name = 'edgemin'; Url = 'https://downloads.rizonesoft.com/Firemin/Edgemin_8522_Setup.exe' },
+            @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' }
+          )
+          New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP\rizone-inspect" | Out-Null
+          foreach ($item in $items) {
+            $path = Join-Path "$env:RUNNER_TEMP\rizone-inspect" $item.Name
+            Write-Host "===== $($item.Name) ====="
+            try {
+              $response = Invoke-WebRequest -Uri $item.Url -OutFile "$path.download" -PassThru -MaximumRedirection 10 -TimeoutSec 90 -Headers @{ 'User-Agent' = 'Mozilla/5.0 ScoopManifestValidation/1.0' }
+              $file = Get-Item "$path.download"
+              $hash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+              $signature = Get-AuthenticodeSignature $file.FullName
+              Write-Host "Bytes=$($file.Length)"
+              Write-Host "SHA256=$hash"
+              Write-Host "FinalResponseUri=$($response.BaseResponse.ResponseUri.AbsoluteUri)"
+              Write-Host "ContentType=$($response.Headers['Content-Type'])"
+              Write-Host "FileVersion=$((Get-Item $file.FullName).VersionInfo.FileVersion)"
+              Write-Host "SignatureStatus=$($signature.Status)"
+              Write-Host "SignatureSubject=$($signature.SignerCertificate.Subject)"
+              $first = [System.IO.File]::ReadAllBytes($file.FullName)
+              $head = [System.Text.Encoding]::ASCII.GetString($first, 0, [Math]::Min(8, $first.Length))
+              Write-Host "Header=$head"
+              if ($file.Length -gt 4 -and ($head.StartsWith('PK') -or $head.StartsWith('7z') -or $head.StartsWith('MZ'))) {
+                $listing = & 7z.exe l -slt $file.FullName 2>&1
+                $listing | Select-Object -First 90 | ForEach-Object { Write-Host $_ }
+              }
+            } catch {
+              Write-Host "DOWNLOAD_OR_INSPECTION_FAILED=$($_.Exception.Message)"
+            }
+          }
