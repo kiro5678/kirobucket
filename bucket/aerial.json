@@ -47,14 +47,14 @@
             "64bit": {
                 "url": "https://github.com/AerialWindows/Aerial/releases/download/v$version/Aerial.$version.win-x64.zip",
                 "hash": {
-                    "url": "https://api.github.com/repos/OrangeJedi/Aerial/releases/latest",
+                    "url": "https://api.github.com/repos/AerialWindows/Aerial/releases/tags/v$version",
                     "regex": "\"name\"\\s*:\\s*\"Aerial\\.[\\d.]+\\.win-x64\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
                 }
             },
             "arm64": {
                 "url": "https://github.com/AerialWindows/Aerial/releases/download/v$version/Aerial.$version.win-arm64.zip",
                 "hash": {
-                    "url": "https://api.github.com/repos/OrangeJedi/Aerial/releases/latest",
+                    "url": "https://api.github.com/repos/AerialWindows/Aerial/releases/tags/v$version",
                     "regex": "\"name\"\\s*:\\s*\"Aerial\\.[\\d.]+\\.win-arm64\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
                 }
             }
