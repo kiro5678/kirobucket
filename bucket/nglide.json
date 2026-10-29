@@ -7,8 +7,8 @@
     "hash": "3cfcd03a923386c36685a772d24797fb78762cfbe63fe5676756091cf27da7a4",
     "nsis": true,
     "checkver": {
-        "url": "https://www.zeus-software.com/downloads/nglide",
-        "regex": "Version:[^0-9]*([0-9]+\\.[0-9]+)"
+        "url": "https://www.zeus-software.com/",
+        "regex": "nGlide\\s+([0-9]+\\.[0-9]+)"
     },
     "autoupdate": {
         "url": "https://www.zeus-software.com/files/nglide/nGlide$cleanVersion_setup.exe"
