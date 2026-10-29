@@ -39,7 +39,9 @@ jobs:
             @{ Name = 'pixel-repair-portable'; Url = 'https://rizonesoft.com/?download_id=18322&gdm_process_download=1' },
             @{ Name = 'take-ownership'; Url = 'https://rizonesoft.com/?download_id=18314&gdm_process_download=1' },
             @{ Name = 'complete-internet-repair'; Url = 'https://rizonesoft.com/?download_id=18323&gdm_process_download=1' },
-            @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' }
+            @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' },
+            @{ Name = 'rizonesoft-office'; Url = 'https://rizonesoft.com/?download_id=18318&gdm_process_download=1' },
+            @{ Name = 'resolute'; Url = 'https://rizonesoft.com/?download_id=18329&gdm_process_download=1' }
           )
           $pages = @(
             @{ Name = 'dvd-drive-repair'; Url = 'https://rizonesoft.com/gdm_downloads/dvd-drive-repair-portable/'; Regex = '(?is)Version:(?:\s|&nbsp;|<[^>]*>)*\s*(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
@@ -111,4 +113,25 @@ jobs:
             } catch {
               Write-Host "DOWNLOAD_OR_INSPECTION_FAILED=$($_.Exception.Message)"
             }
+          }
+          Write-Host "===== INNO SETUP PACKAGE VALIDATION ====="
+          $innoZip = Join-Path "$env:RUNNER_TEMP" "innounpacker.zip"
+          $innoDir = Join-Path "$env:RUNNER_TEMP" "innounpacker"
+          try {
+            Invoke-WebRequest -Uri 'https://www.rathlev-home.de/tools/download/innounpacker.zip' -OutFile $innoZip -TimeoutSec 90
+            $innoHash = (Get-FileHash $innoZip -Algorithm SHA256).Hash.ToLowerInvariant()
+            Write-Host "InnoUnpackerSHA256=$innoHash"
+            if ($innoHash -ne '4f83dc55e33b9019734b1ff1c1148503215dcaeb1c40d61da42062069f7b35e4') { throw 'InnoUnpacker package hash mismatch' }
+            Expand-Archive -LiteralPath $innoZip -DestinationPath $innoDir -Force
+            $innounp = Join-Path $innoDir 'innounp.exe'
+            foreach ($name in @('complete-internet-repair','bios-beep-codes','rizonesoft-office','resolute','firemin','watermin','chromin','edgemin')) {
+              $setup = Join-Path "$env:RUNNER_TEMP\rizone-inspect" "$name.download"
+              if (-not (Test-Path $setup)) { continue }
+              Write-Host "===== INNOUNP $name ====="
+              $output = & $innounp -l $setup 2>&1
+              Write-Host "InnoUnpackerExit=$LASTEXITCODE"
+              $output | Select-Object -First 25 | ForEach-Object { Write-Host "INNO_OUTPUT=$_"}
+            }
+          } catch {
+            Write-Host "INNO_VALIDATION_SETUP_FAILED=$($_.Exception.Message)"
           }
