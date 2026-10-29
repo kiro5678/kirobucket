@@ -193,6 +193,8 @@ jobs:
               $failures += "$relativePath : $($_.Exception.Message)"
               Write-Host "FAILED: $relativePath" -ForegroundColor Red
               Write-Host $_.Exception.Message -ForegroundColor Red
+              if ($_.ScriptStackTrace) { Write-Host $_.ScriptStackTrace -ForegroundColor DarkRed }
+              if ($_.InvocationInfo.PositionMessage) { Write-Host $_.InvocationInfo.PositionMessage -ForegroundColor DarkRed }
               if ($outputText) { Write-Host $outputText }
             }
           }
