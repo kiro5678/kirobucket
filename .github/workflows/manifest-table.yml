@@ -313,6 +313,7 @@ jobs:
               "wingodarktray" = "Windows Customization"
               "winhance" = "Windows Privacy & Tweaks"
               "winscript" = "Windows Privacy & Tweaks"
+              "winutil" = "Windows Privacy & Tweaks"
               "winzenith" = "Windows Privacy & Tweaks"
               "wox" = "Productivity & Launchers"
               "xfetch" = "Other Utilities"
