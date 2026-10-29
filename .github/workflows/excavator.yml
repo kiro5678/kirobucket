@@ -33,12 +33,12 @@ jobs:
           $downloadRoot = Join-Path $env:RUNNER_TEMP 'eric-zimmerman-hash-seed'
           New-Item -ItemType Directory -Path $downloadRoot -Force | Out-Null
           $changedPaths = [System.Collections.Generic.List[string]]::new()
-          $lineEnding = "`n"
 
           foreach ($manifestName in $manifestNames) {
             $manifestPath = Join-Path (Join-Path $env:GITHUB_WORKSPACE 'bucket') ($manifestName + '.json')
             $originalText = [System.IO.File]::ReadAllText($manifestPath)
             $text = $originalText
+            $lineEnding = "`n"
             if ($text.Contains("`r`n")) { $lineEnding = "`r`n" }
             $manifest = $text | ConvertFrom-Json
 
@@ -86,7 +86,7 @@ jobs:
 
             if ($text -ne $originalText) {
               [System.IO.File]::WriteAllText($manifestPath, $text, [System.Text.UTF8Encoding]::new($false))
-              $changedPaths.Add($manifestPath)
+              $changedPaths.Add("bucket/$manifestName.json")
             }
           }
 
