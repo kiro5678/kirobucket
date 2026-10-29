@@ -51,7 +51,47 @@ jobs:
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $path = ([string]$env:MANIFEST_INPUT).Trim().Replace('\', '/')
-            if ($path -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)
+            if ($path -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
+              throw "Provide one manifest filename or bucket/filename.json. Received: $path"
+            }
+            $manifestPaths.Add("bucket/$($Matches.name)")
+          } else {
+            $before = [string]$env:PUSH_BEFORE
+            $after = [string]$env:PUSH_SHA
+            if ([string]::IsNullOrWhiteSpace($before) -or $before -match '^0+$') {
+              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after -- bucket)
+            } else {
+              $changedFiles = @(git diff --name-only $before $after -- bucket)
+            }
+            if ($LASTEXITCODE -ne 0) {
+              throw "Could not determine changed files for push $before..$after."
+            }
+
+            foreach ($file in $changedFiles) {
+              $normalized = ([string]$file).Replace('\', '/')
+              if ($normalized -match '^bucket/[^/]+\.json$' -and
+                  (Test-Path -LiteralPath $normalized -PathType Leaf)) {
+                $manifestPaths.Add($normalized)
+              }
+            }
+          }
+
+          $manifestPaths = @($manifestPaths | Sort-Object -Unique)
+          if ($manifestPaths.Count -eq 0) {
+            "has_manifests=false" >> $env:GITHUB_OUTPUT
+            "manifests=" >> $env:GITHUB_OUTPUT
+            Write-Host "No existing root-level manifest files changed. Nothing to validate."
+            exit 0
+          }
+
+          "has_manifests=true" >> $env:GITHUB_OUTPUT
+          "manifests<<MANIFESTLIST" >> $env:GITHUB_OUTPUT
+          foreach ($manifestPath in $manifestPaths) {
+            $manifestPath >> $env:GITHUB_OUTPUT
+          }
+          "MANIFESTLIST" >> $env:GITHUB_OUTPUT
+
+      - name: Run required workflows sequentially
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -181,367 +221,6 @@ jobs:
             Start-And-WaitWorkflow -WorkflowFile 'ci.yml'
           }
 
-          Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
-
-          $summary.Add("")
-          $summary.Add("All manifest pipeline stages passed.")
-          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-          Write-Host "All manifest pipeline stages passed."
-) {
-              throw "Provide one manifest filename or bucket/filename.json. Received: $path"
-            }
-            $manifestPaths.Add("bucket/$($Matches.name)")
-          } else {
-            $before = [string]$env:PUSH_BEFORE
-            $after = [string]$env:PUSH_SHA
-            if ([string]::IsNullOrWhiteSpace($before) -or $before -match '^0+
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPOSITORY: ${{ github.repository }}
-          MANIFEST_PATH: ${{ steps.input.outputs.manifest }}
-          FORCE_UPDATE: ${{ inputs.force_update }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $ProgressPreference = 'SilentlyContinue'
-          $apiRoot = "https://api.github.com/repos/$env:GH_REPOSITORY"
-          $headers = @{
-            Accept = 'application/vnd.github+json'
-            Authorization = "Bearer $env:GH_TOKEN"
-            'X-GitHub-Api-Version' = '2022-11-28'
-            'User-Agent' = 'kirobucket-manifest-pipeline'
-          }
-          $summary = [System.Collections.Generic.List[string]]::new()
-          $summary.Add("## Manual manifest pipeline")
-          $summary.Add("")
-          $summary.Add("- Manifest: $env:MANIFEST_PATH")
-          $summary.Add("- Force autoupdate test: $env:FORCE_UPDATE")
-          $summary.Add("")
-
-          function Get-WorkflowRuns {
-            param([Parameter(Mandatory)][string]$WorkflowFile)
-            $uri = "$apiRoot/actions/workflows/$WorkflowFile/runs?branch=master&event=workflow_dispatch&per_page=100"
-            Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -TimeoutSec 30 -ErrorAction Stop
-          }
-
-          function Start-And-WaitWorkflow {
-            param(
-              [Parameter(Mandatory)][string]$WorkflowFile,
-              [hashtable]$Inputs = @{}
-            )
-
-            Write-Host ""
-            Write-Host "============================================================"
-            Write-Host "Starting workflow: $WorkflowFile"
-            Write-Host "============================================================"
-
-            $before = Get-WorkflowRuns -WorkflowFile $WorkflowFile
-            $knownIds = @($before.workflow_runs | ForEach-Object { [string]$_.id })
-            $dispatchStarted = [DateTimeOffset]::UtcNow
-            $payload = @{
-              ref = 'master'
-              inputs = $Inputs
-            } | ConvertTo-Json -Depth 6 -Compress
-
-            Invoke-RestMethod -Method Post -Uri "$apiRoot/actions/workflows/$WorkflowFile/dispatches" -Headers $headers -ContentType 'application/json' -Body $payload -TimeoutSec 30 -ErrorAction Stop | Out-Null
-
-            $deadline = [DateTimeOffset]::UtcNow.AddMinutes(45)
-            $childRun = $null
-            while ([DateTimeOffset]::UtcNow -lt $deadline) {
-              Start-Sleep -Seconds 8
-              $current = Get-WorkflowRuns -WorkflowFile $WorkflowFile
-              if ($null -eq $childRun) {
-                $eligibleRuns = @($current.workflow_runs | Where-Object {
-                  ($knownIds -notcontains [string]$_.id) -and
-                  ([DateTimeOffset]::Parse([string]$_.created_at) -ge $dispatchStarted.AddSeconds(-10))
-                } | Sort-Object { [DateTimeOffset]::Parse([string]$_.created_at) } -Descending)
-                if ($eligibleRuns.Count -gt 0) { $childRun = $eligibleRuns[0] }
-              } else {
-                $refreshedRun = @($current.workflow_runs | Where-Object { [string]$_.id -eq [string]$childRun.id } | Select-Object -First 1)
-                if ($refreshedRun.Count -gt 0) { $childRun = $refreshedRun[0] }
-              }
-
-              if ($null -eq $childRun) { continue }
-
-              Write-Host "Workflow run: $($childRun.html_url)"
-              if ($childRun.status -ne 'completed') {
-                continue
-              }
-
-              if ($childRun.conclusion -ne 'success') {
-                $summary.Add("- FAILED: $WorkflowFile — conclusion: $($childRun.conclusion)")
-                $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-                throw "Workflow $WorkflowFile failed with conclusion '$($childRun.conclusion)'. Pipeline stopped."
-              }
-
-              $summary.Add("- PASS: $WorkflowFile — $($childRun.html_url)")
-              Write-Host "PASS: $WorkflowFile"
-              return
-            }
-
-            throw "Timed out waiting for $WorkflowFile to complete within 45 minutes."
-          }
-
-          Start-And-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-          Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-          Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-
-          if ($env:MANIFEST_PATH -ieq 'bucket/fxsound.json') {
-            Start-And-WaitWorkflow -WorkflowFile 'fxsound.yml'
-          }
-
-          Start-And-WaitWorkflow -WorkflowFile 'scoop-autoupdate-validation.yml' -Inputs @{
-            manifest = $env:MANIFEST_PATH
-            force_update = ([string]$env:FORCE_UPDATE).ToLowerInvariant()
-          }
-          Start-And-WaitWorkflow -WorkflowFile 'ci.yml'
-          Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
-
-          $summary.Add("")
-          $summary.Add("All manifest pipeline stages passed.")
-          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-          Write-Host "All manifest pipeline stages passed."
-) {
-              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after -- bucket)
-            } else {
-              $changedFiles = @(git diff --name-only $before $after -- bucket)
-            }
-            if ($LASTEXITCODE -ne 0) {
-              throw "Could not determine changed files for push $before..$after."
-            }
-
-            foreach ($file in $changedFiles) {
-              $normalized = ([string]$file).Replace('\', '/')
-              if ($normalized -match '^bucket/[^/]+\.json
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPOSITORY: ${{ github.repository }}
-          MANIFEST_PATH: ${{ steps.input.outputs.manifest }}
-          FORCE_UPDATE: ${{ inputs.force_update }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $ProgressPreference = 'SilentlyContinue'
-          $apiRoot = "https://api.github.com/repos/$env:GH_REPOSITORY"
-          $headers = @{
-            Accept = 'application/vnd.github+json'
-            Authorization = "Bearer $env:GH_TOKEN"
-            'X-GitHub-Api-Version' = '2022-11-28'
-            'User-Agent' = 'kirobucket-manifest-pipeline'
-          }
-          $summary = [System.Collections.Generic.List[string]]::new()
-          $summary.Add("## Manual manifest pipeline")
-          $summary.Add("")
-          $summary.Add("- Manifest: $env:MANIFEST_PATH")
-          $summary.Add("- Force autoupdate test: $env:FORCE_UPDATE")
-          $summary.Add("")
-
-          function Get-WorkflowRuns {
-            param([Parameter(Mandatory)][string]$WorkflowFile)
-            $uri = "$apiRoot/actions/workflows/$WorkflowFile/runs?branch=master&event=workflow_dispatch&per_page=100"
-            Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -TimeoutSec 30 -ErrorAction Stop
-          }
-
-          function Start-And-WaitWorkflow {
-            param(
-              [Parameter(Mandatory)][string]$WorkflowFile,
-              [hashtable]$Inputs = @{}
-            )
-
-            Write-Host ""
-            Write-Host "============================================================"
-            Write-Host "Starting workflow: $WorkflowFile"
-            Write-Host "============================================================"
-
-            $before = Get-WorkflowRuns -WorkflowFile $WorkflowFile
-            $knownIds = @($before.workflow_runs | ForEach-Object { [string]$_.id })
-            $dispatchStarted = [DateTimeOffset]::UtcNow
-            $payload = @{
-              ref = 'master'
-              inputs = $Inputs
-            } | ConvertTo-Json -Depth 6 -Compress
-
-            Invoke-RestMethod -Method Post -Uri "$apiRoot/actions/workflows/$WorkflowFile/dispatches" -Headers $headers -ContentType 'application/json' -Body $payload -TimeoutSec 30 -ErrorAction Stop | Out-Null
-
-            $deadline = [DateTimeOffset]::UtcNow.AddMinutes(45)
-            $childRun = $null
-            while ([DateTimeOffset]::UtcNow -lt $deadline) {
-              Start-Sleep -Seconds 8
-              $current = Get-WorkflowRuns -WorkflowFile $WorkflowFile
-              if ($null -eq $childRun) {
-                $eligibleRuns = @($current.workflow_runs | Where-Object {
-                  ($knownIds -notcontains [string]$_.id) -and
-                  ([DateTimeOffset]::Parse([string]$_.created_at) -ge $dispatchStarted.AddSeconds(-10))
-                } | Sort-Object { [DateTimeOffset]::Parse([string]$_.created_at) } -Descending)
-                if ($eligibleRuns.Count -gt 0) { $childRun = $eligibleRuns[0] }
-              } else {
-                $refreshedRun = @($current.workflow_runs | Where-Object { [string]$_.id -eq [string]$childRun.id } | Select-Object -First 1)
-                if ($refreshedRun.Count -gt 0) { $childRun = $refreshedRun[0] }
-              }
-
-              if ($null -eq $childRun) { continue }
-
-              Write-Host "Workflow run: $($childRun.html_url)"
-              if ($childRun.status -ne 'completed') {
-                continue
-              }
-
-              if ($childRun.conclusion -ne 'success') {
-                $summary.Add("- FAILED: $WorkflowFile — conclusion: $($childRun.conclusion)")
-                $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-                throw "Workflow $WorkflowFile failed with conclusion '$($childRun.conclusion)'. Pipeline stopped."
-              }
-
-              $summary.Add("- PASS: $WorkflowFile — $($childRun.html_url)")
-              Write-Host "PASS: $WorkflowFile"
-              return
-            }
-
-            throw "Timed out waiting for $WorkflowFile to complete within 45 minutes."
-          }
-
-          Start-And-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-          Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-          Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-
-          if ($env:MANIFEST_PATH -ieq 'bucket/fxsound.json') {
-            Start-And-WaitWorkflow -WorkflowFile 'fxsound.yml'
-          }
-
-          Start-And-WaitWorkflow -WorkflowFile 'scoop-autoupdate-validation.yml' -Inputs @{
-            manifest = $env:MANIFEST_PATH
-            force_update = ([string]$env:FORCE_UPDATE).ToLowerInvariant()
-          }
-          Start-And-WaitWorkflow -WorkflowFile 'ci.yml'
-          Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
-
-          $summary.Add("")
-          $summary.Add("All manifest pipeline stages passed.")
-          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-          Write-Host "All manifest pipeline stages passed."
- -and
-                  (Test-Path -LiteralPath $normalized -PathType Leaf)) {
-                $manifestPaths.Add($normalized)
-              }
-            }
-          }
-
-          $manifestPaths = @($manifestPaths | Sort-Object -Unique)
-          if ($manifestPaths.Count -eq 0) {
-            "has_manifests=false" >> $env:GITHUB_OUTPUT
-            "manifests=" >> $env:GITHUB_OUTPUT
-            Write-Host "No existing root-level manifest files changed. Nothing to validate."
-            exit 0
-          }
-
-          "has_manifests=true" >> $env:GITHUB_OUTPUT
-          "manifests<<MANIFESTLIST" >> $env:GITHUB_OUTPUT
-          foreach ($manifestPath in $manifestPaths) {
-            $manifestPath >> $env:GITHUB_OUTPUT
-          }
-          "MANIFESTLIST" >> $env:GITHUB_OUTPUT
-
-      - name: Run required workflows sequentially
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPOSITORY: ${{ github.repository }}
-          MANIFEST_PATH: ${{ steps.input.outputs.manifest }}
-          FORCE_UPDATE: ${{ inputs.force_update }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $ProgressPreference = 'SilentlyContinue'
-          $apiRoot = "https://api.github.com/repos/$env:GH_REPOSITORY"
-          $headers = @{
-            Accept = 'application/vnd.github+json'
-            Authorization = "Bearer $env:GH_TOKEN"
-            'X-GitHub-Api-Version' = '2022-11-28'
-            'User-Agent' = 'kirobucket-manifest-pipeline'
-          }
-          $summary = [System.Collections.Generic.List[string]]::new()
-          $summary.Add("## Manual manifest pipeline")
-          $summary.Add("")
-          $summary.Add("- Manifest: $env:MANIFEST_PATH")
-          $summary.Add("- Force autoupdate test: $env:FORCE_UPDATE")
-          $summary.Add("")
-
-          function Get-WorkflowRuns {
-            param([Parameter(Mandatory)][string]$WorkflowFile)
-            $uri = "$apiRoot/actions/workflows/$WorkflowFile/runs?branch=master&event=workflow_dispatch&per_page=100"
-            Invoke-RestMethod -Method Get -Uri $uri -Headers $headers -TimeoutSec 30 -ErrorAction Stop
-          }
-
-          function Start-And-WaitWorkflow {
-            param(
-              [Parameter(Mandatory)][string]$WorkflowFile,
-              [hashtable]$Inputs = @{}
-            )
-
-            Write-Host ""
-            Write-Host "============================================================"
-            Write-Host "Starting workflow: $WorkflowFile"
-            Write-Host "============================================================"
-
-            $before = Get-WorkflowRuns -WorkflowFile $WorkflowFile
-            $knownIds = @($before.workflow_runs | ForEach-Object { [string]$_.id })
-            $dispatchStarted = [DateTimeOffset]::UtcNow
-            $payload = @{
-              ref = 'master'
-              inputs = $Inputs
-            } | ConvertTo-Json -Depth 6 -Compress
-
-            Invoke-RestMethod -Method Post -Uri "$apiRoot/actions/workflows/$WorkflowFile/dispatches" -Headers $headers -ContentType 'application/json' -Body $payload -TimeoutSec 30 -ErrorAction Stop | Out-Null
-
-            $deadline = [DateTimeOffset]::UtcNow.AddMinutes(45)
-            $childRun = $null
-            while ([DateTimeOffset]::UtcNow -lt $deadline) {
-              Start-Sleep -Seconds 8
-              $current = Get-WorkflowRuns -WorkflowFile $WorkflowFile
-              if ($null -eq $childRun) {
-                $eligibleRuns = @($current.workflow_runs | Where-Object {
-                  ($knownIds -notcontains [string]$_.id) -and
-                  ([DateTimeOffset]::Parse([string]$_.created_at) -ge $dispatchStarted.AddSeconds(-10))
-                } | Sort-Object { [DateTimeOffset]::Parse([string]$_.created_at) } -Descending)
-                if ($eligibleRuns.Count -gt 0) { $childRun = $eligibleRuns[0] }
-              } else {
-                $refreshedRun = @($current.workflow_runs | Where-Object { [string]$_.id -eq [string]$childRun.id } | Select-Object -First 1)
-                if ($refreshedRun.Count -gt 0) { $childRun = $refreshedRun[0] }
-              }
-
-              if ($null -eq $childRun) { continue }
-
-              Write-Host "Workflow run: $($childRun.html_url)"
-              if ($childRun.status -ne 'completed') {
-                continue
-              }
-
-              if ($childRun.conclusion -ne 'success') {
-                $summary.Add("- FAILED: $WorkflowFile — conclusion: $($childRun.conclusion)")
-                $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-                throw "Workflow $WorkflowFile failed with conclusion '$($childRun.conclusion)'. Pipeline stopped."
-              }
-
-              $summary.Add("- PASS: $WorkflowFile — $($childRun.html_url)")
-              Write-Host "PASS: $WorkflowFile"
-              return
-            }
-
-            throw "Timed out waiting for $WorkflowFile to complete within 45 minutes."
-          }
-
-          Start-And-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-          Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-          Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-
-          if ($env:MANIFEST_PATH -ieq 'bucket/fxsound.json') {
-            Start-And-WaitWorkflow -WorkflowFile 'fxsound.yml'
-          }
-
-          Start-And-WaitWorkflow -WorkflowFile 'scoop-autoupdate-validation.yml' -Inputs @{
-            manifest = $env:MANIFEST_PATH
-            force_update = ([string]$env:FORCE_UPDATE).ToLowerInvariant()
-          }
-          Start-And-WaitWorkflow -WorkflowFile 'ci.yml'
           Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
 
           $summary.Add("")
