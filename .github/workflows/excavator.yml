@@ -84,12 +84,17 @@ jobs:
               $urlLineWithComma = $indent + '"url": "' + $url + '",'
               $urlLineWithoutComma = $indent + '"url": "' + $url + '"'
               $hashLine = $indent + '"hash": "' + $hash + '",'
-              if ($text.Contains($urlLineWithComma)) {
-                $text = $text.Replace($urlLineWithComma, $urlLineWithComma + $lineEnding + $hashLine)
-              } elseif ($text.Contains($urlLineWithoutComma)) {
-                $text = $text.Replace($urlLineWithoutComma, $urlLineWithoutComma + ',' + $lineEnding + $hashLine.TrimEnd(','))
+              $urlIndex = $text.IndexOf($urlLineWithComma, [System.StringComparison]::Ordinal)
+              if ($urlIndex -ge 0) {
+                $text = $text.Substring(0, $urlIndex) + $urlLineWithComma + $lineEnding + $hashLine + $text.Substring($urlIndex + $urlLineWithComma.Length)
               } else {
-                throw "Could not identify the exact URL line in $manifestName.json; refusing to rewrite it."
+                $urlIndex = $text.IndexOf($urlLineWithoutComma, [System.StringComparison]::Ordinal)
+                if ($urlIndex -ge 0) {
+                  $replacement = $urlLineWithoutComma + ',' + $lineEnding + $hashLine.TrimEnd(',')
+                  $text = $text.Substring(0, $urlIndex) + $replacement + $text.Substring($urlIndex + $urlLineWithoutComma.Length)
+                } else {
+                  throw "Could not identify the exact URL line in $manifestName.json; refusing to rewrite it."
+                }
               }
               Write-Host "Calculated $manifestName SHA-256: $hash"
             }
