@@ -14,7 +14,7 @@
     ],
     "checkver": {
         "url": "https://rizonesoft.com/gdm_downloads/carbon-cd-portable/",
-        "regex": "Version:\\s*(?<version>[\\d.]+)"
+        "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d+\\.\\d+\\.\\d+)"
     },
     "autoupdate": {
         "url": "https://downloads.rizonesoft.com/CarbonCD/CarbonCD$cleanVersion.zip",
