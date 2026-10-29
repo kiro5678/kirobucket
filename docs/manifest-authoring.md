@@ -148,7 +148,7 @@ For each changed manifest, the orchestrator dispatches and waits for these stage
 
 After all required validation stages pass, `manifest-table.yml` regenerates the README and manifest indexes. It also runs when a manifest deletion needs the indexes refreshed. The orchestrator stops at the first failed or timed-out validation stage.
 
-The child validation workflows remain manually dispatchable so the orchestrator can sequence them. The main Manifest Pipeline is manual-only. FxSound, Excavator, and KVRT verification are also manual-only; the issue and pull-request handlers remain event-driven because they respond to issue/PR events, not direct manifest changes.
+The child validation workflows remain manually dispatchable so the orchestrator can sequence them. The main Manifest Pipeline is manual-only. FxSound and KVRT verification are manual-only; Excavator supports both manual dispatch and its existing four-hour schedule. The issue and pull-request handlers remain event-driven because they respond to issue/PR events, not direct manifest changes.
 
 ## 6. Required validation before considering work complete
 
@@ -161,10 +161,12 @@ Run the relevant checks from a disposable checkout or working copy where practic
 5. **Installation behavior:** where practical, install the manifest from its file path and verify that the declared executable and shortcut work. Check persistence/migration behavior when relevant.
 6. **Workflow follow-through:** inspect the actual GitHub Actions runs and job logs. Do not claim a check passed while it is queued or running. Do not equate a successful archive check with a successful full CI run.
 7. **PowerShell workflow exit handling:** `checkver.ps1` is a PowerShell script, not a native executable. Do not use `$LASTEXITCODE` after invoking it; that variable may be `$null` or stale and can incorrectly mark every manifest as failed. Capture its output, handle terminating exceptions, and detect Scoop's explicit no-match/download/JSON diagnostics (some checkver failures are printed without setting a native process exit code). Confirm the workflow reports realistic per-manifest results instead of counting successful version lookups as failures.
-8. **Live update verification:** because Excavator is manual-only, dispatch it from GitHub Actions after an upstream release and inspect its actual run and commit. Confirm its conclusion is `success` and that the expected manifest version, URL, and SHA-256 were updated.
+8. **Live update verification:** because Excavator has both a manual trigger and a four-hour schedule, inspect its actual run and commit after an upstream release. Confirm its conclusion is `success` and that the expected manifest version, URL, and SHA-256 were updated.
 
 The repository currently has these related workflows:
-- `.github/workflows/excavator.yml`: manual manifest updater; requires write permission to commit changes. It first seeds missing SHA-256 values for the targeted Eric Zimmerman manifests, then runs checkver and fails on update errors.
+- `.github/workflows/excavator.yml`: manual and scheduled manifest updater (every four hours); requires write permission to commit changes. It first seeds missing SHA-256 values for the targeted Eric Zimmerman manifests, then runs checkver and fails on update errors.
+
+- When workflow code edits a manifest by matching a URL string, replace only the intended current `url` entry; the same URL may also appear under `autoupdate`. Re-parse the edited JSON and never write a fixed `hash` inside `autoupdate`; that section must remain a template.
 - `.github/workflows/scoop-checkver-validation.yml`: validates version detection for every manifest; it does not by itself prove that update templates work.
 - `.github/workflows/validate-manifest-archives.yml`: validates downloadable assets, hashes, and archive paths. The main Manifest Pipeline dispatches autoupdate validation after this stage succeeds.
 - `.github/workflows/scoop-autoupdate-validation.yml`: tests only the archive-validated manifest(s) against an isolated copy with Scoop's `checkver.ps1 -Update`. If there is no newer upstream version, it reports that the URL/hash path was not exercised rather than falsely claiming a full test. Manually dispatch it with `force_update=true` to exercise URL/hash templates even when the current version is already up to date.
