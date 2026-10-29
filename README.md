@@ -40,7 +40,7 @@ Manifest Added shows the date a manifest first entered this bucket's Git history
 
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
 <a id="manifests-newest"></a>
-| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE[↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |
+| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE[↓] (docs/manifests-newest.md)[↑](docs/manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- | --- |
 | [rigsight](bucket/rigsight.json) | System Monitoring & Hardware | 1.0.0 | 2026-09-29 | 2026-10-29 | [Homepage](https://github.com/b0llu/Rigsight) | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. |
 | [vovsoft-health-break-reminder](bucket/vovsoft-health-break-reminder.json) | Other Utilities | 2.5 | 2026-10-21 | 2026-10-29 | [Homepage](https://vovsoft.com/software/health-break-reminder/) | Portable edition of Vovsoft Health Break Reminder. |
