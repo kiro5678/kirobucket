@@ -16,6 +16,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout ScoopInstaller GitHub Action
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/GithubActions
+          ref: 5bceeda181721d9d10a18fdcc3ddca6f33467ae6
+          path: .github-actions/scoopinstaller
+          persist-credentials: false
       - name: Seed hashes for Eric Zimmerman archives
         shell: pwsh
         run: |
@@ -127,7 +134,43 @@ jobs:
           }
 
       - name: Excavate
-        uses: ScoopInstaller/GithubActions@5bceeda181721d9d10a18fdcc3ddca6f33467ae6 # v3.0.0
+        shell: pwsh
         env:
           SKIP_UPDATED: 1
           THROW_ERROR: 1
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $actionRoot = Join-Path $env:GITHUB_WORKSPACE '.github-actions/scoopinstaller'
+          $actionScript = Join-Path $actionRoot 'action.ps1'
+          if (-not (Test-Path -LiteralPath $actionScript -PathType Leaf)) {
+            throw "ScoopInstaller GitHub Action script not found: $actionScript"
+          }
+
+          $env:GITHUB_ACTION_PATH = $actionRoot
+          $env:GITHUB_ACTION_REPOSITORY = 'ScoopInstaller/GithubActions'
+          $stdoutPath = Join-Path $env:RUNNER_TEMP 'excavator-action.stdout.log'
+          $stderrPath = Join-Path $env:RUNNER_TEMP 'excavator-action.stderr.log'
+          Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
+
+          $pwsh = (Get-Command pwsh -ErrorAction Stop).Source
+          $process = Start-Process -FilePath $pwsh -ArgumentList @('-NoLogo', '-NoProfile', '-File', ('"' + $actionScript + '"')) -WorkingDirectory $env:GITHUB_WORKSPACE -RedirectStandardOutput $stdoutPath -RedirectStandardError $stderrPath -PassThru -Wait
+
+          $actionOutput = @()
+          if (Test-Path -LiteralPath $stdoutPath) { $actionOutput += Get-Content -LiteralPath $stdoutPath }
+          if (Test-Path -LiteralPath $stderrPath) { $actionOutput += Get-Content -LiteralPath $stderrPath }
+          $actionOutput | ForEach-Object { Write-Host $_ }
+
+          if ($process.ExitCode -ne 0) {
+            throw "ScoopInstaller GitHub Action exited with code $($process.ExitCode)."
+          }
+
+          # Scoop's checkver.ps1 logs some URL/regex errors and continues instead of setting a failing exit code.
+          # Fail this workflow if that action log contains any such skipped check or a failed update.
+          $diagnosticPattern = "(?i)(couldn't\s+match|couldn't\s+find new version|URL https?://\S+ is not valid|The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|ERROR Could not update|Could not update .*hash.*failed)"
+          $diagnostics = @($actionOutput | Where-Object { $_ -match $diagnosticPattern })
+          if ($diagnostics.Count -gt 0) {
+            Write-Host 'Excavator reported nonfatal checkver/update diagnostics:'
+            $diagnostics | ForEach-Object { Write-Host "##[error]$_" }
+            throw "Excavator completed its action but logged $($diagnostics.Count) checkver/update diagnostic(s)."
+          }
