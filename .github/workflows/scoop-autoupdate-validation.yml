@@ -120,6 +120,53 @@ jobs:
             $testManifestPath = Join-Path $testDir ([System.IO.Path]::GetFileName($sourcePath))
             $outputText = ''
             try {
+              # Older manifests without a published checksum need a seed hash in the isolated test copy.
+              # This keeps the repository file untouched while allowing Scoop's URL/update path to be exercised.
+              $testManifest = Get-Content -LiteralPath $testManifestPath -Raw | ConvertFrom-Json -AsHashtable
+              $hashSeedPlan = [System.Collections.Generic.List[object]]::new()
+
+              if ($testManifest.ContainsKey('architecture') -and $testManifest.architecture) {
+                foreach ($architectureName in $testManifest.architecture.Keys) {
+                  $architecture = $testManifest.architecture[$architectureName]
+                  if ($architecture.url -and [string]::IsNullOrWhiteSpace([string]$architecture.hash)) {
+                    $hashSeedPlan.Add([ordered]@{
+                      scope = 'architecture'
+                      name = [string]$architectureName
+                      url = [string]$architecture.url
+                    })
+                  }
+                }
+              } elseif ($testManifest.url -and [string]::IsNullOrWhiteSpace([string]$testManifest.hash)) {
+                $hashSeedPlan.Add([ordered]@{
+                  scope = 'root'
+                  name = ''
+                  url = [string]$testManifest.url
+                })
+              }
+
+              foreach ($seed in $hashSeedPlan) {
+                $seedPath = Join-Path $testDir ("hash-seed-" + [guid]::NewGuid().ToString('N') + '.bin')
+                Write-Host "Seeding a temporary SHA-256 for $manifestName ($($seed.scope)$([string]::IsNullOrEmpty($seed.name) ? '' : ':' + $seed.name))"
+                Invoke-WebRequest -Uri $seed.url -OutFile $seedPath -MaximumRedirection 10 -TimeoutSec 240 -ErrorAction Stop
+                $downloadedSeed = Get-Item -LiteralPath $seedPath
+                if ($downloadedSeed.Length -lt 1024) {
+                  throw "The checksum seed download for $manifestName is unexpectedly small ($($downloadedSeed.Length) bytes)."
+                }
+                $seedHash = (Get-FileHash -LiteralPath $seedPath -Algorithm SHA256).Hash.ToLowerInvariant()
+                Remove-Item -LiteralPath $seedPath -Force -ErrorAction SilentlyContinue
+
+                if ($seed.scope -eq 'architecture') {
+                  $testManifest.architecture[$seed.name]['hash'] = $seedHash
+                } else {
+                  $testManifest['hash'] = $seedHash
+                }
+                Write-Host "Temporary SHA-256 seed for $manifestName ($($seed.scope)): $seedHash"
+              }
+
+              if ($hashSeedPlan.Count -gt 0) {
+                $testManifestJson = ConvertTo-Json -InputObject $testManifest -Depth 100
+                [System.IO.File]::WriteAllText($testManifestPath, $testManifestJson + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
+              }
               # Use explicit named parameters; string-array splatting treats switch strings as positional arguments here.
               if ($forceUpdate) {
                 $output = @(& $checkver -App $testManifestPath -ForceUpdate -ThrowError *>&1 | ForEach-Object { [string]$_ })
