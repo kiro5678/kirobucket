@@ -146,7 +146,9 @@ jobs:
 
               foreach ($seed in $hashSeedPlan) {
                 $seedPath = Join-Path $testDir ("hash-seed-" + [guid]::NewGuid().ToString('N') + '.bin')
-                Write-Host "Seeding a temporary SHA-256 for $manifestName ($($seed.scope)$([string]::IsNullOrEmpty($seed.name) ? '' : ':' + $seed.name))"
+                $seedLabel = [string]$seed.scope
+                if (-not [string]::IsNullOrWhiteSpace([string]$seed.name)) { $seedLabel += ':' + [string]$seed.name }
+                Write-Host "Seeding a temporary SHA-256 for $manifestName ($seedLabel)"
                 Invoke-WebRequest -Uri $seed.url -OutFile $seedPath -MaximumRedirection 10 -TimeoutSec 240 -ErrorAction Stop
                 $downloadedSeed = Get-Item -LiteralPath $seedPath
                 if ($downloadedSeed.Length -lt 1024) {
