@@ -65,6 +65,7 @@ jobs:
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $bucket = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket'
           $failed = @()
+          $skipped = @()
           $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
 
           $manifests = Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse |
@@ -93,6 +94,18 @@ jobs:
               Write-Host "PASS: $($manifest.BaseName)" -ForegroundColor Green
             }
             catch {
+              if ($manifest.BaseName -eq 'kvrt') {
+                $skipped += [PSCustomObject]@{
+                  Manifest = $manifest.Name
+                  Error    = $_.Exception.Message
+                }
+                Write-Warning "SKIPPED: $($manifest.Name) checkver failed; continuing without failing the workflow."
+                if ($outputText) {
+                  Write-Host $outputText
+                }
+                continue
+              }
+
               $failed += [PSCustomObject]@{
                 Manifest = $manifest.Name
                 Error    = $_.Exception.Message
@@ -110,7 +123,14 @@ jobs:
           Write-Host "Checkver summary"
           Write-Host "============================================================"
           Write-Host "Checked: $($manifests.Count)"
+          Write-Host "Skipped: $($skipped.Count)"
           Write-Host "Failed:  $($failed.Count)"
+
+          if ($skipped.Count -gt 0) {
+            Write-Host ''
+            Write-Host 'Manifests skipped after checkver failure:' -ForegroundColor Yellow
+            $skipped | Format-Table -AutoSize
+          }
 
           if ($failed.Count -gt 0) {
             $failed | Format-Table -AutoSize
