@@ -435,11 +435,12 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Added an authoring rule clarifying that `THROW_ERROR: 1` makes actual update exceptions fatal, but a Scoop checkver regex no-match or failed source fetch may be logged and skipped without failing the action. A green conclusion alone does not certify every manifest's version lookup.
 
 
-## 2026-10-29 — Strict Excavator diagnostic guard
+## 2026-10-29 — Prevent false-success results in Excavator
 
-- The latest green run still showed that Scoop's `checkver.ps1` can print `couldn't match` or a failed-source URL and continue, even with `THROW_ERROR: 1`. The upstream script's `next()` helper writes these messages and continues; the `ThrowError` switch primarily affects exceptions during the update path.
-- Reworked `.github/workflows/excavator.yml` to check out the pinned `ScoopInstaller/GithubActions` source, invoke its `action.ps1` in a child PowerShell process, capture both output streams, and fail the workflow if the action has a nonzero exit code or its log contains a checkver no-match, invalid URL, HTTP 4xx/5xx, or failed-update diagnostic. This preserves the action's scheduled/manual handling while preventing those skipped diagnostics from being reported as green.
-- The stricter wrapper and the nGlide homepage-based version detector have only been statically reviewed; no live Excavator run has tested these latest commits yet. The official Registry Finder website was returning 502/timeouts during the last check, so the next run may correctly fail on that source until it recovers.
+- Root cause: `THROW_ERROR: 1` alone does not guarantee that every manifest's version check fails the workflow. Scoop's `checkver.ps1` can print a `couldn't match` message or a failed-source URL, then continue through the remaining manifests. Its `next()` helper logs these diagnostics and continues; `ThrowError` mainly makes exceptions during the update path fatal.
+- Updated `.github/workflows/excavator.yml` to check out a pinned revision of `ScoopInstaller/GithubActions` (commit `5bceeda181721d9d10a18fdcc3ddca6f33467ae6`), run its `action.ps1` in a child PowerShell process, and capture both stdout and stderr. The workflow now fails if the action exits nonzero **or** the captured log contains a skipped checkver/update diagnostic, including version-regex no-match, an invalid URL, HTTP 403/404/408/429/5xx, or a failed update/hash operation.
+- This guard is intended to prevent an Excavator run from showing **success** while known checkver/source errors were logged and skipped. The workflow retains both its manual trigger and four-hour schedule (`20 */4 * * *`).
+- Verification status: the change and nGlide detector have been reviewed statically, but no new live Excavator run has yet verified the latest commits. The Registry Finder official site returned HTTP 502/timeouts during the last check, so a subsequent run may fail on that source until it recovers.
 
 
 ## 2026-10-29 — Restore Detect It Easy release API lookup
