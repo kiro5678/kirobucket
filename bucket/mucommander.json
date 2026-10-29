@@ -1,6 +1,6 @@
 {
     "version": "1.6.2-1",
-    "description": "Dual-pane file manager",
+    "description": "Dual-pane file manager (stable release).",
     "homepage": "https://www.mucommander.com",
     "license": "GPL-3.0-only",
     "suggest": {
