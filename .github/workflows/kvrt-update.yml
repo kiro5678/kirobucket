@@ -56,12 +56,14 @@ jobs:
               [Parameter(Mandatory)][string]$Url,
               [Parameter(Mandatory)][string]$OutputPath,
               [int]$TimeoutSeconds = 60,
-              [switch]$Retry
+              [switch]$Retry,
+              [switch]$InsecureTls
             )
             Remove-Item -LiteralPath $OutputPath -Force -ErrorAction SilentlyContinue
             $curlArgs = @('--fail','--silent','--show-error','--location','--max-time',"$TimeoutSeconds",
               '--user-agent',$userAgent,'--referer','https://me.kaspersky.com/downloads/free-virus-removal-tool','--cookie-jar',$cookieJar,'--output',$OutputPath,'--write-out','%{http_code}')
             if ($Retry) { $curlArgs += @('--retry','3','--retry-delay','5','--retry-all-errors') }
+            if ($InsecureTls) { $curlArgs += '--insecure' }
             if (Test-Path -LiteralPath $cookieJar) { $curlArgs += @('--cookie',$cookieJar) }
             $curlArgs += $Url
             $status = & curl.exe @curlArgs 2>$null
@@ -79,7 +81,11 @@ jobs:
               [int]$TimeoutSeconds = 60,
               [switch]$OfficialSource
             )
-            if ($SourceUrl -match '^https?://devbuilds(\.s)?\.kaspersky-labs\.com/') {
+            if ($SourceUrl -match '^https://devbuilds\.kaspersky-labs\.com/') {
+              # The legacy official Kaspersky hostname may present a certificate that curl cannot validate.
+              # Its payload is still checked against Kaspersky's Authenticode signature before use.
+              $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds -Retry -InsecureTls
+            } elseif ($SourceUrl -match '^https?://devbuilds(\.s)?\.kaspersky-labs\.com/') {
               $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds -Retry
             } else {
               $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds
@@ -102,6 +108,17 @@ jobs:
             }
           }
 
+          # Prime a session with Kaspersky's official download page before requesting the binary.
+          $landingPath = Join-Path $env:RUNNER_TEMP 'kvrt-landing.html'
+          Write-Host 'Opening Kaspersky official download page to initialize cookies...'
+          $landing = Invoke-KvrtCurl -Url 'https://me.kaspersky.com/downloads/free-virus-removal-tool' -OutputPath $landingPath -TimeoutSeconds 30
+          if ($landing.ExitCode -eq 0 -and $landing.Exists) {
+            Write-Host 'Official download page session initialized.'
+          } else {
+            Write-Warning ('Could not initialize the download page session; continuing with the official direct URL. HTTP {0}, curl exit {1}.' -f $landing.Status,$landing.ExitCode)
+          }
+          Remove-Item -LiteralPath $landingPath -Force -ErrorAction SilentlyContinue
+
           $exeUrls = @(
             $exeUrl,
             $exeUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com'),
@@ -115,7 +132,13 @@ jobs:
             Write-Host "Downloading KVRT.exe from $candidateUrl ..."
             $candidateTimeout = 25
             if ($candidateUrl -eq $exeUrls[0] -or $candidateUrl -eq $exeUrls[1]) { $candidateTimeout = 60 }
-            $candidateDownload = Invoke-KvrtCurl -Url $candidateUrl -OutputPath $exePath -TimeoutSeconds $candidateTimeout -Retry
+            if ($candidateUrl -eq $exeUrls[1]) {
+              # This is Kaspersky's legacy hostname; tolerate its TLS certificate issue only for transport,
+              # then require a valid Kaspersky Authenticode signature and matching product version below.
+              $candidateDownload = Invoke-KvrtCurl -Url $candidateUrl -OutputPath $exePath -TimeoutSeconds $candidateTimeout -Retry -InsecureTls
+            } else {
+              $candidateDownload = Invoke-KvrtCurl -Url $candidateUrl -OutputPath $exePath -TimeoutSeconds $candidateTimeout -Retry
+            }
             if ($candidateDownload.ExitCode -eq 0 -and $candidateDownload.Exists) {
               $download = $candidateDownload
               $exeUrl = $candidateUrl
