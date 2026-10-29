@@ -124,13 +124,17 @@ jobs:
             if ($innoHash -ne '4f83dc55e33b9019734b1ff1c1148503215dcaeb1c40d61da42062069f7b35e4') { throw 'InnoUnpacker package hash mismatch' }
             Expand-Archive -LiteralPath $innoZip -DestinationPath $innoDir -Force
             $innounp = Join-Path $innoDir 'innounp.exe'
-            foreach ($name in @('complete-internet-repair','bios-beep-codes','rizonesoft-office','resolute','firemin','watermin','chromin','edgemin')) {
-              $setup = Join-Path "$env:RUNNER_TEMP\rizone-inspect" "$name.download"
-              if (-not (Test-Path $setup)) { continue }
-              Write-Host "===== INNOUNP $name ====="
-              $output = & $innounp -l $setup 2>&1
+            foreach ($name in @('complete-internet-repair','bios-beep-codes','rizonesoft-office','resolute')) {
+              $setup = Join-Path "$env:RUNNER_TEMP\rizone-inspect" "$($name).download"
+              if (-not (Test-Path $setup)) { Write-Host "SETUP_NOT_FOUND=$setup"; continue }
+              $target = Join-Path "$env:RUNNER_TEMP\innounpacker" "$name"
+              New-Item -ItemType Directory -Force -Path $target | Out-Null
+              Write-Host "===== INNOUNP EXTRACT $name ====="
+              $output = & $innounp -x "-d$target" $setup 2>&1
               Write-Host "InnoUnpackerExit=$LASTEXITCODE"
-              $output | Select-Object -First 25 | ForEach-Object { Write-Host "INNO_OUTPUT=$_"}
+              $files = Get-ChildItem -LiteralPath $target -Recurse -File -ErrorAction SilentlyContinue
+              Write-Host "ExtractedFileCount=$($files.Count)"
+              $files | Select-Object -First 60 | ForEach-Object { Write-Host "EXTRACTED_FILE=$($_.FullName.Substring($target.Length).TrimStart('\','/'))"}
             }
           } catch {
             Write-Host "INNO_VALIDATION_SETUP_FAILED=$($_.Exception.Message)"
