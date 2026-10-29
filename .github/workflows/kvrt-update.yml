@@ -58,12 +58,12 @@ jobs:
               [switch]$Retry
             )
             Remove-Item -LiteralPath $OutputPath -Force -ErrorAction SilentlyContinue
-            $args = @('--fail','--silent','--show-error','--location','--max-time',"$TimeoutSeconds",
+            $curlArgs = @('--fail','--silent','--show-error','--location','--max-time',"$TimeoutSeconds",
               '--user-agent',$userAgent,'--cookie-jar',$cookieJar,'--output',$OutputPath,'--write-out','%{http_code}')
-            if ($Retry) { $args += @('--retry','2','--retry-delay','2') }
-            if (Test-Path -LiteralPath $cookieJar) { $args += @('--cookie',$cookieJar) }
-            $args += $Url
-            $status = & curl.exe @args 2>$null
+            if ($Retry) { $curlArgs += @('--retry','2','--retry-delay','2') }
+            if (Test-Path -LiteralPath $cookieJar) { $curlArgs += @('--cookie',$cookieJar) }
+            $curlArgs += $Url
+            $status = & curl.exe @curlArgs 2>$null
             $exitCode = $LASTEXITCODE
             [PSCustomObject]@{
               Status = ([string]$status).Trim()
