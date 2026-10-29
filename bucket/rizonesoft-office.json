@@ -1,0 +1,22 @@
+{
+    "version": "2023.9.27.1794",
+    "description": "Rizonesoft Office Alpha 5 application suite, distributed as an Inno Setup package.",
+    "homepage": "https://rizonesoft.com/downloads/rizonesoft-office/",
+    "license": "GPL-3.0-or-later",
+    "url": "https://rizonesoft.com/?download_id=18318&gdm_process_download=1#/rizonesoft-office.exe",
+    "hash": "a861af178a4a7d7e7b78e7d6c170acf435248281da7ebb582cd6afa3e7d23904",
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "Flow.exe",
+            "Rizonesoft Office - Flow"
+        ]
+    ],
+    "checkver": {
+        "url": "https://rizonesoft.com/gdm_downloads/rizonesoft-office/",
+        "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d{4}\\.\\d+\\.\\d+\\.\\d+)"
+    },
+    "autoupdate": {
+        "url": "https://rizonesoft.com/?download_id=18318&gdm_process_download=1#/rizonesoft-office.exe"
+    }
+}
