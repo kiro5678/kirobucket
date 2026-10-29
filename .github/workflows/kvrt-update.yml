@@ -134,7 +134,7 @@ jobs:
             throw ('Could not download KVRT.exe from any configured official Kaspersky endpoint. No manifest changes were made. Attempts: ' + ($downloadErrors -join ' | '))
           }
 
-          
+
           $exeFile = Get-Item -LiteralPath $exePath
           if ($exeFile.Length -lt 25000000) {
             throw "Downloaded KVRT.exe is unexpectedly small ($($exeFile.Length) bytes)."
