@@ -366,3 +366,13 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Verification performed: fetched the workflow and authoring guide from `master` and confirmed the optional-token handling, changed-manifest selection, KVRT-only exception, and failure behavior are present.
 - CI status: no post-change run result was available during this verification, so the changes are committed and inspected but are not recorded as CI-passing.
 
+### muCommander nightly checkver — transient 404 and mutable release version
+
+- Investigated [checkver validation run 40860770065, job 123403114234](https://github.com/kiro5678/kirobucket/actions/runs/40860770065/job/123403114234). The only non-KVRT manifest failure was `bucket/mucommander-nightly.json`: the API endpoint `/repos/mucommander/mucommander/releases/tags/nightly` returned `404 Not Found`.
+- Inspected the upstream [nightly workflow](https://github.com/mucommander/mucommander/blob/master/.github/workflows/nightly.yml). It deletes the previous `nightly` release/tag before rebuilding and uploading replacement assets, so the official API can temporarily have no release at that tag.
+- Backed up the prior manifest to [`logs/manifests/mucommander-nightly-1.6.3-2026-10-29.json`](https://github.com/kiro5678/kirobucket/blob/master/logs/manifests/mucommander-nightly-1.6.3-2026-10-29.json).
+- Replaced the URL/JSONPath-only version lookup with a PowerShell `checkver.script` that retries the official release endpoint up to 20 times with a 15-second delay, optionally authenticates with `GITHUB_TOKEN`, verifies the `nightly` tag and the expected x86_64 portable ZIP, and extracts both the app version and source commit from the official release metadata.
+- The script emits the app version and seven-character commit separated by `|`; `checkver.replace` makes the Scoop version include both, so republished nightly builds can trigger updates even when the semantic app version is unchanged. The `autoupdate.url` uses `$matchVersion` to keep the filename aligned with the upstream asset's app version.
+- Updated `docs/manifest-authoring.md` with the bounded-retry rule for nightly releases that are deleted and recreated during builds, and retained the requirement to fail clearly if the official source remains unavailable.
+- Verification status: the updated manifest, backup, documentation, and log were committed and read back from `master`. At repair time, the official nightly release API still returned `404`; therefore a passing checkver run cannot be claimed until upstream republishes the nightly release and the new Actions run completes successfully. The script intentionally fails after its bounded retry window rather than skipping the manifest or fabricating a version.
+
