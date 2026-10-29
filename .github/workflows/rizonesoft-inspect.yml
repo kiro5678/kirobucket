@@ -1,6 +1,11 @@
 name: Temporary Rizonesoft Package Inspection
 
 on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/rizonesoft-inspect.yml"
   push:
     branches:
       - add-rizonesoft-manifests
