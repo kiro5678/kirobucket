@@ -134,6 +134,13 @@ jobs:
               Write-Host "InnoUnpackerExit=$LASTEXITCODE"
               $files = Get-ChildItem -LiteralPath $target -Recurse -File -ErrorAction SilentlyContinue
               Write-Host "ExtractedFileCount=$($files.Count)"
+              if ($name -eq 'rizonesoft-office') {
+                $files | Where-Object { $_.Extension -ieq '.exe' -and $_.FullName.Substring($target.Length) -match '(?i)(office|rizone|write|grid|stage|flow|plan|mail|suite|launcher|start)' } | ForEach-Object { Write-Host "OFFICE_EXECUTABLE=$($_.FullName.Substring($target.Length).TrimStart('\','/'))" }
+                $script = Join-Path $target 'install_script.iss'
+                if (Test-Path $script) {
+                  Select-String -Path $script -Pattern 'AppName|DefaultDirName|OutputBaseFilename|Filename:|Source:' | Select-Object -First 100 | ForEach-Object { Write-Host "OFFICE_INSTALL_SCRIPT=$($_.Line.Trim())" }
+                }
+              }
               $files | Select-Object -First 60 | ForEach-Object { Write-Host "EXTRACTED_FILE=$($_.FullName.Substring($target.Length).TrimStart('\','/'))"}
             }
           } catch {
