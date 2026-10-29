@@ -16,6 +16,93 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Seed hashes for Eric Zimmerman archives
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $manifestNames = @(
+            'eric-registry-explorer',
+            'eric-sbecmd',
+            'eric-jumplist-explorer',
+            'eric-lecmd',
+            'eric-shellbags-explorer',
+            'eric-jlecmd',
+            'eric-recmd'
+          )
+          $downloadRoot = Join-Path $env:RUNNER_TEMP 'eric-zimmerman-hash-seed'
+          New-Item -ItemType Directory -Path $downloadRoot -Force | Out-Null
+          $changedPaths = [System.Collections.Generic.List[string]]::new()
+          $lineEnding = "`n"
+
+          foreach ($manifestName in $manifestNames) {
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE ("bucket\\" + $manifestName + ".json")
+            $originalText = [System.IO.File]::ReadAllText($manifestPath)
+            $text = $originalText
+            if ($text.Contains("`r`n")) { $lineEnding = "`r`n" }
+            $manifest = $text | ConvertFrom-Json
+
+            if ($manifest.architecture) {
+              $arch = $manifest.architecture.PSObject.Properties['64bit']
+              if ($null -eq $arch -or [string]::IsNullOrWhiteSpace([string]$arch.Value.url)) {
+                throw "Missing architecture.64bit.url in $manifestName.json."
+              }
+              $url = [string]$arch.Value.url
+              $hashExists = -not [string]::IsNullOrWhiteSpace([string]$arch.Value.hash)
+              $indent = '            '
+            } else {
+              if ([string]::IsNullOrWhiteSpace([string]$manifest.url)) {
+                throw "Missing url in $manifestName.json."
+              }
+              $url = [string]$manifest.url
+              $hashExists = -not [string]::IsNullOrWhiteSpace([string]$manifest.hash)
+              $indent = '    '
+            }
+
+            if (-not $hashExists) {
+              $downloadPath = Join-Path $downloadRoot ($manifestName + '.zip')
+              Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
+              Write-Host "Downloading official archive to calculate SHA-256: $manifestName"
+              Invoke-WebRequest -Uri $url -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 240 -ErrorAction Stop
+              $downloaded = Get-Item -LiteralPath $downloadPath
+              if ($downloaded.Length -lt 100000) {
+                throw "Downloaded archive for $manifestName is unexpectedly small ($($downloaded.Length) bytes)."
+              }
+              $hash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
+              Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
+
+              $urlLine = $indent + '"url": "' + $url + '",'
+              if (-not $text.Contains($urlLine)) {
+                throw "Could not identify the exact URL line in $manifestName.json; refusing to rewrite it."
+              }
+              $hashLine = $indent + '"hash": "' + $hash + '",'
+              $text = $text.Replace($urlLine, $urlLine + $lineEnding + $hashLine)
+              Write-Host "Calculated $manifestName SHA-256: $hash"
+            }
+
+            $oldNote = 'The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated.'
+            $newNote = 'The upstream site does not publish a static SHA-256 checksum. The initial checksum is calculated from its official archive; Scoop recalculates it when updating the manifest.'
+            $text = $text.Replace($oldNote, $newNote)
+
+            if ($text -ne $originalText) {
+              [System.IO.File]::WriteAllText($manifestPath, $text, [System.Text.UTF8Encoding]::new($false))
+              $changedPaths.Add($manifestPath)
+            }
+          }
+
+          if ($changedPaths.Count -gt 0) {
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            foreach ($manifestPath in $changedPaths) {
+              git add -- $manifestPath
+            }
+            git commit -m 'Seed hashes for Eric Zimmerman manifests'
+            git pull --rebase origin master
+            git push origin HEAD:master
+          } else {
+            Write-Host 'All targeted Eric Zimmerman manifests already contain hashes and corrected notes.'
+          }
+
       - name: Excavate
         uses: ScoopInstaller/GithubActions@5bceeda181721d9d10a18fdcc3ddca6f33467ae6 # v3.0.0
         env:
