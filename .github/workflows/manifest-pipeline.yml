@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - "bucket/*.json"
+      - "bucket/**"
   workflow_dispatch:
     inputs:
       manifest:
@@ -48,6 +48,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $manifestPaths = [System.Collections.Generic.List[string]]::new()
+          $needsTable = $false
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $path = ([string]$env:MANIFEST_INPUT).Trim().Replace('\', '/')
@@ -55,6 +56,7 @@ jobs:
               throw "Provide one manifest filename or bucket/filename.json. Received: $path"
             }
             $manifestPaths.Add("bucket/$($Matches.name)")
+            $needsTable = $true
           } else {
             $before = [string]$env:PUSH_BEFORE
             $after = [string]$env:PUSH_SHA
@@ -69,9 +71,11 @@ jobs:
 
             foreach ($file in $changedFiles) {
               $normalized = ([string]$file).Replace('\', '/')
-              if ($normalized -match '^bucket/[^/]+\.json$' -and
-                  (Test-Path -LiteralPath $normalized -PathType Leaf)) {
-                $manifestPaths.Add($normalized)
+              if ($normalized -match '(?i)^bucket/[^/]+\.json$') {
+                $needsTable = $true
+                if (Test-Path -LiteralPath $normalized -PathType Leaf) {
+                  $manifestPaths.Add($normalized)
+                }
               }
             }
           }
@@ -79,12 +83,14 @@ jobs:
           $manifestPaths = @($manifestPaths | Sort-Object -Unique)
           if ($manifestPaths.Count -eq 0) {
             "has_manifests=false" >> $env:GITHUB_OUTPUT
+            "needs_table=$($needsTable.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
             "manifests=" >> $env:GITHUB_OUTPUT
-            Write-Host "No existing root-level manifest files changed. Nothing to validate."
+            Write-Host "No existing root-level manifest files changed."
             exit 0
           }
 
           "has_manifests=true" >> $env:GITHUB_OUTPUT
+          "needs_table=$($needsTable.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
           "manifests<<MANIFESTLIST" >> $env:GITHUB_OUTPUT
           foreach ($manifestPath in $manifestPaths) {
             $manifestPath >> $env:GITHUB_OUTPUT
@@ -100,19 +106,17 @@ jobs:
           PIPELINE_SHA: ${{ github.sha }}
           MANIFESTS: ${{ steps.input.outputs.manifests }}
           HAS_MANIFESTS: ${{ steps.input.outputs.has_manifests }}
+          NEEDS_TABLE: ${{ steps.input.outputs.needs_table }}
           FORCE_UPDATE_INPUT: ${{ inputs.force_update }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          if ($env:HAS_MANIFESTS -ne 'true') {
-            @('## Manifest pipeline', '', 'No existing root-level manifest files changed; no validation stages were required.') |
+          $manifestPaths = @($env:MANIFESTS -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+          $needsTable = $env:NEEDS_TABLE -eq 'true'
+          if ($manifestPaths.Count -eq 0 -and -not $needsTable) {
+            @('## Manifest pipeline', '', 'No manifest JSON files changed; no validation or index regeneration was required.') |
               Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
             exit 0
-          }
-
-          $manifestPaths = @($env:MANIFESTS -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
-          if ($manifestPaths.Count -eq 0) {
-            throw "The workflow detected manifests to validate but received an empty manifest list."
           }
 
           $forceUpdate = [string]$env:FORCE_UPDATE_INPUT
@@ -262,7 +266,9 @@ jobs:
             Start-And-WaitWorkflow -WorkflowFile 'ci.yml'
           }
 
-          Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
+          if ($needsTable) {
+            Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
+          }
 
           $summary.Add("")
           $summary.Add("All manifest pipeline stages passed.")
