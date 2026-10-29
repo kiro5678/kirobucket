@@ -21,6 +21,15 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Continue'
+          function Get-ContentType {
+            param([string]$Path)
+            try {
+              $bytes = [System.IO.File]::ReadAllBytes($Path)
+              if ($bytes.Length -ge 2 -and $bytes[0] -eq 0x50 -and $bytes[1] -eq 0x4B) { return 'ZIP signature' }
+              if ($bytes.Length -ge 2 -and $bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) { return 'PE/EXE signature' }
+              return 'Unknown signature'
+            } catch { return 'Unknown' }
+          }
           $items = @(
             @{ Name = 'notepad3-x64'; Url = 'https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_7.26.602.1/Notepad3_7.26.602.1_x64_Portable.zip' },
             @{ Name = 'notepad3-x86'; Url = 'https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_7.26.602.1/Notepad3_7.26.602.1_x86_Portable.zip' },
@@ -30,13 +39,7 @@ jobs:
             @{ Name = 'pixel-repair-portable'; Url = 'https://rizonesoft.com/?download_id=18322&gdm_process_download=1' },
             @{ Name = 'take-ownership'; Url = 'https://rizonesoft.com/?download_id=18314&gdm_process_download=1' },
             @{ Name = 'complete-internet-repair'; Url = 'https://rizonesoft.com/?download_id=18323&gdm_process_download=1' },
-            @{ Name = 'firemin'; Url = 'https://downloads.rizonesoft.com/Firemin/Firemin_8520_Setup.exe' },
-            @{ Name = 'watermin'; Url = 'https://downloads.rizonesoft.com/Firemin/Watermin_8535_Setup.exe' },
-            @{ Name = 'chromin'; Url = 'https://downloads.rizonesoft.com/Firemin/Chromin_8535_Setup.exe' },
-            @{ Name = 'edgemin'; Url = 'https://downloads.rizonesoft.com/Firemin/Edgemin_8522_Setup.exe' },
-            @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' },
-            @{ Name = 'rizonesoft-office'; Url = 'https://rizonesoft.com/?download_id=18318&gdm_process_download=1' },
-            @{ Name = 'resolute'; Url = 'https://rizonesoft.com/?download_id=18329&gdm_process_download=1' }
+            @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' }
           )
           New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP\rizone-inspect" | Out-Null
           foreach ($item in $items) {
@@ -49,7 +52,7 @@ jobs:
               $signature = Get-AuthenticodeSignature $file.FullName
               Write-Host "Bytes=$($file.Length)"
               Write-Host "SHA256=$hash"
-              Write-Host "ContentType=$((Get-ContentType -Path $file.FullName))"
+              Write-Host "ContentType=$(Get-ContentType -Path $file.FullName)"
               $vi = $file.VersionInfo
               Write-Host "FileVersion=$($vi.FileVersion)"
               Write-Host "ProductVersion=$($vi.ProductVersion)"
@@ -61,20 +64,9 @@ jobs:
               $first = [System.IO.File]::ReadAllBytes($file.FullName)
               $head = [System.Text.Encoding]::ASCII.GetString($first, 0, [Math]::Min(8, $first.Length))
               Write-Host "Header=$head"
-              if ($file.Length -gt 4 -and ($head.StartsWith('PK') -or $head.StartsWith('7z') -or $head.StartsWith('MZ'))) {
-                $listing = & 7z.exe l -ba $file.FullName 2>&1
-                $listing | Where-Object { $_ -match '\.(exe|dll|ini|cfg|json|reg|chm|dat)$' } | ForEach-Object { Write-Host "PACKAGE_FILE=$_"}
-              }
+              $listing = & 7z.exe l -ba $file.FullName 2>&1
+              $listing | Where-Object { $_ -match '\.(exe|dll|ini|cfg|json|reg|chm|dat)$' } | ForEach-Object { Write-Host "PACKAGE_FILE=$_"}
             } catch {
               Write-Host "DOWNLOAD_OR_INSPECTION_FAILED=$($_.Exception.Message)"
             }
-          }
-          function Get-ContentType {
-            param([string]$Path)
-            try {
-              $bytes = [System.IO.File]::ReadAllBytes($Path)
-              if ($bytes.Length -ge 2 -and $bytes[0] -eq 0x50 -and $bytes[1] -eq 0x4B) { return 'ZIP signature' }
-              if ($bytes.Length -ge 2 -and $bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) { return 'PE/EXE signature' }
-              return 'Unknown signature'
-            } catch { return 'Unknown' }
           }
