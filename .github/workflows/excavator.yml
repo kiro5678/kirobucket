@@ -68,6 +68,16 @@ jobs:
               if ($downloaded.Length -lt 100000) {
                 throw "Downloaded archive for $manifestName is unexpectedly small ($($downloaded.Length) bytes)."
               }
+              $stream = [System.IO.File]::OpenRead($downloadPath)
+              try {
+                $signature = [byte[]]::new(2)
+                $bytesRead = $stream.Read($signature, 0, 2)
+              } finally {
+                $stream.Dispose()
+              }
+              if ($bytesRead -ne 2 -or $signature[0] -ne 0x50 -or $signature[1] -ne 0x4B) {
+                throw "The download for $manifestName does not have a ZIP header. Refusing to save a hash for a likely error page."
+              }
               $hash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
               Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
 
