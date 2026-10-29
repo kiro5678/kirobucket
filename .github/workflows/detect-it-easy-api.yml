@@ -1,4 +1,4 @@
-name: Detect It Easy API Inspector
+name: Multi-Engine Installer Type Inspector
 
 on:
   workflow_dispatch:
@@ -152,6 +152,197 @@ jobs:
             "The target file was downloaded for static analysis and was not executed."
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+      - name: Detect container formats and installer-family signatures
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          INSTALLER_NAME: ${{ steps.target.outputs.installer_name }}
+          TARGET_SHA256: ${{ steps.target.outputs.sha256 }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $file = $env:INSTALLER_PATH
+          $name = $env:INSTALLER_NAME
+          $extension = [System.IO.Path]::GetExtension($name).ToLowerInvariant()
+          $length = (Get-Item -LiteralPath $file).Length
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add("Static installer-family and container analysis")
+          $report.Add("=============================================")
+          $report.Add("Filename: $name")
+          $report.Add("SHA-256: $env:TARGET_SHA256")
+          $report.Add("Extension: $extension")
+          $report.Add("Size: $length bytes")
+          $report.Add("")
+
+          $header = [byte[]]::new(4096)
+          $stream = [System.IO.File]::OpenRead($file)
+          try {
+            $headerRead = $stream.Read($header, 0, $header.Length)
+            $headHex = if ($headerRead -ge 8) { [System.BitConverter]::ToString($header, 0, 8).Replace("-", "") } else { "" }
+            $asciiHeader = [System.Text.Encoding]::ASCII.GetString($header, 0, $headerRead)
+            $report.Add("First 8 bytes: $headHex")
+
+            if ($headerRead -ge 2 -and $header[0] -eq 0x4D -and $header[1] -eq 0x5A) {
+              $peOffset = -1
+              if ($headerRead -ge 64) { $peOffset = [System.BitConverter]::ToInt32($header, 0x3C) }
+              if ($peOffset -ge 0 -and $peOffset -le ($length - 4)) {
+                $stream.Position = $peOffset
+                $peSignature = [byte[]]::new(4)
+                $peRead = $stream.Read($peSignature, 0, 4)
+                if ($peRead -eq 4 -and $peSignature[0] -eq 0x50 -and $peSignature[1] -eq 0x45 -and $peSignature[2] -eq 0 -and $peSignature[3] -eq 0) {
+                  $report.Add("Container/format: Windows PE executable (MZ + PE signature)")
+                } else {
+                  $report.Add("Container/format: MZ file; valid PE signature was not confirmed")
+                }
+              } else {
+                $report.Add("Container/format: MZ file; PE header offset could not be validated")
+              }
+            } elseif ($headHex.StartsWith("D0CF11E0A1B11AE1")) {
+              $report.Add("Container/format: OLE Compound File (MSI/MSP/MSM-family candidate; signature alone is not conclusive)")
+            } elseif ($asciiHeader.StartsWith("MSCF")) {
+              $report.Add("Container/format: Microsoft Cabinet (CAB)")
+            } elseif ($headHex.StartsWith("504B0304") -or $headHex.StartsWith("504B0506") -or $headHex.StartsWith("504B0708")) {
+              $report.Add("Container/format: ZIP-compatible archive")
+            } elseif ($headHex.StartsWith("377ABCAF271C")) {
+              $report.Add("Container/format: 7-Zip archive")
+            } elseif ($headHex.StartsWith("526172211A0700") -or $headHex.StartsWith("526172211A070100")) {
+              $report.Add("Container/format: RAR archive")
+            } elseif ($headHex.StartsWith("1F8B")) {
+              $report.Add("Container/format: gzip stream")
+            } else {
+              $report.Add("Container/format: no recognized leading signature")
+            }
+            $stream.Position = 0
+          } finally {
+            $stream.Dispose()
+          }
+
+          if ($extension -in @(".msi", ".msp", ".msm")) {
+            $report.Add("")
+            $report.Add("Windows Installer package inspection:")
+            try {
+              $windowsInstaller = New-Object -ComObject WindowsInstaller.Installer
+              $database = $windowsInstaller.OpenDatabase($file, 0)
+              $report.Add("Windows Installer COM opened the file in read-only mode.")
+              if ($extension -eq ".msi") {
+                foreach ($propertyName in @("ProductName", "ProductVersion", "Manufacturer", "ProductCode")) {
+                  try {
+                    $quote = [string][char]96
+                    $query = "SELECT $quote" + "Value" + "$quote FROM $quote" + "Property" + "$quote WHERE $quote" + "Property" + "$quote = '$propertyName'"
+                    $view = $database.OpenView($query)
+                    $view.Execute()
+                    $record = $view.Fetch()
+                    if ($null -ne $record) {
+                      $value = $record.StringData(1)
+                      if (-not [string]::IsNullOrWhiteSpace($value)) {
+                        $report.Add("MSI " + $propertyName + ": " + $value)
+                      }
+                    }
+                    $view.Close()
+                  } catch {
+                    $report.Add("MSI property $propertyName was unavailable.")
+                  }
+                }
+              }
+            } catch {
+              $report.Add("Windows Installer COM could not parse this package; extension alone is not treated as confirmation.")
+            }
+          }
+
+          if ($extension -in @(".msix", ".appx", ".msixbundle", ".appxbundle") -or $headHex.StartsWith("504B0304")) {
+            try {
+              Add-Type -AssemblyName System.IO.Compression.FileSystem
+              $zip = [System.IO.Compression.ZipFile]::OpenRead($file)
+              try {
+                $entryNames = @($zip.Entries | ForEach-Object { $_.FullName })
+                if ($entryNames -contains "AppxManifest.xml") {
+                  $report.Add("Package evidence: ZIP contains AppxManifest.xml (MSIX/APPX package candidate).")
+                }
+                if ($entryNames -contains "AppxBlockMap.xml") {
+                  $report.Add("Package evidence: ZIP contains AppxBlockMap.xml.")
+                }
+                if ($entryNames -contains "AppxMetadata/AppxBundleManifest.xml") {
+                  $report.Add("Package evidence: ZIP contains AppxMetadata/AppxBundleManifest.xml (APPX/MSIX bundle candidate).")
+                }
+              } finally {
+                $zip.Dispose()
+              }
+            } catch {
+              $report.Add("ZIP central-directory inspection was not applicable or failed; this is not an installation test.")
+            }
+          }
+
+          $markerLabels = @{
+            InnoSetup = "Inno Setup"
+            NSIS = "NSIS (Nullsoft Install System)"
+            WiXBurn = "WiX Burn bootstrapper"
+            InstallShield = "InstallShield"
+            AdvancedInstaller = "Advanced Installer / Caphyon"
+            InstallAware = "InstallAware"
+            InstallAnywhere = "InstallAnywhere / Zero G"
+            Wise = "Wise installer"
+            InstallForge = "InstallForge"
+            SetupFactory = "Setup Factory"
+            BitRock = "BitRock / InstallBuilder"
+            QtInstallerFramework = "Qt Installer Framework"
+            Squirrel = "Squirrel installer/update framework"
+            SevenZipSFX = "7-Zip SFX"
+            ActualInstaller = "Actual Installer"
+            Clickteam = "Clickteam Install Creator"
+          }
+          $signaturePattern = '(?<InnoSetup>Inno Setup Setup Data|Inno Setup)|(?<NSIS>NullsoftInst|Nullsoft Install System)|(?<WiXBurn>WixBundle|WixBurn)|(?<InstallShield>InstallShield)|(?<AdvancedInstaller>Advanced Installer|Caphyon)|(?<InstallAware>InstallAware)|(?<InstallAnywhere>InstallAnywhere|Zero G)|(?<Wise>Wise Installation Wizard|Wise Installer)|(?<InstallForge>InstallForge)|(?<SetupFactory>Setup Factory)|(?<BitRock>BitRock|InstallBuilder)|(?<QtInstallerFramework>Qt Installer Framework|QtIFW)|(?<Squirrel>SquirrelSetup|Squirrel\.Windows)|(?<SevenZipSFX>7zS\.sfx|7-Zip SFX)|(?<ActualInstaller>Actual Installer)|(?<Clickteam>Install Creator)'
+          $signatureRegex = [System.Text.RegularExpressions.Regex]::new($signaturePattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+          $markerHits = [System.Collections.Generic.List[string]]::new()
+          $chunkSize = 4MB
+          $overlapSize = 512
+          $buffer = [byte[]]::new($chunkSize + $overlapSize)
+          $scanStream = [System.IO.File]::OpenRead($file)
+          try {
+            $carry = 0
+            while ($true) {
+              $readCount = $scanStream.Read($buffer, $carry, $chunkSize)
+              if ($readCount -eq 0) { break }
+              $totalCount = $carry + $readCount
+              $asciiText = [System.Text.Encoding]::ASCII.GetString($buffer, 0, $totalCount)
+              $unicodeLength = $totalCount - ($totalCount % 2)
+              $unicodeText = [System.Text.Encoding]::Unicode.GetString($buffer, 0, $unicodeLength).Replace([string][char]0, "")
+
+              foreach ($textBlock in @($asciiText, $unicodeText)) {
+                foreach ($match in $signatureRegex.Matches($textBlock)) {
+                  foreach ($groupName in $markerLabels.Keys) {
+                    if ($match.Groups[$groupName].Success -and -not $markerHits.Contains($markerLabels[$groupName])) {
+                      $markerHits.Add($markerLabels[$groupName])
+                    }
+                  }
+                }
+              }
+
+              $carry = [Math]::Min($overlapSize, $totalCount)
+              [System.Array]::Copy($buffer, $totalCount - $carry, $buffer, 0, $carry)
+            }
+          } finally {
+            $scanStream.Dispose()
+          }
+
+          $report.Add("")
+          $report.Add("Installer-family string markers (heuristic, not proof):")
+          if ($markerHits.Count -gt 0) {
+            foreach ($marker in $markerHits) { $report.Add("- $marker") }
+          } else {
+            $report.Add("No recognized installer-family markers found by this string scan.")
+          }
+
+          $report.Add("")
+          $report.Add("Interpretation:")
+          $report.Add("- Treat container signatures and MSI COM metadata as stronger format evidence than a filename extension.")
+          $report.Add("- Treat installer-family string markers as candidates that should be compared with Detect It Easy results; an installer may contain unrelated embedded strings.")
+          $report.Add("- An EXE, ZIP/SFX signature, or extraction-friendly structure does not by itself prove that an application is portable.")
+          $report.Add("- The target file was not executed and no payload was extracted.")
+
+          $reportPath = Join-Path (Split-Path -Parent $file) "static-signature-report.txt"
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
       - name: Download latest Detect It Easy release through GitHub API
         id: die
         shell: pwsh
@@ -261,9 +452,9 @@ jobs:
 
           Write-Output "Detect It Easy release: $env:DIE_RELEASE"
           Write-Output "Scanning $env:INSTALLER_NAME (SHA-256 $env:INSTALLER_SHA256)"
-          Write-Output "Static analysis only; the target file will not be executed."
+          Write-Output "Deep + heuristic static analysis only; the target file will not be executed."
 
-          $scanOutput = @(& $env:DIEC_PATH $env:INSTALLER_PATH 2>&1 | ForEach-Object { "$_" })
+          $scanOutput = @(& $env:DIEC_PATH -d -u -b -a $env:INSTALLER_PATH 2>&1 | ForEach-Object { "$_" })
           $scanExitCode = $LASTEXITCODE
           $scanOutput | ForEach-Object { Write-Output $_ }
 
@@ -283,7 +474,7 @@ jobs:
             "Target SHA-256: $env:INSTALLER_SHA256"
             "Scan exit code: $scanExitCode"
             ""
-            "Detect It Easy output:"
+            "Detect It Easy output (deep scan + heuristics + verbose mode):"
             $scanOutput
             ""
             "Safety note: the target file was not executed."
