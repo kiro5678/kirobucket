@@ -98,9 +98,24 @@ jobs:
           }
 
           $exeUrls = @(
-            $exeUrl,
-            $exeUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com')
+            'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'https://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'https://downloads.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads0.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads1.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads2.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads3.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads4.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads5.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads6.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads7.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads8.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
+            'http://downloads9.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe'
           ) | Select-Object -Unique
+
           $download = $null
           $downloadErrors = [System.Collections.Generic.List[string]]::new()
           foreach ($candidateUrl in $exeUrls) {
@@ -157,8 +172,23 @@ jobs:
 
           $xmlUrls = @(
             $xmlUrl,
-            $xmlUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com')
+            $xmlUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com'),
+            $xmlUrl.Replace('devbuilds.s.kaspersky-labs.com','downloads.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.s.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads0.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads1.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads2.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads3.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads4.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads5.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads6.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads7.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads8.kaspersky-labs.com'),
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads9.kaspersky-labs.com')
           ) | Select-Object -Unique
+
           $metadata = $null
           foreach ($candidateXmlUrl in $xmlUrls) {
             $metadata = Get-KvrtMetadata -SourceUrl $candidateXmlUrl -TimeoutSeconds 45
