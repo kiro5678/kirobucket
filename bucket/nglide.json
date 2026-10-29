@@ -8,7 +8,7 @@
     "nsis": true,
     "checkver": {
         "url": "https://www.zeus-software.com/downloads/nglide",
-        "regex": "(?s)Version:.*?([0-9]+\\.[0-9]+)"
+        "regex": "Version:[^0-9]*([0-9]+\\\\.[0-9]+)"
     },
     "autoupdate": {
         "url": "https://www.zeus-software.com/files/nglide/nGlide$cleanVersion_setup.exe"
