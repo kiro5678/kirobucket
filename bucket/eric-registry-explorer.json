@@ -1,5 +1,5 @@
 {
-    "version": "2026.10.1",
+    "version": "2026.10.2",
     "description": "Eric Zimmerman's Registry Explorer: GUI for examining Windows Registry hives, including multi-hive searches and locked hive files.",
     "homepage": "https://ericzimmerman.github.io/",
     "license": "Freeware",
