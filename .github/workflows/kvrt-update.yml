@@ -60,7 +60,7 @@ jobs:
             Remove-Item -LiteralPath $OutputPath -Force -ErrorAction SilentlyContinue
             $curlArgs = @('--fail','--silent','--show-error','--location','--max-time',"$TimeoutSeconds",
               '--user-agent',$userAgent,'--referer','https://me.kaspersky.com/downloads/free-virus-removal-tool','--cookie-jar',$cookieJar,'--output',$OutputPath,'--write-out','%{http_code}')
-            if ($Retry) { $curlArgs += @('--retry','2','--retry-delay','2') }
+            if ($Retry) { $curlArgs += @('--retry','3','--retry-delay','5','--retry-all-errors') }
             if (Test-Path -LiteralPath $cookieJar) { $curlArgs += @('--cookie',$cookieJar) }
             $curlArgs += $Url
             $status = & curl.exe @curlArgs 2>$null
@@ -78,7 +78,11 @@ jobs:
               [int]$TimeoutSeconds = 60,
               [switch]$OfficialSource
             )
-            $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds
+            if ($SourceUrl -match '^https?://devbuilds(\.s)?\.kaspersky-labs\.com/') {
+              $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds -Retry
+            } else {
+              $response = Invoke-KvrtCurl -Url $SourceUrl -OutputPath $xmlPath -TimeoutSeconds $TimeoutSeconds
+            }
             if ($response.ExitCode -ne 0 -or -not $response.Exists) {
               $diagnostics.Add(('{0}: HTTP {1}, curl exit {2}' -f $SourceUrl,$response.Status,$response.ExitCode))
               return $null
@@ -98,22 +102,10 @@ jobs:
           }
 
           $exeUrls = @(
-            'https://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'https://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'https://downloads.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://devbuilds.s.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://devbuilds.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads0.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads1.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads2.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads3.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads4.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads5.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads6.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads7.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads8.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe',
-            'http://downloads9.kaspersky-labs.com/devbuilds/KVRT/latest/full/KVRT.exe'
+            $exeUrl,
+            $exeUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com'),
+            $exeUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.s.kaspersky-labs.com'),
+            $exeUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.kaspersky-labs.com')
           ) | Select-Object -Unique
 
           $download = $null
@@ -175,20 +167,8 @@ jobs:
           $xmlUrls = @(
             $xmlUrl,
             $xmlUrl.Replace('devbuilds.s.kaspersky-labs.com','devbuilds.kaspersky-labs.com'),
-            $xmlUrl.Replace('devbuilds.s.kaspersky-labs.com','downloads.kaspersky-labs.com'),
             $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.s.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads0.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads1.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads2.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads3.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads4.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads5.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads6.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads7.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads8.kaspersky-labs.com'),
-            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://downloads9.kaspersky-labs.com')
+            $xmlUrl.Replace('https://devbuilds.s.kaspersky-labs.com','http://devbuilds.kaspersky-labs.com')
           ) | Select-Object -Unique
 
           $metadata = $null
