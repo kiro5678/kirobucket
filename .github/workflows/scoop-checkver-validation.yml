@@ -74,102 +74,11 @@ jobs:
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $manualManifest = $env:MANUAL_MANIFEST.Trim().Replace('\', '/')
             if (-not [string]::IsNullOrWhiteSpace($manualManifest)) {
-              if ($manualManifest -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)
-            $baseSha = $env:BASE_SHA.Trim()
-            $headSha = $env:HEAD_SHA.Trim()
-            if ($baseSha -notmatch '^[0-9a-fA-F]{40}$' -or $headSha -notmatch '^[0-9a-fA-F]{40}$') {
-              throw 'Could not determine the push base and head commits for changed-manifest validation.'
-            }
-            $repoRoot = Split-Path $bucket -Parent
-            git -C $repoRoot cat-file -e "${baseSha}^{commit}" 2>$null
-            if ($LASTEXITCODE -ne 0) {
-              throw "Push base commit $baseSha is unavailable; cannot identify changed manifests."
-            }
-            $changedPaths = @(git -C $repoRoot diff --name-only $baseSha $headSha)
-            if ($LASTEXITCODE -ne 0) {
-              throw "Could not compare $baseSha with $headSha."
-            }
-            $changedManifests = @($changedPaths | Where-Object {
-              $_.Replace('\', '/') -match '^bucket/.+\.json$'
-            })
-            if ($changedManifests.Count -eq 0) {
-              Write-Host 'No bucket manifests changed in this push. Use workflow_dispatch to validate the full bucket.'
-              exit 0
-            }
-            $manifests = @($changedManifests | ForEach-Object {
-              Join-Path $repoRoot $_
-            } | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | ForEach-Object {
-              Get-Item -LiteralPath $_
-            } | Sort-Object FullName)
-          } else {
-            $manifests = @(Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse | Sort-Object FullName)
-          }
-
-          Write-Host "Found $($manifests.Count) manifest(s) to validate."
-
-          foreach ($manifest in $manifests) {
-            Write-Host ''
-            Write-Host '============================================================'
-            Write-Host "Checking: $($manifest.Name)"
-            Write-Host '============================================================'
-            $outputText = ''
-            try {
-              $output = @(& $checkver -App $manifest.FullName -ThrowError *>&1 | ForEach-Object { "$_" })
-              $outputText = $output -join [Environment]::NewLine
-              if ($outputText -match $failurePattern) {
-                throw "Version detection failed: $($Matches[0])"
-              }
-              Write-Host "PASS: $($manifest.BaseName)" -ForegroundColor Green
-            } catch {
-              $reason = $_.Exception.Message
-              if ($manifest.Name -ieq 'kvrt.json') {
-                $skipped += [PSCustomObject]@{
-                  Manifest = $manifest.Name
-                  Reason   = $reason
-                }
-                Write-Warning "SKIPPED: kvrt.json checkver failed; this exemption applies only to kvrt.json."
-              }
-              else {
-                $failed += [PSCustomObject]@{
-                  Manifest = $manifest.Name
-                  Reason   = $reason
-                }
-                Write-Host "FAIL: $($manifest.Name) checkver failed: $reason" -ForegroundColor Red
-              }
-              if ($outputText) { Write-Host $outputText }
-              continue
-            }
-          }
-
-          Write-Host ''
-          Write-Host '============================================================'
-          Write-Host 'Checkver summary'
-          Write-Host '============================================================'
-          $passedCount = $manifests.Count - $failed.Count - $skipped.Count
-          Write-Host "Checked: $($manifests.Count)"
-          Write-Host "Passed:  $passedCount"
-          Write-Host "Skipped: $($skipped.Count)"
-          Write-Host "Failed:  $($failed.Count)"
-
-          if ($skipped.Count -gt 0) {
-            Write-Host ''
-            Write-Host 'Only kvrt.json checkver failures are skipped:' -ForegroundColor Yellow
-            $skipped | Format-Table -AutoSize
-          }
-
-          if ($failed.Count -gt 0) {
-            Write-Host ''
-            Write-Host 'Checkver failures in manifests other than kvrt.json:' -ForegroundColor Red
-            $failed | Format-Table -AutoSize
-            exit 1
-          }
-
-          Write-Host 'Checkver validation completed. Only kvrt.json failures are skipped; any other manifest failure fails this workflow.' -ForegroundColor Green
-) {
+              if ($manualManifest -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
                 throw "Provide one manifest filename or bucket/filename.json. Received: $manualManifest"
               }
-              $manifestPath = Join-Path $bucket "PLACEHOLDER"
-              $manifestPath = Join-Path (Split-Path $bucket -Parent) ("bucket/" + $Matches.name)
+              $repoRoot = Split-Path $bucket -Parent
+              $manifestPath = Join-Path (Join-Path $repoRoot 'bucket') $Matches.name
               if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
                 throw "Manifest does not exist: bucket/$($Matches.name)"
               }
@@ -180,33 +89,6 @@ jobs:
               }
               $manifests = @(Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse | Sort-Object FullName)
             }
-          } else {
-            $baseSha = $env:BASE_SHA.Trim()
-            $headSha = $env:HEAD_SHA.Trim()
-            if ($baseSha -notmatch '^[0-9a-fA-F]{40}$' -or $headSha -notmatch '^[0-9a-fA-F]{40}$') {
-              throw 'Could not determine the push base and head commits for changed-manifest validation.'
-            }
-            $repoRoot = Split-Path $bucket -Parent
-            git -C $repoRoot cat-file -e "${baseSha}^{commit}" 2>$null
-            if ($LASTEXITCODE -ne 0) {
-              throw "Push base commit $baseSha is unavailable; cannot identify changed manifests."
-            }
-            $changedPaths = @(git -C $repoRoot diff --name-only $baseSha $headSha)
-            if ($LASTEXITCODE -ne 0) {
-              throw "Could not compare $baseSha with $headSha."
-            }
-            $changedManifests = @($changedPaths | Where-Object {
-              $_.Replace('\', '/') -match '^bucket/.+\.json$'
-            })
-            if ($changedManifests.Count -eq 0) {
-              Write-Host 'No bucket manifests changed in this push. Use workflow_dispatch to validate the full bucket.'
-              exit 0
-            }
-            $manifests = @($changedManifests | ForEach-Object {
-              Join-Path $repoRoot $_
-            } | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | ForEach-Object {
-              Get-Item -LiteralPath $_
-            } | Sort-Object FullName)
           } else {
             $manifests = @(Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse | Sort-Object FullName)
           }
