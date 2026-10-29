@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - master
-    paths:
-      - ".github/workflows/rizonesoft-inspect.yml"
   push:
     branches:
       - add-rizonesoft-manifests
@@ -45,15 +43,14 @@ jobs:
             $path = Join-Path "$env:RUNNER_TEMP\rizone-inspect" $item.Name
             Write-Host "===== $($item.Name) ====="
             try {
-              $response = Invoke-WebRequest -Uri $item.Url -OutFile "$path.download" -PassThru -MaximumRedirection 10 -TimeoutSec 90 -Headers @{ 'User-Agent' = 'Mozilla/5.0 ScoopManifestValidation/1.0' }
+              Invoke-WebRequest -Uri $item.Url -OutFile "$path.download" -MaximumRedirection 10 -TimeoutSec 120 -Headers @{ 'User-Agent' = 'Mozilla/5.0 ScoopManifestValidation/1.0' }
               $file = Get-Item "$path.download"
               $hash = (Get-FileHash $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
               $signature = Get-AuthenticodeSignature $file.FullName
               Write-Host "Bytes=$($file.Length)"
               Write-Host "SHA256=$hash"
-              Write-Host "FinalResponseUri=$($response.BaseResponse.ResponseUri.AbsoluteUri)"
-              Write-Host "ContentType=$($response.Headers['Content-Type'])"
-              $vi = (Get-Item $file.FullName).VersionInfo
+              Write-Host "ContentType=$((Get-ContentType -Path $file.FullName))"
+              $vi = $file.VersionInfo
               Write-Host "FileVersion=$($vi.FileVersion)"
               Write-Host "ProductVersion=$($vi.ProductVersion)"
               Write-Host "ProductName=$($vi.ProductName)"
@@ -66,15 +63,18 @@ jobs:
               Write-Host "Header=$head"
               if ($file.Length -gt 4 -and ($head.StartsWith('PK') -or $head.StartsWith('7z') -or $head.StartsWith('MZ'))) {
                 $listing = & 7z.exe l -ba $file.FullName 2>&1
-                $listing | Where-Object { $_ -match '\.(exe|dll|ini|cfg|json|reg|chm|dat)
+                $listing | Where-Object { $_ -match '\.(exe|dll|ini|cfg|json|reg|chm|dat)$' } | ForEach-Object { Write-Host "PACKAGE_FILE=$_"}
               }
             } catch {
               Write-Host "DOWNLOAD_OR_INSPECTION_FAILED=$($_.Exception.Message)"
             }
           }
- } | ForEach-Object { Write-Host "PACKAGE_FILE=$_"}
-              }
-            } catch {
-              Write-Host "DOWNLOAD_OR_INSPECTION_FAILED=$($_.Exception.Message)"
-            }
+          function Get-ContentType {
+            param([string]$Path)
+            try {
+              $bytes = [System.IO.File]::ReadAllBytes($Path)
+              if ($bytes.Length -ge 2 -and $bytes[0] -eq 0x50 -and $bytes[1] -eq 0x4B) { return 'ZIP signature' }
+              if ($bytes.Length -ge 2 -and $bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) { return 'PE/EXE signature' }
+              return 'Unknown signature'
+            } catch { return 'Unknown' }
           }
