@@ -27,8 +27,8 @@
     "pre_install": "if (-not (Test-Path \"$persist_dir\\SoftwareOK_Program.ini\")) { New-Item -Path \"$dir\\SoftwareOK_Program.ini\" -ItemType File | Out-Null }",
     "persist": "SoftwareOK_Program.ini",
     "checkver": {
-        "url": "https://www.softwareok.com/?Download=WinBin2Iso",
-        "regex": "Download WinBin2Iso ([\\d.]+)"
+        "url": "https://www.softwareok.com/?seite=Freeware/WinBin2Iso/History",
+        "regex": "New in version ([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
