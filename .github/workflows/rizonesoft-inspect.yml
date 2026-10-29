@@ -41,6 +41,25 @@ jobs:
             @{ Name = 'complete-internet-repair'; Url = 'https://rizonesoft.com/?download_id=18323&gdm_process_download=1' },
             @{ Name = 'bios-beep-codes'; Url = 'https://rizonesoft.com/?download_id=18328&gdm_process_download=1' }
           )
+          $pages = @(
+            @{ Name = 'dvd-drive-repair'; Url = 'https://rizonesoft.com/gdm_downloads/dvd-drive-repair-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'carbon-cd'; Url = 'https://rizonesoft.com/gdm_downloads/carbon-cd-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+)' },
+            @{ Name = 'usb-repair'; Url = 'https://rizonesoft.com/gdm_downloads/usb-repair-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'pixel-repair'; Url = 'https://rizonesoft.com/gdm_downloads/pixel-repair-portable/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' },
+            @{ Name = 'take-ownership'; Url = 'https://rizonesoft.com/gdm_downloads/take-ownership/'; Regex = '(?is)Version[\s\S]{0,250}?(?<version>\d+\.\d+\.\d+\.(?<matchVersion>\d+))' }
+          )
+          foreach ($page in $pages) {
+            try {
+              $html = (Invoke-WebRequest -Uri $page.Url -TimeoutSec 60 -Headers @{ 'User-Agent' = 'Mozilla/5.0 ScoopManifestValidation/1.0' }).Content
+              $match = [regex]::Match($html, $page.Regex)
+              Write-Host "===== CHECKVER $($page.Name) ====="
+              Write-Host "MatchedVersion=$($match.Groups['version'].Value)"
+              Write-Host "MatchVersion=$($match.Groups['matchVersion'].Value)"
+              if (-not $match.Success) { Write-Host "CHECKVER_NO_MATCH=true" }
+            } catch {
+              Write-Host "CHECKVER_FETCH_FAILED $($page.Name): $($_.Exception.Message)"
+            }
+          }
           New-Item -ItemType Directory -Force -Path "$env:RUNNER_TEMP\rizone-inspect" | Out-Null
           foreach ($item in $items) {
             $path = Join-Path "$env:RUNNER_TEMP\rizone-inspect" $item.Name
