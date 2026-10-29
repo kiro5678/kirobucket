@@ -8,44 +8,51 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | --- | ---: | --- | --- |
 | Android & Device Tools | 10 | Functional | [View](#android-device-tools) |
 | Auslogics Suite | 15 | Publisher cross-list | [View](#auslogics-suite) |
-| Browsers & Communication | 6 | Functional | [View](#browsers-communication) |
+| Browsers & Communication | 7 | Functional | [View](#browsers-communication) |
 | ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
 | Clipboard & Text | 33 | Functional | [View](#clipboard-text) |
-| Developer & Technical Tools | 43 | Functional | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 44 | Functional | [View](#developer-technical-tools) |
 | Download Managers | 16 | Functional | [View](#download-managers) |
 | EFSoftware Suite | 13 | Publisher cross-list | [View](#efsoftware-suite) |
 | Emulators & Compatibility | 15 | Functional | [View](#emulators-compatibility) |
 | Eric Zimmerman Suite | 31 | Publisher cross-list | [View](#eric-zimmerman-suite) |
-| File Management | 69 | Functional | [View](#file-management) |
+| File Management | 71 | Functional | [View](#file-management) |
 | Forensics & Diagnostics | 31 | Functional | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | Functional | [View](#games-game-utilities) |
 | GRC Suite | 18 | Publisher cross-list | [View](#grc-suite) |
-| Images & Photos | 48 | Functional | [View](#images-photos) |
+| Images & Photos | 52 | Functional | [View](#images-photos) |
 | Keyboard & Language | 15 | Functional | [View](#keyboard-language) |
-| Media & Audio/Video | 45 | Functional | [View](#media-audio-video) |
+| Media & Audio/Video | 46 | Functional | [View](#media-audio-video) |
 | MiTeC Suite | 22 | Publisher cross-list | [View](#mitec-suite) |
 | Network & DNS | 51 | Functional | [View](#network-dns) |
 | Notes & Knowledge | 20 | Functional | [View](#notes-knowledge) |
 | Other Utilities | 1 | Functional | [View](#other-utilities) |
 | Package Management | 13 | Functional | [View](#package-management) |
 | PDF & Documents | 29 | Functional | [View](#pdf-documents) |
-| Productivity & Launchers | 29 | Functional | [View](#productivity-launchers) |
+| Productivity & Launchers | 30 | Functional | [View](#productivity-launchers) |
 | Security | 41 | Functional | [View](#security) |
 | SoftwareOK Suite | 81 | Publisher cross-list | [View](#softwareok-suite) |
 | Sordum Suite | 63 | Publisher cross-list | [View](#sordum-suite) |
 | Storage & Disk Tools | 23 | Functional | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | Functional | [View](#sync-backup) |
-| System Monitoring & Hardware | 63 | Functional | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 66 | Functional | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | Functional | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | Functional | [View](#translation-ocr) |
 | Türkaysoft Suite | 8 | Publisher cross-list | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
 | Weather & Information | 1 | Functional | [View](#weather-information) |
-| Windows Customization | 90 | Functional | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 46 | Functional | [View](#windows-privacy-tweaks) |
+| Windows Customization | 93 | Functional | [View](#windows-customization) |
+| Windows Privacy & Tweaks | 47 | Functional | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
 
-**Total unique manifests: 799**
+**Total unique manifests: 816**
+
+| Aurelitec Suite | 5 | Publisher cross-list | [View](#aurelitec-suite) |
+| ComputerSluggish Suite | 1 | Publisher cross-list | [View](#computersluggish-suite) |
+| Funk.eu Suite | 7 | Publisher cross-list | [View](#funk-eu-suite) |
+| Neuber Suite | 2 | Publisher cross-list | [View](#neuber-suite) |
+
+**Total unique manifests: 816**
 
 Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
 
@@ -68,6 +75,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
+| [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | 2.5.0.30 | Creates small portable HTML files for storing and opening individual bookmarks. | [Homepage](https://www.aurelitec.com/portmarks/) |
 | [belarc-advisor](../bucket/belarc-advisor.json) | 13.1 | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. | [Homepage](https://www.belarc.com/products/belarc-advisor) |
 | [biscuit](../bucket/biscuit.json) | 2.2.1 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
 | [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | 26.10 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
@@ -121,6 +129,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [cmtrace](../bucket/cmtrace.json) | 1.6.3 | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. | [Homepage](https://cmtraceopen.com) |
 | [detect-it-easy](../bucket/detect-it-easy.json) | 3.10 | Tool for identifying packers, protectors, compilers, and file formats | [Homepage](https://github.com/horsicq/Detect-It-Easy) |
 | [firelink](../bucket/firelink.json) | 1.5.0 | Firelink | [Homepage](https://github.com/nimbold/Firelink) |
+| [lopesoft-lopeedit](../bucket/lopesoft-lopeedit.json) | 5.8.1 | Tabbed programmer's editor and Notepad replacement with syntax highlighting. | [Homepage](https://www.lopesoft.com/index.php/en/products/lopeedit) |
 | [makerom](../bucket/makerom.json) | 0.19.0 | A CLI tool to create CTR (Nintendo 3DS) ROM images. | [Homepage](https://github.com/3DSGuy/Project_CTR) |
 | [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | 8.4.0 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
 | [mitec-hexedit](../bucket/mitec-hexedit.json) | 7.1.0 | Hexadecimal editor with data inspector, calculator, file compare, memory dump and disk dump tools. | [Homepage](https://www.mitec.cz/wp/mhex/) |
@@ -210,6 +219,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
 | [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
 | [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json) | 6.3.0 | Bulk program uninstaller with advanced automation | [Homepage](https://www.bcuninstaller.com/) |
+| [computersluggish-cs-easy-unlocker](../bucket/computersluggish-cs-easy-unlocker.json) | 1.1.7.0 | Identifies processes locking files or folders and helps release handles that prevent access. | [Homepage](https://computersluggish.com/cs-easy-unlocker/) |
 | [czkawka-cli](../bucket/czkawka-cli.json) | 12.0.2 | Command-line file and directory cleaner and duplicate finder | [Homepage](https://github.com/qarmin/czkawka) |
 | [czkawka-gui-gtk](../bucket/czkawka-gui-gtk.json) | 12.0.2 | Legacy GTK graphical interface for Czkawka | [Homepage](https://github.com/qarmin/czkawka) |
 | [czkawka-krokiet](../bucket/czkawka-krokiet.json) | 12.0.2 | Modern graphical interface for Czkawka file and directory cleaner | [Homepage](https://github.com/qarmin/czkawka) |
@@ -234,6 +244,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [findly](../bucket/findly.json) | 1.0.2 | Windows utility for finding installed programs and their executable paths | [Homepage](https://findly.devslim.com/) |
 | [foldersizeexplorer](../bucket/foldersizeexplorer.json) | 1.0.4 | Portable file manager with recursive folder-size analysis for Windows. | [Homepage](https://github.com/ribeirogustav/FolderSizeExplorer-Releases) |
 | [foldra](../bucket/foldra.json) | 1.0 | Lightweight desktop folder widgets and file organization utility for Windows. | [Homepage](https://github.com/YusufEren97/FoldRa) |
+| [funk-smf](../bucket/funk-smf.json) | 18 | Multi-purpose file search and duplicate finder with filters, hash calculation, reporting, copy/move, and deletion tools. | [Homepage](https://funk.eu/smf/) |
 | [meinplatz](../bucket/meinplatz.json) | 8.66 | Scan disk usage and visualize space occupied by files and folders. | [Homepage](https://www.softwareok.com/?Download=MeinPlatz) |
 | [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
 | [mouzi](../bucket/mouzi.json) | 0.2.1 | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. | [Homepage](https://github.com/hsr88/mouzi) |
@@ -340,15 +351,19 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
+| [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | 2.0.0 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
 | [film-strip-explorer](../bucket/film-strip-explorer.json) | 1.05 | Browse images in a film-strip explorer. | [Homepage](https://www.softwareok.com/?Download=Film.Strip.Explorer) |
 | [find-same-images-ok](../bucket/find-same-images-ok.json) | 6.16 | Find duplicate or similar images. | [Homepage](https://www.softwareok.com/?Download=Find.Same.Images.OK) |
 | [flyphotos](../bucket/flyphotos.json) | 2.7.4 | Fast and modern photo viewer for Windows. | [Homepage](https://github.com/riyasy/FlyPhotos) |
 | [fractus-atlas](../bucket/fractus-atlas.json) | 2.3.0 | An image viewer that lets you move images quickly into folders | [Homepage](https://github.com/Jimskapt/fractus-atlas) |
+| [funk-bic](../bucket/funk-bic.json) | 2 | Batch-crops images from a folder and saves cropped outputs to a separate directory. | [Homepage](https://funk.eu/bic-batch-image-cropper/) |
+| [funk-cop](../bucket/funk-cop.json) | 0.0.3.5 | Screen color picker with multiple color-code formats, magnifier, clipboard copy, and a built-in color chart. | [Homepage](https://funk.eu/cop/) |
 | [imageglass](../bucket/imageglass.json) | 10.0.6.906 | A fast, modern, open-source image viewer for Windows | [Homepage](https://imageglass.org) |
 | [imagemagick](../bucket/imagemagick.json) | 7.1.2-34 | Create, edit, compose, and convert 200+ bitmap image formats. | [Homepage](https://imagemagick.org/) |
 | [imagemagick-hdri](../bucket/imagemagick-hdri.json) | 7.1.2-34 | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. | [Homepage](https://imagemagick.org/) |
 | [imagemagick-q8](../bucket/imagemagick-q8.json) | 7.1.2-34 | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. | [Homepage](https://imagemagick.org/) |
 | [imagetype](../bucket/imagetype.json) | 3.0.0 | Accessible image editor for adding custom text to images | [Homepage](https://github.com/ahmedthebest31/ImageType) |
+| [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
 | [nvidia-icat](../bucket/nvidia-icat.json) | 0.6.17 | Image Comparison & Analysis Tool (ICAT) | [Homepage](https://www.nvidia.com/en-us/geforce/technologies/icat/) |
 | [Omoide](../bucket/Omoide.json) | 0.7.6 | Offline-first, self-hosted photo and video library with local AI-powered organization and search. | [Homepage](https://github.com/EinAeffchen/Omoide) |
 | [open-photo-ai](../bucket/open-photo-ai.json) | 26.10.6 | An open source alternative to the popular photo AI editor. | [Homepage](https://github.com/vegidio/open-photo-ai) |
@@ -419,6 +434,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [ef-duplicate-mp3-finder](../bucket/ef-duplicate-mp3-finder.json) | 26.10 | Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA. | [Homepage](https://efsoftware.com/d3/e.htm) |
 | [ef-talk-scriber](../bucket/ef-talk-scriber.json) | 26.10 | Combines a text editor and audio player to support keyboard-driven transcription of recordings. | [Homepage](https://efsoftware.com/ts/e.htm) |
 | [fastcast](../bucket/fastcast.json) | 0.9.2 | Native Windows screen recorder and live streaming app. | [Homepage](https://github.com/CalvinSturm/FastCast-releases) |
+| [funk-ssd](../bucket/funk-ssd.json) | 4 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
 | [haruna](../bucket/haruna.json) | 1944 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
 | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 20.1.0 | Mega variant of the K-Lite Codec Pack, a collection of DirectShow filters, VFW/ACM codecs and tools. | [Homepage](https://codecguide.com/about_kl.htm) |
@@ -603,6 +619,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
 | [appgroup](../bucket/appgroup.json) | 1.6.0 | Organize, customize, and launch app groups from the Windows taskbar. | [Homepage](https://github.com/iandiv/AppGroup) |
+| [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | 2.2.0 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
 | [biniware-run](../bucket/biniware-run.json) | 7.9.0.0 | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. | [Homepage](https://biniware.com/brun) |
 | [desktoptools](../bucket/desktoptools.json) | 1.2.9 | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. | [Homepage](https://github.com/vg2222/DesktopTools) |
 | [favoritenfreund](../bucket/favoritenfreund.json) | 1.34 | Manage favorites in a small Windows utility. | [Homepage](https://www.softwareok.com/?Download=FavoritenFreund) |
@@ -727,6 +744,8 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
 | [3d-benchmark-ok](../bucket/3d-benchmark-ok.json) | 2.55 | Benchmark 3D graphics performance. | [Homepage](https://www.softwareok.com/?Download=3D.Benchmark.OK) |
+| [aurelitec-injuredpixels](../bucket/aurelitec-injuredpixels.json) | 4.0.0.127 | Portable display test utility for finding dead, stuck, hot, or defective pixels. | [Homepage](https://www.aurelitec.com/injuredpixels/) |
+| [aurelitec-pixelhealer](../bucket/aurelitec-pixelhealer.json) | 1.5.0.30 | Portable display utility that attempts to recover stuck or hot pixels. | [Homepage](https://www.aurelitec.com/pixelhealer/) |
 | [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
 | [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
 | [Auslogics-system-information](../bucket/Auslogics-system-information.json) | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
@@ -756,6 +775,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [mitec-tapi-monitor](../bucket/mitec-tapi-monitor.json) | 1.2.0 | Monitors TAPI lines, telephones, service providers and call events. | [Homepage](https://www.mitec.cz/wp/mtapimon/) |
 | [mitec-task-manager-deluxe](../bucket/mitec-task-manager-deluxe.json) | 5.1.1 | Portable advanced replacement for Windows Task Manager, with process, service, network, disk, GPU and system monitoring. | [Homepage](https://www.mitec.cz/wp/tmx/) |
 | [MPOGPUFIX](../bucket/MPOGPUFIX.json) | 7 | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) |
+| [neuber-security-task-manager](../bucket/neuber-security-task-manager.json) | 3.2c | Process-inspection utility showing running processes, file paths, descriptions, and security-risk indicators; trialware. | [Homepage](https://www.neuber.com/taskmanager/) |
 | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json) | 621.01 | NVIDIA display driver (DCH) | [Homepage](https://www.nvidia.com/Download/index.aspx) |
 | [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 621.01 | NVIDIA display driver (DCH) | [Homepage](https://www.nvidia.com/Download/index.aspx) |
 | [nvidiaprofileinspector](../bucket/nvidiaprofileinspector.json) | 3.0.2.1 | NVIDIA graphics driver profile editor and settings utility. | [Homepage](https://github.com/Orbmu2k/nvidiaProfileInspector) |
@@ -865,8 +885,9 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
 | [fancywm](../bucket/fancywm.json) | 2.19.0 | Windows tiling window manager designed for power users. | [Homepage](https://github.com/FancyWM/fancywm) |
 | [fancywm-msix-cert](../bucket/fancywm-msix-cert.json) | 2.19.0 | FancyWM MSIX signing certificate (download only; for MSIX installation). | [Homepage](https://github.com/FancyWM/fancywm) |
-| [FoliCon](../bucket/FoliCon.JSON) | 5.3.1 | Folder icon customizer for movies, TV shows, music, games, anime, and books. | [Homepage](https://github.com/DineshSolanki/FoliCon) |
 | [fontviewok](../bucket/fontviewok.json) | 9.33 | Create a quick visual overview of installed fonts. | [Homepage](https://www.softwareok.com/?Download=FontViewOK) |
+| [funk-hrc](../bucket/funk-hrc.json) | 2.1 | Tray utility for assigning hotkeys to switch between display resolutions. | [Homepage](https://funk.eu/hrc/) |
+| [funk-icu](../bucket/funk-icu.json) | 6 | Saves and restores Windows desktop icon layouts after display changes or icons being rearranged. | [Homepage](https://funk.eu/icu-icon-configuration-utility/) |
 | [get-pixel-color](../bucket/get-pixel-color.json) | 3.55 | Read the color of a pixel on screen. | [Homepage](https://www.softwareok.com/?Download=GetPixelColor) |
 | [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
 | [iconswappergui](../bucket/iconswappergui.json) | 2.1.2 | Portable GUI for swapping Windows file and folder icons. | [Homepage](https://github.com/aj-phillips/IconSwapperGui) |
@@ -875,6 +896,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [komorebi-nightly](../bucket/komorebi-nightly.json) | 2026-08-22 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
 | [lively](../bucket/lively.json) | 2.2.1.0 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
 | [livewallpaper](../bucket/livewallpaper.json) | 4.0.1-alpha.4 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
+| [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 8.6 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
 | [magic-mouse-move](../bucket/magic-mouse-move.json) | 1.04 | Move the mouse pointer automatically. | [Homepage](https://www.softwareok.com/?Download=MagicMouseMove) |
 | [magic-mouse-trails](../bucket/magic-mouse-trails.json) | 4.51 | Display customizable mouse trails. | [Homepage](https://www.softwareok.com/?Download=MagicMouseTrails) |
 | [mousefx-generator](../bucket/mousefx-generator.json) | 1.1.0 | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. | [Homepage](https://github.com/os4ma31/MouseFX-Generator) |
@@ -926,6 +948,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [windhawk](../bucket/windhawk.json) | 2.0.0-alpha.8 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
 | [zigarettenschachtel-spruch](../bucket/zigarettenschachtel-spruch.json) | 2.32 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
+| [FoliCon](../bucket/FoliCon.JSON) | 5.3.1 | Folder icon customizer for movies, TV shows, music, games, anime, and books. | [Homepage](https://github.com/DineshSolanki/FoliCon) |
 
 ## Windows Privacy & Tweaks
 
@@ -948,6 +971,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [fluentcleaner-classic](../bucket/fluentcleaner-classic.json) | 26.09.01 | Classic WinForms edition of FluentCleaner for Windows. | [Homepage](https://github.com/builtbybel/FluentCleaner) |
 | [fluenttweaker](../bucket/fluenttweaker.json) | 26.06.02 | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. | [Homepage](https://github.com/builtbybel/FluentTweaker) |
 | [flyoobe](../bucket/flyoobe.json) | 3.03.100 | Windows setup, customization, debloating, and system management utility. | [Homepage](https://github.com/builtbybel/Flyoobe) |
+| [funk-hmw](../bucket/funk-hmw.json) | 4 | Portable utility for hiding selected Windows applications and windows. | [Homepage](https://funk.eu/hmw/) |
 | [go-away-edge-installer](../bucket/go-away-edge-installer.json) | 2.0.3 | GoAwayEdge is designed for those who, like me, aren’t fans of Microsoft Edge or Windows Copilot. | [Homepage](https://github.com/valnoxy/GoAwayEdge) |
 | [grc-incontrol](../bucket/grc-incontrol.json) | 2022.02.13 | GRC InControl: Controls Windows 10/11 feature updates while allowing monthly security updates. | [Homepage](https://www.grc.com/incontrol.htm) |
 | [grc-inspectre](../bucket/grc-inspectre.json) | 2018.01.15 | GRC InSpectre: Legacy Meltdown/Spectre mitigation and performance diagnostic for older Windows systems. | [Homepage](https://www.grc.com/inspectre.htm) |
@@ -1488,3 +1512,45 @@ Publisher cross-list of 8 manifests associated with Türkaysoft. Each entry is a
 | [yamira](../bucket/yamira.json) | 26.11 | USB drive protection tool for Windows. | [Homepage](https://github.com/turkaysoft/yamira) |
 | [zafuse](../bucket/zafuse.json) | 26.12 | INI file analysis tool for finding inconsistencies across configuration files. | [Homepage](https://github.com/turkaysoft/zafuse) |
 
+## Aurelitec Suite
+
+Publisher cross-list of 5 manifests associated with Aurelitec. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | 2.2.0 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
+| [aurelitec-injuredpixels](../bucket/aurelitec-injuredpixels.json) | 4.0.0.127 | Portable display test utility for finding dead, stuck, hot, or defective pixels. | [Homepage](https://www.aurelitec.com/injuredpixels/) |
+| [aurelitec-pixelhealer](../bucket/aurelitec-pixelhealer.json) | 1.5.0.30 | Portable display utility that attempts to recover stuck or hot pixels. | [Homepage](https://www.aurelitec.com/pixelhealer/) |
+| [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | 2.0.0 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
+| [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | 2.5.0.30 | Creates small portable HTML files for storing and opening individual bookmarks. | [Homepage](https://www.aurelitec.com/portmarks/) |
+
+## ComputerSluggish Suite
+
+Publisher cross-list of 1 manifests associated with ComputerSluggish. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [computersluggish-cs-easy-unlocker](../bucket/computersluggish-cs-easy-unlocker.json) | 1.1.7.0 | Identifies processes locking files or folders and helps release handles that prevent access. | [Homepage](https://computersluggish.com/cs-easy-unlocker/) |
+
+## Funk.eu Suite
+
+Publisher cross-list of 7 manifests associated with Funk.eu. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [funk-smf](../bucket/funk-smf.json) | 18 | Multi-purpose file search and duplicate finder with filters, hash calculation, reporting, copy/move, and deletion tools. | [Homepage](https://funk.eu/smf/) |
+| [funk-hmw](../bucket/funk-hmw.json) | 4 | Portable utility for hiding selected Windows applications and windows. | [Homepage](https://funk.eu/hmw/) |
+| [funk-hrc](../bucket/funk-hrc.json) | 2.1 | Tray utility for assigning hotkeys to switch between display resolutions. | [Homepage](https://funk.eu/hrc/) |
+| [funk-cop](../bucket/funk-cop.json) | 0.0.3.5 | Screen color picker with multiple color-code formats, magnifier, clipboard copy, and a built-in color chart. | [Homepage](https://funk.eu/cop/) |
+| [funk-icu](../bucket/funk-icu.json) | 6 | Saves and restores Windows desktop icon layouts after display changes or icons being rearranged. | [Homepage](https://funk.eu/icu-icon-configuration-utility/) |
+| [funk-bic](../bucket/funk-bic.json) | 2 | Batch-crops images from a folder and saves cropped outputs to a separate directory. | [Homepage](https://funk.eu/bic-batch-image-cropper/) |
+| [funk-ssd](../bucket/funk-ssd.json) | 4 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
+
+## Neuber Suite
+
+Publisher cross-list of 2 manifests associated with Neuber Software. Each entry is also listed under its functional category above.
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [neuber-security-task-manager](../bucket/neuber-security-task-manager.json) | 3.2c | Process-inspection utility showing running processes, file paths, descriptions, and security-risk indicators; trialware. | [Homepage](https://www.neuber.com/taskmanager/) |
+| [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
