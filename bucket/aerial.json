@@ -5,11 +5,11 @@
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/OrangeJedi/Aerial/releases/download/v1.3.0/Aerial.1.3.0.win-x64.zip",
+            "url": "https://github.com/AerialWindows/Aerial/releases/download/v1.3.0/Aerial.1.3.0.win-x64.zip",
             "hash": "8546f2544c2f0ec2a068f6fccb50e42d6ac7b97c1f0e662093dc52e093916336"
         },
         "arm64": {
-            "url": "https://github.com/OrangeJedi/Aerial/releases/download/v1.3.0/Aerial.1.3.0.win-arm64.zip",
+            "url": "https://github.com/AerialWindows/Aerial/releases/download/v1.3.0/Aerial.1.3.0.win-arm64.zip",
             "hash": "1d4f5f8ca6cfdb7064fb544503efdabc6737e4008b298d5e10f28bc033ba2046"
         }
     },
