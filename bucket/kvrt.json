@@ -99,6 +99,6 @@
     "The manifest version combines Kaspersky's product version with the database timestamp (YYYYMMDDHHMM) from kvrt.xml to detect refreshed builds behind the unversioned latest download URL.",
     "Version detection tries Kaspersky's official metadata first, then the Internet Archive. If both are unreachable from a CI runner, it uses the version field from https://github.com/zizhengwu/scoop_bucket/blob/master/bucket/kaspersky-virus-removal-tool.json only as a fallback for version discovery; the executable is still downloaded from Kaspersky's official host.",
     "Installation is refused unless KVRT.exe has a valid Authenticode signature from Kaspersky.",
-    "Last verified by KVRT updater: 2026-10-29 06:20 UTC; product/database version 20.0.14.0.202610290121; SHA-256 9c1d88b388e3cb64c55ed7c5974cbe58c612327f9901d002be3aa7716ec2b0bf (audit record only: official /latest/ URL is mutable, so this hash is not pinned as Scoop's install hash)."
+    "Last verified by KVRT updater: 2026-10-29 06:22 UTC; product/database version 20.0.14.0.202610290121; SHA-256 9c1d88b388e3cb64c55ed7c5974cbe58c612327f9901d002be3aa7716ec2b0bf (audit record only: official /latest/ URL is mutable, so this hash is not pinned as Scoop's install hash)."
   ]
 }
