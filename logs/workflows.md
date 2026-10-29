@@ -352,3 +352,17 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Removed the post-install migration of existing `Settings` contents from prior UniGetUI Scoop locations; installation no longer copies legacy settings into `%LOCALAPPDATA%\UniGetUI`. The hook only removes `ForceUniGetUIPortable` so UniGetUI uses its normal per-user data directory.
 - Removed `ForceUniGetUIPortable` from the installed ZIP so UniGetUI uses its normal per-user data directory instead of storing active configuration and caches inside Scoop.
 - Kept `bucket/unigetui-portable.json` as the separate portable variant and updated the manifest category mapping and category documentation.
+
+## 2026-10-29
+
+### Merge and checkver workflow reconciliation — PR #33 and PR #32
+
+- Merged [PR #33 — Fix checkver detection for affected manifests](https://github.com/kiro5678/kirobucket/pull/33) into `master` first. Merge commit: [`9af68b6`](https://github.com/kiro5678/kirobucket/commit/9af68b63fdfa8f3b8353892d36592078695a82bf).
+- Merged [PR #32 — Add categorized manifests from Neuber, Aurelitec, ComputerSluggish, Funk.eu and LopeSoft](https://github.com/kiro5678/kirobucket/pull/32) afterward. Merge commit: [`b1cfaf4`](https://github.com/kiro5678/kirobucket/commit/b1cfaf4ec4ba5af56b03b91a2ed040ed32d46b72).
+- Reconciled `.github/workflows/scoop-checkver-validation.yml` after the branch conflict. Push-triggered runs validate only manifests changed by that push; manual full-bucket validation requires the optional repository Actions secret `CHECKVER_GITHUB_TOKEN`.
+- Kept the checkver exemption limited to `bucket/kvrt.json`. Failures in any other manifest are recorded as failures and cause the workflow to exit with code 1.
+- Updated `docs/manifest-authoring.md` to document use of `CHECKVER_GITHUB_TOKEN` for authenticated requests to unrelated public GitHub repositories, while preserving the existing regex, timeout/retry, and validation guidance.
+- Follow-up commits: [workflow reconciliation](https://github.com/kiro5678/kirobucket/commit/3a72558553c33e87be95f9f0e7576b8ba8ed76a0) and [authoring guidance](https://github.com/kiro5678/kirobucket/commit/d2586144c385dcc69100fa40940a7e0d8c90ab43).
+- Verification performed: fetched the workflow and authoring guide from `master` and confirmed the optional-token handling, changed-manifest selection, KVRT-only exception, and failure behavior are present.
+- CI status: no post-change run result was available during this verification, so the changes are committed and inspected but are not recorded as CI-passing.
+
