@@ -1,0 +1,192 @@
+name: Rizonesoft Final Revalidation
+run-name: Revalidate all 14 Rizonesoft manifests after fixes
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/rizonesoft-final-revalidation.yml
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  validate:
+    name: Revalidate all 14 Rizonesoft manifests
+    runs-on: windows-latest
+    timeout-minutes: 360
+    steps:
+      - name: Wait for the original batch, then rerun all manifest pipelines
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $apiRoot = "https://api.github.com/repos/$env:GH_REPOSITORY"
+          $headers = @{
+            Accept = 'application/vnd.github+json'
+            Authorization = "Bearer $env:GH_TOKEN"
+            'X-GitHub-Api-Version' = '2022-11-28'
+            'User-Agent' = 'kirobucket-rizonesoft-final-revalidation'
+          }
+          $pipelineRunsUrl = "$apiRoot/actions/workflows/manifest-pipeline.yml/runs?branch=master&event=workflow_dispatch&per_page=100"
+          $originalBatchRunId = 41000602638
+          $manifestPaths = @(
+            'bucket/bios-beep-codes-viewer.json'
+            'bucket/carbon-cd.json'
+            'bucket/chromin.json'
+            'bucket/complete-internet-repair.json'
+            'bucket/dvd-drive-repair.json'
+            'bucket/edgemin.json'
+            'bucket/firemin.json'
+            'bucket/notepad3.json'
+            'bucket/pixel-repair.json'
+            'bucket/rizonesoft-office.json'
+            'bucket/rizonesoft-resolute.json'
+            'bucket/take-ownership.json'
+            'bucket/usb-repair.json'
+            'bucket/watermin.json'
+          )
+          $results = [System.Collections.Generic.List[object]]::new()
+
+          try {
+            Write-Host "Waiting for original batch run $originalBatchRunId to finish..."
+            $deadline = [DateTimeOffset]::UtcNow.AddHours(5)
+            $stableChecks = 0
+            while ([DateTimeOffset]::UtcNow -lt $deadline) {
+              $batch = Invoke-RestMethod -Method Get -Uri "$apiRoot/actions/runs/$originalBatchRunId" -Headers $headers -TimeoutSec 30
+              $currentRuns = Invoke-RestMethod -Method Get -Uri $pipelineRunsUrl -Headers $headers -TimeoutSec 30
+              $activeRuns = @($currentRuns.workflow_runs | Where-Object { $_.status -ne 'completed' })
+              Write-Host "Original batch: $($batch.status); active manifest pipelines: $($activeRuns.Count)"
+              if ($batch.status -eq 'completed' -and $activeRuns.Count -eq 0) {
+                $stableChecks++
+                if ($stableChecks -ge 3) { break }
+              } else {
+                $stableChecks = 0
+              }
+              Start-Sleep -Seconds 15
+            }
+            if ($stableChecks -lt 3) {
+              throw "Timed out waiting for the original batch and its child workflows to finish."
+            }
+
+            $dispatchUrl = "$apiRoot/actions/workflows/manifest-pipeline.yml/dispatches"
+            foreach ($manifestPath in $manifestPaths) {
+              Write-Host ""
+              Write-Host "============================================================"
+              Write-Host "Revalidating $manifestPath"
+              Write-Host "============================================================"
+
+              try {
+                $before = Invoke-RestMethod -Method Get -Uri $pipelineRunsUrl -Headers $headers -TimeoutSec 30
+                $knownIds = @($before.workflow_runs | ForEach-Object { [string]$_.id })
+                $dispatchStarted = [DateTimeOffset]::UtcNow
+                $payload = @{
+                  ref = 'master'
+                  inputs = @{
+                    manifest = $manifestPath
+                    force_update = 'true'
+                  }
+                } | ConvertTo-Json -Depth 5 -Compress
+
+                Invoke-RestMethod -Method Post -Uri $dispatchUrl -Headers $headers -ContentType 'application/json' -Body $payload -TimeoutSec 30 | Out-Null
+
+                $runDeadline = [DateTimeOffset]::UtcNow.AddMinutes(50)
+                $childRun = $null
+                while ([DateTimeOffset]::UtcNow -lt $runDeadline) {
+                  Start-Sleep -Seconds 15
+                  $current = Invoke-RestMethod -Method Get -Uri $pipelineRunsUrl -Headers $headers -TimeoutSec 30
+                  if ($null -eq $childRun) {
+                    $candidates = @($current.workflow_runs | Where-Object {
+                      ($knownIds -notcontains [string]$_.id) -and
+                      ([DateTimeOffset]::Parse([string]$_.created_at) -ge $dispatchStarted.AddSeconds(-10))
+                    } | Sort-Object { [DateTimeOffset]::Parse([string]$_.created_at) } -Descending)
+                    if ($candidates.Count -gt 0) { $childRun = $candidates[0] }
+                  } else {
+                    $refreshed = @($current.workflow_runs | Where-Object { [string]$_.id -eq [string]$childRun.id } | Select-Object -First 1)
+                    if ($refreshed.Count -gt 0) { $childRun = $refreshed[0] }
+                  }
+                  if ($null -eq $childRun) { continue }
+                  if ($childRun.status -ne 'completed') {
+                    Write-Host "Still running: $manifestPath (run $($childRun.id))"
+                    continue
+                  }
+
+                  $results.Add([PSCustomObject]@{
+                    Manifest = $manifestPath
+                    RunId = $childRun.id
+                    Conclusion = $childRun.conclusion
+                    Url = $childRun.html_url
+                  })
+                  if ($childRun.conclusion -eq 'success') {
+                    Write-Host "PASS: $manifestPath — $($childRun.html_url)" -ForegroundColor Green
+                  } else {
+                    Write-Host "FAIL: $manifestPath — $($childRun.conclusion) — $($childRun.html_url)" -ForegroundColor Red
+                  }
+                  break
+                }
+
+                if ($null -eq $childRun -or $childRun.status -ne 'completed') {
+                  $results.Add([PSCustomObject]@{
+                    Manifest = $manifestPath
+                    RunId = if ($null -ne $childRun) { $childRun.id } else { $null }
+                    Conclusion = 'timeout'
+                    Url = if ($null -ne $childRun) { $childRun.html_url } else { $null }
+                  })
+                  Write-Host "FAIL: timed out waiting for $manifestPath" -ForegroundColor Red
+                }
+              } catch {
+                $results.Add([PSCustomObject]@{
+                  Manifest = $manifestPath
+                  RunId = $null
+                  Conclusion = 'dispatch_error'
+                  Url = $null
+                })
+                Write-Host "FAIL: $manifestPath — $($_.Exception.Message)" -ForegroundColor Red
+              }
+            }
+
+            $passed = @($results | Where-Object { $_.Conclusion -eq 'success' }).Count
+            $failed = $results.Count - $passed
+            $summary = [System.Collections.Generic.List[string]]::new()
+            $summary.Add('# Rizonesoft final manifest revalidation')
+            $summary.Add('')
+            $summary.Add("- Manifests requested: $($manifestPaths.Count)")
+            $summary.Add("- Pipelines passed: $passed")
+            $summary.Add("- Pipelines failed or timed out: $failed")
+            $summary.Add('')
+            $summary.Add('| Manifest | Result | Run |')
+            $summary.Add('|---|---:|---|')
+            foreach ($item in $results) {
+              $runLink = if ($item.Url) { "[$($item.RunId)]($($item.Url))" } else { '—' }
+              $summary.Add("| $($item.Manifest) | $($item.Conclusion) | $runLink |")
+            }
+            $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+            $failedResults = @($results | Where-Object { $_.Conclusion -ne 'success' })
+            if ($failedResults.Count -gt 0) {
+              throw "$($failedResults.Count) of $($manifestPaths.Count) Rizonesoft manifest pipelines failed or timed out."
+            }
+            Write-Host "All 14 Rizonesoft manifest pipelines passed." -ForegroundColor Green
+          }
+          finally {
+            Write-Host "Removing temporary final revalidation workflow..."
+            try {
+              $workflowPath = '.github/workflows/rizonesoft-final-revalidation.yml'
+              $fileUri = "$apiRoot/contents/$workflowPath?ref=master"
+              $fileInfo = Invoke-RestMethod -Method Get -Uri $fileUri -Headers $headers -TimeoutSec 30
+              $deleteBody = @{
+                message = 'chore: remove temporary Rizonesoft final revalidation workflow'
+                sha = $fileInfo.sha
+                branch = 'master'
+              } | ConvertTo-Json -Compress
+              Invoke-RestMethod -Method Delete -Uri "$apiRoot/contents/$workflowPath" -Headers $headers -ContentType 'application/json' -Body $deleteBody -TimeoutSec 30 | Out-Null
+              Write-Host "Temporary workflow removed."
+            } catch {
+              Write-Warning "Could not remove temporary workflow: $($_.Exception.Message)"
+            }
+          }
