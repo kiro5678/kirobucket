@@ -87,20 +87,20 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 
 | Program | Primary function | Functional category | Manifest | Installer Type |
 | --- | --- | --- | --- | --- |
-| [BIOS Beep Codes Viewer](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) | BIOS beep-code reference and hardware diagnostics | Forensics & Diagnostics | [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | Inno Setup EXE |
+| [BIOS Beep Codes Viewer](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) | BIOS beep-code reference and hardware diagnostics | Forensics & Diagnostics | [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | Inno |
 | [Carbon CD](https://rizonesoft.com/downloads/carbon-cd/) | CD cloning and disc-image creation | Storage & Disk Tools | [carbon-cd](../bucket/carbon-cd.json) | ZIP archive |
-| [Chromin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Chrome and Chromium-based browsers | System Monitoring & Hardware | [chromin](../bucket/chromin.json) | Inno Setup EXE |
-| [Complete Internet Repair](https://rizonesoft.com/downloads/complete-internet-repair/) | Repair common Windows internet connectivity problems | Network & DNS | [complete-internet-repair](../bucket/complete-internet-repair.json) | Inno Setup EXE |
+| [Chromin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Chrome and Chromium-based browsers | System Monitoring & Hardware | [chromin](../bucket/chromin.json) | Inno |
+| [Complete Internet Repair](https://rizonesoft.com/downloads/complete-internet-repair/) | Repair common Windows internet connectivity problems | Network & DNS | [complete-internet-repair](../bucket/complete-internet-repair.json) | Inno |
 | [DVD Drive Repair](https://rizonesoft.com/downloads/dvd-drive-repair/) | Diagnose and repair DVD drive issues | Storage & Disk Tools | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | Package format not stated in manifest |
-| [EdgeMin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Microsoft Edge | System Monitoring & Hardware | [edgemin](../bucket/edgemin.json) | Inno Setup EXE |
-| [Firemin](https://rizonesoft.com/downloads/firemin/) | Reduce browser memory usage | System Monitoring & Hardware | [firemin](../bucket/firemin.json) | Inno Setup EXE |
+| [EdgeMin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Microsoft Edge | System Monitoring & Hardware | [edgemin](../bucket/edgemin.json) | Inno |
+| [Firemin](https://rizonesoft.com/downloads/firemin/) | Reduce browser memory usage | System Monitoring & Hardware | [firemin](../bucket/firemin.json) | Inno |
 | [Notepad3](https://rizonesoft.com/downloads/notepad3/) | Scintilla-based text editor with syntax highlighting | Clipboard & Text | [notepad3](../bucket/notepad3.json) | ZIP archive |
 | [Pixel Repair](https://rizonesoft.com/downloads/pixel-repair/) | Detect and attempt to repair stuck display pixels | System Monitoring & Hardware | [pixel-repair](../bucket/pixel-repair.json) | Package format not stated in manifest |
-| [Rizonesoft Office Alpha 5](https://rizonesoft.com/downloads/rizonesoft-office/) | Collection of office and productivity applications | Productivity & Launchers | [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno Setup EXE |
-| [Resolute](https://rizonesoft.com/downloads/resolute/) | Collection of Windows repair, maintenance, and diagnostic utilities | Other Utilities | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno Setup EXE |
+| [Rizonesoft Office Alpha 5](https://rizonesoft.com/downloads/rizonesoft-office/) | Collection of office and productivity applications | Productivity & Launchers | [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno |
+| [Resolute](https://rizonesoft.com/downloads/resolute/) | Collection of Windows repair, maintenance, and diagnostic utilities | Other Utilities | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno |
 | [Take Ownership](https://rizonesoft.com/gdm_downloads/take-ownership/) | Add or remove a Windows Take Ownership context-menu action | File Management | [take-ownership](../bucket/take-ownership.json) | Package format not stated in manifest |
 | [USB Repair](https://rizonesoft.com/downloads/usb-repair/) | Diagnose and repair USB device problems | Storage & Disk Tools | [usb-repair](../bucket/usb-repair.json) | Package format not stated in manifest |
-| [Watermin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Waterfox and compatible browsers | System Monitoring & Hardware | [watermin](../bucket/watermin.json) | Inno Setup EXE |
+| [Watermin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Waterfox and compatible browsers | System Monitoring & Hardware | [watermin](../bucket/watermin.json) | Inno |
 
 ## Checksum and update limitations
 

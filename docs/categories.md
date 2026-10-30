@@ -80,7 +80,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- |
 | [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | ZIP archive | 2.5.0.30 | Creates small portable HTML files for storing and opening individual bookmarks. | [Homepage](https://www.aurelitec.com/portmarks/) |
 | [belarc-advisor](../bucket/belarc-advisor.json) | EXE setup (engine unverified) | 13.1 | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. | [Homepage](https://www.belarc.com/products/belarc-advisor) |
-| [biscuit](../bucket/biscuit.json) | EXE payload (standalone/extractor not verified) | 2.2.1 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
+| [biscuit](../bucket/biscuit.json) | NSIS | 2.2.1 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
 | [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | Package format not stated in manifest | 26.10 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | ZIP archive | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
 | [viola](../bucket/viola.json) | 7Z archive | 0.2.10 | Native desktop web browser. | [Homepage](https://github.com/nmcmil/Viola-Downloads) |
@@ -102,8 +102,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [crosspaste](../bucket/crosspaste.json) | ZIP archive | 2.3.0.2767 | Universal pasteboard across devices. | [Homepage](https://crosspaste.com/en/) |
 | [cursortip](../bucket/cursortip.json) | ZIP archive | 1.4.1 | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. | [Homepage](https://github.com/zeno528/CursorTip) |
 | [deskdrop](../bucket/deskdrop.json) | EXE payload (standalone/extractor not verified) | 1.3.3 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
-| [ecopaste](../bucket/ecopaste.json) | EXE setup (engine unverified) | 1.1.0 | Open-source clipboard manager for Windows and macOS. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
-| [ecopaste-nightly](../bucket/ecopaste-nightly.json) | EXE setup (engine unverified) | 1.1.1-nightly.20260813.1 | Open-source clipboard manager for Windows and macOS. Nightly build. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
+| [ecopaste](../bucket/ecopaste.json) | NSIS | 1.1.0 | Open-source clipboard manager for Windows and macOS. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
+| [ecopaste-nightly](../bucket/ecopaste-nightly.json) | NSIS | 1.1.1-nightly.20260813.1 | Open-source clipboard manager for Windows and macOS. Nightly build. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
 | [edge-drop](../bucket/edge-drop.json) | NSIS | 0.3.2 | Clipboard manager that lives on the left edge of your screen. | [Homepage](https://github.com/Deepender25/Edge-Drop) |
 | [get-window-text](../bucket/get-window-text.json) | ZIP archive | 5.31 | Read text from Windows controls and windows. | [Homepage](https://www.softwareok.com/?Download=GetWindowText) |
 | [multi-clipboard-slots](../bucket/multi-clipboard-slots.json) | ZIP archive | 3.61 | Manage multiple clipboard slots. | [Homepage](https://www.softwareok.com/?Download=MultiClipBoardSlots) |
@@ -112,7 +112,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [quicktextpaste](../bucket/quicktextpaste.json) | ZIP archive | 9.61 | Paste predefined text using keyboard shortcuts. | [Homepage](https://www.softwareok.com/?Download=QuickTextPaste) |
 | [sklad](../bucket/sklad.json) | MSI installer/package | 0.2.3 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text | [Homepage](https://github.com/Rench321/sklad) |
 | [sklad-setup-portable](../bucket/sklad-setup-portable.json) | Unknown (manifest not found) | 0.2.3 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text (portable) | [Homepage](https://github.com/Rench321/sklad) |
-| [skyeclip](../bucket/skyeclip.json) | Inno Setup EXE | 1.4 | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. | [Homepage](https://github.com/YodeSkye/SkyeClip) |
+| [skyeclip](../bucket/skyeclip.json) | Inno | 1.4 | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. | [Homepage](https://github.com/YodeSkye/SkyeClip) |
 | [smart-clipboard](../bucket/smart-clipboard.json) | EXE payload (standalone/extractor not verified) | 1.3.2 | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection | [Homepage](https://github.com/ezeiq7/Smart-Clipboard) |
 | [tiez-clipboard](../bucket/tiez-clipboard.json) | ZIP archive | 0.3.3 | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. | [Homepage](https://github.com/jimuzhe/tiez-clipboard) |
 | [vovsoft-clipboard-reader](../bucket/vovsoft-clipboard-reader.json) | ZIP archive | 1.4 | Portable edition of Vovsoft Clipboard Reader. | [Homepage](https://vovsoft.com/software/clipboard-reader/) |
@@ -140,8 +140,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mitec-interbase-query](../bucket/mitec-interbase-query.json) | ZIP archive | 9.5.0 | Database management tool for InterBase 6+ and Firebird 1.5+. | [Homepage](https://www.mitec.cz/wp/mibq/) |
 | [mitec-json-viewer](../bucket/mitec-json-viewer.json) | ZIP archive | 3.2.2 | JSON and BSON viewer and editor. | [Homepage](https://www.mitec.cz/wp/mjsonv/) |
 | [mitec-ole-com-explorer](../bucket/mitec-ole-com-explorer.json) | ZIP archive | 1.4.0 | OLE/COM object explorer and Type Library viewer. | [Homepage](https://www.mitec.cz/wp/molexp/) |
-| [mitec-paradox-data-editor](../bucket/mitec-paradox-data-editor.json) | Inno Setup EXE | 3.7.0 | Viewer and editor for Paradox tables, with repair and maintenance features. | [Homepage](https://www.mitec.cz/wp/mpde/) |
-| [mitec-project-maker](../bucket/mitec-project-maker.json) | Inno Setup EXE | 1.9.0 | Automates batch Delphi project builds, code signing and executable version information patching. | [Homepage](https://www.mitec.cz/wp/pm/) |
+| [mitec-paradox-data-editor](../bucket/mitec-paradox-data-editor.json) | Inno | 3.7.0 | Viewer and editor for Paradox tables, with repair and maintenance features. | [Homepage](https://www.mitec.cz/wp/mpde/) |
+| [mitec-project-maker](../bucket/mitec-project-maker.json) | Inno | 1.9.0 | Automates batch Delphi project builds, code signing and executable version information patching. | [Homepage](https://www.mitec.cz/wp/pm/) |
 | [mitec-sqlite-query](../bucket/mitec-sqlite-query.json) | ZIP archive | 3.2.0 | SQLite 3 database management and query tool. | [Homepage](https://www.mitec.cz/wp/msqliteq/) |
 | [mitec-structured-storage-viewer](../bucket/mitec-structured-storage-viewer.json) | ZIP archive | 4.1.2 | Viewer and manager for Microsoft OLE structured-storage files. | [Homepage](https://www.mitec.cz/wp/mssv/) |
 | [mitec-uuid-generator](../bucket/mitec-uuid-generator.json) | ZIP archive | 1.0.0 | Generates and decodes UUID values. | [Homepage](https://www.mitec.cz/wp/uuid/) |
@@ -179,7 +179,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
 | [am-downloader](../bucket/am-downloader.json) | ZIP archive | 1.3.3 | A modern download manager for Windows. | [Homepage](https://github.com/antikmozib/AM-Downloader) |
-| [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | Inno Setup EXE | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
+| [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | Inno | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
 | [brisk](../bucket/brisk.json) | ZIP archive | 2.3.9 | Fast and lightweight download manager with browser integration. | [Homepage](https://github.com/BrisklyDev/brisk) |
 | [cross-platform-download-manager](../bucket/cross-platform-download-manager.json) | ZIP archive | 0.30.0 | Fast, free, and open-source cross-platform download manager | [Homepage](https://github.com/adel-bakhshi/CrossPlatformDownloadManager) |
 | [dlman](../bucket/dlman.json) | NSIS | 1.11.1 | Fast, reliable, open-source download manager with multi-segment downloads, queue management, browser extensions, and SQLite persistence. | [Homepage](https://github.com/novincode/dlman) |
@@ -220,8 +220,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
 | [aifilesorter](../bucket/aifilesorter.json) | Package format not stated in manifest | 1.9.2 | Local AI file organization with categorization and rename suggestions. | [Homepage](https://github.com/hyperfield/ai-file-sorter) |
-| [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | Inno Setup EXE | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
-| [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | Inno Setup EXE | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
+| [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | Inno | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
+| [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | Inno | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
 | [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json) | 7Z archive | 6.3.0 | Bulk program uninstaller with advanced automation | [Homepage](https://www.bcuninstaller.com/) |
 | [computersluggish-cs-easy-unlocker](../bucket/computersluggish-cs-easy-unlocker.json) | EXE payload (standalone/extractor not verified) | 1.1.7.0 | Identifies processes locking files or folders and helps release handles that prevent access. | [Homepage](https://computersluggish.com/cs-easy-unlocker/) |
 | [czkawka-cli](../bucket/czkawka-cli.json) | EXE payload (standalone/extractor not verified) | 12.0.2 | Command-line file and directory cleaner and duplicate finder | [Homepage](https://github.com/qarmin/czkawka) |
@@ -231,7 +231,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [czkawka-krokiet-on-linux](../bucket/czkawka-krokiet-on-linux.json) | EXE payload (standalone/extractor not verified) | 12.0.2 | Czkawka Krokiet Windows build cross-compiled with the Linux GNU toolchain | [Homepage](https://github.com/qarmin/czkawka) |
 | [czkawka-krokiet-skia-opengl](../bucket/czkawka-krokiet-skia-opengl.json) | EXE payload (standalone/extractor not verified) | 12.0.2 | Czkawka Krokiet Windows build using the Skia OpenGL backend | [Homepage](https://github.com/qarmin/czkawka) |
 | [czkawka-krokiet-skia-vulkan](../bucket/czkawka-krokiet-skia-vulkan.json) | EXE payload (standalone/extractor not verified) | 12.0.2 | Czkawka Krokiet Windows build using the Skia Vulkan backend | [Homepage](https://github.com/qarmin/czkawka) |
-| [declutter](../bucket/declutter.json) | Inno Setup EXE | 1.13.7 | Desktop application for managing and organizing files with automated processing rules and tagging. | [Homepage](https://github.com/midnightdim/declutter) |
+| [declutter](../bucket/declutter.json) | Inno | 1.13.7 | Desktop application for managing and organizing files with automated processing rules and tagging. | [Homepage](https://github.com/midnightdim/declutter) |
 | [delete-on-reboot](../bucket/delete-on-reboot.json) | ZIP archive | 3.47 | Schedule files for deletion during the next reboot. | [Homepage](https://www.softwareok.com/?Download=Delete.On.Reboot) |
 | [dirprintok](../bucket/dirprintok.json) | ZIP archive | 7.69 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
 | [doublecmd](../bucket/doublecmd.json) | ZIP archive | 1.2.9 | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
@@ -244,10 +244,10 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [everything-cmdpal](../bucket/everything-cmdpal.json) | MSIX/AppX package registration | 0.9.26030.0 | Everything search extension for PowerToys Command Palette | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) |
 | [filee](../bucket/filee.json) | ZIP archive | 2.1.0 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
 | [filepilot](../bucket/filepilot.json) | NSIS | 1.0.7 | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. | [Homepage](https://github.com/qup1010/FilePilot) |
-| [files-inspector](../bucket/files-inspector.json) | Inno Setup EXE | 4.55 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
-| [findly](../bucket/findly.json) | Inno Setup EXE | 1.0.2 | Windows utility for finding installed programs and their executable paths | [Homepage](https://findly.devslim.com/) |
+| [files-inspector](../bucket/files-inspector.json) | Inno | 4.55 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
+| [findly](../bucket/findly.json) | Inno | 1.0.2 | Windows utility for finding installed programs and their executable paths | [Homepage](https://findly.devslim.com/) |
 | [foldersizeexplorer](../bucket/foldersizeexplorer.json) | ZIP archive | 1.0.4 | Portable file manager with recursive folder-size analysis for Windows. | [Homepage](https://github.com/ribeirogustav/FolderSizeExplorer-Releases) |
-| [foldra](../bucket/foldra.json) | Inno Setup EXE | 1.0 | Lightweight desktop folder widgets and file organization utility for Windows. | [Homepage](https://github.com/YusufEren97/FoldRa) |
+| [foldra](../bucket/foldra.json) | Inno | 1.0 | Lightweight desktop folder widgets and file organization utility for Windows. | [Homepage](https://github.com/YusufEren97/FoldRa) |
 | [funk-smf](../bucket/funk-smf.json) | ZIP archive | 18 | Multi-purpose file search and duplicate finder with filters, hash calculation, reporting, copy/move, and deletion tools. | [Homepage](https://funk.eu/smf/) |
 | [meinplatz](../bucket/meinplatz.json) | ZIP archive | 8.66 | Scan disk usage and visualize space occupied by files and folders. | [Homepage](https://www.softwareok.com/?Download=MeinPlatz) |
 | [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | ZIP archive | 3.7.5 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
@@ -296,7 +296,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | Inno Setup EXE | 11.3.1.1992 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
+| [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | Inno | 11.3.1.1992 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
 | [eric-amcacheparser](../bucket/eric-amcacheparser.json) | ZIP archive | 2026.10.1 | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-appcompatcacheparser](../bucket/eric-appcompatcacheparser.json) | ZIP archive | 2026.10.1 | Eric Zimmerman's AppCompatCacheParser: Parser for Windows AppCompatCache (ShimCache) artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-bstrings](../bucket/eric-bstrings.json) | ZIP archive | 2026.10.1 | Eric Zimmerman's bstrings: Search files for strings using built-in regular-expression patterns. | [Homepage](https://ericzimmerman.github.io/) |
@@ -382,7 +382,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [tagstudio](../bucket/tagstudio.json) | ZIP archive | 9.6.4 | A user-focused photo and file management system. | [Homepage](https://github.com/TagStudioDev/TagStudio) |
 | [tagstudio-x86_64](../bucket/tagstudio-x86_64.json) | ZIP archive | 9.6.4 | A user-focused photo and file management system. | [Homepage](https://github.com/TagStudioDev/TagStudio) |
 | [tokri](../bucket/tokri.json) | ZIP archive | 2026.09.26 | Desktop basket to drag and drop text, URLs, images, and files. | [Homepage](https://github.com/ysuraj1999/tokri) |
-| [ultraiso.cns](../bucket/ultraiso.cns.json) | Inno Setup EXE | 9.7.6.3860 | CD/DVD image file editing tool | [Homepage](https://www.ezbsystems.com/ultraiso/) |
+| [ultraiso.cns](../bucket/ultraiso.cns.json) | Inno | 9.7.6.3860 | CD/DVD image file editing tool | [Homepage](https://www.ezbsystems.com/ultraiso/) |
 | [vovsoft-3d-box-maker](../bucket/vovsoft-3d-box-maker.json) | ZIP archive | 1.1 | Portable edition of Vovsoft 3D Box Maker. | [Homepage](https://vovsoft.com/software/3d-box-maker/) |
 | [vovsoft-batch-image-converter](../bucket/vovsoft-batch-image-converter.json) | ZIP archive | 2.4 | Portable edition of Vovsoft Batch Image Converter. | [Homepage](https://vovsoft.com/software/batch-image-converter/) |
 | [vovsoft-batch-image-resizer](../bucket/vovsoft-batch-image-resizer.json) | ZIP archive | 2.4 | Portable edition of Vovsoft Batch Image Resizer. | [Homepage](https://vovsoft.com/software/batch-image-resizer/) |
@@ -422,7 +422,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [keyboardsounds-pro](../bucket/keyboardsounds-pro.json) | 7Z archive | 0.3.2 | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. | [Homepage](https://keyboardsounds.pro/) |
 | [langover](../bucket/langover.json) | EXE payload (standalone/extractor not verified) | 1.2.1 | Portable Windows utility for converting text between Hebrew and English keyboard layouts. | [Homepage](https://github.com/nachlib/LangOver) |
 | [mechvibes](../bucket/mechvibes.json) | 7Z archive | 2.3.4 | Play mechanical keyboard sounds as you type, with customizable sound packs. | [Homepage](https://mechvibes.com) |
-| [mechvibes-dx](../bucket/mechvibes-dx.json) | Inno Setup EXE | 0.8.4 | Low-latency mechanical keyboard and mouse sound simulator with customizable soundpacks. | [Homepage](https://github.com/hainguyents13/mechvibes-dx) |
+| [mechvibes-dx](../bucket/mechvibes-dx.json) | Inno | 0.8.4 | Low-latency mechanical keyboard and mouse sound simulator with customizable soundpacks. | [Homepage](https://github.com/hainguyents13/mechvibes-dx) |
 | [monkeysounds](../bucket/monkeysounds.json) | 7Z archive | 1.0.0.0 | Portable Windows app that plays mechanical keyboard and mouse click sounds system-wide, with built-in and custom sound profiles. | [Homepage](https://github.com/NSTechBytes/MonkeySounds) |
 | [poltertype](../bucket/poltertype.json) | MSI installer/package | 0.38.2 | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. | [Homepage](https://github.com/Just-Code-NET/PolterType) |
 | [sordum-send-windows-key](../bucket/sordum-send-windows-key.json) | 7Z archive | 1.1 | SendKeys methode allows you to send keystrokes just as if you had manually typed them on the keyboard . | [Homepage](https://www.sordum.org/12894/send-windows-key-v1-1/) |
@@ -434,7 +434,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [allplayer](../bucket/allplayer.json) | Inno Setup EXE | 9.6 | Free multimedia player with built-in codecs and automatic subtitles. | [Homepage](https://allplayer.com/) |
+| [allplayer](../bucket/allplayer.json) | Inno | 9.6 | Free multimedia player with built-in codecs and automatic subtitles. | [Homepage](https://allplayer.com/) |
 | [blur](../bucket/blur.json) | EXE payload (standalone/extractor not verified) | 2.45 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. | [Homepage](https://github.com/f0e/blur) |
 | [drift](../bucket/drift.json) | ZIP archive | 0.8.0 | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). | [Homepage](https://github.com/CutWire-Studios/Drift) |
 | [ef-duplicate-mp3-finder](../bucket/ef-duplicate-mp3-finder.json) | Package format not stated in manifest | 26.10 | Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA. | [Homepage](https://efsoftware.com/d3/e.htm) |
@@ -454,7 +454,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [recordly](../bucket/recordly.json) | NSIS | 1.4.0 | Open-source screen recorder and editor for polished demo videos. | [Homepage](https://github.com/webadderallorg/Recordly) |
 | [screenbox](../bucket/screenbox.json) | MSIX/AppX package registration | 0.24.0 | LibVLC-based media player for the Universal Windows Platform. | [Homepage](https://github.com/huynhsontung/Screenbox) |
 | [shotcut](../bucket/shotcut.json) | ZIP archive | 26.9.27 | Free, open source, cross-platform video editor. | [Homepage](https://www.shotcut.org) |
-| [sukut](../bucket/sukut.json) | Inno Setup EXE | 0.2.33 | Windows x64 audio utility that filters music from app audio to focus on speech. | [Homepage](https://github.com/altarafiya/Sukut) |
+| [sukut](../bucket/sukut.json) | Inno | 0.2.33 | Windows x64 audio utility that filters music from app audio to focus on speech. | [Homepage](https://github.com/altarafiya/Sukut) |
 | [ventic](../bucket/ventic.json) | EXE payload (standalone/extractor not verified) | 0.5.0 | A media library and BitTorrent player for the desktop and Android TV. | [Homepage](https://github.com/ventic/ventic) |
 | [video2x](../bucket/video2x.json) | ZIP archive | 6.4.0 | A Machine learning-based lossless video super resolution framework | [Homepage](https://github.com/k4yt3x/video2x) |
 | [voicestudio](../bucket/voicestudio.json) | 7Z archive | 0.5.6 | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. | [Homepage](https://voicestudio.sh) |
@@ -488,7 +488,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [amule](../bucket/amule.json) | ZIP archive | 3.0.0 | A free and open-source peer-to-peer file sharing client. | [Homepage](https://www.amule-project.net/) |
 | [babyshark](../bucket/babyshark.json) | ZIP archive | 0.3.0 | Wireshark made easy in your terminal. | [Homepage](https://github.com/vignesh07/babyshark) |
 | [bargozin](../bucket/bargozin.json) | MSI installer/package | 0.2.0 | DNS and network testing tool - Test URL accessibility, download speeds, and Docker registries across multiple DNS servers | [Homepage](https://github.com/403unlocker/bargozin-desktop) |
-| [complete-internet-repair](../bucket/complete-internet-repair.json) | Inno Setup EXE | 11.1.3.6518 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
+| [complete-internet-repair](../bucket/complete-internet-repair.json) | Inno | 11.1.3.6518 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
 | [cstatus](../bucket/cstatus.json) | ZIP archive | 1.2.7.1 | Free network monitoring and scanning tool for Windows | [Homepage](https://www.hnsoft.pt/cstatus) |
 | [dnschanger](../bucket/dnschanger.json) | ZIP archive | 2.3.14 | Open-source DNS changer for Windows, macOS, and Linux. | [Homepage](https://github.com/DnsChanger/dnsChanger-desktop) |
 | [dnschanger-msi](../bucket/dnschanger-msi.json) | MSI installer/package | 2.3.14 | Open-source DNS changer for Windows, macOS, and Linux. | [Homepage](https://github.com/DnsChanger/dnsChanger-desktop) |
@@ -499,7 +499,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [net-merge](../bucket/net-merge.json) | ZIP archive | 0.3.5 | Balance network traffic across multiple Wi-Fi, Ethernet, and tethered connections on Windows. | [Homepage](https://github.com/rohit267/net-merge) |
 | [netronome](../bucket/netronome.json) | ZIP archive | 0.16.0 | Modern network speed testing and monitoring tool built with Go and React. | [Homepage](https://github.com/autobrr/netronome) |
 | [netspeedtray](../bucket/netspeedtray.json) | ZIP archive | 2.1.7 | Live network speeds, CPU/GPU stats, temperatures, and power draw on the Windows taskbar. | [Homepage](https://github.com/erez-c137/NetSpeedTray) |
-| [nettime](../bucket/nettime.json) | Inno Setup EXE | 3.14 | Simple Network Time Protocol (SNTP) client for Windows that synchronizes the system clock. | [Homepage](https://www.timesynctool.com/) |
+| [nettime](../bucket/nettime.json) | Inno | 3.14 | Simple Network Time Protocol (SNTP) client for Windows that synchronizes the system clock. | [Homepage](https://www.timesynctool.com/) |
 | [network-checker](../bucket/network-checker.json) | ZIP archive | 1.7.2 | Network connectivity checker - test domains and IP ranges. | [Homepage](https://github.com/mirarr-app/network-checker) |
 | [network-profile-name-changer](../bucket/network-profile-name-changer.json) | ZIP archive | 1.4 | It is still possible to edit network profile names to make them more descriptive but the only effective way to Rename or remove the connections in Windows is by using the registry editor. | [Homepage](https://www.sordum.org/network-profile-name-changer) |
 | [npcap-np](../bucket/npcap-np.json) | Multiple package types: EXE setup (engine unverified) / AHK package | 1.90 | A packet capture (and sending) library for Microsoft Windows. | [Homepage](https://npcap.com/) |
@@ -567,7 +567,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno Setup EXE | 23.2.0.853 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
+| [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno | 23.2.0.853 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
 | [softwareok-suite](../bucket/softwareok-suite.json) | ZIP archive | 2026.10.27.6 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |
 
 ## Package Management
@@ -581,7 +581,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [local-desktop-store](../bucket/local-desktop-store.json) | ZIP archive | 0.3.2 | Private GitHub-based desktop application store and installer | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) |
 | [npackd](../bucket/npackd.json) | ZIP archive | 1.27.1 | Windows package manager for finding, installing, updating, and uninstalling software. | [Homepage](https://www.npackd.org) |
 | [rscoop](../bucket/rscoop.json) | EXE payload (standalone/extractor not verified) | 1.11.0 | A graphical user interface for Scoop package manager | [Homepage](https://github.com/AmarBego/Rscoop) |
-| [soft-organizer](../bucket/soft-organizer.json) | Inno Setup EXE | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
+| [soft-organizer](../bucket/soft-organizer.json) | Inno | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
 | [sordum-store-apps-tool](../bucket/sordum-store-apps-tool.json) | ZIP archive | 1.1 | The Microsoft Store app comes built into Windows and allows you to download and install dozens of apps and games. | [Homepage](https://www.sordum.org/store-apps-tool) |
 | [store-apps-tool](../bucket/store-apps-tool.json) | ZIP archive | 1.1 | The Microsoft Store app comes built into Windows and allows you to download and install dozens of apps and games. | [Homepage](https://www.sordum.org/store-apps-tool) |
 | [unigetui-portable](../bucket/unigetui-portable.json) | ZIP archive | 2026.3.2 | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. | [Homepage](https://devolutions.net/unigetui/) |
@@ -636,7 +636,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [lettuce-window-switcher](../bucket/lettuce-window-switcher.json) | EXE payload (standalone/extractor not verified) | 0.3.70 | Windows 11 application switcher with live DWM previews and multiple switcher views | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) |
 | [merkuro-calendar](../bucket/merkuro-calendar.json) | 7Z archive | 6719 | Calendar application for managing tasks and events | [Homepage](https://apps.kde.org/merkuro.calendar/) |
 | [quickpanel](../bucket/quickpanel.json) | ZIP archive | 1.0.12 | A floating Windows panel for launching web apps in native WebView2 windows. | [Homepage](https://github.com/lucasgiusiano/QuickPanel) |
-| [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno Setup EXE | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
+| [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
 | [run-command](../bucket/run-command.json) | ZIP archive | 6.41 | Portable replacement for the Windows Run dialog, with favorites and elevated command execution. | [Homepage](https://www.softwareok.com/?seite=Microsoft/Run-Command) |
 | [shortercut](../bucket/shortercut.json) | ZIP archive | 1.0.0.7 | Free and lightweight app launcher and desktop organizer. | [Homepage](https://www.getshortercut.com/) |
 | [sofast](../bucket/sofast.json) | NSIS | 0.12.0 | Quick launcher and productivity tool for Windows. | [Homepage](https://www.sofast.fun/) |
@@ -664,14 +664,14 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- |
 | [2faguard](../bucket/2faguard.json) | ZIP archive | 1.8.4 | A modern and secure Windows app for managing your 2FA authentication codes. | [Homepage](https://2faguard.app/) |
 | [astel](../bucket/astel.json) | ZIP archive | 26.11 | Encrypted password manager for Windows. | [Homepage](https://github.com/turkaysoft/astel) |
-| [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | Inno Setup EXE | 1.23.0.4 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
+| [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | Inno | 1.23.0.4 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
 | [blank-and-secure](../bucket/blank-and-secure.json) | ZIP archive | 8.44 | Securely overwrite and delete files. | [Homepage](https://www.softwareok.com/?Download=BlankAndSecure) |
 | [crowdsec](../bucket/crowdsec.json) | MSI installer/package | 1.8.2 | Open-source security engine that detects and responds to malicious behavior. | [Homepage](https://github.com/crowdsecurity/crowdsec) |
 | [dgreadiness](../bucket/dgreadiness.json) | 7Z archive | 3.6 | Device Guard and Credential Guard hardware readiness tool | [Homepage](https://www.microsoft.com/en-us/download/details.aspx?id=53337) |
 | [easylpac](../bucket/easylpac.json) | ZIP archive | 0.8.1.1 | lpac GUI Frontend | [Homepage](https://github.com/creamlike1024/EasyLPAC) |
 | [ef-checksum-manager](../bucket/ef-checksum-manager.json) | Package format not stated in manifest | 26.10 | Creates and verifies file checksums, including SFV/CRC32, MD5, BLAKE3, and SHA-family formats. | [Homepage](https://efsoftware.com/cm/e.htm) |
 | [encryphix](../bucket/encryphix.json) | ZIP archive | 26.11 | AES-256 file and folder encryption utility for Windows. | [Homepage](https://github.com/turkaysoft/encryphix) |
-| [fort](../bucket/fort.json) | Inno Setup EXE | 3.20.8 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
+| [fort](../bucket/fort.json) | Inno | 3.20.8 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
 | [grc-leaktest](../bucket/grc-leaktest.json) | EXE payload (standalone/extractor not verified) | 2008.03.13 | GRC LeakTest: Legacy outbound-firewall leakage test utility. | [Homepage](https://www.grc.com/lt/leaktest.htm) |
 | [grc-securable](../bucket/grc-securable.json) | EXE payload (standalone/extractor not verified) | 2013.02.22 | GRC SecurAble: Reports processor support for 64-bit instructions, hardware DEP/NX, and virtualization. | [Homepage](https://www.grc.com/securable.htm) |
 | [grc-unplug-n-pray](../bucket/grc-unplug-n-pray.json) | EXE payload (standalone/extractor not verified) | 2001.12.28 | GRC UnPlug n' Pray: Legacy utility for checking and enabling/disabling the historical Windows UPnP service. | [Homepage](https://www.grc.com/unpnp/unpnp.htm) |
@@ -708,12 +708,12 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | Inno Setup EXE | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
-| [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | Inno Setup EXE | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
-| [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | Inno Setup EXE | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
+| [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | Inno | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
+| [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | Inno | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
+| [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | Inno | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
 | [carbon-cd](../bucket/carbon-cd.json) | ZIP archive | 1.0.8 | Portable CD cloning and disc-image utility. | [Homepage](https://rizonesoft.com/downloads/carbon-cd/) |
 | [compactgui](../bucket/compactgui.json) | EXE payload (standalone/extractor not verified) | 4.0.0-beta.12 | Reduce the space taken up by games and programs on disk by using native Windows APIs. | [Homepage](https://github.com/IridiumIO/CompactGUI) |
-| [diskgeek](../bucket/diskgeek.json) | Inno Setup EXE | 1.1.1 | A free, self-contained disk space analyser for Windows. | [Homepage](https://github.com/techygeekshome/DiskGeek) |
+| [diskgeek](../bucket/diskgeek.json) | Inno | 1.1.1 | A free, self-contained disk space analyser for Windows. | [Homepage](https://github.com/techygeekshome/DiskGeek) |
 | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | Package format not stated in manifest | 11.2.3.2920 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
 | [grc-bootable](../bucket/grc-bootable.json) | ZIP archive | 2024.04.21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
 | [grc-initdisk](../bucket/grc-initdisk.json) | EXE payload (standalone/extractor not verified) | 2020.12.19 | GRC InitDisk: Command-line USB formatter that can create a FAT-formatted and optionally FreeDOS-bootable drive. | [Homepage](https://www.grc.com/initdisk.htm) |
@@ -739,11 +739,11 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | Inno Setup EXE | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
+| [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | Inno | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
 | [backup-start-menu-layout](../bucket/backup-start-menu-layout.json) | ZIP archive | 1.6 | A simple app that allows users to backup and restore their StartMenu layout. | [Homepage](https://www.sordum.org/backup-start-menu-layout) |
 | [ef-autosync](../bucket/ef-autosync.json) | Package format not stated in manifest | 26.10 | Portable utility for synchronizing files and folders between PCs, USB flash drives, external drives, and other storage. | [Homepage](https://efsoftware.com/as/e.htm) |
 | [endstate](../bucket/endstate.json) | 7Z archive | 3.13.1 | Endstate desktop app payload extracted without running the setup installer. | [Homepage](https://github.com/Artexis10/endstate-gui) |
-| [freefilesync](../bucket/freefilesync.json) | Inno Setup EXE | 14.13. | Folder comparison and synchronization software for backups and file synchronization. | [Homepage](https://freefilesync.org/) |
+| [freefilesync](../bucket/freefilesync.json) | Inno | 14.13. | Folder comparison and synchronization software for backups and file synchronization. | [Homepage](https://freefilesync.org/) |
 | [mitec-windows-registry-recovery](../bucket/mitec-windows-registry-recovery.json) | ZIP archive | 3.1.3 | Reads offline Windows Registry hives and extracts configuration information; also provides live Registry backup. | [Homepage](https://www.mitec.cz/wp/mwrr/) |
 | [onedrive-np](../bucket/onedrive-np.json) | EXE setup (engine unverified) | 26.183.0920.0005 | Microsoft OneDrive. Save your photos and files to OneDrive and access them from any device, anywhere. | [Homepage](https://oneclient.sfx.ms) |
 | [sordum-backup-start-menu-layout](../bucket/sordum-backup-start-menu-layout.json) | ZIP archive | 1.6 | A simple app that allows users to backup and restore their StartMenu layout. | [Homepage](https://www.sordum.org/backup-start-menu-layout) |
@@ -758,18 +758,18 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [3d-benchmark-ok](../bucket/3d-benchmark-ok.json) | ZIP archive | 2.55 | Benchmark 3D graphics performance. | [Homepage](https://www.softwareok.com/?Download=3D.Benchmark.OK) |
 | [aurelitec-injuredpixels](../bucket/aurelitec-injuredpixels.json) | ZIP archive | 4.0.0.127 | Portable display test utility for finding dead, stuck, hot, or defective pixels. | [Homepage](https://www.aurelitec.com/injuredpixels/) |
 | [aurelitec-pixelhealer](../bucket/aurelitec-pixelhealer.json) | ZIP archive | 1.5.0.30 | Portable display utility that attempts to recover stuck or hot pixels. | [Homepage](https://www.aurelitec.com/pixelhealer/) |
-| [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | Inno Setup EXE | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
-| [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | Inno Setup EXE | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
-| [Auslogics-system-information](../bucket/Auslogics-system-information.json) | Inno Setup EXE | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
-| [chromin](../bucket/chromin.json) | Inno Setup EXE | 11.8.3.8535 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | Inno | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
+| [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | Inno | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
+| [Auslogics-system-information](../bucket/Auslogics-system-information.json) | Inno | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
+| [chromin](../bucket/chromin.json) | Inno | 11.8.3.8535 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [clickmonitorddc](../bucket/clickmonitorddc.json) | ZIP archive | 7.2 | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) |
 | [cpu-frequenz](../bucket/cpu-frequenz.json) | ZIP archive | 4.55 | Display CPU frequency information. | [Homepage](https://www.softwareok.com/?Download=CpuFrequenz) |
 | [driverstoreexplorer](../bucket/driverstoreexplorer.json) | ZIP archive | 1.0.36 | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. | [Homepage](https://github.com/lostindark/DriverStoreExplorer) |
-| [edgemin](../bucket/edgemin.json) | Inno Setup EXE | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [edgemin](../bucket/edgemin.json) | Inno | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [ef-process-manager](../bucket/ef-process-manager.json) | Package format not stated in manifest | 26.10 | Inspects running processes and loaded modules, closes or terminates processes, and displays system details. | [Homepage](https://efsoftware.com/pm/e.htm) |
 | [ef-system-monitor](../bucket/ef-system-monitor.json) | Package format not stated in manifest | 26.10 | Monitors local and remote system resources and performance, including CPU, memory, disks, and other metrics. | [Homepage](https://efsoftware.com/sm/e.htm) |
 | [experience-index-ok](../bucket/experience-index-ok.json) | ZIP archive | 4.77 | View and run Windows performance index measurements. | [Homepage](https://www.softwareok.com/?Download=ExperienceIndexOK) |
-| [firemin](../bucket/firemin.json) | Inno Setup EXE | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [firemin](../bucket/firemin.json) | Inno | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [fluent-sensors](../bucket/fluent-sensors.json) | ZIP archive | 1.7.0 | Native Windows hardware monitoring app. | [Homepage](https://github.com/cechout/fluent-sensors) |
 | [freetoken-desktop.beta](../bucket/freetoken-desktop.beta.json) | 7Z archive | 0.2.0-beta.25 | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. | [Homepage](https://www.flashml.ai) |
 | [grc-clickey](../bucket/grc-clickey.json) | EXE payload (standalone/extractor not verified) | 2005.10.29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
@@ -784,7 +784,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [is-my-lcd-ok](../bucket/is-my-lcd-ok.json) | ZIP archive | 6.21 | IsMyLcdOK is a small program but effective solution to easily check for dead/paralysed/stuck pixels on LCD monitors. | [Homepage](http://www.softwareok.com/?seite=Microsoft/IsMyLcdOK) |
 | [is-my-memory-ok](../bucket/is-my-memory-ok.json) | ZIP archive | 1.33 | Test RAM performance and stability on Windows PCs. | [Homepage](https://www.softwareok.com/?Download=IsMyMemoryOK) |
 | [is-my-touch-screen-ok](../bucket/is-my-touch-screen-ok.json) | ZIP archive | 3.21 | Test touchscreen input on Windows. | [Homepage](https://www.softwareok.com/?Download=IsMyTouchScreenOK) |
-| [mitec-infobar](../bucket/mitec-infobar.json) | Inno Setup EXE | 4.6.2 | Taskbar-style information bar with system monitoring, calendar, weather and developer tools. | [Homepage](https://www.mitec.cz/wp/mib/) |
+| [mitec-infobar](../bucket/mitec-infobar.json) | Inno | 4.6.2 | Taskbar-style information bar with system monitoring, calendar, weather and developer tools. | [Homepage](https://www.mitec.cz/wp/mib/) |
 | [mitec-smbios-explorer](../bucket/mitec-smbios-explorer.json) | ZIP archive | 1.8.0 | SMBIOS explorer and analyzer for firmware and hardware inventory. | [Homepage](https://www.mitec.cz/wp/smbe/) |
 | [mitec-system-information-extra](../bucket/mitec-system-information-extra.json) | ZIP archive | 16.0.0 | System information utility for inspecting computer hardware and software, with report export. | [Homepage](https://www.mitec.cz/wp/msix/) |
 | [mitec-tapi-monitor](../bucket/mitec-tapi-monitor.json) | ZIP archive | 1.2.0 | Monitors TAPI lines, telephones, service providers and call events. | [Homepage](https://www.mitec.cz/wp/mtapimon/) |
@@ -800,7 +800,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [pulse](../bucket/pulse.json) | ZIP archive | 1.6.0 | Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService. | [Homepage](https://github.com/Regncreative/Pulse) |
 | [quick-memory-test-ok](../bucket/quick-memory-test-ok.json) | ZIP archive | 5.55 | Test memory for errors. | [Homepage](https://www.softwareok.com/?Download=QuickMemoryTestOK) |
 | [ramagic](../bucket/ramagic.json) | ZIP archive | 1.33 | Clear outdated working sets and standby cache to free RAM. | [Homepage](https://www.softwareok.com/?Download=RAMagic) |
-| [rigsight](../bucket/rigsight.json) | Inno Setup EXE | 0.36.0 | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. | [Homepage](https://github.com/b0llu/Rigsight) |
+| [rigsight](../bucket/rigsight.json) | Inno | 0.36.0 | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. | [Homepage](https://github.com/b0llu/Rigsight) |
 | [sordum-bluetooth-version-finder](../bucket/sordum-bluetooth-version-finder.json) | ZIP archive | 1.7 | Free software that shows the Bluetooth version in Windows 11 and 10. | [Homepage](https://www.sordum.org/10772/bluetooth-version-finder-v1-7/) |
 | [sordum-find-prime-numbers](../bucket/sordum-find-prime-numbers.json) | ZIP archive | 1.1 | Portable benchmark that tests CPU performance by searching for prime numbers across a selected range. | [Homepage](https://www.sordum.org/9207/find-prime-numbers-v1-1/) |
 | [sordum-monitor-off](../bucket/sordum-monitor-off.json) | ZIP archive | 1.1 | MonitorOff (Screen Turns Off) | [Homepage](https://www.sordum.org/10104/sordum-monitor-off-v1-1/) |
@@ -811,7 +811,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [stressthegpu](../bucket/stressthegpu.json) | ZIP archive | 1.44 | Portable GPU stress tester and benchmark. | [Homepage](https://www.softwareok.com/?Download=StressTheGPU) |
 | [sysmanager](../bucket/sysmanager.json) | EXE setup (engine unverified) | 1.131.3 | Modern Windows system monitoring and management toolkit. | [Homepage](https://github.com/laurentiu021/SystemManager) |
 | [systeminformer](../bucket/systeminformer.json) | ZIP archive | 4.0.26241.138 | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. | [Homepage](https://systeminformer.com/) |
-| [taskexplorer](../bucket/taskexplorer.json) | Inno Setup EXE | 2.0.1 | Advanced process and system monitoring tool | [Homepage](https://github.com/DavidXanatos/TaskExplorer) |
+| [taskexplorer](../bucket/taskexplorer.json) | Inno | 2.0.1 | Advanced process and system monitoring tool | [Homepage](https://github.com/DavidXanatos/TaskExplorer) |
 | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | EXE payload (standalone/extractor not verified) | 1.4.1 | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
 | [turkaysoft-glow](../bucket/turkaysoft-glow.json) | ZIP archive | 26.14 | Advanced system analysis software for Windows. | [Homepage](https://github.com/turkaysoft/glow) |
 | [uefitool](../bucket/uefitool.json) | ZIP archive | A76 | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. | [Homepage](https://github.com/LongSoft/UEFITool) |
@@ -825,7 +825,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-ram-monitor-gadget](../bucket/vovsoft-ram-monitor-gadget.json) | ZIP archive | 2.0 | Portable edition of Vovsoft RAM Monitor Gadget. | [Homepage](https://vovsoft.com/software/ram-monitor-gadget/) |
 | [vovsoft-vov-stop-start](../bucket/vovsoft-vov-stop-start.json) | ZIP archive | 2.0 | Portable edition of Vovsoft Vov Stop Start. | [Homepage](https://vovsoft.com/software/vov-stop-start/) |
 | [vovsoft-vov-system-uptime](../bucket/vovsoft-vov-system-uptime.json) | ZIP archive | 1.8 | Portable edition of Vovsoft Vov System Uptime. | [Homepage](https://vovsoft.com/software/vov-system-uptime/) |
-| [watermin](../bucket/watermin.json) | Inno Setup EXE | 11.8.3.8535 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [watermin](../bucket/watermin.json) | Inno | 11.8.3.8535 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 
 ## Time Tracking & Focus
 
@@ -911,7 +911,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [keep-mouse-speed-ok](../bucket/keep-mouse-speed-ok.json) | ZIP archive | 3.55 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
 | [komorebi](../bucket/komorebi.json) | ZIP archive | 0.1.41 | A tiling window manager for Windows | [Homepage](https://github.com/LGUG2Z/komorebi) |
 | [komorebi-nightly](../bucket/komorebi-nightly.json) | ZIP archive | 2026-08-22 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
-| [lively](../bucket/lively.json) | Inno Setup EXE | 2.2.1.0 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
+| [lively](../bucket/lively.json) | Inno | 2.2.1.0 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
 | [livewallpaper](../bucket/livewallpaper.json) | EXE setup (engine unverified) | 4.0.1-alpha.4 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
 | [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 7Z archive | 8.6 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
 | [magic-mouse-move](../bucket/magic-mouse-move.json) | ZIP archive | 1.04 | Move the mouse pointer automatically. | [Homepage](https://www.softwareok.com/?Download=MagicMouseMove) |
@@ -970,12 +970,12 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
 | [anti-yandex](../bucket/anti-yandex.json) | EXE payload (standalone/extractor not verified) | 1.3 | Utility for finding and removing Yandex Browser files and registry entries | [Homepage](https://github.com/TheCawa/AntiYandex) |
-| [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | Inno Setup EXE | 14.2.0.6 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
-| [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | Inno Setup EXE | 11.2.0.6 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
-| [Auslogics-registry-defrag](../bucket/Auslogics-registry-defrag.json) | Inno Setup EXE | 15.2.0.6 | Windows registry defragmentation utility | [Homepage](https://www.auslogics.com/en/software/registry-defrag/) |
-| [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | Inno Setup EXE | 5.2.0.6 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
+| [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | Inno | 14.2.0.6 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
+| [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | Inno | 11.2.0.6 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
+| [Auslogics-registry-defrag](../bucket/Auslogics-registry-defrag.json) | Inno | 15.2.0.6 | Windows registry defragmentation utility | [Homepage](https://www.auslogics.com/en/software/registry-defrag/) |
+| [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | Inno | 5.2.0.6 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
 | [auto-power-options-ok](../bucket/auto-power-options-ok.json) | ZIP archive | 6.55 | Automatically manage Windows power options. | [Homepage](https://www.softwareok.com/?Download=AutoPowerOptionsOK) |
-| [autorun-organizer](../bucket/autorun-organizer.json) | Inno Setup EXE | 7.02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
+| [autorun-organizer](../bucket/autorun-organizer.json) | Inno | 7.02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
 | [bloatynosy](../bucket/bloatynosy.json) | ZIP archive | 1.02.142 | Windows debloater for reviewing privacy tweaks, system settings, and installed apps | [Homepage](https://github.com/builtbybel/Bloatynosy) |
 | [c-cleaner-plus](../bucket/c-cleaner-plus.json) | ZIP archive | 0.8.0 | Windows cleanup utility with large-file scanning, advanced cleanup, forced uninstall, and scheduled tasks. | [Homepage](https://github.com/Kiowx/c_cleaner_plus) |
 | [crapfixer](../bucket/crapfixer.json) | ZIP archive | 2.01.41 | Windows tweaking, privacy, and app removal utility. | [Homepage](https://github.com/builtbybel/CrapFixer) |
@@ -1000,9 +1000,9 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [nixthis](../bucket/nixthis.json) | ZIP archive | 0.42.2 | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. | [Homepage](https://github.com/builtbybel/NixThis) |
 | [optimizerduck](../bucket/optimizerduck.json) | EXE payload (standalone/extractor not verified) | 2.29.0 | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. | [Homepage](https://github.com/itsfatduck/optimizerDuck) |
 | [prevent-turn-off](../bucket/prevent-turn-off.json) | ZIP archive | 3.63 | Prevent Windows from shutting down or entering sleep mode. | [Homepage](https://www.softwareok.com/?Download=PreventTurnOff) |
-| [reg-organizer](../bucket/reg-organizer.json) | Inno Setup EXE | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
-| [reg-organizer-portable](../bucket/reg-organizer-portable.json) | Inno Setup EXE | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
-| [regalyzer](../bucket/regalyzer.json) | Inno Setup EXE | 2.0.2.24 | Registry editor with background search, regular-expression search, bookmarks, and hive snapshots. | [Homepage](https://www.safer-networking.org/products/regalyzer/) |
+| [reg-organizer](../bucket/reg-organizer.json) | Inno | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [reg-organizer-portable](../bucket/reg-organizer-portable.json) | Inno | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [regalyzer](../bucket/regalyzer.json) | Inno | 2.0.2.24 | Registry editor with background search, regular-expression search, bookmarks, and hive snapshots. | [Homepage](https://www.safer-networking.org/products/regalyzer/) |
 | [registry-finder](../bucket/registry-finder.json) | ZIP archive | 2.63.0.0 | Registry Finder is an improved replacement for the built-in Windows registry editor | [Homepage](https://registry-finder.com/) |
 | [sordum-easy-service-optimizer](../bucket/sordum-easy-service-optimizer.json) | ZIP archive | 1.2 | A portable freeware to optimize services for almost all Windows versions (except for Win 98 and before). | [Homepage](https://www.sordum.org/easy-service-optimizer) |
 | [sordum-edge-blocker](../bucket/sordum-edge-blocker.json) | ZIP archive | 2.1 | block edge | [Homepage](https://www.sordum.org/9312/edge-blocker-v2-1/) |
@@ -1033,21 +1033,21 @@ Publisher cross-list of 15 manifests associated with Auslogics. Each entry is al
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | Inno Setup EXE | 1.23.0.4 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
-| [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | Inno Setup EXE | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
-| [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | Inno Setup EXE | 14.2.0.6 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
-| [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | Inno Setup EXE | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
-| [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | Inno Setup EXE | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
-| [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | Inno Setup EXE | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
-| [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | Inno Setup EXE | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
-| [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | Inno Setup EXE | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
-| [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | Inno Setup EXE | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
-| [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | Inno Setup EXE | 11.2.0.6 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
-| [Auslogics-registry-defrag](../bucket/Auslogics-registry-defrag.json) | Inno Setup EXE | 15.2.0.6 | Windows registry defragmentation utility | [Homepage](https://www.auslogics.com/en/software/registry-defrag/) |
-| [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | Inno Setup EXE | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
-| [Auslogics-system-information](../bucket/Auslogics-system-information.json) | Inno Setup EXE | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
-| [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | Inno Setup EXE | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
-| [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | Inno Setup EXE | 5.2.0.6 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
+| [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | Inno | 1.23.0.4 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
+| [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | Inno | 2.6.0.3 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
+| [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | Inno | 14.2.0.6 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
+| [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | Inno | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
+| [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | Inno | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
+| [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | Inno | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
+| [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | Inno | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
+| [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | Inno | 11.2.0.6 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
+| [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | Inno | 12.2.0.6 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |
+| [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | Inno | 11.2.0.6 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
+| [Auslogics-registry-defrag](../bucket/Auslogics-registry-defrag.json) | Inno | 15.2.0.6 | Windows registry defragmentation utility | [Homepage](https://www.auslogics.com/en/software/registry-defrag/) |
+| [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | Inno | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
+| [Auslogics-system-information](../bucket/Auslogics-system-information.json) | Inno | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
+| [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | Inno | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
+| [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | Inno | 5.2.0.6 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
 
 ## ChemTable Suite
 
@@ -1055,11 +1055,11 @@ Publisher cross-list of 5 manifests associated with ChemTable. Each entry is als
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [autorun-organizer](../bucket/autorun-organizer.json) | Inno Setup EXE | 7.02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
-| [files-inspector](../bucket/files-inspector.json) | Inno Setup EXE | 4.55 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
-| [reg-organizer](../bucket/reg-organizer.json) | Inno Setup EXE | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
-| [reg-organizer-portable](../bucket/reg-organizer-portable.json) | Inno Setup EXE | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
-| [soft-organizer](../bucket/soft-organizer.json) | Inno Setup EXE | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
+| [autorun-organizer](../bucket/autorun-organizer.json) | Inno | 7.02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
+| [files-inspector](../bucket/files-inspector.json) | Inno | 4.55 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
+| [reg-organizer](../bucket/reg-organizer.json) | Inno | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [reg-organizer-portable](../bucket/reg-organizer-portable.json) | Inno | 9.96 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
+| [soft-organizer](../bucket/soft-organizer.json) | Inno | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
 
 ## Eric Zimmerman Suite
 
@@ -1135,14 +1135,14 @@ Publisher cross-list of 22 manifests associated with MiTeC. Each entry is also l
 | [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | ZIP archive | 8.4.0 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
 | [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | ZIP archive | 3.7.5 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
 | [mitec-hexedit](../bucket/mitec-hexedit.json) | ZIP archive | 7.1.0 | Hexadecimal editor with data inspector, calculator, file compare, memory dump and disk dump tools. | [Homepage](https://www.mitec.cz/wp/mhex/) |
-| [mitec-infobar](../bucket/mitec-infobar.json) | Inno Setup EXE | 4.6.2 | Taskbar-style information bar with system monitoring, calendar, weather and developer tools. | [Homepage](https://www.mitec.cz/wp/mib/) |
+| [mitec-infobar](../bucket/mitec-infobar.json) | Inno | 4.6.2 | Taskbar-style information bar with system monitoring, calendar, weather and developer tools. | [Homepage](https://www.mitec.cz/wp/mib/) |
 | [mitec-interbase-query](../bucket/mitec-interbase-query.json) | ZIP archive | 9.5.0 | Database management tool for InterBase 6+ and Firebird 1.5+. | [Homepage](https://www.mitec.cz/wp/mibq/) |
 | [mitec-json-viewer](../bucket/mitec-json-viewer.json) | ZIP archive | 3.2.2 | JSON and BSON viewer and editor. | [Homepage](https://www.mitec.cz/wp/mjsonv/) |
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | ZIP archive | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
 | [mitec-network-scanner](../bucket/mitec-network-scanner.json) | ZIP archive | 6.1.0 | Network discovery and scanning utility for hosts, ports, shares, services, SNMP and Active Directory. | [Homepage](https://www.mitec.cz/wp/mns/) |
 | [mitec-ole-com-explorer](../bucket/mitec-ole-com-explorer.json) | ZIP archive | 1.4.0 | OLE/COM object explorer and Type Library viewer. | [Homepage](https://www.mitec.cz/wp/molexp/) |
-| [mitec-paradox-data-editor](../bucket/mitec-paradox-data-editor.json) | Inno Setup EXE | 3.7.0 | Viewer and editor for Paradox tables, with repair and maintenance features. | [Homepage](https://www.mitec.cz/wp/mpde/) |
-| [mitec-project-maker](../bucket/mitec-project-maker.json) | Inno Setup EXE | 1.9.0 | Automates batch Delphi project builds, code signing and executable version information patching. | [Homepage](https://www.mitec.cz/wp/pm/) |
+| [mitec-paradox-data-editor](../bucket/mitec-paradox-data-editor.json) | Inno | 3.7.0 | Viewer and editor for Paradox tables, with repair and maintenance features. | [Homepage](https://www.mitec.cz/wp/mpde/) |
+| [mitec-project-maker](../bucket/mitec-project-maker.json) | Inno | 1.9.0 | Automates batch Delphi project builds, code signing and executable version information patching. | [Homepage](https://www.mitec.cz/wp/pm/) |
 | [mitec-smbios-explorer](../bucket/mitec-smbios-explorer.json) | ZIP archive | 1.8.0 | SMBIOS explorer and analyzer for firmware and hardware inventory. | [Homepage](https://www.mitec.cz/wp/smbe/) |
 | [mitec-sqlite-query](../bucket/mitec-sqlite-query.json) | ZIP archive | 3.2.0 | SQLite 3 database management and query tool. | [Homepage](https://www.mitec.cz/wp/msqliteq/) |
 | [mitec-structured-storage-viewer](../bucket/mitec-structured-storage-viewer.json) | ZIP archive | 4.1.2 | Viewer and manager for Microsoft OLE structured-storage files. | [Homepage](https://www.mitec.cz/wp/mssv/) |
@@ -1575,17 +1575,17 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | Inno Setup EXE | 11.3.1.1992 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
+| [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | Inno | 11.3.1.1992 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
 | [carbon-cd](../bucket/carbon-cd.json) | ZIP archive | 1.0.8 | Portable CD cloning and disc-image utility. | [Homepage](https://rizonesoft.com/downloads/carbon-cd/) |
-| [chromin](../bucket/chromin.json) | Inno Setup EXE | 11.8.3.8535 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
-| [complete-internet-repair](../bucket/complete-internet-repair.json) | Inno Setup EXE | 11.1.3.6518 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
+| [chromin](../bucket/chromin.json) | Inno | 11.8.3.8535 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [complete-internet-repair](../bucket/complete-internet-repair.json) | Inno | 11.1.3.6518 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
 | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | Package format not stated in manifest | 11.2.3.2920 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
-| [edgemin](../bucket/edgemin.json) | Inno Setup EXE | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
-| [firemin](../bucket/firemin.json) | Inno Setup EXE | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [edgemin](../bucket/edgemin.json) | Inno | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [firemin](../bucket/firemin.json) | Inno | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [notepad3](../bucket/notepad3.json) | ZIP archive | 7.26.602.1 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
 | [pixel-repair](../bucket/pixel-repair.json) | Package format not stated in manifest | 11.1.1.1008 | Portable utility for detecting and attempting to fix stuck pixels on LCD and OLED displays. | [Homepage](https://rizonesoft.com/downloads/pixel-repair/) |
-| [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno Setup EXE | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
-| [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno Setup EXE | 23.2.0.853 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
+| [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
+| [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno | 23.2.0.853 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
 | [take-ownership](../bucket/take-ownership.json) | Package format not stated in manifest | 11.1.1.869 | Portable utility that can add or remove a Take Ownership context-menu action. | [Homepage](https://rizonesoft.com/gdm_downloads/take-ownership/) |
 | [usb-repair](../bucket/usb-repair.json) | Package format not stated in manifest | 11.2.3.2380 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
-| [watermin](../bucket/watermin.json) | Inno Setup EXE | 11.8.3.8535 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [watermin](../bucket/watermin.json) | Inno | 11.8.3.8535 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
