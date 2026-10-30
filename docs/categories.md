@@ -4,36 +4,36 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 
 ## Category Index
 
-| Category | Manifests | Type | Link |
-| --- | ---: | --- | --- |
-| Android & Device Tools | 10 | Functional | [View](#android-device-tools) |
-| Browsers & Communication | 7 | Functional | [View](#browsers-communication) |
-| Clipboard & Text | 34 | Functional | [View](#clipboard-text) |
-| Developer & Technical Tools | 44 | Functional | [View](#developer-technical-tools) |
-| Download Managers | 16 | Functional | [View](#download-managers) |
-| Emulators & Compatibility | 15 | Functional | [View](#emulators-compatibility) |
-| File Management | 71 | Functional | [View](#file-management) |
-| Forensics & Diagnostics | 32 | Functional | [View](#forensics-diagnostics) |
-| Games & Game Utilities | 19 | Functional | [View](#games-game-utilities) |
-| Images & Photos | 52 | Functional | [View](#images-photos) |
-| Keyboard & Language | 15 | Functional | [View](#keyboard-language) |
-| Media & Audio/Video | 46 | Functional | [View](#media-audio-video) |
-| Network & DNS | 52 | Functional | [View](#network-dns) |
-| Notes & Knowledge | 20 | Functional | [View](#notes-knowledge) |
-| Other Utilities | 2 | Functional | [View](#other-utilities) |
-| Package Management | 13 | Functional | [View](#package-management) |
-| PDF & Documents | 29 | Functional | [View](#pdf-documents) |
-| Productivity & Launchers | 31 | Functional | [View](#productivity-launchers) |
-| Security | 41 | Functional | [View](#security) |
-| Storage & Disk Tools | 26 | Functional | [View](#storage-disk-tools) |
-| Sync & Backup | 11 | Functional | [View](#sync-backup) |
-| System Monitoring & Hardware | 71 | Functional | [View](#system-monitoring-hardware) |
-| Time Tracking & Focus | 14 | Functional | [View](#time-tracking-focus) |
-| Translation & OCR | 12 | Functional | [View](#translation-ocr) |
-| Weather & Information | 1 | Functional | [View](#weather-information) |
-| Windows Customization | 91 | Functional | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 47 | Functional | [View](#windows-privacy-tweaks) |
-| Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
+| Category | Manifests | Link |
+| --- | ---: | --- |
+| Android & Device Tools | 10 | [View](#android-device-tools) |
+| Browsers & Communication | 7 | [View](#browsers-communication) |
+| Clipboard & Text | 34 | [View](#clipboard-text) |
+| Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
+| Download Managers | 16 | [View](#download-managers) |
+| Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
+| File Management | 71 | [View](#file-management) |
+| Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
+| Games & Game Utilities | 19 | [View](#games-game-utilities) |
+| Images & Photos | 52 | [View](#images-photos) |
+| Keyboard & Language | 15 | [View](#keyboard-language) |
+| Media & Audio/Video | 46 | [View](#media-audio-video) |
+| Network & DNS | 52 | [View](#network-dns) |
+| Notes & Knowledge | 20 | [View](#notes-knowledge) |
+| Other Utilities | 2 | [View](#other-utilities) |
+| Package Management | 13 | [View](#package-management) |
+| PDF & Documents | 29 | [View](#pdf-documents) |
+| Productivity & Launchers | 31 | [View](#productivity-launchers) |
+| Security | 41 | [View](#security) |
+| Storage & Disk Tools | 26 | [View](#storage-disk-tools) |
+| Sync & Backup | 11 | [View](#sync-backup) |
+| System Monitoring & Hardware | 71 | [View](#system-monitoring-hardware) |
+| Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
+| Translation & OCR | 12 | [View](#translation-ocr) |
+| Weather & Information | 1 | [View](#weather-information) |
+| Windows Customization | 91 | [View](#windows-customization) |
+| Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
+| Windows Update & Management | 5 | [View](#windows-update-management) |
 
 **Total unique manifests: 827**
 
@@ -41,23 +41,23 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 ## Developer Index
 
-| Developer / Suite | Manifests | Type | Link |
-| --- | ---: | --- | --- |
-| Aurelitec Suite | 5 | Publisher cross-list | [View](#aurelitec-suite) |
-| Auslogics Suite | 15 | Publisher cross-list | [View](#auslogics-suite) |
-| ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
-| ComputerSluggish Suite | 1 | Publisher cross-list | [View](#computersluggish-suite) |
-| EFSoftware Suite | 13 | Publisher cross-list | [View](#efsoftware-suite) |
-| Eric Zimmerman Suite | 31 | Publisher cross-list | [View](#eric-zimmerman-suite) |
-| Funk.eu Suite | 7 | Publisher cross-list | [View](#funk-eu-suite) |
-| GRC Suite | 18 | Publisher cross-list | [View](#grc-suite) |
-| MiTeC Suite | 22 | Publisher cross-list | [View](#mitec-suite) |
-| Neuber Suite | 2 | Publisher cross-list | [View](#neuber-suite) |
-| Rizonesoft Suite | 14 | Publisher cross-list | [View](#rizonesoft-suite) |
-| SoftwareOK Suite | 81 | Publisher cross-list | [View](#softwareok-suite) |
-| Sordum Suite | 63 | Publisher cross-list | [View](#sordum-suite) |
-| Türkaysoft Suite | 8 | Publisher cross-list | [View](#turkaysoft-suite) |
-| Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
+| Developer / Suite | Manifests | Link |
+| --- | ---: | --- |
+| Aurelitec Suite | 5 | [View](#aurelitec-suite) |
+| Auslogics Suite | 15 | [View](#auslogics-suite) |
+| ChemTable Suite | 5 | [View](#chemtable-suite) |
+| ComputerSluggish Suite | 1 | [View](#computersluggish-suite) |
+| EFSoftware Suite | 13 | [View](#efsoftware-suite) |
+| Eric Zimmerman Suite | 31 | [View](#eric-zimmerman-suite) |
+| Funk.eu Suite | 7 | [View](#funk-eu-suite) |
+| GRC Suite | 18 | [View](#grc-suite) |
+| MiTeC Suite | 22 | [View](#mitec-suite) |
+| Neuber Suite | 2 | [View](#neuber-suite) |
+| Rizonesoft Suite | 14 | [View](#rizonesoft-suite) |
+| SoftwareOK Suite | 81 | [View](#softwareok-suite) |
+| Sordum Suite | 63 | [View](#sordum-suite) |
+| Türkaysoft Suite | 8 | [View](#turkaysoft-suite) |
+| Vovsoft Suite | 174 | [View](#vovsoft-suite) |
 
 ## Android & Device Tools
 
