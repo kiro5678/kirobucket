@@ -55,6 +55,7 @@ function Start-CheckverRequests {
         $name, $json, $file = $checkverScheduler.Queue.Dequeue()
 '@ -Label 'request queue loop'
 $queueBlock = Replace-Once -Text $queueBlock -Old '    $name, $json, $file = $_' -New '' -Label 'queued manifest unpack'
+$queueBlock = Replace-Once -Text $queueBlock -Old '            return' -New '            continue' -Label 'skip malformed checkver manifest'
 $queueBlock = Replace-Once -Text $queueBlock -Old '$in_progress++' -New '$checkverScheduler.InProgress++' -Label 'in-progress increment'
 $queueBlock = $queueBlock.TrimEnd() + $newLine + '}'
 
