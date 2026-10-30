@@ -29,61 +29,63 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 These manifests execute an actual installer or create persistent Windows integration. A target path inside Scoop does **not** change the classification.
 
-| Manifest | Install behavior / scope |
-|---|---|
-| [agaric](../bucket/agaric.json) | Runs the NSIS setup with silent install arguments and `/D=$dir`. |
-| [air-server-np](../bucket/air-server-np.json) | Runs `msiexec /i` with elevation; installs through Windows Installer. |
-| [another](../bucket/another.json) | Runs the vendor setup with `/S /NS /D=$dir`. |
-| [belarc-advisor](../bucket/belarc-advisor.json) | Runs the vendor installer; `/D=$dir` is intended to redirect its installation, but the manifest notes that this behavior has not been independently confirmed. |
-| [biscuit](../bucket/biscuit.json) | Runs the NSIS setup silently from `pre_install`; it is not extracted as an archive. |
-| [clustercut](../bucket/clustercut.json) | Runs the vendor setup with `/S /NS /D=$dir`. |
-| [coodesker-github](../bucket/coodesker-github.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [crowdsec](../bucket/crowdsec.json) | Runs the MSI installer silently. **Manifest issue:** the download is 1.8.2 but `installer.file` currently names `crowdsec_1.8.1.msi`. |
-| [directx-np](../bucket/directx-np.json) | Runs the extracted `DXSETUP.exe`; installs DirectX runtime components into Windows. |
-| [dlman](../bucket/dlman.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [ecopaste](../bucket/ecopaste.json) | Runs the NSIS setup with silent/update arguments and `/D=$dir`. |
-| [ecopaste-nightly](../bucket/ecopaste-nightly.json) | Runs the NSIS setup silently with `/D=$dir`. |
-| [edge-drop](../bucket/edge-drop.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [everything-cmdpal](../bucket/everything-cmdpal.json) | Registers an MSIX package with `Add-AppxPackage` for the current user. |
-| [filepilot](../bucket/filepilot.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [fluentstore](../bucket/fluentstore.json) | Runs the official interactive installer; registers an MSIX package and requires trust approval for its signing certificate. |
-| [fxsound](../bucket/fxsound.json) | Runs the official setup/MSI installation. Installs the FxSound virtual audio driver system-wide; elevated install/uninstall is required. |
-| [helixnotes](../bucket/helixnotes.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [imazing-np](../bucket/imazing-np.json) | Runs the vendor setup silently with administrator rights and a directory override. |
-| [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | Runs the K-Lite setup silently; this is a real codec installation, not archive extraction. |
-| [lapis](../bucket/lapis.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [livewallpaper](../bucket/livewallpaper.json) | Runs the Inno Setup installer silently with elevated rights and `/DIR=$dir`. |
-| [mumuplayer](../bucket/mumuplayer.json) | Executes the MuMuPlayer vendor installation workflow (`install_prepare` and `commit`); administrator rights are required. **Manifest issue:** the current file failed JSON parsing during this review because its `pre_install` value contains literal line breaks inside a JSON string; fix the JSON before relying on this manifest. |
-| [mumuplayer-android15](../bucket/mumuplayer-android15.json) | Executes the Android 15 engine setup workflow and modifies the existing MuMuPlayer installation directory. |
-| [mumuplayer-online](../bucket/mumuplayer-online.json) | Runs the MuMuPlayer setup silently with elevated rights. |
-| [nightlight-launcher](../bucket/nightlight-launcher.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [npcap-np](../bucket/npcap-np.json) | Runs the Npcap setup through AutoHotkey with elevation; installs a network driver/component. |
-| [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json) | Runs the extracted NVIDIA setup silently with elevation; installs the display driver. |
-| [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | Runs the extracted NVIDIA setup silently with elevation; installs the notebook display driver. |
-| [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | Runs Office Deployment Tool with the configuration XML to install Microsoft 365/Office. |
-| [onedrive-np](../bucket/onedrive-np.json) | Runs Microsoft's installer with `/allusers`; installs OneDrive for all users. |
-| [open-shell](../bucket/open-shell.json) | Runs the Open-Shell setup with Windows Installer quiet arguments. |
-| [open-shell-nightly](../bucket/open-shell-nightly.json) | Runs the Open-Shell nightly setup with Windows Installer quiet arguments. |
-| [openedr](../bucket/openedr.json) | Runs `msiexec /i`; installs the OpenEDR endpoint agent through Windows Installer. |
-| [openglass](../bucket/openglass.json) | Runs the signed setup with Inno Setup silent-install arguments. |
-| [openzfs-np](../bucket/openzfs-np.json) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
-| [poweriso](../bucket/poweriso.json) | Runs the PowerISO setup silently with `/S`. |
-| [powershell-np](../bucket/powershell-np.json) | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
-| [recordly](../bucket/recordly.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [sandboxie-plus](../bucket/sandboxie-plus.json) | Runs the Sandboxie setup silently; installs system integration including its driver/service components. |
-| [scanner](../bucket/scanner.json) | Registers the MSIX package with `Add-AppxPackage` for the current user. |
-| [screenbox](../bucket/screenbox.json) | Registers the MSIX bundle and its APPX dependencies with `Add-AppxPackage` for the current user. |
-| [smol](../bucket/smol.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [sofast](../bucket/sofast.json) | Runs the vendor setup with `/S /D=$dir`; WebView2 remains an external runtime dependency. |
-| [spacedrive](../bucket/spacedrive.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [sucrose](../bucket/sucrose.json) | Runs the official per-user bundle installer; installs under `%LOCALAPPDATA%\Sucrose` and creates shortcuts. |
-| [sucrose-nightly](../bucket/sucrose-nightly.json) | Runs the official per-user bundle installer; installs under `%LOCALAPPDATA%\Sucrose` and creates shortcuts. |
-| [tockler](../bucket/tockler.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [ttf-stix2](../bucket/ttf-stix2.json) | Copies fonts into the Windows Fonts directory and registers them in the Fonts registry key. Scope is per-user or all-users depending on the Scoop install mode. |
-| [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | Runs the WiFiman vendor setup with `/S /D=$dir`. |
-| [wincux](../bucket/wincux.json) | Runs the vendor setup with `/S /D=$dir`. |
-| [yt-dlp-gui](../bucket/yt-dlp-gui.json) | Extracts the MSI payload, then registers the `ytdlp-gui://` URL protocol under `HKCU\Software\Classes`; the registry entry points to the Scoop app path. |
-| [znote](../bucket/znote.json) | Runs the vendor setup with `/S /D=$dir`. |
+The installer type describes the package or setup technology used by the manifest. Labels marked *inferred* are based on the declared setup switches and are not a claim that the installer binary was independently fingerprinted. Where the engine is unknown, the table says so rather than guessing.
+
+| Manifest | Installer type | Install behavior / scope |
+|---|---|---|
+| [agaric](../bucket/agaric.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the NSIS setup with silent install arguments and `/D=$dir`. |
+| [air-server-np](../bucket/air-server-np.json) | MSI | Runs `msiexec /i` with elevation; installs through Windows Installer. |
+| [another](../bucket/another.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /NS /D=$dir`. |
+| [belarc-advisor](../bucket/belarc-advisor.json) | Vendor EXE setup (engine unverified) | Runs the vendor installer; `/D=$dir` is intended to redirect its installation, but the manifest notes that this behavior has not been independently confirmed. |
+| [biscuit](../bucket/biscuit.json) | NSIS EXE | Runs the NSIS setup silently from `pre_install`; it is not extracted as an archive. |
+| [clustercut](../bucket/clustercut.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /NS /D=$dir`. |
+| [coodesker-github](../bucket/coodesker-github.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [crowdsec](../bucket/crowdsec.json) | MSI | Runs the MSI installer silently. **Manifest issue:** the download is 1.8.2 but `installer.file` currently names `crowdsec_1.8.1.msi`. |
+| [directx-np](../bucket/directx-np.json) | Self-extracting EXE + DXSETUP | Runs the extracted `DXSETUP.exe`; installs DirectX runtime components into Windows. |
+| [dlman](../bucket/dlman.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [ecopaste](../bucket/ecopaste.json) | NSIS EXE | Runs the NSIS setup with silent/update arguments and `/D=$dir`. |
+| [ecopaste-nightly](../bucket/ecopaste-nightly.json) | NSIS EXE | Runs the NSIS setup silently with `/D=$dir`. |
+| [edge-drop](../bucket/edge-drop.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [everything-cmdpal](../bucket/everything-cmdpal.json) | MSIX | Registers an MSIX package with `Add-AppxPackage` for the current user. |
+| [filepilot](../bucket/filepilot.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [fluentstore](../bucket/fluentstore.json) | EXE bootstrapper + MSIX | Runs the official interactive installer; registers an MSIX package and requires trust approval for its signing certificate. |
+| [fxsound](../bucket/fxsound.json) | EXE bootstrapper + embedded MSI | Runs the official setup/MSI installation. Installs the FxSound virtual audio driver system-wide; elevated install/uninstall is required. |
+| [helixnotes](../bucket/helixnotes.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [imazing-np](../bucket/imazing-np.json) | EXE setup (Inno-style switches; engine not confirmed) | Runs the vendor setup silently with administrator rights and a directory override. |
+| [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | Inno Setup EXE | Runs the K-Lite setup silently; this is a real codec installation, not archive extraction. |
+| [lapis](../bucket/lapis.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [livewallpaper](../bucket/livewallpaper.json) | Inno Setup EXE | Runs the Inno Setup installer silently with elevated rights and `/DIR=$dir`. |
+| [mumuplayer](../bucket/mumuplayer.json) | Vendor-specific EXE installer/orchestrator | Executes the MuMuPlayer vendor installation workflow (`install_prepare` and `commit`); administrator rights are required. **Manifest issue:** the current file failed JSON parsing during this review because its `pre_install` value contains literal line breaks inside a JSON string; fix the JSON before relying on this manifest. |
+| [mumuplayer-android15](../bucket/mumuplayer-android15.json) | Vendor-specific EXE component installer | Executes the Android 15 engine setup workflow and modifies the existing MuMuPlayer installation directory. |
+| [mumuplayer-online](../bucket/mumuplayer-online.json) | Vendor EXE silent installer (engine unverified) | Runs the MuMuPlayer setup silently with elevated rights. |
+| [nightlight-launcher](../bucket/nightlight-launcher.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [npcap-np](../bucket/npcap-np.json) | Npcap EXE driver installer (engine unspecified) | Runs the Npcap setup through AutoHotkey with elevation; installs a network driver/component. |
+| [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json) | NVIDIA self-extracting EXE + setup.exe | Runs the extracted NVIDIA setup silently with elevation; installs the display driver. |
+| [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | NVIDIA self-extracting EXE + setup.exe | Runs the extracted NVIDIA setup silently with elevation; installs the notebook display driver. |
+| [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | Office Deployment Tool (self-extracting EXE + setup.exe) | Runs Office Deployment Tool with the configuration XML to install Microsoft 365/Office. |
+| [onedrive-np](../bucket/onedrive-np.json) | Microsoft OneDrive setup EXE | Runs Microsoft's installer with `/allusers`; installs OneDrive for all users. |
+| [open-shell](../bucket/open-shell.json) | Open-Shell EXE bootstrapper (MSI-based) | Runs the Open-Shell setup with Windows Installer quiet arguments. |
+| [open-shell-nightly](../bucket/open-shell-nightly.json) | Open-Shell EXE bootstrapper (MSI-based) | Runs the Open-Shell nightly setup with Windows Installer quiet arguments. |
+| [openedr](../bucket/openedr.json) | MSI | Runs `msiexec /i`; installs the OpenEDR endpoint agent through Windows Installer. |
+| [openglass](../bucket/openglass.json) | Inno Setup EXE | Runs the signed setup with Inno Setup silent-install arguments. |
+| [openzfs-np](../bucket/openzfs-np.json) | Inno Setup-style EXE (based on switches) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
+| [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
+| [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
+| [recordly](../bucket/recordly.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [sandboxie-plus](../bucket/sandboxie-plus.json) | Inno Setup EXE | Runs the Sandboxie setup silently; installs system integration including its driver/service components. |
+| [scanner](../bucket/scanner.json) | MSIX | Registers the MSIX package with `Add-AppxPackage` for the current user. |
+| [screenbox](../bucket/screenbox.json) | MSIXBundle + APPX dependencies | Registers the MSIX bundle and its APPX dependencies with `Add-AppxPackage` for the current user. |
+| [smol](../bucket/smol.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [sofast](../bucket/sofast.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`; WebView2 remains an external runtime dependency. |
+| [spacedrive](../bucket/spacedrive.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [sucrose](../bucket/sucrose.json) | .NET bundle EXE installer | Runs the official per-user bundle installer; installs under `%LOCALAPPDATA%\Sucrose` and creates shortcuts. |
+| [sucrose-nightly](../bucket/sucrose-nightly.json) | .NET bundle EXE installer | Runs the official per-user bundle installer; installs under `%LOCALAPPDATA%\Sucrose` and creates shortcuts. |
+| [tockler](../bucket/tockler.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [ttf-stix2](../bucket/ttf-stix2.json) | ZIP font files + Windows font-registration script | Copies fonts into the Windows Fonts directory and registers them in the Fonts registry key. Scope is per-user or all-users depending on the Scoop install mode. |
+| [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | Vendor EXE setup (NSIS-style switches; engine unverified) | Runs the WiFiman vendor setup with `/S /D=$dir`. |
+| [wincux](../bucket/wincux.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
+| [yt-dlp-gui](../bucket/yt-dlp-gui.json) | MSI payload extraction + URL protocol registration | Extracts the MSI payload, then registers the `ytdlp-gui://` URL protocol under `HKCU\Software\Classes`; the registry entry points to the Scoop app path. |
+| [znote](../bucket/znote.json) | EXE setup (NSIS-style switches; engine inferred) | Runs the vendor setup with `/S /D=$dir`. |
 
 ## Review before classifying
 
