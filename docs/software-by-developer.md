@@ -4,23 +4,23 @@ This catalog covers the requested vendor pages and links each included program t
 
 ## Developer Index
 
-| Developer / Suite | Manifests | Type | Link |
-| --- | ---: | --- | --- |
-| Aurelitec Suite | 5 | Publisher cross-list | [View](categories.md#aurelitec-suite) |
-| Auslogics Suite | 15 | Publisher cross-list | [View](categories.md#auslogics-suite) |
-| ChemTable Suite | 5 | Publisher cross-list | [View](categories.md#chemtable-suite) |
-| ComputerSluggish Suite | 1 | Publisher cross-list | [View](categories.md#computersluggish-suite) |
-| EFSoftware Suite | 13 | Publisher cross-list | [View](categories.md#efsoftware-suite) |
-| Eric Zimmerman Suite | 31 | Publisher cross-list | [View](categories.md#eric-zimmerman-suite) |
-| Funk.eu Suite | 7 | Publisher cross-list | [View](categories.md#funk-eu-suite) |
-| GRC Suite | 18 | Publisher cross-list | [View](categories.md#grc-suite) |
-| MiTeC Suite | 22 | Publisher cross-list | [View](categories.md#mitec-suite) |
-| Neuber Suite | 2 | Publisher cross-list | [View](categories.md#neuber-suite) |
-| Rizonesoft Suite | 14 | Publisher cross-list | [View](categories.md#rizonesoft-suite) |
-| SoftwareOK Suite | 81 | Publisher cross-list | [View](categories.md#softwareok-suite) |
-| Sordum Suite | 63 | Publisher cross-list | [View](categories.md#sordum-suite) |
-| Türkaysoft Suite | 8 | Publisher cross-list | [View](categories.md#turkaysoft-suite) |
-| Vovsoft Suite | 174 | Publisher cross-list | [View](categories.md#vovsoft-suite) |
+| Developer / Suite | Manifests | Link |
+| --- | ---: | --- |
+| Aurelitec Suite | 5 | [View](categories.md#aurelitec-suite) |
+| Auslogics Suite | 15 | [View](categories.md#auslogics-suite) |
+| ChemTable Suite | 5 | [View](categories.md#chemtable-suite) |
+| ComputerSluggish Suite | 1 | [View](categories.md#computersluggish-suite) |
+| EFSoftware Suite | 13 | [View](categories.md#efsoftware-suite) |
+| Eric Zimmerman Suite | 31 | [View](categories.md#eric-zimmerman-suite) |
+| Funk.eu Suite | 7 | [View](categories.md#funk-eu-suite) |
+| GRC Suite | 18 | [View](categories.md#grc-suite) |
+| MiTeC Suite | 22 | [View](categories.md#mitec-suite) |
+| Neuber Suite | 2 | [View](categories.md#neuber-suite) |
+| Rizonesoft Suite | 14 | [View](categories.md#rizonesoft-suite) |
+| SoftwareOK Suite | 81 | [View](categories.md#softwareok-suite) |
+| Sordum Suite | 63 | [View](categories.md#sordum-suite) |
+| Türkaysoft Suite | 8 | [View](categories.md#turkaysoft-suite) |
+| Vovsoft Suite | 174 | [View](categories.md#vovsoft-suite) |
 
 ## Aurelitec
 
