@@ -54,6 +54,19 @@ $queueBlock = Replace-Once -Text $queueBlock -Old '$Queue | ForEach-Object {' -N
 $queueBlock = Replace-Once -Text $queueBlock -Old '    $name, $json, $file = $_' -New '' -Label 'queued manifest unpack'
 $queueBlock = Replace-Once -Text $queueBlock -Old '            return' -New '            continue' -Label 'skip malformed checkver manifest'
 $queueBlock = Replace-Once -Text $queueBlock -Old '$in_progress++' -New '$checkverScheduler.InProgress++' -Label 'in-progress increment'
+$githubRatePacing = @'
+    if ($url -match '(?i)^https://api\.github\.com/') {
+        if ($null -ne $checkverScheduler.LastGitHubRequestUtc) {
+            $elapsedMilliseconds = ([DateTime]::UtcNow - $checkverScheduler.LastGitHubRequestUtc).TotalMilliseconds
+            $waitMilliseconds = [int][Math]::Ceiling($checkverScheduler.GitHubRequestIntervalMilliseconds - $elapsedMilliseconds)
+            if ($waitMilliseconds -gt 0) {
+                Start-Sleep -Milliseconds $waitMilliseconds
+            }
+        }
+        $checkverScheduler.LastGitHubRequestUtc = [DateTime]::UtcNow
+    }
+'@
+$queueBlock = Replace-Once -Text $queueBlock -Old '    $wc.DownloadDataAsync($url, $state)' -New ($githubRatePacing + $newLine + '    $wc.DownloadDataAsync($url, $state)') -Label 'GitHub API request pacing'
 $queueBlock = $queueBlock.TrimEnd() + $newLine + '}'
 
 $schedulerInit = @'
@@ -61,6 +74,8 @@ $checkverScheduler = [PSCustomObject]@{
     Queue = [System.Collections.Generic.Queue[object]]::new()
     InProgress = 0
     MaxConcurrent = 20
+    LastGitHubRequestUtc = $null
+    GitHubRequestIntervalMilliseconds = 100
 }
 foreach ($item in $Queue) {
     $checkverScheduler.Queue.Enqueue($item)
@@ -104,6 +119,8 @@ $source = $source.Substring(0, $lastBrace) + $finallyBlock + $newLine + $source.
 
 $required = @(
     'MaxConcurrent = 20',
+    'GitHubRequestIntervalMilliseconds = 100',
+    '$checkverScheduler.LastGitHubRequestUtc = [DateTime]::UtcNow',
     'function Start-CheckverRequests',
     '$state = $ev.SourceEventArgs.UserState',
     '$wc = $state.webclient',
@@ -127,4 +144,5 @@ if ($source.Contains('while ($in_progress -gt 0)') -or
 
 [System.IO.File]::WriteAllText($checkverPath, $source, [System.Text.UTF8Encoding]::new($false))
 Write-Host "Patched Scoop checkver.ps1: maximum $maxConcurrentRequests concurrent requests."
+Write-Host 'GitHub API request start interval: 100 ms (maximum 10 starts per second).'
 Write-Host "Patched file: $checkverPath"
