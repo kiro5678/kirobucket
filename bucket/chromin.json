@@ -29,9 +29,9 @@
     "persist": "Chromin.ini",
     "checkver": {
         "url": "https://rizonesoft.com/gdm_downloads/chromin/",
-        "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d+\\.\\d+\\.\\d+\\.(?<matchVersion>\\d+))"
+        "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d+\\.\\d+\\.\\d+\\.(?<build>\\d+))"
     },
     "autoupdate": {
-        "url": "https://downloads.rizonesoft.com/Firemin/Chromin_$matchMatchVersion_Setup.exe#/chromin.exe"
+        "url": "https://downloads.rizonesoft.com/Firemin/Chromin_$matchBuild_Setup.exe#/chromin.exe"
     }
 }
