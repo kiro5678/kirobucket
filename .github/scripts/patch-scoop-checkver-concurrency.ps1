@@ -95,6 +95,9 @@ if ($lastBrace -lt 0) {
     throw 'Could not find the end of the Checkver event loop. No patch was written.'
 }
 $finallyBlock = @'
+    } catch {
+        error "$app checkver processing failed: $($_.Exception.Message)"
+        Write-Host $_.ScriptStackTrace -ForegroundColor DarkRed
     } finally {
         Unregister-Event -SourceIdentifier $ev.SourceIdentifier -ErrorAction SilentlyContinue
         if ($state.webclient) {
@@ -112,7 +115,7 @@ $required = @(
     '$wc = $state.webclient',
     'while ($checkverScheduler.InProgress -gt 0)',
     'Start-CheckverRequests',
-    'Unregister-Event -SourceIdentifier $ev.SourceIdentifier'
+    'Unregister-Event -SourceIdentifier $ev.SourceIdentifier', 'checkver processing failed:'
 )
 foreach ($fragment in $required) {
     if (-not $source.Contains($fragment)) {
