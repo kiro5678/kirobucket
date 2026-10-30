@@ -109,14 +109,19 @@ $required = @(
     '$wc = $state.webclient',
     'while ($checkverScheduler.InProgress -gt 0)',
     'Start-CheckverRequests',
-    'Unregister-Event -SourceIdentifier $ev.SourceIdentifier', 'checkver processing failed:'
+    'Unregister-Event -SourceIdentifier $ev.SourceIdentifier',
+    'checkver processing failed:'
 )
 foreach ($fragment in $required) {
     if (-not $source.Contains($fragment)) {
         throw "Post-patch verification failed: missing '$fragment'."
     }
 }
-if ($source.Contains('while ($in_progress -gt 0)') -or $source.Contains('$Queue | ForEach-Object {')) {
+if ($source.Contains('while ($in_progress -gt 0)') -or
+    $source.Contains('$Queue | ForEach-Object {') -or
+    $source.Contains('$in_progress++') -or
+    $source.Contains('$in_progress--')
+) {
     throw 'Post-patch verification failed: the unbounded download loop is still present.'
 }
 
