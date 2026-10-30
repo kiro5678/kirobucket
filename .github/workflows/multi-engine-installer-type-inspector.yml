@@ -1,0 +1,503 @@
+name: Multi-Engine Installer Type Inspector
+
+on:
+  workflow_dispatch:
+    inputs:
+      installer_url:
+        description: "Direct HTTPS URL to the installer or executable to inspect"
+        required: true
+        type: string
+      installer_name:
+        description: "Optional local filename (for example setup.exe); leave empty to use the URL filename"
+        required: false
+        default: ""
+        type: string
+      expected_sha256:
+        description: "Optional expected SHA-256 checksum (64 hexadecimal characters)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download and statically inspect target
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Validate and download target file
+        id: target
+        shell: pwsh
+        env:
+          INSTALLER_URL: ${{ inputs.installer_url }}
+          INSTALLER_NAME: ${{ inputs.installer_name }}
+          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          try {
+            $uri = [System.Uri]::new($env:INSTALLER_URL)
+          } catch {
+            throw "installer_url is not a valid absolute URL."
+          }
+
+          if (-not $uri.IsAbsoluteUri -or $uri.Scheme -ne "https") {
+            throw "Only absolute HTTPS download URLs are accepted."
+          }
+          if (-not [string]::IsNullOrWhiteSpace($uri.UserInfo)) {
+            throw "URLs containing embedded username/password credentials are not accepted."
+          }
+
+          $hostName = $uri.DnsSafeHost.TrimEnd(".").ToLowerInvariant()
+          if ($hostName -eq "localhost" -or $hostName.EndsWith(".localhost") -or $hostName.EndsWith(".local")) {
+            throw "Localhost and .local hosts are not accepted."
+          }
+          $parsedAddress = $null
+          if ([System.Net.IPAddress]::TryParse($hostName, [ref]$parsedAddress)) {
+            throw "Use a DNS hostname instead of an IP-literal URL."
+          }
+
+          $expectedHash = $env:EXPECTED_SHA256.Trim()
+          if ($expectedHash -and $expectedHash -notmatch '^[0-9a-fA-F]{64}$') {
+            throw "expected_sha256 must be exactly 64 hexadecimal characters."
+          }
+
+          $nameInput = $env:INSTALLER_NAME.Trim()
+          if ($nameInput) {
+            if ([System.IO.Path]::GetFileName($nameInput) -ne $nameInput -or
+                $nameInput -match '[<>:"/\\|?*\x00-\x1F]' -or
+                $nameInput -match '[. ]$' -or
+                $nameInput -in @(".", "..")) {
+              throw "installer_name must be a filename only, without path separators or invalid filename characters."
+            }
+            $safeName = $nameInput
+          } else {
+            $safeName = [System.IO.Path]::GetFileName([System.Uri]::UnescapeDataString($uri.AbsolutePath))
+            if ([string]::IsNullOrWhiteSpace($safeName)) { $safeName = "installer.bin" }
+            $safeName = $safeName -replace '[<>:"/\\|?*\x00-\x1F]', '_'
+            $safeName = $safeName.TrimEnd(".", " ")
+            if ([string]::IsNullOrWhiteSpace($safeName) -or $safeName -in @(".", "..")) {
+              $safeName = "installer.bin"
+            }
+          }
+
+          $workDir = Join-Path $env:RUNNER_TEMP "detect-it-easy-api"
+          New-Item -ItemType Directory -Path $workDir -Force | Out-Null
+          $installer = Join-Path $workDir $safeName
+
+          try {
+            Invoke-WebRequest -Uri $uri.AbsoluteUri -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
+          } catch {
+            throw "Download failed. Confirm that the HTTPS URL is a direct file download and is reachable. Error type: $($_.Exception.GetType().FullName)"
+          }
+
+          if (-not (Test-Path -LiteralPath $installer -PathType Leaf)) {
+            throw "The download did not create a local file."
+          }
+          $item = Get-Item -LiteralPath $installer
+          if ($item.Length -le 0) { throw "The downloaded file is empty." }
+          if ($item.Length -gt 1610612736) { throw "The downloaded file exceeds the 1.5 GiB safety limit." }
+
+          $actualHash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($expectedHash -and $actualHash -ine $expectedHash.ToLowerInvariant()) {
+            throw "SHA-256 mismatch. Expected $expectedHash, received $actualHash."
+          }
+
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+          $sourceHost = $uri.Host
+          $signatureSubject = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { "(no signer certificate)" }
+
+          $metadata = @(
+            "Target file inspection"
+            "======================"
+            "Source host: $sourceHost"
+            "Local filename: $safeName"
+            "File size: $($item.Length) bytes"
+            "SHA-256: $actualHash"
+            "Expected SHA-256 supplied: $([bool]$expectedHash)"
+            "Authenticode status: $($signature.Status)"
+            "Signer: $signatureSubject"
+            "Product name: $($versionInfo.ProductName)"
+            "File description: $($versionInfo.FileDescription)"
+            "File version: $($versionInfo.FileVersion)"
+            ""
+            "Safety note: the downloaded target was not executed."
+          )
+          $metadata | Set-Content -LiteralPath (Join-Path $workDir "target-metadata.txt") -Encoding utf8
+          $metadata | ForEach-Object { Write-Output $_ }
+
+          "installer_path=$installer" >> $env:GITHUB_OUTPUT
+          "installer_name=$safeName" >> $env:GITHUB_OUTPUT
+          "sha256=$actualHash" >> $env:GITHUB_OUTPUT
+          "source_host=$sourceHost" >> $env:GITHUB_OUTPUT
+
+          @(
+            "## Target file metadata"
+            ""
+            "- **Source host:** $sourceHost"
+            "- **Filename:** $safeName"
+            "- **Size:** $($item.Length) bytes"
+            "- **SHA-256:** $actualHash"
+            "- **Authenticode:** $($signature.Status)"
+            "- **Signer:** $signatureSubject"
+            "- **Product:** $($versionInfo.ProductName)"
+            "- **Description:** $($versionInfo.FileDescription)"
+            "- **File version:** $($versionInfo.FileVersion)"
+            ""
+            "The target file was downloaded for static analysis and was not executed."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Detect container formats and installer-family signatures
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          INSTALLER_NAME: ${{ steps.target.outputs.installer_name }}
+          TARGET_SHA256: ${{ steps.target.outputs.sha256 }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $file = $env:INSTALLER_PATH
+          $name = $env:INSTALLER_NAME
+          $extension = [System.IO.Path]::GetExtension($name).ToLowerInvariant()
+          $length = (Get-Item -LiteralPath $file).Length
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add("Static installer-family and container analysis")
+          $report.Add("=============================================")
+          $report.Add("Filename: $name")
+          $report.Add("SHA-256: $env:TARGET_SHA256")
+          $report.Add("Extension: $extension")
+          $report.Add("Size: $length bytes")
+          $report.Add("")
+
+          $header = [byte[]]::new(4096)
+          $stream = [System.IO.File]::OpenRead($file)
+          try {
+            $headerRead = $stream.Read($header, 0, $header.Length)
+            $headHex = if ($headerRead -ge 8) { [System.BitConverter]::ToString($header, 0, 8).Replace("-", "") } else { "" }
+            $asciiHeader = [System.Text.Encoding]::ASCII.GetString($header, 0, $headerRead)
+            $report.Add("First 8 bytes: $headHex")
+
+            if ($headerRead -ge 2 -and $header[0] -eq 0x4D -and $header[1] -eq 0x5A) {
+              $peOffset = -1
+              if ($headerRead -ge 64) { $peOffset = [System.BitConverter]::ToInt32($header, 0x3C) }
+              if ($peOffset -ge 0 -and $peOffset -le ($length - 4)) {
+                $stream.Position = $peOffset
+                $peSignature = [byte[]]::new(4)
+                $peRead = $stream.Read($peSignature, 0, 4)
+                if ($peRead -eq 4 -and $peSignature[0] -eq 0x50 -and $peSignature[1] -eq 0x45 -and $peSignature[2] -eq 0 -and $peSignature[3] -eq 0) {
+                  $report.Add("Container/format: Windows PE executable (MZ + PE signature)")
+                } else {
+                  $report.Add("Container/format: MZ file; valid PE signature was not confirmed")
+                }
+              } else {
+                $report.Add("Container/format: MZ file; PE header offset could not be validated")
+              }
+            } elseif ($headHex.StartsWith("D0CF11E0A1B11AE1")) {
+              $report.Add("Container/format: OLE Compound File (MSI/MSP/MSM-family candidate; signature alone is not conclusive)")
+            } elseif ($asciiHeader.StartsWith("MSCF")) {
+              $report.Add("Container/format: Microsoft Cabinet (CAB)")
+            } elseif ($headHex.StartsWith("504B0304") -or $headHex.StartsWith("504B0506") -or $headHex.StartsWith("504B0708")) {
+              $report.Add("Container/format: ZIP-compatible archive")
+            } elseif ($headHex.StartsWith("377ABCAF271C")) {
+              $report.Add("Container/format: 7-Zip archive")
+            } elseif ($headHex.StartsWith("526172211A0700") -or $headHex.StartsWith("526172211A070100")) {
+              $report.Add("Container/format: RAR archive")
+            } elseif ($headHex.StartsWith("1F8B")) {
+              $report.Add("Container/format: gzip stream")
+            } else {
+              $report.Add("Container/format: no recognized leading signature")
+            }
+            $stream.Position = 0
+          } finally {
+            $stream.Dispose()
+          }
+
+          if ($extension -in @(".msi", ".msp", ".msm")) {
+            $report.Add("")
+            $report.Add("Windows Installer package inspection:")
+            try {
+              $windowsInstaller = New-Object -ComObject WindowsInstaller.Installer
+              $database = $windowsInstaller.OpenDatabase($file, 0)
+              $report.Add("Windows Installer COM opened the file in read-only mode.")
+              if ($extension -eq ".msi") {
+                foreach ($propertyName in @("ProductName", "ProductVersion", "Manufacturer", "ProductCode")) {
+                  try {
+                    $quote = [string][char]96
+                    $query = "SELECT $quote" + "Value" + "$quote FROM $quote" + "Property" + "$quote WHERE $quote" + "Property" + "$quote = '$propertyName'"
+                    $view = $database.OpenView($query)
+                    $view.Execute()
+                    $record = $view.Fetch()
+                    if ($null -ne $record) {
+                      $value = $record.StringData(1)
+                      if (-not [string]::IsNullOrWhiteSpace($value)) {
+                        $report.Add("MSI " + $propertyName + ": " + $value)
+                      }
+                    }
+                    $view.Close()
+                  } catch {
+                    $report.Add("MSI property $propertyName was unavailable.")
+                  }
+                }
+              }
+            } catch {
+              $report.Add("Windows Installer COM could not parse this package; extension alone is not treated as confirmation.")
+            }
+          }
+
+          if ($extension -in @(".msix", ".appx", ".msixbundle", ".appxbundle") -or $headHex.StartsWith("504B0304")) {
+            try {
+              Add-Type -AssemblyName System.IO.Compression.FileSystem
+              $zip = [System.IO.Compression.ZipFile]::OpenRead($file)
+              try {
+                $entryNames = @($zip.Entries | ForEach-Object { $_.FullName })
+                if ($entryNames -contains "AppxManifest.xml") {
+                  $report.Add("Package evidence: ZIP contains AppxManifest.xml (MSIX/APPX package candidate).")
+                }
+                if ($entryNames -contains "AppxBlockMap.xml") {
+                  $report.Add("Package evidence: ZIP contains AppxBlockMap.xml.")
+                }
+                if ($entryNames -contains "AppxMetadata/AppxBundleManifest.xml") {
+                  $report.Add("Package evidence: ZIP contains AppxMetadata/AppxBundleManifest.xml (APPX/MSIX bundle candidate).")
+                }
+              } finally {
+                $zip.Dispose()
+              }
+            } catch {
+              $report.Add("ZIP central-directory inspection was not applicable or failed; this is not an installation test.")
+            }
+          }
+
+          $markerLabels = @{
+            InnoSetup = "Inno Setup"
+            NSIS = "NSIS (Nullsoft Install System)"
+            WiXBurn = "WiX Burn bootstrapper"
+            InstallShield = "InstallShield"
+            AdvancedInstaller = "Advanced Installer / Caphyon"
+            InstallAware = "InstallAware"
+            InstallAnywhere = "InstallAnywhere / Zero G"
+            Wise = "Wise installer"
+            InstallForge = "InstallForge"
+            SetupFactory = "Setup Factory"
+            BitRock = "BitRock / InstallBuilder"
+            QtInstallerFramework = "Qt Installer Framework"
+            Squirrel = "Squirrel installer/update framework"
+            SevenZipSFX = "7-Zip SFX"
+            ActualInstaller = "Actual Installer"
+            Clickteam = "Clickteam Install Creator"
+          }
+          $signaturePattern = '(?<InnoSetup>Inno Setup Setup Data|Inno Setup)|(?<NSIS>NullsoftInst|Nullsoft Install System)|(?<WiXBurn>WixBundle|WixBurn)|(?<InstallShield>InstallShield)|(?<AdvancedInstaller>Advanced Installer|Caphyon)|(?<InstallAware>InstallAware)|(?<InstallAnywhere>InstallAnywhere|Zero G)|(?<Wise>Wise Installation Wizard|Wise Installer)|(?<InstallForge>InstallForge)|(?<SetupFactory>Setup Factory)|(?<BitRock>BitRock|InstallBuilder)|(?<QtInstallerFramework>Qt Installer Framework|QtIFW)|(?<Squirrel>SquirrelSetup|Squirrel\.Windows)|(?<SevenZipSFX>7zS\.sfx|7-Zip SFX)|(?<ActualInstaller>Actual Installer)|(?<Clickteam>Install Creator)'
+          $signatureRegex = [System.Text.RegularExpressions.Regex]::new($signaturePattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+          $markerHits = [System.Collections.Generic.List[string]]::new()
+          $chunkSize = 4MB
+          $overlapSize = 512
+          $buffer = [byte[]]::new($chunkSize + $overlapSize)
+          $scanStream = [System.IO.File]::OpenRead($file)
+          try {
+            $carry = 0
+            while ($true) {
+              $readCount = $scanStream.Read($buffer, $carry, $chunkSize)
+              if ($readCount -eq 0) { break }
+              $totalCount = $carry + $readCount
+              $asciiText = [System.Text.Encoding]::ASCII.GetString($buffer, 0, $totalCount)
+              $unicodeLength = $totalCount - ($totalCount % 2)
+              $unicodeText = [System.Text.Encoding]::Unicode.GetString($buffer, 0, $unicodeLength).Replace([string][char]0, "")
+
+              foreach ($textBlock in @($asciiText, $unicodeText)) {
+                foreach ($match in $signatureRegex.Matches($textBlock)) {
+                  foreach ($groupName in $markerLabels.Keys) {
+                    if ($match.Groups[$groupName].Success -and -not $markerHits.Contains($markerLabels[$groupName])) {
+                      $markerHits.Add($markerLabels[$groupName])
+                    }
+                  }
+                }
+              }
+
+              $carry = [Math]::Min($overlapSize, $totalCount)
+              [System.Array]::Copy($buffer, $totalCount - $carry, $buffer, 0, $carry)
+            }
+          } finally {
+            $scanStream.Dispose()
+          }
+
+          $report.Add("")
+          $report.Add("Installer-family string markers (heuristic, not proof):")
+          if ($markerHits.Count -gt 0) {
+            foreach ($marker in $markerHits) { $report.Add("- $marker") }
+          } else {
+            $report.Add("No recognized installer-family markers found by this string scan.")
+          }
+
+          $report.Add("")
+          $report.Add("Interpretation:")
+          $report.Add("- Treat container signatures and MSI COM metadata as stronger format evidence than a filename extension.")
+          $report.Add("- Treat installer-family string markers as candidates that should be compared with Detect It Easy results; an installer may contain unrelated embedded strings.")
+          $report.Add("- An EXE, ZIP/SFX signature, or extraction-friendly structure does not by itself prove that an application is portable.")
+          $report.Add("- The target file was not executed and no payload was extracted.")
+
+          $reportPath = Join-Path (Split-Path -Parent $file) "static-signature-report.txt"
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Download latest Detect It Easy release through GitHub API
+        id: die
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $apiUrl = "https://api.github.com/repos/horsicq/DIE-engine/releases/latest"
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            "User-Agent" = "kirobucket-detect-it-easy-api"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
+            $headers.Authorization = "Bearer $env:GITHUB_TOKEN"
+          }
+
+          $release = $null
+          for ($attempt = 1; $attempt -le 4; $attempt++) {
+            try {
+              $release = Invoke-RestMethod -Uri $apiUrl -Headers $headers -TimeoutSec 45 -ErrorAction Stop
+              break
+            } catch {
+              $statusCode = $null
+              if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+                $statusCode = [int]$_.Exception.Response.StatusCode
+              }
+              Write-Warning "Detect It Easy release API attempt $attempt failed (HTTP $statusCode): $($_.Exception.GetType().FullName)"
+              if ($attempt -eq 4) { throw "Could not retrieve the latest Detect It Easy release after four attempts." }
+              Start-Sleep -Seconds ([Math]::Min(2 * $attempt, 8))
+            }
+          }
+          if (-not $release) { throw "GitHub did not return the latest Detect It Easy release." }
+
+          $asset = $release.assets |
+            Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } |
+            Select-Object -First 1
+          if (-not $asset) {
+            throw "Could not find a Windows x64 portable ZIP in Detect It Easy release $($release.tag_name)."
+          }
+
+          $workDir = Join-Path $env:RUNNER_TEMP "detect-it-easy-api"
+          $zip = Join-Path $workDir $asset.name
+          $toolDir = Join-Path $workDir "die-tool"
+          try {
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip -MaximumRedirection 10 -TimeoutSec 300 -ErrorAction Stop
+          } catch {
+            throw "Could not download the Detect It Easy release asset. Error type: $($_.Exception.GetType().FullName)"
+          }
+
+          $archive = Get-Item -LiteralPath $zip
+          if ($archive.Length -lt 100000) {
+            throw "Detect It Easy archive is unexpectedly small ($($archive.Length) bytes)."
+          }
+          $stream = [System.IO.File]::OpenRead($zip)
+          try {
+            $signatureBytes = [byte[]]::new(2)
+            $bytesRead = $stream.Read($signatureBytes, 0, 2)
+          } finally {
+            $stream.Dispose()
+          }
+          if ($bytesRead -ne 2 -or $signatureBytes[0] -ne 0x50 -or $signatureBytes[1] -ne 0x4B) {
+            throw "The Detect It Easy download does not have a ZIP header."
+          }
+
+          if ($asset.digest -match '^sha256:(?<expected>[0-9a-fA-F]{64})$') {
+            $actualDigest = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash
+            if ($actualDigest -ine $Matches.expected) {
+              throw "Detect It Easy archive SHA-256 mismatch. Expected $($Matches.expected), received $actualDigest."
+            }
+            Write-Output "Detect It Easy archive SHA-256 verified: $actualDigest"
+          } else {
+            Write-Warning "GitHub did not provide a SHA-256 digest for this release asset; ZIP structure was checked, but publisher checksum verification was unavailable."
+          }
+
+          Expand-Archive -LiteralPath $zip -DestinationPath $toolDir -Force
+          $diec = Get-ChildItem -LiteralPath $toolDir -Filter "diec.exe" -Recurse -File | Select-Object -First 1
+          if (-not $diec) { throw "diec.exe was not found in the portable release archive." }
+
+          Write-Output "Detect It Easy release: $($release.tag_name)"
+          "release_tag=$($release.tag_name)" >> $env:GITHUB_OUTPUT
+          "diec_path=$($diec.FullName)" >> $env:GITHUB_OUTPUT
+
+          @(
+            ""
+            "## Detect It Easy tool"
+            ""
+            "- **Release:** $($release.tag_name)"
+            "- **Asset:** $($asset.name)"
+            "- **SHA-256 digest:** $($asset.digest)"
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Run static identification
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          INSTALLER_NAME: ${{ steps.target.outputs.installer_name }}
+          INSTALLER_SHA256: ${{ steps.target.outputs.sha256 }}
+          SOURCE_HOST: ${{ steps.target.outputs.source_host }}
+          DIE_RELEASE: ${{ steps.die.outputs.release_tag }}
+          DIEC_PATH: ${{ steps.die.outputs.diec_path }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $workDir = Join-Path $env:RUNNER_TEMP "detect-it-easy-api"
+          $scanLog = Join-Path $workDir "detect-it-easy-scan.txt"
+
+          Write-Output "Detect It Easy release: $env:DIE_RELEASE"
+          Write-Output "Scanning $env:INSTALLER_NAME (SHA-256 $env:INSTALLER_SHA256)"
+          Write-Output "Deep + heuristic static analysis only; the target file will not be executed."
+
+          $scanOutput = @(& $env:DIEC_PATH -d -u -b -a $env:INSTALLER_PATH 2>&1 | ForEach-Object { "$_" })
+          $scanExitCode = $LASTEXITCODE
+          $scanOutput | ForEach-Object { Write-Output $_ }
+
+          if ($scanOutput.Count -eq 0) {
+            throw "Detect It Easy returned no output."
+          }
+          if ($scanExitCode -ne 0) {
+            throw "Detect It Easy exited with code $scanExitCode; treat the scan as failed."
+          }
+
+          $report = @(
+            "Multi-Engine Installer Type Inspector"
+            "============================"
+            "Detect It Easy release: $env:DIE_RELEASE"
+            "Source host: $env:SOURCE_HOST"
+            "Target filename: $env:INSTALLER_NAME"
+            "Target SHA-256: $env:INSTALLER_SHA256"
+            "Scan exit code: $scanExitCode"
+            ""
+            "Detect It Easy output (deep scan + heuristics + verbose mode):"
+            $scanOutput
+            ""
+            "Safety note: the target file was not executed."
+          )
+          $report | Set-Content -LiteralPath $scanLog -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+
+          @(
+            ""
+            "## Detect It Easy identification result"
+            ""
+            "- **Target file:** $env:INSTALLER_NAME"
+            "- **SHA-256:** $env:INSTALLER_SHA256"
+            "- **Detect It Easy release:** $env:DIE_RELEASE"
+            "- **Scan exit code:** $scanExitCode"
+            ""
+            $scanOutput
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: installer-type-inspection-report
+          path: ${{ runner.temp }}/detect-it-easy-api/*.txt
+          if-no-files-found: ignore
