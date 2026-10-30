@@ -60,8 +60,8 @@ jobs:
       - name: Download and classify the completed Excavator job log
         shell: pwsh
         env:
-          GITHUB_TOKEN: \${{ github.token }}
-          EXCAVATE_RESULT: \${{ needs.excavate.result }}
+          GITHUB_TOKEN: ${{ github.token }}
+          EXCAVATE_RESULT: ${{ needs.excavate.result }}
         run: |
           $ErrorActionPreference = 'Stop'
           $reportPath = Join-Path $env:RUNNER_TEMP 'excavator-verification-report.txt'
@@ -201,5 +201,5 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: excavator-verification-report
-          path: \${{ runner.temp }}/excavator-verification-report.txt
+          path: ${{ runner.temp }}/excavator-verification-report.txt
           if-no-files-found: warn
