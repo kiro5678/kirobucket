@@ -1190,8 +1190,7 @@ jobs:
 
                           $cells = [System.Collections.Generic.List[string]]::new()
                           foreach ($cell in (Get-MarkdownCells $row)) { $cells.Add([string]$cell) }
-                          $expectedColumnCount = if ($typeIndex -ge 0) { $headers.Count + $(if ($headerCells.Count -gt $headers.Count) { 1 } else { 0 }) } else { $headers.Count }
-                          if ($cells.Count -eq $expectedColumnCount) {
+                          if ($cells.Count -eq $headers.Count) {
                               if ($headerCells.Count -gt $headers.Count) {
                                   $cells.Insert($typeIndex, $type.Replace("|", "\|"))
                               } else {
