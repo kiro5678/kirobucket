@@ -2,6 +2,8 @@
 
 This is the repository's mandatory reference for creating, changing, troubleshooting, or reviewing any Scoop manifest. Read it before working on manifests. When a real failure reveals a missing rule, update this document in the same task so the lesson is not lost.
 
+For the current Portable / Nonportable classification of every bucket manifest, see [Manifest Portability Inventory](manifest-portability.md). Reclassify entries whenever their installer, extraction method, or installation hooks change.
+
 ## 1. Non-negotiable rule: automatic updates must work
 
 A manifest is not finished merely because the current version installs. By default, every manifest must support automatic version and download updates.
