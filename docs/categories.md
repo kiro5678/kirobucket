@@ -7,54 +7,57 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Category | Manifests | Type | Link |
 | --- | ---: | --- | --- |
 | Android & Device Tools | 10 | Functional | [View](#android-device-tools) |
-| Auslogics Suite | 15 | Publisher cross-list | [View](#auslogics-suite) |
 | Browsers & Communication | 7 | Functional | [View](#browsers-communication) |
-| ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
-| Clipboard & Text | 33 | Functional | [View](#clipboard-text) |
+| Clipboard & Text | 34 | Functional | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | Functional | [View](#developer-technical-tools) |
 | Download Managers | 16 | Functional | [View](#download-managers) |
-| EFSoftware Suite | 13 | Publisher cross-list | [View](#efsoftware-suite) |
 | Emulators & Compatibility | 15 | Functional | [View](#emulators-compatibility) |
-| Eric Zimmerman Suite | 31 | Publisher cross-list | [View](#eric-zimmerman-suite) |
 | File Management | 71 | Functional | [View](#file-management) |
-| Forensics & Diagnostics | 31 | Functional | [View](#forensics-diagnostics) |
+| Forensics & Diagnostics | 32 | Functional | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | Functional | [View](#games-game-utilities) |
-| GRC Suite | 18 | Publisher cross-list | [View](#grc-suite) |
 | Images & Photos | 52 | Functional | [View](#images-photos) |
 | Keyboard & Language | 15 | Functional | [View](#keyboard-language) |
 | Media & Audio/Video | 46 | Functional | [View](#media-audio-video) |
-| MiTeC Suite | 22 | Publisher cross-list | [View](#mitec-suite) |
-| Network & DNS | 51 | Functional | [View](#network-dns) |
+| Network & DNS | 52 | Functional | [View](#network-dns) |
 | Notes & Knowledge | 20 | Functional | [View](#notes-knowledge) |
-| Other Utilities | 1 | Functional | [View](#other-utilities) |
+| Other Utilities | 2 | Functional | [View](#other-utilities) |
 | Package Management | 13 | Functional | [View](#package-management) |
 | PDF & Documents | 29 | Functional | [View](#pdf-documents) |
-| Productivity & Launchers | 30 | Functional | [View](#productivity-launchers) |
+| Productivity & Launchers | 31 | Functional | [View](#productivity-launchers) |
 | Security | 41 | Functional | [View](#security) |
-| SoftwareOK Suite | 81 | Publisher cross-list | [View](#softwareok-suite) |
-| Sordum Suite | 63 | Publisher cross-list | [View](#sordum-suite) |
-| Storage & Disk Tools | 23 | Functional | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 26 | Functional | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | Functional | [View](#sync-backup) |
-| System Monitoring & Hardware | 66 | Functional | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 71 | Functional | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | Functional | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | Functional | [View](#translation-ocr) |
-| Türkaysoft Suite | 8 | Publisher cross-list | [View](#turkaysoft-suite) |
-| Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
 | Weather & Information | 1 | Functional | [View](#weather-information) |
-| Windows Customization | 93 | Functional | [View](#windows-customization) |
+| Windows Customization | 91 | Functional | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | Functional | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | Functional | [View](#windows-update-management) |
 
-**Total unique manifests: 816**
+**Total unique manifests: 827**
 
+Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
+
+## Developer Index
+
+| Developer / Suite | Manifests | Type | Link |
+| --- | ---: | --- | --- |
 | Aurelitec Suite | 5 | Publisher cross-list | [View](#aurelitec-suite) |
+| Auslogics Suite | 15 | Publisher cross-list | [View](#auslogics-suite) |
+| ChemTable Suite | 5 | Publisher cross-list | [View](#chemtable-suite) |
 | ComputerSluggish Suite | 1 | Publisher cross-list | [View](#computersluggish-suite) |
+| EFSoftware Suite | 13 | Publisher cross-list | [View](#efsoftware-suite) |
+| Eric Zimmerman Suite | 31 | Publisher cross-list | [View](#eric-zimmerman-suite) |
 | Funk.eu Suite | 7 | Publisher cross-list | [View](#funk-eu-suite) |
+| GRC Suite | 18 | Publisher cross-list | [View](#grc-suite) |
+| MiTeC Suite | 22 | Publisher cross-list | [View](#mitec-suite) |
 | Neuber Suite | 2 | Publisher cross-list | [View](#neuber-suite) |
-
-**Total unique manifests: 816**
-
-Functional categories assign each manifest once. Publisher cross-list counts overlap with functional categories and are not additional unique manifests.
+| Rizonesoft Suite | 14 | Publisher cross-list | [View](#rizonesoft-suite) |
+| SoftwareOK Suite | 81 | Publisher cross-list | [View](#softwareok-suite) |
+| Sordum Suite | 63 | Publisher cross-list | [View](#sordum-suite) |
+| Türkaysoft Suite | 8 | Publisher cross-list | [View](#turkaysoft-suite) |
+| Vovsoft Suite | 174 | Publisher cross-list | [View](#vovsoft-suite) |
 
 ## Android & Device Tools
 
@@ -104,6 +107,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [edge-drop](../bucket/edge-drop.json) | 0.3.2 | Clipboard manager that lives on the left edge of your screen. | [Homepage](https://github.com/Deepender25/Edge-Drop) |
 | [get-window-text](../bucket/get-window-text.json) | 5.31 | Read text from Windows controls and windows. | [Homepage](https://www.softwareok.com/?Download=GetWindowText) |
 | [multi-clipboard-slots](../bucket/multi-clipboard-slots.json) | 3.61 | Manage multiple clipboard slots. | [Homepage](https://www.softwareok.com/?Download=MultiClipBoardSlots) |
+| [notepad3](../bucket/notepad3.json) | 7.26.602.1 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
 | [pastebar](../bucket/pastebar.json) | 0.7.0 | Limitless, Free Clipboard Manager for Mac and Windows | [Homepage](https://www.pastebar.app/) |
 | [quicktextpaste](../bucket/quicktextpaste.json) | 9.61 | Paste predefined text using keyboard shortcuts. | [Homepage](https://www.softwareok.com/?Download=QuickTextPaste) |
 | [sklad](../bucket/sklad.json) | 0.2.3 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text | [Homepage](https://github.com/Rench321/sklad) |
@@ -262,6 +266,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [sigma-file-manager](../bucket/sigma-file-manager.json) | 2.2.0 | A modern cross-platform file manager with a powerful interface. | [Homepage](https://github.com/aleksey-hoffman/sigma-file-manager) |
 | [sordum-streams-remover](../bucket/sordum-streams-remover.json) | 1.0 | Utility for removing Zone.Identifier alternate data streams from downloaded Windows files. | [Homepage](https://www.sordum.org/11263/streams-remover-v1-0/) |
 | [spacedrive](../bucket/spacedrive.json) | 2.0.0-alpha.2 | Open source cross-platform file explorer. | [Homepage](https://github.com/spacedriveapp/spacedrive) |
+| [take-ownership](../bucket/take-ownership.json) | 11.1.1.869 | Portable utility that can add or remove a Take Ownership context-menu action. | [Homepage](https://rizonesoft.com/gdm_downloads/take-ownership/) |
 | [thisismyfile](../bucket/thisismyfile.json) | 4.51 | Unlock or delete locked and protected files. | [Homepage](https://www.softwareok.com/?Download=ThisIsMyFile) |
 | [vcardix](../bucket/vcardix.json) | 26.11 | Contact manager and converter for vCard, CSV, and JSON files. | [Homepage](https://github.com/turkaysoft/vcardix) |
 | [vovsoft-compare-two-lists](../bucket/vovsoft-compare-two-lists.json) | 1.7 | Portable edition of Vovsoft Compare Two Lists. | [Homepage](https://vovsoft.com/software/compare-two-lists/) |
@@ -291,6 +296,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
+| [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | 11.3.1.1992 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
 | [eric-amcacheparser](../bucket/eric-amcacheparser.json) | 2026.10.1 | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-appcompatcacheparser](../bucket/eric-appcompatcacheparser.json) | 2026.10.1 | Eric Zimmerman's AppCompatCacheParser: Parser for Windows AppCompatCache (ShimCache) artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-bstrings](../bucket/eric-bstrings.json) | 2026.10.1 | Eric Zimmerman's bstrings: Search files for strings using built-in regular-expression patterns. | [Homepage](https://ericzimmerman.github.io/) |
@@ -482,6 +488,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [amule](../bucket/amule.json) | 3.0.0 | A free and open-source peer-to-peer file sharing client. | [Homepage](https://www.amule-project.net/) |
 | [babyshark](../bucket/babyshark.json) | 0.3.0 | Wireshark made easy in your terminal. | [Homepage](https://github.com/vignesh07/babyshark) |
 | [bargozin](../bucket/bargozin.json) | 0.2.0 | DNS and network testing tool - Test URL accessibility, download speeds, and Docker registries across multiple DNS servers | [Homepage](https://github.com/403unlocker/bargozin-desktop) |
+| [complete-internet-repair](../bucket/complete-internet-repair.json) | 11.1.3.6518 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
 | [cstatus](../bucket/cstatus.json) | 1.2.7.1 | Free network monitoring and scanning tool for Windows | [Homepage](https://www.hnsoft.pt/cstatus) |
 | [dnschanger](../bucket/dnschanger.json) | 2.3.14 | Open-source DNS changer for Windows, macOS, and Linux. | [Homepage](https://github.com/DnsChanger/dnsChanger-desktop) |
 | [dnschanger-msi](../bucket/dnschanger-msi.json) | 2.3.14 | Open-source DNS changer for Windows, macOS, and Linux. | [Homepage](https://github.com/DnsChanger/dnsChanger-desktop) |
@@ -560,6 +567,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
+| [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
 | [softwareok-suite](../bucket/softwareok-suite.json) | 2026.10.27.6 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |
 
 ## Package Management
@@ -628,6 +636,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [lettuce-window-switcher](../bucket/lettuce-window-switcher.json) | 0.3.70 | Windows 11 application switcher with live DWM previews and multiple switcher views | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) |
 | [merkuro-calendar](../bucket/merkuro-calendar.json) | 6719 | Calendar application for managing tasks and events | [Homepage](https://apps.kde.org/merkuro.calendar/) |
 | [quickpanel](../bucket/quickpanel.json) | 1.0.12 | A floating Windows panel for launching web apps in native WebView2 windows. | [Homepage](https://github.com/lucasgiusiano/QuickPanel) |
+| [rizonesoft-office](../bucket/rizonesoft-office.json) | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
 | [run-command](../bucket/run-command.json) | 6.41 | Portable replacement for the Windows Run dialog, with favorites and elevated command execution. | [Homepage](https://www.softwareok.com/?seite=Microsoft/Run-Command) |
 | [shortercut](../bucket/shortercut.json) | 1.0.0.7 | Free and lightweight app launcher and desktop organizer. | [Homepage](https://www.getshortercut.com/) |
 | [sofast](../bucket/sofast.json) | 0.12.0 | Quick launcher and productivity tool for Windows. | [Homepage](https://www.sofast.fun/) |
@@ -702,8 +711,10 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | 12.3.0.1 | Auslogics Disk Defrag hard-drive defragmenter | [Homepage](https://www.auslogics.com/en/software/disk-defrag/) |
 | [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
 | [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
+| [carbon-cd](../bucket/carbon-cd.json) | 1.0.8 | Portable CD cloning and disc-image utility. | [Homepage](https://rizonesoft.com/downloads/carbon-cd/) |
 | [compactgui](../bucket/compactgui.json) | 4.0.0-beta.12 | Reduce the space taken up by games and programs on disk by using native Windows APIs. | [Homepage](https://github.com/IridiumIO/CompactGUI) |
 | [diskgeek](../bucket/diskgeek.json) | 1.1.1 | A free, self-contained disk space analyser for Windows. | [Homepage](https://github.com/techygeekshome/DiskGeek) |
+| [dvd-drive-repair](../bucket/dvd-drive-repair.json) | 11.2.3.2920 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
 | [grc-bootable](../bucket/grc-bootable.json) | 2024.04.21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
 | [grc-initdisk](../bucket/grc-initdisk.json) | 2020.12.19 | GRC InitDisk: Command-line USB formatter that can create a FAT-formatted and optionally FreeDOS-bootable drive. | [Homepage](https://www.grc.com/initdisk.htm) |
 | [grc-validrive](../bucket/grc-validrive.json) | 2023.10.06 | GRC ValiDrive: Spot-checks USB mass-storage drives to detect fraudulent capacity and failed read/write storage. | [Homepage](https://www.grc.com/validrive.htm) |
@@ -719,6 +730,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [sordum-drive-letter-changer](../bucket/sordum-drive-letter-changer.json) | 1.4 | A simple app that allows you to change the letter of your hard drives. | [Homepage](https://www.sordum.org/drive-letter-changer) |
 | [sordum-show-disk-partition-style](../bucket/sordum-show-disk-partition-style.json) | 1.1 | A simple app for showing disk partion style. | [Homepage](https://www.sordum.org/show-disk-partition-style) |
 | [sordum-simple-vhd-manager](../bucket/sordum-simple-vhd-manager.json) | 1.5 | This software is designed to simplify operations such as creating VHD and VHDX files, adding them to boot menu and Automatically mounting at system startup. Partial ISO support is also available. | [Homepage](https://www.sordum.org/simple-vhd-manager) |
+| [usb-repair](../bucket/usb-repair.json) | 11.2.3.2380 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
 | [vovsoft-disk-benchmark](../bucket/vovsoft-disk-benchmark.json) | 2.0 | Portable edition of Vovsoft Disk Benchmark. | [Homepage](https://vovsoft.com/software/disk-benchmark/) |
 | [vovsoft-disk-monitor-gadget](../bucket/vovsoft-disk-monitor-gadget.json) | 2.1 | Portable edition of Vovsoft Disk Monitor Gadget. | [Homepage](https://vovsoft.com/software/disk-monitor-gadget/) |
 | [vovsoft-prevent-disk-sleep](../bucket/vovsoft-prevent-disk-sleep.json) | 5.3 | Portable edition of Vovsoft Prevent Disk Sleep. | [Homepage](https://vovsoft.com/software/prevent-disk-sleep/) |
@@ -749,12 +761,15 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [Auslogics-chillmate](../bucket/Auslogics-chillmate.json) | 1.1.0.6 | PC temperature and performance monitoring utility | [Homepage](https://www.auslogics.com/en/software/chillmate/) |
 | [Auslogics-driver-updater](../bucket/Auslogics-driver-updater.json) | 2.1.0.0 | Driver detection and update utility | [Homepage](https://www.auslogics.com/en/software/driver-updater/) |
 | [Auslogics-system-information](../bucket/Auslogics-system-information.json) | 2.0.0.8 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
+| [chromin](../bucket/chromin.json) | 11.8.3.8535 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [clickmonitorddc](../bucket/clickmonitorddc.json) | 7.2 | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) |
 | [cpu-frequenz](../bucket/cpu-frequenz.json) | 4.55 | Display CPU frequency information. | [Homepage](https://www.softwareok.com/?Download=CpuFrequenz) |
 | [driverstoreexplorer](../bucket/driverstoreexplorer.json) | 1.0.36 | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. | [Homepage](https://github.com/lostindark/DriverStoreExplorer) |
+| [edgemin](../bucket/edgemin.json) | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [ef-process-manager](../bucket/ef-process-manager.json) | 26.10 | Inspects running processes and loaded modules, closes or terminates processes, and displays system details. | [Homepage](https://efsoftware.com/pm/e.htm) |
 | [ef-system-monitor](../bucket/ef-system-monitor.json) | 26.10 | Monitors local and remote system resources and performance, including CPU, memory, disks, and other metrics. | [Homepage](https://efsoftware.com/sm/e.htm) |
 | [experience-index-ok](../bucket/experience-index-ok.json) | 4.77 | View and run Windows performance index measurements. | [Homepage](https://www.softwareok.com/?Download=ExperienceIndexOK) |
+| [firemin](../bucket/firemin.json) | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [fluent-sensors](../bucket/fluent-sensors.json) | 1.7.0 | Native Windows hardware monitoring app. | [Homepage](https://github.com/cechout/fluent-sensors) |
 | [freetoken-desktop.beta](../bucket/freetoken-desktop.beta.json) | 0.2.0-beta.25 | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. | [Homepage](https://www.flashml.ai) |
 | [grc-clickey](../bucket/grc-clickey.json) | 2005.10.29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
@@ -779,6 +794,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json) | 621.01 | NVIDIA display driver (DCH) | [Homepage](https://www.nvidia.com/Download/index.aspx) |
 | [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 621.01 | NVIDIA display driver (DCH) | [Homepage](https://www.nvidia.com/Download/index.aspx) |
 | [nvidiaprofileinspector](../bucket/nvidiaprofileinspector.json) | 3.0.2.1 | NVIDIA graphics driver profile editor and settings utility. | [Homepage](https://github.com/Orbmu2k/nvidiaProfileInspector) |
+| [pixel-repair](../bucket/pixel-repair.json) | 11.1.1.1008 | Portable utility for detecting and attempting to fix stuck pixels on LCD and OLED displays. | [Homepage](https://rizonesoft.com/downloads/pixel-repair/) |
 | [print-test-page-ok](../bucket/print-test-page-ok.json) | 3.55 | Print Windows test pages. | [Homepage](https://www.softwareok.com/?Download=Print.Test.Page.OK) |
 | [processko](../bucket/processko.json) | 6.77 | Quickly terminate running or unresponsive processes. | [Homepage](https://www.softwareok.com/?Download=ProcessKO) |
 | [pulse](../bucket/pulse.json) | 1.6.0 | Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService. | [Homepage](https://github.com/Regncreative/Pulse) |
@@ -809,6 +825,7 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [vovsoft-ram-monitor-gadget](../bucket/vovsoft-ram-monitor-gadget.json) | 2.0 | Portable edition of Vovsoft RAM Monitor Gadget. | [Homepage](https://vovsoft.com/software/ram-monitor-gadget/) |
 | [vovsoft-vov-stop-start](../bucket/vovsoft-vov-stop-start.json) | 2.0 | Portable edition of Vovsoft Vov Stop Start. | [Homepage](https://vovsoft.com/software/vov-stop-start/) |
 | [vovsoft-vov-system-uptime](../bucket/vovsoft-vov-system-uptime.json) | 1.8 | Portable edition of Vovsoft Vov System Uptime. | [Homepage](https://vovsoft.com/software/vov-system-uptime/) |
+| [watermin](../bucket/watermin.json) | 11.8.3.8535 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 
 ## Time Tracking & Focus
 
@@ -909,7 +926,6 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [openglass](../bucket/openglass.json) | 3.0.2.3749 | A replacement for the Desktop Window Manager glass effect on Windows. | [Homepage](https://github.com/ALTaleX531/OpenGlass) |
 | [openrgb](../bucket/openrgb.json) | 1.1 | RGB lighting control that does not depend on manufacturer software. | [Homepage](https://openrgb.org) |
 | [pointerstick](../bucket/pointerstick.json) | 7.22 | Display a virtual pointer stick on the desktop for presentations. | [Homepage](https://www.softwareok.com/?Download=PointerStick) |
-| [qq-pet](../bucket/qq-pet.json) | 0.7.4 | QQ 宠物跨平台复刻，基于 Arctic Penguin T800 逆向重建。 | [Homepage](https://pet.ankio.net/) |
 | [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
 | [rebuild-shell-icon-cache](../bucket/rebuild-shell-icon-cache.json) | 1.3 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |
@@ -948,7 +964,6 @@ Functional categories assign each manifest once. Publisher cross-list counts ove
 | [windhawk](../bucket/windhawk.json) | 2.0.0-alpha.8 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
 | [zigarettenschachtel-spruch](../bucket/zigarettenschachtel-spruch.json) | 2.32 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
-| [FoliCon](../bucket/FoliCon.JSON) | 5.3.1 | Folder icon customizer for movies, TV shows, music, games, anime, and books. | [Homepage](https://github.com/DineshSolanki/FoliCon) |
 
 ## Windows Privacy & Tweaks
 
@@ -1554,3 +1569,23 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 | --- | --- | --- | --- |
 | [neuber-security-task-manager](../bucket/neuber-security-task-manager.json) | 3.2c | Process-inspection utility showing running processes, file paths, descriptions, and security-risk indicators; trialware. | [Homepage](https://www.neuber.com/taskmanager/) |
 | [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
+
+
+## Rizonesoft Suite
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | 11.3.1.1992 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
+| [carbon-cd](../bucket/carbon-cd.json) | 1.0.8 | Portable CD cloning and disc-image utility. | [Homepage](https://rizonesoft.com/downloads/carbon-cd/) |
+| [chromin](../bucket/chromin.json) | 11.8.3.8535 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [complete-internet-repair](../bucket/complete-internet-repair.json) | 11.1.3.6518 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
+| [dvd-drive-repair](../bucket/dvd-drive-repair.json) | 11.2.3.2920 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
+| [edgemin](../bucket/edgemin.json) | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [firemin](../bucket/firemin.json) | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [notepad3](../bucket/notepad3.json) | 7.26.602.1 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
+| [pixel-repair](../bucket/pixel-repair.json) | 11.1.1.1008 | Portable utility for detecting and attempting to fix stuck pixels on LCD and OLED displays. | [Homepage](https://rizonesoft.com/downloads/pixel-repair/) |
+| [rizonesoft-office](../bucket/rizonesoft-office.json) | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
+| [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
+| [take-ownership](../bucket/take-ownership.json) | 11.1.1.869 | Portable utility that can add or remove a Take Ownership context-menu action. | [Homepage](https://rizonesoft.com/gdm_downloads/take-ownership/) |
+| [usb-repair](../bucket/usb-repair.json) | 11.2.3.2380 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
+| [watermin](../bucket/watermin.json) | 11.8.3.8535 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
