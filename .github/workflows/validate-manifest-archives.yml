@@ -1,6 +1,6 @@
 name: Validate manifest archives
 
-on:
+'on':
   workflow_dispatch:
     inputs:
       manifest:
