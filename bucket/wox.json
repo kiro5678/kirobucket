@@ -1,13 +1,21 @@
 {
     "version": "2.4.8",
-    "description": "A fully native, open-source launcher for Windows, macOS, and Linux.",
+    "description": "A full-featured launcher, access programs and web contents as you type.",
     "homepage": "https://github.com/Wox-launcher/Wox",
     "license": {
         "identifier": "GPL-3.0-or-later",
         "url": "https://github.com/Wox-launcher/Wox/blob/master/LICENSE"
     },
-    "url": "https://github.com/Wox-launcher/Wox/releases/download/v2.4.8/wox-windows-amd64.exe#/wox.exe",
-    "hash": "c10ca9e7ac9c6147c9a896c3d7ac0affa746d6f5db761c28fbd9f3127cabcc4b",
+    "suggest": {
+        "Python3": "main/python",
+        "Everything": "extras/everything"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Wox-launcher/Wox/releases/download/v2.4.8/wox-windows-amd64.exe#/wox.exe",
+            "hash": "c10ca9e7ac9c6147c9a896c3d7ac0affa746d6f5db761c28fbd9f3127cabcc4b"
+        }
+    },
     "bin": "wox.exe",
     "shortcuts": [
         [
@@ -21,6 +29,10 @@
         "regex": "(?i)tag/v([\\d.]+)(?=\")"
     },
     "autoupdate": {
-        "url": "https://github.com/Wox-launcher/Wox/releases/download/v$version/wox-windows-amd64.exe#/wox.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Wox-launcher/Wox/releases/download/v$version/wox-windows-amd64.exe#/wox.exe"
+            }
+        }
     }
 }

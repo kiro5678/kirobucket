@@ -1,8 +1,11 @@
 {
     "version": "1.0.1",
-    "description": "A customizable system information fetch tool.",
-    "homepage": "https://xfetch-cli.github.io/web/",
+    "description": "A fast, customizable system information fetch tool for the terminal",
+    "homepage": "https://github.com/xfetch-cli/xfetch",
     "license": "MIT",
+    "suggest": {
+        "vcredist": "extras/vcredist2022"
+    },
     "architecture": {
         "64bit": {
             "url": "https://github.com/xfetch-cli/xfetch/releases/download/v1.0.1/xfetch-1.0.1-x86_64-pc-windows-msvc.zip",
@@ -10,14 +13,15 @@
         }
     },
     "bin": "xfetch.exe",
-    "checkver": {
-        "github": "https://github.com/xfetch-cli/xfetch"
-    },
+    "checkver": "github",
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/xfetch-cli/xfetch/releases/download/v$version/xfetch-$version-x86_64-pc-windows-msvc.zip"
             }
+        },
+        "hash": {
+            "url": "$baseurl/SHA256SUMS"
         }
     }
 }

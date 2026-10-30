@@ -11,15 +11,17 @@
     "extract_dir": "BackupSML",
     "architecture": {
         "32bit": {
+            "pre_install": "Remove-Item \"$dir\\BackupSML_x64.exe\" | Out-Null",
             "bin": "BackupSML.exe",
             "shortcuts": [
                 [
                     "BackupSML.exe",
-                    "Sordum\\Backup Start Menu Layout"
+                    "Backup Start Menu Layout"
                 ]
             ]
         },
         "64bit": {
+            "pre_install": "Remove-Item \"$dir\\BackupSML.exe\" | Out-Null",
             "bin": [
                 [
                     "BackupSML_x64.exe",
@@ -29,7 +31,7 @@
             "shortcuts": [
                 [
                     "BackupSML_x64.exe",
-                    "Sordum\\Backup Start Menu Layout"
+                    "Backup Start Menu Layout"
                 ]
             ]
         }

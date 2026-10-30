@@ -1,7 +1,7 @@
 {
     "version": "2.2.1.0",
     "homepage": "https://livelywallpaper.net/",
-    "description": "A free and open-source software that allows users to set animated desktop wallpapers and screensavers.",
+    "description": "A free and open-source software that allows users to set animated desktop wallpapers and screensavers. ",
     "license": "GPL-3.0",
     "suggest": {
         ".NET Desktop Runtime 9.0": "versions/windowsdesktop-runtime-9.0",
@@ -23,12 +23,12 @@
         "}"
     ],
     "checkver": {
-        "github": "https://github.com/lively-community/lively"
+        "github": "https://github.com/rocksdanister/lively"
     },
     "autoupdate": {
         "url": "https://github.com/rocksdanister/lively/releases/download/v$version/lively_setup_x86_full_v$cleanVersion.exe",
         "hash": {
-            "url": "https://github.com/lively-community/lively/releases/latest",
+            "url": "https://github.com/rocksdanister/lively/releases/latest",
             "regex": ">SHA256</h2>\\n+<p>$sha256<"
         }
     }

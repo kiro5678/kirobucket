@@ -1,25 +1,19 @@
 {
-    "version": "28.40.0600",
-    "description": "Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization.",
-    "homepage": "https://www.xyplorer.com/",
-    "license": "Proprietary",
-    "url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.rar",
-    "bin": [
-        "XYplorer.exe",
-        "XYcopy.exe"
-    ],
+    "version": "17.40.0100",
+    "description": "File manager for Windows",
+    "homepage": "https://www.xyplorer.com/free.php",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.xyplorer.com/company.php#legal"
+    },
+    "url": "https://www.xyplorer.com/download/xyplorer_free_noinstall.zip",
+    "hash": "38cb3abc8a699023e5f74fe19c167e91e59be67a09c9e1fc7f589b98324b9ee9",
+    "bin": "XYplorerFree.exe",
     "shortcuts": [
         [
-            "XYplorer.exe",
+            "XYplorerFree.exe",
             "XYplorer"
         ]
     ],
-    "checkver": {
-        "url": "https://www.xyplorer.com/download.php?bit=64",
-        "regex": "(?is)No-Install Package \\(ZIP\\).*?Version.*?(?<version>\\d+\\.\\d+\\.\\d+)"
-    },
-    "autoupdate": {
-        "url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.rar"
-    },
-    "hash": "8a43b6a06cc5ce1e014a0af48a1aa9c6b9b2271d814cc0d02de7b6ef6963184f"
+    "persist": "Data"
 }

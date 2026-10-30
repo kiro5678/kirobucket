@@ -2,52 +2,41 @@
     "version": "1.1",
     "description": "RGB lighting control that does not depend on manufacturer software.",
     "homepage": "https://openrgb.org",
-    "license": "GPL-2.0-only",
+    "license": "GPL-2.0-or-later",
     "suggest": {
         "vcredist": "extras/vcredist2022"
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_1.1/OpenRGB_1.1_Windows_64_8e16de2.zip",
+            "url": "https://codeberg.org/OpenRGB/OpenRGB/releases/download/release_1.1/OpenRGB_1.1_Windows_64_8e16de2.zip",
             "hash": "63291726c6fc84eb479ef2ee752e97e1187f6ce9c49fd27eee40ded588a8172a",
-            "bin": "OpenRGB Windows 64-bit/OpenRGB.exe",
-            "shortcuts": [
-                [
-                    "OpenRGB Windows 64-bit/OpenRGB.exe",
-                    "OpenRGB"
-                ]
-            ]
+            "extract_dir": "OpenRGB Windows 64-bit"
         },
         "32bit": {
-            "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_1.1/OpenRGB_1.1_Windows_32_8e16de2.zip",
+            "url": "https://codeberg.org/OpenRGB/OpenRGB/releases/download/release_1.1/OpenRGB_1.1_Windows_32_8e16de2.zip",
             "hash": "27b1e68e65107c4976c898a0214b752de576fdfc2f01c18559bdf05697e7c8bc",
-            "bin": "OpenRGB Windows 32-bit/OpenRGB.exe",
-            "shortcuts": [
-                [
-                    "OpenRGB Windows 32-bit/OpenRGB.exe",
-                    "OpenRGB"
-                ]
-            ]
+            "extract_dir": "OpenRGB Windows 32-bit"
         }
     },
+    "shortcuts": [
+        [
+            "OpenRGB.exe",
+            "OpenRGB"
+        ]
+    ],
     "checkver": {
-        "url": "https://api.github.com/repos/CalcProgrammer1/OpenRGB/releases/latest",
-        "jsonpath": "$.assets[*].name",
-        "regex": "OpenRGB_(?<version>[\\d.]+)_Windows_64_(?<commit>[\\da-fA-F]{7})\\.zip"
+        "url": "https://codeberg.org/api/v1/repos/OpenRGB/OpenRGB/releases/latest",
+        "jsonpath": "$.assets[*].browser_download_url",
+        "regex": "OpenRGB_([\\d.]+)_Windows_64_(?<commit>[a-fA-F0-9]+)\\.zip"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_$version/OpenRGB_$version_Windows_64_$matchCommit.zip"
+                "url": "https://codeberg.org/OpenRGB/OpenRGB/releases/download/release_$version/OpenRGB_$version_Windows_64_$matchCommit.zip"
             },
             "32bit": {
-                "url": "https://github.com/CalcProgrammer1/OpenRGB/releases/download/release_$version/OpenRGB_$version_Windows_32_$matchCommit.zip"
+                "url": "https://codeberg.org/OpenRGB/OpenRGB/releases/download/release_$version/OpenRGB_$version_Windows_32_$matchCommit.zip"
             }
         }
-    },
-    "pre_install": [
-        "$exe = Get-ChildItem -LiteralPath $dir -Filter 'OpenRGB.exe' -File -Recurse | Select-Object -First 1",
-        "if ($null -eq $exe) { throw 'OpenRGB.exe was not found in the extracted archive.' }",
-        "if ($exe.DirectoryName -ne $dir) { Get-ChildItem -LiteralPath $exe.DirectoryName -Force | ForEach-Object { Move-Item -LiteralPath $_.FullName -Destination $dir -Force } }"
-    ]
+    }
 }

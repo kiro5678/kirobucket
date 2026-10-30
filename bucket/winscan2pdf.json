@@ -1,14 +1,14 @@
 {
     "version": "9.79",
-    "description": "Save scanned documents as PDF files.",
-    "homepage": "https://www.softwareok.com/?Download=WinScan2PDF",
-    "license": "Freeware",
-    "architecture": {
-        "64bit": {
-            "url": "https://www.softwareok.com/Download/WinScan2PDF_Portable.zip",
-            "hash": "fc90aadc403a7a496607d21a233b5bcad2e359e17c1f46e1914e0ca9c16ed6be"
-        }
+    "description": "Documents to PDF scanner",
+    "homepage": "https://www.softwareok.com/?seite=Microsoft/WinScan2PDF",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.softwareok.com/?seite=Microsoft/WinScan2PDF/Eula"
     },
+    "url": "https://www.softwareok.com/Download/WinScan2PDF_Portable.zip",
+    "hash": "fc90aadc403a7a496607d21a233b5bcad2e359e17c1f46e1914e0ca9c16ed6be",
+    "pre_install": "if (-not (Test-Path \"$persist_dir\\WinScan2PDF_p.ini\")) { New-Item \"$dir\\WinScan2PDF_p.ini\" | Out-Null }",
     "bin": [
         [
             "WinScan2PDF_p.exe",
@@ -18,19 +18,16 @@
     "shortcuts": [
         [
             "WinScan2PDF_p.exe",
-            "SoftwareOK - WinScan2PDF"
+            "WinScan2PDF"
         ]
     ],
+    "persist": "WinScan2PDF_p.ini",
     "checkver": {
-        "url": "https://www.softwareok.com/?Download=WinScan2PDF",
-        "regex": "WinScan2PDF (?<version>\\d+(?:\\.\\d+)+)"
+        "url": "https://www.softwareok.com/?seite=Microsoft/WinScan2PDF/History",
+        "regex": "version ([\\d.]+)"
     },
     "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://www.softwareok.com/Download/WinScan2PDF_Portable.zip"
-            }
-        },
+        "url": "https://www.softwareok.com/Download/WinScan2PDF_Portable.zip",
         "hash": {
             "url": "https://www.softwareok.com/?Download=WinScan2PDF",
             "regex": "$basename.*?$sha256<"

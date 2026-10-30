@@ -1,43 +1,23 @@
 {
-    "version": "0.7.0",
-    "description": "Open-source event, calendar, and time management app for Windows.",
-    "homepage": "https://github.com/LinwoodDev/Flow",
-    "license": "AGPL-3.0-only",
+    "version": "0.337.0",
+    "description": "A static type checker for JavaScript code",
+    "homepage": "https://flow.org/",
+    "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/LinwoodDev/Flow/releases/download/v0.7.0/linwood-flow-windows-x86_64.zip",
-            "hash": "95d1a81bcc090e40462c6eb022bb8c3738d3a6d73443307075d32a4aebd9da29"
-        },
-        "arm64": {
-            "url": "https://github.com/LinwoodDev/Flow/releases/download/v0.7.0/linwood-flow-windows-arm64.zip",
-            "hash": "555162bbbbda967107e01a4767dca77f4522a2ba06ee49a3f2fc2ad6d6d195c6"
+            "url": "https://github.com/facebook/flow/releases/download/v0.337.0/flow-win64-v0.337.0.zip",
+            "hash": "ae1459e9c1960df451512d1bfcf9d85a924275daa0367a8874e36ead7659d8d2"
         }
     },
+    "extract_dir": "flow",
     "bin": "flow.exe",
-    "shortcuts": [
-        [
-            "flow.exe",
-            "Flow"
-        ]
-    ],
     "checkver": {
-        "script": [
-            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
-            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
-            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/LinwoodDev/Flow/releases?per_page=100' -Headers $headers",
-            "$release = $releases | Where-Object { $_.tag_name -match '^v[\\d.]+$' -and ($_.assets | Where-Object { $_.name -eq 'linwood-flow-windows-x86_64.zip' } | Select-Object -First 1) } | Select-Object -First 1",
-            "if (-not $release) { throw 'No numbered Flow release containing the Windows x64 ZIP was found.' }",
-            "Write-Output $release.tag_name"
-        ],
-        "regex": "^v(?<version>[\\d.]+)$"
+        "github": "https://github.com/facebook/flow"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/LinwoodDev/Flow/releases/download/v$version/linwood-flow-windows-x86_64.zip"
-            },
-            "arm64": {
-                "url": "https://github.com/LinwoodDev/Flow/releases/download/v$version/linwood-flow-windows-arm64.zip"
+                "url": "https://github.com/facebook/flow/releases/download/v$version/flow-win64-v$version.zip"
             }
         }
     }

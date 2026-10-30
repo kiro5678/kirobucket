@@ -1,43 +1,19 @@
 {
-    "version": "1.02.142",
-    "description": "Windows debloater for reviewing privacy tweaks, system settings, and installed apps",
-    "homepage": "https://github.com/builtbybel/Bloatynosy",
+    "version": "1.0.20.522",
+    "description": "Universal debloater and PC manager for Windows 11",
+    "homepage": "https://github.com/builtbybel/BloatyNosy",
     "license": "MIT",
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/builtbybel/Bloatynosy/releases/download/1.02.142/Bloatynosy-1.02.142.zip",
-            "hash": "8abbd47d5049a67aece062b1d28f1904e9264e93cfc210f407ed46c120792f8e"
-        }
-    },
-    "pre_install": [
-        "New-Item -ItemType Directory -Path \"$dir\\Data\" -Force | Out-Null",
-        "if (!(Test-Path \"$dir\\Data\\Settings.json\")) { Set-Content -Path \"$dir\\Data\\Settings.json\" -Value '{}' -Encoding UTF8 }"
-    ],
-    "persist": "Data/Settings.json",
+    "url": "https://github.com/builtbybel/Bloatynosy/releases/download/1.0.20.522/Bloatynosy.zip",
+    "hash": "afb079b1b556970e841d9b2685793bd553cd8a9666cc87b339b508d816c05a2c",
+    "bin": "BloatyNosy.exe",
     "shortcuts": [
         [
-            "Bloatynosy.exe",
-            "Bloatynosy"
+            "BloatyNosy.exe",
+            "BloatyNosy"
         ]
     ],
-    "checkver": {
-        "url": "https://api.github.com/repos/builtbybel/Bloatynosy/releases/latest",
-        "regex": "Bloatynosy-([\\d.]+)\\.zip"
-    },
+    "checkver": "github",
     "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/builtbybel/Bloatynosy/releases/download/$version/Bloatynosy-$version.zip",
-                "hash": {
-                    "url": "https://api.github.com/repos/builtbybel/Bloatynosy/releases/tags/$version",
-                    "regex": "\"name\"\\s*:\\s*\"Bloatynosy-$version\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
-                }
-            }
-        }
-    },
-    "notes": [
-        "Portable ZIP build. Requires Windows 10 or 11 and .NET Framework 4.8.",
-        "Review selected changes before applying; the app can change Windows settings or uninstall Store apps.",
-        "Optional AI API keys are stored as plain text in Data/Settings.json."
-    ]
+        "url": "https://github.com/builtbybel/Bloatynosy/releases/download/$version/Bloatynosy.zip"
+    }
 }

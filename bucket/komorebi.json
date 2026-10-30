@@ -6,8 +6,11 @@
         "identifier": "Komorebi",
         "url": "https://github.com/LGUG2Z/komorebi/blob/master/LICENSE.md"
     },
-    "url": "https://github.com/LGUG2Z/komorebi/releases/download/v0.1.41/komorebi-0.1.41-x86_64-pc-windows-msvc.zip",
-    "hash": "838b1cbe551dbfada306a91e23fd536f8cea059ff619ad98495379e5228055b9",
+    "notes": "Check out the quickstart guide on https://lgug2z.github.io/komorebi",
+    "suggest": {
+        "whkd": "extras/whkd",
+        "autohotkey": "extras/autohotkey"
+    },
     "architecture": {
         "64bit": {
             "url": "https://github.com/LGUG2Z/komorebi/releases/download/v0.1.41/komorebi-0.1.41-x86_64-pc-windows-msvc.zip",
@@ -23,20 +26,10 @@
         "komorebic.exe",
         "komorebic-no-console.exe",
         "komorebi-gui.exe",
-        "komorebi-bar.exe"
+        "komorebi-bar.exe",
+        "komorebi-shortcuts.exe"
     ],
-    "shortcuts": [
-        [
-            "komorebi-gui.exe",
-            "Komorebi"
-        ]
-    ],
-    "pre_install": [
-        "if (Get-Process -Name komorebi -ErrorAction SilentlyContinue) { komorebic stop }"
-    ],
-    "checkver": {
-        "github": "https://github.com/LGUG2Z/komorebi"
-    },
+    "checkver": "github",
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -45,6 +38,9 @@
             "arm64": {
                 "url": "https://github.com/LGUG2Z/komorebi/releases/download/v$version/komorebi-$version-aarch64-pc-windows-msvc.zip"
             }
+        },
+        "hash": {
+            "url": "$baseurl/checksums.txt"
         }
     }
 }

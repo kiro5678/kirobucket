@@ -3,6 +3,9 @@
     "description": "A simple program to monitor your network/data usage.",
     "homepage": "https://github.com/Ashfaaq18/OpenNetMeter",
     "license": "Apache-2.0",
+    "suggest": {
+        ".NET Desktop Runtime 8.0": "versions/windowsdesktop-runtime-8.0"
+    },
     "architecture": {
         "64bit": {
             "url": "https://github.com/Ashfaaq18/OpenNetMeter/releases/download/v0.15.0/OpenNetMeter-0.15.0.msi",
@@ -20,7 +23,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/Ashfaaq18/OpenNetMeter/releases/download/v$version/OpenNetMeter-$version.msi"
+                "url": "https://github.com/Ashfaaq18/OpenNetMeter/releases/download/v$version/OpenNetMeter-$matchHead.msi"
             }
         }
     }

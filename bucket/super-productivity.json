@@ -1,27 +1,29 @@
 {
     "version": "19.3.1",
-    "description": "A task management and time tracking application for personal productivity.",
-    "homepage": "https://github.com/super-productivity/super-productivity",
+    "description": "To-do list & time tracker for programmers and other digital workers with Jira, Github, and Gitlab integration",
+    "homepage": "https://super-productivity.com",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/super-productivity/super-productivity/releases/download/v19.3.1/Super-Productivity-Setup-x64.exe#/dl.7z",
-            "hash": "9f44405f4e5cbddcedd5554114d47831909e6f565b50c08a8585f4ad7d202500"
+            "url": "https://github.com/super-productivity/super-productivity/releases/download/v19.3.1/superProductivity-x64.exe#/dl.7z",
+            "hash": "7e4431295cc6e0bdac8ba081e486640088f78456fcb1165e01c89743ec734e4c",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Force -Recurse"
+            ]
+        },
+        "arm64": {
+            "url": "https://github.com/super-productivity/super-productivity/releases/download/v19.3.1/superProductivity-arm64.exe#/dl.7z",
+            "hash": "7e4431295cc6e0bdac8ba081e486640088f78456fcb1165e01c89743ec734e4c",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\"",
+                "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Force -Recurse"
+            ]
         }
     },
-    "installer": {
-        "script": [
-            "$embedded = Get-ChildItem \"$dir\" -Recurse -Filter 'app-64.7z' | Select-Object -First 1",
-            "if (!$embedded) { abort 'Could not find the embedded Super Productivity application archive (app-64.7z).' }",
-            "7z x \"$($embedded.FullName)\" -o\"$dir\" -y | Out-Null",
-            "Remove-Item \"$embedded\" -Force -ErrorAction SilentlyContinue",
-            "Get-ChildItem \"$dir\" -Filter 'Super-Productivity-Setup-x64.exe' -File -ErrorAction SilentlyContinue | Remove-Item -Force"
-        ]
-    },
-    "bin": "superProductivity.exe",
     "shortcuts": [
         [
-            "superProductivity.exe",
+            "Super Productivity.exe",
             "Super Productivity"
         ]
     ],
@@ -31,7 +33,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/super-productivity/super-productivity/releases/download/v$version/Super-Productivity-Setup-x64.exe#/dl.7z"
+                "url": "https://github.com/super-productivity/super-productivity/releases/download/v$version/superProductivity-x64.exe#/dl.7z"
+            },
+            "arm64": {
+                "url": "https://github.com/super-productivity/super-productivity/releases/download/v$version/superProductivity-arm64.exe#/dl.7z"
             }
         }
     }

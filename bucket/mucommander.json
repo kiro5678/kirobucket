@@ -1,6 +1,6 @@
 {
     "version": "1.6.2-1",
-    "description": "Dual-pane file manager (stable release).",
+    "description": "Dual-pane file manager",
     "homepage": "https://www.mucommander.com",
     "license": "GPL-3.0-only",
     "suggest": {
@@ -28,9 +28,8 @@
         ".mucommander"
     ],
     "checkver": {
-        "url": "https://api.github.com/repos/mucommander/mucommander/releases/latest",
-        "jsonpath": "$.tag_name",
-        "regex": "^(?<version>\\d+(?:\\.\\d+)*-\\d+)$"
+        "github": "https://github.com/mucommander/mucommander",
+        "regex": "tag/([\\d.-]+)"
     },
     "autoupdate": {
         "architecture": {

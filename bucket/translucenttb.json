@@ -1,6 +1,6 @@
 {
     "version": "2026.2",
-    "description": "Lightweight utility for customizing the Windows taskbar appearance.",
+    "description": "Makes the Windows taskbar translucent/transparent.",
     "homepage": "https://github.com/TranslucentTB/TranslucentTB",
     "license": "GPL-3.0-only",
     "architecture": {
@@ -13,16 +13,20 @@
             "hash": "81b2f386bd4776a2d9f5c44d8a9b5b3aebccd2eeffaa53435eac24aa38797c82"
         }
     },
-    "bin": "TranslucentTB.exe",
+    "pre_install": [
+        "# Create settings.json if it does not exist",
+        "if (!(Test-Path \"$persist_dir\\settings.json\")) {",
+        "    Set-Content -Path \"$dir\\settings.json\" -Value \"{}\"",
+        "}"
+    ],
     "shortcuts": [
         [
             "TranslucentTB.exe",
             "TranslucentTB"
         ]
     ],
-    "checkver": {
-        "github": "https://github.com/TranslucentTB/TranslucentTB"
-    },
+    "persist": "settings.json",
+    "checkver": "github",
     "autoupdate": {
         "architecture": {
             "64bit": {

@@ -1,20 +1,27 @@
 {
     "version": "3.5.1",
-    "description": "Windows utility for changing system UI fonts and font sizes.",
+    "description": "No!! MeiryoUI is Windows system font setting tool on Windows 8.1/10/11.",
     "homepage": "https://github.com/Tatsu-syo/noMeiryoUI",
     "license": "MIT",
     "url": "https://github.com/Tatsu-syo/noMeiryoUI/releases/download/TAG-3.5.1/noMeiryoUI3.5.1.zip",
     "hash": "f96c2803a499c4e3b20e10bd423aa765d081b557536a5b6f3a7ba2aa9be93cf2",
+    "pre_install": [
+        "if (-not (Test-Path \"$persist_dir\\noMeiryoUI.ini\")) {",
+        "    New-Item -Path \"$dir\\noMeiryoUI.ini\" -ItemType File -Force | Out-Null",
+        "}"
+    ],
     "bin": "noMeiryoUI.exe",
     "shortcuts": [
         [
             "noMeiryoUI.exe",
-            "noMeiryoUI"
+            "No!! Meiryo UI"
         ]
     ],
+    "persist": "noMeiryoUI.ini",
     "checkver": {
         "github": "https://github.com/Tatsu-syo/noMeiryoUI",
-        "regex": "TAG-([0-9]+\\.[0-9]+\\.[0-9]+)"
+        "jsonpath": "$.tag_name",
+        "regex": "^TAG-([\\d.]+)$"
     },
     "autoupdate": {
         "url": "https://github.com/Tatsu-syo/noMeiryoUI/releases/download/TAG-$version/noMeiryoUI$version.zip"

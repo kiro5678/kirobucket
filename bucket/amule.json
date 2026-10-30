@@ -1,21 +1,44 @@
 {
-  "version": "3.0.0",
-  "description": "A free and open-source peer-to-peer file sharing client.",
-  "homepage": "https://www.amule-project.net/",
-  "license": "GPL-2.0-or-later",
-  "url": "https://github.com/amule-project/amule/releases/download/3.0.0/aMule-3.0.0-Windows-x64.zip",
-  "hash": "9b5a6a17a1039c5b1d6ea15adb471bf5495691d73c57a5eda54d696e03f7c299",
-  "bin": "amule.exe",
-  "shortcuts": [
-    [
-      "amule.exe",
-      "aMule"
-    ]
-  ],
-  "checkver": {
-    "github": "https://github.com/amule-project/amule"
-  },
-  "autoupdate": {
-    "url": "https://github.com/amule-project/amule/releases/download/$version/aMule-$version-Windows-x64.zip"
-  }
+    "version": "3.2.0",
+    "description": "A peer-to-peer file-sharing client for the eD2k and Kademlia networks, compatible with eMule.",
+    "homepage": "https://github.com/amule-org/amule",
+    "license": "GPL-2.0-or-later",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/amule-org/amule/releases/download/3.2.0/aMule-3.2.0-Windows-x64.zip",
+            "hash": "6826fb9c3a63394c5ba111647ab397025cc8e44034772263aab18bae50f4ab32",
+            "extract_dir": "amule-portable-x64"
+        },
+        "arm64": {
+            "url": "https://github.com/amule-org/amule/releases/download/3.2.0/aMule-3.2.0-Windows-arm64.zip",
+            "hash": "a584a25cbc47767ba07a70387ada5183daf184453401d24d035a6587f86daef8",
+            "extract_dir": "amule-portable-arm64"
+        }
+    },
+    "bin": [
+        "bin\\amulecmd.exe",
+        "bin\\amuled.exe",
+        "bin\\amuleweb.exe"
+    ],
+    "shortcuts": [
+        [
+            "bin\\amule.exe",
+            "aMule"
+        ],
+        [
+            "bin\\amulegui.exe",
+            "aMule (Remote GUI)"
+        ]
+    ],
+    "checkver": "github",
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/amule-org/amule/releases/download/$version/aMule-$version-Windows-x64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/amule-org/amule/releases/download/$version/aMule-$version-Windows-arm64.zip"
+            }
+        }
+    }
 }
