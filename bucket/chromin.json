@@ -32,6 +32,6 @@
         "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d+\\.\\d+\\.\\d+\\.(?<matchVersion>\\d+))"
     },
     "autoupdate": {
-        "url": "https://downloads.rizonesoft.com/Firemin/Chromin_$matchVersion_Setup.exe#/chromin.exe"
+        "url": "https://downloads.rizonesoft.com/Firemin/Chromin_$matchMatchVersion_Setup.exe#/chromin.exe"
     }
 }

@@ -32,6 +32,6 @@
         "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d+\\.\\d+\\.\\d+\\.(?<matchVersion>\\d+))"
     },
     "autoupdate": {
-        "url": "https://downloads.rizonesoft.com/Firemin/Edgemin_$matchVersion_Setup.exe#/edgemin.exe"
+        "url": "https://downloads.rizonesoft.com/Firemin/Edgemin_$matchMatchVersion_Setup.exe#/edgemin.exe"
     }
 }
