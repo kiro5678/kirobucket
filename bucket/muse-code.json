@@ -1,0 +1,38 @@
+{
+    "version": "1.4.14-R7309.1",
+    "description": "Meta's coding agent for the terminal and CI, built for Muse Spark.",
+    "homepage": "https://dev.meta.ai/docs/muse-code",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://dev.meta.ai/legal/terms-of-service"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://lookaside.facebook.com/lookaside/muse/download/?channel=muse&version=1.4.14-R7309.1&file=muse-x86-windows.exe#/muse.exe",
+            "hash": "20d18c426cc26e9e4b3cc07008ec07ec97e12e466a2be8cd2797b2e0e2018382"
+        },
+        "arm64": {
+            "url": "https://lookaside.facebook.com/lookaside/muse/download/?channel=muse&version=1.4.14-R7309.1&file=muse-aarch64-windows.exe#/muse.exe",
+            "hash": "64cef76cb210de993d31478ee582ef4639bbb212df8912b74f45d40431e66e82"
+        }
+    },
+    "bin": "muse.exe",
+    "checkver": {
+        "url": "https://api.meta.ai/muse-code/channels/muse-stable",
+        "jsonpath": "$.version"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://lookaside.facebook.com/lookaside/muse/download/?channel=muse&version=$version&file=muse-x86-windows.exe#/muse.exe"
+            },
+            "arm64": {
+                "url": "https://lookaside.facebook.com/lookaside/muse/download/?channel=muse&version=$version&file=muse-aarch64-windows.exe#/muse.exe"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/?channel=muse&version=$version&file=manifest.json",
+            "jsonpath": "$..[?(@.url == '$url')].checksum"
+        }
+    }
+}

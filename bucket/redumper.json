@@ -1,0 +1,45 @@
+{
+    "version": "b770",
+    "description": "Command-line tool for creating accurate optical disc dumps.",
+    "homepage": "https://github.com/superg/redumper",
+    "license": "GPL-3.0-or-later",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/superg/redumper/releases/download/b770/redumper-b770-windows-x64.zip",
+            "hash": "7f493d5ea3a26b5564eaf6d1a244ab05978e0361ce730512007c77a984a3f98b",
+            "extract_dir": "redumper-b770-windows-x64\\bin"
+        },
+        "32bit": {
+            "url": "https://github.com/superg/redumper/releases/download/b770/redumper-b770-windows-x86.zip",
+            "hash": "c6505f7ae27d512baab37e47566040087f71f7cc6b44b312904eac2621b017c8",
+            "extract_dir": "redumper-b770-windows-x86\\bin"
+        },
+        "arm64": {
+            "url": "https://github.com/superg/redumper/releases/download/b770/redumper-b770-windows-arm64.zip",
+            "hash": "892c886c1085f7689c2515fa0f0a89f520f93bc22b567a11bb5e2e8df3dc988e",
+            "extract_dir": "redumper-b770-windows-arm64\\bin"
+        }
+    },
+    "bin": "redumper.exe",
+    "checkver": {
+        "github": "https://api.github.com/repos/superg/redumper/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "(b[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/superg/redumper/releases/download/$version/redumper-$version-windows-x64.zip",
+                "extract_dir": "redumper-$version-windows-x64\\bin"
+            },
+            "32bit": {
+                "url": "https://github.com/superg/redumper/releases/download/$version/redumper-$version-windows-x86.zip",
+                "extract_dir": "redumper-$version-windows-x86\\bin"
+            },
+            "arm64": {
+                "url": "https://github.com/superg/redumper/releases/download/$version/redumper-$version-windows-arm64.zip",
+                "extract_dir": "redumper-$version-windows-arm64\\bin"
+            }
+        }
+    }
+}

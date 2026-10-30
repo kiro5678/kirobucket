@@ -1,0 +1,43 @@
+{
+    "version": "13.6.12",
+    "description": "A system and performance monitoring utility",
+    "homepage": "https://www.sysgauge.com",
+    "license": "Shareware",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.sysgauge.com/setups_x64/sysgauge_setup_v13.6.12_x64.exe#/dl.7z",
+            "hash": "b804ead52b028102853bd6e75f66b75515e7987568947aafd7d79b6a21d30957"
+        },
+        "32bit": {
+            "url": "https://www.sysgauge.com/setups/sysgauge_setup_v13.6.12.exe#/dl.7z",
+            "hash": "97b8da497f5590d6da7d9cf84053e3cff5e59178a2d409b5f8b96ef81ddc7fa3"
+        }
+    },
+    "installer": {
+        "script": [
+            "Rename-Item \"$dir\\bin\\sysgauge.flx\" 'sysgau.flx'",
+            "Invoke-ExternalCommand \"$dir\\bin\\dsminst.exe\" 'install', \"$dir\", 'sysgau' -LogPath \"$dir\\dsminst.log\" | Out-Null",
+            "Remove-Item \"$dir\\`$*\", \"$dir\\uninstall*\" -Recurse"
+        ]
+    },
+    "shortcuts": [
+        [
+            "bin\\sysgau.exe",
+            "SysGauge"
+        ]
+    ],
+    "checkver": {
+        "url": "https://www.sysgauge.com/downloads.html",
+        "regex": "(?sm)>SysGauge.*?>([\\d.]+)<"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.sysgauge.com/setups_x64/sysgauge_setup_v$version_x64.exe#/dl.7z"
+            },
+            "32bit": {
+                "url": "https://www.sysgauge.com/setups/sysgauge_setup_v$version.exe#/dl.7z"
+            }
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "version": "1.32.4",
+    "description": "Manage and run custom Linux virtual machines locally by using a portable, lightweight, self-contained virtual machine.",
+    "homepage": "https://smolmachines.com",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/smol-machines/smolvm/releases/download/v1.32.4/smolvm-1.32.4-windows-x86_64.zip",
+            "hash": "97c702731ff2758b5e9f31b95acbd6aa83d534fc1cb781dd8165cd6395584ed4",
+            "extract_dir": "smolvm-1.32.4-windows-x86_64"
+        }
+    },
+    "bin": "smolvm.exe",
+    "checkver": {
+        "github": "https://github.com/smol-machines/smolvm"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/smol-machines/smolvm/releases/download/v$version/smolvm-$version-windows-x86_64.zip",
+                "extract_dir": "smolvm-$version-windows-x86_64"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/checksums.sha256"
+        }
+    }
+}

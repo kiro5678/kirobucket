@@ -1,0 +1,47 @@
+{
+    "version": "0.12.16",
+    "description": "An open-source ebook reader designed for immersive and deep reading experiences",
+    "homepage": "https://readest.com/",
+    "license": {
+        "identifier": "AGPL-3.0-or-later",
+        "url": "https://github.com/readest/readest/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/readest/readest/releases/download/v0.12.16/Readest_0.12.16_x64-portable.exe#/Readest.exe",
+            "hash": "683a620d4ee883c2d15c500cbe0ca82e42900510276e557df33289e3b7265f74"
+        },
+        "arm64": {
+            "url": "https://github.com/readest/readest/releases/download/v0.12.16/Readest_0.12.16_arm64-portable.exe#/Readest.exe",
+            "hash": "e1135dcf8f3c1ebaed9b3e8e0b8173a245c59efa47e7ec488b4cc35001f06326"
+        }
+    },
+    "pre_install": [
+        "if (-not (Test-Path \"$persist_dir\\settings.json\")) {",
+        "    Set-Content -Path \"$dir\\settings.json\" -Value '{\"autoCheckUpdates\":false}' -Encoding ASCII",
+        "}"
+    ],
+    "shortcuts": [
+        [
+            "Readest.exe",
+            "Readest"
+        ]
+    ],
+    "persist": [
+        "Readest",
+        "settings.json"
+    ],
+    "checkver": {
+        "github": "https://github.com/readest/readest"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/readest/readest/releases/download/v$version/Readest_$version_x64-portable.exe#/Readest.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/readest/readest/releases/download/v$version/Readest_$version_arm64-portable.exe#/Readest.exe"
+            }
+        }
+    }
+}

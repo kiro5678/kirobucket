@@ -1,0 +1,34 @@
+{
+    "version": "1.6.42",
+    "description": "Test automation tool",
+    "homepage": "https://gauge.org",
+    "license": "GPL-3.0-or-later",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/getgauge/gauge/releases/download/v1.6.42/gauge-1.6.42-windows.x86_64.zip",
+            "hash": "423e4712e408089a0752bcbee2899579fb5d9aaf8950e53edc103dc789ed5cf9"
+        },
+        "32bit": {
+            "url": "https://github.com/getgauge/gauge/releases/download/v1.6.42/gauge-1.6.42-windows.x86.zip",
+            "hash": "62dea127214212f3f4dc85205fcf5f5b0df33ae36165c7dd8039e0271a11195d"
+        }
+    },
+    "bin": "gauge.exe",
+    "env_set": {
+        "GAUGE_HOME": "$persist_dir\\home"
+    },
+    "persist": "home",
+    "checkver": {
+        "github": "https://github.com/getgauge/gauge"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/getgauge/gauge/releases/download/v$version/gauge-$version-windows.x86_64.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/getgauge/gauge/releases/download/v$version/gauge-$version-windows.x86.zip"
+            }
+        }
+    }
+}

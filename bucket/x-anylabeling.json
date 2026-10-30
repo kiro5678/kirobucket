@@ -1,0 +1,45 @@
+{
+    "version": "4.2.3",
+    "description": "AI-assisted desktop annotation tool for image, video, text and 3D point cloud data, with built-in YOLO, SAM and other models (CPU build)",
+    "homepage": "https://xanylabeling.com/",
+    "license": "GPL-3.0-only",
+    "notes": [
+        "This is the CPU build. For NVIDIA GPU acceleration, use a Windows CUDA 11/12/13 installer from",
+        "https://github.com/CVHub520/X-AnyLabeling/releases matching your driver.",
+        "",
+        "X-AnyLabeling has a built-in updater; prefer `scoop update x-anylabeling` so Scoop stays in sync.",
+        "To disable automatic update check, run `xanylabeling --no-auto-update-check`."
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/CVHub520/X-AnyLabeling/releases/download/v4.2.3/X-AnyLabeling-v4.2.3-Windows-CPU-Setup.exe",
+            "hash": "774c49fc0c1732c2a58b1207a47399d29d81dca039d6d727fabd71bd03c58991"
+        }
+    },
+    "innosetup": true,
+    "bin": [
+        [
+            "X-AnyLabeling.exe",
+            "xanylabeling"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "X-AnyLabeling.exe",
+            "X-AnyLabeling"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/CVHub520/X-AnyLabeling"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/CVHub520/X-AnyLabeling/releases/download/v$version/X-AnyLabeling-v$version-Windows-CPU-Setup.exe"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/SHA256SUMS.txt"
+        }
+    }
+}

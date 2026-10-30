@@ -1,0 +1,47 @@
+{
+    "version": "4.3.229",
+    "homepage": "https://www.beeper.com/",
+    "description": "Universal chat app powered by Matrix",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://www.beeper.com/terms"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://beeper-desktop.download.beeper.com/builds/Beeper%20x64%204.3.229.exe#/dl.7z",
+            "hash": "c6b7685e4c0572d7e65b2beef756a55b0d3a96d9c612e4f52f0323326dfd2424",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\" -Removal",
+                "Remove-Item \"$dir\\`$*\" -Recurse"
+            ]
+        },
+        "arm64": {
+            "url": "https://beeper-desktop.download.beeper.com/builds/Beeper%20arm64%204.3.229.exe#/dl.7z",
+            "hash": "c7883b2c5e0f910183090316b2beeca85180e7fa43c8d0d8c1da7b8e7e8833fa",
+            "pre_install": [
+                "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-arm64.7z\" \"$dir\" -Removal",
+                "Remove-Item \"$dir\\`$*\" -Recurse"
+            ]
+        }
+    },
+    "shortcuts": [
+        [
+            "Beeper.exe",
+            "Beeper"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.beeper.com/desktop/update-feed.json?&platform=win32&channel=stable",
+        "jp": "$.version"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://beeper-desktop.download.beeper.com/builds/Beeper%20x64%20$version.exe#/dl.7z"
+            },
+            "arm64": {
+                "url": "https://beeper-desktop.download.beeper.com/builds/Beeper%20arm64%20$version.exe#/dl.7z"
+            }
+        }
+    }
+}
