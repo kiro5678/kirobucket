@@ -1,7 +1,7 @@
 # Manifest Portability Inventory
 
 **Audit target:** `master`  
-**Bucket manifests reviewed:** 825  
+**Portability audit coverage:** 825 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).  
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
 ## Definitions
