@@ -84,14 +84,16 @@ jobs:
               print("\\n".join(invalid))
               raise SystemExit("Stopped: one or more source manifests were invalid JSON.")
 
-          with (repo_root / "official-manifest-sync-summary.txt").open("w", encoding="utf-8") as report:
-              report.write("Sources: ScoopInstaller/Main and ScoopInstaller/Extras\\n")
-              report.write(f"Added: {len(added)}\\n")
-              report.write(f"Skipped because the case-insensitive filename already exists: {len(skipped)}\\n")
-              report.write("Source precedence for duplicate names: Main before Extras\\n")
-              report.write("\\nAdded manifests:\\n")
-              report.write("\\n".join(added))
-              report.write("\\n")
+          summary_path = repo_root / "official-manifest-sync-summary.txt"
+          if added or not summary_path.exists():
+              with summary_path.open("w", encoding="utf-8") as report:
+                  report.write("Sources: ScoopInstaller/Main and ScoopInstaller/Extras\\n")
+                  report.write(f"Added in this run: {len(added)}\\n")
+                  report.write(f"Skipped because the case-insensitive filename already exists: {len(skipped)}\\n")
+                  report.write("Source precedence for duplicate names: Main before Extras\\n")
+                  report.write("\\nAdded manifests:\\n")
+                  report.write("\\n".join(added))
+                  report.write("\\n")
           PY
 
       - name: Commit and push imported manifests
