@@ -14,8 +14,8 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/hainguyents13/mechvibes-dx",
-        "regex": "v([\\d.]+)"
+        "url": "https://api.github.com/repos/hainguyents13/mechvibes/releases?per_page=100",
+        "regex": "\"tag_name\"\\s*:\\s*\"v([\\d.]+)\"(?=(?:(?!\"tag_name\")[\\s\\S])*?\"name\"\\s*:\\s*\"MechvibesDX-[\\d.]+-Setup-x64\\.exe\")"
     },
     "autoupdate": {
         "url": "https://github.com/hainguyents13/mechvibes-dx/releases/download/v$version/MechvibesDX-$version-Setup-x64.exe",
