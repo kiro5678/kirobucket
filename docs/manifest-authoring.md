@@ -195,6 +195,12 @@ Replace `taskexplorer` with the manifest basename, without `.json`. Review every
 - When a task uncovers a new recurring failure or a correction to these rules, update this document as part of that task and verify the doc change in GitHub.
 - Report the commit and validation links, and distinguish successful checks from checks that have not completed.
 
+## Installer type in generated catalogs
+
+Manifest catalog tables include an **Installer Type** field. It is derived from the manifest's declared download URL, Scoop URL fragment, and explicit installer metadata such as `innosetup: true`. It identifies the package format or installer family when the manifest provides enough evidence.
+
+Do not label an EXE as NSIS, Inno Setup, or another installer engine from its extension or silent switches alone. Use **EXE setup (engine unverified)** unless the engine is explicitly declared or independently fingerprinted. The catalog is metadata-based and is not a substitute for inspecting the actual downloaded installer with the separate installer-type inspection workflow.
+
 ## Official references
 
 - [Scoop App Manifests](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
