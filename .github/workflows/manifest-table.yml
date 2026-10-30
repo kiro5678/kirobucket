@@ -896,6 +896,7 @@ jobs:
                   }
                   $repo = Get-GitHubRepoCandidate $json
                   $downloadUrl = Get-DownloadUrlFromManifest $json
+                  $installerType = Get-InstallerType $json
               } else {
                   $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
                   $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
@@ -904,6 +905,7 @@ jobs:
                   $homepage = ""
                   $repo = ""
                   $downloadUrl = ""
+                  $installerType = "Unknown (invalid manifest JSON)"
               }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
@@ -918,6 +920,7 @@ jobs:
                   AddedDate = $addedDate
                   Repo = $repo
                   DownloadUrl = $downloadUrl
+                  InstallerType = $installerType
               })
           }
 
@@ -1019,6 +1022,7 @@ jobs:
               $nameEscaped = $item.Name.Replace("|", "\|")
               $categoryEscaped = $item.Category.Replace("|", "\|")
               $versionEscaped = $item.Version.Replace("|", "\|")
+              $installerTypeEscaped = $item.InstallerType.Replace("|", "\|")
               $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
               $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
               $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
@@ -1031,7 +1035,8 @@ jobs:
                   Added = $addedDate
                   Date = $date
                   Homepage = $item.Homepage
-                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
+                  InstallerType = $item.InstallerType
+                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $installerTypeEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
               }
           }
 
@@ -1064,8 +1069,8 @@ jobs:
                   ""
                   "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
                   ""
-                  "| Name | Category | Version | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
-                  "| --- | --- | --- | --- | --- | --- | --- |"
+                  "| Name | Category | Version | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- | --- | --- | --- |"
                   ($Items | ForEach-Object { $_.Row })
                   ""
               ) -join [Environment]::NewLine
@@ -1083,6 +1088,100 @@ jobs:
           Set-Content -Path (Join-Path $docsPath "manifests-category-az.md") -Value (New-View "Category A-Z" $categoryAz) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-category-za.md") -Value (New-View "Category Z-A" $categoryZa) -Encoding utf8NoBOM
 
+
+          $installerTypeByName = @{}
+          foreach ($item in $manifestData) {
+              $installerTypeByName[$item.Name] = [string]$item.InstallerType
+          }
+
+          function Get-MarkdownCells {
+              param([string]$Line)
+              $value = $Line.Trim()
+              if ($value.StartsWith("|")) { $value = $value.Substring(1) }
+              if ($value.EndsWith("|")) { $value = $value.Substring(0, $value.Length - 1) }
+              return ,([regex]::Split($value, '(?<!\\)\|') | ForEach-Object { $_.Trim() })
+          }
+
+          function Set-MarkdownCells {
+              param([System.Collections.Generic.List[string]]$Cells)
+              return "| " + ($Cells -join " | ") + " |"
+          }
+
+          function Add-InstallerTypeColumn {
+              param([string]$DocumentPath)
+
+              if (-not (Test-Path -LiteralPath $DocumentPath -PathType Leaf)) {
+                  Write-Warning "Document not found; installer type column not added: $DocumentPath"
+                  return
+              }
+
+              $documentLines = [System.Collections.Generic.List[string]]::new()
+              foreach ($line in ([System.IO.File]::ReadAllText($DocumentPath) -split '\r?\n')) {
+                  $documentLines.Add($line)
+              }
+
+              $changed = $false
+              for ($lineIndex = 0; $lineIndex -lt $documentLines.Count; $lineIndex++) {
+                  if ($documentLines[$lineIndex] -notmatch '^\|') { continue }
+
+                  $headers = @(Get-MarkdownCells $documentLines[$lineIndex])
+                  if ($headers -notcontains "Manifest") { continue }
+                  if (@($headers | Where-Object { $_ -match '(?i)installer.*type' }).Count -gt 0) { continue }
+                  if ($lineIndex + 1 -ge $documentLines.Count -or $documentLines[$lineIndex + 1] -notmatch '^\|\s*:?-{3,}') { continue }
+
+                  $insertAt = [array]::IndexOf($headers, "Manifest") + 1
+                  $headerCells = [System.Collections.Generic.List[string]]::new()
+                  foreach ($header in $headers) { $headerCells.Add([string]$header) }
+                  $headerCells.Insert($insertAt, "Installer Type")
+                  $documentLines[$lineIndex] = Set-MarkdownCells $headerCells
+
+                  $separatorCells = [System.Collections.Generic.List[string]]::new()
+                  for ($column = 0; $column -lt $headerCells.Count; $column++) {
+                      $separatorCells.Add("---")
+                  }
+                  $documentLines[$lineIndex + 1] = Set-MarkdownCells $separatorCells
+
+                  $rowIndex = $lineIndex + 2
+                  while ($rowIndex -lt $documentLines.Count -and $documentLines[$rowIndex] -match '^\|') {
+                      $row = $documentLines[$rowIndex]
+                      $manifestMatch = [regex]::Match($row, 'bucket/([^/)\]]+)\.json')
+                      if ($manifestMatch.Success) {
+                          $manifestName = $manifestMatch.Groups[1].Value
+                          $type = if ($installerTypeByName.ContainsKey($manifestName)) {
+                              [string]$installerTypeByName[$manifestName]
+                          } else {
+                              "Unknown (manifest not found)"
+                          }
+
+                          $cells = [System.Collections.Generic.List[string]]::new()
+                          foreach ($cell in (Get-MarkdownCells $row)) { $cells.Add([string]$cell) }
+                          if ($cells.Count -eq $headers.Count) {
+                              $cells.Insert($insertAt, $type.Replace("|", "\|"))
+                              $documentLines[$rowIndex] = Set-MarkdownCells $cells
+                          } else {
+                              Write-Warning "Unexpected table width while adding Installer Type: $DocumentPath"
+                          }
+                      }
+                      $rowIndex++
+                  }
+
+                  $lineIndex = $rowIndex - 1
+                  $changed = $true
+              }
+
+              if ($changed) {
+                  [System.IO.File]::WriteAllText(
+                      $DocumentPath,
+                      ($documentLines -join [Environment]::NewLine),
+                      [System.Text.UTF8Encoding]::new($false)
+                  )
+                  Write-Host "Added Installer Type to manifest tables in $DocumentPath"
+              }
+          }
+
+          Add-InstallerTypeColumn (Join-Path $docsPath "categories.md")
+          Add-InstallerTypeColumn (Join-Path $docsPath "software-by-developer.md")
+
           $readme = Get-Content -Path $readmePath -Raw
 
           $table = @(
@@ -1092,8 +1191,8 @@ jobs:
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
-              "| --- | --- | --- | --- | --- | --- | --- |"
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | Installer Type | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- | --- | --- | --- |"
               ($newest | ForEach-Object { $_.Row })
               $end
           ) -join [Environment]::NewLine
