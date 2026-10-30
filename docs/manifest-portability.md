@@ -25,6 +25,9 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Review | 4 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
 | **Total** | **825** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
+<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
+<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
+
 ## Nonportable manifests by installer type
 
 This index groups the 53 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
