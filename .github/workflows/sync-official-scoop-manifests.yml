@@ -1,0 +1,109 @@
+name: Sync missing manifests from Scoop Main and Extras
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/sync-official-scoop-manifests.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-official-scoop-manifests
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kirobucket
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download official bucket manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/scoop-sources"
+
+          for repo in Main Extras; do
+            git clone --quiet --depth 1 --filter=blob:none --sparse \
+              "https://github.com/ScoopInstaller/${repo}.git" \
+              "$RUNNER_TEMP/scoop-sources/${repo}"
+            git -C "$RUNNER_TEMP/scoop-sources/${repo}" sparse-checkout set bucket
+            echo "${repo} source commit: $(git -C "$RUNNER_TEMP/scoop-sources/${repo}" rev-parse HEAD)"
+          done
+
+      - name: Add only missing manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - "$GITHUB_WORKSPACE" "$RUNNER_TEMP/scoop-sources" <<'PY'
+          import json
+          import shutil
+          import sys
+          from pathlib import Path
+
+          repo_root = Path(sys.argv[1])
+          sources_root = Path(sys.argv[2])
+          destination = repo_root / "bucket"
+          destination.mkdir(parents=True, exist_ok=True)
+
+          existing = {path.name.casefold() for path in destination.glob("*.json")}
+          added = []
+          skipped = []
+          invalid = []
+
+          # Main is processed first if a filename is present in both official buckets.
+          for source_name in ("Main", "Extras"):
+              source_bucket = sources_root / source_name / "bucket"
+              for source_file in sorted(source_bucket.glob("*.json"), key=lambda p: p.name.casefold()):
+                  key = source_file.name.casefold()
+                  if key in existing:
+                      skipped.append(f"{source_name}/{source_file.name}")
+                      continue
+
+                  try:
+                      json.loads(source_file.read_text(encoding="utf-8-sig"))
+                  except (UnicodeError, json.JSONDecodeError) as exc:
+                      invalid.append(f"{source_name}/{source_file.name}: {exc}")
+                      continue
+
+                  shutil.copy2(source_file, destination / source_file.name)
+                  existing.add(key)
+                  added.append(f"{source_name}/{source_file.name}")
+
+          print(f"Added: {len(added)}")
+          print(f"Already present / duplicate name skipped: {len(skipped)}")
+          print(f"Invalid JSON skipped: {len(invalid)}")
+          if invalid:
+              print("\\n".join(invalid))
+              raise SystemExit("Stopped: one or more source manifests were invalid JSON.")
+
+          with (repo_root / "official-manifest-sync-summary.txt").open("w", encoding="utf-8") as report:
+              report.write("Sources: ScoopInstaller/Main and ScoopInstaller/Extras\\n")
+              report.write(f"Added: {len(added)}\\n")
+              report.write(f"Skipped because the case-insensitive filename already exists: {len(skipped)}\\n")
+              report.write("Source precedence for duplicate names: Main before Extras\\n")
+              report.write("\\nAdded manifests:\\n")
+              report.write("\\n".join(added))
+              report.write("\\n")
+          PY
+
+      - name: Commit and push imported manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bucket official-manifest-sync-summary.txt
+          if git diff --cached --quiet; then
+            echo "No missing manifests to add."
+            exit 0
+          fi
+          git commit -m "Add missing manifests from Scoop Main and Extras"
+          git push origin HEAD:master
