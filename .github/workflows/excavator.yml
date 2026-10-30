@@ -196,7 +196,7 @@ jobs:
           # are emitted by Scoop's error() helper as "ERROR Could not update <manifest>...".
           # Do not treat "Could not find hash" alone as a failure: Scoop may successfully
           # download the archive and calculate its hash as a fallback.
-          $diagnosticPattern = "(?i)(^\s*ERROR\b|^\s*[a-z0-9][a-z0-9._+-]*:\s*couldn't\s+(?:match|find|retrieve)\b|^\s*[a-z0-9][a-z0-9._+-]*:\s*The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|^\s*URL https?://\S+ is not valid\s*$)"
+          $diagnosticPattern = "(?i)(^\s*ERROR\b|^\s*[a-z0-9][a-z0-9._+-]*:\s*couldn't\s+(?:match|find|retrieve|requires)\b|^\s*[a-z0-9][a-z0-9._+-]*:\s*The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|^\s*URL https?://\S+ is not valid\s*$)"
           $diagnostics = @($cleanOutput | Where-Object { $_ -match $diagnosticPattern })
 
           if ($process.ExitCode -ne 0) {
@@ -273,4 +273,6 @@ jobs:
           path: |
             ${{ runner.temp }}/excavator-failure-report.txt
             ${{ runner.temp }}/excavator-seed-failures.txt
+            ${{ runner.temp }}/excavator-action.stdout.log
+            ${{ runner.temp }}/excavator-action.stderr.log
           if-no-files-found: warn
