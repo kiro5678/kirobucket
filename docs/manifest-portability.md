@@ -25,6 +25,38 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Review | 4 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
 | **Total** | **825** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
+## Nonportable manifests by installer type
+
+This index groups the 53 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+
+| Installer/package type | Manifests | Count |
+|---|---|---:|
+| NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 17 |
+| Inno Setup EXE | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 4 |
+| MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json) | 4 |
+| NSIS EXE | [biscuit](../bucket/biscuit.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json) | 3 |
+| .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
+| MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
+| NVIDIA self-extracting EXE + setup.exe | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json), [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 2 |
+| Open-Shell EXE bootstrapper (MSI-based) | [open-shell](../bucket/open-shell.json), [open-shell-nightly](../bucket/open-shell-nightly.json) | 2 |
+| Vendor EXE setup (engine unverified) | [belarc-advisor](../bucket/belarc-advisor.json), [poweriso](../bucket/poweriso.json) | 2 |
+| EXE bootstrapper + embedded MSI | [fxsound](../bucket/fxsound.json) | 1 |
+| EXE bootstrapper + MSIX | [fluentstore](../bucket/fluentstore.json) | 1 |
+| EXE setup (Inno-style switches; engine not confirmed) | [imazing-np](../bucket/imazing-np.json) | 1 |
+| Inno Setup-style EXE (based on switches) | [openzfs-np](../bucket/openzfs-np.json) | 1 |
+| Microsoft OneDrive setup EXE | [onedrive-np](../bucket/onedrive-np.json) | 1 |
+| MSI payload extraction + URL protocol registration | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | 1 |
+| MSIXBundle + APPX dependencies | [screenbox](../bucket/screenbox.json) | 1 |
+| Npcap EXE driver installer (engine unspecified) | [npcap-np](../bucket/npcap-np.json) | 1 |
+| Office Deployment Tool (self-extracting EXE + setup.exe) | [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | 1 |
+| Self-extracting EXE + DXSETUP | [directx-np](../bucket/directx-np.json) | 1 |
+| Vendor EXE setup (NSIS-style switches; engine unverified) | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | 1 |
+| Vendor EXE silent installer (engine unverified) | [mumuplayer-online](../bucket/mumuplayer-online.json) | 1 |
+| Vendor-specific EXE component installer | [mumuplayer-android15](../bucket/mumuplayer-android15.json) | 1 |
+| Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
+| ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
+| **Total** | **All Nonportable manifests** | **53** |
+
 ## Nonportable manifests
 
 These manifests execute an actual installer or create persistent Windows integration. A target path inside Scoop does **not** change the classification.
