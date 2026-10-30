@@ -1121,7 +1121,7 @@ jobs:
           $installerTypeLines = [System.Collections.Generic.List[string]]::new()
           $installerTypeLines.Add("## All bucket manifests by installer type")
           $installerTypeLines.Add("")
-          $installerTypeLines.Add("This inventory covers every JSON manifest in `bucket/` at generation time. It uses the same Installer Type inference as the generated manifest views; installer engines that cannot be verified remain explicitly unverified.")
+          $installerTypeLines.Add('This inventory covers every JSON manifest in bucket/ at generation time. It uses the same Installer Type inference as the generated manifest views; installer engines that cannot be verified remain explicitly unverified.')
           $installerTypeLines.Add("")
           $installerTypeLines.Add("| Installer Type | Manifests | Count |")
           $installerTypeLines.Add("| --- | --- | ---: |")
@@ -1132,7 +1132,7 @@ jobs:
                       Sort-Object Name |
                       ForEach-Object { "[$($_.Name)](../bucket/$($_.Name).json)" }
               ) -join ", "
-              $typeLabel = ([string]$group.Name).Replace("|", "\\|")
+              $typeLabel = ([string]$group.Name).Replace("|", "\|")
               $installerTypeLines.Add("| $typeLabel | $links | $($group.Count) |")
           }
           $installerTypeLines.Add("| **Total** | **All bucket manifests** | **$($manifests.Count)** |")
