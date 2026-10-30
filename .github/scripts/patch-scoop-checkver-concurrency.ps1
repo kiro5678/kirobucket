@@ -8,12 +8,14 @@ if (-not (Test-Path -LiteralPath $scoopShim -PathType Leaf)) {
     throw "Scoop is not installed at the expected path: $scoopShim"
 }
 
-$scoopPrefix = (& $scoopShim prefix scoop | Select-Object -Last 1)
-if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace([string]$scoopPrefix)) {
+$scoopPrefixOutput = @(& $scoopShim prefix scoop)
+$scoopPrefix = [string]($scoopPrefixOutput | Select-Object -Last 1)
+if ([string]::IsNullOrWhiteSpace($scoopPrefix)) {
     throw 'Could not resolve the installed Scoop directory using scoop prefix scoop.'
 }
+$scoopPrefix = $scoopPrefix.Trim()
 
-$checkverPath = Join-Path ([string]$scoopPrefix).Trim() 'bin\checkver.ps1'
+$checkverPath = Join-Path $scoopPrefix 'bin\checkver.ps1'
 if (-not (Test-Path -LiteralPath $checkverPath -PathType Leaf)) {
     throw "Scoop checkver.ps1 was not found: $checkverPath"
 }
@@ -49,11 +51,12 @@ if ($queueStart -lt 0 -or $queueEnd -lt 0 -or $queueEnd -le $queueStart) {
 $queueBlock = $source.Substring($queueStart, $queueEnd - $queueStart)
 $queueBlock = Replace-Once -Text $queueBlock -Old '# start all downloads' -New '# Start a bounded queue of Checkver HTTP requests.' -Label 'queue comment'
 $queueBlock = Replace-Once -Text $queueBlock -Old '$in_progress = 0' -New '' -Label 'initial in-progress counter'
-$queueBlock = Replace-Once -Text $queueBlock -Old '$Queue | ForEach-Object {' -New @'
+$queueLoopHeader = @'
 function Start-CheckverRequests {
     while ($checkverScheduler.InProgress -lt $checkverScheduler.MaxConcurrent -and $checkverScheduler.Queue.Count -gt 0) {
         $name, $json, $file = $checkverScheduler.Queue.Dequeue()
-'@ -Label 'request queue loop'
+'@
+$queueBlock = Replace-Once -Text $queueBlock -Old '$Queue | ForEach-Object {' -New $queueLoopHeader -Label 'request queue loop'
 $queueBlock = Replace-Once -Text $queueBlock -Old '    $name, $json, $file = $_' -New '' -Label 'queued manifest unpack'
 $queueBlock = Replace-Once -Text $queueBlock -Old '            return' -New '            continue' -Label 'skip malformed checkver manifest'
 $queueBlock = Replace-Once -Text $queueBlock -Old '$in_progress++' -New '$checkverScheduler.InProgress++' -Label 'in-progress increment'
