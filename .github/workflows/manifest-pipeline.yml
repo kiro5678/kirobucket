@@ -1,6 +1,11 @@
 name: Manifest Pipeline
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/*.json'
   workflow_dispatch:
     inputs:
       manifest:
