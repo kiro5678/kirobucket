@@ -7,7 +7,6 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | Name | Category | Version | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- | --- |
 | [aifilesorter](bucket/aifilesorter.json) | File Management | 1.9.2 | 2026-09-29 | — | [Homepage](https://github.com/hyperfield/ai-file-sorter) | Local AI file organization with categorization and rename suggestions. |
-| [biniware-run](bucket/biniware-run.json) | Productivity & Launchers | 7.9.0.0 | 2026-09-29 | — | [Homepage](https://biniware.com/brun) | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. |
 | [clickmonitorddc](bucket/clickmonitorddc.json) | System Monitoring & Hardware | 7.2 | 2026-09-29 | — | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. |
 | [clipangel](bucket/clipangel.json) | Clipboard & Text | 2.23 | 2026-09-29 | — | [Homepage](https://sourceforge.net/projects/clip-angel/) | Clipboard history capture and paste tool. |
 | [cstatus](bucket/cstatus.json) | Network & DNS | 1.2.7.1 | 2026-09-29 | — | [Homepage](https://www.hnsoft.pt/cstatus) | Free network monitoring and scanning tool for Windows |
@@ -700,6 +699,7 @@ Manifest Added is the date the manifest first entered this bucket's Git history;
 | [poltertype](bucket/poltertype.json) | Keyboard & Language | 0.38.2 | 2026-10-05 | 2026-10-19 | [Homepage](https://github.com/Just-Code-NET/PolterType) | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. |
 | [winbin2iso](bucket/winbin2iso.json) | Other Utilities | 6.79 | 2026-10-27 | 2026-10-19 | [Homepage](https://www.softwareok.com/?Download=WinBin2Iso) | Convert BIN CD images to ISO images. |
 | [autohide-mouse-cursor](bucket/autohide-mouse-cursor.json) | Other Utilities | 6.29 | 2026-10-27 | 2026-10-20 | [Homepage](https://www.softwareok.com/?Download=AutoHideMouseCursor) | Automatically hide the mouse cursor after inactivity. |
+| [biniware-run](bucket/biniware-run.json) | Productivity & Launchers | 7.9.0.0 | 2026-09-29 | 2026-10-20 | [Homepage](https://biniware.com/brun) | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. |
 | [cursortip](bucket/cursortip.json) | Other Utilities | 1.4.1 | 2026-10-23 | 2026-10-20 | [Homepage](https://github.com/zeno528/CursorTip) | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. |
 | [dirprintok](bucket/dirprintok.json) | Other Utilities | 7.69 | 2026-10-27 | 2026-10-20 | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) | Print directory listings and export them to XLS, HTML, CSV, and TXT. |
 | [endfield-gacha](bucket/endfield-gacha.json) | Other Utilities | 0.7.1 | 2026-10-21 | 2026-10-20 | [Homepage](https://github.com/bhaoo/endfield-gacha) | 一个《明日方舟：终末地》寻访记录统计与分析工具 |
