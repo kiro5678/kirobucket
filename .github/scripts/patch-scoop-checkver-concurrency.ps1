@@ -56,7 +56,7 @@ function Start-CheckverRequests {
 '@ -Label 'request queue loop'
 $queueBlock = Replace-Once -Text $queueBlock -Old '    $name, $json, $file = $_' -New '' -Label 'queued manifest unpack'
 $queueBlock = Replace-Once -Text $queueBlock -Old '$in_progress++' -New '$checkverScheduler.InProgress++' -Label 'in-progress increment'
-$queueBlock = $queueBlock.TrimEnd() + $newLine + '    }' + $newLine + '}'
+$queueBlock = $queueBlock.TrimEnd() + $newLine + '}'
 
 $schedulerInit = @'
 $checkverScheduler = [PSCustomObject]@{
