@@ -6,11 +6,11 @@
 
 ## Definitions
 
-| Class | Meaning in this repository |
-|---|---|
-| **Portable** | Scoop downloads a standalone executable or extracts an archive/installer payload into the Scoop app directory. The manifest does not run the vendor's installation routine or register a Windows package/component as part of installation. The application files can generally be moved with the Scoop app directory. |
-| **Nonportable** | The manifest runs the vendor's setup routine, registers an MSIX/AppX package, installs a driver/service/runtime, installs fonts into Windows, or writes persistent Windows integration such as a protocol registration. This remains Nonportable even when the setup routine places the main files inside `$dir` or the Scoop app directory. |
-| **Review** | The manifest downloads a setup/package asset but its current instructions do not establish a safe, complete extraction or installation method. Do not assume it is Portable until the payload and launch path are verified. |
+| Class | Typical installer/package types | Meaning in this repository |
+| --- | --- | --- |
+| **Portable** | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS payload extraction | Scoop downloads a standalone executable or extracts an archive/installer payload into the Scoop app directory. The manifest does not run the vendor's installation routine or register a Windows package/component as part of installation. The application files can generally be moved with the Scoop app directory. |
+| **Nonportable** | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, Windows font or registry registration | The manifest runs the vendor's setup routine, registers an MSIX/AppX package, installs a driver/service/runtime, installs fonts into Windows, or writes persistent Windows integration such as a protocol registration. This remains Nonportable even when the setup routine places the main files inside `$dir` or the Scoop app directory. |
+| **Review** | Unverified EXE setup, RMSKIN add-on, or MSIX/EXE with unverified unpackaged behavior | The manifest downloads a setup/package asset but its current instructions do not establish a safe, complete extraction or installation method. Do not assume it is Portable until the payload and launch path are verified. |
 
 **Application data is not part of this classification.** A Portable application may still store settings, profiles, databases, caches, or other user data under `%APPDATA%`, `%LOCALAPPDATA%`, Documents, or another location outside Scoop. Portable means the application payload is not installed into Windows by the manifest; it does not mean that every part of the application's data is relocatable.
 
@@ -18,12 +18,12 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 ## Summary
 
-| Classification | Manifests | How to interpret it |
-|---|---:|---|
-| Portable | 768 | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 53 | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 4 | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **825** | Current JSON files in `bucket/` on `master`. |
+| Classification | Manifests | Installer/package types represented | How to interpret it |
+| --- | --- | --- | --- |
+| Portable | 768 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Nonportable | 53 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Review | 4 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
+| **Total** | **825** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ## Nonportable manifests
 
@@ -91,39 +91,39 @@ The installer type describes the package or setup technology used by the manifes
 
 These entries should not be treated as Portable or Nonportable until their payloads and launch behavior are checked.
 
-| Manifest | Why it needs review |
-|---|---|
-| [go-away-edge-installer](../bucket/go-away-edge-installer.json) | Downloads a standalone `.exe` and creates a shortcut, but the manifest has no extraction or installer instructions. The shortcut label says “Installer”; inspect the executable before classifying it. |
-| [motrix-next](../bucket/motrix-next.json) | Downloads a `*-setup.exe` without an archive fragment or installer instructions. Its declared `bin` is `motrix-next.exe`, which does not match the downloaded setup filename. The current extraction/launch path is not established. |
-| [quanto-flx](../bucket/quanto-flx.json) | Downloads a Rainmeter `.rmskin` add-on and depends on Rainmeter; the notes say it is installed through `SkinInstaller.exe`. This is an add-on payload, not a standalone portable application. |
-| [zenbreak-msix](../bucket/zenbreak-msix.json) | Renames an MSIX asset as a 7-Zip archive and extracts its files without registering the MSIX package. Verify that the unpackaged executable works before calling it Portable. |
+| Manifest | Installer/package type | Why it needs review |
+| --- | --- | --- |
+| [go-away-edge-installer](../bucket/go-away-edge-installer.json) | Standalone EXE (setup type not identified) | Downloads a standalone `.exe` and creates a shortcut, but the manifest has no extraction or installer instructions. The shortcut label says “Installer”; inspect the executable before classifying it. |
+| [motrix-next](../bucket/motrix-next.json) | EXE setup (installer engine unverified) | Downloads a `*-setup.exe` without an archive fragment or installer instructions. Its declared `bin` is `motrix-next.exe`, which does not match the downloaded setup filename. The current extraction/launch path is not established. |
+| [quanto-flx](../bucket/quanto-flx.json) | Rainmeter RMSKIN skin/add-on package | Downloads a Rainmeter `.rmskin` add-on and depends on Rainmeter; the notes say it is installed through `SkinInstaller.exe`. This is an add-on payload, not a standalone portable application. |
+| [zenbreak-msix](../bucket/zenbreak-msix.json) | MSIX package currently extracted as 7Z | Renames an MSIX asset as a 7-Zip archive and extracts its files without registering the MSIX package. Verify that the unpackaged executable works before calling it Portable. |
 
 ## Portable examples and important exceptions
 
 The following are examples of Portable manifest techniques in this bucket:
 
-| Manifest pattern | Example manifests | Why they are Portable |
-|---|---|---|
-| MSI extraction, not Windows Installer execution | [rqbit](../bucket/rqbit.json), [sklad](../bucket/sklad.json), [timigs](../bucket/timigs.json), [clipper](../bucket/clipper.json), [cooldesk-msi](../bucket/cooldesk-msi.json), [cedro-modern-dock](../bucket/cedro-modern-dock.json), [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json), [poltertype](../bucket/poltertype.json), [dnschanger-msi](../bucket/dnschanger-msi.json) | Scoop extracts the MSI payload; the manifest does not run `msiexec /i`. |
-| Inno Setup payload extraction | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
-| EXE/NSIS payload extraction | [endstate](../bucket/endstate.json), [mechvibes](../bucket/mechvibes.json), [openscreen](../bucket/openscreen.json), [keyboardsounds](../bucket/keyboardsounds.json), [keyboardsounds-pro](../bucket/keyboardsounds-pro.json), [super-productivity](../bucket/super-productivity.json), [safepdf-installer](../bucket/safepdf-installer.json) | The downloaded setup file is treated as an archive or its embedded application archive is extracted; the vendor setup routine is not executed. |
-| Explicit portable mode | [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | Their manifest passes the application's explicit portable-mode option. |
-| Setup executable used only as an extractor | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
-| File-only or direct portable payload | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
+| Manifest pattern | Installer/package type | Example manifests | Why they are Portable |
+| --- | --- | --- | --- |
+| MSI extraction, not Windows Installer execution | MSI database/payload extracted by Scoop | [rqbit](../bucket/rqbit.json), [sklad](../bucket/sklad.json), [timigs](../bucket/timigs.json), [clipper](../bucket/clipper.json), [cooldesk-msi](../bucket/cooldesk-msi.json), [cedro-modern-dock](../bucket/cedro-modern-dock.json), [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json), [poltertype](../bucket/poltertype.json), [dnschanger-msi](../bucket/dnschanger-msi.json) | Scoop extracts the MSI payload; the manifest does not run `msiexec /i`. |
+| Inno Setup payload extraction | Inno Setup EXE | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
+| EXE/NSIS payload extraction | NSIS EXE containing an embedded application archive (commonly app-64.7z) | [endstate](../bucket/endstate.json), [mechvibes](../bucket/mechvibes.json), [openscreen](../bucket/openscreen.json), [keyboardsounds](../bucket/keyboardsounds.json), [keyboardsounds-pro](../bucket/keyboardsounds-pro.json), [super-productivity](../bucket/super-productivity.json), [safepdf-installer](../bucket/safepdf-installer.json) | The downloaded setup file is treated as an archive or its embedded application archive is extracted; the vendor setup routine is not executed. |
+| Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | Their manifest passes the application's explicit portable-mode option. |
+| Setup executable used only as an extractor | Portable self-extracting EXE or Inno Setup portable bundle | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
+| File-only or direct portable payload | ZIP, 7Z, or standalone EXE | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
 
 ### Portable does not mean system-neutral at runtime
 
 The classification above concerns what the Scoop manifest does during installation. Some Portable applications can still request administrator rights or change Windows when the user enables a feature or runs a command:
 
-| Manifest | Runtime caveat not performed by the current Scoop install hook |
-|---|---|
-| [pulse](../bucket/pulse.json) | The ZIP is extracted by Scoop. First-time registration/start of `PulseService` is deliberately left to the app's in-app Repair / Install service action. |
-| [ublockdnsclient](../bucket/ublockdnsclient.json) | The binary is extracted; the user must explicitly run its elevated `install` command to configure the DNS service. |
-| [net-merge](../bucket/net-merge.json) | The official portable ZIP is extracted; system-wide connection balancing may require a virtual network adapter when used. |
-| [patchlight](../bucket/patchlight.json) | The ZIP is extracted; the SYSTEM scheduled task from the vendor setup is not created by the manifest. |
-| [veracrypt](../bucket/veracrypt.json) | The portable files are extracted; mounting volumes loads a driver at runtime and requires administrator privileges. |
-| [winutil](../bucket/winutil.json) | The manifest downloads a PowerShell script only; the user may run it elevated to change Windows settings, services, registry, apps, and updates. |
-| [MPOGPUFIX](../bucket/MPOGPUFIX.json) | The ZIP is extracted; the utility can change Windows graphics settings when the user runs its repair actions. |
+| Manifest | Installer/package type | Runtime caveat not performed by the current Scoop install hook |
+| --- | --- | --- |
+| [pulse](../bucket/pulse.json) | ZIP archive | The ZIP is extracted by Scoop. First-time registration/start of `PulseService` is deliberately left to the app's in-app Repair / Install service action. |
+| [ublockdnsclient](../bucket/ublockdnsclient.json) | Standalone EXE | The binary is extracted; the user must explicitly run its elevated `install` command to configure the DNS service. |
+| [net-merge](../bucket/net-merge.json) | Portable ZIP | The official portable ZIP is extracted; system-wide connection balancing may require a virtual network adapter when used. |
+| [patchlight](../bucket/patchlight.json) | ZIP archive | The ZIP is extracted; the SYSTEM scheduled task from the vendor setup is not created by the manifest. |
+| [veracrypt](../bucket/veracrypt.json) | Portable self-extracting EXE | The portable files are extracted; mounting volumes loads a driver at runtime and requires administrator privileges. |
+| [winutil](../bucket/winutil.json) | PowerShell script (.ps1) | The manifest downloads a PowerShell script only; the user may run it elevated to change Windows settings, services, registry, apps, and updates. |
+| [MPOGPUFIX](../bucket/MPOGPUFIX.json) | ZIP archive | The ZIP is extracted; the utility can change Windows graphics settings when the user runs its repair actions. |
 
 Do not move these runtime caveats into the Nonportable list unless the manifest itself starts the installation or registration during `scoop install`.
 
