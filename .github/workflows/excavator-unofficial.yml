@@ -1,0 +1,202 @@
+name: Unofficial Excavator
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  excavate:
+    name: Excavate
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Prepare Scoop with bounded Checkver concurrency
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopRoot = Join-Path $env:USERPROFILE 'SCOOP'
+          $env:SCOOP = $scoopRoot
+          $scoopShim = Join-Path $scoopRoot 'shims\scoop.ps1'
+
+          if (-not (Test-Path -LiteralPath $scoopShim -PathType Leaf)) {
+            Write-Host 'Installing Scoop using the official installer...'
+            Invoke-RestMethod 'https://raw.githubusercontent.com/ScoopInstaller/Install/master/install.ps1' | Invoke-Expression
+          }
+
+          if (-not (Test-Path -LiteralPath $scoopShim -PathType Leaf)) {
+            throw "The official Scoop installer did not create $scoopShim."
+          }
+
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value (Join-Path $scoopRoot 'shims') -Encoding utf8
+          [System.IO.File]::AppendAllText(
+            $env:GITHUB_ENV,
+            "SCOOP=$scoopRoot$([Environment]::NewLine)",
+            [System.Text.UTF8Encoding]::new($false)
+          )
+
+          & $scoopShim --version
+          & (Join-Path $env:GITHUB_WORKSPACE '.github\scripts\patch-scoop-checkver-concurrency.ps1')
+
+      - name: Excavate
+        uses: ScoopInstaller/GithubActions@5bceeda181721d9d10a18fdcc3ddca6f33467ae6 # v3.0.0
+        env:
+          SKIP_UPDATED: 1
+
+  verify:
+    name: Verify all manifest checks
+    needs: excavate
+    if: always()
+    runs-on: windows-latest
+    permissions:
+      actions: read
+    steps:
+      - name: Download and classify the completed Excavator job log
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          EXCAVATE_RESULT: ${{ needs.excavate.result }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $reportPath = Join-Path $env:RUNNER_TEMP 'excavator-verification-report.txt'
+          $extractPath = Join-Path $env:RUNNER_TEMP 'excavator-job-logs'
+          $zipPath = Join-Path $env:RUNNER_TEMP 'excavator-job-logs.zip'
+          $headers = @{
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
+          }
+
+          try {
+            $jobsUri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID/jobs?per_page=100"
+            $jobList = Invoke-RestMethod -Uri $jobsUri -Headers $headers -TimeoutSec 60 -ErrorAction Stop
+            $excavateJob = @($jobList.jobs | Where-Object { $_.name -eq 'Excavate' } | Select-Object -First 1)
+            if ($excavateJob.Count -ne 1) {
+              throw "Could not uniquely locate the completed Excavate job in run $env:GITHUB_RUN_ID."
+            }
+
+            $logsUri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/actions/jobs/$($excavateJob[0].id)/logs"
+            Invoke-WebRequest -Uri $logsUri -Headers $headers -OutFile $zipPath -MaximumRedirection 10 -TimeoutSec 180 -ErrorAction Stop
+
+            if (-not (Test-Path -LiteralPath $zipPath -PathType Leaf)) {
+              throw 'GitHub did not provide the completed Excavator job log.'
+            }
+
+            $bytes = [System.IO.File]::ReadAllBytes($zipPath)
+            $rawLogs = ''
+            if ($bytes.Length -ge 4 -and $bytes[0] -eq 0x50 -and $bytes[1] -eq 0x4B) {
+              Remove-Item -LiteralPath $extractPath -Recurse -Force -ErrorAction SilentlyContinue
+              Expand-Archive -LiteralPath $zipPath -DestinationPath $extractPath -Force
+              $logFiles = @(Get-ChildItem -LiteralPath $extractPath -File -Recurse)
+              if ($logFiles.Count -eq 0) {
+                throw 'The downloaded Excavator job log archive was empty.'
+              }
+              $rawLogs = ($logFiles | ForEach-Object { [System.IO.File]::ReadAllText($_.FullName) }) -join [Environment]::NewLine
+            } else {
+              $rawLogs = [System.IO.File]::ReadAllText($zipPath)
+            }
+
+            $ansiPattern = [string][char]27 + '\[[0-?]*[ -/]*[@-~]'
+            $manifestFailures = @{}
+            $rateLimitFailures = @{}
+            $diagnosticLines = [System.Collections.Generic.List[string]]::new()
+            $globalFailures = [System.Collections.Generic.List[string]]::new()
+
+            foreach ($rawLine in ($rawLogs -split '\r?\n')) {
+              $line = ([string]$rawLine) -replace $ansiPattern, ''
+              $line = $line -replace '^\uFEFF', ''
+              $line = $line -replace '^\d{4}-\d{2}-\d{2}T[^\s]+Z\s*', ''
+
+              if ($line -match '^\s*(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*):\s*(?<message>.*)$') {
+                $name = $Matches.name
+                $message = $Matches.message
+                if ($message -match "(?i)couldn't\s+(?:match|find|retrieve)|The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|No such host is known|checkver expects|could not retrieve content|URL https?://\S+ is not valid") {
+                  if (-not $manifestFailures.ContainsKey($name)) {
+                    $manifestFailures[$name] = [System.Collections.Generic.List[string]]::new()
+                  }
+                  $manifestFailures[$name].Add($message)
+                  $diagnosticLines.Add(($name + ': ' + $message))
+                  if ($message -match '(?i)API rate limit exceeded|secondary rate limit|\((?:403|429)\)') {
+                    $rateLimitFailures[$name] = $true
+                  }
+                }
+              } elseif ($line -match '(?i)^\s*ERROR\s+Could not update\s+(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*)') {
+                $name = $Matches.name
+                if (-not $manifestFailures.ContainsKey($name)) {
+                  $manifestFailures[$name] = [System.Collections.Generic.List[string]]::new()
+                }
+                $manifestFailures[$name].Add($line.Trim())
+                $diagnosticLines.Add($line.Trim())
+              } elseif ($line -match '(?i)^\s*ERROR\s+(?<message>.+)$') {
+                $globalFailures.Add($line.Trim())
+                $diagnosticLines.Add($line.Trim())
+              }
+            }
+
+            $failedNames = @($manifestFailures.Keys | Sort-Object)
+            $rateLimitedNames = @($rateLimitFailures.Keys | Sort-Object)
+            $reportLines = [System.Collections.Generic.List[string]]::new()
+            $reportLines.Add('Excavator verification report')
+            $reportLines.Add("Excavate job result: $env:EXCAVATE_RESULT")
+            $reportLines.Add("Unique manifests with checkver/autoupdate errors: $($failedNames.Count)")
+            $reportLines.Add("Manifests with HTTP 403/429 or rate-limit responses: $($rateLimitedNames.Count)")
+            $reportLines.Add("Additional global ERROR lines: $($globalFailures.Count)")
+            $reportLines.Add('')
+
+            if ($failedNames.Count -gt 0) {
+              $reportLines.Add('Failed manifests:')
+              foreach ($name in $failedNames) {
+                $reportLines.Add("- $name")
+                foreach ($message in $manifestFailures[$name]) {
+                  $reportLines.Add("  - $message")
+                }
+              }
+            }
+            if ($globalFailures.Count -gt 0) {
+              $reportLines.Add('')
+              $reportLines.Add('Global errors:')
+              foreach ($failure in $globalFailures) { $reportLines.Add("- $failure") }
+            }
+            if ($failedNames.Count -eq 0 -and $globalFailures.Count -eq 0) {
+              $reportLines.Add('No manifest checkver/autoupdate errors were found in the completed job log.')
+            }
+
+            [System.IO.File]::WriteAllLines($reportPath, $reportLines, [System.Text.UTF8Encoding]::new($false))
+
+            $summary = @(
+              '## Excavator verification',
+              "- Excavate job result: $env:EXCAVATE_RESULT",
+              "- Unique manifests with errors: $($failedNames.Count)",
+              "- Manifests with HTTP 403/429 or rate-limit responses: $($rateLimitedNames.Count)",
+              "- Additional global errors: $($globalFailures.Count)"
+            )
+            if ($failedNames.Count -gt 0) {
+              $summary += ''
+              $summary += '### Manifests with errors'
+              foreach ($name in $failedNames) { $summary += "- $name" }
+            }
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($summary -join [Environment]::NewLine)
+
+            if ($env:EXCAVATE_RESULT -ne 'success') {
+              throw "The official Scoop Excavator job ended with result '$env:EXCAVATE_RESULT'."
+            }
+            if ($failedNames.Count -gt 0 -or $globalFailures.Count -gt 0) {
+              throw "Excavator completed its manifest queue but found errors in $($failedNames.Count) manifest(s) and $($globalFailures.Count) global diagnostic line(s). See the verification report artifact."
+            }
+          } catch {
+            if (-not (Test-Path -LiteralPath $reportPath)) {
+              [System.IO.File]::WriteAllText($reportPath, "Verification failed: $($_.Exception.Message)", [System.Text.UTF8Encoding]::new($false))
+            }
+            throw
+          }
+
+      - name: Upload Excavator verification report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: excavator-verification-report
+          path: ${{ runner.temp }}/excavator-verification-report.txt
+          if-no-files-found: warn
