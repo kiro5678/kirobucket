@@ -23,7 +23,9 @@ function Replace-Once {
     param(
         [Parameter(Mandatory)][string]$Text,
         [Parameter(Mandatory)][string]$Old,
-        [Parameter(Mandatory)][string]$New,
+        [Parameter(Mandatory)]
+        [AllowEmptyString()]
+        [string]$New,
         [Parameter(Mandatory)][string]$Label
     )
     $count = ([regex]::Matches($Text, [regex]::Escape($Old))).Count
