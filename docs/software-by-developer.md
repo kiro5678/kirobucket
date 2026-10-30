@@ -2,6 +2,26 @@
 
 This catalog covers the requested vendor pages and links each included program to its Scoop manifest. Programs are also grouped by their primary function in [KiroBucket Categories](categories.md). EFSoftware was already represented by 13 manifests, so those entries are cross-referenced rather than duplicated.
 
+## Developer Index
+
+| Developer / Suite | Manifests | Type | Link |
+| --- | ---: | --- | --- |
+| Aurelitec Suite | 5 | Publisher cross-list | [View](categories.md#aurelitec-suite) |
+| Auslogics Suite | 15 | Publisher cross-list | [View](categories.md#auslogics-suite) |
+| ChemTable Suite | 5 | Publisher cross-list | [View](categories.md#chemtable-suite) |
+| ComputerSluggish Suite | 1 | Publisher cross-list | [View](categories.md#computersluggish-suite) |
+| EFSoftware Suite | 13 | Publisher cross-list | [View](categories.md#efsoftware-suite) |
+| Eric Zimmerman Suite | 31 | Publisher cross-list | [View](categories.md#eric-zimmerman-suite) |
+| Funk.eu Suite | 7 | Publisher cross-list | [View](categories.md#funk-eu-suite) |
+| GRC Suite | 18 | Publisher cross-list | [View](categories.md#grc-suite) |
+| MiTeC Suite | 22 | Publisher cross-list | [View](categories.md#mitec-suite) |
+| Neuber Suite | 2 | Publisher cross-list | [View](categories.md#neuber-suite) |
+| Rizonesoft Suite | 14 | Publisher cross-list | [View](categories.md#rizonesoft-suite) |
+| SoftwareOK Suite | 81 | Publisher cross-list | [View](categories.md#softwareok-suite) |
+| Sordum Suite | 63 | Publisher cross-list | [View](categories.md#sordum-suite) |
+| Türkaysoft Suite | 8 | Publisher cross-list | [View](categories.md#turkaysoft-suite) |
+| Vovsoft Suite | 174 | Publisher cross-list | [View](categories.md#vovsoft-suite) |
+
 ## Aurelitec
 
 | Program | Primary function | Functional category | Manifest |
@@ -62,6 +82,25 @@ Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each ma
 | [fonttwister](https://www.neuber.com/twister/) | Font effects, text graphics, and thumbnails | Images & Photos | [neuber-fonttwister](../bucket/neuber-fonttwister.json) |
 
 Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter. Their current downloads are installer executables, not verified portable payloads; they are not included until unattended installation and uninstallation can be validated. PC On/Off Time, Svchost Process Analyzer, and VoicesInstaller are freeware but do not publish numbered versions. They need a verified version signal before being added under the bucket's update-tracking rules.
+
+## Rizonesoft
+
+| Program | Primary function | Functional category | Manifest |
+| --- | --- | --- | --- |
+| [BIOS Beep Codes Viewer](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) | BIOS beep-code reference and hardware diagnostics | Forensics & Diagnostics | [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) |
+| [Carbon CD](https://rizonesoft.com/downloads/carbon-cd/) | CD cloning and disc-image creation | Storage & Disk Tools | [carbon-cd](../bucket/carbon-cd.json) |
+| [Chromin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Chrome and Chromium-based browsers | System Monitoring & Hardware | [chromin](../bucket/chromin.json) |
+| [Complete Internet Repair](https://rizonesoft.com/downloads/complete-internet-repair/) | Repair common Windows internet connectivity problems | Network & DNS | [complete-internet-repair](../bucket/complete-internet-repair.json) |
+| [DVD Drive Repair](https://rizonesoft.com/downloads/dvd-drive-repair/) | Diagnose and repair DVD drive issues | Storage & Disk Tools | [dvd-drive-repair](../bucket/dvd-drive-repair.json) |
+| [EdgeMin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Microsoft Edge | System Monitoring & Hardware | [edgemin](../bucket/edgemin.json) |
+| [Firemin](https://rizonesoft.com/downloads/firemin/) | Reduce browser memory usage | System Monitoring & Hardware | [firemin](../bucket/firemin.json) |
+| [Notepad3](https://rizonesoft.com/downloads/notepad3/) | Scintilla-based text editor with syntax highlighting | Clipboard & Text | [notepad3](../bucket/notepad3.json) |
+| [Pixel Repair](https://rizonesoft.com/downloads/pixel-repair/) | Detect and attempt to repair stuck display pixels | System Monitoring & Hardware | [pixel-repair](../bucket/pixel-repair.json) |
+| [Rizonesoft Office Alpha 5](https://rizonesoft.com/downloads/rizonesoft-office/) | Collection of office and productivity applications | Productivity & Launchers | [rizonesoft-office](../bucket/rizonesoft-office.json) |
+| [Resolute](https://rizonesoft.com/downloads/resolute/) | Collection of Windows repair, maintenance, and diagnostic utilities | Other Utilities | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) |
+| [Take Ownership](https://rizonesoft.com/gdm_downloads/take-ownership/) | Add or remove a Windows Take Ownership context-menu action | File Management | [take-ownership](../bucket/take-ownership.json) |
+| [USB Repair](https://rizonesoft.com/downloads/usb-repair/) | Diagnose and repair USB device problems | Storage & Disk Tools | [usb-repair](../bucket/usb-repair.json) |
+| [Watermin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Waterfox and compatible browsers | System Monitoring & Hardware | [watermin](../bucket/watermin.json) |
 
 ## Checksum and update limitations
 
