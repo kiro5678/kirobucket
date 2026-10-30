@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Prepare Scoop with bounded Checkver concurrency
+      - name: Prepare Scoop
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -39,7 +39,6 @@ jobs:
           )
 
           & $scoopShim --version
-          & (Join-Path $env:GITHUB_WORKSPACE '.github\scripts\patch-scoop-checkver-concurrency.ps1')
 
       - name: Excavate
         uses: ScoopInstaller/GithubActions@5bceeda181721d9d10a18fdcc3ddca6f33467ae6 # v3.0.0
