@@ -2,6 +2,11 @@ name: Update README Manifest Table
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/manifest-table.yml
 
 concurrency:
   group: manifest-table-${{ github.ref }}
@@ -715,6 +720,799 @@ jobs:
                   }
               }
               return ""
+          }
+
+
+          function Get-InstallerType {
+              param([object]$Manifest)
+
+              if ($null -eq $Manifest) {
+                  return "Unknown (invalid manifest JSON)"
+              }
+
+              $urls = [System.Collections.Generic.List[string]]::new()
+              if ($Manifest.url -is [string]) {
+                  $urls.Add($Manifest.url.Trim())
+              } elseif ($Manifest.url -is [array]) {
+                  foreach ($value in $Manifest.url) {
+                      if ($value -is [string]) { $urls.Add($value.Trim()) }
+                  }
+              }
+              if ($null -ne $Manifest.architecture) {
+                  foreach ($arch in $Manifest.architecture.PSObject.Properties) {
+                      if ($null -eq $arch.Value.url) { continue }
+                      if ($arch.Value.url -is [string]) {
+                          $urls.Add($arch.Value.url.Trim())
+                      } elseif ($arch.Value.url -is [array]) {
+                          foreach ($value in $arch.Value.url) {
+                              if ($value -is [string]) { $urls.Add($value.Trim()) }
+                          }
+                      }
+                  }
+              }
+
+              $installerParts = [System.Collections.Generic.List[string]]::new()
+              foreach ($propertyName in @("installer", "pre_install", "post_install", "uninstaller", "pre_uninstall", "post_uninstall")) {
+                  $property = $Manifest.PSObject.Properties[$propertyName]
+                  if ($null -ne $property -and $null -ne $property.Value) {
+                      $installerParts.Add(($property.Value | ConvertTo-Json -Depth 20 -Compress))
+                  }
+              }
+              $installerText = ($installerParts -join " ").ToLowerInvariant()
+
+              if ($Manifest.innosetup -eq $true) {
+                  return "Inno Setup EXE"
+              }
+              if ($installerText -match 'add-appxpackage' -or $urls -match '(?i)\.msixbundle(?:[?#]|$)') {
+                  if ($urls -match '(?i)\.msixbundle(?:[?#]|$)') { return "MSIXBundle" }
+                  return "MSIX/AppX package registration"
+              }
+
+              $hasMsi = $installerText -match 'msiexec(?:\.exe)?\s+/i' -or $installerText -match '(?i)\.msi'
+              $extensions = [System.Collections.Generic.List[string]]::new()
+              foreach ($candidate in $urls) {
+                  $extension = ""
+                  if ($candidate -match '(?i)#/dl\.([a-z0-9]+)(?:$|[?])') {
+                      $extension = $Matches[1].ToLowerInvariant()
+                  } else {
+                      $cleanUrl = ($candidate -split '#', 2)[0]
+                      $cleanUrl = ($cleanUrl -split '\?', 2)[0]
+                      if ($cleanUrl -match '(?i)\.tar\.gz              param([string]$RelativePath)
+
+              # Follow renames and return the oldest commit that introduced this manifest.
+              # Later edits and repairs do not change the original add date.
+              $history = @(& git log --follow --diff-filter=A --format=%cs -- $RelativePath 2>$null)
+              if ($LASTEXITCODE -ne 0 -or $history.Count -eq 0) {
+                  Write-Warning "Could not determine the original add date for $RelativePath."
+                  return "—"
+              }
+
+              $addedDate = [string]($history | Select-Object -Last 1)
+              if ($addedDate -match '^\d{4}-\d{2}-\d{2}$') {
+                  return $addedDate
+              }
+              Write-Warning "Git returned an invalid add date for $RelativePath."
+              return "—"
+          }
+
+          $manifestData = [System.Collections.Generic.List[object]]::new()
+          foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
+              $relativePath = "bucket/$($file.Name)"
+              $addedDate = Get-ManifestAddedDate $relativePath
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+                  $repo = Get-GitHubRepoCandidate $json
+                  $downloadUrl = Get-DownloadUrlFromManifest $json
+                  $installerType = Get-InstallerType $json
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+                  $homepage = ""
+                  $repo = ""
+                  $downloadUrl = ""
+                  $installerType = "Unknown (invalid manifest JSON)"
+              }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { Write-Warning "No category mapping for '$name'; using 'Other Utilities'."; "Other Utilities" }
+              $manifestData.Add([PSCustomObject]@{
+                  Name = $name
+                  RelativePath = $relativePath
+                  Version = $version
+                  Description = $description
+                  Homepage = $homepage
+                  Category = $category
+                  AddedDate = $addedDate
+                  Repo = $repo
+                  DownloadUrl = $downloadUrl
+                  InstallerType = $installerType
+              })
+          }
+
+          # Query each upstream GitHub repository once, in parallel. Use published releases,
+          # not commit dates from the bucket manifest. The bounded parallelism avoids serial waits.
+          $githubRepos = @(
+              $manifestData |
+                  Where-Object { -not [string]::IsNullOrWhiteSpace($_.Repo) } |
+                  Select-Object -ExpandProperty Repo -Unique
+          )
+          Write-Host "Looking up published releases for $($githubRepos.Count) unique GitHub repositories."
+          $upstreamRecords = @(
+              $githubRepos | ForEach-Object -Parallel {
+                  $repo = [string]$_
+                  $releaseDate = ""
+                  $headers = @{
+                      Accept = "application/vnd.github+json"
+                      "X-GitHub-Api-Version" = "2022-11-28"
+                      "User-Agent" = "kirobucket-manifest-table"
+                  }
+                  if (-not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+                      $headers.Authorization = "Bearer $($env:GH_TOKEN)"
+                  }
+                  try {
+                      $releases = @(Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases?per_page=10" -Headers $headers -TimeoutSec 15 -ErrorAction Stop)
+                      $published = @(
+                          $releases |
+                              Where-Object { -not $_.draft -and -not [string]::IsNullOrWhiteSpace([string]$_.published_at) } |
+                              Sort-Object @{ Expression = { [DateTimeOffset]::Parse([string]$_.published_at) }; Descending = $true }
+                      )
+                      if ($published.Count -gt 0) {
+                          $releaseDate = ([DateTimeOffset]::Parse([string]$published[0].published_at)).UtcDateTime.ToString("yyyy-MM-dd")
+                      }
+                  } catch {
+                      Write-Verbose "No release metadata for $repo : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{
+                      Repository = $repo
+                      ReleaseDate = $releaseDate
+                  }
+              } -ThrottleLimit 20
+          )
+
+          $upstreamCache = @{}
+          foreach ($record in $upstreamRecords) {
+              $upstreamCache[$record.Repository] = [string]$record.ReleaseDate
+          }
+
+          # If GitHub has no published release date, probe the actual download asset's
+          # Last-Modified header in parallel. Never use manifest commit timestamps.
+          $urlsToProbe = [System.Collections.Generic.List[string]]::new()
+          foreach ($item in $manifestData) {
+              $hasReleaseDate = $false
+              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
+                  $hasReleaseDate = -not [string]::IsNullOrWhiteSpace([string]$upstreamCache[$item.Repo])
+              }
+              if (-not $hasReleaseDate -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
+                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
+                  if ($cleanUrl -match '^https://') { $urlsToProbe.Add($cleanUrl) }
+              }
+          }
+
+          $downloadDates = @{}
+          $uniqueDownloadUrls = @($urlsToProbe | Sort-Object -Unique)
+          Write-Host "Checking Last-Modified on $($uniqueDownloadUrls.Count) download URL(s) without release dates."
+          $downloadDateRecords = @(
+              $uniqueDownloadUrls | ForEach-Object -Parallel {
+                  $url = [string]$_
+                  $date = ""
+                  try {
+                      $response = Invoke-WebRequest -Uri $url -Method Head -MaximumRedirection 10 -TimeoutSec 12 -ErrorAction Stop
+                      $lastModified = $response.Headers["Last-Modified"]
+                      if (-not [string]::IsNullOrWhiteSpace([string]$lastModified)) {
+                          $date = ([DateTimeOffset]::Parse([string]$lastModified)).UtcDateTime.ToString("yyyy-MM-dd")
+                      }
+                  } catch {
+                      Write-Verbose "No Last-Modified header for $url : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{ Url = $url; Date = $date }
+              } -ThrottleLimit 20
+          )
+          foreach ($record in $downloadDateRecords) {
+              $downloadDates[$record.Url] = [string]$record.Date
+          }
+
+          $manifests = foreach ($item in $manifestData) {
+              $date = ""
+              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
+                  $date = [string]$upstreamCache[$item.Repo]
+              }
+              if ([string]::IsNullOrWhiteSpace($date) -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
+                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
+                  if ($downloadDates.ContainsKey($cleanUrl)) {
+                      $date = [string]$downloadDates[$cleanUrl]
+                  }
+              }
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $nameEscaped = $item.Name.Replace("|", "\|")
+              $categoryEscaped = $item.Category.Replace("|", "\|")
+              $versionEscaped = $item.Version.Replace("|", "\|")
+              $installerTypeEscaped = $item.InstallerType.Replace("|", "\|")
+              $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
+
+              $addedDate = if ([string]::IsNullOrWhiteSpace([string]$item.AddedDate)) { "—" } else { [string]$item.AddedDate }
+
+              [PSCustomObject]@{
+                  Name = $item.Name
+                  Category = $item.Category
+                  Added = $addedDate
+                  Date = $date
+                  Homepage = $item.Homepage
+                  InstallerType = $item.InstallerType
+                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $installerTypeEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+          $addedDateValue = {
+              if ($_.Added -eq "—") { [datetime]::MinValue } else { [datetime]$_.Added }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $addedNewest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $true }, Name
+          $addedOldest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+          $categoryAz = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $false }, Name
+          $categoryZa = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $true }, Name
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
+                  ""
+                  "| Name | Category | Version | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-newest.md") -Value (New-View "Manifest additions — newest first" $addedNewest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-oldest.md") -Value (New-View "Manifest additions — oldest first" $addedOldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-az.md") -Value (New-View "Category A-Z" $categoryAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-za.md") -Value (New-View "Category Z-A" $categoryZa) -Encoding utf8NoBOM
+
+
+          $installerTypeByName = @{}
+          foreach ($item in $manifestData) {
+              $installerTypeByName[$item.Name] = [string]$item.InstallerType
+          }
+
+          function Get-MarkdownCells {
+              param([string]$Line)
+              $value = $Line.Trim()
+              if ($value.StartsWith("|")) { $value = $value.Substring(1) }
+              if ($value.EndsWith("|")) { $value = $value.Substring(0, $value.Length - 1) }
+              return ,([regex]::Split($value, '(?<!\\)\|') | ForEach-Object { $_.Trim() })
+          }
+
+          function Set-MarkdownCells {
+              param([System.Collections.Generic.List[string]]$Cells)
+              return "| " + ($Cells -join " | ") + " |"
+          }
+
+          function Add-InstallerTypeColumn {
+              param([string]$DocumentPath)
+
+              if (-not (Test-Path -LiteralPath $DocumentPath -PathType Leaf)) {
+                  Write-Warning "Document not found; installer type column not added: $DocumentPath"
+                  return
+              }
+
+              $documentLines = [System.Collections.Generic.List[string]]::new()
+              foreach ($line in ([System.IO.File]::ReadAllText($DocumentPath) -split '\r?\n')) {
+                  $documentLines.Add($line)
+              }
+
+              $changed = $false
+              for ($lineIndex = 0; $lineIndex -lt $documentLines.Count; $lineIndex++) {
+                  if ($documentLines[$lineIndex] -notmatch '^\|') { continue }
+
+                  $headers = @(Get-MarkdownCells $documentLines[$lineIndex])
+                  if ($headers -notcontains "Manifest") { continue }
+                  if (@($headers | Where-Object { $_ -match '(?i)installer.*type' }).Count -gt 0) { continue }
+                  if ($lineIndex + 1 -ge $documentLines.Count -or $documentLines[$lineIndex + 1] -notmatch '^\|\s*:?-{3,}') { continue }
+
+                  $insertAt = [array]::IndexOf($headers, "Manifest") + 1
+                  $headerCells = [System.Collections.Generic.List[string]]::new()
+                  foreach ($header in $headers) { $headerCells.Add([string]$header) }
+                  $headerCells.Insert($insertAt, "Installer Type")
+                  $documentLines[$lineIndex] = Set-MarkdownCells $headerCells
+
+                  $separatorCells = [System.Collections.Generic.List[string]]::new()
+                  for ($column = 0; $column -lt $headerCells.Count; $column++) {
+                      $separatorCells.Add("---")
+                  }
+                  $documentLines[$lineIndex + 1] = Set-MarkdownCells $separatorCells
+
+                  $rowIndex = $lineIndex + 2
+                  while ($rowIndex -lt $documentLines.Count -and $documentLines[$rowIndex] -match '^\|') {
+                      $row = $documentLines[$rowIndex]
+                      $manifestMatch = [regex]::Match($row, 'bucket/([^/)\]]+)\.json')
+                      if ($manifestMatch.Success) {
+                          $manifestName = $manifestMatch.Groups[1].Value
+                          $type = if ($installerTypeByName.ContainsKey($manifestName)) {
+                              [string]$installerTypeByName[$manifestName]
+                          } else {
+                              "Unknown (manifest not found)"
+                          }
+
+                          $cells = [System.Collections.Generic.List[string]]::new()
+                          foreach ($cell in (Get-MarkdownCells $row)) { $cells.Add([string]$cell) }
+                          if ($cells.Count -eq $headers.Count) {
+                              $cells.Insert($insertAt, $type.Replace("|", "\\|"))
+                              $documentLines[$rowIndex] = Set-MarkdownCells $cells
+                          } else {
+                              Write-Warning "Unexpected table width while adding Installer Type: $DocumentPath"
+                          }
+                      }
+                      $rowIndex++
+                  }
+
+                  $lineIndex = $rowIndex - 1
+                  $changed = $true
+              }
+
+              if ($changed) {
+                  [System.IO.File]::WriteAllText(
+                      $DocumentPath,
+                      ($documentLines -join [Environment]::NewLine),
+                      [System.Text.UTF8Encoding]::new($false)
+                  )
+                  Write-Host "Added Installer Type to manifest tables in $DocumentPath"
+              }
+          }
+
+          Add-InstallerTypeColumn (Join-Path $docsPath "categories.md")
+          Add-InstallerTypeColumn (Join-Path $docsPath "software-by-developer.md")
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "Manifest Added shows the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | Installer Type | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          $readme = [regex]::Replace($readme, '(?:\r?\n)+\z', '') + "`n"
+          [System.IO.File]::WriteAllText(
+              $readmePath,
+              $readme,
+              [System.Text.UTF8Encoding]::new($false)
+          )
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master:refs/remotes/origin/master
+          git rebase origin/master
+          git push origin HEAD:master
+) {
+                          $extension = "tar.gz"
+                      } elseif ($cleanUrl -match '(?i)\.tar\.xz              param([string]$RelativePath)
+
+              # Follow renames and return the oldest commit that introduced this manifest.
+              # Later edits and repairs do not change the original add date.
+              $history = @(& git log --follow --diff-filter=A --format=%cs -- $RelativePath 2>$null)
+              if ($LASTEXITCODE -ne 0 -or $history.Count -eq 0) {
+                  Write-Warning "Could not determine the original add date for $RelativePath."
+                  return "—"
+              }
+
+              $addedDate = [string]($history | Select-Object -Last 1)
+              if ($addedDate -match '^\d{4}-\d{2}-\d{2}$') {
+                  return $addedDate
+              }
+              Write-Warning "Git returned an invalid add date for $RelativePath."
+              return "—"
+          }
+
+          $manifestData = [System.Collections.Generic.List[object]]::new()
+          foreach ($file in Get-ChildItem -Path (Join-Path $env:GITHUB_WORKSPACE "bucket") -Filter *.json -File) {
+              $relativePath = "bucket/$($file.Name)"
+              $addedDate = Get-ManifestAddedDate $relativePath
+              $raw = Get-Content -Path $file.FullName -Raw
+              $json = $null
+
+              try {
+                  $json = $raw | ConvertFrom-Json
+              } catch {
+                  Write-Warning "Invalid JSON in $relativePath - $($_.Exception.Message)"
+              }
+
+              if ($null -ne $json) {
+                  $version = if ($null -ne $json.version) { [string]$json.version } else { "—" }
+                  $description = if ($null -ne $json.description -and -not [string]::IsNullOrWhiteSpace([string]$json.description)) {
+                      ([string]$json.description).Trim()
+                  } else {
+                      "—"
+                  }
+                  $homepage = if ($null -ne $json.homepage -and -not [string]::IsNullOrWhiteSpace([string]$json.homepage)) {
+                      ([string]$json.homepage).Trim()
+                  } else {
+                      ""
+                  }
+                  $repo = Get-GitHubRepoCandidate $json
+                  $downloadUrl = Get-DownloadUrlFromManifest $json
+              } else {
+                  $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
+                  $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
+                  $version = if ($versionMatch.Success) { $versionMatch.Groups[1].Value } else { "—" }
+                  $description = if ($descriptionMatch.Success) { $descriptionMatch.Groups[1].Value } else { "—" }
+                  $homepage = ""
+                  $repo = ""
+                  $downloadUrl = ""
+              }
+
+              $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
+              $category = if ($categoryMap.ContainsKey($name)) { $categoryMap[$name] } else { Write-Warning "No category mapping for '$name'; using 'Other Utilities'."; "Other Utilities" }
+              $manifestData.Add([PSCustomObject]@{
+                  Name = $name
+                  RelativePath = $relativePath
+                  Version = $version
+                  Description = $description
+                  Homepage = $homepage
+                  Category = $category
+                  AddedDate = $addedDate
+                  Repo = $repo
+                  DownloadUrl = $downloadUrl
+              })
+          }
+
+          # Query each upstream GitHub repository once, in parallel. Use published releases,
+          # not commit dates from the bucket manifest. The bounded parallelism avoids serial waits.
+          $githubRepos = @(
+              $manifestData |
+                  Where-Object { -not [string]::IsNullOrWhiteSpace($_.Repo) } |
+                  Select-Object -ExpandProperty Repo -Unique
+          )
+          Write-Host "Looking up published releases for $($githubRepos.Count) unique GitHub repositories."
+          $upstreamRecords = @(
+              $githubRepos | ForEach-Object -Parallel {
+                  $repo = [string]$_
+                  $releaseDate = ""
+                  $headers = @{
+                      Accept = "application/vnd.github+json"
+                      "X-GitHub-Api-Version" = "2022-11-28"
+                      "User-Agent" = "kirobucket-manifest-table"
+                  }
+                  if (-not [string]::IsNullOrWhiteSpace($env:GH_TOKEN)) {
+                      $headers.Authorization = "Bearer $($env:GH_TOKEN)"
+                  }
+                  try {
+                      $releases = @(Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases?per_page=10" -Headers $headers -TimeoutSec 15 -ErrorAction Stop)
+                      $published = @(
+                          $releases |
+                              Where-Object { -not $_.draft -and -not [string]::IsNullOrWhiteSpace([string]$_.published_at) } |
+                              Sort-Object @{ Expression = { [DateTimeOffset]::Parse([string]$_.published_at) }; Descending = $true }
+                      )
+                      if ($published.Count -gt 0) {
+                          $releaseDate = ([DateTimeOffset]::Parse([string]$published[0].published_at)).UtcDateTime.ToString("yyyy-MM-dd")
+                      }
+                  } catch {
+                      Write-Verbose "No release metadata for $repo : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{
+                      Repository = $repo
+                      ReleaseDate = $releaseDate
+                  }
+              } -ThrottleLimit 20
+          )
+
+          $upstreamCache = @{}
+          foreach ($record in $upstreamRecords) {
+              $upstreamCache[$record.Repository] = [string]$record.ReleaseDate
+          }
+
+          # If GitHub has no published release date, probe the actual download asset's
+          # Last-Modified header in parallel. Never use manifest commit timestamps.
+          $urlsToProbe = [System.Collections.Generic.List[string]]::new()
+          foreach ($item in $manifestData) {
+              $hasReleaseDate = $false
+              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
+                  $hasReleaseDate = -not [string]::IsNullOrWhiteSpace([string]$upstreamCache[$item.Repo])
+              }
+              if (-not $hasReleaseDate -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
+                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
+                  if ($cleanUrl -match '^https://') { $urlsToProbe.Add($cleanUrl) }
+              }
+          }
+
+          $downloadDates = @{}
+          $uniqueDownloadUrls = @($urlsToProbe | Sort-Object -Unique)
+          Write-Host "Checking Last-Modified on $($uniqueDownloadUrls.Count) download URL(s) without release dates."
+          $downloadDateRecords = @(
+              $uniqueDownloadUrls | ForEach-Object -Parallel {
+                  $url = [string]$_
+                  $date = ""
+                  try {
+                      $response = Invoke-WebRequest -Uri $url -Method Head -MaximumRedirection 10 -TimeoutSec 12 -ErrorAction Stop
+                      $lastModified = $response.Headers["Last-Modified"]
+                      if (-not [string]::IsNullOrWhiteSpace([string]$lastModified)) {
+                          $date = ([DateTimeOffset]::Parse([string]$lastModified)).UtcDateTime.ToString("yyyy-MM-dd")
+                      }
+                  } catch {
+                      Write-Verbose "No Last-Modified header for $url : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{ Url = $url; Date = $date }
+              } -ThrottleLimit 20
+          )
+          foreach ($record in $downloadDateRecords) {
+              $downloadDates[$record.Url] = [string]$record.Date
+          }
+
+          $manifests = foreach ($item in $manifestData) {
+              $date = ""
+              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
+                  $date = [string]$upstreamCache[$item.Repo]
+              }
+              if ([string]::IsNullOrWhiteSpace($date) -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
+                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
+                  if ($downloadDates.ContainsKey($cleanUrl)) {
+                      $date = [string]$downloadDates[$cleanUrl]
+                  }
+              }
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $nameEscaped = $item.Name.Replace("|", "\|")
+              $categoryEscaped = $item.Category.Replace("|", "\|")
+              $versionEscaped = $item.Version.Replace("|", "\|")
+              $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
+
+              $addedDate = if ([string]::IsNullOrWhiteSpace([string]$item.AddedDate)) { "—" } else { [string]$item.AddedDate }
+
+              [PSCustomObject]@{
+                  Name = $item.Name
+                  Category = $item.Category
+                  Added = $addedDate
+                  Date = $date
+                  Homepage = $item.Homepage
+                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+          $addedDateValue = {
+              if ($_.Added -eq "—") { [datetime]::MinValue } else { [datetime]$_.Added }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $addedNewest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $true }, Name
+          $addedOldest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+          $categoryAz = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $false }, Name
+          $categoryZa = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $true }, Name
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
+                  ""
+                  "| Name | Category | Version | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- | --- | --- |"
+                  ($Items | ForEach-Object { $_.Row })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-newest.md") -Value (New-View "Manifest additions — newest first" $addedNewest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-oldest.md") -Value (New-View "Manifest additions — oldest first" $addedOldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-az.md") -Value (New-View "Category A-Z" $categoryAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-za.md") -Value (New-View "Category Z-A" $categoryZa) -Encoding utf8NoBOM
+
+          $readme = Get-Content -Path $readmePath -Raw
+
+          $table = @(
+              "## Manifests"
+              ""
+              "Manifest Added shows the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row })
+              $end
+          ) -join [Environment]::NewLine
+
+          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
+
+          if ($readme -match $sectionPattern) {
+              $readme = [regex]::Replace(
+                  $readme,
+                  $sectionPattern,
+                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
+                  1
+              )
+          } else {
+              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
+          }
+
+          $readme = [regex]::Replace($readme, '(?:\r?\n)+\z', '') + "`n"
+          [System.IO.File]::WriteAllText(
+              $readmePath,
+              $readme,
+              [System.Text.UTF8Encoding]::new($false)
+          )
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- README.md docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add README.md docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master:refs/remotes/origin/master
+          git rebase origin/master
+          git push origin HEAD:master
+) {
+                          $extension = "tar.xz"
+                      } else {
+                          $extension = [System.IO.Path]::GetExtension($cleanUrl).TrimStart('.').ToLowerInvariant()
+                      }
+                  }
+                  if (-not [string]::IsNullOrWhiteSpace($extension) -and -not $extensions.Contains($extension)) {
+                      $extensions.Add($extension)
+                  }
+              }
+
+              if ($hasMsi) {
+                  if ($extensions.Contains("exe")) { return "EXE bootstrapper + MSI" }
+                  return "MSI installer/package"
+              }
+
+              $knownTypes = @{
+                  "msix" = "MSIX package"
+                  "appx" = "APPX package"
+                  "appxbundle" = "APPXBundle package"
+                  "zip" = "ZIP archive"
+                  "7z" = "7Z archive"
+                  "rar" = "RAR archive"
+                  "cab" = "CAB archive"
+                  "tar" = "TAR archive"
+                  "tar.gz" = "TAR.GZ archive"
+                  "tar.xz" = "TAR.XZ archive"
+                  "gz" = "GZIP archive"
+                  "xz" = "XZ archive"
+                  "iso" = "ISO image"
+                  "wim" = "WIM image"
+                  "ps1" = "PowerShell script"
+                  "bat" = "Windows batch script"
+                  "cmd" = "Windows command script"
+                  "jar" = "Java archive"
+                  "dll" = "DLL/library payload"
+              }
+
+              if ($extensions.Count -eq 1) {
+                  $extension = $extensions[0]
+                  if ($knownTypes.ContainsKey($extension)) {
+                      return $knownTypes[$extension]
+                  }
+                  if ($extension -eq "msi") { return "MSI installer/package" }
+                  if ($extension -eq "exe") {
+                      if ($null -ne $Manifest.installer) {
+                          return "EXE setup (engine unverified)"
+                      }
+                      return "EXE payload (standalone/extractor not verified)"
+                  }
+                  if ($extension) {
+                      return "$($extension.ToUpperInvariant()) package"
+                  }
+              }
+
+              if ($extensions.Count -gt 1) {
+                  $labels = foreach ($extension in $extensions) {
+                      if ($knownTypes.ContainsKey($extension)) { $knownTypes[$extension] }
+                      elseif ($extension -eq "exe" -and $null -ne $Manifest.installer) { "EXE setup (engine unverified)" }
+                      elseif ($extension -eq "exe") { "EXE payload" }
+                      else { "$($extension.ToUpperInvariant()) package" }
+                  }
+                  return "Multiple package types: $($labels -join ' / ')"
+              }
+
+              if ($null -ne $Manifest.installer) {
+                  return "Installer declared; package format not identified"
+              }
+              return "Package format not stated in manifest"
           }
 
           function Get-ManifestAddedDate {
