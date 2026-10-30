@@ -32,6 +32,6 @@
         "regex": "(?is)Version:(?:\\s|&nbsp;|<[^>]*>)*\\s*(?<version>\\d+\\.\\d+\\.\\d+\\.(?<matchVersion>\\d+))"
     },
     "autoupdate": {
-        "url": "https://downloads.rizonesoft.com/Firemin/Watermin_$matchVersion_Setup.exe#/watermin.exe"
+        "url": "https://downloads.rizonesoft.com/Firemin/Watermin_$matchMatchVersion_Setup.exe#/watermin.exe"
     }
 }
