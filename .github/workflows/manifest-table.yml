@@ -1068,6 +1068,7 @@ jobs:
                   "## $Title"
                   ""
                   "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
+                  "Installer Type is inferred from manifest metadata and the declared download format; unknown EXE installer engines are labeled unverified, not guessed."
                   ""
                   "| Name | Category | Version | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
                   "| --- | --- | --- | --- | --- | --- | --- | --- |"
@@ -1099,7 +1100,7 @@ jobs:
               $value = $Line.Trim()
               if ($value.StartsWith("|")) { $value = $value.Substring(1) }
               if ($value.EndsWith("|")) { $value = $value.Substring(0, $value.Length - 1) }
-              return ,([regex]::Split($value, '(?<!\\)\|') | ForEach-Object { $_.Trim() })
+              return [regex]::Split($value, '(?<!\\)\|') | ForEach-Object { $_.Trim() }
           }
 
           function Set-MarkdownCells {
@@ -1188,6 +1189,7 @@ jobs:
               "## Manifests"
               ""
               "Manifest Added shows the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
+              "Installer Type is inferred from manifest metadata and the declared download format; unknown EXE installer engines are labeled unverified, not guessed."
               ""
               $start
               '<a id="manifests-newest"></a>'
