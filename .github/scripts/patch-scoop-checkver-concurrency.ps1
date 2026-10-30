@@ -8,14 +8,8 @@ if (-not (Test-Path -LiteralPath $scoopShim -PathType Leaf)) {
     throw "Scoop is not installed at the expected path: $scoopShim"
 }
 
-$scoopPrefixOutput = @(& $scoopShim prefix scoop)
-$scoopPrefix = [string]($scoopPrefixOutput | Select-Object -Last 1)
-if ([string]::IsNullOrWhiteSpace($scoopPrefix)) {
-    throw 'Could not resolve the installed Scoop directory using scoop prefix scoop.'
-}
-$scoopPrefix = $scoopPrefix.Trim()
-
-$checkverPath = Join-Path $scoopPrefix 'bin\checkver.ps1'
+$scoopHome = Join-Path $scoopRoot 'apps\scoop\current'
+$checkverPath = Join-Path $scoopHome 'bin\checkver.ps1'
 if (-not (Test-Path -LiteralPath $checkverPath -PathType Leaf)) {
     throw "Scoop checkver.ps1 was not found: $checkverPath"
 }
