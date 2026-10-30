@@ -40,80 +40,101 @@ jobs:
           $downloadRoot = Join-Path $env:RUNNER_TEMP 'eric-zimmerman-hash-seed'
           New-Item -ItemType Directory -Path $downloadRoot -Force | Out-Null
           $changedPaths = [System.Collections.Generic.List[string]]::new()
+          $seedFailures = [System.Collections.Generic.List[string]]::new()
 
           foreach ($manifestName in $manifestNames) {
-            $manifestPath = Join-Path (Join-Path $env:GITHUB_WORKSPACE 'bucket') ($manifestName + '.json')
-            $originalText = [System.IO.File]::ReadAllText($manifestPath)
-            $text = $originalText
-            $lineEnding = "`n"
-            if ($text.Contains("`r`n")) { $lineEnding = "`r`n" }
-            $manifest = $text | ConvertFrom-Json
+            try {
+              $manifestPath = Join-Path (Join-Path $env:GITHUB_WORKSPACE 'bucket') ($manifestName + '.json')
+              $originalText = [System.IO.File]::ReadAllText($manifestPath)
+              $text = $originalText
+              $lineEnding = [string][char]10
+              $crlf = ([string][char]13 + [string][char]10)
+              if ($text.Contains($crlf)) { $lineEnding = $crlf }
+              $manifest = $text | ConvertFrom-Json -ErrorAction Stop
 
-            if ($manifest.architecture) {
-              $arch = $manifest.architecture.PSObject.Properties['64bit']
-              if ($null -eq $arch -or [string]::IsNullOrWhiteSpace([string]$arch.Value.url)) {
-                throw "Missing architecture.64bit.url in $manifestName.json."
-              }
-              $url = [string]$arch.Value.url
-              $hashExists = -not [string]::IsNullOrWhiteSpace([string]$arch.Value.hash)
-              $indent = '            '
-            } else {
-              if ([string]::IsNullOrWhiteSpace([string]$manifest.url)) {
-                throw "Missing url in $manifestName.json."
-              }
-              $url = [string]$manifest.url
-              $hashExists = -not [string]::IsNullOrWhiteSpace([string]$manifest.hash)
-              $indent = '    '
-            }
-
-            if (-not $hashExists) {
-              $downloadPath = Join-Path $downloadRoot ($manifestName + '.zip')
-              Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
-              Write-Host "Downloading official archive to calculate SHA-256: $manifestName"
-              Invoke-WebRequest -Uri $url -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 240 -ErrorAction Stop
-              $downloaded = Get-Item -LiteralPath $downloadPath
-              if ($downloaded.Length -lt 100000) {
-                throw "Downloaded archive for $manifestName is unexpectedly small ($($downloaded.Length) bytes)."
-              }
-              $stream = [System.IO.File]::OpenRead($downloadPath)
-              try {
-                $signature = [byte[]]::new(2)
-                $bytesRead = $stream.Read($signature, 0, 2)
-              } finally {
-                $stream.Dispose()
-              }
-              if ($bytesRead -ne 2 -or $signature[0] -ne 0x50 -or $signature[1] -ne 0x4B) {
-                throw "The download for $manifestName does not have a ZIP header. Refusing to save a hash for a likely error page."
-              }
-              $hash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
-              Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
-
-              $urlLineWithComma = $indent + '"url": "' + $url + '",'
-              $urlLineWithoutComma = $indent + '"url": "' + $url + '"'
-              $hashLine = $indent + '"hash": "' + $hash + '",'
-              $urlIndex = $text.IndexOf($urlLineWithComma, [System.StringComparison]::Ordinal)
-              if ($urlIndex -ge 0) {
-                $text = $text.Substring(0, $urlIndex) + $urlLineWithComma + $lineEnding + $hashLine + $text.Substring($urlIndex + $urlLineWithComma.Length)
-              } else {
-                $urlIndex = $text.IndexOf($urlLineWithoutComma, [System.StringComparison]::Ordinal)
-                if ($urlIndex -ge 0) {
-                  $replacement = $urlLineWithoutComma + ',' + $lineEnding + $hashLine.TrimEnd(',')
-                  $text = $text.Substring(0, $urlIndex) + $replacement + $text.Substring($urlIndex + $urlLineWithoutComma.Length)
-                } else {
-                  throw "Could not identify the exact URL line in $manifestName.json; refusing to rewrite it."
+              if ($manifest.architecture) {
+                $arch = $manifest.architecture.PSObject.Properties['64bit']
+                if ($null -eq $arch -or [string]::IsNullOrWhiteSpace([string]$arch.Value.url)) {
+                  throw "Missing architecture.64bit.url in $manifestName.json."
                 }
+                $url = [string]$arch.Value.url
+                $hashExists = -not [string]::IsNullOrWhiteSpace([string]$arch.Value.hash)
+                $indent = '            '
+              } else {
+                if ([string]::IsNullOrWhiteSpace([string]$manifest.url)) {
+                  throw "Missing url in $manifestName.json."
+                }
+                $url = [string]$manifest.url
+                $hashExists = -not [string]::IsNullOrWhiteSpace([string]$manifest.hash)
+                $indent = '    '
               }
-              Write-Host "Calculated $manifestName SHA-256: $hash"
-            }
 
-            $oldNote = 'The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated.'
-            $newNote = 'The upstream site does not publish a static SHA-256 checksum. The initial checksum is calculated from its official archive; Scoop recalculates it when updating the manifest.'
-            $text = $text.Replace($oldNote, $newNote)
+              if (-not $hashExists) {
+                $downloadPath = Join-Path $downloadRoot ($manifestName + '.zip')
+                Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
+                Write-Host "Downloading official archive to calculate SHA-256: $manifestName"
+                Invoke-WebRequest -Uri $url -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 240 -ErrorAction Stop
+                $downloaded = Get-Item -LiteralPath $downloadPath
+                if ($downloaded.Length -lt 100000) {
+                  throw "Downloaded archive for $manifestName is unexpectedly small ($($downloaded.Length) bytes)."
+                }
+                $stream = [System.IO.File]::OpenRead($downloadPath)
+                try {
+                  $signature = [byte[]]::new(2)
+                  $bytesRead = $stream.Read($signature, 0, 2)
+                } finally {
+                  $stream.Dispose()
+                }
+                if ($bytesRead -ne 2 -or $signature[0] -ne 0x50 -or $signature[1] -ne 0x4B) {
+                  throw "The download for $manifestName does not have a ZIP header. Refusing to save a hash for a likely error page."
+                }
+                $hash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
+                Remove-Item -LiteralPath $downloadPath -Force -ErrorAction SilentlyContinue
 
-            if ($text -ne $originalText) {
-              [System.IO.File]::WriteAllText($manifestPath, $text, [System.Text.UTF8Encoding]::new($false))
-              $changedPaths.Add("bucket/$manifestName.json")
+                $urlLineWithComma = $indent + '"url": "' + $url + '",'
+                $urlLineWithoutComma = $indent + '"url": "' + $url + '"'
+                $hashLine = $indent + '"hash": "' + $hash + '",'
+                $urlIndex = $text.IndexOf($urlLineWithComma, [System.StringComparison]::Ordinal)
+                if ($urlIndex -ge 0) {
+                  $text = $text.Substring(0, $urlIndex) + $urlLineWithComma + $lineEnding + $hashLine + $text.Substring($urlIndex + $urlLineWithComma.Length)
+                } else {
+                  $urlIndex = $text.IndexOf($urlLineWithoutComma, [System.StringComparison]::Ordinal)
+                  if ($urlIndex -ge 0) {
+                    $replacement = $urlLineWithoutComma + ',' + $lineEnding + $hashLine.TrimEnd(',')
+                    $text = $text.Substring(0, $urlIndex) + $replacement + $text.Substring($urlIndex + $urlLineWithoutComma.Length)
+                  } else {
+                    throw "Could not identify the exact URL line in $manifestName.json; refusing to rewrite it."
+                  }
+                }
+                Write-Host "Calculated $manifestName SHA-256: $hash"
+              }
+
+              $oldNote = 'The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated.'
+              $newNote = 'The upstream site does not publish a static SHA-256 checksum. The initial checksum is calculated from its official archive; Scoop recalculates it when updating the manifest.'
+              $text = $text.Replace($oldNote, $newNote)
+
+              if ($text -ne $originalText) {
+                [System.IO.File]::WriteAllText($manifestPath, $text, [System.Text.UTF8Encoding]::new($false))
+                $changedPaths.Add("bucket/$manifestName.json")
+              }
+            } catch {
+              $failure = "$manifestName.json: $($_.Exception.Message)"
+              $seedFailures.Add($failure)
+              Write-Host "##[error]SEED_FAILURE $failure"
             }
+          }
+
+          $seedReportPath = Join-Path $env:RUNNER_TEMP 'excavator-seed-failures.txt'
+          if ($seedFailures.Count -gt 0) {
+            [System.IO.File]::WriteAllLines($seedReportPath, $seedFailures, [System.Text.UTF8Encoding]::new($false))
+            "EXCAVATOR_SEED_FAILURES=$($seedFailures.Count)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### Eric Zimmerman hash-seeding failures"
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ""
+            foreach ($failure in $seedFailures) { Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- $failure" }
+          } else {
+            [System.IO.File]::WriteAllText($seedReportPath, ("No Eric Zimmerman hash-seeding failures." + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
+            "EXCAVATOR_SEED_FAILURES=0" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+            Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "Eric Zimmerman hash seeding: no failures."
           }
 
           if ($changedPaths.Count -gt 0) {
@@ -130,25 +151,31 @@ jobs:
             git push origin HEAD:master
             if ($LASTEXITCODE -ne 0) { throw 'Could not push the seeded hashes to master.' }
           } else {
-            Write-Host 'All targeted Eric Zimmerman manifests already contain hashes and corrected notes.'
+            Write-Host 'No Eric Zimmerman manifest hashes or notes needed updating.'
           }
 
       - name: Excavate
         shell: pwsh
         env:
           SKIP_UPDATED: 1
-          THROW_ERROR: 1
+          # Keep THROW_ERROR disabled: Scoop checkver catches autoupdate failures per manifest.
+          # The workflow parses the completed log and fails only after all manifests were processed.
+          THROW_ERROR: 0
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
           $actionRoot = Join-Path $env:GITHUB_WORKSPACE '.github-actions/scoopinstaller'
           $actionScript = Join-Path $actionRoot 'action.ps1'
+          $failureReportPath = Join-Path $env:RUNNER_TEMP 'excavator-failure-report.txt'
           if (-not (Test-Path -LiteralPath $actionScript -PathType Leaf)) {
-            throw "ScoopInstaller GitHub Action script not found: $actionScript"
+            $message = "ScoopInstaller GitHub Action script not found: $actionScript"
+            [System.IO.File]::WriteAllText($failureReportPath, $message, [System.Text.UTF8Encoding]::new($false))
+            throw $message
           }
 
           $env:GITHUB_ACTION_PATH = $actionRoot
           $env:GITHUB_ACTION_REPOSITORY = 'ScoopInstaller/GithubActions'
+          $env:SCOOP_GH_TOKEN = $env:GITHUB_TOKEN
           $stdoutPath = Join-Path $env:RUNNER_TEMP 'excavator-action.stdout.log'
           $stderrPath = Join-Path $env:RUNNER_TEMP 'excavator-action.stderr.log'
           Remove-Item -LiteralPath $stdoutPath, $stderrPath -Force -ErrorAction SilentlyContinue
@@ -159,18 +186,91 @@ jobs:
           $actionOutput = @()
           if (Test-Path -LiteralPath $stdoutPath) { $actionOutput += Get-Content -LiteralPath $stdoutPath }
           if (Test-Path -LiteralPath $stderrPath) { $actionOutput += Get-Content -LiteralPath $stderrPath }
-          $actionOutput | ForEach-Object { Write-Host $_ }
+
+          # Strip terminal color sequences before printing, matching, and saving diagnostics.
+          $ansiPattern = '\x1B\[[0-?]*[ -/]*[@-~]'
+          $cleanOutput = @($actionOutput | ForEach-Object { ([string]$_) -replace $ansiPattern, '' })
+          $cleanOutput | ForEach-Object { Write-Host $_ }
+
+          # checkver reports a failed manifest with its name. Autoupdate hash/download errors
+          # are emitted by Scoop's error() helper as "ERROR Could not update <manifest>...".
+          # Do not treat "Could not find hash" alone as a failure: Scoop may successfully
+          # download the archive and calculate its hash as a fallback.
+          $diagnosticPattern = "(?i)(^\s*ERROR\b|^\s*[a-z0-9][a-z0-9._+-]*:\s*couldn't\s+(?:match|find|retrieve)\b|^\s*[a-z0-9][a-z0-9._+-]*:\s*The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|^\s*URL https?://\S+ is not valid\s*$)"
+          $diagnostics = @($cleanOutput | Where-Object { $_ -match $diagnosticPattern } | Sort-Object -Unique)
 
           if ($process.ExitCode -ne 0) {
-            throw "ScoopInstaller GitHub Action exited with code $($process.ExitCode)."
+            $diagnostics += "ACTION-LEVEL FAILURE: ScoopInstaller GitHub Action exited with code $($process.ExitCode)."
           }
 
-          # Scoop's checkver.ps1 logs some URL/regex errors and continues instead of setting a failing exit code.
-          # Fail this workflow if that action log contains any such skipped check or a failed update.
-          $diagnosticPattern = "(?i)(couldn't\s+match|couldn't\s+find new version|URL https?://\S+ is not valid|The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|ERROR Could not update|Could not update .*hash.*failed)"
-          $diagnostics = @($actionOutput | Where-Object { $_ -match $diagnosticPattern })
-          if ($diagnostics.Count -gt 0) {
-            Write-Host 'Excavator reported nonfatal checkver/update diagnostics:'
-            $diagnostics | ForEach-Object { Write-Host "##[error]$_" }
-            throw "Excavator completed its action but logged $($diagnostics.Count) checkver/update diagnostic(s)."
+          $failedManifestNames = [System.Collections.Generic.List[string]]::new()
+          foreach ($line in $diagnostics) {
+            if ($line -match '^\s*(?<name>[a-z0-9][a-z0-9._+-]*):\s*') {
+              $failedManifestNames.Add($Matches.name)
+            } elseif ($line -match '(?i)Could not update\s+(?<name>[^,\s]+),') {
+              $failedManifestNames.Add($Matches.name)
+            }
           }
+          $failedManifestNames = @($failedManifestNames | Sort-Object -Unique)
+
+          $reportLines = [System.Collections.Generic.List[string]]::new()
+          $reportLines.Add('Excavator failure report')
+          $reportLines.Add("Action exit code: $($process.ExitCode)")
+          $reportLines.Add("Unique manifests with identified errors: $($failedManifestNames.Count)")
+          $reportLines.Add("Diagnostic lines: $($diagnostics.Count)")
+          $reportLines.Add('')
+          if ($diagnostics.Count -gt 0) {
+            $reportLines.Add('Diagnostics:')
+            foreach ($line in $diagnostics) { $reportLines.Add("- $line") }
+          } else {
+            $reportLines.Add('No manifest check/update diagnostics detected.')
+          }
+          [System.IO.File]::WriteAllLines($failureReportPath, $reportLines, [System.Text.UTF8Encoding]::new($false))
+
+          $summaryLines = @(
+            '## Excavator results',
+            "- Action exit code: $($process.ExitCode)",
+            "- Manifest error diagnostics: $($diagnostics.Count)",
+            "- Unique identified manifests with errors: $($failedManifestNames.Count)"
+          )
+          if ($failedManifestNames.Count -gt 0) {
+            $summaryLines += ''
+            $summaryLines += '### Failed manifests'
+            foreach ($name in $failedManifestNames) { $summaryLines += "- $name" }
+          }
+          if ($diagnostics.Count -gt 0) {
+            $summaryLines += ''
+            $summaryLines += '### Diagnostics'
+            foreach ($line in $diagnostics) { $summaryLines += "- $line" }
+          }
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value ($summaryLines -join [Environment]::NewLine)
+
+          # Fail only after Scoop has finished the complete manifest queue and the report is saved.
+          if ($process.ExitCode -ne 0) {
+            throw "ScoopInstaller GitHub Action exited with code $($process.ExitCode). See the Excavator report artifact."
+          }
+          if ($diagnostics.Count -gt 0) {
+            throw "Excavator finished processing the manifest queue but found $($diagnostics.Count) error diagnostic(s) across $($failedManifestNames.Count) identified manifest(s)."
+          }
+
+      - name: Enforce Eric Zimmerman seed results
+        if: always()
+        shell: pwsh
+        run: |
+          $seedFailureCount = 0
+          if ($env:EXCAVATOR_SEED_FAILURES -match '^\d+$') {
+            $seedFailureCount = [int]$env:EXCAVATOR_SEED_FAILURES
+          }
+          if ($seedFailureCount -gt 0) {
+            throw "Eric Zimmerman hash seeding had $seedFailureCount manifest failure(s). See the Excavator diagnostics artifact."
+          }
+
+      - name: Upload Excavator diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: excavator-diagnostics
+          path: |
+            ${{ runner.temp }}/excavator-failure-report.txt
+            ${{ runner.temp }}/excavator-seed-failures.txt
+          if-no-files-found: warn
