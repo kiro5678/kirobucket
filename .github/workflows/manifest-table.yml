@@ -724,7 +724,7 @@ jobs:
 
 
           function Get-InstallerType {
-              param([object]$Manifest)
+              param([object]$Manifest, [string]$ManifestName)
 
               if ($null -eq $Manifest) {
                   return "Unknown (invalid manifest JSON)"
@@ -759,6 +759,29 @@ jobs:
                   }
               }
               $installerText = ($installerParts -join " ").ToLowerInvariant()
+
+              $nsisManifests = @(
+                  "agaric"
+                  "another"
+                  "clustercut"
+                  "coodesker-github"
+                  "dlman"
+                  "edge-drop"
+                  "filepilot"
+                  "helixnotes"
+                  "lapis"
+                  "nightlight-launcher"
+                  "recordly"
+                  "smol"
+                  "sofast"
+                  "spacedrive"
+                  "tockler"
+                  "wincux"
+                  "znote"
+              )
+              if ($nsisManifests -contains $ManifestName.ToLowerInvariant()) {
+                  return "NSIS"
+              }
 
               if ($Manifest.innosetup -eq $true) {
                   return "Inno Setup EXE"
@@ -896,7 +919,7 @@ jobs:
                   }
                   $repo = Get-GitHubRepoCandidate $json
                   $downloadUrl = Get-DownloadUrlFromManifest $json
-                  $installerType = Get-InstallerType $json
+                  $installerType = Get-InstallerType $json $file.BaseName
               } else {
                   $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
                   $descriptionMatch = [regex]::Match($raw, '(?m)"description"\s*:\s*"([^"]*)"')
