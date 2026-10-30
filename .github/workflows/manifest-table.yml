@@ -778,13 +778,16 @@ jobs:
                   "tockler"
                   "wincux"
                   "znote"
+                  "biscuit"
+                  "ecopaste"
+                  "ecopaste-nightly"
               )
               if ($nsisManifests -contains $ManifestName.ToLowerInvariant()) {
                   return "NSIS"
               }
 
               if ($Manifest.innosetup -eq $true) {
-                  return "Inno Setup EXE"
+                  return "Inno"
               }
               if ($installerText -match 'add-appxpackage' -or $urls -match '(?i)\.msixbundle(?:[?#]|$)') {
                   if ($urls -match '(?i)\.msixbundle(?:[?#]|$)') { return "MSIXBundle" }
@@ -1102,6 +1105,50 @@ jobs:
 
           $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
           New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          # Build a complete installer-type inventory from every manifest currently in bucket/.
+          # This is regenerated with the same $manifests data used by all generated manifest views.
+          $portabilityPath = Join-Path $docsPath "manifest-portability.md"
+          $portabilityContent = [System.IO.File]::ReadAllText($portabilityPath)
+          $installerTypeStart = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->"
+          $installerTypeEnd = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->"
+          $installerTypeStartIndex = $portabilityContent.IndexOf($installerTypeStart, [System.StringComparison]::Ordinal)
+          $installerTypeEndIndex = $portabilityContent.IndexOf($installerTypeEnd, [System.StringComparison]::Ordinal)
+          if ($installerTypeStartIndex -lt 0 -or $installerTypeEndIndex -le $installerTypeStartIndex) {
+              throw "Installer-type table markers are missing or out of order in docs/manifest-portability.md."
+          }
+
+          $installerTypeLines = [System.Collections.Generic.List[string]]::new()
+          $installerTypeLines.Add("## All bucket manifests by installer type")
+          $installerTypeLines.Add("")
+          $installerTypeLines.Add("This inventory covers every JSON manifest in `bucket/` at generation time. It uses the same Installer Type inference as the generated manifest views; installer engines that cannot be verified remain explicitly unverified.")
+          $installerTypeLines.Add("")
+          $installerTypeLines.Add("| Installer Type | Manifests | Count |")
+          $installerTypeLines.Add("| --- | --- | ---: |")
+          $installerTypeGroups = @($manifests | Group-Object InstallerType | Sort-Object @{ Expression = { $_.Count }; Descending = $true }, Name)
+          foreach ($group in $installerTypeGroups) {
+              $links = @(
+                  $group.Group |
+                      Sort-Object Name |
+                      ForEach-Object { "[$($_.Name)](../bucket/$($_.Name).json)" }
+              ) -join ", "
+              $typeLabel = ([string]$group.Name).Replace("|", "\\|")
+              $installerTypeLines.Add("| $typeLabel | $links | $($group.Count) |")
+          }
+          $installerTypeLines.Add("| **Total** | **All bucket manifests** | **$($manifests.Count)** |")
+
+          $installerTypeBlock = $installerTypeStart + [Environment]::NewLine +
+              ($installerTypeLines -join [Environment]::NewLine) + [Environment]::NewLine +
+              $installerTypeEnd
+          $beforeInstallerTypeTable = $portabilityContent.Substring(0, $installerTypeStartIndex)
+          $afterInstallerTypeTable = $portabilityContent.Substring($installerTypeEndIndex + $installerTypeEnd.Length)
+          $portabilityContent = $beforeInstallerTypeTable + $installerTypeBlock + $afterInstallerTypeTable
+          [System.IO.File]::WriteAllText(
+              $portabilityPath,
+              $portabilityContent,
+              [System.Text.UTF8Encoding]::new($false)
+          )
+          Write-Host "Generated installer-type inventory for $($manifests.Count) manifests across $($installerTypeGroups.Count) installer types."
 
           Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
