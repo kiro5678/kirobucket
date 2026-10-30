@@ -1149,21 +1149,32 @@ jobs:
                   if ($documentLines[$lineIndex] -notmatch '^\|') { continue }
 
                   $headers = @(Get-MarkdownCells $documentLines[$lineIndex])
-                  if ($headers -notcontains "Manifest") { continue }
-                  if (@($headers | Where-Object { $_ -match '(?i)installer.*type' }).Count -gt 0) { continue }
+                  $manifestIndex = [array]::IndexOf($headers, "Manifest")
+                  if ($manifestIndex -lt 0) { continue }
                   if ($lineIndex + 1 -ge $documentLines.Count -or $documentLines[$lineIndex + 1] -notmatch '^\|\s*:?-{3,}') { continue }
 
-                  $insertAt = [array]::IndexOf($headers, "Manifest") + 1
+                  $typeIndex = -1
+                  for ($column = 0; $column -lt $headers.Count; $column++) {
+                      if ($headers[$column] -match '(?i)installer.*type') {
+                          $typeIndex = $column
+                          break
+                      }
+                  }
+
                   $headerCells = [System.Collections.Generic.List[string]]::new()
                   foreach ($header in $headers) { $headerCells.Add([string]$header) }
-                  $headerCells.Insert($insertAt, "Installer Type")
-                  $documentLines[$lineIndex] = Set-MarkdownCells $headerCells
 
-                  $separatorCells = [System.Collections.Generic.List[string]]::new()
-                  for ($column = 0; $column -lt $headerCells.Count; $column++) {
-                      $separatorCells.Add("---")
+                  if ($typeIndex -lt 0) {
+                      $typeIndex = $manifestIndex + 1
+                      $headerCells.Insert($typeIndex, "Installer Type")
+                      $documentLines[$lineIndex] = Set-MarkdownCells $headerCells
+
+                      $separatorCells = [System.Collections.Generic.List[string]]::new()
+                      for ($column = 0; $column -lt $headerCells.Count; $column++) {
+                          $separatorCells.Add("---")
+                      }
+                      $documentLines[$lineIndex + 1] = Set-MarkdownCells $separatorCells
                   }
-                  $documentLines[$lineIndex + 1] = Set-MarkdownCells $separatorCells
 
                   $rowIndex = $lineIndex + 2
                   while ($rowIndex -lt $documentLines.Count -and $documentLines[$rowIndex] -match '^\|') {
@@ -1179,8 +1190,13 @@ jobs:
 
                           $cells = [System.Collections.Generic.List[string]]::new()
                           foreach ($cell in (Get-MarkdownCells $row)) { $cells.Add([string]$cell) }
-                          if ($cells.Count -eq $headers.Count) {
-                              $cells.Insert($insertAt, $type.Replace("|", "\|"))
+                          $expectedColumnCount = if ($typeIndex -ge 0) { $headers.Count + $(if ($headerCells.Count -gt $headers.Count) { 1 } else { 0 }) } else { $headers.Count }
+                          if ($cells.Count -eq $expectedColumnCount) {
+                              if ($headerCells.Count -gt $headers.Count) {
+                                  $cells.Insert($typeIndex, $type.Replace("|", "\|"))
+                              } else {
+                                  $cells[$typeIndex] = $type.Replace("|", "\|")
+                              }
                               $documentLines[$rowIndex] = Set-MarkdownCells $cells
                           } else {
                               Write-Warning "Unexpected table width while adding Installer Type: $DocumentPath"
