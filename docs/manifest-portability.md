@@ -32,9 +32,9 @@ This index groups the 53 Nonportable manifests by the exact installer/package la
 | Installer/package type | Manifests | Count |
 |---|---|---:|
 | NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 17 |
-| Inno Setup EXE | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 4 |
+| Inno | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 4 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json) | 4 |
-| NSIS EXE | [biscuit](../bucket/biscuit.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json) | 3 |
+| NSIS | [biscuit](../bucket/biscuit.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json) | 3 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
 | NVIDIA self-extracting EXE + setup.exe | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json), [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 2 |
@@ -69,14 +69,14 @@ The installer type describes the package or setup technology used by the manifes
 | [air-server-np](../bucket/air-server-np.json) | MSI | Runs `msiexec /i` with elevation; installs through Windows Installer. |
 | [another](../bucket/another.json) | NSIS | Runs the vendor setup with `/S /NS /D=$dir`. NSIS-style switches; engine inferred. |
 | [belarc-advisor](../bucket/belarc-advisor.json) | Vendor EXE setup (engine unverified) | Runs the vendor installer; `/D=$dir` is intended to redirect its installation, but the manifest notes that this behavior has not been independently confirmed. |
-| [biscuit](../bucket/biscuit.json) | NSIS EXE | Runs the NSIS setup silently from `pre_install`; it is not extracted as an archive. |
+| [biscuit](../bucket/biscuit.json) | NSIS | Runs the NSIS setup silently from `pre_install`; it is not extracted as an archive. |
 | [clustercut](../bucket/clustercut.json) | NSIS | Runs the vendor setup with `/S /NS /D=$dir`. NSIS-style switches; engine inferred. |
 | [coodesker-github](../bucket/coodesker-github.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [crowdsec](../bucket/crowdsec.json) | MSI | Runs the MSI installer silently. **Manifest issue:** the download is 1.8.2 but `installer.file` currently names `crowdsec_1.8.1.msi`. |
 | [directx-np](../bucket/directx-np.json) | Self-extracting EXE + DXSETUP | Runs the extracted `DXSETUP.exe`; installs DirectX runtime components into Windows. |
 | [dlman](../bucket/dlman.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
-| [ecopaste](../bucket/ecopaste.json) | NSIS EXE | Runs the NSIS setup with silent/update arguments and `/D=$dir`. |
-| [ecopaste-nightly](../bucket/ecopaste-nightly.json) | NSIS EXE | Runs the NSIS setup silently with `/D=$dir`. |
+| [ecopaste](../bucket/ecopaste.json) | NSIS | Runs the NSIS setup with silent/update arguments and `/D=$dir`. |
+| [ecopaste-nightly](../bucket/ecopaste-nightly.json) | NSIS | Runs the NSIS setup silently with `/D=$dir`. |
 | [edge-drop](../bucket/edge-drop.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [everything-cmdpal](../bucket/everything-cmdpal.json) | MSIX | Registers an MSIX package with `Add-AppxPackage` for the current user. |
 | [filepilot](../bucket/filepilot.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
@@ -84,9 +84,9 @@ The installer type describes the package or setup technology used by the manifes
 | [fxsound](../bucket/fxsound.json) | EXE bootstrapper + embedded MSI | Runs the official setup/MSI installation. Installs the FxSound virtual audio driver system-wide; elevated install/uninstall is required. |
 | [helixnotes](../bucket/helixnotes.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [imazing-np](../bucket/imazing-np.json) | EXE setup (Inno-style switches; engine not confirmed) | Runs the vendor setup silently with administrator rights and a directory override. |
-| [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | Inno Setup EXE | Runs the K-Lite setup silently; this is a real codec installation, not archive extraction. |
+| [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | Inno | Runs the K-Lite setup silently; this is a real codec installation, not archive extraction. |
 | [lapis](../bucket/lapis.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
-| [livewallpaper](../bucket/livewallpaper.json) | Inno Setup EXE | Runs the Inno Setup installer silently with elevated rights and `/DIR=$dir`. |
+| [livewallpaper](../bucket/livewallpaper.json) | Inno | Runs the Inno Setup installer silently with elevated rights and `/DIR=$dir`. |
 | [mumuplayer](../bucket/mumuplayer.json) | Vendor-specific EXE installer/orchestrator | Executes the MuMuPlayer vendor installation workflow (`install_prepare` and `commit`); administrator rights are required. **Manifest issue:** the current file failed JSON parsing during this review because its `pre_install` value contains literal line breaks inside a JSON string; fix the JSON before relying on this manifest. |
 | [mumuplayer-android15](../bucket/mumuplayer-android15.json) | Vendor-specific EXE component installer | Executes the Android 15 engine setup workflow and modifies the existing MuMuPlayer installation directory. |
 | [mumuplayer-online](../bucket/mumuplayer-online.json) | Vendor EXE silent installer (engine unverified) | Runs the MuMuPlayer setup silently with elevated rights. |
@@ -99,12 +99,12 @@ The installer type describes the package or setup technology used by the manifes
 | [open-shell](../bucket/open-shell.json) | Open-Shell EXE bootstrapper (MSI-based) | Runs the Open-Shell setup with Windows Installer quiet arguments. |
 | [open-shell-nightly](../bucket/open-shell-nightly.json) | Open-Shell EXE bootstrapper (MSI-based) | Runs the Open-Shell nightly setup with Windows Installer quiet arguments. |
 | [openedr](../bucket/openedr.json) | MSI | Runs `msiexec /i`; installs the OpenEDR endpoint agent through Windows Installer. |
-| [openglass](../bucket/openglass.json) | Inno Setup EXE | Runs the signed setup with Inno Setup silent-install arguments. |
+| [openglass](../bucket/openglass.json) | Inno | Runs the signed setup with Inno Setup silent-install arguments. |
 | [openzfs-np](../bucket/openzfs-np.json) | Inno Setup-style EXE (based on switches) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
 | [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
 | [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
 | [recordly](../bucket/recordly.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
-| [sandboxie-plus](../bucket/sandboxie-plus.json) | Inno Setup EXE | Runs the Sandboxie setup silently; installs system integration including its driver/service components. |
+| [sandboxie-plus](../bucket/sandboxie-plus.json) | Inno | Runs the Sandboxie setup silently; installs system integration including its driver/service components. |
 | [scanner](../bucket/scanner.json) | MSIX | Registers the MSIX package with `Add-AppxPackage` for the current user. |
 | [screenbox](../bucket/screenbox.json) | MSIXBundle + APPX dependencies | Registers the MSIX bundle and its APPX dependencies with `Add-AppxPackage` for the current user. |
 | [smol](../bucket/smol.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
@@ -137,7 +137,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | Manifest pattern | Installer/package type | Example manifests | Why they are Portable |
 | --- | --- | --- | --- |
 | MSI extraction, not Windows Installer execution | MSI database/payload extracted by Scoop | [rqbit](../bucket/rqbit.json), [sklad](../bucket/sklad.json), [timigs](../bucket/timigs.json), [clipper](../bucket/clipper.json), [cooldesk-msi](../bucket/cooldesk-msi.json), [cedro-modern-dock](../bucket/cedro-modern-dock.json), [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json), [poltertype](../bucket/poltertype.json), [dnschanger-msi](../bucket/dnschanger-msi.json) | Scoop extracts the MSI payload; the manifest does not run `msiexec /i`. |
-| Inno Setup payload extraction | Inno Setup EXE | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
+| Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
 | EXE/NSIS payload extraction | NSIS EXE containing an embedded application archive (commonly app-64.7z) | [endstate](../bucket/endstate.json), [mechvibes](../bucket/mechvibes.json), [openscreen](../bucket/openscreen.json), [keyboardsounds](../bucket/keyboardsounds.json), [keyboardsounds-pro](../bucket/keyboardsounds-pro.json), [super-productivity](../bucket/super-productivity.json), [safepdf-installer](../bucket/safepdf-installer.json) | The downloaded setup file is treated as an archive or its embedded application archive is extracted; the vendor setup routine is not executed. |
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | Their manifest passes the application's explicit portable-mode option. |
 | Setup executable used only as an extractor | Portable self-extracting EXE or Inno Setup portable bundle | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
