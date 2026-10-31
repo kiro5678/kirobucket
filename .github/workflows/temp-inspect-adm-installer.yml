@@ -35,7 +35,7 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($version)) {
               $version = '1.0.9'
           }
-          if ($version -notmatch '^\d+\.\d+\.\d+ {
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
               throw "Invalid version: $version"
           }
 
