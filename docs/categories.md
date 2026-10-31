@@ -10,7 +10,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Browsers & Communication | 8 | [View](#browsers-communication) |
 | Clipboard & Text | 34 | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
-| Download Managers | 16 | [View](#download-managers) |
+| Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
 | File Management | 71 | [View](#file-management) |
 | Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 836**
+**Total unique manifests: 840**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -180,18 +180,22 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
 | [am-downloader](../bucket/am-downloader.json) | 1.3.3 | A modern download manager for Windows. | [Homepage](https://github.com/antikmozib/AM-Downloader) |
+| [asm-download-manager](../bucket/asm-download-manager.json) | 1.0.9 | Windows download manager; installer payload and installation behavior are awaiting verification. | [Homepage](https://github.com/Engineer-Ahmed-Said-Official/ADM) |
 | [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
 | [brisk](../bucket/brisk.json) | 2.3.9 | Fast and lightweight download manager with browser integration. | [Homepage](https://github.com/BrisklyDev/brisk) |
 | [cross-platform-download-manager](../bucket/cross-platform-download-manager.json) | 0.30.0 | Fast, free, and open-source cross-platform download manager | [Homepage](https://github.com/adel-bakhshi/CrossPlatformDownloadManager) |
 | [dlman](../bucket/dlman.json) | 1.11.1 | Fast, reliable, open-source download manager with multi-segment downloads, queue management, browser extensions, and SQLite persistence. | [Homepage](https://github.com/novincode/dlman) |
+| [ezoo-download](../bucket/ezoo-download.json) | 1.0.8 | Rust download manager for Windows with browser integration, video downloads and torrent support. | [Homepage](https://github.com/AhmedEzo686/ezoo-download) |
 | [imfile](../bucket/imfile.json) | 2.3.4 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
 | [motrix](../bucket/motrix.json) | 2.0.1 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
 | [motrix-next](../bucket/motrix-next.json) | 3.9.9 | Legacy Motrix Next 3.x download manager for HTTP, FTP, BitTorrent and Magnet links. | [Homepage](https://github.com/AnInsomniacy/rayburst) |
+| [prism](../bucket/prism.json) | 1.2.3 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
 | [nanaget](../bucket/nanaget.json) | 1.3.1609.0 | Lightweight file transfer utility based on aria2 and XAML Islands. | [Homepage](https://github.com/M2Team/NanaGet) |
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
 | [qbittorrent-lt20](../bucket/qbittorrent-lt20.json) | 5.2.4 | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). | [Homepage](https://www.qbittorrent.org) |
 | [rqbit](../bucket/rqbit.json) | 9.0.1 | A BitTorrent client with a desktop GUI, HTTP API and Web UI. | [Homepage](https://github.com/ikatson/rqbit) |
 | [varia](../bucket/varia.json) | 2026.8.5-1 | Download manager for files, torrents and videos. | [Homepage](https://github.com/giantpinkrobots/varia) |
+| [veloxfetch](../bucket/veloxfetch.json) | 2.0.1 | Rust-based download manager with multi-connection downloads, browser integration, video and playlist downloads. | [Homepage](https://github.com/IlyesBs/VeloxFetch) |
 | [vovsoft-batch-url-downloader](../bucket/vovsoft-batch-url-downloader.json) | 6.4 | Portable edition of Vovsoft Batch URL Downloader. | [Homepage](https://vovsoft.com/software/batch-url-downloader/) |
 | [vovsoft-download-mailbox-emails](../bucket/vovsoft-download-mailbox-emails.json) | 2.1 | Portable edition of Vovsoft Download Mailbox Emails. | [Homepage](https://vovsoft.com/software/download-mailbox-emails/) |
 | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | 1.0.0 | Desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. | [Homepage](https://github.com/imsyy/yt-dlp-gui) |

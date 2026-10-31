@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 836 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
+**Portability audit coverage:** 840 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,10 +22,10 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 775 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 778 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 5 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **836** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| Review | 6 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
+| **Total** | **840** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
 
@@ -40,6 +40,11 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 - [`qnotch`](../bucket/qnotch.json) — **Portable**: the upstream Windows release workflow creates a self-contained ZIP from `QNotch.exe`; the Scoop manifest extracts the archive and launches that executable. The published release SHA-256 digest is pinned. The Scoop installation workflow has not yet been run.
 - [`winisland`](../bucket/winisland.json) — **Portable**: the upstream release script publishes a self-contained `win-x64` directory as a ZIP; the app executable is `WinIsland.exe`. The published release SHA-256 digest is pinned. The Scoop installation workflow has not yet been run.
 - [`snowey-island`](../bucket/snowey-island.json) — **Portable**: the upstream installer source identifies Inno Setup and packages the self-contained `Island.App.exe` payload at the install root; `innosetup: true` extracts that payload instead of running the install routine. Release notes state that Windows 11 x64 is the tested platform. The Scoop installation workflow has not yet been run.
+
+- [`ezoo-download`](../bucket/ezoo-download.json) — **Portable**: uses `innosetup: true` to extract the official Inno Setup payload without running the vendor's installation tasks, registry writes, startup task or shortcuts. The app data remains under `%APPDATA%\\Ezoo\\EzooDownload\\data`; the portable copy does not use the installed-copy self-updater.
+- [`prism`](../bucket/prism.json) — **Portable**: uses the official Windows portable ZIP with `portable.txt`; settings, history and tools live in the adjacent `data` folder, which Scoop persists. The app registers its browser native-messaging host at runtime; `pre_uninstall` removes only registrations that point to this Scoop copy.
+- [`veloxfetch`](../bucket/veloxfetch.json) — **Portable**: uses the official Windows portable ZIP. The v2.0.1 release packaging script places `velox-desktop.exe` and `velox-native-host.exe` under `VeloxFetch-portable\\`; the portable build has no uninstaller and opens the release page for updates.
+- [`asm-download-manager`](../bucket/asm-download-manager.json) — **Review**: the current release exposes `ASMDownload-Setup.exe` with a SHA-256 digest, but the repository does not establish the installer engine, payload structure or uninstall behavior. The manifest downloads it only and does not execute the setup.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
@@ -176,6 +181,7 @@ These entries should not be treated as Portable or Nonportable until their paylo
 | [quanto-flx](../bucket/quanto-flx.json) | Rainmeter RMSKIN skin/add-on package | Downloads a Rainmeter `.rmskin` add-on and depends on Rainmeter; the notes say it is installed through `SkinInstaller.exe`. This is an add-on payload, not a standalone portable application. |
 | [zenbreak-msix](../bucket/zenbreak-msix.json) | MSIX package currently extracted as 7Z | Renames an MSIX asset as a 7-Zip archive and extracts its files without registering the MSIX package. Verify that the unpackaged executable works before calling it Portable. |
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official redirect supplies a versioned setup EXE, but no checksum or reliable installer/uninstaller behavior is available. The manifest only downloads the setup and deliberately does not execute it. |
+| [asm-download-manager](../bucket/asm-download-manager.json) | Windows setup EXE (engine unverified) | The release publishes a SHA-256 digest, but the repository does not identify the setup engine or document installation paths, silent-install behavior or a reliable uninstaller. The manifest downloads the setup only. |
 
 ## Portable examples and important exceptions
 
