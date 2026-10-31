@@ -1,0 +1,130 @@
+name: Manual Now Bar 7-Zip Extraction Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/now-bar-sevenzip-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    name: Test Now Bar setup extraction with 7-Zip
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download current setup and verify SHA-256
+        id: target
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $url = "https://github.com/nixesty/now-bar/releases/download/v0.4.1/nowbar-setup.exe"
+          $expected = "e9c6c29f58b10f8c3ddc7c7c404de971d7036329de0e5493db9fa3f29a06172b"
+          $root = Join-Path $env:RUNNER_TEMP "now-bar-7zip-test"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $installer = Join-Path $root "nowbar-setup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
+          $item = Get-Item -LiteralPath $installer
+          if ($item.Length -le 0) { throw "Downloaded setup is empty." }
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SHA-256 mismatch: expected $expected, received $actual." }
+          "installer_path=$installer" >> $env:GITHUB_OUTPUT
+          "work_root=$root" >> $env:GITHUB_OUTPUT
+          Write-Host "Downloaded $($item.Length) bytes; SHA-256 verified: $actual"
+
+      - name: Locate 7-Zip
+        id: sevenzip
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $candidates = @(
+            (Join-Path $env:ProgramFiles "7-Zip\7z.exe"),
+            (Join-Path ${env:ProgramFiles(x86)} "7-Zip\7z.exe")
+          )
+          $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          if (-not $sevenZip) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not $sevenZip) {
+            choco install 7zip.install --yes --no-progress
+            if ($LASTEXITCODE -ne 0) { throw "Could not install 7-Zip." }
+            $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          }
+          if (-not $sevenZip) { throw "7z.exe was not found." }
+          "sevenzip_path=$sevenZip" >> $env:GITHUB_OUTPUT
+          & $sevenZip i | Select-Object -First 8
+
+      - name: List and extract setup without executing it
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          WORK_ROOT: ${{ steps.target.outputs.work_root }}
+          SEVENZIP_PATH: ${{ steps.sevenzip.outputs.sevenzip_path }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $installer = $env:INSTALLER_PATH
+          $sevenZip = $env:SEVENZIP_PATH
+          $listingPath = Join-Path $env:WORK_ROOT "7zip-list.txt"
+          $extractPath = Join-Path $env:WORK_ROOT "extracted"
+          New-Item -ItemType Directory -Path $extractPath -Force | Out-Null
+
+          $listing = @(& $sevenZip l -slt $installer 2>&1 | ForEach-Object { "$_" })
+          $listCode = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath $listingPath -Encoding utf8
+          if ($listCode -ne 0 -or $listing.Count -eq 0) {
+            throw "7-Zip could not list the setup (exit code $listCode)."
+          }
+
+          $extractLog = @(& $sevenZip x -y "-o$extractPath" $installer 2>&1 | ForEach-Object { "$_" })
+          $extractCode = $LASTEXITCODE
+          $extractLog | ForEach-Object { Write-Host $_ }
+          if ($extractCode -ne 0) {
+            throw "7-Zip extraction failed with exit code $extractCode."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $extractPath -File -Recurse -Force)
+          $relative = @($files | ForEach-Object {
+            $_.FullName.Substring($extractPath.Length).TrimStart('\')
+          } | Sort-Object)
+          if ($files.Count -eq 0) { throw "7-Zip reported success but extracted no files." }
+
+          $relative | Set-Content -LiteralPath (Join-Path $env:WORK_ROOT "extracted-files.txt") -Encoding utf8
+          Write-Host "Extracted file count: $($files.Count)"
+          $relative | ForEach-Object { Write-Host " - $_" }
+
+          $main = @($files | Where-Object { $_.Name -ieq "nowbar.exe" })
+          $settings = @($files | Where-Object { $_.Name -ieq "nowbar-settings.exe" })
+          $complete = $main.Count -eq 1 -and $settings.Count -eq 1
+          Write-Host "nowbar.exe found: $($main.Count -eq 1)"
+          Write-Host "nowbar-settings.exe found: $($settings.Count -eq 1)"
+          if (-not $complete) {
+            Write-Warning "7-Zip did not expose both released application executables. Use the separately published direct binary assets instead of the setup."
+          }
+
+          @(
+            "## Now Bar 7-Zip extraction test"
+            ""
+            "- **7-Zip extraction:** SUCCESS"
+            "- **Extracted files:** $($files.Count)"
+            "- **nowbar.exe at payload path:** $($main.Count -eq 1)"
+            "- **nowbar-settings.exe at payload path:** $($settings.Count -eq 1)"
+            "- **Complete application payload:** $complete"
+            "- **Setup execution:** No"
+            ""
+            "### Extracted paths"
+            $relative
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload extraction report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: now-bar-7zip-extraction-report
+          path: ${{ runner.temp }}/now-bar-7zip-test/*.txt
+          if-no-files-found: ignore
