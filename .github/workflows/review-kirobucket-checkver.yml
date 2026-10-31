@@ -102,7 +102,10 @@ jobs:
           Write-Host "Failed:  $($failed.Count)"
           if ($failed.Count -gt 0) {
             $failed | Format-Table -Wrap -AutoSize
-            $failed | ForEach-Object { Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "- FAIL: $($_.Manifest) — $($_.Reason)" }
+            $failed | ForEach-Object {
+              $summaryLine = '- FAIL: {0} - {1}' -f $_.Manifest, $_.Reason
+              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value $summaryLine
+            }
             exit 1
           }
           Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "Checked $($manifests.Count) under-review manifests; all passed."
