@@ -1,11 +1,6 @@
 name: Sync missing manifests from Scoop Main and Extras
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - .github/workflows/sync-official-scoop-manifests.yml
   workflow_dispatch:
 
 permissions:
