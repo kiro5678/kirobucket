@@ -33,6 +33,7 @@ jobs:
         with:
           repository: ScoopInstaller/Scoop
           path: scoop_core
+          token: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
 
       - name: Test automatic update path in an isolated copy
         shell: pwsh

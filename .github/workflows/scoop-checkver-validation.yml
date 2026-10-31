@@ -35,6 +35,7 @@ jobs:
         with:
           repository: ScoopInstaller/Scoop
           path: scoop_core
+          token: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
 
       - name: Enable authenticated GitHub API requests in Scoop checkver
         env:

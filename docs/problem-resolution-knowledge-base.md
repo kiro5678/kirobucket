@@ -92,3 +92,14 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - **التحقق:** التنسيق نجح في [41193383683](https://github.com/kiro5678/kirobucket/actions/runs/41193383683). فحص `checkver` نجح في PowerShell وpwsh ضمن [41193419418](https://github.com/kiro5678/kirobucket/actions/runs/41193419418). فحص SHA-256 ومسارات الأرشيف نجح في [41193462723](https://github.com/kiro5678/kirobucket/actions/runs/41193462723). اختبار `autoupdate` نجح في [41193496154](https://github.com/kiro5678/kirobucket/actions/runs/41193496154)، واختبارات CI نجحت في PowerShell وpwsh ضمن [41193538127](https://github.com/kiro5678/kirobucket/actions/runs/41193538127). لا يُسجَّل تشغيل Manifest Pipeline المجمع كاملاً على أنه ناجح قبل انتهاء مرحلة تحديث جدول README.
 - **الوقاية:** ضع رابط إصدار حقيقياً ومحدداً في `architecture.<arch>.url`. استخدم `$version` في قوالب `autoupdate.url` فقط، ثم افحص استخراج الأرشيف ووجود كل ملف في `bin` والاختصارات.
 
+
+
+## 2026-10-31 — فشل Checkout لمستودع Scoop بسبب حد GitHub API
+
+- **الحالة:** تم تطبيق إصلاح إعداد المصادقة؛ التحقق التشغيلي بعد التعديل ما زال معلقاً.
+- **الملفات المتأثرة:** `.github/workflows/scoop-checkver-validation.yml` و`.github/workflows/ci.yml` و`.github/workflows/scoop-autoupdate-validation.yml`.
+- **المشكلة:** فشلت وظائف Checkver وCI أثناء خطوة `Checkout Scoop` قبل تشغيل فحوص المانيفست، وظهر الخطأ الصريح `API rate limit exceeded for installation`. أدى ذلك إلى توقف Manifest Pipeline عند أول مرحلة فرعية فاشلة، وبالتالي لم تكتمل دفعة الـ48 ولا إعادة فحص Fig/Nook.
+- **السبب الجذري:** كانت خطوة `actions/checkout` لمستودع `ScoopInstaller/Scoop` تستخدم تلقائياً `github.token` المرتبط بتثبيت GitHub App، ووصل هذا الرمز إلى حد طلبات API. السجلات تؤكد أن الفشل حدث أثناء Checkout وليس داخل Scoop `checkver` أو في Regex المانيفستات.
+- **الحل:** أضيف إلى Checkout لمستودع Scoop في workflows الثلاثة الرمز `${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}`، بحيث يستخدم PAT المخزن في `CHECKVER_GITHUB_TOKEN` عند توفره، مع الإبقاء على رمز GitHub الافتراضي كخيار احتياطي.
+- **التحقق:** تأكدت من سجلات التشغيل [41194974061](https://github.com/kiro5678/kirobucket/actions/runs/41194974061) و[41194857644](https://github.com/kiro5678/kirobucket/actions/runs/41194857644) أن Checkout Scoop انتهى برسالة حد API قبل تشغيل Checkver/CI. تم فحص التعديلات نصياً قبل دفعها؛ لم يُعَد تشغيل الوظائف بعد، لذا لا يُعد تجاوز حد API مثبتاً بعد.
+- **الوقاية:** استخدم رمزاً مخصصاً ذا حد API مستقل عند Checkout لمستودع Scoop أو طلب GitHub API بكثافة. لا تسجل فشل Checkver على أنه خطأ مانيفست إذا فشلت خطوة Checkout قبل تشغيله. افصل نتيجة تجهيز بيئة الاختبار عن نتيجة الاختبار الفعلي في تقارير Manifest Pipeline.
