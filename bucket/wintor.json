@@ -1,0 +1,33 @@
+{
+    "version": "0.3.0.0",
+    "description": "Windows BitTorrent client with magnet links, torrent queues, peers, and a system-tray mode",
+    "homepage": "https://github.com/tarasenko-by/wintor",
+    "license": "GPL-3.0",
+    "installer": {
+        "script": [
+            "$packageName = 'SiarheiTarasenka.Wintor-TorrentClient'",
+            "$winget = Get-Command winget.exe -ErrorAction SilentlyContinue",
+            "if (-not $winget) { throw 'Wintor is distributed through Microsoft Store. Install App Installer (winget) before installing this Scoop manifest.' }",
+            "$installed = Get-AppxPackage -Name $packageName -ErrorAction SilentlyContinue",
+            "if (-not $installed) {",
+            "    & $winget.Source install --id '9P7P2DH9P4XN' --exact --source msstore --accept-source-agreements --accept-package-agreements",
+            "    if ($LASTEXITCODE -ne 0 -and -not (Get-AppxPackage -Name $packageName -ErrorAction SilentlyContinue)) { throw \"Microsoft Store installation of Wintor failed with exit code $LASTEXITCODE.\" }",
+            "}"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "$packages = @(Get-AppxPackage -Name 'SiarheiTarasenka.Wintor-TorrentClient' -ErrorAction SilentlyContinue)",
+            "foreach ($package in $packages) { Remove-AppxPackage -Package $package.PackageFullName -ErrorAction Stop }"
+        ]
+    },
+    "checkver": {
+        "url": "https://raw.githubusercontent.com/tarasenko-by/wintor/main/src/Wintor.App/Package.appxmanifest",
+        "regex": "Version=\"([0-9.]+)\""
+    },
+    "notes": [
+        "Wintor is officially distributed as a Microsoft Store app (Product ID 9P7P2DH9P4XN); this manifest installs the current-user Store package through winget and removes that package on Scoop uninstall.",
+        "Requires App Installer with winget and an available msstore source. Microsoft Store manages subsequent application updates.",
+        "This is a Nonportable MSIX/Store installation, not a portable GitHub release."
+    ]
+}

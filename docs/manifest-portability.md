@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 831 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
+**Portability audit coverage:** 835 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -23,15 +23,19 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 770 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 57 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 4 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **831** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| Nonportable | 58 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Review | 7 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
+| **Total** | **835** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
 
 - [`cue`](../bucket/cue.json) — **Nonportable**: the custom setup writes current-user Uninstall and App Paths registry entries and creates a Start Menu shortcut.
 - [`deskstats`](../bucket/deskstats.json) — **Portable**: Scoop extracts the Inno Setup payload only. The application itself requests administrator rights; its bundled PawnIO driver is not installed by Scoop and can be installed only through the application's user action.
 - [`imgconv`](../bucket/imgconv.json) — **Nonportable**: the silent vendor setup registers the Explorer context menu and startup integration, writes uninstall metadata, and may register its Windows 11 menu package.
+- [`wintor`](../bucket/wintor.json) — **Nonportable**: installs the official Microsoft Store MSIX package through winget; the manifest does not extract or register an unpackaged portable build.
+- [`anton`](../bucket/anton.json) — **Review**: the official Windows endpoint redirects to a setup EXE, but its checksum and installer/uninstaller behavior are not verified; the manifest downloads it without executing it.
+- [`cliptray`](../bucket/cliptray.json) — **Review**: the exact linked repository has no Windows release asset or declared license; the manifest attempts a source build requiring Node.js, Rust, and Visual Studio C++ Build Tools, which remains unverified.
+- [`yerel`](../bucket/yerel.json) — **Review**: source-based Node.js/Next.js build requiring cloudflared; the upstream repository has no declared license and the Windows installation/build has not been verified.
 - [`fig`](../bucket/fig.json) — **Portable**: uses the publisher's standalone, self-contained Windows executable rather than its setup installer.
 - [`nook`](../bucket/nook.json) — **Nonportable**: the application registers the `nook://` URL scheme under the current user's registry each time it starts. The manifest removes that registration on uninstall only when it still points to this Scoop installation.
 - [`rust-meow`](../bucket/rust-meow.json) — **Nonportable**: Scoop runs the vendor's NSIS setup routine silently and directs it to the Scoop app directory; this is installation, not extraction of a portable payload. Linked-device credentials and profile data remain under `%LOCALAPPDATA%\\rust-meow` and are not removed by Scoop uninstall.
@@ -65,7 +69,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 57 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 58 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
@@ -93,7 +97,8 @@ This index groups the 57 Nonportable manifests by the exact installer/package la
 | Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
-| **Total** | **All Nonportable manifests** | **57** |
+| Microsoft Store / MSIX (winget) | [wintor](../bucket/wintor.json) | 1 |
+| **Total** | **All Nonportable manifests** | **58** |
 
 ## Nonportable manifests
 
@@ -159,6 +164,7 @@ The installer type describes the package or setup technology used by the manifes
 | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | Vendor EXE setup (NSIS-style switches; engine unverified) | Runs the WiFiman vendor setup with `/S /D=$dir`. |
 | [wincux](../bucket/wincux.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | MSI payload extraction + URL protocol registration | Extracts the MSI payload, then registers the `ytdlp-gui://` URL protocol under `HKCU\Software\Classes`; the registry entry points to the Scoop app path. |
+| [wintor](../bucket/wintor.json) | Microsoft Store / MSIX (winget) | Installs the official Store product ID through winget, registering the current-user MSIX package and its declared Windows integrations. |
 | [znote](../bucket/znote.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 
 ## Review before classifying
@@ -171,6 +177,9 @@ These entries should not be treated as Portable or Nonportable until their paylo
 | [motrix-next](../bucket/motrix-next.json) | EXE setup (installer engine unverified) | Downloads a `*-setup.exe` without an archive fragment or installer instructions. Its declared `bin` is `motrix-next.exe`, which does not match the downloaded setup filename. The current extraction/launch path is not established. |
 | [quanto-flx](../bucket/quanto-flx.json) | Rainmeter RMSKIN skin/add-on package | Downloads a Rainmeter `.rmskin` add-on and depends on Rainmeter; the notes say it is installed through `SkinInstaller.exe`. This is an add-on payload, not a standalone portable application. |
 | [zenbreak-msix](../bucket/zenbreak-msix.json) | MSIX package currently extracted as 7Z | Renames an MSIX asset as a 7-Zip archive and extracts its files without registering the MSIX package. Verify that the unpackaged executable works before calling it Portable. |
+| [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official redirect supplies a versioned setup EXE, but no checksum or reliable installer/uninstaller behavior is available. The manifest only downloads the setup and deliberately does not execute it. |
+| [cliptray](../bucket/cliptray.json) | Tauri source archive / local build | No Windows release asset is published for this exact repository. The manifest builds from a pinned source commit and creates a Start Menu shortcut, but the build has not yet been verified on Windows and upstream has no declared license. |
+| [yerel](../bucket/yerel.json) | Node.js source archive / local build | Builds the Next.js app and creates local companion/web shortcuts from a pinned source commit. It depends on Node.js and cloudflared; the upstream license and Windows runtime have not been verified. |
 
 ## Portable examples and important exceptions
 

@@ -455,6 +455,10 @@ jobs:
               "funk-ssd" = "Media & Audio/Video"
               "lopesoft-filemenu-tools" = "Windows Customization"
               "lopesoft-lopeedit" = "Developer & Technical Tools"
+              "anton" = "Media & Audio/Video"
+              "cliptray" = "Clipboard & Text"
+              "wintor" = "Network & DNS"
+              "yerel" = "Network & DNS"
           }
 
           function ConvertTo-DateOnly {

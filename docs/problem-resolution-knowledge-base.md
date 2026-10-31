@@ -103,3 +103,14 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - **الحل:** أضيف إلى Checkout لمستودع Scoop في workflows الثلاثة الرمز `${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}`، بحيث يستخدم PAT المخزن في `CHECKVER_GITHUB_TOKEN` عند توفره، مع الإبقاء على رمز GitHub الافتراضي كخيار احتياطي.
 - **التحقق:** تأكدت من سجلات التشغيل [41194974061](https://github.com/kiro5678/kirobucket/actions/runs/41194974061) و[41194857644](https://github.com/kiro5678/kirobucket/actions/runs/41194857644) أن Checkout Scoop انتهى برسالة حد API قبل تشغيل Checkver/CI. تم فحص التعديلات نصياً قبل دفعها؛ لم يُعَد تشغيل الوظائف بعد، لذا لا يُعد تجاوز حد API مثبتاً بعد.
 - **الوقاية:** استخدم رمزاً مخصصاً ذا حد API مستقل عند Checkout لمستودع Scoop أو طلب GitHub API بكثافة. لا تسجل فشل Checkver على أنه خطأ مانيفست إذا فشلت خطوة Checkout قبل تشغيله. افصل نتيجة تجهيز بيئة الاختبار عن نتيجة الاختبار الفعلي في تقارير Manifest Pipeline.
+
+
+## 2026-10-31 — إضافة Wintor وCliptray وYerel وAnton إلى bucket مع حالات التحقق
+
+- **الحالة:** أُضيفت المانيفستات الأربعة إلى `bucket/`؛ تصنيفا Review لمشروعي المصدر وAnton مؤقتان حتى التحقق التشغيلي. لا يُسجَّل أي تثبيت أو بناء محلي ناجح في هذه المرحلة.
+- **الملفات المتأثرة:** `bucket/wintor.json`، `bucket/cliptray.json`، `bucket/yerel.json`، `bucket/anton.json`، `docs/manifest-portability.md`، `docs/categories.md`، `.github/workflows/manifest-table.yml`.
+- **المشكلة:** لم تكن البرامج الأربعة توفر كلها ملف Windows جاهزاً يمكن إضافته برابط تنزيل وChecksum منشورين. Wintor يوزع عبر Microsoft Store؛ Cliptray وYerel لا ينشران Windows release assets في المستودعين المحددين؛ وAnton يعيد توجيه رابط Windows الرسمي إلى Setup EXE دون Checksum عام متاح.
+- **الحل:** أضيف Wintor عبر Store Product ID الرسمي بواسطة winget، مع إزالة حزمة المستخدم عند إلغاء التثبيت. أضيف Cliptray وYerel كمصدرَي بناء مثبتين على Git commit كامل، مع تبعيات البناء والاختصارات التي ينشئها Hook بعد نجاح البناء. أضيف Anton كعنصر Review ينزّل ملف Setup الرسمي فقط ولا يشغّله، مع اكتشاف الإصدار من عنوان إعادة التوجيه.
+- **التحقق المتاح قبل التشغيل:** README وPackage.appxmanifest ومصدر المستودعات تؤكد طريقة توزيع Wintor ومتطلبات Cliptray وYerel؛ رابط Anton الرسمي أعاد توجيهاً إلى إصدار Windows 0.2.48. لا يتوفر Checksum منشور لـAnton أو لملفات المصدر المضغوطة؛ تم تثبيت المصدرين على SHA-1 commit كامل بدلاً من اختلاق Hash أرشيف.
+- **الاختبارات غير المنفذة بعد:** لم يُثبت تشغيل winget/MS Store أو بناء Cliptray مع MSVC أو بناء Yerel عبر npm أو تشغيل Anton Setup على Windows. يجب انتظار نتائج Scoop Checkver وArchive/Autoupdate validation وCI بعد الدفع، ولا تُعد هذه الفحوص بديلاً عن اختبار التثبيت والبناء الفعلي.
+- **الوقاية:** لا تستبدل غياب ملفات الإصدارات بملفات من Fork أو مشروع آخر يحمل اسماً مشابهاً. لا تصف برامج المصدر بأنها Portable قبل نجاح البناء والتشغيل، ولا تشغّل Setup غير مفحوص أو تحذف بياناته أو تكاملاته بالافتراض.
