@@ -31,11 +31,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 95 | [View](#windows-customization) |
+| Windows Customization | 96 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 836**
+**Total unique manifests: 837**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -903,6 +903,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [desktop-snow-ok](../bucket/desktop-snow-ok.json) | 7.11 | Display snow effects on the Windows desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopSnowOK) |
 | [desktopframesplus](../bucket/desktopframesplus.json) | 2.7.8.376 | Open-source desktop icon management software for organizing files and shortcuts into virtual frames. | [Homepage](https://github.com/limbo666/DesktopFramesPlus) |
 | [desktopok](../bucket/desktopok.json) | 12.81 | Save and restore the positions of Windows desktop icons. | [Homepage](https://www.softwareok.com/?Download=DesktopOK) |
+| [dlives](../bucket/dlives.json) | 1.0.0 | Liquid Glass Dynamic Island for Windows with media, diagnostics, calendar, alarms, notes, and clipboard shelf. | [Homepage](https://github.com/FuGen-India-Private-Ltd/Dlives) |
 | [dragwin](../bucket/dragwin.json) | 1.1.6 | Move and resize Windows without holding Alt or Control. | [Homepage](https://github.com/PinchToDebug/DragWin) |
 | [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
 | [fancywm](../bucket/fancywm.json) | 2.19.0 | Windows tiling window manager designed for power users. | [Homepage](https://github.com/FancyWM/fancywm) |
