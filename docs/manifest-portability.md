@@ -22,8 +22,8 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 770 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 57 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Portable | 771 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 7 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
 | **Total** | **834** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
@@ -37,7 +37,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 - [`yerel`](../bucket/yerel.json) — **Review**: source-based Node.js/Next.js build requiring cloudflared; the upstream repository has no declared license and the Windows installation/build has not been verified.
 - [`fig`](../bucket/fig.json) — **Portable**: uses the publisher's standalone, self-contained Windows executable rather than its setup installer.
 - [`nook`](../bucket/nook.json) — **Nonportable**: the application registers the `nook://` URL scheme under the current user's registry each time it starts. The manifest removes that registration on uninstall only when it still points to this Scoop installation.
-- [`rust-meow`](../bucket/rust-meow.json) — **Nonportable**: Scoop runs the vendor's NSIS setup routine silently and directs it to the Scoop app directory; this is installation, not extraction of a portable payload. Linked-device credentials and profile data remain under `%LOCALAPPDATA%\\rust-meow` and are not removed by Scoop uninstall.
+- [`rust-meow`](../bucket/rust-meow.json) — **Portable**: verified 7-Zip 26.05 extraction of the NSIS EXE produced `rust-meow.exe` and `rust-meow-backend.exe` at the payload root without running the vendor setup routine; Scoop uses `#/dl.7z`. Linked-device credentials and profile data remain under `%LOCALAPPDATA%\\rust-meow` and are not removed by Scoop uninstall.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
@@ -68,11 +68,11 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 57 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 56 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
-| NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [rust-meow](../bucket/rust-meow.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 21 |
+| NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 20 |
 | Inno | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 5 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json) | 4 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
@@ -96,7 +96,7 @@ This index groups the 57 Nonportable manifests by the exact installer/package la
 | Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
-| **Total** | **All Nonportable manifests** | **57** |
+| **Total** | **All Nonportable manifests** | **56** |
 
 ## Nonportable manifests
 
@@ -148,7 +148,6 @@ The installer type describes the package or setup technology used by the manifes
 | [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
 | [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
 | [recordly](../bucket/recordly.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
-| [rust-meow](../bucket/rust-meow.json) | NSIS | Runs the Tauri-generated NSIS setup silently with `/S /NS /D=$dir`; the upstream release workflow explicitly builds the Windows target with `nsis,msi` bundles. This executes the vendor installation routine rather than extracting a portable payload. |
 | [sandboxie-plus](../bucket/sandboxie-plus.json) | Inno | Runs the Sandboxie setup silently; installs system integration including its driver/service components. |
 | [scanner](../bucket/scanner.json) | MSIX | Registers the MSIX package with `Add-AppxPackage` for the current user. |
 | [screenbox](../bucket/screenbox.json) | MSIXBundle + APPX dependencies | Registers the MSIX bundle and its APPX dependencies with `Add-AppxPackage` for the current user. |
@@ -187,6 +186,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | MSI extraction, not Windows Installer execution | MSI database/payload extracted by Scoop | [rqbit](../bucket/rqbit.json), [sklad](../bucket/sklad.json), [timigs](../bucket/timigs.json), [clipper](../bucket/clipper.json), [cooldesk-msi](../bucket/cooldesk-msi.json), [cedro-modern-dock](../bucket/cedro-modern-dock.json), [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json), [poltertype](../bucket/poltertype.json), [dnschanger-msi](../bucket/dnschanger-msi.json) | Scoop extracts the MSI payload; the manifest does not run `msiexec /i`. |
 | Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json), [deskstats](../bucket/deskstats.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
 | EXE/NSIS payload extraction | NSIS containing an embedded application archive (commonly app-64.7z) | [endstate](../bucket/endstate.json), [mechvibes](../bucket/mechvibes.json), [openscreen](../bucket/openscreen.json), [keyboardsounds](../bucket/keyboardsounds.json), [keyboardsounds-pro](../bucket/keyboardsounds-pro.json), [super-productivity](../bucket/super-productivity.json), [safepdf-installer](../bucket/safepdf-installer.json) | The downloaded setup file is treated as an archive or its embedded application archive is extracted; the vendor setup routine is not executed. |
+| Direct NSIS payload extraction | NSIS EXE whose files are directly readable by 7-Zip | [rust-meow](../bucket/rust-meow.json) | `#/dl.7z` extracts the NSIS container directly; 7-Zip 26.05 verified extraction of `rust-meow.exe` and `rust-meow-backend.exe` without executing the setup routine. |
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | Their manifest passes the application's explicit portable-mode option. |
 | Setup executable used only as an extractor | Portable self-extracting EXE or Inno Setup portable bundle | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
 | File-only or direct portable payload | ZIP, 7Z, or standalone EXE | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
