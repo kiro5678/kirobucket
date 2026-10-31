@@ -29,13 +29,13 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 72 | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
-| Translation & OCR | 12 | [View](#translation-ocr) |
+| Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 102 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 847**
+**Total unique manifests: 848**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -858,6 +858,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 ## Translation & OCR
 
 | Manifest | Version | Description | Homepage |
+| [biniware-translation-tool](../bucket/biniware-translation-tool.json) | 1.6.0.0 | Portable utility for translating software localization files. | [Homepage](https://biniware.com/bttool) |
 | --- | --- | --- | --- |
 | [crow-translate](../bucket/crow-translate.json) | 4.1.0 | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. | [Homepage](https://apps.kde.org/crowtranslate) |
 | [dpscreenocr](../bucket/dpscreenocr.json) | 1.5.1 | A free and open-source program to recognize text on the screen. | [Homepage](https://danpla.github.io/dpscreenocr/) |
