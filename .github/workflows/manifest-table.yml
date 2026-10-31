@@ -1,4 +1,4 @@
-name: Update README Manifest Table
+name: Update Manifest Documentation
 
 on:
   workflow_dispatch:
@@ -35,7 +35,6 @@ jobs:
 
           $start = "<!-- KIROBUCKET-MANIFEST-TABLE-START -->"
           $end = "<!-- KIROBUCKET-MANIFEST-TABLE-END -->"
-          $readmePath = Join-Path $env:GITHUB_WORKSPACE "README.md"
 
           $categoryMap = @{
               "0install-win" = "Package Management"
@@ -1178,39 +1177,31 @@ jobs:
 
 
 
-          $readme = Get-Content -Path $readmePath -Raw
-
-          $table = @(
-              "## Manifests"
+          $manifestPage = @(
+              "# KiroBucket Manifest Inventory"
               ""
-              "Manifest Added shows the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
-              "Installer Type is inferred from manifest metadata and the declared download format; unknown EXE installer engines are labeled unverified, not guessed."
+              "This page contains the complete manifest inventory generated from the JSON files in `bucket/`."
+              ""
+              "Manifest Added is the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
+              ""
+              "Installer Type is inferred from manifest metadata and the declared download format. Unknown EXE installer engines are labeled unverified rather than guessed."
+              ""
+              "Use the column links to open alternative views sorted by name, category, manifest-added date, or program-update date."
               ""
               $start
               '<a id="manifests-newest"></a>'
-              "| Name [↑](docs/manifests-name-az.md) [↓](docs/manifests-name-za.md) | Category [↑](docs/manifests-category-az.md) [↓](docs/manifests-category-za.md) | Version | Installer Type | MANIFEST ADDED [↓](docs/manifests-added-newest.md) [↑](docs/manifests-added-oldest.md) | PROGRAM UPDATE [↓](docs/manifests-newest.md) [↑](docs/manifests-oldest.md) | Homepage | Description |"
+              "| Name [↑](manifests-name-az.md) [↓](manifests-name-za.md) | Category [↑](manifests-category-az.md) [↓](manifests-category-za.md) | Version | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
               "| --- | --- | --- | --- | --- | --- | --- | --- |"
-              ($newest | ForEach-Object { $_.Row })
+              ($newest | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
               $end
+              ""
+              "[Back to README](../README.md#manifests)"
           ) -join [Environment]::NewLine
 
-          $sectionPattern = "(?s)## Manifests.*?" + [regex]::Escape($end)
-
-          if ($readme -match $sectionPattern) {
-              $readme = [regex]::Replace(
-                  $readme,
-                  $sectionPattern,
-                  [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $table },
-                  1
-              )
-          } else {
-              $readme = $readme.TrimEnd() + [Environment]::NewLine + [Environment]::NewLine + $table + [Environment]::NewLine
-          }
-
-          $readme = [regex]::Replace($readme, '(?:\r?\n)+\z', '') + "`n"
+          $manifestPage = [regex]::Replace($manifestPage, '(?:\r?\n)+\z', '') + "`n"
           [System.IO.File]::WriteAllText(
-              $readmePath,
-              $readme,
+              (Join-Path $docsPath "manifests.md"),
+              $manifestPage,
               [System.Text.UTF8Encoding]::new($false)
           )
 
@@ -1220,12 +1211,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet -- README.md docs; then
+          if git diff --quiet -- docs; then
             echo "Generated files are already up to date."
             exit 0
           fi
 
-          git add README.md docs
+          git add docs
           git commit -m "docs: update manifest views"
           git fetch origin master:refs/remotes/origin/master
           git rebase origin/master
