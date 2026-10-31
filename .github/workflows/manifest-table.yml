@@ -787,6 +787,7 @@ jobs:
                   "biscuit"
                   "ecopaste"
                   "ecopaste-nightly"
+              "rust-meow"
               )
               if ($nsisManifests -contains $ManifestName.ToLowerInvariant()) {
                   return "NSIS"
