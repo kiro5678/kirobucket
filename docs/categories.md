@@ -6,9 +6,9 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 
 | Category | Manifests | Link |
 | --- | ---: | --- |
-| Android & Device Tools | 10 | [View](#android-device-tools) |
+| Android & Device Tools | 9 | [View](#android-device-tools) |
 | Browsers & Communication | 8 | [View](#browsers-communication) |
-| Clipboard & Text | 34 | [View](#clipboard-text) |
+| Clipboard & Text | 33 | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
 | Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
@@ -16,8 +16,8 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 53 | [View](#images-photos) |
-| Keyboard & Language | 15 | [View](#keyboard-language) |
-| Media & Audio/Video | 48 | [View](#media-audio-video) |
+| Keyboard & Language | 14 | [View](#keyboard-language) |
+| Media & Audio/Video | 49 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
 | Other Utilities | 2 | [View](#other-utilities) |
@@ -31,11 +31,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 102 | [View](#windows-customization) |
+| Windows Customization | 103 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 850**
+**Total unique manifests: 849**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -71,7 +71,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [scrcpy](../bucket/scrcpy.json) | 5.0.1 | Display and control Android devices from Windows. | [Homepage](https://github.com/Genymobile/scrcpy) |
 | [scrcpy-gui-georgeenglezos](../bucket/scrcpy-gui-georgeenglezos.json) | 1.7.5 | A modern GUI for scrcpy | [Homepage](https://github.com/GeorgeEnglezos/Scrcpy-GUI) |
 | [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json) | 4.1.0 | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) |
-| [scrcpy-gui-kil0bit-setup-portable](../bucket/scrcpy-gui-kil0bit-setup-portable.json) | 4.1.0 | ScrcpyGUI desktop GUI for scrcpy, packaged as a portable Scoop app by extracting the Windows setup executable. | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) |
 | [scrcpy-gui-simonaking](../bucket/scrcpy-gui-simonaking.json) | 2.5.0 | Modern desktop GUI for scrcpy with bundled scrcpy and ADB. | [Homepage](https://github.com/SimonAKing/scrcpy-gui) |
 
 ## Browsers & Communication
@@ -112,7 +111,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [pastebar](../bucket/pastebar.json) | 0.7.0 | Limitless, Free Clipboard Manager for Mac and Windows | [Homepage](https://www.pastebar.app/) |
 | [quicktextpaste](../bucket/quicktextpaste.json) | 9.61 | Paste predefined text using keyboard shortcuts. | [Homepage](https://www.softwareok.com/?Download=QuickTextPaste) |
 | [sklad](../bucket/sklad.json) | 0.2.3 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text | [Homepage](https://github.com/Rench321/sklad) |
-| [sklad-setup-portable](../bucket/sklad-setup-portable.json) | 0.2.3 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text (portable) | [Homepage](https://github.com/Rench321/sklad) |
 | [skyeclip](../bucket/skyeclip.json) | 1.4 | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. | [Homepage](https://github.com/YodeSkye/SkyeClip) |
 | [smart-clipboard](../bucket/smart-clipboard.json) | 1.3.2 | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection | [Homepage](https://github.com/ezeiq7/Smart-Clipboard) |
 | [tiez-clipboard](../bucket/tiez-clipboard.json) | 0.3.3 | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. | [Homepage](https://github.com/jimuzhe/tiez-clipboard) |
@@ -428,7 +426,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [keyboardsounds-pro](../bucket/keyboardsounds-pro.json) | 0.3.2 | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. | [Homepage](https://keyboardsounds.pro/) |
 | [langover](../bucket/langover.json) | 1.2.1 | Portable Windows utility for converting text between Hebrew and English keyboard layouts. | [Homepage](https://github.com/nachlib/LangOver) |
 | [mechvibes](../bucket/mechvibes.json) | 2.3.4 | Play mechanical keyboard sounds as you type, with customizable sound packs. | [Homepage](https://mechvibes.com) |
-| [mechvibes-dx](../bucket/mechvibes-dx.json) | 0.8.4 | Low-latency mechanical keyboard and mouse sound simulator with customizable soundpacks. | [Homepage](https://github.com/hainguyents13/mechvibes-dx) |
 | [monkeysounds](../bucket/monkeysounds.json) | 1.0.0.0 | Portable Windows app that plays mechanical keyboard and mouse click sounds system-wide, with built-in and custom sound profiles. | [Homepage](https://github.com/NSTechBytes/MonkeySounds) |
 | [poltertype](../bucket/poltertype.json) | 0.38.2 | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. | [Homepage](https://github.com/Just-Code-NET/PolterType) |
 | [sordum-send-windows-key](../bucket/sordum-send-windows-key.json) | 1.1 | SendKeys methode allows you to send keystrokes just as if you had manually typed them on the keyboard . | [Homepage](https://www.sordum.org/12894/send-windows-key-v1-1/) |
@@ -448,6 +445,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [ef-duplicate-mp3-finder](../bucket/ef-duplicate-mp3-finder.json) | 26.10 | Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA. | [Homepage](https://efsoftware.com/d3/e.htm) |
 | [ef-talk-scriber](../bucket/ef-talk-scriber.json) | 26.10 | Combines a text editor and audio player to support keyboard-driven transcription of recordings. | [Homepage](https://efsoftware.com/ts/e.htm) |
 | [fastcast](../bucket/fastcast.json) | 0.9.2 | Native Windows screen recorder and live streaming app. | [Homepage](https://github.com/CalvinSturm/FastCast-releases) |
+| [fig](../bucket/fig.json) | 1.0.1 | Open-source non-linear video editor with a timeline, effects and keyframes. | [Homepage](https://github.com/Skynse/Fig) |
 | [funk-ssd](../bucket/funk-ssd.json) | 4 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
 | [haruna](../bucket/haruna.json) | 1944 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
@@ -932,6 +930,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [magic-mouse-trails](../bucket/magic-mouse-trails.json) | 4.51 | Display customizable mouse trails. | [Homepage](https://www.softwareok.com/?Download=MagicMouseTrails) |
 | [mousefx-generator](../bucket/mousefx-generator.json) | 1.1.0 | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. | [Homepage](https://github.com/os4ma31/MouseFX-Generator) |
 | [nofences](../bucket/nofences.json) | 1.8 | Open-source alternative to Fences for organizing the Windows desktop. | [Homepage](https://github.com/Twometer/NoFences) |
+| [nook](../bucket/nook.json) | 0.2.1 | Floating Windows desktop notch with a customizable utility panel. | [Homepage](https://github.com/Geguchh024/nook) |
 | [nomeiryoui](../bucket/nomeiryoui.json) | 3.5.1 | Windows utility for changing system UI fonts and font sizes. | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) |
 | [now-bar](../bucket/now-bar.json) | 0.4.1 | Samsung One UI-inspired live activity bar for the Windows taskbar, with media controls, timers, sports scores, weather, and system status. | [Homepage](https://github.com/nixesty/now-bar) |
 | [ok-its-raining-men](../bucket/ok-its-raining-men.json) | 2.55 | Display customizable raindrop effects on the Windows desktop. | [Homepage](https://www.softwareok.com/?seite=Microsoft/OK.Its.Raining.Men) |
