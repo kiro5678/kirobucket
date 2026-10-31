@@ -32,7 +32,206 @@ jobs:
           $ProgressPreference = 'SilentlyContinue'
 
           $version = ([string]$env:TARGET_VERSION).Trim().TrimStart('v')
-          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+          if ([string]::IsNullOrWhiteSpace($version)) {
+              $version = '1.0.9'
+          }
+          if ($version -notmatch '^\d+\.\d+\.\d+ {
+              throw "Invalid version: $version"
+          }
+
+          $work = Join-Path $env:RUNNER_TEMP 'adm-installer-inspection'
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          function Add-Report([string]$Line) {
+              $report.Add($Line)
+              Write-Host $Line
+          }
+
+          $headers = @{
+              Accept = 'application/vnd.github+json'
+              'X-GitHub-Api-Version' = '2022-11-28'
+              'User-Agent' = 'kirobucket-adm-installer-inspector'
+          }
+
+          Add-Report "ADM installer inspection"
+          Add-Report "Requested version: $version"
+          Add-Report "Inspection mode: static only; Setup.exe is never launched."
+          Add-Report ""
+
+          $releaseUri = "https://api.github.com/repos/Engineer-Ahmed-Said-Official/ADM/releases/tags/v$version"
+          $release = Invoke-RestMethod -Uri $releaseUri -Headers $headers
+          $asset = @($release.assets | Where-Object { $_.name -eq 'ASMDownload-Setup.exe' } | Select-Object -First 1)
+          if ($asset.Count -eq 0) {
+              throw "ASMDownload-Setup.exe was not found in release v$version."
+          }
+          $asset = $asset[0]
+
+          $installer = Join-Path $work 'ASMDownload-Setup.exe'
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $installer -Headers @{ 'User-Agent' = 'kirobucket-adm-installer-inspector' }
+
+          $actualHash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expectedHash = ([string]$asset.digest -replace '^sha256:', '').ToLowerInvariant()
+          Add-Report "Release tag: $($release.tag_name)"
+          Add-Report "Release published: $($release.published_at)"
+          Add-Report "Asset URL: $($asset.browser_download_url)"
+          Add-Report "Asset size: $($asset.size) bytes"
+          Add-Report "Publisher digest: $($asset.digest)"
+          Add-Report "Downloaded SHA-256: $actualHash"
+          if ($expectedHash) {
+              if ($actualHash -ne $expectedHash) {
+                  throw "Downloaded installer SHA-256 does not match the GitHub release asset digest."
+              }
+              Add-Report "Digest verification: PASS"
+          } else {
+              Add-Report "Digest verification: NOT AVAILABLE in release metadata"
+          }
+
+          $signature = Get-AuthenticodeSignature -FilePath $installer
+          Add-Report "Authenticode status: $($signature.Status)"
+          if ($signature.SignerCertificate) {
+              Add-Report "Signer: $($signature.SignerCertificate.Subject)"
+          } else {
+              Add-Report "Signer: no Authenticode signer certificate"
+          }
+          Add-Report ""
+
+          # Detect It Easy identifies the PE installer/compiler/packer without running the file.
+          Add-Report "=== Detect It Easy ==="
+          $dieRelease = Invoke-RestMethod -Uri 'https://api.github.com/repos/horsicq/DIE-engine/releases/latest' -Headers $headers
+          $dieAsset = @($dieRelease.assets | Where-Object { $_.name -match '^die_win64_portable_.*_x64\.zip$' } | Select-Object -First 1)
+          if ($dieAsset.Count -eq 0) {
+              throw "The official Detect It Easy Windows x64 portable ZIP was not found."
+          }
+          $dieAsset = $dieAsset[0]
+          $dieZip = Join-Path $work $dieAsset.name
+          Invoke-WebRequest -Uri $dieAsset.browser_download_url -OutFile $dieZip -Headers @{ 'User-Agent' = 'kirobucket-adm-installer-inspector' }
+          if ($dieAsset.digest) {
+              $dieHash = (Get-FileHash -LiteralPath $dieZip -Algorithm SHA256).Hash.ToLowerInvariant()
+              $dieExpected = ([string]$dieAsset.digest -replace '^sha256:', '').ToLowerInvariant()
+              if ($dieHash -ne $dieExpected) { throw "Detect It Easy archive hash mismatch." }
+          }
+
+          $dieDir = Join-Path $work 'die'
+          Expand-Archive -LiteralPath $dieZip -DestinationPath $dieDir -Force
+          $diec = Get-ChildItem -LiteralPath $dieDir -Filter 'diec.exe' -File -Recurse | Select-Object -First 1
+          if (-not $diec) {
+              throw "diec.exe was not found inside the official Detect It Easy archive."
+          }
+
+          Push-Location $diec.DirectoryName
+          try {
+              $dieOutput = & $diec.FullName $installer 2>&1
+              $dieExit = $LASTEXITCODE
+          } finally {
+              Pop-Location
+          }
+          Add-Report "Detect It Easy version: $($dieRelease.tag_name)"
+          Add-Report "diec exit code: $dieExit"
+          foreach ($line in $dieOutput) { Add-Report ([string]$line) }
+          Add-Report ""
+
+          # Try a dedicated Inno Setup extractor. This reads/extracts payload files only.
+          $extractionDir = Join-Path $work 'extracted'
+          $extractionSucceeded = $false
+          Add-Report "=== Inno Setup extraction attempt ==="
+          try {
+              $innoRelease = Invoke-RestMethod -Uri 'https://api.github.com/repos/UserUnknownFactor/innoextract_win/releases/latest' -Headers $headers
+              $innoAsset = @($innoRelease.assets | Where-Object { $_.name -match '^innoextract.*\.zip$' } | Select-Object -First 1)
+              if ($innoAsset.Count -gt 0) {
+                  $innoAsset = $innoAsset[0]
+                  $innoZip = Join-Path $work $innoAsset.name
+                  Invoke-WebRequest -Uri $innoAsset.browser_download_url -OutFile $innoZip -Headers @{ 'User-Agent' = 'kirobucket-adm-installer-inspector' }
+                  if ($innoAsset.digest) {
+                      $innoHash = (Get-FileHash -LiteralPath $innoZip -Algorithm SHA256).Hash.ToLowerInvariant()
+                      $innoExpected = ([string]$innoAsset.digest -replace '^sha256:', '').ToLowerInvariant()
+                      if ($innoHash -ne $innoExpected) { throw "innoextract archive hash mismatch." }
+                  }
+
+                  $innoDir = Join-Path $work 'innoextract'
+                  Expand-Archive -LiteralPath $innoZip -DestinationPath $innoDir -Force
+                  $inno = Get-ChildItem -LiteralPath $innoDir -Filter 'innoextract.exe' -File -Recurse | Select-Object -First 1
+                  if ($inno) {
+                      $listing = & $inno.FullName -l $installer 2>&1
+                      $listExit = $LASTEXITCODE
+                      Add-Report "innoextract version: $($innoRelease.tag_name)"
+                      Add-Report "innoextract list exit code: $listExit"
+                      foreach ($line in $listing) { Add-Report ([string]$line) }
+
+                      if ($listExit -eq 0) {
+                          New-Item -ItemType Directory -Path $extractionDir -Force | Out-Null
+                          $extractOutput = & $inno.FullName -d $extractionDir $installer 2>&1
+                          $extractExit = $LASTEXITCODE
+                          Add-Report "innoextract extraction exit code: $extractExit"
+                          foreach ($line in $extractOutput) { Add-Report ([string]$line) }
+                          if ($extractExit -eq 0) { $extractionSucceeded = $true }
+                      }
+                  } else {
+                      Add-Report "innoextract.exe was not found in its release ZIP."
+                  }
+              } else {
+                  Add-Report "No Windows innoextract ZIP was found."
+              }
+          } catch {
+              Add-Report "Inno extractor attempt failed: $($_.Exception.Message)"
+          }
+
+          # If Inno extraction is not applicable, use 7-Zip as a non-executing archive reader.
+          if (-not $extractionSucceeded) {
+              Add-Report ""
+              Add-Report "=== 7-Zip archive inspection fallback ==="
+              $sevenZip = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+              if (-not $sevenZip -and (Test-Path 'C:\Program Files\7-Zip\7z.exe')) {
+                  $sevenZipPath = 'C:\Program Files\7-Zip\7z.exe'
+              } elseif ($sevenZip) {
+                  $sevenZipPath = $sevenZip.Source
+              } else {
+                  choco install 7zip --yes --no-progress
+                  $sevenZipPath = 'C:\Program Files\7-Zip\7z.exe'
+              }
+
+              if (Test-Path $sevenZipPath) {
+                  $sevenList = & $sevenZipPath l -slt $installer 2>&1
+                  $sevenListExit = $LASTEXITCODE
+                  Add-Report "7-Zip list exit code: $sevenListExit"
+                  foreach ($line in $sevenList) { Add-Report ([string]$line) }
+
+                  if ($sevenListExit -eq 0) {
+                      New-Item -ItemType Directory -Path $extractionDir -Force | Out-Null
+                      $sevenExtract = & $sevenZipPath x -y "-o$extractionDir" $installer 2>&1
+                      $sevenExtractExit = $LASTEXITCODE
+                      Add-Report "7-Zip extraction exit code: $sevenExtractExit"
+                      foreach ($line in $sevenExtract) { Add-Report ([string]$line) }
+                      if ($sevenExtractExit -eq 0) { $extractionSucceeded = $true }
+                  }
+              } else {
+                  Add-Report "7-Zip executable was not available."
+              }
+          }
+
+          Add-Report ""
+          Add-Report "=== Extracted executable and library inventory ==="
+          if ($extractionSucceeded -and (Test-Path -LiteralPath $extractionDir)) {
+              $files = @(Get-ChildItem -LiteralPath $extractionDir -File -Recurse)
+              Add-Report "Extracted file count: $($files.Count)"
+              $interesting = @($files | Where-Object {
+                  $_.Extension -in @('.exe', '.dll', '.msi', '.sys', '.json', '.ini', '.config') -or $_.Name -match '^(unins|uninstall)'
+              } | Sort-Object FullName)
+              foreach ($file in ($interesting | Select-Object -First 250)) {
+                  $relative = $file.FullName.Substring($extractionDir.Length).TrimStart('\')
+                  Add-Report ("{0} | {1} bytes" -f $relative, $file.Length)
+              }
+              if ($interesting.Count -gt 250) { Add-Report "Output truncated after 250 relevant files." }
+          } else {
+              Add-Report "No payload extraction succeeded. Keep the installer classified as Review."
+          }
+
+          $reportPath = Join-Path $work 'adm-installer-report.txt'
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value '## ADM installer inspection'
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value 'The setup executable was never launched.'
+          Get-Content -LiteralPath $reportPath | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+) {
               throw "Invalid version: $version"
           }
 
