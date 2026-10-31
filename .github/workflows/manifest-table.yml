@@ -1,4 +1,5 @@
 name: Update Manifest Documentation
+# Regenerate README and docs indexes when manifest metadata or installer-type inference changes.
 
 on:
   workflow_dispatch:
