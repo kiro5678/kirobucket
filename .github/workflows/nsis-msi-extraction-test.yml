@@ -132,6 +132,15 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Quick Pill\.exe$"
+            },
+            @{
+              Name = "Deskboard"
+              Version = "0.13.0"
+              NsisUrl = "https://deskboard.geeke.app/downloads/windows/Deskboard_0.13.0_x64-setup.exe"
+              NsisSha256 = "0812aa7a5667c4820a0c30d72afb72939e5c74c4f251580c41c4cd71c9287ebc"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Deskboard\.exe$"
             }
           )
 
