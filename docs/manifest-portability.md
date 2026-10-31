@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 843 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
+**Portability audit coverage:** 847 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -24,8 +24,8 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | --- | --- | --- | --- |
 | Portable | 782 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 5 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **843** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| Review | 9 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
+| **Total** | **847** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
 - [`bloom`](../bucket/bloom.json) — **Portable**: 7-Zip 26.05 verified the official NSIS payload and extracted `bloom.exe` at the payload root. Scoop uses `#/dl.7z` and does not execute the installer. The bundle contains a WebView2 bootstrapper that Scoop does not run; WebView2 Runtime must be available separately. Bloom enables autostart during its first-run application logic.
@@ -183,6 +183,10 @@ These entries should not be treated as Portable or Nonportable until their paylo
 | [quanto-flx](../bucket/quanto-flx.json) | Rainmeter RMSKIN skin/add-on package | Downloads a Rainmeter `.rmskin` add-on and depends on Rainmeter; the notes say it is installed through `SkinInstaller.exe`. This is an add-on payload, not a standalone portable application. |
 | [zenbreak-msix](../bucket/zenbreak-msix.json) | MSIX package currently extracted as 7Z | Renames an MSIX asset as a 7-Zip archive and extracts its files without registering the MSIX package. Verify that the unpackaged executable works before calling it Portable. |
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official redirect supplies a versioned setup EXE, but no checksum or reliable installer/uninstaller behavior is available. The manifest only downloads the setup and deliberately does not execute it. |
+| [dlives](../bucket/dlives.json) | Inno Setup EXE | Upstream installer source confirms Inno Setup and the Dlives.exe payload name, but the current release asset has not yet been extracted and checked with Scoop's Inno extractor. |
+| [v-notch](../bucket/v-notch.json) | NSIS EXE with `$PLUGINSDIR\\payload` | Upstream NSIS source specifies the payload directory and executable name, but the 7-Zip extraction path for the current release has not yet been verified. |
+| [wnotch](../bucket/wnotch.json) | Custom appended ZIP payload | The upstream source documents the NOTCHPAY trailer and ZIP payload. The new Scoop extraction script has not yet been executed against the downloaded release. |
+| [yata](../bucket/yata.json) | Inno Setup EXE | Upstream installer source identifies Inno Setup and the Yata.exe payload, but extraction of the current release has not yet been verified with Scoop's Inno extractor. |
 
 ## Portable examples and important exceptions
 
