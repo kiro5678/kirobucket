@@ -7,7 +7,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Category | Manifests | Link |
 | --- | ---: | --- |
 | Android & Device Tools | 9 | [View](#android-device-tools) |
-| Browsers & Communication | 8 | [View](#browsers-communication) |
+| Browsers & Communication | 9 | [View](#browsers-communication) |
 | Clipboard & Text | 33 | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
 | Download Managers | 20 | [View](#download-managers) |
@@ -31,11 +31,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 103 | [View](#windows-customization) |
+| Windows Customization | 104 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 852**
+**Total unique manifests: 854**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -84,6 +84,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
 | [rust-meow](../bucket/rust-meow.json) | 0.2.0 | Unofficial WhatsApp desktop linked-device client built with Tauri, SolidJS, and a Go whatsmeow sidecar. | [Homepage](https://github.com/thinkter/rust-meow) |
 | [viola](../bucket/viola.json) | 0.2.10 | Native desktop web browser. | [Homepage](https://github.com/nmcmil/Viola-Downloads) |
+| [zapfast](../bucket/zapfast.json) | 0.20.1 | Unofficial native WhatsApp desktop client built with Rust, with linked devices, chat history, media, calls, and notifications. | [Homepage](https://zapfast.rocks/) |
 | [zapzap](../bucket/zapzap.json) | 7.5.1 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafatosta/zapzap) |
 
 ## Clipboard & Text
@@ -917,6 +918,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
 | [fancywm](../bucket/fancywm.json) | 2.19.0 | Windows tiling window manager designed for power users. | [Homepage](https://github.com/FancyWM/fancywm) |
 | [fancywm-msix-cert](../bucket/fancywm-msix-cert.json) | 2.19.0 | FancyWM MSIX signing certificate (download only; for MSIX installation). | [Homepage](https://github.com/FancyWM/fancywm) |
+| [FoliCon](../bucket/FoliCon.JSON) | 5.3.1 | Folder icon customizer for movies, TV shows, music, games, anime, and books. | [Homepage](https://github.com/DineshSolanki/FoliCon) |
 | [fontviewok](../bucket/fontviewok.json) | 9.33 | Create a quick visual overview of installed fonts. | [Homepage](https://www.softwareok.com/?Download=FontViewOK) |
 | [funk-hrc](../bucket/funk-hrc.json) | 2.1 | Tray utility for assigning hotkeys to switch between display resolutions. | [Homepage](https://funk.eu/hrc/) |
 | [funk-icu](../bucket/funk-icu.json) | 6 | Saves and restores Windows desktop icon layouts after display changes or icons being rearranged. | [Homepage](https://funk.eu/icu-icon-configuration-utility/) |
