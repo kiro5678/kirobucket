@@ -12,14 +12,14 @@
             "hash": "8f6be299feecb18d15f3b46fa69fa19f5d1014ba53f9f1eb93ec451b5f77d2ec"
         }
     },
-    "bin": "Launchy.exe",
+    "bin": "Launchy/Launchy.exe",
     "shortcuts": [
         [
-            "Launchy.exe",
+            "Launchy/Launchy.exe",
             "LaunchyQt"
         ]
     ],
-    "persist": "config",
+    "persist": "Launchy/config",
     "checkver": {
         "url": "https://api.github.com/repos/samsonwang/LaunchyQt/releases/latest",
         "jsonpath": "$.tag_name",
@@ -33,8 +33,8 @@
         }
     },
     "notes": [
-        "The official Windows x64 release is a runnable 7-Zip archive. The upstream build workflow verifies that Launchy.exe is at the archive root and packages the required Qt runtime, embedded Python runtime, plugins, skins, and utilities.",
-        "Scoop persists the app-local config directory. Launchy detects this directory and uses its portable configuration mode, keeping launchy.ini, catalog.json, and history.json across updates and reinstalls.",
+        "The official Windows x64 release is a runnable 7-Zip archive. Its installed archive layout places the executable at Launchy/Launchy.exe; the upstream build workflow validates the executable and the packaged application tree.",
+        "Scoop persists Launchy/config, which is beside the executable in the application directory. Launchy detects this directory and uses its portable configuration mode, keeping launchy.ini, catalog.json, and history.json across updates and reinstalls.",
         "The application also searches the current user's Launchy data directory for additional user plugins and skins; those optional user-added files remain outside the Scoop app directory."
     ]
 }
