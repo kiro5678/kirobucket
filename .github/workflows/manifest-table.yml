@@ -1113,7 +1113,7 @@ jobs:
                   ""
                   "| Name | Category | Version | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
                   "| --- | --- | --- | --- | --- | --- | --- | --- |"
-                  ($Items | ForEach-Object { $_.Row })
+                  ($Items | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
                   ""
               ) -join [Environment]::NewLine
           }
