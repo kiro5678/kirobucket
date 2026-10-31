@@ -463,3 +463,22 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - The string markers are explicitly reported as heuristic candidates, not definitive classifications. Container recognition is not taken as proof of a portable application; an EXE or archive signature does not establish install behavior.
 - Research notes: the [Detect It Easy project](https://github.com/horsicq/Detect-It-Easy) describes a signature/heuristic-based static file-identification engine, and its CLI documents deep and heuristic scan options. [Universal Extractor 2](https://github.com/Bioruebe/UniExtract2) advertises scan-only identification and lists many installer families in its [format table](https://github.com/Bioruebe/UniExtract2/blob/master/docs/FORMATS.md), but its latest published GitHub release is v2.0.0-rc.3 from 2020 and its release API entry does not publish an asset digest. It was therefore evaluated as a reference, not added as an unverified/stale binary dependency.
 - The workflow produces a signature report, a deep/heuristic Detect It Easy report, step summaries, and the downloadable installer-type-inspection-report artifact. Verification so far is static: the latest file was read back from master and the manual trigger, both identification paths, read-only MSI inspection, and report artifact were checked. **No live Actions run has yet tested the full workflow against a user-supplied installer URL.**
+
+## 2026-10-31 — تعديلات مصادقة Scoop والتحقق من GitHub API
+
+- **Commit `de54ed5`:** أضيف استخدام `CHECKVER_GITHUB_TOKEN` كرمز مفضل مع fallback إلى `github.token` عند تحميل مستودع `ScoopInstaller/Scoop` في:
+  - `.github/workflows/ci.yml`
+  - `.github/workflows/scoop-checkver-validation.yml`
+  - `.github/workflows/scoop-autoupdate-validation.yml`
+  كان الهدف معالجة فشل `Checkout Scoop` برسالة `API rate limit exceeded for installation` الذي ظهر قبل بدء اختبارات Scoop.
+  [Commit](https://github.com/kiro5678/kirobucket/commit/de54ed5001db6c0b37eb1be720e652fd97ca934f).
+
+- **Commit `86d2f18`:** عُدّل متغير البيئة `GITHUB_TOKEN` في `scoop-checkver-validation.yml` ليستخدم `CHECKVER_GITHUB_TOKEN || github.token` أيضًا أثناء طلبات GitHub API التي ينفذها سكريبت Scoop Checkver، بدل اقتصار المصادقة على خطوة Checkout.
+  [Commit](https://github.com/kiro5678/kirobucket/commit/86d2f1870d79ba7cb84605c53bb764615cb21dc5).
+
+- **Commit `3de0205`:** أضيف Workflow باسم `.github/workflows/verify-scoop-api-auth.yml` لتشغيل CI ثم فحص Checkver منفصلًا لكل من `bucket/fig.json` و`bucket/nook.json`، ومتابعة نتائج التشغيلات والتحقق من اكتمالها على الفرع `master`.
+  [Commit](https://github.com/kiro5678/kirobucket/commit/3de0205d5c0090937da6be35f1e28fd947afdff9).
+
+- **نتيجة التحقق:** شُغّل CI على commit `3de0205` في [41197637353](https://github.com/kiro5678/kirobucket/actions/runs/41197637353)، وفشل في خطوة `Checkout Scoop` في كل من PowerShell وpwsh برسالة `API rate limit exceeded for installation`. لم تبدأ اختبارات Scoop الفعلية. بدأ Workflow التحقق الجديد [41197628621](https://github.com/kiro5678/kirobucket/actions/runs/41197628621)، لكنه توقف بعد فشل CI؛ لذلك لم يصل إلى فحص Fig أو Nook.
+- **الحالة:** التعديلات البرمجية وسجل الاختبار أُضيفت، لكن مشكلة GitHub API rate limit **ما زالت غير محلولة وغير مثبت تجاوزها**. لا يوجد حتى الآن دليل تشغيلي على نجاح استخدام `CHECKVER_GITHUB_TOKEN` في Checkout؛ كما لا يمكن استنتاج وجود الـSecret أو عدمه من سجلات التشغيل المتاحة.
+- **ملاحظة:** الـfallback إلى `github.token` لا يضمن تجاوز حد الطلبات إذا لم يكن `CHECKVER_GITHUB_TOKEN` مضبوطًا أو لم يُستخدم بنجاح. لا تعتبر نجاح Workflow التحقق أو Checkout مثبتًا إلا بعد نجاح Checkout Scoop وتشغيل اختبارات CI وCheckver على commit التعديل.
