@@ -34,6 +34,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ScoopInstaller/Scoop
+          ref: master
           path: scoop_core
           token: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
 
@@ -63,7 +64,8 @@ jobs:
           MANUAL_MANIFEST: ${{ inputs.manifest || '' }}
           BASE_SHA: ${{ github.event.before || '' }}
           HEAD_SHA: ${{ github.sha }}
-          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
+          CHECKVER_GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN || '' }}
           SCOOP_HOME: ${{ github.workspace }}\\scoop_core
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
@@ -85,7 +87,7 @@ jobs:
               }
               $manifests = @(Get-Item -LiteralPath $manifestPath)
             } else {
-              if ([string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
+              if ([string]::IsNullOrWhiteSpace($env:CHECKVER_GITHUB_TOKEN)) {
                 throw 'Full-bucket checkver requires a repository secret named CHECKVER_GITHUB_TOKEN. Specify the manifest input to check one manifest without requiring that secret.'
               }
               $manifests = @(Get-ChildItem -Path $bucket -Filter '*.json' -File -Recurse | Sort-Object FullName)
