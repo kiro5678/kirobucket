@@ -71,8 +71,15 @@
         ]
     },
     "checkver": {
-        "url": "https://api.github.com/repos/stipub/stixfonts/releases",
-        "jsonpath": "$[0].tag_name"
+        "script": [
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/stipub/stixfonts/releases?per_page=100' -Headers $headers",
+            "$release = $releases | Where-Object { $_.tag_name -match '^v[0-9A-Za-z.]+$' } | Select-Object -First 1",
+            "if (-not $release) { throw 'No numbered STIX fonts release tag was returned by GitHub.' }",
+            "Write-Output $release.tag_name"
+        ],
+        "regex": "^(?<version>v[0-9A-Za-z.]+)$"
     },
     "autoupdate": {
         "url": "https://github.com/stipub/stixfonts/raw/refs/tags/$version/zipfiles/static_ttf.zip"
