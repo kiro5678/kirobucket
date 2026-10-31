@@ -60,5 +60,12 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - **التحقق:** أُعيدت قراءة الدليل الموحد وجرد قابلية النقل من GitHub بعد التحديث، مع التحقق من المحتوى العربي والروابط الداخلية. لم تُشغّل اختبارات Scoop أو CI لأن التغييرات توثيقية.
 - **الوقاية:** اعتماد `docs/manifest-authoring.md` كمرجع أساسي واحد، وعدم الاحتفاظ بنسخ قواعد متوازية. عند إضافة قاعدة جديدة، حدّث الدليل الموحد وجرد التصنيف وسجل المشكلة عند انطباق ذلك.
 
+## 2026-10-31 — تصحيح توثيق مشغلات Manifest Pipeline
 
-No incidents have been added to this knowledge base yet. Add the first entry when a repository problem has been fixed and its resolution has been verified.
+- **المشكلة:** وصف `docs/manifest-authoring.md` الـ Manifest Pipeline بأنه يدوي فقط، بينما ملف `.github/workflows/manifest-pipeline.yml` على `master` يعرّف أيضاً مشغّل `push` لفرع `master` عند تغيّر ملفات `bucket/*.json`. قد يؤدي هذا التعارض إلى توقع غير صحيح بشأن بدء التحقق بعد إضافة مانيفست.
+- **الأعراض:** تعليمات الدليل لا تطابق إعدادات `on.push` و`on.workflow_dispatch` الفعلية في ملف Workflow.
+- **السبب الجذري:** لم يُحدَّث وصف الدليل عند إضافة/تغيير مشغلات الـ Workflow؛ لذلك أصبح التوثيق قديماً.
+- **الحل:** تعديل الدليل ليذكر المشغّل التلقائي عند دفع ملفات المانيفست إلى `master`، مع الإبقاء على إمكانية التشغيل اليدوي. إزالة الجملة الختامية القديمة التي كانت تزعم عدم وجود سجلات مشكلات رغم احتواء الملف على سجل سابق.
+- **التحقق:** تمت قراءة YAML الحالي من `master` والتأكد من وجود `push.branches: master` و`push.paths: bucket/*.json` و`workflow_dispatch`. بعد التحديث ستتم إعادة قراءة ملفات التوثيق من GitHub للتحقق من انعكاس التعديل. لم يُشغَّل Workflow فعلياً ضمن هذا التصحيح.
+- **الوقاية:** عند تعديل مشغلات أي Workflow، راجع القسم المقابل في `manifest-authoring.md` وحدثه في Commit نفسه. لا تعتبر قراءة YAML بديلاً عن متابعة تشغيل Actions.
+- **الحالة:** تم تصحيح التوثيق والتحقق من مطابقته للإعداد الحالي؛ لم يُختبر تنفيذ Workflow.
