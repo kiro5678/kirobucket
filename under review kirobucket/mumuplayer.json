@@ -9,72 +9,74 @@
             "hash": "d92747c4522a60caecb8da2f89174a80c6d0b982f9693f5e1720ef2a2fd84d8b"
         }
     },
-    "pre_install": "if (!(is_admin)) { throw \"$app requires admin rights to $cmd\" }
-
-$sourceInstaller = Join-Path $dir $fname
-$downloadUrl = \"https://a11.gdl.easebar.com/$fname\"
-$cachedInstaller = cache_path $app $version $downloadUrl
-$transactionId = [guid]::NewGuid().ToString()
-$stagingDir = $null
-
-try {
-    if (Test-Path -LiteralPath $cachedInstaller) {
-        $installerPath = $cachedInstaller
-        Remove-Item -LiteralPath $sourceInstaller -Force
-    } else {
-        $scoopRoot = Split-Path (Split-Path (Split-Path $dir -Parent) -Parent) -Parent
-        $stagingDir = Join-Path $scoopRoot \"cache\\mumuplayer-installer-$transactionId\"
-        New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null
-        $installerPath = Join-Path $stagingDir $fname
-        Copy-Item -LiteralPath $sourceInstaller -Destination $installerPath -Force
-        Remove-Item -LiteralPath $sourceInstaller -Force
-    }
-
-    $remainingFiles = @(Get-ChildItem -LiteralPath $dir -Force)
-    if ($remainingFiles.Count -gt 0) {
-        throw \"MuMuPlayer target directory must be empty before setup. Unexpected item: $($remainingFiles[0].FullName)\"
-    }
-
-    $versionParts = $version -split \"\\.\"
-    if ($versionParts.Count -lt 3) {
-        throw \"Cannot derive MuMuPlayer product version from NXMAIN version $version.\"
-    }
-    $productVersion = \"6.$($versionParts[1]).$($versionParts[2]).0\"
-    $commonArguments = @(
-        \"/from_orchestrator=1\",
-        \"/txn_id=$transactionId\",
-        \"/silent=1\",
-        \"/product_version=$productVersion\",
-        \"/auto_start=false\",
-        \"/fchannel=gw-win-download\",
-        \"/auto_run=false\",
-        \"/D=$dir\"
-    )
-
-    $prepareArguments = @(\"/from_orchestrator=1\", \"/action=install_prepare\") + $commonArguments[1..($commonArguments.Count - 1)]
-    $prepare = Start-Process -FilePath $installerPath -ArgumentList $prepareArguments -Wait -PassThru
-    if ($prepare.ExitCode -ne 0) {
-        throw \"MuMuPlayer NX-main install_prepare failed with exit code $($prepare.ExitCode).\"
-    }
-
-    Start-Sleep -Seconds 12
-
-    $commitArguments = @(\"/from_orchestrator=1\", \"/action=commit\") + $commonArguments[1..($commonArguments.Count - 1)]
-    $commit = Start-Process -FilePath $installerPath -ArgumentList $commitArguments -Wait -PassThru
-    if ($commit.ExitCode -ne 0) {
-        throw \"MuMuPlayer NX-main commit failed with exit code $($commit.ExitCode).\"
-    }
-
-    $mainExe = Join-Path $dir \"nx_main\\MuMuNxMain.exe\"
-    if (-not (Test-Path $mainExe)) {
-        throw \"MuMuPlayer setup returned successfully but did not create the expected executable: $mainExe\"
-    }
-}
-finally {
-    if ($stagingDir -and (Test-Path -LiteralPath $stagingDir)) {
-        Remove-Item -LiteralPath $stagingDir -Recurse -Force -ErrorAction SilentlyContinue
-    }
-}",
+    "pre_install": [
+        "if (!(is_admin)) { throw \"$app requires admin rights to $cmd\" }",
+        "",
+        "$sourceInstaller = Join-Path $dir $fname",
+        "$downloadUrl = \"https://a11.gdl.easebar.com/$fname\"",
+        "$cachedInstaller = cache_path $app $version $downloadUrl",
+        "$transactionId = [guid]::NewGuid().ToString()",
+        "$stagingDir = $null",
+        "",
+        "try {",
+        "    if (Test-Path -LiteralPath $cachedInstaller) {",
+        "        $installerPath = $cachedInstaller",
+        "        Remove-Item -LiteralPath $sourceInstaller -Force",
+        "    } else {",
+        "        $scoopRoot = Split-Path (Split-Path (Split-Path $dir -Parent) -Parent) -Parent",
+        "        $stagingDir = Join-Path $scoopRoot \"cache\\mumuplayer-installer-$transactionId\"",
+        "        New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null",
+        "        $installerPath = Join-Path $stagingDir $fname",
+        "        Copy-Item -LiteralPath $sourceInstaller -Destination $installerPath -Force",
+        "        Remove-Item -LiteralPath $sourceInstaller -Force",
+        "    }",
+        "",
+        "    $remainingFiles = @(Get-ChildItem -LiteralPath $dir -Force)",
+        "    if ($remainingFiles.Count -gt 0) {",
+        "        throw \"MuMuPlayer target directory must be empty before setup. Unexpected item: $($remainingFiles[0].FullName)\"",
+        "    }",
+        "",
+        "    $versionParts = $version -split \"\\.\"",
+        "    if ($versionParts.Count -lt 3) {",
+        "        throw \"Cannot derive MuMuPlayer product version from NXMAIN version $version.\"",
+        "    }",
+        "    $productVersion = \"6.$($versionParts[1]).$($versionParts[2]).0\"",
+        "    $commonArguments = @(",
+        "        \"/from_orchestrator=1\",",
+        "        \"/txn_id=$transactionId\",",
+        "        \"/silent=1\",",
+        "        \"/product_version=$productVersion\",",
+        "        \"/auto_start=false\",",
+        "        \"/fchannel=gw-win-download\",",
+        "        \"/auto_run=false\",",
+        "        \"/D=$dir\"",
+        "    )",
+        "",
+        "    $prepareArguments = @(\"/from_orchestrator=1\", \"/action=install_prepare\") + $commonArguments[1..($commonArguments.Count - 1)]",
+        "    $prepare = Start-Process -FilePath $installerPath -ArgumentList $prepareArguments -Wait -PassThru",
+        "    if ($prepare.ExitCode -ne 0) {",
+        "        throw \"MuMuPlayer NX-main install_prepare failed with exit code $($prepare.ExitCode).\"",
+        "    }",
+        "",
+        "    Start-Sleep -Seconds 12",
+        "",
+        "    $commitArguments = @(\"/from_orchestrator=1\", \"/action=commit\") + $commonArguments[1..($commonArguments.Count - 1)]",
+        "    $commit = Start-Process -FilePath $installerPath -ArgumentList $commitArguments -Wait -PassThru",
+        "    if ($commit.ExitCode -ne 0) {",
+        "        throw \"MuMuPlayer NX-main commit failed with exit code $($commit.ExitCode).\"",
+        "    }",
+        "",
+        "    $mainExe = Join-Path $dir \"nx_main\\MuMuNxMain.exe\"",
+        "    if (-not (Test-Path $mainExe)) {",
+        "        throw \"MuMuPlayer setup returned successfully but did not create the expected executable: $mainExe\"",
+        "    }",
+        "}",
+        "finally {",
+        "    if ($stagingDir -and (Test-Path -LiteralPath $stagingDir)) {",
+        "        Remove-Item -LiteralPath $stagingDir -Recurse -Force -ErrorAction SilentlyContinue",
+        "    }",
+        "}"
+    ],
     "shortcuts": [
         [
             "nx_main\\MuMuNxMain.exe",
