@@ -664,3 +664,23 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - توجد نتائج Actions ناجحة موثقة لتحديث الجدول وCheckver وفحص actionlint والتحقق من الأرشيف والتحديث وتنسيق المانيفستات.
 - يظل إثبات تشغيل `ci.yml` مرة واحدة عند Push واحد يضم ملفي Manifest أو أكثر اختبارًا منفصلًا مطلوبًا؛ التعديل نُفّذ، لكن لم يُسجّل هنا تشغيل End-to-End يثبت هذا السيناريو.
 - أُضيف هذا القسم في نهاية السجل فقط. لم تُحذف أو تُعدّل أي سجلات أو أقسام سابقة.
+
+### 2026-10-31 — تحديد نوع مثبّت Now Bar وعدم استخدام #/dl.7z
+
+- الهدف: تحديد نوع `nowbar-setup.exe` للإصدار `v0.4.1` قبل اختيار طريقة Scoop.
+- ملف الاختبار: `https://github.com/nixesty/now-bar/releases/download/v0.4.1/nowbar-setup.exe`.
+- SHA-256 المتحقق منه: `e9c6c29f58b10f8c3ddc7c7c404de971d7036329de0e5493db9fa3f29a06172b`.
+- نتيجة Detect It Easy 3.21 في [Run 41207438698](https://github.com/kiro5678/kirobucket/actions/runs/41207438698):
+  - `PE64`
+  - `Compiler: Rust`
+  - `Library: Direct2D`
+  - `Library: OpenGL`
+  - `Debug data: Records[codeview]`
+  - لم تُظهر نتيجة DIE محرك NSIS أو Inno Setup.
+- نتيجة Authenticode: `NotSigned`. تم تنزيل الملف وفحصه استاتيكيًا فقط؛ لم يتم تشغيله.
+- فحص المصدر upstream يؤكد أن `setup/src/main.rs` و`setup/src/install.rs` و`setup/src/uninstall.rs` تنفذ مُثبّتًا مخصصًا بـRust/Slint، يتعامل مع فك payload ونسخ EXE وكتابة إعدادات التشغيل والاختصارات ومعلومات الإزالة. هذا ليس مشروع NSIS أو Inno.
+- تجربة 7-Zip 26.04 السابقة تعرّفت على الملف كـPE واستخرجت 20 عنصرًا، لكنها لم تكشف `nowbar.exe` أو `nowbar-settings.exe`. لا تعتبر نتيجة `Type = PE` دليلًا على أن الملف أرشيف تثبيت قابلًا للاستخراج، ولا تضف `#/dl.7z` لمجرد نجاح 7-Zip في استخراج موارد PE.
+- طريقة Scoop الصحيحة لهذا الإصدار: تنزيل ملفي الإصدار الرسميين مباشرةً `nowbar.exe` و`nowbar-settings.exe` إلى مجلد التطبيق نفسه، مع SHA-256 المنشور لكل ملف. التطبيق يحتاج الملفين جنبًا إلى جنب؛ لا تستخدم `nowbar-setup.exe` في المانيفست ولا تشغّله.
+- أُحدّث `bucket/now-bar.json` لتوثيق أن المثبّت الرسمي مخصص بـRust/Slint وأنه لا يستخدم `#/dl.7z`. أُضيف تصنيف Now Bar كـPortable في `docs/manifest-portability.md` لأن المانيفست ينزّل ملفات التطبيق المباشرة ولا يشغّل روتين تثبيت Windows.
+- نتائج التحقق من المانيفست: [Checkver 41206687666](https://github.com/kiro5678/kirobucket/actions/runs/41206687666)، [Archive validation 41206750389](https://github.com/kiro5678/kirobucket/actions/runs/41206750389)، [AutoUpdate validation 41206788998](https://github.com/kiro5678/kirobucket/actions/runs/41206788998)، [README manifest table 41206673761](https://github.com/kiro5678/kirobucket/actions/runs/41206673761) — جميعها اكتملت بنجاح.
+- Workflow التشخيص المؤقت أُضيف لتشغيل فحص DIE على هذا الملف فقط، ثم أُزيل بعد توثيق النتيجة. بقي Workflow العام `.github/workflows/detect-it-easy-api.yml` كما هو.
