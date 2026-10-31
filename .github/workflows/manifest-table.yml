@@ -111,6 +111,7 @@ jobs:
               "deskframe" = "Windows Customization"
               "deskripple" = "Windows Customization"
               "deskstats" = "System Monitoring & Hardware"
+              "taskslinger" = "System Monitoring & Hardware"
               "desktopframesplus" = "Windows Customization"
               "desktoptools" = "Productivity & Launchers"
               "detect-it-easy" = "Other Utilities"
