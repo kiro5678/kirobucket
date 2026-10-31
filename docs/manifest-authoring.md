@@ -1,6 +1,6 @@
 # Manifest Authoring and Maintenance Rules
 
-This is the repository's mandatory reference for creating, changing, troubleshooting, or reviewing any Scoop manifest. Read it before working on manifests. When a real failure reveals a missing rule, update this document in the same task so the lesson is not lost.
+This is the repository's mandatory reference for creating, changing, troubleshooting, or reviewing any Scoop manifest. Read it before working on manifests. For the repository-wide process for investigating, fixing, verifying, and recording problems, follow the [Problem Resolution Knowledge Base](problem-resolution-knowledge-base.md). After resolving a manifest-related problem, add its evidence-backed incident entry to that knowledge base in the same task. When the failure reveals a missing manifest-specific rule, update this document as well.
 
 For the current Portable / Nonportable classification of every bucket manifest, see [Manifest Portability Inventory](manifest-portability.md). Reclassify entries whenever their installer, extraction method, or installation hooks change.
 
