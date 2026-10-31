@@ -1,0 +1,109 @@
+name: Review KiroBucket Checkver Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'under review kirobucket/*.json'
+      - '.github/workflows/review-kirobucket-checkver.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  checkver:
+    name: Checkver (${{ matrix.shell }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout Bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: my_bucket
+
+      - name: Checkout Scoop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+
+      - name: Enable authenticated GitHub API requests in Scoop checkver
+        env:
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
+            throw 'Review Checkver validation requires CHECKVER_GITHUB_TOKEN.'
+          }
+          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\checkver.ps1'
+          $source = Get-Content -LiteralPath $checkver -Raw
+          $pattern = '(?m)^\s*\$wc\.Headers\.Add\(''Referer'', \(strip_filename \$url\)\)\s*$'
+          $matches = [regex]::Matches($source, $pattern)
+          if ($matches.Count -ne 1) {
+            throw "Expected one Referer header line in Scoop checkver.ps1, found $($matches.Count)."
+          }
+          $replacement = @'
+              if (($url -match '^https://api\.github\.com/') -and $env:GITHUB_TOKEN -and -not ($wc.Headers.AllKeys -contains 'Authorization')) {
+                  $wc.Headers.Add('Authorization', "Bearer $env:GITHUB_TOKEN")
+                  $wc.Headers.Add('X-GitHub-Api-Version', '2022-11-28')
+              }
+              $wc.Headers.Add('Referer', (strip_filename $url))
+          '@
+          $source = [regex]::Replace($source, $pattern, [System.Text.RegularExpressions.MatchEvaluator]{ param($m) $replacement.TrimEnd() }, 1)
+          Set-Content -LiteralPath $checkver -Value $source -Encoding utf8 -NoNewline
+
+      - name: Validate under-review manifests
+        env:
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
+          SCOOP_HOME: ${{ github.workspace }}\scoop_core
+        run: |
+          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\checkver.ps1'
+          $manifestRoot = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\under review kirobucket'
+          $manifests = @(Get-ChildItem -LiteralPath $manifestRoot -Filter '*.json' -File | Sort-Object Name)
+          if ($manifests.Count -eq 0) { throw 'No under-review manifests were found.' }
+
+          $failed = @()
+          $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON|Invalid JSON primitive|Response status code does not indicate success|remote server returned an error|A parameter cannot be found|Object reference not set|Cannot bind argument)"
+
+          Write-Host "Found $($manifests.Count) under-review manifest(s)."
+          foreach ($manifest in $manifests) {
+            Write-Host ''
+            Write-Host '============================================================'
+            Write-Host "Checking: $($manifest.Name)"
+            Write-Host '============================================================'
+            $outputText = ''
+            try {
+              $output = @(& $checkver -App $manifest.FullName -ThrowError *>&1 | ForEach-Object { "$_" })
+              $outputText = $output -join [Environment]::NewLine
+              if ($outputText -match $failurePattern) {
+                throw "Checkver returned a failure message: $($Matches[0])"
+              }
+              Write-Host "PASS: $($manifest.Name)" -ForegroundColor Green
+            } catch {
+              $reason = $_.Exception.Message
+              $failed += [PSCustomObject]@{ Manifest = $manifest.Name; Reason = $reason }
+              Write-Host "FAIL: $($manifest.Name) - $reason" -ForegroundColor Red
+              if ($outputText) { Write-Host $outputText }
+            }
+          }
+
+          Write-Host ''
+          Write-Host '================ Checkver Summary ================'
+          Write-Host "Checked: $($manifests.Count)"
+          Write-Host "Passed:  $($manifests.Count - $failed.Count)"
+          Write-Host "Failed:  $($failed.Count)"
+          if ($failed.Count -gt 0) {
+            $failed | Format-Table -Wrap -AutoSize
+            $failed | ForEach-Object { Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "- FAIL: $($_.Manifest) — $($_.Reason)" }
+            exit 1
+          }
+          Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "Checked $($manifests.Count) under-review manifests; all passed."
+          Write-Host 'All under-review manifests passed Checkver.' -ForegroundColor Green
