@@ -31,11 +31,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 91 | [View](#windows-customization) |
+| Windows Customization | 92 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 832**
+**Total unique manifests: 833**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -924,6 +924,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mousefx-generator](../bucket/mousefx-generator.json) | 1.1.0 | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. | [Homepage](https://github.com/os4ma31/MouseFX-Generator) |
 | [nofences](../bucket/nofences.json) | 1.8 | Open-source alternative to Fences for organizing the Windows desktop. | [Homepage](https://github.com/Twometer/NoFences) |
 | [nomeiryoui](../bucket/nomeiryoui.json) | 3.5.1 | Windows utility for changing system UI fonts and font sizes. | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) |
+| [now-bar](../bucket/now-bar.json) | 0.4.1 | Samsung One UI-inspired live activity bar for the Windows taskbar, with media controls, timers, sports scores, weather, and system status. | [Homepage](https://github.com/nixesty/now-bar) |
 | [ok-its-raining-men](../bucket/ok-its-raining-men.json) | 2.55 | Display customizable raindrop effects on the Windows desktop. | [Homepage](https://www.softwareok.com/?seite=Microsoft/OK.Its.Raining.Men) |
 | [oneloupe](../bucket/oneloupe.json) | 6.31 | Desktop screen magnifier. | [Homepage](https://www.softwareok.com/?Download=OneLoupe) |
 | [open-shell](../bucket/open-shell.json) | 4.4.198 | A collection of utilities bringing back classic features to Windows. | [Homepage](https://github.com/Open-Shell/Open-Shell-Menu) |
