@@ -482,3 +482,43 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **نتيجة التحقق:** شُغّل CI على commit `3de0205` في [41197637353](https://github.com/kiro5678/kirobucket/actions/runs/41197637353)، وفشل في خطوة `Checkout Scoop` في كل من PowerShell وpwsh برسالة `API rate limit exceeded for installation`. لم تبدأ اختبارات Scoop الفعلية. بدأ Workflow التحقق الجديد [41197628621](https://github.com/kiro5678/kirobucket/actions/runs/41197628621)، لكنه توقف بعد فشل CI؛ لذلك لم يصل إلى فحص Fig أو Nook.
 - **الحالة:** التعديلات البرمجية وسجل الاختبار أُضيفت، لكن مشكلة GitHub API rate limit **ما زالت غير محلولة وغير مثبت تجاوزها**. لا يوجد حتى الآن دليل تشغيلي على نجاح استخدام `CHECKVER_GITHUB_TOKEN` في Checkout؛ كما لا يمكن استنتاج وجود الـSecret أو عدمه من سجلات التشغيل المتاحة.
 - **ملاحظة:** الـfallback إلى `github.token` لا يضمن تجاوز حد الطلبات إذا لم يكن `CHECKVER_GITHUB_TOKEN` مضبوطًا أو لم يُستخدم بنجاح. لا تعتبر نجاح Workflow التحقق أو Checkout مثبتًا إلا بعد نجاح Checkout Scoop وتشغيل اختبارات CI وCheckver على commit التعديل.
+
+
+
+## 2026-10-31 — إضافات وإصلاحات Pipeline والتحقق من ملفات Workflows
+
+### تشغيل CI مرة واحدة لكل دفعة Manifest
+- **Commit [8cf8a91](https://github.com/kiro5678/kirobucket/commit/8cf8a91ebec5ae0283b366528786ba4be1d67105):** نُقل استدعاء `ci.yml` إلى ما بعد حلقة معالجة المانيفستات في `manifest-pipeline.yml`.
+- أصبح Pipeline ينفّذ مراحل الفحص الخاصة بكل Manifest أولًا، ثم يستدعي CI مرة واحدة فقط إذا كانت قائمة المانيفستات غير فارغة. هذا يمنع تشغيل CI الكامل مرة لكل Manifest عند وصول عدة ملفات في Push واحد.
+- **حالة الاختبار:** تمت مراجعة موضع الاستدعاء والحارس `$manifestPaths.Count -gt 0` ساكنًا. لم يظهر تشغيل Pipeline مرتبط بهذا الـ Commit في سجل Actions المتاح؛ لذلك لم يُثبت بعد اختبار Push واحد يحتوي على أكثر من Manifest.
+
+### منع إلغاء تحديث جدول المانيفستات الجاري
+- **Commit [5f26826](https://github.com/kiro5678/kirobucket/commit/5f26826b907cdf69295b8effbb85ec3636e77244):** تغيّر `cancel-in-progress` في `.github/workflows/manifest-table.yml` من `true` إلى `false` مع الإبقاء على مجموعة التزامن نفسها.
+- يمنع ذلك تشغيلًا أحدث من إلغاء تحديث الجدول الذي بدأ بالفعل. تظل GitHub Actions تحتفظ بتشغيل منتظر واحد فقط لكل مجموعة تزامن؛ ويمكن أن يحل تشغيل أحدث محل تشغيل آخر ما زال منتظرًا.
+- **نتيجة الاختبار:** [Run 41204460600](https://github.com/kiro5678/kirobucket/actions/runs/41204460600) — اكتمل Workflow تحديث الجدول بنجاح بعد الـ Commit، ونجحت خطوات Checkout وتوليد الجداول وCommit الملفات.
+
+### توحيد مصادقة Checkver وتثبيت مرجع Scoop
+- **Commit [82534c1](https://github.com/kiro5678/kirobucket/commit/82534c128134b3f4f19c8931cc04712d42ebe4a0):** في `scoop-checkver-validation.yml`:
+  - ثُبّت مرجع Checkout لمستودع `ScoopInstaller/Scoop` على الفرع `master` بدل ترك Checkout يكتشف الفرع الافتراضي.
+  - وُحّد متغير `GITHUB_TOKEN` في خطوة Checkver ليستخدم `secrets.CHECKVER_GITHUB_TOKEN || github.token`، كما في خطوات Checkout وتهيئة Checkver.
+  - أُضيف متغير منفصل `CHECKVER_GITHUB_TOKEN` للحفاظ على شرط وجود PAT مخصص عند طلب فحص المستودع كاملًا؛ استخدام fallback في طلبات API لا يلغي ذلك الشرط.
+- **نتائج الاختبار:**
+  - [Run 41204936131](https://github.com/kiro5678/kirobucket/actions/runs/41204936131) — نجح Checkver في كل من PowerShell وpwsh؛ نجح Checkout Scoop وخطوة المصادقة وخطوة التحقق في المحركين.
+  - [Run 41205112575](https://github.com/kiro5678/kirobucket/actions/runs/41205112575) و[Run 41205289517](https://github.com/kiro5678/kirobucket/actions/runs/41205289517) — اكتمل تشغيل Checkver بنجاح في المحركين أيضًا على رأس الفرع اللاحق.
+- هذه النتائج تثبت نجاح التشغيلات المذكورة دون أخطاء Checkout أو أخطاء مصادقة ظاهرة فيها؛ لكنها لا تثبت وحدها أن جميع حالات GitHub API rate limit المستقبلية قد انتهت.
+
+### إضافة فحص مستقل لملفات GitHub Actions
+- **Commit [60fedd2](https://github.com/kiro5678/kirobucket/commit/60fedd2cb4b9d4c4db62c358345455a733d9cda1):** أُضيف الملف `.github/workflows/validate-workflows.yml`.
+- يعمل الفحص عند:
+  - Push إلى `master` يتضمن تغييرات داخل `.github/workflows/**`.
+  - Pull Request يستهدف `master` ويتضمن تغييرات في المسار نفسه.
+  - التشغيل اليدوي عبر `workflow_dispatch`.
+- يثبت Workflow إصدار `actionlint 1.7.12` ثم يفحص جميع ملفات GitHub Actions في المستودع. صلاحياته محدودة إلى `contents: read` ولا يشغّل Workflows التطبيقية أو يغيّر المانيفستات.
+- **نتيجة الاختبار:** [Run 41205075323](https://github.com/kiro5678/kirobucket/actions/runs/41205075323) — نجح التثبيت وفحص جميع ملفات Workflows، وكانت نتيجة Job هي `success`.
+- **تشغيلات تحقق إضافية على Commit نفسه:** [Archive validation 41205166964](https://github.com/kiro5678/kirobucket/actions/runs/41205166964)، [Autoupdate validation 41205203402](https://github.com/kiro5678/kirobucket/actions/runs/41205203402)، و[Format manifests 41205251867](https://github.com/kiro5678/kirobucket/actions/runs/41205251867) اكتملت جميعها بنجاح. هذه تشغيلات منفصلة ولا تعني أن actionlint نفّذ الاختبارات الوظيفية لهذه الأنظمة.
+
+### الحالة العامة وحدود التحقق
+- تم حفظ التغييرات التالية على `master`: نقل تشغيل CI مرة واحدة، منع إلغاء تحديث الجدول الجاري، توحيد إعداد Token في Checkver وتثبيت مرجع Scoop، وإضافة فحص actionlint المستقل.
+- توجد نتائج Actions ناجحة موثقة لتحديث الجدول وCheckver وفحص actionlint والتحقق من الأرشيف والتحديث وتنسيق المانيفستات.
+- يظل إثبات تشغيل `ci.yml` مرة واحدة عند Push واحد يضم ملفي Manifest أو أكثر اختبارًا منفصلًا مطلوبًا؛ التعديل نُفّذ، لكن لم يُسجّل هنا تشغيل End-to-End يثبت هذا السيناريو.
+- أُضيف هذا القسم في نهاية السجل فقط. لم تُحذف أو تُعدّل أي سجلات أو أقسام سابقة.
