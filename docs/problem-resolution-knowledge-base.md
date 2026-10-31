@@ -131,5 +131,5 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - **التغيير:** حُذف `bucket/cliptray.json` و`bucket/yerel.json` بطلب المستخدم.
 - **السياق:** كلا المانيفستين كانا يجلبان Source ZIP من GitHub ويبنيان التطبيق محلياً، ولم يكن بناء Windows وتشغيل التطبيقين قد تم التحقق منهما.
 - **تحديث الفهارس:** أزيلت الإدخالات من `docs/categories.md` و`docs/manifest-portability.md` ومن خريطة الفئات في `.github/workflows/manifest-table.yml`.
-- **الأعداد:** 832 مانيفستاً: 770 Portable و57 Nonportable و5 Review. عدد ZIP archive أصبح 560 بدلاً من 562.
+- **الأعداد:** 832 مانيفستاً: 771 Portable و56 Nonportable و5 Review. عدد ZIP archive أصبح 560 بدلاً من 562.
 - **التحقق:** تُفحص شجرة GitHub وتشغيلات Actions بعد التحديث للتأكد من اختفاء الملفين وتحديث README.
