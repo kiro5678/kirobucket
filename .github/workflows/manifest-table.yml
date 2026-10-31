@@ -260,6 +260,7 @@ jobs:
               "rpcs3" = "Emulators & Compatibility"
               "rqbit" = "Download Managers"
               "rust-meow" = "Browsers & Communication"
+              "zapfast" = "Browsers & Communication"
               "rscoop" = "Package Management"
               "rstgametranslation" = "Translation & OCR"
               "ruffle" = "Emulators & Compatibility"
