@@ -6,13 +6,13 @@
     "url": "https://download.ccleaner.com/portable/ccsetup641.zip",
     "hash": "572e7ab7cd2889d3a28d4672d523d364b9155cc129bdf2c228625e52014f7844",
     "pre_install": [
-        "if (!(Test-Path \"$persist_dir\\\\ccleaner.ini\")) {",
-        "   Set-Content \"$dir\\\\ccleaner.ini\" '[Options]' -Encoding ASCII",
+        "if (!(Test-Path \"$persist_dir\\ccleaner.ini\")) {",
+        "   Set-Content \"$dir\\ccleaner.ini\" '[Options]' -Encoding ASCII",
         "}",
         "'winapp.ini', 'winreg.ini', 'winsys.ini' | ForEach-Object {",
-        "   if (!(Test-Path \"$persist_dir\\\\$_\")) { New-Item \"$dir\\\\$_\" | Out-Null }",
+        "   if (!(Test-Path \"$persist_dir\\$_\")) { New-Item \"$dir\\$_\" | Out-Null }",
         "}",
-        "Copy-Item \"$persist_dir\\\\*\" \"$dir\" -Include 'branding.dll', 'CCleaner.dat' -ErrorAction SilentlyContinue"
+        "Copy-Item \"$persist_dir\\*\" \"$dir\" -Include 'branding.dll', 'CCleaner.dat' -ErrorAction SilentlyContinue"
     ],
     "post_install": [
         "# Workaround for https://github.com/ScoopInstaller/Extras/issues/15946",
