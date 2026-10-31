@@ -1,6 +1,5 @@
 # Manifest Portability Inventory
 
-**المرجع الإلزامي:** قواعد إنشاء المانيفستات وتصنيف Portable / Nonportable وReview موحّدة الآن داخل [دليل إنشاء وصيانة مانيفستات Scoop](manifest-authoring.md). يجب الرجوع إليه عند الإنشاء أو الاستخراج أو التثبيت أو المراجعة.
 
 ## Mandatory problem-resolution rule for portability audits
 
