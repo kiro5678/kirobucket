@@ -13,16 +13,9 @@
         ]
     ],
     "checkver": {
-        "script": [
-            "$html = & curl.exe --fail --location --silent --show-error --retry 2 --retry-delay 2 --connect-timeout 15 --max-time 45 --user-agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36' 'https://deskboard.geeke.app/download'",
-            "if ($LASTEXITCODE -ne 0) { throw 'Unable to download the official Deskboard download page.' }",
-            "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace(($html -join \"`n\"), '<[^>]+>', ' '))",
-            "$text = [regex]::Replace($text, '\\s+', ' ')",
-            "$match = [regex]::Match($text, '(?i)Version\\s+v?(?<version>\\d+(?:\\.\\d+)+)')",
-            "if (-not $match.Success) { throw ('Unable to detect Deskboard version. Page text preview: ' + $text.Substring(0, [Math]::Min(2500, $text.Length))) }",
-            "$match.Groups['version'].Value"
-        ],
-        "regex": "(?<version>\\d+(?:\\.\\d+)+)"
+        "url": "https://deskboard.geeke.app/downloads/windows/latest.json",
+        "jsonpath": "$.version",
+        "regex": "^v?(?<version>\\d+(?:\\.\\d+)+)$"
     },
     "autoupdate": {
         "url": "https://deskboard.geeke.app/downloads/windows/Deskboard_$version_x64-setup.exe#/dl.7z"
