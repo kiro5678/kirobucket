@@ -1,0 +1,172 @@
+name: Manual 7-Zip EXE Extraction Diagnostic
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/rust-meow-sevenzip-test.yml"
+  workflow_dispatch:
+    inputs:
+      installer_url:
+        description: "Direct HTTPS installer URL; defaults to Rust Meow 0.2.0"
+        required: false
+        default: ""
+        type: string
+      expected_sha256:
+        description: "Optional expected SHA-256; defaults to the Rust Meow 0.2.0 manifest hash"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    name: Test 7-Zip extraction without running installer
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download installer and verify SHA-256
+        id: target
+        shell: pwsh
+        env:
+          INPUT_URL: ${{ inputs.installer_url }}
+          INPUT_SHA256: ${{ inputs.expected_sha256 }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $url = $env:INPUT_URL.Trim()
+          if ([string]::IsNullOrWhiteSpace($url)) {
+            $url = "https://github.com/thinkter/rust-meow/releases/download/v0.2.0/Rust.Meow_0.2.0_x64-setup.exe"
+          }
+          $expected = $env:INPUT_SHA256.Trim()
+          if ([string]::IsNullOrWhiteSpace($expected)) {
+            $expected = "4e4c2720e78cd534f04f7cfd6121a6b95a1108bb4b619ba435f12d3624d0381e"
+          }
+
+          $uri = [Uri]::new($url)
+          if ($uri.Scheme -ne "https" -or -not [string]::IsNullOrWhiteSpace($uri.UserInfo)) {
+            throw "Only credential-free HTTPS installer URLs are accepted."
+          }
+          if ($expected -and $expected -notmatch '^[0-9a-fA-F]{64}$') {
+            throw "Expected SHA-256 must contain exactly 64 hexadecimal characters."
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP "rust-meow-7zip-test"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $installer = Join-Path $root "rust-meow-setup.exe"
+          Invoke-WebRequest -Uri $uri.AbsoluteUri -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
+
+          $item = Get-Item -LiteralPath $installer
+          if ($item.Length -le 0) { throw "Downloaded installer is empty." }
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($expected -and $actual -ne $expected.ToLowerInvariant()) {
+            throw "SHA-256 mismatch. Expected $expected, received $actual."
+          }
+
+          "installer_path=$installer" >> $env:GITHUB_OUTPUT
+          "work_root=$root" >> $env:GITHUB_OUTPUT
+          Write-Host "Downloaded: $($item.Length) bytes"
+          Write-Host "SHA-256: $actual"
+          Write-Host "SHA-256 verified: $([bool]$expected)"
+
+      - name: Locate 7-Zip
+        id: sevenzip
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $candidates = @(
+            (Join-Path $env:ProgramFiles "7-Zip\7z.exe"),
+            (Join-Path ${env:ProgramFiles(x86)} "7-Zip\7z.exe")
+          )
+          $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          if (-not $sevenZip) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not $sevenZip) {
+            choco install 7zip.install --yes --no-progress
+            if ($LASTEXITCODE -ne 0) { throw "Could not install 7-Zip on the runner." }
+            $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          }
+          if (-not $sevenZip) { throw "7z.exe was not found." }
+          "sevenzip_path=$sevenZip" >> $env:GITHUB_OUTPUT
+          Write-Host "Using: $sevenZip"
+          & $sevenZip i | Select-Object -First 12
+
+      - name: List and extract installer using 7-Zip
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          WORK_ROOT: ${{ steps.target.outputs.work_root }}
+          SEVENZIP_PATH: ${{ steps.sevenzip.outputs.sevenzip_path }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $installer = $env:INSTALLER_PATH
+          $sevenZip = $env:SEVENZIP_PATH
+          $listingPath = Join-Path $env:WORK_ROOT "7zip-list.txt"
+          $extractPath = Join-Path $env:WORK_ROOT "extracted"
+          New-Item -ItemType Directory -Path $extractPath -Force | Out-Null
+
+          $listing = @(& $sevenZip l -slt $installer 2>&1 | ForEach-Object { "$_" })
+          $listCode = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath $listingPath -Encoding utf8
+          if ($listCode -ne 0 -or $listing.Count -eq 0) {
+            throw "7-Zip could not list the installer (exit code $listCode)."
+          }
+
+          Write-Host "7-Zip listing succeeded. Starting extraction (the installer will NOT be executed)."
+          $extractLog = @(& $sevenZip x -y "-o$extractPath" $installer 2>&1 | ForEach-Object { "$_" })
+          $extractCode = $LASTEXITCODE
+          $extractLog | ForEach-Object { Write-Host $_ }
+          if ($extractCode -ne 0) {
+            throw "7-Zip extraction failed with exit code $extractCode."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $extractPath -File -Recurse -Force)
+          if ($files.Count -eq 0) {
+            throw "7-Zip returned success but extracted no files."
+          }
+
+          $relative = @($files | ForEach-Object {
+            $_.FullName.Substring($extractPath.Length).TrimStart('\')
+          } | Sort-Object)
+          $fileListPath = Join-Path $env:WORK_ROOT "extracted-files.txt"
+          $relative | Set-Content -LiteralPath $fileListPath -Encoding utf8
+
+          Write-Host "Extraction succeeded. Extracted file count: $($files.Count)"
+          Write-Host "Extracted paths:"
+          $relative | ForEach-Object { Write-Host " - $_" }
+
+          $appCandidates = @($files | Where-Object {
+            $_.Name -match '(?i)^rust[- .]?meow\.exe$'
+          })
+          if ($appCandidates.Count -gt 0) {
+            Write-Host "Candidate application executable(s):"
+            $appCandidates | ForEach-Object { Write-Host $_.FullName }
+          } else {
+            Write-Warning "No rust-meow.exe was found in the extracted files. Review the full file list before converting the Scoop manifest."
+          }
+
+          @(
+            "## Rust Meow 7-Zip extraction test"
+            ""
+            "- **Result:** SUCCESS"
+            "- **Extracted file count:** $($files.Count)"
+            "- **Application executable found:** $([bool]($appCandidates.Count -gt 0))"
+            "- **Installer execution:** No"
+            ""
+            "### Extracted paths"
+            $relative
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload extraction listing
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: rust-meow-7zip-extraction-report
+          path: ${{ runner.temp }}/rust-meow-7zip-test/*.txt
+          if-no-files-found: ignore
