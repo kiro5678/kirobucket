@@ -2,11 +2,6 @@ name: Manual Scoop Manifest Test
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/scoop-manifest-validation.yml'
 
 permissions:
   contents: read
