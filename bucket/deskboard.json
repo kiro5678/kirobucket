@@ -14,9 +14,11 @@
     ],
     "checkver": {
         "script": [
-            "$html = (Invoke-WebRequest -Uri 'https://deskboard.geeke.app/download' -UseBasicParsing).Content",
-            "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace($html, '<[^>]+>', ' '))",
+            "$html = & curl.exe --fail --location --silent --show-error --retry 2 --retry-delay 2 --connect-timeout 15 --max-time 45 --user-agent 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36' 'https://deskboard.geeke.app/download'",
+            "if ($LASTEXITCODE -ne 0) { throw 'Unable to download the official Deskboard download page.' }",
+            "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace(($html -join \"`n\"), '<[^>]+>', ' '))",
             "$text = [regex]::Replace($text, '\\s+', ' ')",
+            "if ($text -notmatch '(?i)Windows') { throw 'The official Deskboard download page did not expose its Windows download section.' }",
             "$match = [regex]::Match($text, '(?i)Version\\s+v?(?<version>\\d+(?:\\.\\d+)+)')",
             "if (-not $match.Success) { throw 'Unable to detect the Deskboard release version from the official download page.' }",
             "$match.Groups['version'].Value"
