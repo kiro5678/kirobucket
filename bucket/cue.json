@@ -1,0 +1,32 @@
+{
+    "version": "1.1",
+    "description": "Free Windows video and audio player with subtitles and playback-position saving",
+    "homepage": "https://github.com/tinypeep/cue",
+    "license": "GPL-3.0-or-later",
+    "url": "https://github.com/tinypeep/cue/releases/download/v1.1/Cue-1.1-Setup.exe",
+    "hash": "89d13c84aaacc4891f392b509e9e9cfcaeedd0b464600ec910ea87f6b6fd0ca2",
+    "installer": {
+        "args": [
+            "--silent",
+            "--dir",
+            "\"$dir\"",
+            "--no-desktop",
+            "--no-launch"
+        ]
+    },
+    "uninstaller": {
+        "script": "$uninstaller = Join-Path $dir 'uninstall.exe'; if (Test-Path -LiteralPath $uninstaller -PathType Leaf) { Start-Process -FilePath $uninstaller -ArgumentList \"--uninstall --silent --dir `\"$dir`\"\" -Wait -PassThru | Out-Null }"
+    },
+    "bin": "Cue.exe",
+    "checkver": {
+        "github": "https://github.com/tinypeep/cue"
+    },
+    "autoupdate": {
+        "url": "https://github.com/tinypeep/cue/releases/download/v$version/Cue-$version-Setup.exe",
+        "hash": {
+            "mode": "json",
+            "url": "https://api.github.com/repos/tinypeep/cue/releases/tags/v$version",
+            "jp": "$.assets[?(@.name == '$basename')].digest"
+        }
+    }
+}

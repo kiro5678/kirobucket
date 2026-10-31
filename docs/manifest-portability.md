@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 827 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
+**Portability audit coverage:** 830 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,13 +22,16 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 769 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 54 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Portable | 770 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 4 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **827** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| **Total** | **830** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
 
+- [`cue`](../bucket/cue.json) — **Nonportable**: the custom setup writes current-user Uninstall and App Paths registry entries and creates a Start Menu shortcut.
+- [`deskstats`](../bucket/deskstats.json) — **Portable**: Scoop extracts the Inno Setup payload only. The application itself requests administrator rights; its bundled PawnIO driver is not installed by Scoop and can be installed only through the application's user action.
+- [`imgconv`](../bucket/imgconv.json) — **Nonportable**: the silent vendor setup registers the Explorer context menu and startup integration, writes uninstall metadata, and may register its Windows 11 menu package.
 - [`fig`](../bucket/fig.json) — **Portable**: uses the publisher's standalone, self-contained Windows executable rather than its setup installer.
 - [`nook`](../bucket/nook.json) — **Nonportable**: the application registers the `nook://` URL scheme under the current user's registry each time it starts. The manifest removes that registration on uninstall only when it still points to this Scoop installation.
 
@@ -61,7 +64,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 53 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 55 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
@@ -88,7 +91,8 @@ This index groups the 53 Nonportable manifests by the exact installer/package la
 | Vendor-specific EXE component installer | [mumuplayer-android15](../bucket/mumuplayer-android15.json) | 1 |
 | Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
-| **Total** | **All Nonportable manifests** | **53** |
+| Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
+| **Total** | **All Nonportable manifests** | **55** |
 
 ## Nonportable manifests
 
@@ -106,6 +110,7 @@ The installer type describes the package or setup technology used by the manifes
 | [clustercut](../bucket/clustercut.json) | NSIS | Runs the vendor setup with `/S /NS /D=$dir`. NSIS-style switches; engine inferred. |
 | [coodesker-github](../bucket/coodesker-github.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [crowdsec](../bucket/crowdsec.json) | MSI | Runs the MSI installer silently. **Manifest issue:** the download is 1.8.2 but `installer.file` currently names `crowdsec_1.8.1.msi`. |
+| [cue](../bucket/cue.json) | Custom EXE installer | Runs the publisher's own silent setup with a Scoop version directory; writes current-user Uninstall and App Paths keys and creates a Start Menu shortcut. |
 | [directx-np](../bucket/directx-np.json) | Self-extracting EXE + DXSETUP | Runs the extracted `DXSETUP.exe`; installs DirectX runtime components into Windows. |
 | [dlman](../bucket/dlman.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [ecopaste](../bucket/ecopaste.json) | NSIS | Runs the NSIS setup with silent/update arguments and `/D=$dir`. |
@@ -116,6 +121,7 @@ The installer type describes the package or setup technology used by the manifes
 | [fluentstore](../bucket/fluentstore.json) | EXE bootstrapper + MSIX | Runs the official interactive installer; registers an MSIX package and requires trust approval for its signing certificate. |
 | [fxsound](../bucket/fxsound.json) | EXE bootstrapper + embedded MSI | Runs the official setup/MSI installation. Installs the FxSound virtual audio driver system-wide; elevated install/uninstall is required. |
 | [helixnotes](../bucket/helixnotes.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
+| [imgconv](../bucket/imgconv.json) | Custom EXE installer | Runs the publisher's silent setup inside the Scoop version directory; enables Explorer context-menu and startup integration, and can register an optional Windows 11 menu package/certificate. |
 | [imazing-np](../bucket/imazing-np.json) | EXE setup (Inno-style switches; engine not confirmed) | Runs the vendor setup silently with administrator rights and a directory override. |
 | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | Inno | Runs the K-Lite setup silently; this is a real codec installation, not archive extraction. |
 | [lapis](../bucket/lapis.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
@@ -170,7 +176,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | Manifest pattern | Installer/package type | Example manifests | Why they are Portable |
 | --- | --- | --- | --- |
 | MSI extraction, not Windows Installer execution | MSI database/payload extracted by Scoop | [rqbit](../bucket/rqbit.json), [sklad](../bucket/sklad.json), [timigs](../bucket/timigs.json), [clipper](../bucket/clipper.json), [cooldesk-msi](../bucket/cooldesk-msi.json), [cedro-modern-dock](../bucket/cedro-modern-dock.json), [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json), [poltertype](../bucket/poltertype.json), [dnschanger-msi](../bucket/dnschanger-msi.json) | Scoop extracts the MSI payload; the manifest does not run `msiexec /i`. |
-| Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
+| Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json), [deskstats](../bucket/deskstats.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
 | EXE/NSIS payload extraction | NSIS containing an embedded application archive (commonly app-64.7z) | [endstate](../bucket/endstate.json), [mechvibes](../bucket/mechvibes.json), [openscreen](../bucket/openscreen.json), [keyboardsounds](../bucket/keyboardsounds.json), [keyboardsounds-pro](../bucket/keyboardsounds-pro.json), [super-productivity](../bucket/super-productivity.json), [safepdf-installer](../bucket/safepdf-installer.json) | The downloaded setup file is treated as an archive or its embedded application archive is extracted; the vendor setup routine is not executed. |
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | Their manifest passes the application's explicit portable-mode option. |
 | Setup executable used only as an extractor | Portable self-extracting EXE or Inno Setup portable bundle | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
@@ -189,6 +195,7 @@ The classification above concerns what the Scoop manifest does during installati
 | [veracrypt](../bucket/veracrypt.json) | Portable self-extracting EXE | The portable files are extracted; mounting volumes loads a driver at runtime and requires administrator privileges. |
 | [winutil](../bucket/winutil.json) | PowerShell script (.ps1) | The manifest downloads a PowerShell script only; the user may run it elevated to change Windows settings, services, registry, apps, and updates. |
 | [MPOGPUFIX](../bucket/MPOGPUFIX.json) | ZIP archive | The ZIP is extracted; the utility can change Windows graphics settings when the user runs its repair actions. |
+| [deskstats](../bucket/deskstats.json) | Inno Setup payload extraction | The executable requests administrator rights. The bundled PawnIO sensor driver is not installed by Scoop; the user can explicitly install it from DeskStats when needed. Settings and logs are stored under `%LOCALAPPDATA%\\DeskStats`. |
 
 Do not move these runtime caveats into the Nonportable list unless the manifest itself starts the installation or registration during `scoop install`.
 

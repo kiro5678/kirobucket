@@ -15,9 +15,9 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | File Management | 71 | [View](#file-management) |
 | Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
-| Images & Photos | 52 | [View](#images-photos) |
+| Images & Photos | 53 | [View](#images-photos) |
 | Keyboard & Language | 15 | [View](#keyboard-language) |
-| Media & Audio/Video | 46 | [View](#media-audio-video) |
+| Media & Audio/Video | 47 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
 | Other Utilities | 2 | [View](#other-utilities) |
@@ -27,7 +27,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Security | 41 | [View](#security) |
 | Storage & Disk Tools | 26 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
-| System Monitoring & Hardware | 71 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 72 | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 827**
+**Total unique manifests: 830**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -369,6 +369,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [imagemagick-hdri](../bucket/imagemagick-hdri.json) | 7.1.2-34 | Create, edit, compose, and convert 200+ bitmap image formats using HDRI and 16-bit quantum depth. | [Homepage](https://imagemagick.org/) |
 | [imagemagick-q8](../bucket/imagemagick-q8.json) | 7.1.2-34 | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. | [Homepage](https://imagemagick.org/) |
 | [imagetype](../bucket/imagetype.json) | 3.0.0 | Accessible image editor for adding custom text to images | [Homepage](https://github.com/ahmedthebest31/ImageType) |
+| [imgconv](../bucket/imgconv.json) | 1.2 | Tiny Windows tray image converter with batch resizing and Explorer integration. | [Homepage](https://github.com/kiranohaiiro/ImgConv) |
 | [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
 | [nvidia-icat](../bucket/nvidia-icat.json) | 0.6.17 | Image Comparison & Analysis Tool (ICAT) | [Homepage](https://www.nvidia.com/en-us/geforce/technologies/icat/) |
 | [Omoide](../bucket/Omoide.json) | 0.7.6 | Offline-first, self-hosted photo and video library with local AI-powered organization and search. | [Homepage](https://github.com/EinAeffchen/Omoide) |
@@ -436,6 +437,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- |
 | [allplayer](../bucket/allplayer.json) | 9.6 | Free multimedia player with built-in codecs and automatic subtitles. | [Homepage](https://allplayer.com/) |
 | [blur](../bucket/blur.json) | 2.45 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. | [Homepage](https://github.com/f0e/blur) |
+| [cue](../bucket/cue.json) | 1.1 | Free Windows video and audio player with subtitles and playback-position saving. | [Homepage](https://github.com/tinypeep/cue) |
 | [drift](../bucket/drift.json) | 0.8.0 | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). | [Homepage](https://github.com/CutWire-Studios/Drift) |
 | [ef-duplicate-mp3-finder](../bucket/ef-duplicate-mp3-finder.json) | 26.10 | Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA. | [Homepage](https://efsoftware.com/d3/e.htm) |
 | [ef-talk-scriber](../bucket/ef-talk-scriber.json) | 26.10 | Combines a text editor and audio player to support keyboard-driven transcription of recordings. | [Homepage](https://efsoftware.com/ts/e.htm) |
@@ -765,6 +767,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [clickmonitorddc](../bucket/clickmonitorddc.json) | 7.2 | Monitor control utility for adjusting brightness, contrast, volume and other display settings via DDC/CI. | [Homepage](https://github.com/chrismah/ClickMonitorDDC7.2) |
 | [cpu-frequenz](../bucket/cpu-frequenz.json) | 4.55 | Display CPU frequency information. | [Homepage](https://www.softwareok.com/?Download=CpuFrequenz) |
 | [driverstoreexplorer](../bucket/driverstoreexplorer.json) | 1.0.36 | Driver Store Explorer (RAPR) makes it easier to deal with Windows driver store. | [Homepage](https://github.com/lostindark/DriverStoreExplorer) |
+| [deskstats](../bucket/deskstats.json) | 1.0.30 | Hardware-monitor widgets for CPU, GPU, memory, sensors, network, and storage. | [Homepage](https://talhazahid.github.io/deskstats/) |
 | [edgemin](../bucket/edgemin.json) | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [ef-process-manager](../bucket/ef-process-manager.json) | 26.10 | Inspects running processes and loaded modules, closes or terminates processes, and displays system details. | [Homepage](https://efsoftware.com/pm/e.htm) |
 | [ef-system-monitor](../bucket/ef-system-monitor.json) | 26.10 | Monitors local and remote system resources and performance, including CPU, memory, disks, and other metrics. | [Homepage](https://efsoftware.com/sm/e.htm) |
