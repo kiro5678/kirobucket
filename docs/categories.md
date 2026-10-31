@@ -31,11 +31,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 95 | [View](#windows-customization) |
+| Windows Customization | 98 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 840**
+**Total unique manifests: 843**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -889,6 +889,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [alwaysmousewheel](../bucket/alwaysmousewheel.json) | 6.61 | Use the mouse wheel over inactive windows. | [Homepage](https://www.softwareok.com/?Download=AlwaysMouseWheel) |
 | [autohide-desktop-icons](../bucket/autohide-desktop-icons.json) | 7.11 | Automatically hide and show Windows desktop icons. | [Homepage](https://www.softwareok.com/?Download=AutoHideDesktopIcons) |
 | [autohide-mouse-cursor](../bucket/autohide-mouse-cursor.json) | 6.29 | Automatically hide the mouse cursor after inactivity. | [Homepage](https://www.softwareok.com/?Download=AutoHideMouseCursor) |
+| [bloom](../bucket/bloom.json) | 3.10.1 | Windows notch and dock with media controls, quick settings, system status, and productivity features. | [Homepage](https://github.com/SehajveerSingh2005/bloom) |
 | [brightness-manager-ok](../bucket/brightness-manager-ok.json) | 1.88 | Adjust screen brightness on Windows. | [Homepage](https://www.softwareok.com/?Download=Brightness.Manager.OK) |
 | [cedro-modern-dock](../bucket/cedro-modern-dock.json) | 1.2.0 | Modern application dock for Windows. | [Homepage](https://github.com/Cedro-Software/cedro-modern-dock) |
 | [classic-desktop-clock](../bucket/classic-desktop-clock.json) | 5.33 | Display a classic desktop clock. | [Homepage](https://www.softwareok.com/?Download=ClassicDesktopClock) |
@@ -935,9 +936,11 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [open-shell-nightly](../bucket/open-shell-nightly.json) | 4.4.202 | A collection of utilities bringing back classic features to Windows. Latest Open-Shell pre-release build. | [Homepage](https://github.com/Open-Shell/Open-Shell-Menu) |
 | [openglass](../bucket/openglass.json) | 3.0.2.3749 | A replacement for the Desktop Window Manager glass effect on Windows. | [Homepage](https://github.com/ALTaleX531/OpenGlass) |
 | [openrgb](../bucket/openrgb.json) | 1.1 | RGB lighting control that does not depend on manufacturer software. | [Homepage](https://openrgb.org) |
+| [pillar](../bucket/pillar.json) | 0.1.4 | Dynamic Island-style Windows overlay with media, notifications, focus timers, and system monitoring. | [Homepage](https://github.com/warpirate/pillar-dynamic-island-for-windows) |
 | [pointerstick](../bucket/pointerstick.json) | 7.22 | Display a virtual pointer stick on the desktop for presentations. | [Homepage](https://www.softwareok.com/?Download=PointerStick) |
 | [qnotch](../bucket/qnotch.json) | 0.8.4 | Dynamic Island-style Windows notch with media controls, system stats, clipboard history, and notifications. | [Homepage](https://github.com/Somafet/qnotch) |
 | [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
+| [quick-pill](../bucket/quick-pill.json) | 5.5.1 | Electron-based Dynamic Island for Windows with media controls, system tools, notifications, clipboard, tasks, notes, and an app launcher. | [Homepage](https://github.com/nabil24024004/Quick-Pill-Dynamic-Island-for-Windows) |
 | [rebuild-shell-icon-cache](../bucket/rebuild-shell-icon-cache.json) | 1.3 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |
 | [shuffle-paper](../bucket/shuffle-paper.json) | 0.4.0 | Privacy-friendly wallpaper shuffle and rotation utility for Windows | [Homepage](https://github.com/jcsm/ShufflePaper) |
