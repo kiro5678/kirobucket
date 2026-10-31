@@ -1,0 +1,37 @@
+{
+    "version": "3.10.1",
+    "description": "Windows notch and dock with media controls, quick settings, system status, and desktop productivity features.",
+    "homepage": "https://github.com/SehajveerSingh2005/bloom",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/SehajveerSingh2005/bloom/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/SehajveerSingh2005/bloom/releases/download/v3.10.1/bloom_3.10.1_x64-setup.exe#/dl.7z",
+            "hash": "5cb4d8fe87aaf26f161be61954aebfacb4c9f481b12c5bbcfc48aa6b56db7231"
+        }
+    },
+    "bin": "bloom.exe",
+    "shortcuts": [
+        [
+            "bloom.exe",
+            "Bloom"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/SehajveerSingh2005/bloom"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/SehajveerSingh2005/bloom/releases/download/v$version/bloom_$version_x64-setup.exe#/dl.7z"
+            }
+        }
+    },
+    "notes": [
+        "Verified with 7-Zip 26.05: the official NSIS package extracts bloom.exe at the payload root. Scoop uses #/dl.7z and does not run the vendor setup routine.",
+        "The NSIS payload also contains $TEMP/MicrosoftEdgeWebview2Setup.exe. Scoop does not execute this bootstrapper; Microsoft Edge WebView2 Runtime must already be present or be installed separately.",
+        "Upstream first-run code enables Bloom autostart when it is not already enabled. This creates Windows startup integration on first launch; the manifest leaves this application behavior unchanged."
+    ]
+}
