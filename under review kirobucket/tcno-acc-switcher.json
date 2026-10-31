@@ -24,9 +24,18 @@
         ]
     ],
     "checkver": {
-        "github": "https://api.github.com/repos/TCNOco/TcNo-Acc-Switcher/releases/latest",
-        "jsonpath": "$.assets[?(@.name =~ /.+\\.7z/i)].browser_download_url",
-        "regex": "(?i)download/([\\d._-]+)/(?<name>(?![^\"]+CEF)[^\"]+\\.7z)"
+        "script": [
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/TCNOco/TcNo-Acc-Switcher/releases?per_page=100' -Headers $headers",
+            "$release = $releases | Where-Object {",
+            "    $_.tag_name -match '^\\d{4}-\\d{2}-\\d{2}_\\d{2}$' -and",
+            "    ($_.assets | Where-Object { $_.name -eq \"TcNo-Acc-Switcher_$($_.tag_name).7z\" } | Select-Object -First 1)",
+            "} | Select-Object -First 1",
+            "if (-not $release) { throw 'No dated legacy TcNo Account Switcher 7z release was found.' }",
+            "Write-Output $release.tag_name"
+        ],
+        "regex": "^(?<version>\\d{4}-\\d{2}-\\d{2}_\\d{2})$"
     },
     "autoupdate": {
         "architecture": {
