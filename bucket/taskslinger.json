@@ -1,0 +1,20 @@
+{
+    "version": "0.9.5",
+    "description": "Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections.",
+    "homepage": "https://taskslinger.net/",
+    "license": "Proprietary",
+    "url": "https://taskslinger.net/download/v0.9.5/winget/x64.exe#/TaskSlinger-Setup.exe",
+    "hash": "6b4c656a9e4a576b061c962a7447c27e74073b7d0210839600f16043aab35e79",
+    "checkver": {
+        "url": "https://taskslinger.net/changelog/",
+        "regex": "TaskSlinger (?<version>[\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://taskslinger.net/download/v$version/winget/x64.exe#/TaskSlinger-Setup.exe"
+    },
+    "notes": [
+        "Review status: the official download is an EXE setup. The Microsoft winget manifest for version 0.9.5 identifies it as a per-user installer and records the default installation location as %LocalAppData%\\Programs\\TaskSlinger.",
+        "The official silent-install arguments are --internal-install 3 --install-source winget. They do not establish a supported custom installation directory or a portable extraction method.",
+        "This manifest downloads the verified-hash setup file only. It does not execute the installer, create a Scoop-managed application installation, or add a shim or shortcut. Inspect the installer payload and confirm an installation method that keeps the application under Scoop before removing Review status. Do not assume the EXE can be extracted with 7-Zip."
+    ]
+}
