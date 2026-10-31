@@ -415,3 +415,15 @@ git diff -- .\bucket\taskexplorer.json
 - [Scoop Checkver Implementation](https://github.com/ScoopInstaller/Scoop/blob/master/bin/checkver.ps1) — آلية اكتشاف الإصدارات.
 - [Scoop Autoupdate Implementation](https://github.com/ScoopInstaller/Scoop/blob/master/lib/autoupdate.ps1) — تنفيذ التحديث التلقائي.
 - [ScoopInstaller/GithubActions and Excavator](https://github.com/ScoopInstaller/GithubActions) — إجراءات GitHub وExcavator.
+
+## 6. رابط الإصدار الحالي مقابل رابط التحديث
+
+يجب أن يكون الحقل الأعلى `url` رابط تنزيل مباشرًا صالحًا للإصدار المحدد في الحقل `version`. لا تضع فيه متغيرات Scoop مثل `$version` أو `$matchVersion`؛ ففاحص مسارات الأرشيف في هذا المستودع يرفض رابط التنزيل الحالي إذا احتوى على متغير غير محلول، ولن يستطيع تنزيل الملف وفحصه.
+
+استخدم الصيغة التالية:
+- `url`: رابط ثابت يتضمن رقم الإصدار الحالي حرفياً، مثل `https://example.com/releases/v1.2.3/app-1.2.3-setup.exe`.
+- `hash`: SHA-256 للإصدار نفسه، ويجب مطابقته مع قيمة checksum أو digest المنشورة من المصدر الرسمي متى توفرت.
+- `autoupdate.url`: قالب التحديث الذي يستخدم متغيرات Scoop مثل `$version`، ويجب أن ينتج رابط الإصدار التالي الصحيح.
+
+بعد كتابة المانيفست، تحقّق من أن رابط `url` الحالي لا يحتوي على أي متغير غير محلول، وأن الملف يُنزّل فعلياً، وأن الـ hash يطابق الملف، ثم شغّل فحص مسارات الأرشيف واختبار `checkver` و`autoupdate`. نجاح JSON parsing وحده لا يثبت صحة رابط التنزيل.
+
