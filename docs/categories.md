@@ -23,7 +23,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Other Utilities | 2 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
-| Productivity & Launchers | 31 | [View](#productivity-launchers) |
+| Productivity & Launchers | 32 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Storage & Disk Tools | 26 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 848**
+**Total unique manifests: 849**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -637,6 +637,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [appgroup](../bucket/appgroup.json) | 1.6.0 | Organize, customize, and launch app groups from the Windows taskbar. | [Homepage](https://github.com/iandiv/AppGroup) |
 | [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | 2.2.0 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
 | [biniware-run](../bucket/biniware-run.json) | 7.9.0.0 | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. | [Homepage](https://biniware.com/brun) |
+| [deskboard](../bucket/deskboard.json) | 0.13.0 | Turns local folders into customizable visual workspaces with widgets, annotations, and notes. | [Homepage](https://deskboard.geeke.app) |
 | [desktoptools](../bucket/desktoptools.json) | 1.2.9 | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. | [Homepage](https://github.com/vg2222/DesktopTools) |
 | [favoritenfreund](../bucket/favoritenfreund.json) | 1.34 | Manage favorites in a small Windows utility. | [Homepage](https://www.softwareok.com/?Download=FavoritenFreund) |
 | [flashlaunch](../bucket/flashlaunch.json) | 1.0.9 | Lightweight keyboard-first application launcher for Windows. | [Homepage](https://github.com/SingCJ/FlashLaunch) |
