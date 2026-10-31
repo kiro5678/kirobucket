@@ -231,9 +231,6 @@ jobs:
           Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value '## ADM installer inspection'
           Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value 'The setup executable was never launched.'
           Get-Content -LiteralPath $reportPath | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-) {
-              throw "Invalid version: $version"
-          }
 
           $work = Join-Path $env:RUNNER_TEMP 'adm-installer-inspection'
           New-Item -ItemType Directory -Path $work -Force | Out-Null
