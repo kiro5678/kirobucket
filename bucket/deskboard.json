@@ -13,8 +13,15 @@
         ]
     ],
     "checkver": {
-        "url": "https://deskboard.geeke.app/download",
-        "regex": "Deskboard_([\\d.]+)_x64-setup\\.exe"
+        "script": [
+            "$html = (Invoke-WebRequest -Uri 'https://deskboard.geeke.app/download' -UseBasicParsing).Content",
+            "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace($html, '<[^>]+>', ' '))",
+            "$text = [regex]::Replace($text, '\\s+', ' ')",
+            "$match = [regex]::Match($text, '(?i)Version\\s+v?(?<version>\\d+(?:\\.\\d+)+)')",
+            "if (-not $match.Success) { throw 'Unable to detect the Deskboard release version from the official download page.' }",
+            "$match.Groups['version'].Value"
+        ],
+        "regex": "(?<version>\\d+(?:\\.\\d+)+)"
     },
     "autoupdate": {
         "url": "https://deskboard.geeke.app/downloads/windows/Deskboard_$version_x64-setup.exe#/dl.7z"
