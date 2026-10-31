@@ -5,8 +5,17 @@
     "license": "Proprietary",
     "url": "https://www.hdd-tool.com/download/portable_pro.zip",
     "checkver": {
-        "url": "https://customers.hdd-tool.com/download.html",
-        "regex": "(?is)Version:\\s*(?<version>\\d+(?:\\.\\d+){1,2})"
+        "url": "https://org.hdd-tool.com/download.html",
+        "script": [
+            "$ProgressPreference = 'SilentlyContinue'",
+            "$response = Invoke-WebRequest -Uri 'https://org.hdd-tool.com/download.html' -UseBasicParsing -Headers @{ 'User-Agent' = 'Mozilla/5.0' }",
+            "$text = [System.Net.WebUtility]::HtmlDecode([string]$response.Content)",
+            "$text = [regex]::Replace($text, '<[^>]+>', ' ')",
+            "$text = [regex]::Replace($text, '\\s+', ' ')",
+            "$match = [regex]::Match($text, 'Version\\s*:\\s*(?<version>\\d+(?:\\.\\d+){1,2})', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)",
+            "if (-not $match.Success) { throw 'Could not find the NIUBI Partition Editor version on the official download page.' }",
+            "Write-Output $match.Groups['version'].Value"
+        ]
     },
     "autoupdate": {
         "url": "https://www.hdd-tool.com/download/portable_pro.zip"
