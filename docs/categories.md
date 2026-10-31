@@ -27,7 +27,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Security | 41 | [View](#security) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
-| System Monitoring & Hardware | 72 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 73 | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 851**
+**Total unique manifests: 852**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -823,6 +823,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sysmanager](../bucket/sysmanager.json) | 1.131.3 | Modern Windows system monitoring and management toolkit. | [Homepage](https://github.com/laurentiu021/SystemManager) |
 | [systeminformer](../bucket/systeminformer.json) | 4.0.26241.138 | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. | [Homepage](https://systeminformer.com/) |
 | [taskexplorer](../bucket/taskexplorer.json) | 2.0.1 | Advanced process and system monitoring tool | [Homepage](https://github.com/DavidXanatos/TaskExplorer) |
+| [taskslinger](../bucket/taskslinger.json) | 0.9.5 | Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections. | [Homepage](https://taskslinger.net/) |
 | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | 1.4.1 | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
 | [turkaysoft-glow](../bucket/turkaysoft-glow.json) | 26.14 | Advanced system analysis software for Windows. | [Homepage](https://github.com/turkaysoft/glow) |
 | [uefitool](../bucket/uefitool.json) | A76 | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. | [Homepage](https://github.com/LongSoft/UEFITool) |
