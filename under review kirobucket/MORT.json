@@ -28,8 +28,8 @@
         "VersionData.txt"
     ],
     "checkver": {
-        "github": "https://api.github.com/repos/kmonkeyhead/MORT/releases/latest",
-        "jsonpath": "$..browser_download_url",
+        "url": "https://api.github.com/repos/kmonkeyhead/MORT/releases/latest",
+        "jsonpath": "$.assets[*].browser_download_url",
         "regex": "MORT\\.(?<version>[\\d.]+)v\\.-\\.(?<build>[\\d]+)\\.zip",
         "replace": "${version}"
     },
