@@ -1,0 +1,118 @@
+name: Temporary Now Bar Setup Detect It Easy Probe
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/now-bar-die-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Identify nowbar-setup.exe with Detect It Easy
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download setup and verify SHA-256
+        id: target
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $url = "https://github.com/nixesty/now-bar/releases/download/v0.4.1/nowbar-setup.exe"
+          $expected = "e9c6c29f58b10f8c3ddc7c7c404de971d7036329de0e5493db9fa3f29a06172b"
+          $root = Join-Path $env:RUNNER_TEMP "now-bar-die-probe"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $file = Join-Path $root "nowbar-setup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $file -MaximumRedirection 10 -TimeoutSec 600
+          $actual = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SHA-256 mismatch: expected $expected, got $actual." }
+          $sig = Get-AuthenticodeSignature -LiteralPath $file
+          $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($file)
+          Write-Host "File: nowbar-setup.exe"
+          Write-Host "SHA-256: $actual"
+          Write-Host "Authenticode: $($sig.Status)"
+          Write-Host "Signer: $(if ($sig.SignerCertificate) { $sig.SignerCertificate.Subject } else { '(none)' })"
+          Write-Host "Product: $($info.ProductName)"
+          Write-Host "Description: $($info.FileDescription)"
+          "file_path=$file" >> $env:GITHUB_OUTPUT
+          "work_root=$root" >> $env:GITHUB_OUTPUT
+
+      - name: Download latest Detect It Easy from official GitHub release
+        id: die
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            "User-Agent" = "kirobucket-now-bar-die-probe"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          if ($env:GITHUB_TOKEN) { $headers.Authorization = "Bearer $env:GITHUB_TOKEN" }
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/horsicq/DIE-engine/releases/latest" -Headers $headers -TimeoutSec 45
+          $asset = $release.assets | Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } | Select-Object -First 1
+          if (-not $asset) { throw "Official latest Detect It Easy x64 portable asset not found." }
+          $root = Join-Path $env:RUNNER_TEMP "now-bar-die-probe"
+          $zip = Join-Path $root $asset.name
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip -MaximumRedirection 10 -TimeoutSec 300
+          if ($asset.digest -match '^sha256:(?<hash>[0-9a-fA-F]{64})$') {
+            $actual = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash
+            if ($actual -ine $Matches.hash) { throw "Detect It Easy archive SHA-256 mismatch." }
+          }
+          $toolDir = Join-Path $root "die"
+          Expand-Archive -LiteralPath $zip -DestinationPath $toolDir -Force
+          $diec = Get-ChildItem -LiteralPath $toolDir -Filter diec.exe -Recurse -File | Select-Object -First 1
+          if (-not $diec) { throw "diec.exe not found in official portable release." }
+          Write-Host "Detect It Easy release: $($release.tag_name)"
+          Write-Host "Asset: $($asset.name)"
+          "diec_path=$($diec.FullName)" >> $env:GITHUB_OUTPUT
+          "die_release=$($release.tag_name)" >> $env:GITHUB_OUTPUT
+
+      - name: Run static Detect It Easy identification
+        shell: pwsh
+        env:
+          TARGET_FILE: ${{ steps.target.outputs.file_path }}
+          ROOT: ${{ steps.target.outputs.work_root }}
+          DIEC: ${{ steps.die.outputs.diec_path }}
+          DIE_RELEASE: ${{ steps.die.outputs.die_release }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          Write-Host "Detect It Easy release: $env:DIE_RELEASE"
+          Write-Host "Target: nowbar-setup.exe"
+          Write-Host "Static analysis only; target will not be executed."
+          $output = @(& $env:DIEC $env:TARGET_FILE 2>&1 | ForEach-Object { "$_" })
+          $code = $LASTEXITCODE
+          $output | ForEach-Object { Write-Host $_ }
+          if ($code -ne 0 -or $output.Count -eq 0) { throw "Detect It Easy scan failed (exit code $code)." }
+          $report = @(
+            "Target: nowbar-setup.exe"
+            "SHA-256: e9c6c29f58b10f8c3ddc7c7c404de971d7036329de0e5493db9fa3f29a06172b"
+            "Detect It Easy release: $env:DIE_RELEASE"
+            "Target execution: NO"
+            ""
+            "Detect It Easy output:"
+            $output
+          )
+          $report | Set-Content -LiteralPath (Join-Path $env:ROOT "detect-it-easy.txt") -Encoding utf8
+          @(
+            "## Now Bar setup classification"
+            ""
+            "- File: `nowbar-setup.exe`"
+            "- Detect It Easy release: $env:DIE_RELEASE"
+            "- Target executed: No"
+            ""
+            $output
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload Detect It Easy report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: now-bar-detect-it-easy-report
+          path: ${{ runner.temp }}/now-bar-die-probe/*.txt
+          if-no-files-found: ignore
