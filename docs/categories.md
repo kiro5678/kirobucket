@@ -23,7 +23,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Other Utilities | 2 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
-| Productivity & Launchers | 32 | [View](#productivity-launchers) |
+| Productivity & Launchers | 33 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Storage & Disk Tools | 26 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 849**
+**Total unique manifests: 850**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -645,6 +645,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [lettuce-window-switcher](../bucket/lettuce-window-switcher.json) | 0.3.70 | Windows 11 application switcher with live DWM previews and multiple switcher views | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) |
 | [merkuro-calendar](../bucket/merkuro-calendar.json) | 6719 | Calendar application for managing tasks and events | [Homepage](https://apps.kde.org/merkuro.calendar/) |
 | [quickpanel](../bucket/quickpanel.json) | 1.0.12 | A floating Windows panel for launching web apps in native WebView2 windows. | [Homepage](https://github.com/lucasgiusiano/QuickPanel) |
+| [pulse-launcher](../bucket/pulse-launcher.json) | 0.1 | Windows application launcher with app search and the global Alt + Space hotkey. Review status: setup download only; installer behavior has not been verified. | [Homepage](https://github.com/thefxng/Pulse) |
 | [rizonesoft-office](../bucket/rizonesoft-office.json) | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
 | [run-command](../bucket/run-command.json) | 6.41 | Portable replacement for the Windows Run dialog, with favorites and elevated command execution. | [Homepage](https://www.softwareok.com/?seite=Microsoft/Run-Command) |
 | [shortercut](../bucket/shortercut.json) | 1.0.0.7 | Free and lightweight app launcher and desktop organizer. | [Homepage](https://www.getshortercut.com/) |
