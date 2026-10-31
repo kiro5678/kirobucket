@@ -50,6 +50,17 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-10-31 — Use Deskboard's official Windows updater metadata for checkver
+
+- **Status:** Resolved and verified.
+- **Affected area:** `bucket/deskboard.json`.
+- **Problem:** Checkver failed when the manifest attempted to scrape the filename or version label from `https://deskboard.geeke.app/download`. Both direct page matching and a browser User-Agent request failed on GitHub Actions; the runner received HTML that did not expose the dynamic Windows release details or a parseable version label.
+- **Root cause:** The official download page is not a reliable raw-HTML version source for automated clients. The Windows release metadata is published separately at `https://deskboard.geeke.app/downloads/windows/latest.json`, which exposes `version` and `platforms.windows-x86_64.url`.
+- **Resolution:** Replaced the page-scraping script with native Scoop `checkver.url` + `jsonpath: "$.version"` and a regex that strips the upstream `v` prefix while capturing the semantic version. Kept the Windows installer URL template aligned with the official filename pattern `Deskboard_$version_x64-setup.exe`; no unsupported `autoupdate.hash` field was added.
+- **Verification:** [Checkver run 41230903787](https://github.com/kiro5678/kirobucket/actions/runs/41230903787) passed for both Windows PowerShell and PowerShell 7. [Archive validation run 41230954671](https://github.com/kiro5678/kirobucket/actions/runs/41230954671) verified the downloaded asset's SHA-256 and confirmed every declared `bin`/shortcut path exists in the extracted archive. [Autoupdate validation run 41230985680](https://github.com/kiro5678/kirobucket/actions/runs/41230985680) passed with `ForceUpdate`, resolving the URL to `Deskboard_0.13.0_x64-setup.exe` and exercising the download/hash update path. [CI run 41231026348](https://github.com/kiro5678/kirobucket/actions/runs/41231026348) passed in both PowerShell editions.
+- **Prevention:** For applications whose web download page is dynamically rendered, inspect the official platform-specific updater metadata before authoring `checkver`. Prefer stable JSON fields and validate that the selected version belongs to the intended platform. Do not rely on search-engine snippets or infer a release version from a hard-coded URL.
+
+
 ### 2026-10-31 — Fix automatic Deskboard installer inspection checkout
 
 - **Status:** Resolved and verified.
