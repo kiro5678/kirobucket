@@ -23,7 +23,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Other Utilities | 2 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
-| Productivity & Launchers | 33 | [View](#productivity-launchers) |
+| Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Storage & Disk Tools | 26 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 849**
+**Total unique manifests: 850**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -640,6 +640,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [favoritenfreund](../bucket/favoritenfreund.json) | 1.34 | Manage favorites in a small Windows utility. | [Homepage](https://www.softwareok.com/?Download=FavoritenFreund) |
 | [flashlaunch](../bucket/flashlaunch.json) | 1.0.9 | Lightweight keyboard-first application launcher for Windows. | [Homepage](https://github.com/SingCJ/FlashLaunch) |
 | [flow](../bucket/flow.json) | 0.7.0 | Open-source event, calendar, and time management app for Windows. | [Homepage](https://github.com/LinwoodDev/Flow) |
+| [launchyqt](../bucket/launchyqt.json) | 3.1.9 | Qt-based Windows application launcher with a searchable catalog, global hotkey, plugins, and skins. | [Homepage](https://github.com/samsonwang/LaunchyQt) |
 | [lettuce-window-switcher](../bucket/lettuce-window-switcher.json) | 0.3.70 | Windows 11 application switcher with live DWM previews and multiple switcher views | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) |
 | [merkuro-calendar](../bucket/merkuro-calendar.json) | 6719 | Calendar application for managing tasks and events | [Homepage](https://apps.kde.org/merkuro.calendar/) |
 | [quickpanel](../bucket/quickpanel.json) | 1.0.12 | A floating Windows panel for launching web apps in native WebView2 windows. | [Homepage](https://github.com/lucasgiusiano/QuickPanel) |
