@@ -42,3 +42,16 @@ This document records manifest paths that were deleted, renamed, or consolidated
 - Where a commit only says that a file was removed, the log does not invent a technical reason; it records the surviving related manifest, if one exists.
 - A stale category key such as `developer-placeholder` was not counted as a deleted manifest because this audit did not find a corresponding `bucket/developer-placeholder.json` deletion.
 - This document records history only. It does not restore any files or change the current manifest set.
+
+
+## Addendum — 2026-10-31 manifest removals
+
+| Former manifest | Recorded disposition | Current state / reason | Git history |
+|---|---|---|---|
+| `wintor.json` | Removed at the user's request. | The manifest installed the Microsoft Store package through winget; no Wintor manifest remains in the bucket. | [2026-10-31 commit](https://github.com/kiro5678/kirobucket/commit/7d9875f86281ae87ee7fa8a9106036c0ac2461fc) |
+| `cliptray.json` | Removed at the user's request. | The manifest downloaded a source archive and attempted a local Windows build; the build and runtime had not been verified. No replacement manifest remains. | [2026-10-31 commit](https://github.com/kiro5678/kirobucket/commit/c6ca9b73a69abfa0769cf35ed6985f579e1faf49) |
+| `yerel.json` | Removed at the user's request. | The manifest downloaded a source archive and attempted a local build; the Windows build and runtime had not been verified. No replacement manifest remains. | [2026-10-31 commit](https://github.com/kiro5678/kirobucket/commit/bf6214ace5835f05618f6489d0aed34f5c016940) |
+
+- The current bucket inventory after these removals contains 832 manifests: 771 Portable, 56 Nonportable, and 5 Review.
+- The ZIP archive installer-type group now contains 560 manifests.
+- This addendum is appended history; existing records above were left unchanged.
