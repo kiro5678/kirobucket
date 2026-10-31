@@ -18,7 +18,6 @@
             "if ($LASTEXITCODE -ne 0) { throw 'Unable to download the official Deskboard download page.' }",
             "$text = [System.Net.WebUtility]::HtmlDecode([regex]::Replace(($html -join \"`n\"), '<[^>]+>', ' '))",
             "$text = [regex]::Replace($text, '\\s+', ' ')",
-            "if ($text -notmatch '(?i)Windows') { throw 'The official Deskboard download page did not expose its Windows download section.' }",
             "$match = [regex]::Match($text, '(?i)Version\\s+v?(?<version>\\d+(?:\\.\\d+)+)')",
             "if (-not $match.Success) { throw 'Unable to detect the Deskboard release version from the official download page.' }",
             "$match.Groups['version'].Value"
