@@ -19,9 +19,9 @@
     ],
     "persist": "noMeiryoUI.ini",
     "checkver": {
-        "github": "https://github.com/Tatsu-syo/noMeiryoUI",
+        "url": "https://api.github.com/repos/Tatsu-syo/noMeiryoUI/releases/latest",
         "jsonpath": "$.tag_name",
-        "regex": "^TAG-([\\d.]+)$"
+        "regex": "^TAG-(?<version>[\\d.]+)$"
     },
     "autoupdate": {
         "url": "https://github.com/Tatsu-syo/noMeiryoUI/releases/download/TAG-$version/noMeiryoUI$version.zip"
