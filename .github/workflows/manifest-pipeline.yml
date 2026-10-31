@@ -263,6 +263,9 @@ jobs:
               manifest = $env:MANIFEST_PATH
               force_update = $forceUpdate
             }
+          }
+
+          if ($manifestPaths.Count -gt 0) {
             Start-And-WaitWorkflow -WorkflowFile 'ci.yml'
           }
 
