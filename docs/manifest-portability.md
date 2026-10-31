@@ -22,12 +22,15 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 783 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 786 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 8 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
+| Review | 5 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
 | **Total** | **847** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
+- [`v-notch`](../bucket/v-notch.json) — **Portable**: the manual extraction workflow verified the official NSIS setup's SHA-256 and extracted `V-Notch.exe` at the exact `$PLUGINSDIR/payload` path declared by `extract_dir`. The application targets .NET 8 and requires the .NET 8 Desktop Runtime separately; the vendor setup's runtime-install routine is not executed. The app's own updater remains unchanged.
+- [`wnotch`](../bucket/wnotch.json) — **Portable**: the manual extraction workflow verified the official setup's SHA-256, parsed its documented `NOTCHPAY` trailer, extracted the embedded ZIP, and confirmed `Notch.exe` at the payload root. Scoop's installer script performs the same payload extraction instead of running the vendor setup, so the vendor's uninstall/protocol/PATH/startup registrations are not created.
+- [`yata`](../bucket/yata.json) — **Portable**: the manual extraction workflow verified the official Inno Setup package's SHA-256 and extracted `Yata.exe` and `yata-cli.exe` at the application root. Scoop extracts the Inno payload rather than running vendor setup tasks. The .NET 10 Desktop Runtime remains a separate prerequisite.
 - [`dlives`](../bucket/dlives.json) — **Portable**: the official Setup EXE is a PyInstaller installer rather than an Inno Setup package. The manual extraction workflow unpacked its `Dlives_Payload.bin`; the embedded payload's SHA-256 matched the direct standalone binary at the pinned upstream commit. Scoop downloads that single-file `Dlives.exe` directly and does not run the interactive installer. The app stores its data under `%APPDATA%\\Dlives`.
 - [`bloom`](../bucket/bloom.json) — **Portable**: 7-Zip 26.05 verified the official NSIS payload and extracted `bloom.exe` at the payload root. Scoop uses `#/dl.7z` and does not execute the installer. The bundle contains a WebView2 bootstrapper that Scoop does not run; WebView2 Runtime must be available separately. Bloom enables autostart during its first-run application logic.
 - [`pillar`](../bucket/pillar.json) — **Portable**: 7-Zip 26.05 verified the official NSIS payload and extracted `pillar.exe` at the payload root. Scoop uses `#/dl.7z` and does not execute the vendor installer. The MSI asset was not needed because NSIS extraction succeeded.
@@ -176,7 +179,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-These entries should not be treated as Portable or Nonportable until their payloads and launch behavior are checked.
+These remaining entries should not be treated as Portable or Nonportable until their payloads and launch behavior are checked.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -185,9 +188,6 @@ These entries should not be treated as Portable or Nonportable until their paylo
 | [quanto-flx](../bucket/quanto-flx.json) | Rainmeter RMSKIN skin/add-on package | Downloads a Rainmeter `.rmskin` add-on and depends on Rainmeter; the notes say it is installed through `SkinInstaller.exe`. This is an add-on payload, not a standalone portable application. |
 | [zenbreak-msix](../bucket/zenbreak-msix.json) | MSIX package currently extracted as 7Z | Renames an MSIX asset as a 7-Zip archive and extracts its files without registering the MSIX package. Verify that the unpackaged executable works before calling it Portable. |
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official redirect supplies a versioned setup EXE, but no checksum or reliable installer/uninstaller behavior is available. The manifest only downloads the setup and deliberately does not execute it. |
-| [v-notch](../bucket/v-notch.json) | NSIS EXE with `$PLUGINSDIR\\payload` | Upstream NSIS source specifies the payload directory and executable name, but the 7-Zip extraction path for the current release has not yet been verified. |
-| [wnotch](../bucket/wnotch.json) | Custom appended ZIP payload | The upstream source documents the NOTCHPAY trailer and ZIP payload. The new Scoop extraction script has not yet been executed against the downloaded release. |
-| [yata](../bucket/yata.json) | Inno Setup EXE | Upstream installer source identifies Inno Setup and the Yata.exe payload, but extraction of the current release has not yet been verified with Scoop's Inno extractor. |
 
 ## Portable examples and important exceptions
 
