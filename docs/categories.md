@@ -180,7 +180,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Version | Description | Homepage |
 | --- | --- | --- | --- |
 | [am-downloader](../bucket/am-downloader.json) | 1.3.3 | A modern download manager for Windows. | [Homepage](https://github.com/antikmozib/AM-Downloader) |
-| [asm-download-manager](../bucket/asm-download-manager.json) | 1.0.9 | Windows download manager; installer payload and installation behavior are awaiting verification. | [Homepage](https://github.com/Engineer-Ahmed-Said-Official/ADM) |
+| [asm-download-manager](../bucket/asm-download-manager.json) | 1.0.9 | Multi-connection Windows download manager with torrents, video capture and browser extensions. | [Homepage](https://github.com/Engineer-Ahmed-Said-Official/ADM) |
 | [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
 | [brisk](../bucket/brisk.json) | 2.3.9 | Fast and lightweight download manager with browser integration. | [Homepage](https://github.com/BrisklyDev/brisk) |
 | [cross-platform-download-manager](../bucket/cross-platform-download-manager.json) | 0.30.0 | Fast, free, and open-source cross-platform download manager | [Homepage](https://github.com/adel-bakhshi/CrossPlatformDownloadManager) |
