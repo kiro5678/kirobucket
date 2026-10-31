@@ -102,7 +102,7 @@ jobs:
           @(
             "## Now Bar setup classification"
             ""
-            "- File: `nowbar-setup.exe`"
+            "- File: nowbar-setup.exe"
             "- Detect It Easy release: $env:DIE_RELEASE"
             "- Target executed: No"
             ""
