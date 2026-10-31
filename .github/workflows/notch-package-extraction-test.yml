@@ -131,7 +131,7 @@ jobs:
                   if ($pyinstExit -ne 0) {
                     throw "PyInstaller archive extraction failed ($pyinstExit): $(($pyinstOutput | Select-Object -Last 8) -join ' ')"
                   }
-                  $pyinstRoot = $installerPath + '_extracted'
+                  $pyinstRoot = Join-Path $env:GITHUB_WORKSPACE ((Split-Path -Leaf $installerPath) + '_extracted')
                   $embeddedPayload = Join-Path $pyinstRoot 'Dlives_Payload.bin'
                   if (-not (Test-Path -LiteralPath $embeddedPayload -PathType Leaf)) {
                     $candidates = @(Get-ChildItem -LiteralPath $pyinstRoot -Filter 'Dlives_Payload.bin' -File -Recurse | ForEach-Object { $_.FullName })
