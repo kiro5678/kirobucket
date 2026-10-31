@@ -72,7 +72,11 @@ jobs:
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\checkver.ps1'
           $manifestRoot = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\under review kirobucket'
           $manifests = @(Get-ChildItem -LiteralPath $manifestRoot -Filter '*.json' -File | Sort-Object Name)
-          if ($manifests.Count -eq 0) { throw 'No under-review manifests were found.' }
+          if ($manifests.Count -eq 0) {
+            Write-Host 'No under-review manifests found; nothing to validate.' -ForegroundColor Yellow
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value 'No under-review manifests found; Checkver validation skipped.'
+            exit 0
+          }
 
           $failed = @()
           $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON|Invalid JSON primitive|Response status code does not indicate success|remote server returned an error|A parameter cannot be found|Object reference not set|Cannot bind argument)"
