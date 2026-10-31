@@ -20,3 +20,102 @@ jobs:
         uses: ScoopInstaller/GithubActions@5bceeda181721d9d10a18fdcc3ddca6f33467ae6 # v3.0.0
         env:
           SKIP_UPDATED: 1
+annotations:
+    name: Excavator annotations
+    needs: excavate
+    if: always()
+    runs-on: windows-latest
+    permissions:
+      actions: read
+    steps:
+      - name: Create Excavator summary annotation
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          EXCAVATE_RESULT: ${{ needs.excavate.result }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $message = "Excavator result: $env:EXCAVATE_RESULT"
+
+          try {
+            $headers = @{
+              Authorization = "Bearer $env:GITHUB_TOKEN"
+              Accept = 'application/vnd.github+json'
+              'X-GitHub-Api-Version' = '2022-11-28'
+            }
+            $apiRoot = "https://api.github.com/repos/$env:GITHUB_REPOSITORY"
+            $jobsUri = "$apiRoot/actions/runs/$env:GITHUB_RUN_ID/jobs?per_page=100"
+            $jobList = Invoke-RestMethod -Uri $jobsUri -Headers $headers -TimeoutSec 60 -ErrorAction Stop
+            $excavateJob = @($jobList.jobs | Where-Object { $_.name -eq 'Excavate' } | Select-Object -First 1)
+            if ($excavateJob.Count -ne 1) {
+              throw "Could not locate the Excavate job in run $env:GITHUB_RUN_ID."
+            }
+
+            $zipPath = Join-Path $env:RUNNER_TEMP 'excavator-logs.zip'
+            $extractPath = Join-Path $env:RUNNER_TEMP 'excavator-logs'
+            $logsUri = "$apiRoot/actions/jobs/$($excavateJob[0].id)/logs"
+            Invoke-WebRequest -Uri $logsUri -Headers $headers -OutFile $zipPath -MaximumRedirection 10 -TimeoutSec 180 -ErrorAction Stop
+            if (-not (Test-Path -LiteralPath $zipPath -PathType Leaf)) {
+              throw 'GitHub did not provide the completed Excavator logs.'
+            }
+
+            Remove-Item -LiteralPath $extractPath -Recurse -Force -ErrorAction SilentlyContinue
+            Expand-Archive -LiteralPath $zipPath -DestinationPath $extractPath -Force
+            $logFiles = @(Get-ChildItem -LiteralPath $extractPath -File -Recurse)
+            if ($logFiles.Count -eq 0) {
+              throw 'The Excavator log archive was empty.'
+            }
+            $rawLogs = ($logFiles | ForEach-Object { [System.IO.File]::ReadAllText($_.FullName) }) -join [Environment]::NewLine
+            $ansiPattern = [string][char]27 + '\[[0-?]*[ -/]*[@-~]'
+            $manifestErrors = @{}
+            $updateCandidates = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+            $http403 = 0
+            $http429 = 0
+            $http5xx = 0
+            $networkErrors = 0
+            $checkverErrors = 0
+            $globalErrors = 0
+
+            foreach ($rawLine in ($rawLogs -split '\r?\n')) {
+              $line = ([string]$rawLine) -replace $ansiPattern, ''
+              $line = $line -replace '^\uFEFF', ''
+              $line = $line -replace '^\d{4}-\d{2}-\d{2}T[^\s]+Z\s*', ''
+
+              if ($line -match '^\s*(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*):\s*.+\(scoop version is .+\)\s*autoupdate available\s*$') {
+                [void]$updateCandidates.Add($Matches.name)
+              }
+              if ($line -match '(?i)\(403\)\s*Forbidden') { $http403++ }
+              if ($line -match '(?i)\(429\)') { $http429++ }
+              if ($line -match '(?i)\((?:500|502|503|504)\)') { $http5xx++ }
+              if ($line -match '(?i)No such host is known|ResponseEnded|timed out|connection.*(?:closed|reset)|unable to connect|name resolution') { $networkErrors++ }
+              if ($line -match '(?i)couldn''t\s+(?:match|find|retrieve)|checkver expects|could not retrieve content') { $checkverErrors++ }
+
+              if ($line -match '^\s*(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*):\s*(?<details>.*)$') {
+                $name = $Matches.name
+                $details = $Matches.details
+                if ($details -match '(?i)couldn''t\s+(?:match|find|retrieve)|remote server returned an error|No such host is known|ResponseEnded|timed out|checkver expects|could not retrieve content|URL https?://\S+ is not valid|API rate limit|secondary rate limit') {
+                  if (-not $manifestErrors.ContainsKey($name)) { $manifestErrors[$name] = $true }
+                }
+              } elseif ($line -match '(?i)^\s*(?:ERROR\s+.+|##\[error\].+|Exception:|Invoke-RestMethod:)') {
+                $globalErrors++
+              }
+            }
+
+            $errorNames = @($manifestErrors.Keys | Sort-Object)
+            $candidateNames = @($updateCandidates | Sort-Object)
+            $candidateSample = @($candidateNames | Select-Object -First 8) -join ', '
+            $errorSample = @($errorNames | Select-Object -First 8) -join ', '
+            $message = "Excavator result: $env:EXCAVATE_RESULT | New-version candidates: $($candidateNames.Count)"
+            if ($candidateSample) { $message += " [$candidateSample]" }
+            $message += " | Manifests with errors: $($errorNames.Count)"
+            if ($errorSample) { $message += " [$errorSample]" }
+            $message += " | HTTP 403: $http403; HTTP 429: $http429; HTTP 5xx: $http5xx; network/DNS: $networkErrors; Checkver matching: $checkverErrors; global errors: $globalErrors"
+          } catch {
+            $message += " | Log analysis unavailable: $($_.Exception.Message)"
+          }
+
+          $message = $message -replace '[\r\n]+', ' '
+          $message = $message.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
+          Write-Output "::notice title=Excavator summary::$message"
