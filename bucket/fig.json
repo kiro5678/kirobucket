@@ -16,8 +16,9 @@
         ]
     ],
     "checkver": {
-        "github": "https://api.github.com/repos/Skynse/Fig/releases/latest",
-        "regex": "^v([\\d.]+)$"
+        "url": "https://api.github.com/repos/Skynse/Fig/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v([\\\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {

@@ -5,8 +5,8 @@
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Shrey113/Android-Dex/releases/download/Android-Dex-v.1.4/Android_Dex_Windows_x64.zip",
-            "hash": "9379a26a9ce78c4656c3d14a9fb349c987e5bfac07ab4092257272f1e8f0f069"
+            "url": "https://github.com/Shrey113/Android-Dex/releases/download/Android-Dex-v.$version/Android_Dex_Windows.zip",
+            "hash": "8df4c945ed3f73aa1d706500eb2092693e955d183af4b1d9a01d54c6634fe49d"
         }
     },
     "bin": "Android_Dex.exe",
@@ -19,12 +19,12 @@
     "checkver": {
         "url": "https://api.github.com/repos/Shrey113/Android-Dex/releases?per_page=100",
         "jsonpath": "$[0].tag_name",
-        "regex": "^Android-Dex-v\\.(?<version>[\\d.]+)$"
+        "regex": "^Android-Dex-v\\\\.(?<version>[\\\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/Shrey113/Android-Dex/releases/download/Android-Dex-v.$version/Android_Dex_Windows_x64.zip"
+                "url": "https://github.com/Shrey113/Android-Dex/releases/download/Android-Dex-v.$version/Android_Dex_Windows.zip"
             }
         }
     }
