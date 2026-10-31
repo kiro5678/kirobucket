@@ -114,3 +114,13 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - **التحقق المتاح قبل التشغيل:** README وPackage.appxmanifest ومصدر المستودعات تؤكد طريقة توزيع Wintor ومتطلبات Cliptray وYerel؛ رابط Anton الرسمي أعاد توجيهاً إلى إصدار Windows 0.2.48. لا يتوفر Checksum منشور لـAnton أو لملفات المصدر المضغوطة؛ تم تثبيت المصدرين على SHA-1 commit كامل بدلاً من اختلاق Hash أرشيف.
 - **الاختبارات غير المنفذة بعد:** لم يُثبت تشغيل winget/MS Store أو بناء Cliptray مع MSVC أو بناء Yerel عبر npm أو تشغيل Anton Setup على Windows. يجب انتظار نتائج Scoop Checkver وArchive/Autoupdate validation وCI بعد الدفع، ولا تُعد هذه الفحوص بديلاً عن اختبار التثبيت والبناء الفعلي.
 - **الوقاية:** لا تستبدل غياب ملفات الإصدارات بملفات من Fork أو مشروع آخر يحمل اسماً مشابهاً. لا تصف برامج المصدر بأنها Portable قبل نجاح البناء والتشغيل، ولا تشغّل Setup غير مفحوص أو تحذف بياناته أو تكاملاته بالافتراض.
+
+
+## 2026-10-31 — حذف Wintor لارتباط تثبيته بـwinget
+
+- **الحالة:** تم حذف `bucket/wintor.json` بناءً على طلب المستخدم.
+- **الملفات المتأثرة:** `bucket/wintor.json`، `docs/manifest-portability.md`، `docs/categories.md`، `.github/workflows/manifest-table.yml`.
+- **السبب:** كان المانيفست يعتمد على تشغيل `winget install --source msstore` لتثبيت تطبيق Microsoft Store، بدلاً من تنزيل حزمة Windows وإدارتها مباشرةً بواسطة Scoop.
+- **الحل:** حذف المانيفست وإزالة إدخاله من فهرس الفئات وماب مولّد README، مع تحديث العدد الكلي إلى 834 والعدد Nonportable إلى 57.
+- **التحقق:** يجب التأكد بعد الدفع من غياب الملف والروابط المرجعية ومن نجاح توليد جدول README. لم يُنفذ التثبيت عبر winget كجزء من هذا الحذف.
+- **الوقاية:** لا تضف مانيفستاً يشغّل winget أو مدير حزم خارجي لتثبيت تطبيق آخر إلا إذا طلب المستخدم ذلك صراحةً؛ فضّل روابط الحزم المباشرة التي يستطيع Scoop تنزيلها وإدارتها.

@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 835 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
+**Portability audit coverage:** 834 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -23,16 +23,15 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 770 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 58 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Nonportable | 57 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 7 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **835** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| **Total** | **834** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
 
 - [`cue`](../bucket/cue.json) — **Nonportable**: the custom setup writes current-user Uninstall and App Paths registry entries and creates a Start Menu shortcut.
 - [`deskstats`](../bucket/deskstats.json) — **Portable**: Scoop extracts the Inno Setup payload only. The application itself requests administrator rights; its bundled PawnIO driver is not installed by Scoop and can be installed only through the application's user action.
 - [`imgconv`](../bucket/imgconv.json) — **Nonportable**: the silent vendor setup registers the Explorer context menu and startup integration, writes uninstall metadata, and may register its Windows 11 menu package.
-- [`wintor`](../bucket/wintor.json) — **Nonportable**: installs the official Microsoft Store MSIX package through winget; the manifest does not extract or register an unpackaged portable build.
 - [`anton`](../bucket/anton.json) — **Review**: the official Windows endpoint redirects to a setup EXE, but its checksum and installer/uninstaller behavior are not verified; the manifest downloads it without executing it.
 - [`cliptray`](../bucket/cliptray.json) — **Review**: the exact linked repository has no Windows release asset or declared license; the manifest attempts a source build requiring Node.js, Rust, and Visual Studio C++ Build Tools, which remains unverified.
 - [`yerel`](../bucket/yerel.json) — **Review**: source-based Node.js/Next.js build requiring cloudflared; the upstream repository has no declared license and the Windows installation/build has not been verified.
@@ -57,7 +56,6 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | EXE setup (engine unverified) | [belarc-advisor](../bucket/belarc-advisor.json), [cue](../bucket/cue.json), [fxsound](../bucket/fxsound.json), [imazing-np](../bucket/imazing-np.json), [imgconv](../bucket/imgconv.json), [livewallpaper](../bucket/livewallpaper.json), [onedrive-np](../bucket/onedrive-np.json), [open-shell](../bucket/open-shell.json), [open-shell-nightly](../bucket/open-shell-nightly.json), [openglass](../bucket/openglass.json), [openzfs-np](../bucket/openzfs-np.json), [poweriso](../bucket/poweriso.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [sysmanager](../bucket/sysmanager.json), [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json), [veracrypt](../bucket/veracrypt.json) | 16 |
 | MSIX/AppX package registration | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json), [screenbox](../bucket/screenbox.json) | 3 |
 | CER package | [fancywm-msix-cert](../bucket/fancywm-msix-cert.json) | 1 |
-| Installer declared; package format not identified | [wintor](../bucket/wintor.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / AHK package | [npcap-np](../bucket/npcap-np.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / INI package | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / XML package | [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | 1 |
@@ -65,12 +63,12 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | PHP package | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1 |
 | PowerShell script | [winutil](../bucket/winutil.json) | 1 |
 | RMSKIN package | [quanto-flx](../bucket/quanto-flx.json) | 1 |
-| **Total** | **All bucket manifests** | **835** |
+| **Total** | **All bucket manifests** | **834** |
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
 ## Nonportable manifests by installer type
 
-This index groups the 58 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 57 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
@@ -98,8 +96,7 @@ This index groups the 58 Nonportable manifests by the exact installer/package la
 | Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
-| Microsoft Store / MSIX (winget) | [wintor](../bucket/wintor.json) | 1 |
-| **Total** | **All Nonportable manifests** | **58** |
+| **Total** | **All Nonportable manifests** | **57** |
 
 ## Nonportable manifests
 
@@ -165,7 +162,6 @@ The installer type describes the package or setup technology used by the manifes
 | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | Vendor EXE setup (NSIS-style switches; engine unverified) | Runs the WiFiman vendor setup with `/S /D=$dir`. |
 | [wincux](../bucket/wincux.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | MSI payload extraction + URL protocol registration | Extracts the MSI payload, then registers the `ytdlp-gui://` URL protocol under `HKCU\Software\Classes`; the registry entry points to the Scoop app path. |
-| [wintor](../bucket/wintor.json) | Microsoft Store / MSIX (winget) | Installs the official Store product ID through winget, registering the current-user MSIX package and its declared Windows integrations. |
 | [znote](../bucket/znote.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 
 ## Review before classifying

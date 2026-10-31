@@ -18,7 +18,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Images & Photos | 53 | [View](#images-photos) |
 | Keyboard & Language | 15 | [View](#keyboard-language) |
 | Media & Audio/Video | 48 | [View](#media-audio-video) |
-| Network & DNS | 54 | [View](#network-dns) |
+| Network & DNS | 53 | [View](#network-dns) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
 | Other Utilities | 2 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 835**
+**Total unique manifests: 834**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -542,7 +542,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-website-watcher](../bucket/vovsoft-website-watcher.json) | 2.3 | Portable edition of Vovsoft Website Watcher. | [Homepage](https://vovsoft.com/software/website-watcher/) |
 | [warpinator](../bucket/warpinator.json) | 1.1 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 | [win-ping](../bucket/win-ping.json) | 2.88 | Run ping tests against network hosts. | [Homepage](https://www.softwareok.com/?Download=WinPing) |
-| [wintor](../bucket/wintor.json) | 0.3.0.0 | Windows BitTorrent client with magnet links, torrent queues, peer details, and tray mode. | [Homepage](https://github.com/tarasenko-by/wintor) |
 | [yerel](../bucket/yerel.json) | main (commit-pinned source build) | Local companion and web interface for sharing a chosen local app through a temporary Cloudflare Quick Tunnel. | [Homepage](https://github.com/Rudrakshbhardwaj01/Yerel) |
 
 ## Notes & Knowledge
