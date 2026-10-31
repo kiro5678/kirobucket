@@ -1,6 +1,11 @@
 name: TEMP - Inspect ADM Installer
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/temp-inspect-adm-installer.yml
   workflow_dispatch:
     inputs:
       version:
