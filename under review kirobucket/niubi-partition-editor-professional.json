@@ -28,7 +28,8 @@
             "} finally {",
             "    Remove-Item -LiteralPath $tempRoot -Recurse -Force -ErrorAction SilentlyContinue",
             "}"
-        ]
+        ],
+        "regex": "(?<version>\\d+(?:\\.\\d+){1,2})"
     },
     "autoupdate": {
         "url": "https://www.hdd-tool.com/download/portable_pro.zip"
