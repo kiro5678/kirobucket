@@ -17,12 +17,11 @@
             "    'Cache-Control' = 'no-cache'",
             "}",
             "$response = Invoke-WebRequest -Uri $pageUrl -UseBasicParsing -Headers $headers -MaximumRedirection 5",
-            "$text = [System.Net.WebUtility]::HtmlDecode([string]$response.Content)",
-            "$text = [regex]::Replace($text, '<[^>]+>', ' ')",
-            "$text = [regex]::Replace($text, '\\s+', ' ').Trim()",
-            "$match = [regex]::Match($text, 'Version\\s*:\\s*(?<version>\\d+(?:\\.\\d+){1,2})', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)",
-            "if (-not $match.Success) { throw 'Could not find the NIUBI Partition Editor version on the official download page.' }",
-            "Write-Output $match.Groups['version'].Value"
+            "$text = [string]$response.Content",
+            "$text = $text -replace '<[^>]+>', ' '",
+            "$text = [System.Net.WebUtility]::HtmlDecode($text)",
+            "$text = $text -replace '\\s+', ' '",
+            "if ($text -match 'Version\\s*:\\s*(?<version>\\d+(?:\\.\\d+){1,2})') { Write-Output $Matches['version'] } else { $excerpt = $text.Substring(0, [Math]::Min(600, $text.Length)); throw ('Could not find the NIUBI version. Page excerpt: ' + $excerpt) }"
         ]
     },
     "autoupdate": {
