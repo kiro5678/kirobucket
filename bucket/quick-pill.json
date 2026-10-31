@@ -12,7 +12,7 @@
             }
         }
     },
-    "extract_dir": "\\$PLUGINSDIR",
+    "extract_dir": "$PLUGINSDIR",
     "pre_install": "Get-ChildItem -LiteralPath \"$dir\" -Force | Where-Object { $_.Name -ne 'app-64.7z' } | Remove-Item -Force -Recurse",
     "post_install": "Remove-Item -LiteralPath (Join-Path $dir 'app-64.7z') -Force -ErrorAction SilentlyContinue",
     "bin": "Quick Pill.exe",
