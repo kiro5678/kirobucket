@@ -31,11 +31,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 98 | [View](#windows-customization) |
+| Windows Customization | 102 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 843**
+**Total unique manifests: 847**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -908,6 +908,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [desktop-snow-ok](../bucket/desktop-snow-ok.json) | 7.11 | Display snow effects on the Windows desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopSnowOK) |
 | [desktopframesplus](../bucket/desktopframesplus.json) | 2.7.8.376 | Open-source desktop icon management software for organizing files and shortcuts into virtual frames. | [Homepage](https://github.com/limbo666/DesktopFramesPlus) |
 | [desktopok](../bucket/desktopok.json) | 12.81 | Save and restore the positions of Windows desktop icons. | [Homepage](https://www.softwareok.com/?Download=DesktopOK) |
+| [dlives](../bucket/dlives.json) | 32162fddd0350e84a8da9a15650519c8d0586fd8 | Windows Dynamic Island with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls. | [Homepage](https://github.com/FuGen-India-Private-Ltd/Dlives) |
 | [dragwin](../bucket/dragwin.json) | 1.1.6 | Move and resize Windows without holding Alt or Control. | [Homepage](https://github.com/PinchToDebug/DragWin) |
 | [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
 | [fancywm](../bucket/fancywm.json) | 2.19.0 | Windows tiling window manager designed for power users. | [Homepage](https://github.com/FancyWM/fancywm) |
@@ -970,6 +971,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [translucenttb](../bucket/translucenttb.json) | 2026.2 | Lightweight utility for customizing the Windows taskbar appearance. | [Homepage](https://github.com/TranslucentTB/TranslucentTB) |
 | [traytoolbar](../bucket/traytoolbar.json) | 1.8.4 | Custom toolbar for the Windows taskbar replacement menu. | [Homepage](https://github.com/brondavies/TrayToolbar) |
 | [ttf-stix2](../bucket/ttf-stix2.json) | v2.13b171 | OpenType Unicode fonts for Scientific, Technical, and Mathematical texts | [Homepage](https://github.com/stipub/stixfonts) |
+| [v-notch](../bucket/v-notch.json) | 2.2.1 | Windows Dynamic Island with media controls, synced lyrics, per-app audio, clipboard, system statistics, privacy indicators, and Spotlight search. | [Homepage](https://github.com/w0otdev/V-Notch) |
 | [vovsoft-auto-change-screensavers](../bucket/vovsoft-auto-change-screensavers.json) | 2.2 | Portable edition of Vovsoft Auto Change Screensavers. | [Homepage](https://vovsoft.com/software/auto-change-screensavers/) |
 | [vovsoft-auto-change-wallpapers](../bucket/vovsoft-auto-change-wallpapers.json) | 1.4 | Portable edition of Vovsoft Auto Change Wallpapers. | [Homepage](https://vovsoft.com/software/auto-change-wallpapers/) |
 | [vovsoft-auto-mouse-clicker](../bucket/vovsoft-auto-mouse-clicker.json) | 3.2 | Portable edition of Vovsoft Auto Mouse Clicker. | [Homepage](https://vovsoft.com/software/auto-mouse-clicker/) |
@@ -978,6 +980,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [wincux](../bucket/wincux.json) | 1.1.0 | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. | [Homepage](https://github.com/samcuxx/WinCux) |
 | [windhawk](../bucket/windhawk.json) | 2.0.0-alpha.8 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
+| [wnotch](../bucket/wnotch.json) | 0.22.0 | Windows Dynamic Notch with media controls, system HUDs, file shelf, terminal, agent integrations, widgets, and plugins. | [Homepage](https://github.com/Brick-Bread/WNotch) |
+| [yata](../bucket/yata.json) | 0.7.1 | Windows Dynamic Notch with synchronized lyrics, calendar, reminders, tasks, Pomodoro timer, and animated Raven companion. | [Homepage](https://getyata.app/) |
 | [zigarettenschachtel-spruch](../bucket/zigarettenschachtel-spruch.json) | 2.32 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
 
 ## Windows Privacy & Tweaks
