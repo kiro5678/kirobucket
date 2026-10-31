@@ -55,9 +55,9 @@
         "Notepad3.ini"
     ],
     "checkver": {
-        "github": "https://github.com/rizonesoft/Notepad3",
+        "url": "https://api.github.com/repos/rizonesoft/Notepad3/releases/latest",
         "jsonpath": "$.tag_name",
-        "regex": "RELEASE_([\\d.]+)"
+        "regex": "^RELEASE_(?<version>[\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {
