@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0",
+    "description": "Windows Dynamic Island overlay with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls.",
+    "homepage": "https://github.com/FuGen-India-Private-Ltd/Dlives",
+    "license": "MIT",
+    "url": "https://github.com/FuGen-India-Private-Ltd/Dlives/releases/download/v1.0.0/Dlives_Setup.exe",
+    "hash": "14a6742997851fb796d99b57b56ac52784d46b812d8138d428b52c68b1ced0f5",
+    "innosetup": true,
+    "bin": "Dlives.exe",
+    "shortcuts": [
+        ["Dlives.exe", "Dlives"]
+    ],
+    "checkver": {
+        "github": "https://github.com/FuGen-India-Private-Ltd/Dlives"
+    },
+    "autoupdate": {
+        "url": "https://github.com/FuGen-India-Private-Ltd/Dlives/releases/download/v$version/Dlives_Setup.exe"
+    },
+    "notes": [
+        "The upstream installer.iss identifies the official release as an Inno Setup installer and declares Dlives.exe plus its icon files under the application directory. Scoop uses Inno Setup extraction rather than running the vendor setup routine.",
+        "The application stores user data under %APPDATA%\\Dlives. Its own Start with Windows option can write a per-user Run key when enabled in the app; Scoop does not enable that option."
+    ]
+}
