@@ -70,13 +70,25 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - **الوقاية:** عند تعديل مشغلات أي Workflow، راجع القسم المقابل في `manifest-authoring.md` وحدثه في Commit نفسه. لا تعتبر قراءة YAML بديلاً عن متابعة تشغيل Actions.
 - **الحالة:** تم تصحيح التوثيق والتحقق من مطابقته للإعداد الحالي؛ لم يُختبر تنفيذ Workflow.
 
-## 2026-10-31 — تثبيت وضع GitHub API في checkver.github
+## 2026-10-31 — تصحيح اكتشاف إصدارات Fig وNook عبر GitHub REST API
 
-- **المشكلة:** فشل فحص `checkver` لمانيفست Fig بعد الإيداع؛ لم يطابق Scoop النمط `^v([\\d.]+)$` مع المصدر الذي قرأه.
-- **الأعراض:** سجل GitHub Actions عرض `couldn't match '^v([\\d.]+)$' in https://github.com/Skynse/Fig/releases/latest`. توقف Manifest Pipeline عند مرحلة Checkver قبل فحص الأرشيف أو Autoupdate، ولم ينتقل إلى Nook.
-- **السبب الجذري:** كان `checkver.github` يشير إلى صفحة المستودع. في هذا التشغيل استخدم Scoop صفحة HTML بدلاً من وضع GitHub API/JSON، بينما Regex مكتوب ليتطابق مع قيمة `tag_name` فقط. يوضح تنفيذ Scoop الحالي أن عنواناً مباشراً يبدأ بـ `https://api.github.com/repos/` يستخدم JSONPath الافتراضي `$.tag_name`.
-- **الحل:** تغيير `checkver.github` في Fig وNook إلى عنوان `releases/latest` المباشر في GitHub REST API، مع الإبقاء على Regex الخاص بوسم الإصدار. توضيح القاعدة في `manifest-authoring.md`.
-- **التحقق:** تمت مراجعة سجل الفشل وتنفيذ `checkver.ps1` الحالي، وتأكيد الفرق بين مسار HTML ومسار API في المصدر. التصحيح committed؛ إعادة تشغيل Checkver بعد هذا التغيير مطلوبة قبل إعلان نجاحه.
-- **الوقاية:** افحص عنوان المصدر الفعلي في سجل Checkver. عند استخدام Regex خاص بـ `tag_name`، لا تفترض أن رابط صفحة المستودع سيعمل كـ API؛ استخدم عنوان API مباشراً أو Regex يطابق HTML فعلياً.
-- **الحالة:** تم تعديل المانيفستات والدليل؛ تحقق Checkver بعد التصحيح قيد الانتظار.
+- **الحالة:** تم تعديل المانيفستات؛ تحقق Scoop بعد التصحيح لم يكتمل بعد.
+- **الملفات المتأثرة:** `bucket/fig.json` و`bucket/nook.json`.
+- **المشكلة:** فشل Fig في مطابقة Regex مع صفحة `https://github.com/Skynse/Fig/releases/latest`، فتوقف Manifest Pipeline قبل الوصول إلى Nook.
+- **السبب الجذري:** Regex صُمم لالتقاط قيمة `tag_name` من JSON، لكن مصدر الفحص لم يقدّم JSON بالطريقة التي يتوقعها Scoop.
+- **الحل:** استخدام `checkver.url` مع `jsonpath: "$.tag_name"` وRegex صريح في Fig وNook، مع توجيه URL إلى GitHub REST API الخاص بالإصدار الأحدث.
+- **التحقق:** القيم الحالية عبر API هي Fig = `v1.0.1` وNook = `v0.2.1`. طابقت أنماط Regex هاتين القيمتين، لكن فحص Scoop المستقل للمانيفستين لم يُعَد تشغيله بعد.
+- **الوقاية:** عند التقاط `tag_name` من JSON، استخدم `checkver.url` مع JSONPath وRegex؛ لا تفترض أن `checkver.github` أو صفحة GitHub العادية ستتحول تلقائياً إلى JSON.
+
+
+
+## 2026-10-31 — إصلاح رابط أرشيف Android DEX والتحقق من مسارات التشغيل
+
+- **الحالة:** تم الإصلاح والتحقق من جميع مراحل التحقق الخاصة بالمانيفست؛ تشغيل Manifest Pipeline المجمع ما زال ينتظر مرحلة تحديث صفحات README.
+- **الملفات المتأثرة:** `bucket/android-dex.json` و`docs/manifest-authoring.md`.
+- **المشكلة:** فشل فحص الأرشيف أولاً لأن `Android_Dex_Windows_x64.zip` لم يحتوِ على `Android_Dex.exe` في المسار المتوقع. بعد اختيار الأرشيف الرسمي الصحيح، كشف الفحص أن رابط التنزيل الحالي يحتوي المتغير غير المحلول `$version`.
+- **السبب الجذري:** تم اختيار Asset غير مطابق لملف Windows الذي يوصي به README الرسمي، كما استُخدم متغير التحديث `$version` في رابط الإصدار الحالي بدلاً من وضعه في قالب `autoupdate` فقط.
+- **الحل:** استخدام `Android_Dex_Windows.zip` من إصدار `Android-Dex-v.1.4` مع SHA-256 الصحيح، وجعل `architecture.64bit.url` رابطاً ثابتاً للإصدار الحالي. بقي `$version` في `autoupdate.architecture.64bit.url` فقط.
+- **التحقق:** التنسيق نجح في [41193383683](https://github.com/kiro5678/kirobucket/actions/runs/41193383683). فحص `checkver` نجح في PowerShell وpwsh ضمن [41193419418](https://github.com/kiro5678/kirobucket/actions/runs/41193419418). فحص SHA-256 ومسارات الأرشيف نجح في [41193462723](https://github.com/kiro5678/kirobucket/actions/runs/41193462723). اختبار `autoupdate` نجح في [41193496154](https://github.com/kiro5678/kirobucket/actions/runs/41193496154)، واختبارات CI نجحت في PowerShell وpwsh ضمن [41193538127](https://github.com/kiro5678/kirobucket/actions/runs/41193538127). لا يُسجَّل تشغيل Manifest Pipeline المجمع كاملاً على أنه ناجح قبل انتهاء مرحلة تحديث جدول README.
+- **الوقاية:** ضع رابط إصدار حقيقياً ومحدداً في `architecture.<arch>.url`. استخدم `$version` في قوالب `autoupdate.url` فقط، ثم افحص استخراج الأرشيف ووجود كل ملف في `bin` والاختصارات.
 
