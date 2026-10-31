@@ -456,8 +456,6 @@ jobs:
               "lopesoft-filemenu-tools" = "Windows Customization"
               "lopesoft-lopeedit" = "Developer & Technical Tools"
               "anton" = "Media & Audio/Video"
-              "cliptray" = "Clipboard & Text"
-              "yerel" = "Network & DNS"
           }
 
           function ConvertTo-DateOnly {
