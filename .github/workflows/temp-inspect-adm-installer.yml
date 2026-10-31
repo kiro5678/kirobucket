@@ -134,48 +134,54 @@ jobs:
           # Try a dedicated Inno Setup extractor. This reads/extracts payload files only.
           $extractionDir = Join-Path $work 'extracted'
           $extractionSucceeded = $false
-          Add-Report "=== Inno Setup extraction attempt ==="
+          Add-Report "=== Scoop-compatible Inno Setup extraction (innounp) ==="
+          $extractionDir = Join-Path $work 'extracted'
+          $extractionSucceeded = $false
           try {
-              $innoRelease = Invoke-RestMethod -Uri 'https://api.github.com/repos/UserUnknownFactor/innoextract_win/releases/latest' -Headers $headers
-              $innoAsset = @($innoRelease.assets | Where-Object { $_.name -match '^innoextract.*\.zip$' } | Select-Object -First 1)
-              if ($innoAsset.Count -gt 0) {
-                  $innoAsset = $innoAsset[0]
-                  $innoZip = Join-Path $work $innoAsset.name
-                  Invoke-WebRequest -Uri $innoAsset.browser_download_url -OutFile $innoZip -Headers @{ 'User-Agent' = 'kirobucket-adm-installer-inspector' }
-                  if ($innoAsset.digest) {
-                      $innoHash = (Get-FileHash -LiteralPath $innoZip -Algorithm SHA256).Hash.ToLowerInvariant()
-                      $innoExpected = ([string]$innoAsset.digest -replace '^sha256:', '').ToLowerInvariant()
-                      if ($innoHash -ne $innoExpected) { throw "innoextract archive hash mismatch." }
-                  }
+              # This is the exact helper URL and SHA-256 pinned by ScoopInstaller/Main bucket/innounp.json.
+              # Use the immutable source commit that published v2.71.2, not the mutable branch URL.
+              $innounpUrl = 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip'
+              $innounpExpectedHash = '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd'
+              $innounpZip = Join-Path $work 'innounp-2.71.2.zip'
+              Invoke-WebRequest -Uri $innounpUrl -OutFile $innounpZip -Headers @{ 'User-Agent' = 'kirobucket-adm-installer-inspector' }
+              $innounpHash = (Get-FileHash -LiteralPath $innounpZip -Algorithm SHA256).Hash.ToLowerInvariant()
+              Add-Report "Scoop innounp helper SHA-256: $innounpHash"
+              if ($innounpHash -ne $innounpExpectedHash) {
+                  throw "Scoop-pinned innounp helper SHA-256 mismatch."
+              }
 
-                  $innoDir = Join-Path $work 'innoextract'
-                  Expand-Archive -LiteralPath $innoZip -DestinationPath $innoDir -Force
-                  $inno = Get-ChildItem -LiteralPath $innoDir -Filter 'innoextract.exe' -File -Recurse | Select-Object -First 1
-                  if ($inno) {
-                      $listing = & $inno.FullName -l $installer 2>&1
-                      $listExit = $LASTEXITCODE
-                      Add-Report "innoextract version: $($innoRelease.tag_name)"
-                      Add-Report "innoextract list exit code: $listExit"
-                      foreach ($line in $listing) { Add-Report ([string]$line) }
+              $innounpDir = Join-Path $work 'innounp'
+              Expand-Archive -LiteralPath $innounpZip -DestinationPath $innounpDir -Force
+              $innounp = Get-ChildItem -LiteralPath $innounpDir -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+              if (-not $innounp) {
+                  throw "innounp.exe was not found in the Scoop helper archive."
+              }
 
-                      if ($listExit -eq 0) {
-                          New-Item -ItemType Directory -Path $extractionDir -Force | Out-Null
-                          $extractOutput = & $inno.FullName -d $extractionDir $installer 2>&1
-                          $extractExit = $LASTEXITCODE
-                          Add-Report "innoextract extraction exit code: $extractExit"
-                          foreach ($line in $extractOutput) { Add-Report ([string]$line) }
-                          if ($extractExit -eq 0) { $extractionSucceeded = $true }
-                      }
-                  } else {
-                      Add-Report "innoextract.exe was not found in its release ZIP."
-                  }
-              } else {
-                  Add-Report "No Windows innoextract ZIP was found."
+              Add-Report "Scoop helper: innounp 2.71.2"
+              Add-Report "=== Inno Setup installer information ==="
+              $info = & $innounp.FullName $installer 2>&1
+              $infoExit = $LASTEXITCODE
+              Add-Report "innounp information exit code: $infoExit"
+              foreach ($line in $info) { Add-Report ([string]$line) }
+
+              Add-Report "=== Inno Setup payload listing ==="
+              $listing = & $innounp.FullName -v $installer 2>&1
+              $listExit = $LASTEXITCODE
+              Add-Report "innounp list exit code: $listExit"
+              foreach ($line in $listing) { Add-Report ([string]$line) }
+
+              if ($listExit -eq 0) {
+                  New-Item -ItemType Directory -Path $extractionDir -Force | Out-Null
+                  Add-Report "=== Extracting {app} payload (same method used by Scoop) ==="
+                  $extractOutput = & $innounp.FullName -x "-d$extractionDir" $installer -y '-c{app}' 2>&1
+                  $extractExit = $LASTEXITCODE
+                  Add-Report "innounp extraction exit code: $extractExit"
+                  foreach ($line in $extractOutput) { Add-Report ([string]$line) }
+                  if ($extractExit -eq 0) { $extractionSucceeded = $true }
               }
           } catch {
-              Add-Report "Inno extractor attempt failed: $($_.Exception.Message)"
+              Add-Report "Scoop-compatible innounp attempt failed: $($_.Exception.Message)"
           }
-
           # If Inno extraction is not applicable, use 7-Zip as a non-executing archive reader.
           if (-not $extractionSucceeded) {
               Add-Report ""
