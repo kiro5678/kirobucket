@@ -16,7 +16,7 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/Skynse/Fig",
+        "github": "https://api.github.com/repos/Skynse/Fig/releases/latest",
         "regex": "^v([\\d.]+)$"
     },
     "autoupdate": {

@@ -69,3 +69,14 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - **التحقق:** تمت قراءة YAML الحالي من `master` والتأكد من وجود `push.branches: master` و`push.paths: bucket/*.json` و`workflow_dispatch`. بعد التحديث ستتم إعادة قراءة ملفات التوثيق من GitHub للتحقق من انعكاس التعديل. لم يُشغَّل Workflow فعلياً ضمن هذا التصحيح.
 - **الوقاية:** عند تعديل مشغلات أي Workflow، راجع القسم المقابل في `manifest-authoring.md` وحدثه في Commit نفسه. لا تعتبر قراءة YAML بديلاً عن متابعة تشغيل Actions.
 - **الحالة:** تم تصحيح التوثيق والتحقق من مطابقته للإعداد الحالي؛ لم يُختبر تنفيذ Workflow.
+
+## 2026-10-31 — تثبيت وضع GitHub API في checkver.github
+
+- **المشكلة:** فشل فحص `checkver` لمانيفست Fig بعد الإيداع؛ لم يطابق Scoop النمط `^v([\\d.]+)$` مع المصدر الذي قرأه.
+- **الأعراض:** سجل GitHub Actions عرض `couldn't match '^v([\\d.]+)$' in https://github.com/Skynse/Fig/releases/latest`. توقف Manifest Pipeline عند مرحلة Checkver قبل فحص الأرشيف أو Autoupdate، ولم ينتقل إلى Nook.
+- **السبب الجذري:** كان `checkver.github` يشير إلى صفحة المستودع. في هذا التشغيل استخدم Scoop صفحة HTML بدلاً من وضع GitHub API/JSON، بينما Regex مكتوب ليتطابق مع قيمة `tag_name` فقط. يوضح تنفيذ Scoop الحالي أن عنواناً مباشراً يبدأ بـ `https://api.github.com/repos/` يستخدم JSONPath الافتراضي `$.tag_name`.
+- **الحل:** تغيير `checkver.github` في Fig وNook إلى عنوان `releases/latest` المباشر في GitHub REST API، مع الإبقاء على Regex الخاص بوسم الإصدار. توضيح القاعدة في `manifest-authoring.md`.
+- **التحقق:** تمت مراجعة سجل الفشل وتنفيذ `checkver.ps1` الحالي، وتأكيد الفرق بين مسار HTML ومسار API في المصدر. التصحيح committed؛ إعادة تشغيل Checkver بعد هذا التغيير مطلوبة قبل إعلان نجاحه.
+- **الوقاية:** افحص عنوان المصدر الفعلي في سجل Checkver. عند استخدام Regex خاص بـ `tag_name`، لا تفترض أن رابط صفحة المستودع سيعمل كـ API؛ استخدم عنوان API مباشراً أو Regex يطابق HTML فعلياً.
+- **الحالة:** تم تعديل المانيفستات والدليل؛ تحقق Checkver بعد التصحيح قيد الانتظار.
+
