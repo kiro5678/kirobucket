@@ -15,6 +15,6 @@
     "notes": [
         "Review status: the official download is an EXE setup. The Microsoft winget manifest for version 0.9.5 identifies it as a per-user installer and records the default installation location as %LocalAppData%\\Programs\\TaskSlinger.",
         "The official silent-install arguments are --internal-install 3 --install-source winget. They do not establish a supported custom installation directory or a portable extraction method.",
-        "This manifest downloads the verified-hash setup file only. It does not execute the installer, create a Scoop-managed application installation, or add a shim or shortcut. Inspect the installer payload and confirm an installation method that keeps the application under Scoop before removing Review status. Do not assume the EXE can be extracted with 7-Zip."
+        "This manifest pins the SHA-256 published in the Microsoft winget manifest and downloads the setup file only. It does not execute the installer, create a Scoop-managed application installation, or add a shim or shortcut. Inspect the installer payload and confirm an installation method that keeps the application under Scoop before removing Review status. Do not assume the EXE can be extracted with 7-Zip."
     ]
 }
