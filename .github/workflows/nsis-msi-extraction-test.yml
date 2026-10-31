@@ -1,0 +1,300 @@
+name: NSIS and MSI Payload Extraction Test
+
+on:
+  push:
+    paths:
+      - ".github/workflows/nsis-msi-extraction-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract-installers:
+    name: Test NSIS extraction and MSI fallback
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Download, verify, and extract official installers
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $cmd = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+            if (-not $cmd) { throw "7-Zip was not found on the runner." }
+            $sevenZip = $cmd.Source
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP "nsis-msi-extraction-test"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $reportPath = Join-Path $root "extraction-report.txt"
+          $report = [System.Collections.Generic.List[string]]::new()
+          $results = [System.Collections.Generic.List[object]]::new()
+
+          function Add-Report {
+            param([string]$Text)
+            $report.Add($Text)
+            Write-Host $Text
+          }
+
+          function Download-Verified {
+            param(
+              [string]$Url,
+              [string]$Path,
+              [string]$ExpectedSha256
+            )
+            Invoke-WebRequest -Uri $Url -OutFile $Path -MaximumRedirection 10 -TimeoutSec 900
+            if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+              throw "Download did not create a file: $Url"
+            }
+            $actual = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $ExpectedSha256.ToLowerInvariant()) {
+              throw "SHA-256 mismatch for $Url. Expected $ExpectedSha256, got $actual."
+            }
+            return $actual
+          }
+
+          function Find-AppExecutables {
+            param(
+              [string]$Directory,
+              [string]$Pattern
+            )
+            if (-not (Test-Path -LiteralPath $Directory -PathType Container)) {
+              return @()
+            }
+            return @(
+              Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -match $Pattern } |
+                ForEach-Object {
+                  [PSCustomObject]@{
+                    Path = [System.IO.Path]::GetRelativePath($Directory, $_.FullName).Replace('\', '/')
+                    Size = $_.Length
+                  }
+                }
+            )
+          }
+
+          function Write-FileInventory {
+            param(
+              [string]$Directory,
+              [string]$Label
+            )
+            if (-not (Test-Path -LiteralPath $Directory -PathType Container)) {
+              Add-Report "$Label : extraction directory was not created."
+              return
+            }
+            $files = @(Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue)
+            Add-Report "$Label : extracted file count = $($files.Count)"
+            $executables = @($files | Where-Object { $_.Extension -ieq ".exe" })
+            Add-Report "$Label : EXE files:"
+            foreach ($file in $executables | Select-Object -First 100) {
+              $relative = [System.IO.Path]::GetRelativePath($Directory, $file.FullName).Replace('\', '/')
+              Add-Report "  $relative [$($file.Length) bytes]"
+            }
+            if ($executables.Count -gt 100) {
+              Add-Report "  ... $($executables.Count - 100) additional EXE files omitted"
+            }
+            Add-Report "$Label : first extracted paths:"
+            foreach ($file in $files | Sort-Object FullName | Select-Object -First 160) {
+              $relative = [System.IO.Path]::GetRelativePath($Directory, $file.FullName).Replace('\', '/')
+              Add-Report "  $relative [$($file.Length) bytes]"
+            }
+          }
+
+          $targets = @(
+            @{
+              Name = "Bloom"
+              Version = "3.10.1"
+              NsisUrl = "https://github.com/SehajveerSingh2005/bloom/releases/download/v3.10.1/bloom_3.10.1_x64-setup.exe"
+              NsisSha256 = "5cb4d8fe87aaf26f161be61954aebfacb4c9f481b12c5bbcfc48aa6b56db7231"
+              MsiUrl = "https://github.com/SehajveerSingh2005/bloom/releases/download/v3.10.1/bloom_3.10.1_x64_en-US.msi"
+              MsiSha256 = "6527153e5170e1feccaea2ad54bd07bcc747ce7dfeeb66aa57845005c6c771f0"
+              AppExePattern = "(?i)^bloom\.exe$"
+            },
+            @{
+              Name = "PILLAR"
+              Version = "0.1.4"
+              NsisUrl = "https://github.com/warpirate/pillar-dynamic-island-for-windows/releases/download/v0.1.4/PILLAR_0.1.4_x64-setup.exe"
+              NsisSha256 = "a2ad2c503303458550a957c5581b8f803ae8ad71a892e9b98a770a051e2012fc"
+              MsiUrl = "https://github.com/warpirate/pillar-dynamic-island-for-windows/releases/download/v0.1.4/PILLAR_0.1.4_x64_en-US.msi"
+              MsiSha256 = "2a000d89af02f0a659499e19c7e2ec840b79318d58d9db229f6ecc33dae30029"
+              AppExePattern = "(?i)^PILLAR\.exe$"
+            },
+            @{
+              Name = "Quick Pill"
+              Version = "5.5.1"
+              NsisUrl = "https://pub-ec47b1fa4cbf4c5ba82408a738fb69d3.r2.dev/QuickPill-Windows-v5.5.1-Setup.exe"
+              NsisSha256 = "14acfabffd3ddb68d78583f18685c5038bbe67355eabcc284d7760c2cd15548d"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Quick Pill\.exe$"
+            }
+          )
+
+          $lessmsiExe = $null
+          foreach ($app in $targets) {
+            Add-Report ""
+            Add-Report "============================================================"
+            Add-Report "$($app.Name) $($app.Version)"
+            Add-Report "============================================================"
+
+            $appRoot = Join-Path $root ($app.Name -replace '[^A-Za-z0-9_-]', '-')
+            $nsisDownload = Join-Path $appRoot "installer.exe"
+            $nsisExtract = Join-Path $appRoot "nsis-extracted"
+            New-Item -ItemType Directory -Path $appRoot -Force | Out-Null
+
+            $result = [ordered]@{
+              Name = $app.Name
+              Version = $app.Version
+              NsisDownload = "not-tested"
+              NsisExtraction = "not-tested"
+              NsisMainExe = ""
+              MsiDownload = "not-available"
+              MsiAdminExtraction = "not-tested"
+              MsiLessmsiExtraction = "not-tested"
+              MsiMainExe = ""
+              SelectedPackage = "none"
+            }
+
+            try {
+              $hash = Download-Verified -Url $app.NsisUrl -Path $nsisDownload -ExpectedSha256 $app.NsisSha256
+              $result.NsisDownload = "downloaded; SHA-256 verified: $hash"
+              Add-Report "NSIS installer downloaded and SHA-256 verified: $hash"
+
+              $listing = & $sevenZip l -slt $nsisDownload 2>&1
+              $listExit = $LASTEXITCODE
+              Add-Report "7-Zip list exit code: $listExit"
+              if ($listExit -eq 0) {
+                $listing | Set-Content -LiteralPath (Join-Path $appRoot "nsis-listing.txt") -Encoding utf8
+              } else {
+                Add-Report "7-Zip could not list the EXE as an archive."
+              }
+
+              New-Item -ItemType Directory -Path $nsisExtract -Force | Out-Null
+              $extractOutput = & $sevenZip x $nsisDownload "-o$nsisExtract" -y -bd 2>&1
+              $extractExit = $LASTEXITCODE
+              $extractOutput | Set-Content -LiteralPath (Join-Path $appRoot "nsis-extraction.log") -Encoding utf8
+              Add-Report "7-Zip extraction exit code: $extractExit"
+              $nsisMain = @(Find-AppExecutables -Directory $nsisExtract -Pattern $app.AppExePattern)
+              Write-FileInventory -Directory $nsisExtract -Label "NSIS extraction"
+
+              if ($listExit -eq 0 -and $extractExit -eq 0 -and $nsisMain.Count -gt 0) {
+                $result.NsisExtraction = "success"
+                $result.NsisMainExe = ($nsisMain | ForEach-Object { $_.Path }) -join "; "
+                $result.SelectedPackage = "NSIS EXE via #/dl.7z candidate"
+                Add-Report "RESULT: NSIS extraction succeeded and the main application executable was found."
+                Add-Report "Main application executable: $($result.NsisMainExe)"
+              } else {
+                $result.NsisExtraction = "failed or incomplete"
+                Add-Report "RESULT: NSIS extraction failed or did not expose the expected application executable."
+              }
+            } catch {
+              $result.NsisDownload = "failed: $($_.Exception.Message)"
+              $result.NsisExtraction = "not completed"
+              Add-Report "NSIS download/extraction error: $($_.Exception.Message)"
+            }
+
+            if ($result.NsisExtraction -ne "success") {
+              if ([string]::IsNullOrWhiteSpace($app.MsiUrl)) {
+                $result.MsiDownload = "no official MSI asset is published in the inspected project release/update metadata"
+                Add-Report "MSI fallback: unavailable. The inspected official release/update metadata does not publish an MSI."
+              } else {
+                $msiPath = Join-Path $appRoot "fallback.msi"
+                $msiHash = Download-Verified -Url $app.MsiUrl -Path $msiPath -ExpectedSha256 $app.MsiSha256
+                $result.MsiDownload = "downloaded; SHA-256 verified: $msiHash"
+                Add-Report "MSI fallback downloaded and SHA-256 verified: $msiHash"
+
+                $adminOut = Join-Path $appRoot "msi-admin-extracted"
+                $msiLog = Join-Path $appRoot "msi-admin-extraction.log"
+                New-Item -ItemType Directory -Path $adminOut -Force | Out-Null
+                & "$env:SystemRoot\System32\msiexec.exe" /a $msiPath /qn "TARGETDIR=$adminOut" /l*v $msiLog
+                $msiExit = $LASTEXITCODE
+                Add-Report "msiexec /a exit code: $msiExit"
+                $msiMain = @(Find-AppExecutables -Directory $adminOut -Pattern $app.AppExePattern)
+                Write-FileInventory -Directory $adminOut -Label "MSI administrative extraction"
+
+                if ($msiExit -eq 0 -and $msiMain.Count -gt 0) {
+                  $result.MsiAdminExtraction = "success"
+                  $result.MsiMainExe = ($msiMain | ForEach-Object { $_.Path }) -join "; "
+                  $result.SelectedPackage = "MSI via Scoop default administrative extraction"
+                  Add-Report "RESULT: MSI administrative extraction succeeded and the main application executable was found."
+                  Add-Report "Main application executable: $($result.MsiMainExe)"
+                } else {
+                  $result.MsiAdminExtraction = "failed or incomplete"
+                  Add-Report "RESULT: MSI administrative extraction failed or did not expose the expected application executable."
+
+                  $lessmsiDir = Join-Path $appRoot "lessmsi-tool"
+                  if ($null -eq $lessmsiExe) {
+                    $lessmsiZip = Join-Path $root "lessmsi-v2.12.9.zip"
+                    $lessmsiHash = Download-Verified -Url "https://github.com/activescott/lessmsi/releases/download/v2.12.9/lessmsi-v2.12.9.zip" -Path $lessmsiZip -ExpectedSha256 "5b4e187e74b184ad3a63ccf06c3d17dae2b8c4b6c298a996dbd51a9f6db29d21"
+                    Add-Report "lessmsi helper SHA-256 verified: $lessmsiHash"
+                    $helperOut = Join-Path $root "lessmsi-helper"
+                    New-Item -ItemType Directory -Path $helperOut -Force | Out-Null
+                    & $sevenZip x $lessmsiZip "-o$helperOut" -y -bd | Out-Null
+                    if ($LASTEXITCODE -ne 0) { throw "Could not extract the verified lessmsi helper archive." }
+                    $lessmsiFile = Get-ChildItem -LiteralPath $helperOut -Filter "lessmsi.exe" -File -Recurse | Select-Object -First 1
+                    if ($null -eq $lessmsiFile) { throw "Verified lessmsi helper archive did not contain lessmsi.exe." }
+                    $lessmsiExe = $lessmsiFile.FullName
+                  }
+                  New-Item -ItemType Directory -Path $lessmsiDir -Force | Out-Null
+                  & $lessmsiExe x $msiPath $lessmsiDir
+                  $lessExit = $LASTEXITCODE
+                  Add-Report "lessmsi extraction exit code: $lessExit"
+                  $lessMain = @(Find-AppExecutables -Directory $lessmsiDir -Pattern $app.AppExePattern)
+                  Write-FileInventory -Directory $lessmsiDir -Label "lessmsi extraction"
+                  if ($lessExit -eq 0 -and $lessMain.Count -gt 0) {
+                    $result.MsiLessmsiExtraction = "success (lessmsi only; not Scoop default unless use_lessmsi is enabled)"
+                    $result.MsiMainExe = ($lessMain | ForEach-Object { $_.Path }) -join "; "
+                    $result.SelectedPackage = "MSI via lessmsi (requires Scoop use_lessmsi configuration)"
+                    Add-Report "RESULT: lessmsi extracted the application. This is not the default Scoop MSI path unless use_lessmsi is enabled."
+                    Add-Report "Main application executable: $($result.MsiMainExe)"
+                  } else {
+                    $result.MsiLessmsiExtraction = "failed or incomplete"
+                    Add-Report "RESULT: lessmsi extraction also failed or did not expose the expected application executable."
+                  }
+                }
+              }
+            }
+
+            $results.Add([PSCustomObject]$result)
+          }
+
+          Add-Report ""
+          Add-Report "==================== FINAL SUMMARY ===================="
+          foreach ($item in $results) {
+            Add-Report "$($item.Name) $($item.Version): NSIS=$($item.NsisExtraction); MSI admin=$($item.MsiAdminExtraction); MSI lessmsi=$($item.MsiLessmsiExtraction); Selected=$($item.SelectedPackage)"
+          }
+          Add-Report "========================================================"
+
+          $results | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root "results.json") -Encoding utf8
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+
+          @(
+            "## NSIS / MSI extraction results"
+            ""
+            "| Program | Version | NSIS 7-Zip extraction | MSI administrative extraction | MSI lessmsi extraction | Candidate |"
+            "|---|---:|---|---|---|---|"
+            foreach ($item in $results) {
+              "| $($item.Name) | $($item.Version) | $($item.NsisExtraction) | $($item.MsiAdminExtraction) | $($item.MsiLessmsiExtraction) | $($item.SelectedPackage) |"
+            }
+            ""
+            "Detailed EXE and file paths are in the `nsis-msi-extraction-results` artifact."
+            "No installer or extracted application was executed."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          if (@($results | Where-Object { $_.SelectedPackage -eq "none" }).Count -gt 0) {
+            throw "One or more applications had no verified NSIS or MSI extraction path. Review the report artifact."
+          }
+
+      - name: Upload extraction reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: nsis-msi-extraction-results
+          path: ${{ runner.temp }}/nsis-msi-extraction-test/
+          if-no-files-found: warn
+          retention-days: 14
