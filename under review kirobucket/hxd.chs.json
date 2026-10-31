@@ -37,18 +37,8 @@
     ],
     "persist": "Settings",
     "checkver": {
-        "url": "https://mh-nexus.de/en/downloads.php?product=HxD20",
-        "script": [
-            "$ProgressPreference = 'SilentlyContinue'",
-            "$pageUrl = 'https://mh-nexus.de/en/downloads.php?product=HxD20'",
-            "$response = Invoke-WebRequest -Uri $pageUrl -UseBasicParsing -Headers @{ 'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'; 'Accept' = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'; 'Accept-Language' = 'en-US,en;q=0.9' }",
-            "$text = [string]$response.Content",
-            "$text = $text -replace '<[^>]+>', ' '",
-            "$text = [System.Net.WebUtility]::HtmlDecode($text)",
-            "$text = $text -replace '\\s+', ' '",
-            "$pattern = 'HxD20[\\s\\S]{0,250}?Chinese\\s*\\(simplified\\)[\\s\\S]{0,250}?installable[\\s\\S]{0,100}?(?<version>\\d+(?:\\.\\d+){3})'",
-            "if ($text -match $pattern) { Write-Output $Matches['version'] } else { throw 'Could not find the HxD20 Simplified Chinese installable version on the official downloads page.' }"
-        ]
+        "url": "https://mh-nexus.de/en/hxd/changelog.php",
+        "regex": "(?<version>\\d+\\.\\d+\\.\\d+\\.\\d+)\\s*\\("
     },
     "autoupdate": {
         "url": "https://mh-nexus.de/downloads/HxDPortableSetup.zip",
