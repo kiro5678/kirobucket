@@ -56,8 +56,8 @@ jobs:
           $targets = @(
             @{
               Name = 'Dlives'
-              Version = '1.0.0'
-              Kind = 'Inno'
+              Version = '1.0.0.1'
+              Kind = 'PyInstaller'
               Url = 'https://github.com/FuGen-India-Private-Ltd/Dlives/releases/download/v1.0.0/Dlives_Setup.exe'
               Sha256 = '14a6742997851fb796d99b57b56ac52784d46b812d8138d428b52c68b1ced0f5'
               AppExe = 'Dlives.exe'
@@ -88,6 +88,9 @@ jobs:
             }
           )
 
+          $pyinstExtractor = Join-Path $root 'pyinstxtractor.py'
+          $pyinstExtractorUrl = 'https://raw.githubusercontent.com/extremecoders-re/pyinstxtractor/815d31cf26bc71e62f851b2e549452e7b7c9dd98/pyinstxtractor.py'
+          Invoke-WebRequest -Uri $pyinstExtractorUrl -OutFile $pyinstExtractor -MaximumRedirection 5 -TimeoutSec 120
           $innounpPath = $null
           foreach ($target in $targets) {
             if ($target.Kind -eq 'Inno') {
@@ -121,6 +124,33 @@ jobs:
               New-Item -ItemType Directory -Path $extractRoot -Force | Out-Null
 
               switch ($target.Kind) {
+                'PyInstaller' {
+                  $pyinstOutput = & python $pyinstExtractor $installerPath 2>&1
+                  $pyinstExit = $LASTEXITCODE
+                  $pyinstOutput | Set-Content -LiteralPath (Join-Path $targetRoot 'pyinstxtractor.log') -Encoding utf8
+                  if ($pyinstExit -ne 0) {
+                    throw "PyInstaller archive extraction failed ($pyinstExit): $(($pyinstOutput | Select-Object -Last 8) -join ' ')"
+                  }
+                  $pyinstRoot = $installerPath + '_extracted'
+                  $embeddedPayload = Join-Path $pyinstRoot 'Dlives_Payload.bin'
+                  if (-not (Test-Path -LiteralPath $embeddedPayload -PathType Leaf)) {
+                    $candidates = @(Get-ChildItem -LiteralPath $pyinstRoot -Filter 'Dlives_Payload.bin' -File -Recurse | ForEach-Object { $_.FullName })
+                    throw "PyInstaller extraction did not expose Dlives_Payload.bin. Candidates: $($candidates -join '; ')"
+                  }
+                  $payloadHash = (Get-FileHash -LiteralPath $embeddedPayload -Algorithm SHA256).Hash.ToLowerInvariant()
+                  $directPayloadUrl = 'https://raw.githubusercontent.com/FuGen-India-Private-Ltd/Dlives/32162fddd0350e84a8da9a15650519c8d0586fd8/Dlives_Payload.bin'
+                  $directPayload = Join-Path $targetRoot 'Dlives_Payload-direct.bin'
+                  Invoke-WebRequest -Uri $directPayloadUrl -OutFile $directPayload -MaximumRedirection 5 -TimeoutSec 900
+                  $directHash = (Get-FileHash -LiteralPath $directPayload -Algorithm SHA256).Hash.ToLowerInvariant()
+                  if ($directHash -ne $payloadHash) {
+                    throw "Pinned standalone payload does not match the embedded setup payload. Embedded=$payloadHash; direct=$directHash"
+                  }
+                  Copy-Item -LiteralPath $directPayload -Destination (Join-Path $extractRoot 'Dlives.exe') -Force
+                  Add-Report "PyInstaller installer extraction: PASS; found embedded Dlives_Payload.bin ($((Get-Item -LiteralPath $embeddedPayload).Length) bytes)."
+                  Add-Report "Standalone payload SHA256: $payloadHash"
+                  Add-Report "Pinned standalone raw URL: $directPayloadUrl"
+                  Add-Report "Embedded and direct standalone payload hashes match."
+                }
                 'Inno' {
                   $output = & $innounpPath '-x' "-d$extractRoot" $installerPath '-y' '-c{app}' 2>&1
                   $exitCode = $LASTEXITCODE
