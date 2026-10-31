@@ -79,7 +79,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | PHP package | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1 |
 | PowerShell script | [winutil](../bucket/winutil.json) | 1 |
 | RMSKIN package | [quanto-flx](../bucket/quanto-flx.json) | 1 |
-| **Total** | **All bucket manifests** | **847** |
+| **Total** | **All bucket manifests** | **848** |
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
 ## Nonportable manifests by installer type
