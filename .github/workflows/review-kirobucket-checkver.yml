@@ -9,6 +9,10 @@ on:
       - 'under review kirobucket/*.json'
       - '.github/workflows/review-kirobucket-checkver.yml'
 
+concurrency:
+  group: review-kirobucket-checkver
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
