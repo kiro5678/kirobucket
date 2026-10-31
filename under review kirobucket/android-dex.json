@@ -17,7 +17,8 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/Shrey113/Android-Dex",
+        "url": "https://api.github.com/repos/Shrey113/Android-Dex/releases?per_page=100",
+        "jsonpath": "$[*].tag_name",
         "regex": "^Android-Dex-v\\.(?<version>[\\d.]+)$"
     },
     "autoupdate": {
