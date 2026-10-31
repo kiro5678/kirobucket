@@ -24,9 +24,9 @@
         ]
     ],
     "checkver": {
-        "github": "https://api.github.com/repos/Wox-launcher/Wox/releases",
-        "jsonpath": "$[?(@.prerelease == false)].html_url",
-        "regex": "(?i)tag/v([\\d.]+)(?=\")"
+        "url": "https://api.github.com/repos/Wox-launcher/Wox/releases?per_page=100",
+        "jsonpath": "$[?(@.prerelease == false)].tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
     },
     "autoupdate": {
         "architecture": {
