@@ -26,10 +26,10 @@ This catalog covers the requested vendor pages and links each included program t
 
 | Program | Primary function | Functional category | Manifest | Installer Type |
 | --- | --- | --- | --- | --- |
-| [cinemadrape](https://www.aurelitec.com/cinemadrape/) | Focus / dim inactive screen areas | Productivity & Launchers | [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | Unknown (manifest not found) |
+| [cinemadrape](https://www.aurelitec.com/cinemadrape/) | Focus / dim inactive screen areas | Productivity & Launchers | [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | ZIP archive |
 | [injuredpixels](https://www.aurelitec.com/injuredpixels/) | Display pixel testing | System Monitoring & Hardware | [aurelitec-injuredpixels](../bucket/aurelitec-injuredpixels.json) | ZIP archive |
 | [pixelhealer](https://www.aurelitec.com/pixelhealer/) | Attempt to recover stuck/hot pixels | System Monitoring & Hardware | [aurelitec-pixelhealer](../bucket/aurelitec-pixelhealer.json) | ZIP archive |
-| [thumbico](https://www.aurelitec.com/thumbico/) | Preview/export Windows thumbnails and icons | Images & Photos | [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | Unknown (manifest not found) |
+| [thumbico](https://www.aurelitec.com/thumbico/) | Preview/export Windows thumbnails and icons | Images & Photos | [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | ZIP archive |
 | [portmarks](https://www.aurelitec.com/portmarks/) | Portable bookmark/link files | Browsers & Communication | [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | ZIP archive |
 
 ## ComputerSluggish
@@ -94,7 +94,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [DVD Drive Repair](https://rizonesoft.com/downloads/dvd-drive-repair/) | Diagnose and repair DVD drive issues | Storage & Disk Tools | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | Package format not stated in manifest |
 | [EdgeMin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Microsoft Edge | System Monitoring & Hardware | [edgemin](../bucket/edgemin.json) | Inno |
 | [Firemin](https://rizonesoft.com/downloads/firemin/) | Reduce browser memory usage | System Monitoring & Hardware | [firemin](../bucket/firemin.json) | Inno |
-| [Notepad3](https://rizonesoft.com/downloads/notepad3/) | Scintilla-based text editor with syntax highlighting | Clipboard & Text | [notepad3](../bucket/notepad3.json) | Unknown (manifest not found) |
+| [Notepad3](https://rizonesoft.com/downloads/notepad3/) | Scintilla-based text editor with syntax highlighting | Clipboard & Text | [notepad3](../bucket/notepad3.json) | ZIP archive |
 | [Pixel Repair](https://rizonesoft.com/downloads/pixel-repair/) | Detect and attempt to repair stuck display pixels | System Monitoring & Hardware | [pixel-repair](../bucket/pixel-repair.json) | Package format not stated in manifest |
 | [Rizonesoft Office Alpha 5](https://rizonesoft.com/downloads/rizonesoft-office/) | Collection of office and productivity applications | Productivity & Launchers | [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno |
 | [Resolute](https://rizonesoft.com/downloads/resolute/) | Collection of Windows repair, maintenance, and diagnostic utilities | Other Utilities | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno |

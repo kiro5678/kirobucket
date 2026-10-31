@@ -63,9 +63,9 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [adb-device-manager](../bucket/adb-device-manager.json) | Unknown (manifest not found) | 1.8 | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) |
+| [adb-device-manager](../bucket/adb-device-manager.json) | EXE payload (standalone/extractor not verified) | 1.8 | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) |
 | [air-server-np](../bucket/air-server-np.json) | MSI installer/package | 5.7.2 | AirServer is the most advanced screen mirroring receiver for Mac and PC. | [Homepage](https://www.airserver.com) |
-| [android-dex](../bucket/android-dex.json) | Unknown (manifest not found) | 1.4 | Android desktop experience for controlling and mirroring Android devices. | [Homepage](https://github.com/Shrey113/Android-Dex) |
+| [android-dex](../bucket/android-dex.json) | ZIP archive | 1.4 | Android desktop experience for controlling and mirroring Android devices. | [Homepage](https://github.com/Shrey113/Android-Dex) |
 | [another](../bucket/another.json) | NSIS | 0.4.4 | A desktop app for mirroring and controlling Android devices over USB. | [Homepage](https://github.com/Zfinix/another) |
 | [imazing-np](../bucket/imazing-np.json) | EXE setup (engine unverified) | 3.6.5 | Manage your iPhone. Your way. | [Homepage](https://imazing.com/) |
 | [scrcpy](../bucket/scrcpy.json) | ZIP archive | 5.0.1 | Display and control Android devices from Windows. | [Homepage](https://github.com/Genymobile/scrcpy) |
@@ -80,7 +80,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- |
 | [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | ZIP archive | 2.5.0.30 | Creates small portable HTML files for storing and opening individual bookmarks. | [Homepage](https://www.aurelitec.com/portmarks/) |
 | [belarc-advisor](../bucket/belarc-advisor.json) | EXE setup (engine unverified) | 13.1 | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. | [Homepage](https://www.belarc.com/products/belarc-advisor) |
-| [biscuit](../bucket/biscuit.json) | Unknown (manifest not found) | 2.2.1 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
+| [biscuit](../bucket/biscuit.json) | NSIS | 2.2.1 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
 | [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | Package format not stated in manifest | 26.10 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | ZIP archive | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
 | [viola](../bucket/viola.json) | 7Z archive | 0.2.10 | Native desktop web browser. | [Homepage](https://github.com/nmcmil/Viola-Downloads) |
@@ -92,29 +92,29 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- |
 | [beetroot-portable](../bucket/beetroot-portable.json) | MSI installer/package | 1.6.7 | Clipboard manager for Windows with AI transforms, OCR, and fuzzy search | [Homepage](https://github.com/mnardit/beetroot-releases) |
 | [clipangel](../bucket/clipangel.json) | ZIP archive | 2.23 | Clipboard history capture and paste tool. | [Homepage](https://sourceforge.net/projects/clip-angel/) |
-| [clipcascade](../bucket/clipcascade.json) | Unknown (manifest not found) | 3.3.1 | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) |
+| [clipcascade](../bucket/clipcascade.json) | EXE payload (standalone/extractor not verified) | 3.3.1 | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) |
 | [clipper](../bucket/clipper.json) | MSI installer/package | 0.24.3 | Clipboard manager with local and network synchronization. | [Homepage](https://github.com/windoze/clipper) |
 | [clipto](../bucket/clipto.json) | 7Z archive | 7.2.17 | Cross-platform clipboard manager and notes app | [Homepage](https://clipto.pro/) |
 | [cliptype](../bucket/cliptype.json) | EXE payload (standalone/extractor not verified) | 2.0.0 | Clipboard injector that types clipboard contents using native keystrokes | [Homepage](https://github.com/ahmedthebest31/ClipType) |
 | [clustercut](../bucket/clustercut.json) | NSIS | 0.5.0 | Secure, local clipboard synchronization across Windows, macOS, and Linux. | [Homepage](https://github.com/keithvassallomt/ClusterCut) |
 | [colorconsole](../bucket/colorconsole.json) | ZIP archive | 7.44 | Portable enhanced Windows console. | [Homepage](https://www.softwareok.com/?Download=ColorConsole) |
 | [copyq](../bucket/copyq.json) | ZIP archive | 17.0.0 | Clipboard manager | [Homepage](https://hluk.github.io/CopyQ/) |
-| [crosspaste](../bucket/crosspaste.json) | Unknown (manifest not found) | 2.3.0.2767 | Universal pasteboard across devices. | [Homepage](https://crosspaste.com/en/) |
+| [crosspaste](../bucket/crosspaste.json) | ZIP archive | 2.3.0.2767 | Universal pasteboard across devices. | [Homepage](https://crosspaste.com/en/) |
 | [cursortip](../bucket/cursortip.json) | ZIP archive | 1.4.1 | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. | [Homepage](https://github.com/zeno528/CursorTip) |
-| [deskdrop](../bucket/deskdrop.json) | Unknown (manifest not found) | 1.3.3 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
+| [deskdrop](../bucket/deskdrop.json) | EXE payload (standalone/extractor not verified) | 1.3.3 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
 | [ecopaste](../bucket/ecopaste.json) | NSIS | 1.1.0 | Open-source clipboard manager for Windows and macOS. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
 | [ecopaste-nightly](../bucket/ecopaste-nightly.json) | NSIS | 1.1.1-nightly.20260813.1 | Open-source clipboard manager for Windows and macOS. Nightly build. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
 | [edge-drop](../bucket/edge-drop.json) | NSIS | 0.3.2 | Clipboard manager that lives on the left edge of your screen. | [Homepage](https://github.com/Deepender25/Edge-Drop) |
 | [get-window-text](../bucket/get-window-text.json) | ZIP archive | 5.31 | Read text from Windows controls and windows. | [Homepage](https://www.softwareok.com/?Download=GetWindowText) |
 | [multi-clipboard-slots](../bucket/multi-clipboard-slots.json) | ZIP archive | 3.61 | Manage multiple clipboard slots. | [Homepage](https://www.softwareok.com/?Download=MultiClipBoardSlots) |
-| [notepad3](../bucket/notepad3.json) | Unknown (manifest not found) | 7.26.602.1 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
+| [notepad3](../bucket/notepad3.json) | ZIP archive | 7.26.602.1 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
 | [pastebar](../bucket/pastebar.json) | ZIP archive | 0.7.0 | Limitless, Free Clipboard Manager for Mac and Windows | [Homepage](https://www.pastebar.app/) |
 | [quicktextpaste](../bucket/quicktextpaste.json) | ZIP archive | 9.61 | Paste predefined text using keyboard shortcuts. | [Homepage](https://www.softwareok.com/?Download=QuickTextPaste) |
 | [sklad](../bucket/sklad.json) | MSI installer/package | 0.2.3 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text | [Homepage](https://github.com/Rench321/sklad) |
 | [sklad-setup-portable](../bucket/sklad-setup-portable.json) | Unknown (manifest not found) | 0.2.3 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text (portable) | [Homepage](https://github.com/Rench321/sklad) |
 | [skyeclip](../bucket/skyeclip.json) | Inno | 1.4 | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. | [Homepage](https://github.com/YodeSkye/SkyeClip) |
 | [smart-clipboard](../bucket/smart-clipboard.json) | EXE payload (standalone/extractor not verified) | 1.3.2 | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection | [Homepage](https://github.com/ezeiq7/Smart-Clipboard) |
-| [tiez-clipboard](../bucket/tiez-clipboard.json) | Unknown (manifest not found) | 0.3.3 | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. | [Homepage](https://github.com/jimuzhe/tiez-clipboard) |
+| [tiez-clipboard](../bucket/tiez-clipboard.json) | ZIP archive | 0.3.3 | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. | [Homepage](https://github.com/jimuzhe/tiez-clipboard) |
 | [vovsoft-clipboard-reader](../bucket/vovsoft-clipboard-reader.json) | ZIP archive | 1.4 | Portable edition of Vovsoft Clipboard Reader. | [Homepage](https://vovsoft.com/software/clipboard-reader/) |
 | [vovsoft-collect-url](../bucket/vovsoft-collect-url.json) | ZIP archive | 4.2 | Portable edition of Vovsoft Collect URL. | [Homepage](https://vovsoft.com/software/collect-url/) |
 | [vovsoft-compare-two-texts](../bucket/vovsoft-compare-two-texts.json) | ZIP archive | 1.5 | Portable edition of Vovsoft Compare Two Texts. | [Homepage](https://vovsoft.com/software/compare-two-texts/) |
@@ -134,7 +134,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [detect-it-easy](../bucket/detect-it-easy.json) | ZIP archive | 3.10 | Tool for identifying packers, protectors, compilers, and file formats | [Homepage](https://github.com/horsicq/Detect-It-Easy) |
 | [firelink](../bucket/firelink.json) | ZIP archive | 1.5.0 | Firelink | [Homepage](https://github.com/nimbold/Firelink) |
 | [lopesoft-lopeedit](../bucket/lopesoft-lopeedit.json) | 7Z archive | 5.8.1 | Tabbed programmer's editor and Notepad replacement with syntax highlighting. | [Homepage](https://www.lopesoft.com/index.php/en/products/lopeedit) |
-| [makerom](../bucket/makerom.json) | Unknown (manifest not found) | 0.19.0 | A CLI tool to create CTR (Nintendo 3DS) ROM images. | [Homepage](https://github.com/3DSGuy/Project_CTR) |
+| [makerom](../bucket/makerom.json) | ZIP archive | 0.19.0 | A CLI tool to create CTR (Nintendo 3DS) ROM images. | [Homepage](https://github.com/3DSGuy/Project_CTR) |
 | [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | ZIP archive | 8.4.0 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
 | [mitec-hexedit](../bucket/mitec-hexedit.json) | ZIP archive | 7.1.0 | Hexadecimal editor with data inspector, calculator, file compare, memory dump and disk dump tools. | [Homepage](https://www.mitec.cz/wp/mhex/) |
 | [mitec-interbase-query](../bucket/mitec-interbase-query.json) | ZIP archive | 9.5.0 | Database management tool for InterBase 6+ and Firebird 1.5+. | [Homepage](https://www.mitec.cz/wp/mibq/) |
@@ -182,7 +182,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | Inno | 1.0.0.13 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
 | [brisk](../bucket/brisk.json) | ZIP archive | 2.3.9 | Fast and lightweight download manager with browser integration. | [Homepage](https://github.com/BrisklyDev/brisk) |
 | [cross-platform-download-manager](../bucket/cross-platform-download-manager.json) | ZIP archive | 0.30.0 | Fast, free, and open-source cross-platform download manager | [Homepage](https://github.com/adel-bakhshi/CrossPlatformDownloadManager) |
-| [dlman](../bucket/dlman.json) | Unknown (manifest not found) | 1.11.1 | Fast, reliable, open-source download manager with multi-segment downloads, queue management, browser extensions, and SQLite persistence. | [Homepage](https://github.com/novincode/dlman) |
+| [dlman](../bucket/dlman.json) | NSIS | 1.11.1 | Fast, reliable, open-source download manager with multi-segment downloads, queue management, browser extensions, and SQLite persistence. | [Homepage](https://github.com/novincode/dlman) |
 | [imfile](../bucket/imfile.json) | ZIP archive | 2.3.4 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
 | [motrix](../bucket/motrix.json) | ZIP archive | 2.0.1 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
 | [motrix-next](../bucket/motrix-next.json) | 7Z archive | 3.9.9 | Legacy Motrix Next 3.x download manager for HTTP, FTP, BitTorrent and Magnet links. | [Homepage](https://github.com/AnInsomniacy/rayburst) |
@@ -199,16 +199,16 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [ctrtool](../bucket/ctrtool.json) | Unknown (manifest not found) | 1.3.0 | General purpose reading/extraction tool for Nintendo 3DS file formats. | [Homepage](https://github.com/3DSGuy/Project_CTR) |
+| [ctrtool](../bucket/ctrtool.json) | ZIP archive | 1.3.0 | General purpose reading/extraction tool for Nintendo 3DS file formats. | [Homepage](https://github.com/3DSGuy/Project_CTR) |
 | [dgvoodoo2](../bucket/dgvoodoo2.json) | ZIP archive | 2.87.4 | Glide/DirectX implementation on D3D11/12 for running old games on modern Windows. | [Homepage](https://github.com/dege-diosg/dgVoodoo2) |
 | [die-engine](../bucket/die-engine.json) | ZIP archive | 3.21 | Detect It Easy - file type, compiler, packer, protector, and binary analysis tool | [Homepage](https://github.com/horsicq/DIE-engine) |
 | [directx-np](../bucket/directx-np.json) | 7Z archive | 9.29.1974.1 | The Microsoft DirectX End-User Runtime installs a number of runtime libraries from the legacy DirectX SDK for some games. | [Homepage](https://www.microsoft.com/en-us/download/details.aspx?id=8109) |
 | [dxvk-gplall](../bucket/dxvk-gplall.json) | ZIP archive | 2.6.9-1 | DXVK-GPLALL — DXVK build with GPLAsync and LowLatency patches for Windows. | [Homepage](https://github.com/Digger1955/dxvk-gplall) |
 | [dxwrapper](../bucket/dxwrapper.json) | ZIP archive | 1.9.8700.25 | DirectX compatibility wrapper for older Windows games. | [Homepage](https://github.com/elishacloud/dxwrapper) |
 | [flycast](../bucket/flycast.json) | ZIP archive | 2.7 | Multiplatform Sega Dreamcast, Naomi, Naomi 2 and Atomiswave emulator. | [Homepage](https://github.com/flyinghead/flycast) |
-| [mumuplayer](../bucket/mumuplayer.json) | Unknown (manifest not found) | 1.8.5.5748 | Android emulator for Windows (NX main engine) | [Homepage](https://www.mumuplayer.com/) |
-| [mumuplayer-android15](../bucket/mumuplayer-android15.json) | Unknown (manifest not found) | 15.8.5.5750 | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest | [Homepage](https://www.mumuplayer.com/) |
-| [mumuplayer-online](../bucket/mumuplayer-online.json) | Unknown (manifest not found) | 6.0.2 | MuMuPlayer international online installer for installing its available Android engines | [Homepage](https://www.mumuplayer.com/) |
+| [mumuplayer](../bucket/mumuplayer.json) | EXE payload (standalone/extractor not verified) | 1.8.5.5748 | Android emulator for Windows (NX main engine) | [Homepage](https://www.mumuplayer.com/) |
+| [mumuplayer-android15](../bucket/mumuplayer-android15.json) | EXE payload (standalone/extractor not verified) | 15.8.5.5750 | Android 15 (MUMU15) engine add-on for MuMuPlayer; requires the NX-main base manifest | [Homepage](https://www.mumuplayer.com/) |
+| [mumuplayer-online](../bucket/mumuplayer-online.json) | EXE payload (standalone/extractor not verified) | 6.0.2 | MuMuPlayer international online installer for installing its available Android engines | [Homepage](https://www.mumuplayer.com/) |
 | [nglide](../bucket/nglide.json) | EXE payload (standalone/extractor not verified) | 2.10 | 3Dfx Voodoo Glide wrapper for playing Glide games using modern graphics APIs. | [Homepage](https://www.zeus-software.com/games/nglide) |
 | [rpcs3](../bucket/rpcs3.json) | 7Z archive | 0.0.43-20410 | Open-source PlayStation 3 emulator and debugger. | [Homepage](https://rpcs3.net/) |
 | [ruffle](../bucket/ruffle.json) | ZIP archive | 0.7.1 | Flash Player emulator and SWF player written in Rust. | [Homepage](https://ruffle.rs/) |
@@ -349,7 +349,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [savestate](../bucket/savestate.json) | ZIP archive | 3.1 | Back up and restore video game saves, with Steam detection and emulator support. | [Homepage](https://github.com/Matteo842/SaveState) |
 | [solitaire-ok](../bucket/solitaire-ok.json) | ZIP archive | 1.26 | Play Solitaire on Windows. | [Homepage](https://www.softwareok.com/?Download=SolitaireOK) |
 | [sordum-bpuzzle](../bucket/sordum-bpuzzle.json) | 7Z archive | 1.2 | Portable sliding-tile puzzle game with multiple difficulty levels. | [Homepage](https://www.sordum.org/8058/bpuzzle-v1-2/) |
-| [tcno-acc-switcher](../bucket/tcno-acc-switcher.json) | Unknown (manifest not found) | 4.0.8 | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) |
+| [tcno-acc-switcher](../bucket/tcno-acc-switcher.json) | 7Z archive | 4.0.8 | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) |
 | [tonkatsu-box](../bucket/tonkatsu-box.json) | ZIP archive | 0.45.0 | Personal collection manager for games, movies, TV shows, anime, visual novels, manga, books, music and podcasts. | [Homepage](https://github.com/hacan359/tonkatsu_box) |
 | [uesave](../bucket/uesave.json) | ZIP archive | 0.7.1 | A library for reading and writing Unreal Engine save files | [Homepage](https://github.com/trumank/uesave-rs) |
 
@@ -357,7 +357,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | Unknown (manifest not found) | 2.0.0 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
+| [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | ZIP archive | 2.0.0 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
 | [film-strip-explorer](../bucket/film-strip-explorer.json) | ZIP archive | 1.05 | Browse images in a film-strip explorer. | [Homepage](https://www.softwareok.com/?Download=Film.Strip.Explorer) |
 | [find-same-images-ok](../bucket/find-same-images-ok.json) | ZIP archive | 6.16 | Find duplicate or similar images. | [Homepage](https://www.softwareok.com/?Download=Find.Same.Images.OK) |
 | [flyphotos](../bucket/flyphotos.json) | MSI installer/package | 2.7.4 | Fast and modern photo viewer for Windows. | [Homepage](https://github.com/riyasy/FlyPhotos) |
@@ -376,7 +376,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [paintokay](../bucket/paintokay.json) | ZIP archive | 1.11 | Lightweight pixel editor and alternative to classic MS Paint XP. | [Homepage](https://www.softwareok.com/?Download=PaintOkay) |
 | [photo-resizer-ok](../bucket/photo-resizer-ok.json) | ZIP archive | 3.51 | Resize photos in batches. | [Homepage](https://www.softwareok.com/?Download=PhotoResizerOK) |
 | [photomanager](../bucket/photomanager.json) | ZIP archive | 1.0.0.22 | Cross-platform photo manager and lightweight digital asset manager. | [Homepage](https://github.com/Hawkynt/PhotoManager) |
-| [photomanager-nightly](../bucket/photomanager-nightly.json) | Unknown (manifest not found) | 2026.09.11 | Cross-platform photo manager and lightweight digital asset manager (nightly channel). | [Homepage](https://github.com/Hawkynt/PhotoManager) |
+| [photomanager-nightly](../bucket/photomanager-nightly.json) | ZIP archive | 2026.09.11 | Cross-platform photo manager and lightweight digital asset manager (nightly channel). | [Homepage](https://github.com/Hawkynt/PhotoManager) |
 | [pictkura](../bucket/pictkura.json) | ZIP archive | 1.0.1 | Photo manager for importing from camera cards and browsing RAW, HEIC, AVIF, video and other image files. | [Homepage](https://harusame64.github.io/pictkura/) |
 | [selfphotos](../bucket/selfphotos.json) | MSI installer/package | 0.9.0 | Cross-platform photo and video management desktop app with local-first privacy. | [Homepage](https://selfphotos.com/) |
 | [tagstudio](../bucket/tagstudio.json) | ZIP archive | 9.6.4 | A user-focused photo and file management system. | [Homepage](https://github.com/TagStudioDev/TagStudio) |
@@ -418,8 +418,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [fliper](../bucket/fliper.json) | EXE payload (standalone/extractor not verified) | 1.2.1 | Universal keyboard layout and case converter for Windows. | [Homepage](https://github.com/beatlejute/Fliper) |
 | [imewlconverter](../bucket/imewlconverter.json) | ZIP archive | 3.6.0 | 一款输入法词库转换软件，支持以下超过 20 种的输入法工具和词库 | [Homepage](https://github.com/studyzy/imewlconverter) |
 | [keyboard-language-fix](../bucket/keyboard-language-fix.json) | 7Z archive | 1.1.0 | Fix text typed with the wrong keyboard language on Windows. | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) |
-| [keyboardsounds](../bucket/keyboardsounds.json) | Unknown (manifest not found) | 2.4.3 | Desktop app that plays customizable mechanical keyboard and mouse sounds, with sound profiles and per-application rules. | [Homepage](https://keyboardsounds.net/) |
-| [keyboardsounds-pro](../bucket/keyboardsounds-pro.json) | Unknown (manifest not found) | 0.3.2 | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. | [Homepage](https://keyboardsounds.pro/) |
+| [keyboardsounds](../bucket/keyboardsounds.json) | 7Z archive | 2.4.3 | Desktop app that plays customizable mechanical keyboard and mouse sounds, with sound profiles and per-application rules. | [Homepage](https://keyboardsounds.net/) |
+| [keyboardsounds-pro](../bucket/keyboardsounds-pro.json) | 7Z archive | 0.3.2 | Desktop app that plays customizable keyboard and mouse sounds, with sound profiles, audio effects, and per-application rules. | [Homepage](https://keyboardsounds.pro/) |
 | [langover](../bucket/langover.json) | EXE payload (standalone/extractor not verified) | 1.2.1 | Portable Windows utility for converting text between Hebrew and English keyboard layouts. | [Homepage](https://github.com/nachlib/LangOver) |
 | [mechvibes](../bucket/mechvibes.json) | Inno | 2.3.4 | Play mechanical keyboard sounds as you type, with customizable sound packs. | [Homepage](https://mechvibes.com) |
 | [mechvibes-dx](../bucket/mechvibes-dx.json) | Unknown (manifest not found) | 0.8.4 | Low-latency mechanical keyboard and mouse sound simulator with customizable soundpacks. | [Homepage](https://github.com/hainguyents13/mechvibes-dx) |
@@ -549,7 +549,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [butterfly-nightly](../bucket/butterfly-nightly.json) | ZIP archive | 2026.10.24.1034 | A powerful, minimalistic, cross-platform note-taking app (nightly build) | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [desktop-note-ok](../bucket/desktop-note-ok.json) | ZIP archive | 4.66 | Create and manage notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopNoteOK) |
 | [flyout-notepad](../bucket/flyout-notepad.json) | ZIP archive | 1.05 | Dockable text and image workspace that opens from screen edges. | [Homepage](https://www.softwareok.com/?seite=Microsoft/FlyOutNotePad) |
-| [goldendict-ng](../bucket/goldendict-ng.json) | Unknown (manifest not found) | v26.11.0 | A feature-rich dictionary lookup program, supporting multiple dictionary formats (StarDict/Babylon/Lingvo/Dictd/AARD/MDict/SDict) and online dictionaries, featuring perfect article rendering with the complete markup, illustrations and other content retained, and allowing you to type in words without any accents or correct case. | [Homepage](https://github.com/xiaoyifang/goldendict) |
+| [goldendict-ng](../bucket/goldendict-ng.json) | 7Z archive | v26.11.0 | A feature-rich dictionary lookup program, supporting multiple dictionary formats (StarDict/Babylon/Lingvo/Dictd/AARD/MDict/SDict) and online dictionaries, featuring perfect article rendering with the complete markup, illustrations and other content retained, and allowing you to type in words without any accents or correct case. | [Homepage](https://github.com/xiaoyifang/goldendict) |
 | [helixnotes](../bucket/helixnotes.json) | NSIS | 1.3.6 | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. | [Homepage](https://helixnotes.com/) |
 | [lapis](../bucket/lapis.json) | NSIS | 3.0.1 | Local-first note-taking app with AI assistant and peer-to-peer sync. | [Homepage](https://github.com/zexadev/lapisnote) |
 | [markra](../bucket/markra.json) | ZIP archive | 2.14.1 | Cross-platform Markdown editor and workspace for local-first notes. | [Homepage](https://github.com/markrahq/markra) |
@@ -557,7 +557,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [paperweight](../bucket/paperweight.json) | EXE payload (standalone/extractor not verified) | 0.6.0 | A local-first desktop app for collecting, organizing, and working with notes and documents | [Homepage](https://github.com/wslyvh/paperweight) |
 | [short-door-note](../bucket/short-door-note.json) | ZIP archive | 4.18 | Create short notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=ShortDoorNote) |
 | [siyuan](../bucket/siyuan.json) | EXE payload (standalone/extractor not verified) | 3.8.8 | Personal knowledge management and note-taking software. | [Homepage](https://github.com/siyuan-note/siyuan) |
-| [tiro-notes](../bucket/tiro-notes.json) | Unknown (manifest not found) | 0.30.3 | Open-source, cross-platform Markdown note-taking app. | [Homepage](https://github.com/dotgreg/tiro-notes) |
+| [tiro-notes](../bucket/tiro-notes.json) | ZIP archive | 0.30.3 | Open-source, cross-platform Markdown note-taking app. | [Homepage](https://github.com/dotgreg/tiro-notes) |
 | [vovsoft-read-mode](../bucket/vovsoft-read-mode.json) | ZIP archive | 2.7 | Portable edition of Vovsoft Read Mode. | [Homepage](https://vovsoft.com/software/read-mode/) |
 | [vovsoft-vov-sticky-notes](../bucket/vovsoft-vov-sticky-notes.json) | ZIP archive | 11.1 | Portable edition of Vovsoft Vov Sticky Notes. | [Homepage](https://vovsoft.com/software/vov-sticky-notes/) |
 | [zinc](../bucket/zinc.json) | 7Z archive | 2.0.1 | Offline-first notes app with local Wi-Fi sync between desktop and mobile. | [Homepage](https://zincnotes.com/) |
@@ -576,10 +576,10 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- |
 | [0install-win](../bucket/0install-win.json) | ZIP archive | 2.29.3 | Decentralized software installation system for Windows with a GUI and OS integrations. | [Homepage](https://0install.net/) |
 | [chocolateygui](../bucket/chocolateygui.json) | MSI installer/package | 3.3.0 | Graphical user interface for Chocolatey. | [Homepage](https://github.com/chocolatey/ChocolateyGUI) |
-| [fluentstore](../bucket/fluentstore.json) | Unknown (manifest not found) | 0.4.0-beta | Beta frontend for Windows app stores and package managers, including Microsoft Store, WinGet, and Chocolatey. | [Homepage](https://github.com/yoshiask/FluentStore) |
+| [fluentstore](../bucket/fluentstore.json) | EXE payload (standalone/extractor not verified) | 0.4.0-beta | Beta frontend for Windows app stores and package managers, including Microsoft Store, WinGet, and Chocolatey. | [Homepage](https://github.com/yoshiask/FluentStore) |
 | [komi-store](../bucket/komi-store.json) | ZIP archive | 1.9.4 | Cross-platform app store for GitHub releases. | [Homepage](https://github.com/komi-store/komi-store) |
 | [local-desktop-store](../bucket/local-desktop-store.json) | ZIP archive | 0.3.2 | Private GitHub-based desktop application store and installer | [Homepage](https://github.com/SysAdminDoc/LocalDesktopStore) |
-| [npackd](../bucket/npackd.json) | Unknown (manifest not found) | 1.27.1 | Windows package manager for finding, installing, updating, and uninstalling software. | [Homepage](https://www.npackd.org) |
+| [npackd](../bucket/npackd.json) | ZIP archive | 1.27.1 | Windows package manager for finding, installing, updating, and uninstalling software. | [Homepage](https://www.npackd.org) |
 | [rscoop](../bucket/rscoop.json) | EXE payload (standalone/extractor not verified) | 1.11.0 | A graphical user interface for Scoop package manager | [Homepage](https://github.com/AmarBego/Rscoop) |
 | [soft-organizer](../bucket/soft-organizer.json) | Inno | 10.50 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
 | [sordum-store-apps-tool](../bucket/sordum-store-apps-tool.json) | ZIP archive | 1.1 | The Microsoft Store app comes built into Windows and allows you to download and install dozens of apps and games. | [Homepage](https://www.sordum.org/store-apps-tool) |
@@ -627,7 +627,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
 | [appgroup](../bucket/appgroup.json) | ZIP archive | 1.6.0 | Organize, customize, and launch app groups from the Windows taskbar. | [Homepage](https://github.com/iandiv/AppGroup) |
-| [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | Unknown (manifest not found) | 2.2.0 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
+| [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | ZIP archive | 2.2.0 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
 | [biniware-run](../bucket/biniware-run.json) | EXE payload (standalone/extractor not verified) | 7.9.0.0 | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. | [Homepage](https://biniware.com/brun) |
 | [desktoptools](../bucket/desktoptools.json) | ZIP archive | 1.2.9 | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. | [Homepage](https://github.com/vg2222/DesktopTools) |
 | [favoritenfreund](../bucket/favoritenfreund.json) | ZIP archive | 1.34 | Manage favorites in a small Windows utility. | [Homepage](https://www.softwareok.com/?Download=FavoritenFreund) |
@@ -656,7 +656,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-visual-notes](../bucket/vovsoft-visual-notes.json) | ZIP archive | 1.6 | Portable edition of Vovsoft Visual Notes. | [Homepage](https://vovsoft.com/software/visual-notes/) |
 | [vovsoft-world-heatmap-creator](../bucket/vovsoft-world-heatmap-creator.json) | ZIP archive | 2.0 | Portable edition of Vovsoft World Heatmap Creator. | [Homepage](https://vovsoft.com/software/world-heatmap-creator/) |
 | [winpinmenu](../bucket/winpinmenu.json) | ZIP archive | 0.1.1 | Portable menu for pinning folders and Quick Launch-style menus to the Windows taskbar. | [Homepage](https://github.com/hatelamers/WinPinMenu) |
-| [wox](../bucket/wox.json) | Unknown (manifest not found) | 2.4.8 | A fully native, open-source launcher for Windows, macOS, and Linux. | [Homepage](https://github.com/Wox-launcher/Wox) |
+| [wox](../bucket/wox.json) | EXE payload (standalone/extractor not verified) | 2.4.8 | A fully native, open-source launcher for Windows, macOS, and Linux. | [Homepage](https://github.com/Wox-launcher/Wox) |
 
 ## Security
 
@@ -718,14 +718,14 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [grc-bootable](../bucket/grc-bootable.json) | ZIP archive | 2024.04.21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
 | [grc-initdisk](../bucket/grc-initdisk.json) | EXE payload (standalone/extractor not verified) | 2020.12.19 | GRC InitDisk: Command-line USB formatter that can create a FAT-formatted and optionally FreeDOS-bootable drive. | [Homepage](https://www.grc.com/initdisk.htm) |
 | [grc-validrive](../bucket/grc-validrive.json) | EXE payload (standalone/extractor not verified) | 2023.10.06 | GRC ValiDrive: Spot-checks USB mass-storage drives to detect fraudulent capacity and failed read/write storage. | [Homepage](https://www.grc.com/validrive.htm) |
-| [hxd.chs](../bucket/hxd.chs.json) | Unknown (manifest not found) | 2.5.0.0 | Hex and Disk Editor (Simplified Chinese) | [Homepage](https://mh-nexus.de/en/hxd/) |
+| [hxd.chs](../bucket/hxd.chs.json) | ZIP archive | 2.5.0.0 | Hex and Disk Editor (Simplified Chinese) | [Homepage](https://mh-nexus.de/en/hxd/) |
 | [is-my-hd-ok](../bucket/is-my-hd-ok.json) | ZIP archive | 4.55 | Benchmark hard-drive performance. | [Homepage](https://www.softwareok.com/?Download=IsMyHdOK) |
 | [mangodisk](../bucket/mangodisk.json) | EXE payload (standalone/extractor not verified) | 1.2.1 | Disk cleanup, storage analysis, and system optimization for Windows. | [Homepage](https://github.com/harry0703/MangoDisk) |
-| [niubi-partition-editor-free](../bucket/niubi-partition-editor-free.json) | Unknown (manifest not found) | 10.3.2 | Portable NIUBI Partition Editor Free Edition for Windows. | [Homepage](https://www.hdd-tool.com/download.html) |
-| [niubi-partition-editor-professional](../bucket/niubi-partition-editor-professional.json) | Unknown (manifest not found) | 10.3.2 | Portable trial of NIUBI Partition Editor Professional Edition for Windows. | [Homepage](https://www.hdd-tool.com/download.html) |
+| [niubi-partition-editor-free](../bucket/niubi-partition-editor-free.json) | ZIP archive | 10.3.2 | Portable NIUBI Partition Editor Free Edition for Windows. | [Homepage](https://www.hdd-tool.com/download.html) |
+| [niubi-partition-editor-professional](../bucket/niubi-partition-editor-professional.json) | ZIP archive | 10.3.2 | Portable trial of NIUBI Partition Editor Professional Edition for Windows. | [Homepage](https://www.hdd-tool.com/download.html) |
 | [noncompressible-files](../bucket/noncompressible-files.json) | ZIP archive | 5.11 | Create files that are difficult to compress. | [Homepage](https://www.softwareok.com/?Download=NonCompressibleFiles) |
 | [openclosedriveeject](../bucket/openclosedriveeject.json) | ZIP archive | 3.55 | Safely eject drives and open or close optical drives. | [Homepage](https://www.softwareok.com/?Download=OpenCloseDriveEject) |
-| [openzfs-np](../bucket/openzfs-np.json) | Unknown (manifest not found) | 2.4.1rc17b | The open source port of OpenZFS on Windows | [Homepage](https://github.com/openzfsonwindows/openzfs) |
+| [openzfs-np](../bucket/openzfs-np.json) | EXE setup (engine unverified) | 2.4.1rc17b | The open source port of OpenZFS on Windows | [Homepage](https://github.com/openzfsonwindows/openzfs) |
 | [simple-vhd-manager](../bucket/simple-vhd-manager.json) | ZIP archive | 1.5 | This software is designed to simplify operations such as creating VHD and VHDX files, adding them to boot menu and Automatically mounting at system startup. Partial ISO support is also available. | [Homepage](https://www.sordum.org/simple-vhd-manager) |
 | [sordum-drive-letter-changer](../bucket/sordum-drive-letter-changer.json) | ZIP archive | 1.4 | A simple app that allows you to change the letter of your hard drives. | [Homepage](https://www.sordum.org/drive-letter-changer) |
 | [sordum-show-disk-partition-style](../bucket/sordum-show-disk-partition-style.json) | ZIP archive | 1.1 | A simple app for showing disk partion style. | [Homepage](https://www.sordum.org/show-disk-partition-style) |
@@ -771,7 +771,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [experience-index-ok](../bucket/experience-index-ok.json) | ZIP archive | 4.77 | View and run Windows performance index measurements. | [Homepage](https://www.softwareok.com/?Download=ExperienceIndexOK) |
 | [firemin](../bucket/firemin.json) | Inno | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [fluent-sensors](../bucket/fluent-sensors.json) | ZIP archive | 1.7.0 | Native Windows hardware monitoring app. | [Homepage](https://github.com/cechout/fluent-sensors) |
-| [freetoken-desktop.beta](../bucket/freetoken-desktop.beta.json) | Unknown (manifest not found) | 0.2.0-beta.25 | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. | [Homepage](https://www.flashml.ai) |
+| [freetoken-desktop.beta](../bucket/freetoken-desktop.beta.json) | 7Z archive | 0.2.0-beta.25 | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. | [Homepage](https://www.flashml.ai) |
 | [grc-clickey](../bucket/grc-clickey.json) | EXE payload (standalone/extractor not verified) | 2005.10.29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
 | [grc-dcombobulator](../bucket/grc-dcombobulator.json) | EXE payload (standalone/extractor not verified) | 2004.05.24 | GRC DCOMbobulator: Legacy utility for checking and enabling/disabling the historical Windows DCOM vulnerability mitigation. | [Homepage](https://www.grc.com/freeware/dcom.htm) |
 | [grc-id-serve](../bucket/grc-id-serve.json) | EXE payload (standalone/extractor not verified) | 2003.08.26 | GRC ID Serve: Identifies web-server software and version information exposed by an Internet server. | [Homepage](https://www.grc.com/id/idserve.htm) |
@@ -814,7 +814,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [taskexplorer](../bucket/taskexplorer.json) | Inno | 2.0.1 | Advanced process and system monitoring tool | [Homepage](https://github.com/DavidXanatos/TaskExplorer) |
 | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | EXE payload (standalone/extractor not verified) | 1.4.1 | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
 | [turkaysoft-glow](../bucket/turkaysoft-glow.json) | ZIP archive | 26.14 | Advanced system analysis software for Windows. | [Homepage](https://github.com/turkaysoft/glow) |
-| [uefitool](../bucket/uefitool.json) | Unknown (manifest not found) | A76 | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. | [Homepage](https://github.com/LongSoft/UEFITool) |
+| [uefitool](../bucket/uefitool.json) | ZIP archive | A76 | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. | [Homepage](https://github.com/LongSoft/UEFITool) |
 | [universal-intel-chipset-device-updater](../bucket/universal-intel-chipset-device-updater.json) | EXE payload (standalone/extractor not verified) | 2026.09.0019 | Automatically detects Intel chipset hardware and installs the latest matching INF files with safety checks. | [Homepage](https://github.com/FirstEverTech/Universal-Intel-Chipset-Updater) |
 | [universal-intel-wifi-bt-updater](../bucket/universal-intel-wifi-bt-updater.json) | EXE payload (standalone/extractor not verified) | 2026.07.0008 | Automatically detects Intel Wi-Fi and Bluetooth hardware and installs the latest matching official drivers. | [Homepage](https://github.com/FirstEverTech/Universal-Intel-WiFi-BT-Updater) |
 | [vovsoft-battery-alert](../bucket/vovsoft-battery-alert.json) | ZIP archive | 1.2 | Portable edition of Vovsoft Battery Alert. | [Homepage](https://vovsoft.com/software/battery-alert/) |
@@ -852,10 +852,10 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- |
 | [crow-translate](../bucket/crow-translate.json) | 7Z archive | 4.1.0 | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. | [Homepage](https://apps.kde.org/crowtranslate) |
 | [dpscreenocr](../bucket/dpscreenocr.json) | ZIP archive | 1.5.1 | A free and open-source program to recognize text on the screen. | [Homepage](https://danpla.github.io/dpscreenocr/) |
-| [MORT](../bucket/MORT.json) | Unknown (manifest not found) | 1.320 | Real-time game translator with OCR and machine translation. | [Homepage](https://github.com/kmonkeyhead/MORT) |
+| [MORT](../bucket/MORT.json) | ZIP archive | 1.320 | Real-time game translator with OCR and machine translation. | [Homepage](https://github.com/kmonkeyhead/MORT) |
 | [one-asr](../bucket/one-asr.json) | ZIP archive | 1.3.0 | 本地 · 离线 · 批量音视频 → SRT 字幕 | [Homepage](https://github.com/eclipse005/OneAsr) |
 | [rstgametranslation](../bucket/rstgametranslation.json) | ZIP archive | 6.1 | Real-time game screen OCR and translation tool. | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) |
-| [translumo](../bucket/translumo.json) | Unknown (manifest not found) | 1.1.0 | Advanced real-time screen translator. | [Homepage](https://github.com/ramjke/Translumo) |
+| [translumo](../bucket/translumo.json) | ZIP archive | 1.1.0 | Advanced real-time screen translator. | [Homepage](https://github.com/ramjke/Translumo) |
 | [vovsoft-batch-translator](../bucket/vovsoft-batch-translator.json) | ZIP archive | 5.0 | Portable edition of Vovsoft Batch Translator. | [Homepage](https://vovsoft.com/software/batch-translator/) |
 | [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | ZIP archive | 4.3 | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
 | [vovsoft-screen-reader](../bucket/vovsoft-screen-reader.json) | ZIP archive | 1.5 | Portable edition of Vovsoft Screen Reader. | [Homepage](https://vovsoft.com/software/screen-reader/) |
@@ -887,8 +887,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [contextmenumgrplus](../bucket/contextmenumgrplus.json) | ZIP archive | 1.7.10 | Windows right-click context menu manager and protection utility | [Homepage](https://github.com/PLFJY/ContextMenuMgr) |
 | [coodesker](../bucket/coodesker.json) | 7Z archive | 2.2.2.2 | Desktop organization tool for automatically organizing desktop icons and running tasks. | [Homepage](https://www.coodesker.com/) |
 | [coodesker-github](../bucket/coodesker-github.json) | NSIS | 1.1.1.1 | Desktop organization tool for automatically organizing desktop icons into resizable boxes. | [Homepage](https://github.com/coodesker/coodesker-desktop) |
-| [cooldesk](../bucket/cooldesk.json) | Unknown (manifest not found) | 2.0.16 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. | [Homepage](https://github.com/abhayraghuwanshi/cooldesk-extension) |
-| [cooldesk-msi](../bucket/cooldesk-msi.json) | Unknown (manifest not found) | 2.0.16 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. | [Homepage](https://github.com/abhayraghuwanshi/cooldesk-extension) |
+| [cooldesk](../bucket/cooldesk.json) | 7Z archive | 2.0.16 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. | [Homepage](https://github.com/abhayraghuwanshi/cooldesk-extension) |
+| [cooldesk-msi](../bucket/cooldesk-msi.json) | MSI installer/package | 2.0.16 | Desktop organization tool with customizable boxes, dock, workspaces, and application management. | [Homepage](https://github.com/abhayraghuwanshi/cooldesk-extension) |
 | [desk-engine](../bucket/desk-engine.json) | EXE payload (standalone/extractor not verified) | 5.1.1 | Lightweight Windows desktop overlay utility for displaying GIFs, images, and videos directly on the desktop. | [Homepage](https://github.com/RAF-02/Desk-Engine) |
 | [deskframe](../bucket/deskframe.json) | EXE payload (standalone/extractor not verified) | 1.44.0 | A highly customizable, open-source tool for desktop organization. | [Homepage](https://github.com/PinchToDebug/DeskFrame) |
 | [deskripple](../bucket/deskripple.json) | ZIP archive | 1.1.1 | Folder docks for the Windows desktop that expand into grids of shortcuts. | [Homepage](https://deskripple.com) |
@@ -910,15 +910,15 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [iconswappergui](../bucket/iconswappergui.json) | ZIP archive | 2.1.2 | Portable GUI for swapping Windows file and folder icons. | [Homepage](https://github.com/aj-phillips/IconSwapperGui) |
 | [keep-mouse-speed-ok](../bucket/keep-mouse-speed-ok.json) | ZIP archive | 3.55 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
 | [komorebi](../bucket/komorebi.json) | ZIP archive | 0.1.41 | A tiling window manager for Windows | [Homepage](https://github.com/LGUG2Z/komorebi) |
-| [komorebi-nightly](../bucket/komorebi-nightly.json) | Unknown (manifest not found) | 2026-08-22 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
+| [komorebi-nightly](../bucket/komorebi-nightly.json) | ZIP archive | 2026-08-22 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
 | [lively](../bucket/lively.json) | Inno | 2.2.1.0 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
-| [livewallpaper](../bucket/livewallpaper.json) | Unknown (manifest not found) | 4.0.1-alpha.4 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
+| [livewallpaper](../bucket/livewallpaper.json) | EXE setup (engine unverified) | 4.0.1-alpha.4 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
 | [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 7Z archive | 8.6 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
 | [magic-mouse-move](../bucket/magic-mouse-move.json) | ZIP archive | 1.04 | Move the mouse pointer automatically. | [Homepage](https://www.softwareok.com/?Download=MagicMouseMove) |
 | [magic-mouse-trails](../bucket/magic-mouse-trails.json) | ZIP archive | 4.51 | Display customizable mouse trails. | [Homepage](https://www.softwareok.com/?Download=MagicMouseTrails) |
 | [mousefx-generator](../bucket/mousefx-generator.json) | EXE payload (standalone/extractor not verified) | 1.1.0 | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. | [Homepage](https://github.com/os4ma31/MouseFX-Generator) |
 | [nofences](../bucket/nofences.json) | EXE payload (standalone/extractor not verified) | 1.8 | Open-source alternative to Fences for organizing the Windows desktop. | [Homepage](https://github.com/Twometer/NoFences) |
-| [nomeiryoui](../bucket/nomeiryoui.json) | Unknown (manifest not found) | 3.5.1 | Windows utility for changing system UI fonts and font sizes. | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) |
+| [nomeiryoui](../bucket/nomeiryoui.json) | ZIP archive | 3.5.1 | Windows utility for changing system UI fonts and font sizes. | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) |
 | [ok-its-raining-men](../bucket/ok-its-raining-men.json) | ZIP archive | 2.55 | Display customizable raindrop effects on the Windows desktop. | [Homepage](https://www.softwareok.com/?seite=Microsoft/OK.Its.Raining.Men) |
 | [oneloupe](../bucket/oneloupe.json) | ZIP archive | 6.31 | Desktop screen magnifier. | [Homepage](https://www.softwareok.com/?Download=OneLoupe) |
 | [open-shell](../bucket/open-shell.json) | EXE setup (engine unverified) | 4.4.198 | A collection of utilities bringing back classic features to Windows. | [Homepage](https://github.com/Open-Shell/Open-Shell-Menu) |
@@ -943,23 +943,23 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sordum-show-desktop-icons](../bucket/sordum-show-desktop-icons.json) | ZIP archive | 1.2 | Portable utility for showing or hiding common Windows desktop icons. | [Homepage](https://www.sordum.org/9341/show-desktop-icons-v1-2/) |
 | [sordum-win11-classic-context-menu](../bucket/sordum-win11-classic-context-menu.json) | ZIP archive | 1.2 | An application that allows Windows 11 users to revert back to the classic Windows 10 context menu. | [Homepage](https://www.sordum.org/windows-11-classic-context-menu) |
 | [sordum-window-topmost-control](../bucket/sordum-window-topmost-control.json) | ZIP archive | 1.3 | Portable utility for keeping selected windows always on top. | [Homepage](https://www.sordum.org/9182/window-topmost-control-v1-3/) |
-| [spotlight-dimmer](../bucket/spotlight-dimmer.json) | Unknown (manifest not found) | 0.9.1 | Windows utility that dims inactive displays or regions to spotlight the active window. | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) |
-| [spotlight-downloader](../bucket/spotlight-downloader.json) | Unknown (manifest not found) | 2.0.1 | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. | [Homepage](https://github.com/ORelio/Spotlight-Downloader) |
+| [spotlight-dimmer](../bucket/spotlight-dimmer.json) | ZIP archive | 0.9.1 | Windows utility that dims inactive displays or regions to spotlight the active window. | [Homepage](https://github.com/thomazmoura/spotlight-dimmer) |
+| [spotlight-downloader](../bucket/spotlight-downloader.json) | ZIP archive | 2.0.1 | Download Windows Spotlight images and optionally set them as desktop wallpaper or lock screen. | [Homepage](https://github.com/ORelio/Spotlight-Downloader) |
 | [spotlightsaver](../bucket/spotlightsaver.json) | EXE payload (standalone/extractor not verified) | 7.0.0 | Saves Windows 10/11 Spotlight wallpapers to a local folder. | [Homepage](https://github.com/depthbomb/SpotlightSaver) |
 | [static-desktop-ruler](../bucket/static-desktop-ruler.json) | ZIP archive | 1.07 | Adjustable desktop rulers with click-through ghost mode. | [Homepage](https://www.softwareok.com/?Download=StaticDesktopRuler) |
 | [sucrose](../bucket/sucrose.json) | EXE payload (standalone/extractor not verified) | 26.7.5.0 | Sucrose Wallpaper Engine for Windows (stable channel; official per-user Bundle installer). | [Homepage](https://github.com/Taiizor/Sucrose) |
-| [sucrose-nightly](../bucket/sucrose-nightly.json) | Unknown (manifest not found) | 26.10.5.0 | Sucrose Wallpaper Engine for Windows (nightly/pre-release channel; official per-user Bundle installer). | [Homepage](https://github.com/Taiizor/Sucrose) |
+| [sucrose-nightly](../bucket/sucrose-nightly.json) | EXE payload (standalone/extractor not verified) | 26.10.5.0 | Sucrose Wallpaper Engine for Windows (nightly/pre-release channel; official per-user Bundle installer). | [Homepage](https://github.com/Taiizor/Sucrose) |
 | [takeoff-launcher](../bucket/takeoff-launcher.json) | EXE payload (standalone/extractor not verified) | 1.0.4 | Focused, lightweight native Windows application launcher | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
 | [takeoff-launcher-portable](../bucket/takeoff-launcher-portable.json) | ZIP archive | 1.0.4 | Focused, lightweight native Windows application launcher (portable) | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
 | [theaeroclock](../bucket/theaeroclock.json) | ZIP archive | 9.41 | Portable desktop clock with transparency and customizable textures. | [Homepage](https://www.softwareok.com/?Download=TheAeroClock) |
 | [translucenttb](../bucket/translucenttb.json) | ZIP archive | 2026.2 | Lightweight utility for customizing the Windows taskbar appearance. | [Homepage](https://github.com/TranslucentTB/TranslucentTB) |
 | [traytoolbar](../bucket/traytoolbar.json) | ZIP archive | 1.8.4 | Custom toolbar for the Windows taskbar replacement menu. | [Homepage](https://github.com/brondavies/TrayToolbar) |
-| [ttf-stix2](../bucket/ttf-stix2.json) | Unknown (manifest not found) | v2.13b171 | OpenType Unicode fonts for Scientific, Technical, and Mathematical texts | [Homepage](https://github.com/stipub/stixfonts) |
+| [ttf-stix2](../bucket/ttf-stix2.json) | ZIP archive | v2.13b171 | OpenType Unicode fonts for Scientific, Technical, and Mathematical texts | [Homepage](https://github.com/stipub/stixfonts) |
 | [vovsoft-auto-change-screensavers](../bucket/vovsoft-auto-change-screensavers.json) | ZIP archive | 2.2 | Portable edition of Vovsoft Auto Change Screensavers. | [Homepage](https://vovsoft.com/software/auto-change-screensavers/) |
 | [vovsoft-auto-change-wallpapers](../bucket/vovsoft-auto-change-wallpapers.json) | ZIP archive | 1.4 | Portable edition of Vovsoft Auto Change Wallpapers. | [Homepage](https://vovsoft.com/software/auto-change-wallpapers/) |
 | [vovsoft-auto-mouse-clicker](../bucket/vovsoft-auto-mouse-clicker.json) | ZIP archive | 3.2 | Portable edition of Vovsoft Auto Mouse Clicker. | [Homepage](https://vovsoft.com/software/auto-mouse-clicker/) |
 | [vovsoft-window-resizer](../bucket/vovsoft-window-resizer.json) | ZIP archive | 5.0 | Portable edition of Vovsoft Window Resizer. | [Homepage](https://vovsoft.com/software/window-resizer/) |
-| [wallpaper-changer](../bucket/wallpaper-changer.json) | Unknown (manifest not found) | 5.4.1 | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) |
+| [wallpaper-changer](../bucket/wallpaper-changer.json) | 7Z archive | 5.4.1 | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) |
 | [wincux](../bucket/wincux.json) | NSIS | 1.1.0 | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. | [Homepage](https://github.com/samcuxx/WinCux) |
 | [windhawk](../bucket/windhawk.json) | EXE payload (standalone/extractor not verified) | 2.0.0-alpha.8 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
 | [wingodarktray](../bucket/wingodarktray.json) | EXE payload (standalone/extractor not verified) | 2.3.1 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
@@ -983,8 +983,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [easy-context-menu](../bucket/easy-context-menu.json) | ZIP archive | 1.6 | A simple app for editing the context menu. | [Homepage](https://www.sordum.org/easy-context-menu) |
 | [ef-startup-manager](../bucket/ef-startup-manager.json) | Package format not stated in manifest | 26.10 | Manages programs that launch with Windows and can control startup order and delays. | [Homepage](https://efsoftware.com/su/e.htm) |
 | [fluentcleaner](../bucket/fluentcleaner.json) | ZIP archive | 26.09.01 | Windows privacy cleaner and system cleanup utility. | [Homepage](https://github.com/builtbybel/FluentCleaner) |
-| [fluentcleaner-classic](../bucket/fluentcleaner-classic.json) | Unknown (manifest not found) | 26.09.01 | Classic WinForms edition of FluentCleaner for Windows. | [Homepage](https://github.com/builtbybel/FluentCleaner) |
-| [fluenttweaker](../bucket/fluenttweaker.json) | Unknown (manifest not found) | 26.06.02 | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. | [Homepage](https://github.com/builtbybel/FluentTweaker) |
+| [fluentcleaner-classic](../bucket/fluentcleaner-classic.json) | ZIP archive | 26.09.01 | Classic WinForms edition of FluentCleaner for Windows. | [Homepage](https://github.com/builtbybel/FluentCleaner) |
+| [fluenttweaker](../bucket/fluenttweaker.json) | ZIP archive | 26.06.02 | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. | [Homepage](https://github.com/builtbybel/FluentTweaker) |
 | [flyoobe](../bucket/flyoobe.json) | ZIP archive | 3.03.100 | Windows setup, customization, debloating, and system management utility. | [Homepage](https://github.com/builtbybel/Flyoobe) |
 | [funk-hmw](../bucket/funk-hmw.json) | ZIP archive | 4 | Portable utility for hiding selected Windows applications and windows. | [Homepage](https://funk.eu/hmw/) |
 | [go-away-edge-installer](../bucket/go-away-edge-installer.json) | EXE payload (standalone/extractor not verified) | 2.0.3 | GoAwayEdge is designed for those who, like me, aren’t fans of Microsoft Edge or Windows Copilot. | [Homepage](https://github.com/valnoxy/GoAwayEdge) |
@@ -995,9 +995,9 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [gtweak](../bucket/gtweak.json) | ZIP archive | 5.5.6 | Portable Windows tweaking and customization tool. | [Homepage](https://github.com/Greedeks/GTweak) |
 | [gtweak-exe](../bucket/gtweak-exe.json) | EXE payload (standalone/extractor not verified) | 5.5.6 | Portable Windows tweaking and customization tool. | [Homepage](https://github.com/Greedeks/GTweak) |
 | [kudu](../bucket/kudu.json) | ZIP archive | 3.10.0 | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. | [Homepage](https://github.com/AdventDevInc/kudu) |
-| [lynxoptimizer](../bucket/lynxoptimizer.json) | Unknown (manifest not found) | 0.216.2 | Windows system optimization utility. | [Homepage](https://github.com/caxzy/LynxOptimizer) |
+| [lynxoptimizer](../bucket/lynxoptimizer.json) | ZIP archive | 0.216.2 | Windows system optimization utility. | [Homepage](https://github.com/caxzy/LynxOptimizer) |
 | [minimal-firewall](../bucket/minimal-firewall.json) | EXE payload (standalone/extractor not verified) | 2.8.6 | A lightweight frontend for Windows Firewall. | [Homepage](https://github.com/deminimis/minimalfirewall) |
-| [nixthis](../bucket/nixthis.json) | Unknown (manifest not found) | 0.42.2 | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. | [Homepage](https://github.com/builtbybel/NixThis) |
+| [nixthis](../bucket/nixthis.json) | ZIP archive | 0.42.2 | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. | [Homepage](https://github.com/builtbybel/NixThis) |
 | [optimizerduck](../bucket/optimizerduck.json) | EXE payload (standalone/extractor not verified) | 2.29.0 | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. | [Homepage](https://github.com/itsfatduck/optimizerDuck) |
 | [prevent-turn-off](../bucket/prevent-turn-off.json) | ZIP archive | 3.63 | Prevent Windows from shutting down or entering sleep mode. | [Homepage](https://www.softwareok.com/?Download=PreventTurnOff) |
 | [reg-organizer](../bucket/reg-organizer.json) | Inno | 9.96 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
@@ -1021,7 +1021,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [dism-tools](../bucket/dism-tools.json) | Unknown (manifest not found) | v0.8.1_upd1 | DISMTools is a front-end for DISM that lets you manage your Windows Imaging (WIM) files and a whole lot more. | [Homepage](https://github.com/CodingWonders/DISMTools) |
+| [dism-tools](../bucket/dism-tools.json) | ZIP archive | v0.8.1_upd1 | DISMTools is a front-end for DISM that lets you manage your Windows Imaging (WIM) files and a whole lot more. | [Homepage](https://github.com/CodingWonders/DISMTools) |
 | [patchlight](../bucket/patchlight.json) | ZIP archive | 0.5.2 | Windows 11 update monitor that checks pending updates against Microsoft's known issues and pauses affected updates. | [Homepage](https://github.com/G4SBO/PatchLight) |
 | [sordum-fix-print-spooler](../bucket/sordum-fix-print-spooler.json) | ZIP archive | 1.3 | A small tool for fixing or disabling the Print Spooler service in Windows. | [Homepage](https://www.sordum.org/fix-print-spooler) |
 | [sordum-safe-mode-launcher](../bucket/sordum-safe-mode-launcher.json) | ZIP archive | 1.1 | Safe Mode Launcher is a freeware GUI app to restart your computer in Safe Mode. | [Homepage](https://www.sordum.org/12964/safe-mode-launcher-v1-1/) |
@@ -1533,10 +1533,10 @@ Publisher cross-list of 5 manifests associated with Aurelitec. Each entry is als
 
 | Manifest | Installer Type | Version | Description | Homepage |
 | --- | --- | --- | --- | --- |
-| [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | Unknown (manifest not found) | 2.2.0 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
+| [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | ZIP archive | 2.2.0 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
 | [aurelitec-injuredpixels](../bucket/aurelitec-injuredpixels.json) | ZIP archive | 4.0.0.127 | Portable display test utility for finding dead, stuck, hot, or defective pixels. | [Homepage](https://www.aurelitec.com/injuredpixels/) |
 | [aurelitec-pixelhealer](../bucket/aurelitec-pixelhealer.json) | ZIP archive | 1.5.0.30 | Portable display utility that attempts to recover stuck or hot pixels. | [Homepage](https://www.aurelitec.com/pixelhealer/) |
-| [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | Unknown (manifest not found) | 2.0.0 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
+| [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | ZIP archive | 2.0.0 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
 | [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | ZIP archive | 2.5.0.30 | Creates small portable HTML files for storing and opening individual bookmarks. | [Homepage](https://www.aurelitec.com/portmarks/) |
 
 ## ComputerSluggish Suite
@@ -1582,7 +1582,7 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | Package format not stated in manifest | 11.2.3.2920 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
 | [edgemin](../bucket/edgemin.json) | Inno | 11.8.3.8522 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [firemin](../bucket/firemin.json) | Inno | 11.8.3.8520 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
-| [notepad3](../bucket/notepad3.json) | Unknown (manifest not found) | 7.26.602.1 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
+| [notepad3](../bucket/notepad3.json) | ZIP archive | 7.26.602.1 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
 | [pixel-repair](../bucket/pixel-repair.json) | Package format not stated in manifest | 11.1.1.1008 | Portable utility for detecting and attempting to fix stuck pixels on LCD and OLED displays. | [Homepage](https://rizonesoft.com/downloads/pixel-repair/) |
 | [rizonesoft-office](../bucket/rizonesoft-office.json) | Inno | 2023.9.27.1794 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | Inno | 23.2.0.853 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
