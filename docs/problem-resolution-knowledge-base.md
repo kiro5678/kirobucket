@@ -684,3 +684,14 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - أُحدّث `bucket/now-bar.json` لتوثيق أن المثبّت الرسمي مخصص بـRust/Slint وأنه لا يستخدم `#/dl.7z`. أُضيف تصنيف Now Bar كـPortable في `docs/manifest-portability.md` لأن المانيفست ينزّل ملفات التطبيق المباشرة ولا يشغّل روتين تثبيت Windows.
 - نتائج التحقق من المانيفست: [Checkver 41206687666](https://github.com/kiro5678/kirobucket/actions/runs/41206687666)، [Archive validation 41206750389](https://github.com/kiro5678/kirobucket/actions/runs/41206750389)، [AutoUpdate validation 41206788998](https://github.com/kiro5678/kirobucket/actions/runs/41206788998)، [README manifest table 41206673761](https://github.com/kiro5678/kirobucket/actions/runs/41206673761) — جميعها اكتملت بنجاح.
 - Workflow التشخيص المؤقت أُضيف لتشغيل فحص DIE على هذا الملف فقط، ثم أُزيل بعد توثيق النتيجة. بقي Workflow العام `.github/workflows/detect-it-easy-api.yml` كما هو.
+
+
+## 2026-10-31 — التحقق من نوع مثبّت Nook وطريقة إدخاله إلى Scoop
+
+- **المانيفست:** `bucket/nook.json`، الإصدار `0.2.1`.
+- **نوع المثبّت المؤكد:** Inno Setup، وليس NSIS. ملف المصدر `installer/nook.iss` عند Tag `v0.2.1` يحتوي أقسام Inno Setup مثل `[Setup]` و`[Files]`، وسكربت `installer/build.ps1` يطلب Inno Setup 6.7 أو أحدث ويشغّل `ISCC.exe` لإنتاج `Nook-Setup-0.2.1.exe`.
+- **التحقق من الإصدار:** GitHub Release `v0.2.1` ينشر `Nook-Setup-0.2.1.exe` مع SHA-256 المعلن `00d6cc4bd58d3fd14fe6ceef9002f39ef60348dc03aa808dbc9120a1cce03446)، وهو مطابق لقيمة المانيفست الحالية.
+- **طريقة Scoop المناسبة:** الإبقاء على `innosetup: true`؛ يستخدم Scoop دالة `Expand-InnoArchive` ومساعد `innounp` لاستخراج محتويات `{app}` إلى مجلد إصدار Scoop بدلاً من تشغيل المثبّت الأصلي. لا تستخدم `#/dl.7z` لهذا الملف.
+- **بنية الملفات المتوقعة من سكربت المصدر:** `nook.exe` و`LICENSE.txt` في جذر `{app}`؛ لذلك اختصار Start Menu الحالي إلى `nook.exe` يطابق مسار التثبيت داخل سكربت Inno.
+- **سلوك النظام:** سكربت Inno يسجل بروتوكول `nook://` تحت HKCU ويتيح مهمة تشغيل عند تسجيل الدخول. تشغيل Scoop للاستخراج لا ينفذ أقسام `[Registry]` أو `[Run]` الخاصة بالمثبّت؛ التطبيق نفسه يسجل البروتوكول عند تشغيله. المانيفست يبقى **Nonportable** وفق فهرس المشروع بسبب تسجيل البروتوكول في HKCU عند تشغيل التطبيق.
+- **التحقق التشغيلي:** تحديث المانيفست سيطلق Manifest Pipeline، التي تستخدم `innounp` نفسه وتتحقق من تنزيل الملف وSHA-256 ووجود ملفات `{app}` ومسارات التشغيل. لا تسجل نجاح الاستخراج أو التثبيت قبل اكتمال تشغيل Archive Validation.
