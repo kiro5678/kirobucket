@@ -1,6 +1,12 @@
 name: Multi-Engine Installer Type Inspector
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - "under review scoop bucket/deskboard.json"
+      - ".github/workflows/multi-engine-installer-type-inspector.yml"
   workflow_dispatch:
     inputs:
       installer_url:
@@ -32,12 +38,24 @@ jobs:
         id: target
         shell: pwsh
         env:
-          INSTALLER_URL: ${{ inputs.installer_url }}
-          INSTALLER_NAME: ${{ inputs.installer_name }}
-          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+          INSTALLER_URL: ${{ inputs.installer_url || '' }}
+          INSTALLER_NAME: ${{ inputs.installer_name || '' }}
+          EXPECTED_SHA256: ${{ inputs.expected_sha256 || '' }}
         run: |
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
+
+          if ([string]::IsNullOrWhiteSpace($env:INSTALLER_URL)) {
+            $candidatePath = Join-Path $env:GITHUB_WORKSPACE "under review scoop bucket/deskboard.json"
+            if (-not (Test-Path -LiteralPath $candidatePath -PathType Leaf)) {
+              throw "The automatic Deskboard inspection could not find its review manifest."
+            }
+            $candidate = Get-Content -LiteralPath $candidatePath -Raw | ConvertFrom-Json
+            $env:INSTALLER_URL = [string]$candidate.url
+            if ([string]::IsNullOrWhiteSpace($env:INSTALLER_URL)) {
+              throw "The Deskboard review manifest does not contain a download URL."
+            }
+          }
 
           try {
             $uri = [System.Uri]::new($env:INSTALLER_URL)
