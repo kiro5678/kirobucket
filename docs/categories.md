@@ -31,11 +31,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 12 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 92 | [View](#windows-customization) |
+| Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 833**
+**Total unique manifests: 836**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -932,10 +932,12 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [openglass](../bucket/openglass.json) | 3.0.2.3749 | A replacement for the Desktop Window Manager glass effect on Windows. | [Homepage](https://github.com/ALTaleX531/OpenGlass) |
 | [openrgb](../bucket/openrgb.json) | 1.1 | RGB lighting control that does not depend on manufacturer software. | [Homepage](https://openrgb.org) |
 | [pointerstick](../bucket/pointerstick.json) | 7.22 | Display a virtual pointer stick on the desktop for presentations. | [Homepage](https://www.softwareok.com/?Download=PointerStick) |
+| [qnotch](../bucket/qnotch.json) | 0.8.4 | Dynamic Island-style Windows notch with media controls, system stats, clipboard history, and notifications. | [Homepage](https://github.com/Somafet/qnotch) |
 | [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
 | [rebuild-shell-icon-cache](../bucket/rebuild-shell-icon-cache.json) | 1.3 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |
 | [shuffle-paper](../bucket/shuffle-paper.json) | 0.4.0 | Privacy-friendly wallpaper shuffle and rotation utility for Windows | [Homepage](https://github.com/jcsm/ShufflePaper) |
+| [snowey-island](../bucket/snowey-island.json) | 1.0.1 | Windows 11 Dynamic Island desktop overlay with media controls, notifications, tasks, focus tools, and customizable pages. | [Homepage](https://www.snoweylabs.com/island/) |
 | [sordum-classic-shut-down](../bucket/sordum-classic-shut-down.json) | 1.2 | Portable utility that restores a convenient interface for the classic Windows shutdown options. | [Homepage](https://www.sordum.org/9205/classic-shut-down-v1-2/) |
 | [sordum-desktop-ini-editor](../bucket/sordum-desktop-ini-editor.json) | 1.2 | A simple app that allows users to edit the desktop.ini file in thier folders. | [Homepage](https://www.sordum.org/desktop-ini-editor) |
 | [sordum-easy-context-menu](../bucket/sordum-easy-context-menu.json) | 1.6 | A simple app for editing the context menu. | [Homepage](https://www.sordum.org/easy-context-menu) |
@@ -1019,6 +1021,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sparkle](../bucket/sparkle.json) | 2.25.0 | Windows debloat and optimization tool. | [Homepage](https://getsparkle.net) |
 | [ultimate-settings-panel](../bucket/ultimate-settings-panel.json) | 8.0.4 | 250+ Windows settings, tools, diagnostics and commands in one searchable panel. | [Homepage](https://github.com/techygeekshome/Ultimate-Settings-Panel) |
 | [winhance](../bucket/winhance.json) | 26.06.12 | Windows enhancement, debloating, optimization and customization utility | [Homepage](https://github.com/memstechtips/Winhance) |
+| [winisland](../bucket/winisland.json) | 1.0.2 | Dynamic Island-style Windows overlay with media controls, weather, focus timer, camera preview, tasks, and notifications. | [Homepage](https://github.com/zHeuzy2/WinIsland) |
 | [winscript](../bucket/winscript.json) | 2.27.1 | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. | [Homepage](https://winscript.cc/) |
 | [winutil](../bucket/winutil.json) | 26.10.07 | Windows utility for installing programs, applying system tweaks, troubleshooting, and configuring Windows updates. | [Homepage](https://winutil.christitus.com/) |
 | [winzenith](../bucket/winzenith.json) | 1.3.5 | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. | [Homepage](https://winzenith.github.io/) |
