@@ -4,6 +4,8 @@ This is the repository's mandatory reference for creating, changing, troubleshoo
 
 For the current Portable / Nonportable classification of every bucket manifest, see [Manifest Portability Inventory](manifest-portability.md). Reclassify entries whenever their installer, extraction method, or installation hooks change.
 
+The detailed Arabic source policy for creating manifests and choosing Portable / Nonportable extraction methods is [Scoop Manifest Portability Rules](scoop-manifest-portability-rules.md). Treat it as a mandatory companion to this guide, especially for MSI, Inno Setup, NSIS, EXE, ZIP, and 7Z packages.
+
 ## Mandatory problem-resolution and knowledge-base update rule
 
 This rule applies to every manifest-authoring, manifest-maintenance, and validation task:
