@@ -18,5 +18,6 @@
     },
     "autoupdate": {
         "url": "https://biniware.com/download/brun/v4/brun.exe"
-    }
+    },
+    "persist": "brun.cfg"
 }
