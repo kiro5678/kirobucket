@@ -2,6 +2,11 @@ name: Manual Scoop Checkver Validation
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/scoop-checkver-validation.yml'
     inputs:
       manifest:
         description: "Optional single manifest path under bucket/, e.g. bucket/taskexplorer.json. Leave empty to check the full bucket."
