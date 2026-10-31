@@ -4,6 +4,19 @@ This is the repository's mandatory reference for creating, changing, troubleshoo
 
 For the current Portable / Nonportable classification of every bucket manifest, see [Manifest Portability Inventory](manifest-portability.md). Reclassify entries whenever their installer, extraction method, or installation hooks change.
 
+## Mandatory problem-resolution and knowledge-base update rule
+
+This rule applies to every manifest-authoring, manifest-maintenance, and validation task:
+
+1. Investigate each real failure until its cause is supported by evidence. Do not treat an error message, a guessed explanation, or a workaround as a confirmed root cause.
+2. Fix the underlying issue where possible, not merely the visible symptom.
+3. After the fix, run the relevant validation again. Depending on the change, this may include JSON/schema validation, Scoop `checkver`, autoupdate simulation, archive inspection, extraction-path checks, installation/uninstallation tests, shortcut checks, and the relevant GitHub Actions workflow.
+4. **After resolving the problem, add or update its incident entry in [Problem Resolution Knowledge Base](problem-resolution-knowledge-base.md) in the same task.** Record the affected manifest/file, symptoms, confirmed root cause, exact fix, verification performed and its result, and a prevention/regression check.
+5. Mark an issue **Resolved and verified** only when the fix was actually tested or independently confirmed. State clearly when any verification remains pending or when only part of a batch was tested.
+6. If the incident exposes a general rule for creating, updating, extracting, installing, or classifying manifests, update this guide and/or the [Manifest Portability Inventory](manifest-portability.md) in the same task. Do not leave the lesson only in chat, a commit message, or a workflow log.
+
+Before investigating a recurring failure, search the problem-resolution knowledge base and reuse still-valid findings. Update an existing incident instead of creating a duplicate when new evidence concerns the same underlying cause.
+
 ## 1. Non-negotiable rule: automatic updates must work
 
 A manifest is not finished merely because the current version installs. By default, every manifest must support automatic version and download updates.
