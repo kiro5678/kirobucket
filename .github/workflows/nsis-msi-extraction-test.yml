@@ -183,7 +183,34 @@ jobs:
               $nsisSearchDirs = @($nsisExtract)
               $nestedArchives = @(
                 Get-ChildItem -LiteralPath $nsisExtract -File -Recurse -Force -ErrorAction SilentlyContinue |
-                  Where-Object { $_.Extension -match '(?i)^\.(7z|zip|cab)$              if ($listExit -eq 0 -and $extractExit -eq 0 -and $nsisMain.Count -gt 0) {
+                  Where-Object { $_.Extension.ToLowerInvariant() -in @(".7z", ".zip", ".cab") }
+              )
+              foreach ($nestedArchive in $nestedArchives) {
+                $nestedName = [System.IO.Path]::GetFileNameWithoutExtension($nestedArchive.Name)
+                $nestedOut = Join-Path $appRoot ("nested-" + ($nestedName -replace "[^A-Za-z0-9_-]", "-"))
+                New-Item -ItemType Directory -Path $nestedOut -Force | Out-Null
+                Add-Report "Nested archive detected: $($nestedArchive.FullName) [$($nestedArchive.Length) bytes]"
+                $nestedOutput = & $sevenZip x $nestedArchive.FullName "-o$nestedOut" -y -bd 2>&1
+                $nestedExit = $LASTEXITCODE
+                $nestedOutput | Set-Content -LiteralPath (Join-Path $appRoot "nested-$nestedName-extraction.log") -Encoding utf8
+                Add-Report "Nested archive extraction exit code ($($nestedArchive.Name)): $nestedExit"
+                if ($nestedExit -eq 0) {
+                  $nsisSearchDirs += $nestedOut
+                  Write-FileInventory -Directory $nestedOut -Label "Nested archive $($nestedArchive.Name)"
+                }
+              }
+
+              $nsisMain = @()
+              foreach ($searchDir in $nsisSearchDirs) {
+                $foundInDir = @(Find-AppExecutables -Directory $searchDir -Pattern $app.AppExePattern)
+                foreach ($candidate in $foundInDir) {
+                  $candidate.Path = (Join-Path (Split-Path -Leaf $searchDir) $candidate.Path).Replace('\', '/')
+                  $nsisMain += $candidate
+                }
+              }
+              Write-FileInventory -Directory $nsisExtract -Label "NSIS extraction"
+
+              if ($listExit -eq 0 -and $extractExit -eq 0 -and $nsisMain.Count -gt 0) {
                 $result.NsisExtraction = "success"
                 $result.NsisMainExe = ($nsisMain | ForEach-Object { $_.Path }) -join "; "
                 $nestedMainCount = @($nsisMain | Where-Object { $_.Path -match '^nested-' }).Count
