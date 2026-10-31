@@ -50,4 +50,15 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-10-31 — إصلاح تكرار وفساد دليل إنشاء المانيفستات ودمج قواعد قابلية النقل
+
+- **الحالة:** تم الإصلاح والتحقق من تحديث التوثيق.
+- **الملفات المتأثرة:** `docs/manifest-authoring.md`، `docs/manifest-portability.md`، `docs/scoop-manifest-portability-rules.md`.
+- **المشكلة:** احتوى دليل إنشاء المانيفستات على مقطع قديم مكرر ومُدرج في منتصف فقرة `checkver.github`، ما قطع مثال Regex وكرر أجزاء من الدليل. كما كانت قواعد Portable / Nonportable موزعة في ملف منفصل مع روابط متقاطعة.
+- **السبب الجذري:** السبب التاريخي لإدراج المقطع المكرر غير محسوم من محتوى الملفات وحده؛ المؤكد هو وجود التكرار وانقسام فقرة Regex. لا ننسب ذلك إلى Commit بعينه دون دليل.
+- **الحل:** إعادة بناء `manifest-authoring.md` باللغة العربية كمرجع موحد، وحذف النسخة المكررة وإصلاح صياغة Regex، ودمج قواعد Portable / Nonportable وReview وطرق MSI وInno وNSIS وEXE والاختبارات في الدليل نفسه. تحديث رابط `manifest-portability.md` ليشير إلى الدليل الموحد، ثم حذف الملف المنفصل بعد نقل محتواه.
+- **التحقق:** أُعيدت قراءة الدليل الموحد وجرد قابلية النقل من GitHub بعد التحديث، مع التحقق من المحتوى العربي والروابط الداخلية. لم تُشغّل اختبارات Scoop أو CI لأن التغييرات توثيقية.
+- **الوقاية:** اعتماد `docs/manifest-authoring.md` كمرجع أساسي واحد، وعدم الاحتفاظ بنسخ قواعد متوازية. عند إضافة قاعدة جديدة، حدّث الدليل الموحد وجرد التصنيف وسجل المشكلة عند انطباق ذلك.
+
+
 No incidents have been added to this knowledge base yet. Add the first entry when a repository problem has been fixed and its resolution has been verified.
