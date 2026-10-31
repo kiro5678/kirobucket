@@ -8,7 +8,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | --- | ---: | --- |
 | Android & Device Tools | 10 | [View](#android-device-tools) |
 | Browsers & Communication | 8 | [View](#browsers-communication) |
-| Clipboard & Text | 35 | [View](#clipboard-text) |
+| Clipboard & Text | 34 | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
 | Download Managers | 16 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
@@ -18,7 +18,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Images & Photos | 53 | [View](#images-photos) |
 | Keyboard & Language | 15 | [View](#keyboard-language) |
 | Media & Audio/Video | 48 | [View](#media-audio-video) |
-| Network & DNS | 53 | [View](#network-dns) |
+| Network & DNS | 52 | [View](#network-dns) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
 | Other Utilities | 2 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 834**
+**Total unique manifests: 832**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -96,7 +96,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [clipcascade](../bucket/clipcascade.json) | 3.3.1 | Cross-platform clipboard sync client for sharing clipboard content between devices with end-to-end encryption. | [Homepage](https://github.com/Sathvik-Rao/ClipCascade) |
 | [clipper](../bucket/clipper.json) | 0.24.3 | Clipboard manager with local and network synchronization. | [Homepage](https://github.com/windoze/clipper) |
 | [clipto](../bucket/clipto.json) | 7.2.17 | Cross-platform clipboard manager and notes app | [Homepage](https://clipto.pro/) |
-| [cliptray](../bucket/cliptray.json) | main (commit-pinned source build) | Native tray clipboard manager with local history, search, and automatic paste. | [Homepage](https://github.com/Shivam38391/cliptray) |
 | [cliptype](../bucket/cliptype.json) | 2.0.0 | Clipboard injector that types clipboard contents using native keystrokes | [Homepage](https://github.com/ahmedthebest31/ClipType) |
 | [clustercut](../bucket/clustercut.json) | 0.5.0 | Secure, local clipboard synchronization across Windows, macOS, and Linux. | [Homepage](https://github.com/keithvassallomt/ClusterCut) |
 | [colorconsole](../bucket/colorconsole.json) | 7.44 | Portable enhanced Windows console. | [Homepage](https://www.softwareok.com/?Download=ColorConsole) |
@@ -542,7 +541,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-website-watcher](../bucket/vovsoft-website-watcher.json) | 2.3 | Portable edition of Vovsoft Website Watcher. | [Homepage](https://vovsoft.com/software/website-watcher/) |
 | [warpinator](../bucket/warpinator.json) | 1.1 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 | [win-ping](../bucket/win-ping.json) | 2.88 | Run ping tests against network hosts. | [Homepage](https://www.softwareok.com/?Download=WinPing) |
-| [yerel](../bucket/yerel.json) | main (commit-pinned source build) | Local companion and web interface for sharing a chosen local app through a temporary Cloudflare Quick Tunnel. | [Homepage](https://github.com/Rudrakshbhardwaj01/Yerel) |
 
 ## Notes & Knowledge
 
