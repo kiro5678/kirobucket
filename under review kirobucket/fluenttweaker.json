@@ -14,7 +14,8 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/builtbybel/FluentTweaker",
+        "url": "https://api.github.com/repos/builtbybel/FluentTweaker/releases?per_page=100",
+        "jsonpath": "$[*].tag_name",
         "regex": "^(?<version>[\\d.]+)$"
     },
     "autoupdate": {
