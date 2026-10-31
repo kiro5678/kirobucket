@@ -25,7 +25,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | PDF & Documents | 29 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
-| Storage & Disk Tools | 26 | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 72 | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 850**
+**Total unique manifests: 851**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -721,6 +721,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [Auslogics-disk-defrag-ultimate](../bucket/Auslogics-disk-defrag-ultimate.json) | 4.13.0.3 | Disk defragmentation and optimization utility | [Homepage](https://www.auslogics.com/en/software/disk-defrag-ultimate/) |
 | [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
 | [carbon-cd](../bucket/carbon-cd.json) | 1.0.8 | Portable CD cloning and disc-image utility. | [Homepage](https://rizonesoft.com/downloads/carbon-cd/) |
+| [ccleaner](../bucket/ccleaner.json) | 6.41.11567 | Portable utility for cleaning temporary files and browser/system junk. | [Homepage](https://www.ccleaner.com/ccleaner) |
 | [compactgui](../bucket/compactgui.json) | 4.0.0-beta.12 | Reduce the space taken up by games and programs on disk by using native Windows APIs. | [Homepage](https://github.com/IridiumIO/CompactGUI) |
 | [diskgeek](../bucket/diskgeek.json) | 1.1.1 | A free, self-contained disk space analyser for Windows. | [Homepage](https://github.com/techygeekshome/DiskGeek) |
 | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | 11.2.3.2920 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
