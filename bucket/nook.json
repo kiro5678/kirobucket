@@ -30,7 +30,8 @@
         "if ($runValue -and $runValue -eq $expectedRunValue) { Remove-ItemProperty -LiteralPath $runKey -Name 'Nook' -Force }"
     ],
     "checkver": {
-        "github": "https://api.github.com/repos/Geguchh024/nook/releases/latest",
+        "url": "https://api.github.com/repos/Geguchh024/nook/releases/latest",
+        "jsonpath": "$.tag_name",
         "regex": "^v([\\d.]+)$"
     },
     "autoupdate": {
