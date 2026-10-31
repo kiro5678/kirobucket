@@ -71,6 +71,11 @@ jobs:
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\checkver.ps1'
           $manifestRoot = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\under review kirobucket'
+          if (-not (Test-Path -LiteralPath $manifestRoot -PathType Container)) {
+            Write-Host 'The under-review folder does not exist; nothing to validate.' -ForegroundColor Yellow
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value 'The under-review folder does not exist; Checkver validation skipped.'
+            exit 0
+          }
           $manifests = @(Get-ChildItem -LiteralPath $manifestRoot -Filter '*.json' -File | Sort-Object Name)
           if ($manifests.Count -eq 0) {
             Write-Host 'No under-review manifests found; nothing to validate.' -ForegroundColor Yellow
