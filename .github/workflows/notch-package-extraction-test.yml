@@ -1,0 +1,233 @@
+name: Notch Package Extraction Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/notch-package-extraction-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract-packages:
+    name: Download, verify, and inspect notch installers
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Download, verify, and extract official release assets
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if ($null -eq $command) { throw '7-Zip was not found on the runner.' }
+            $sevenZip = $command.Source
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP 'notch-package-extraction'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $reportPath = Join-Path $root 'extraction-report.txt'
+          $report = [System.Collections.Generic.List[string]]::new()
+          $failures = [System.Collections.Generic.List[string]]::new()
+
+          function Add-Report {
+            param([string]$Message)
+            $report.Add($Message)
+            Write-Host $Message
+          }
+
+          function Download-Verified {
+            param([string]$Url, [string]$Path, [string]$ExpectedSha256)
+            Invoke-WebRequest -Uri $Url -OutFile $Path -MaximumRedirection 10 -TimeoutSec 900
+            $actual = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $ExpectedSha256.ToLowerInvariant()) {
+              throw "SHA-256 mismatch. Expected $ExpectedSha256; got $actual."
+            }
+            return $actual
+          }
+
+          $targets = @(
+            @{
+              Name = 'Dlives'
+              Version = '1.0.0'
+              Kind = 'Inno'
+              Url = 'https://github.com/FuGen-India-Private-Ltd/Dlives/releases/download/v1.0.0/Dlives_Setup.exe'
+              Sha256 = '14a6742997851fb796d99b57b56ac52784d46b812d8138d428b52c68b1ced0f5'
+              AppExe = 'Dlives.exe'
+            },
+            @{
+              Name = 'V-Notch'
+              Version = '2.2.1'
+              Kind = 'NSIS'
+              Url = 'https://github.com/w0otdev/V-Notch/releases/download/v2.2.1/V-Notch-Setup.exe'
+              Sha256 = '549fe1cf2c6ae6f493fe2d90fefb1cd9b4d152fe5ca7dcd9d83ed8d4fc5c004b'
+              AppExe = 'V-Notch.exe'
+            },
+            @{
+              Name = 'WNotch'
+              Version = '0.22.0'
+              Kind = 'NotchPayload'
+              Url = 'https://github.com/Brick-Bread/WNotch/releases/download/v0.22.0/Notch-Setup-0.22.0.exe'
+              Sha256 = 'd8e2b78124021463cdbc7156868efa4b63fd789a019c19ce624853d9189b0f16'
+              AppExe = 'Notch.exe'
+            },
+            @{
+              Name = 'Yata'
+              Version = '0.7.1'
+              Kind = 'Inno'
+              Url = 'https://github.com/akaneni/yata/releases/download/v0.7.1/Yata-Setup-0.7.1.exe'
+              Sha256 = '4a979f5777df6751b130881828b97da1f8e41cb80f77ef1e1d678204df23569d'
+              AppExe = 'Yata.exe'
+            }
+          )
+
+          $innounpPath = $null
+          foreach ($target in $targets) {
+            if ($target.Kind -eq 'Inno') {
+              $helperZip = Join-Path $root 'innounp-2.zip'
+              $helperRoot = Join-Path $root 'innounp-helper'
+              $helperUrl = 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip'
+              $helperHash = '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd'
+              Download-Verified -Url $helperUrl -Path $helperZip -ExpectedSha256 $helperHash | Out-Null
+              New-Item -ItemType Directory -Path $helperRoot -Force | Out-Null
+              & $sevenZip x $helperZip "-o$helperRoot" '-y' | Out-Null
+              if ($LASTEXITCODE -ne 0) { throw 'Could not extract the pinned innounp helper.' }
+              $innounp = Get-ChildItem -LiteralPath $helperRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+              if ($null -eq $innounp) { throw 'Pinned innounp helper archive did not contain innounp.exe.' }
+              $innounpPath = $innounp.FullName
+              break
+            }
+          }
+
+          foreach ($target in $targets) {
+            Add-Report ''
+            Add-Report '============================================================'
+            Add-Report "$($target.Name) $($target.Version) [$($target.Kind)]"
+            Add-Report '============================================================'
+            $targetRoot = Join-Path $root ($target.Name -replace '[^A-Za-z0-9_-]', '-')
+            New-Item -ItemType Directory -Path $targetRoot -Force | Out-Null
+            $installerPath = Join-Path $targetRoot ([System.IO.Path]::GetFileName(([uri]$target.Url).AbsolutePath))
+            try {
+              $hash = Download-Verified -Url $target.Url -Path $installerPath -ExpectedSha256 $target.Sha256
+              Add-Report "Download and SHA-256: PASS ($hash)"
+              $extractRoot = Join-Path $targetRoot 'extracted'
+              New-Item -ItemType Directory -Path $extractRoot -Force | Out-Null
+
+              switch ($target.Kind) {
+                'Inno' {
+                  $output = & $innounpPath '-x' "-d$extractRoot" $installerPath '-y' '-c{app}' 2>&1
+                  $exitCode = $LASTEXITCODE
+                  if ($exitCode -ne 0) {
+                    throw "innounp extraction failed ($exitCode): $(($output | Select-Object -Last 8) -join ' ')"
+                  }
+                  $expected = Join-Path $extractRoot $target.AppExe
+                  if (-not (Test-Path -LiteralPath $expected -PathType Leaf)) {
+                    $found = @(Get-ChildItem -LiteralPath $extractRoot -Filter $target.AppExe -File -Recurse | ForEach-Object {
+                      [System.IO.Path]::GetRelativePath($extractRoot, $_.FullName).Replace('\', '/')
+                    })
+                    throw "Expected $($target.AppExe) at the extracted app root. Found: $($found -join ', ')"
+                  }
+                  Add-Report "Inno Setup extraction: PASS; $($target.AppExe) is at the app root."
+                }
+                'NSIS' {
+                  $listing = & $sevenZip l -slt $installerPath 2>&1
+                  if ($LASTEXITCODE -ne 0) { throw '7-Zip could not list the NSIS installer.' }
+                  $listing | Set-Content -LiteralPath (Join-Path $targetRoot '7zip-listing.txt') -Encoding utf8
+                  $extractOutput = & $sevenZip x $installerPath "-o$extractRoot" '-y' '-bd' 2>&1
+                  $exitCode = $LASTEXITCODE
+                  $extractOutput | Set-Content -LiteralPath (Join-Path $targetRoot '7zip-extraction.log') -Encoding utf8
+                  if ($exitCode -ne 0) { throw "7-Zip NSIS extraction failed ($exitCode)." }
+                  $expectedRelative = '$PLUGINSDIR/payload/' + $target.AppExe
+                  $found = @(Get-ChildItem -LiteralPath $extractRoot -Filter $target.AppExe -File -Recurse | ForEach-Object {
+                    [System.IO.Path]::GetRelativePath($extractRoot, $_.FullName).Replace('\', '/')
+                  })
+                  if ($found -notcontains $expectedRelative) {
+                    throw "Expected exact NSIS path '$expectedRelative'. Found: $($found -join ', ')"
+                  }
+                  Add-Report "NSIS extraction: PASS; exact payload path $expectedRelative."
+                }
+                'NotchPayload' {
+                  $stream = [System.IO.File]::OpenRead($installerPath)
+                  $payloadZip = Join-Path $targetRoot 'notch-payload.zip'
+                  $output = $null
+                  try {
+                    if ($stream.Length -lt 16) { throw 'Setup is too small for the NOTCHPAY trailer.' }
+                    $stream.Position = $stream.Length - 16
+                    $trailer = New-Object byte[] 16
+                    $totalRead = 0
+                    while ($totalRead -lt 16) {
+                      $read = $stream.Read($trailer, $totalRead, 16 - $totalRead)
+                      if ($read -le 0) { throw 'Could not read the NOTCHPAY trailer.' }
+                      $totalRead += $read
+                    }
+                    $magic = [System.Text.Encoding]::ASCII.GetString($trailer, 8, 8)
+                    if ($magic -cne 'NOTCHPAY') { throw "Unexpected payload marker: $magic" }
+                    $zipLength = [System.BitConverter]::ToInt64($trailer, 0)
+                    $zipOffset = $stream.Length - 16 - $zipLength
+                    if ($zipLength -le 0 -or $zipOffset -le 0) { throw 'Embedded ZIP length is invalid.' }
+                    $stream.Position = $zipOffset
+                    $output = [System.IO.File]::Create($payloadZip)
+                    $buffer = New-Object byte[] 65536
+                    $remaining = $zipLength
+                    while ($remaining -gt 0) {
+                      $count = [int][Math]::Min([long]$buffer.Length, $remaining)
+                      $read = $stream.Read($buffer, 0, $count)
+                      if ($read -le 0) { throw 'Embedded ZIP ended unexpectedly.' }
+                      $output.Write($buffer, 0, $read)
+                      $remaining -= $read
+                    }
+                    $output.Flush()
+                  }
+                  finally {
+                    if ($null -ne $output) { $output.Dispose() }
+                    $stream.Dispose()
+                  }
+                  Expand-Archive -LiteralPath $payloadZip -DestinationPath $extractRoot -Force
+                  Remove-Item -LiteralPath $payloadZip -Force
+                  if (-not (Test-Path -LiteralPath (Join-Path $extractRoot $target.AppExe) -PathType Leaf)) {
+                    throw "Embedded ZIP did not extract $($target.AppExe) at its root."
+                  }
+                  Add-Report "NOTCHPAY embedded ZIP extraction: PASS; $($target.AppExe) is at the root."
+                }
+              }
+
+              $files = @(Get-ChildItem -LiteralPath $extractRoot -File -Recurse -Force)
+              $executables = @($files | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+                [System.IO.Path]::GetRelativePath($extractRoot, $_.FullName).Replace('\', '/')
+              })
+              Add-Report "Extracted files: $($files.Count)"
+              Add-Report "EXE inventory: $($executables -join '; ')"
+              Add-Report 'RESULT: PASS'
+            }
+            catch {
+              $message = "$($target.Name): $($_.Exception.Message)"
+              $failures.Add($message)
+              Add-Report "RESULT: FAIL — $message"
+            }
+          }
+
+          Add-Report ''
+          Add-Report '============================================================'
+          Add-Report "Packages tested: $($targets.Count)"
+          Add-Report "Failures: $($failures.Count)"
+          Add-Report '============================================================'
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          if ($failures.Count -gt 0) {
+            $failures | ForEach-Object { Write-Error $_ }
+            exit 1
+          }
+
+      - name: Upload extraction report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: notch-package-extraction-report
+          path: ${{ runner.temp }}/notch-package-extraction
+          if-no-files-found: warn
