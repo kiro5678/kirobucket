@@ -38,7 +38,7 @@ jobs:
 
       - name: Enable authenticated GitHub API requests in Scoop checkver
         env:
-          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           if ([string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
             throw 'Review Checkver validation requires CHECKVER_GITHUB_TOKEN.'
@@ -62,7 +62,7 @@ jobs:
 
       - name: Validate under-review manifests
         env:
-          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           SCOOP_HOME: ${{ github.workspace }}\scoop_core
         run: |
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\checkver.ps1'
