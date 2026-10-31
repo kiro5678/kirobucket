@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 832 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
+**Portability audit coverage:** 833 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,10 +22,10 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 771 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 772 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 5 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **832** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| **Total** | **833** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
 
@@ -36,6 +36,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 - [`fig`](../bucket/fig.json) — **Portable**: uses the publisher's standalone, self-contained Windows executable rather than its setup installer.
 - [`nook`](../bucket/nook.json) — **Nonportable**: the application registers the `nook://` URL scheme under the current user's registry each time it starts. The manifest removes that registration on uninstall only when it still points to this Scoop installation.
 - [`rust-meow`](../bucket/rust-meow.json) — **Portable**: verified 7-Zip 26.05 extraction of the NSIS EXE produced `rust-meow.exe` and `rust-meow-backend.exe` at the payload root without running the vendor setup routine; Scoop uses `#/dl.7z`. Linked-device credentials and profile data remain under `%LOCALAPPDATA%\\rust-meow` and are not removed by Scoop uninstall.
+- [`now-bar`](../bucket/now-bar.json) — **Portable**: Scoop downloads the two official standalone application binaries directly (`nowbar.exe` and `nowbar-settings.exe`) and places them side by side; it does not run the vendor's custom Rust/Slint setup. Detect It Easy 3.21 identifies `nowbar-setup.exe` as `PE64 / Compiler: Rust`, not NSIS or Inno. Settings and logs remain outside Scoop under `%APPDATA%\\NowBar` and `%LOCALAPPDATA%\\NowBar`.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
