@@ -7,7 +7,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Category | Manifests | Link |
 | --- | ---: | --- |
 | Android & Device Tools | 10 | [View](#android-device-tools) |
-| Browsers & Communication | 7 | [View](#browsers-communication) |
+| Browsers & Communication | 8 | [View](#browsers-communication) |
 | Clipboard & Text | 34 | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
 | Download Managers | 16 | [View](#download-managers) |
@@ -35,7 +35,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 830**
+**Total unique manifests: 831**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -83,6 +83,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [biscuit](../bucket/biscuit.json) | 2.2.1 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
 | [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | 26.10 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
+| [rust-meow](../bucket/rust-meow.json) | 0.2.0 | Unofficial WhatsApp desktop linked-device client built with Tauri, SolidJS, and a Go whatsmeow sidecar. | [Homepage](https://github.com/thinkter/rust-meow) |
 | [viola](../bucket/viola.json) | 0.2.10 | Native desktop web browser. | [Homepage](https://github.com/nmcmil/Viola-Downloads) |
 | [zapzap](../bucket/zapzap.json) | 7.5.1 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafatosta/zapzap) |
 
