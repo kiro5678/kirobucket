@@ -21,9 +21,9 @@
         ]
     ],
     "checkver": {
-        "github": "https://api.github.com/repos/LongSoft/UEFITool/releases/latest",
+        "url": "https://api.github.com/repos/LongSoft/UEFITool/releases/latest",
         "jsonpath": "$.tag_name",
-        "regex": "([\\w.]+)"
+        "regex": "^(?<version>[A-Z]\\d+)$"
     },
     "autoupdate": {
         "architecture": {
