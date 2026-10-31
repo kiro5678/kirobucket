@@ -1,5 +1,7 @@
 # Manifest Portability Inventory
 
+**Mandatory companion policy:** Follow [قاعدة إنشاء مانيفستات Scoop وتصنيف Portable / Nonportable](scoop-manifest-portability-rules.md) when creating manifests, selecting extraction methods, and deciding Portable / Nonportable / Review.
+
 ## Mandatory problem-resolution rule for portability audits
 
 When creating, reviewing, or changing a manifest's Portable / Nonportable / Review classification:
