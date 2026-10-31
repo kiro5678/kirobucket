@@ -1,0 +1,47 @@
+name: Validate GitHub Actions Workflows
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-workflows-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  actionlint:
+    name: Lint workflow files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install actionlint
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTIONLINT_VERSION='1.7.12'
+          ARCHIVE="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          curl --fail --location --silent --show-error \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/${ARCHIVE}" \
+            --output "${RUNNER_TEMP}/${ARCHIVE}"
+          tar -xzf "${RUNNER_TEMP}/${ARCHIVE}" -C "${RUNNER_TEMP}" actionlint
+          sudo install -m 0755 "${RUNNER_TEMP}/actionlint" /usr/local/bin/actionlint
+          actionlint -version
+
+      - name: Validate all GitHub Actions workflows
+        shell: bash
+        run: actionlint -color
