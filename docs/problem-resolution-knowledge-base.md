@@ -50,89 +50,89 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
-### 2026-10-31 — إصلاح تكرار وفساد دليل إنشاء المانيفستات ودمج قواعد قابلية النقل
+### 2026-10-31 — Repair duplicated and corrupted manifest authoring guide and merge portability rules
 
-- **الحالة:** تم الإصلاح والتحقق من تحديث التوثيق.
-- **الملفات المتأثرة:** `docs/manifest-authoring.md`، `docs/manifest-portability.md`، `docs/scoop-manifest-portability-rules.md`.
-- **المشكلة:** احتوى دليل إنشاء المانيفستات على مقطع قديم مكرر ومُدرج في منتصف فقرة `checkver.github`، ما قطع مثال Regex وكرر أجزاء من الدليل. كما كانت قواعد Portable / Nonportable موزعة في ملف منفصل مع روابط متقاطعة.
-- **السبب الجذري:** السبب التاريخي لإدراج المقطع المكرر غير محسوم من محتوى الملفات وحده؛ المؤكد هو وجود التكرار وانقسام فقرة Regex. لا ننسب ذلك إلى Commit بعينه دون دليل.
-- **الحل:** إعادة بناء `manifest-authoring.md` باللغة العربية كمرجع موحد، وحذف النسخة المكررة وإصلاح صياغة Regex، ودمج قواعد Portable / Nonportable وReview وطرق MSI وInno وNSIS وEXE والاختبارات في الدليل نفسه. تحديث رابط `manifest-portability.md` ليشير إلى الدليل الموحد، ثم حذف الملف المنفصل بعد نقل محتواه.
-- **التحقق:** أُعيدت قراءة الدليل الموحد وجرد قابلية النقل من GitHub بعد التحديث، مع التحقق من المحتوى العربي والروابط الداخلية. لم تُشغّل اختبارات Scoop أو CI لأن التغييرات توثيقية.
-- **الوقاية:** اعتماد `docs/manifest-authoring.md` كمرجع أساسي واحد، وعدم الاحتفاظ بنسخ قواعد متوازية. عند إضافة قاعدة جديدة، حدّث الدليل الموحد وجرد التصنيف وسجل المشكلة عند انطباق ذلك.
+- **Status:** Fixed; documentation update verified.
+- **Affected files:** `docs/manifest-authoring.md`, `docs/manifest-portability.md`, `docs/scoop-manifest-portability-rules.md`.
+- **Problem:** The manifest authoring guide contained an old duplicated section inserted in the middle of the `checkver.github` paragraph. This broke the Regex example and repeated parts of the guide. Portable / Nonportable rules were also split across a separate file with cross-links between the documents.
+- **Root cause:** The historical reason for inserting the duplicated section cannot be established from the file contents alone. The confirmed facts are the duplication and the interrupted Regex paragraph. Do not attribute the issue to a specific commit without evidence.
+- **Resolution:** Rebuilt `manifest-authoring.md` in Arabic as a single reference, removed the duplicate section, repaired the Regex wording, and merged the Portable / Nonportable / Review rules, MSI / Inno / NSIS / EXE extraction methods, and testing guidance into the same guide. Updated the link in `manifest-portability.md` to point to the unified guide, then deleted the separate rules file after moving its content.
+- **Verification:** Read back the unified guide and portability inventory from GitHub after the update, and checked the Arabic content and internal links. Scoop and CI tests were not run because the changes were documentation-only.
+- **Prevention:** Keep `docs/manifest-authoring.md` as the single primary reference and do not maintain parallel copies of the same rules. When adding a new rule, update the unified guide, classification inventory, and incident log where applicable.
 
-## 2026-10-31 — تصحيح توثيق مشغلات Manifest Pipeline
+## 2026-10-31 — Correct Manifest Pipeline trigger documentation
 
-- **المشكلة:** وصف `docs/manifest-authoring.md` الـ Manifest Pipeline بأنه يدوي فقط، بينما ملف `.github/workflows/manifest-pipeline.yml` على `master` يعرّف أيضاً مشغّل `push` لفرع `master` عند تغيّر ملفات `bucket/*.json`. قد يؤدي هذا التعارض إلى توقع غير صحيح بشأن بدء التحقق بعد إضافة مانيفست.
-- **الأعراض:** تعليمات الدليل لا تطابق إعدادات `on.push` و`on.workflow_dispatch` الفعلية في ملف Workflow.
-- **السبب الجذري:** لم يُحدَّث وصف الدليل عند إضافة/تغيير مشغلات الـ Workflow؛ لذلك أصبح التوثيق قديماً.
-- **الحل:** تعديل الدليل ليذكر المشغّل التلقائي عند دفع ملفات المانيفست إلى `master`، مع الإبقاء على إمكانية التشغيل اليدوي. إزالة الجملة الختامية القديمة التي كانت تزعم عدم وجود سجلات مشكلات رغم احتواء الملف على سجل سابق.
-- **التحقق:** تمت قراءة YAML الحالي من `master` والتأكد من وجود `push.branches: master` و`push.paths: bucket/*.json` و`workflow_dispatch`. بعد التحديث ستتم إعادة قراءة ملفات التوثيق من GitHub للتحقق من انعكاس التعديل. لم يُشغَّل Workflow فعلياً ضمن هذا التصحيح.
-- **الوقاية:** عند تعديل مشغلات أي Workflow، راجع القسم المقابل في `manifest-authoring.md` وحدثه في Commit نفسه. لا تعتبر قراءة YAML بديلاً عن متابعة تشغيل Actions.
-- **الحالة:** تم تصحيح التوثيق والتحقق من مطابقته للإعداد الحالي؛ لم يُختبر تنفيذ Workflow.
+- **Problem:** `docs/manifest-authoring.md` described the Manifest Pipeline as manual-only, while `.github/workflows/manifest-pipeline.yml` on `master` also defines a `push` trigger for the `master` branch when `bucket/*.json` files change. This mismatch could lead to incorrect expectations about validation starting after a manifest is added.
+- **Symptoms:** The guide's instructions did not match the actual `on.push` and `on.workflow_dispatch` settings in the workflow file.
+- **Root cause:** The guide was not updated when workflow triggers were added or changed, leaving the documentation outdated.
+- **Resolution:** Updated the guide to document the automatic trigger when manifest files are pushed to `master`, while retaining the manual trigger. Removed the old closing sentence that claimed there were no incident records even though the file already contained an incident log.
+- **Verification:** Read the current YAML from `master` and confirmed `push.branches: master`, `push.paths: bucket/*.json`, and `workflow_dispatch`. The documentation files were to be read back from GitHub after the update to confirm the change. No workflow was actually run as part of this correction.
+- **Prevention:** Whenever workflow triggers are changed, review and update the corresponding section in `manifest-authoring.md` in the same commit. Reading the YAML is not a substitute for monitoring an actual Actions run.
+- **Status:** The documentation was corrected and checked against the current configuration; workflow execution was not tested.
 
-## 2026-10-31 — تصحيح اكتشاف إصدارات Fig وNook عبر GitHub REST API
+## 2026-10-31 — Fix Fig and Nook version detection through the GitHub REST API
 
-- **الحالة:** تم تعديل المانيفستات؛ تحقق Scoop بعد التصحيح لم يكتمل بعد.
-- **الملفات المتأثرة:** `bucket/fig.json` و`bucket/nook.json`.
-- **المشكلة:** فشل Fig في مطابقة Regex مع صفحة `https://github.com/Skynse/Fig/releases/latest`، فتوقف Manifest Pipeline قبل الوصول إلى Nook.
-- **السبب الجذري:** Regex صُمم لالتقاط قيمة `tag_name` من JSON، لكن مصدر الفحص لم يقدّم JSON بالطريقة التي يتوقعها Scoop.
-- **الحل:** استخدام `checkver.url` مع `jsonpath: "$.tag_name"` وRegex صريح في Fig وNook، مع توجيه URL إلى GitHub REST API الخاص بالإصدار الأحدث.
-- **التحقق:** القيم الحالية عبر API هي Fig = `v1.0.1` وNook = `v0.2.1`. طابقت أنماط Regex هاتين القيمتين، لكن فحص Scoop المستقل للمانيفستين لم يُعَد تشغيله بعد.
-- **الوقاية:** عند التقاط `tag_name` من JSON، استخدم `checkver.url` مع JSONPath وRegex؛ لا تفترض أن `checkver.github` أو صفحة GitHub العادية ستتحول تلقائياً إلى JSON.
-
-
-
-## 2026-10-31 — إصلاح رابط أرشيف Android DEX والتحقق من مسارات التشغيل
-
-- **الحالة:** تم الإصلاح والتحقق من جميع مراحل التحقق الخاصة بالمانيفست؛ تشغيل Manifest Pipeline المجمع ما زال ينتظر مرحلة تحديث صفحات README.
-- **الملفات المتأثرة:** `bucket/android-dex.json` و`docs/manifest-authoring.md`.
-- **المشكلة:** فشل فحص الأرشيف أولاً لأن `Android_Dex_Windows_x64.zip` لم يحتوِ على `Android_Dex.exe` في المسار المتوقع. بعد اختيار الأرشيف الرسمي الصحيح، كشف الفحص أن رابط التنزيل الحالي يحتوي المتغير غير المحلول `$version`.
-- **السبب الجذري:** تم اختيار Asset غير مطابق لملف Windows الذي يوصي به README الرسمي، كما استُخدم متغير التحديث `$version` في رابط الإصدار الحالي بدلاً من وضعه في قالب `autoupdate` فقط.
-- **الحل:** استخدام `Android_Dex_Windows.zip` من إصدار `Android-Dex-v.1.4` مع SHA-256 الصحيح، وجعل `architecture.64bit.url` رابطاً ثابتاً للإصدار الحالي. بقي `$version` في `autoupdate.architecture.64bit.url` فقط.
-- **التحقق:** التنسيق نجح في [41193383683](https://github.com/kiro5678/kirobucket/actions/runs/41193383683). فحص `checkver` نجح في PowerShell وpwsh ضمن [41193419418](https://github.com/kiro5678/kirobucket/actions/runs/41193419418). فحص SHA-256 ومسارات الأرشيف نجح في [41193462723](https://github.com/kiro5678/kirobucket/actions/runs/41193462723). اختبار `autoupdate` نجح في [41193496154](https://github.com/kiro5678/kirobucket/actions/runs/41193496154)، واختبارات CI نجحت في PowerShell وpwsh ضمن [41193538127](https://github.com/kiro5678/kirobucket/actions/runs/41193538127). لا يُسجَّل تشغيل Manifest Pipeline المجمع كاملاً على أنه ناجح قبل انتهاء مرحلة تحديث جدول README.
-- **الوقاية:** ضع رابط إصدار حقيقياً ومحدداً في `architecture.<arch>.url`. استخدم `$version` في قوالب `autoupdate.url` فقط، ثم افحص استخراج الأرشيف ووجود كل ملف في `bin` والاختصارات.
+- **Status:** The manifests were updated; post-fix Scoop validation has not yet completed.
+- **Affected files:** `bucket/fig.json` and `bucket/nook.json`.
+- **Problem:** Fig failed to match its Regex against `https://github.com/Skynse/Fig/releases/latest`, causing Manifest Pipeline to stop before reaching Nook.
+- **Root cause:** The Regex was designed to capture `tag_name` from JSON, but the checkver source did not provide JSON in the format Scoop expected.
+- **Resolution:** Used `checkver.url` with `jsonpath: "$.tag_name"` and an explicit Regex in both Fig and Nook, pointing the URL to the GitHub REST API endpoint for the latest release.
+- **Verification:** The current API values are Fig = `v1.0.1` and Nook = `v0.2.1`. Both values matched their Regex patterns, but the independent Scoop checkver validation for the two manifests has not yet been rerun.
+- **Prevention:** When extracting `tag_name` from JSON, use `checkver.url` with JSONPath and Regex. Do not assume that `checkver.github` or a regular GitHub page will automatically be converted to JSON.
 
 
 
-## 2026-10-31 — فشل Checkout لمستودع Scoop بسبب حد GitHub API
+## 2026-10-31 — Fix Android DEX archive URL and verify executable paths
 
-- **الحالة:** تم تطبيق إصلاح إعداد المصادقة؛ التحقق التشغيلي بعد التعديل ما زال معلقاً.
-- **الملفات المتأثرة:** `.github/workflows/scoop-checkver-validation.yml` و`.github/workflows/ci.yml` و`.github/workflows/scoop-autoupdate-validation.yml`.
-- **المشكلة:** فشلت وظائف Checkver وCI أثناء خطوة `Checkout Scoop` قبل تشغيل فحوص المانيفست، وظهر الخطأ الصريح `API rate limit exceeded for installation`. أدى ذلك إلى توقف Manifest Pipeline عند أول مرحلة فرعية فاشلة، وبالتالي لم تكتمل دفعة الـ48 ولا إعادة فحص Fig/Nook.
-- **السبب الجذري:** كانت خطوة `actions/checkout` لمستودع `ScoopInstaller/Scoop` تستخدم تلقائياً `github.token` المرتبط بتثبيت GitHub App، ووصل هذا الرمز إلى حد طلبات API. السجلات تؤكد أن الفشل حدث أثناء Checkout وليس داخل Scoop `checkver` أو في Regex المانيفستات.
-- **الحل:** أضيف إلى Checkout لمستودع Scoop في workflows الثلاثة الرمز `${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}`، بحيث يستخدم PAT المخزن في `CHECKVER_GITHUB_TOKEN` عند توفره، مع الإبقاء على رمز GitHub الافتراضي كخيار احتياطي.
-- **التحقق:** تأكدت من سجلات التشغيل [41194974061](https://github.com/kiro5678/kirobucket/actions/runs/41194974061) و[41194857644](https://github.com/kiro5678/kirobucket/actions/runs/41194857644) أن Checkout Scoop انتهى برسالة حد API قبل تشغيل Checkver/CI. تم فحص التعديلات نصياً قبل دفعها؛ لم يُعَد تشغيل الوظائف بعد، لذا لا يُعد تجاوز حد API مثبتاً بعد.
-- **الوقاية:** استخدم رمزاً مخصصاً ذا حد API مستقل عند Checkout لمستودع Scoop أو طلب GitHub API بكثافة. لا تسجل فشل Checkver على أنه خطأ مانيفست إذا فشلت خطوة Checkout قبل تشغيله. افصل نتيجة تجهيز بيئة الاختبار عن نتيجة الاختبار الفعلي في تقارير Manifest Pipeline.
-
-
-## 2026-10-31 — إضافة Wintor وCliptray وYerel وAnton إلى bucket مع حالات التحقق
-
-- **الحالة:** أُضيفت المانيفستات الأربعة إلى `bucket/`؛ تصنيفا Review لمشروعي المصدر وAnton مؤقتان حتى التحقق التشغيلي. لا يُسجَّل أي تثبيت أو بناء محلي ناجح في هذه المرحلة.
-- **الملفات المتأثرة:** `bucket/wintor.json`، `bucket/cliptray.json`، `bucket/yerel.json`، `bucket/anton.json`، `docs/manifest-portability.md`، `docs/categories.md`، `.github/workflows/manifest-table.yml`.
-- **المشكلة:** لم تكن البرامج الأربعة توفر كلها ملف Windows جاهزاً يمكن إضافته برابط تنزيل وChecksum منشورين. Wintor يوزع عبر Microsoft Store؛ Cliptray وYerel لا ينشران Windows release assets في المستودعين المحددين؛ وAnton يعيد توجيه رابط Windows الرسمي إلى Setup EXE دون Checksum عام متاح.
-- **الحل:** أضيف Wintor عبر Store Product ID الرسمي بواسطة winget، مع إزالة حزمة المستخدم عند إلغاء التثبيت. أضيف Cliptray وYerel كمصدرَي بناء مثبتين على Git commit كامل، مع تبعيات البناء والاختصارات التي ينشئها Hook بعد نجاح البناء. أضيف Anton كعنصر Review ينزّل ملف Setup الرسمي فقط ولا يشغّله، مع اكتشاف الإصدار من عنوان إعادة التوجيه.
-- **التحقق المتاح قبل التشغيل:** README وPackage.appxmanifest ومصدر المستودعات تؤكد طريقة توزيع Wintor ومتطلبات Cliptray وYerel؛ رابط Anton الرسمي أعاد توجيهاً إلى إصدار Windows 0.2.48. لا يتوفر Checksum منشور لـAnton أو لملفات المصدر المضغوطة؛ تم تثبيت المصدرين على SHA-1 commit كامل بدلاً من اختلاق Hash أرشيف.
-- **الاختبارات غير المنفذة بعد:** لم يُثبت تشغيل winget/MS Store أو بناء Cliptray مع MSVC أو بناء Yerel عبر npm أو تشغيل Anton Setup على Windows. يجب انتظار نتائج Scoop Checkver وArchive/Autoupdate validation وCI بعد الدفع، ولا تُعد هذه الفحوص بديلاً عن اختبار التثبيت والبناء الفعلي.
-- **الوقاية:** لا تستبدل غياب ملفات الإصدارات بملفات من Fork أو مشروع آخر يحمل اسماً مشابهاً. لا تصف برامج المصدر بأنها Portable قبل نجاح البناء والتشغيل، ولا تشغّل Setup غير مفحوص أو تحذف بياناته أو تكاملاته بالافتراض.
+- **Status:** The manifest-specific validation stages were fixed and verified; the combined Manifest Pipeline run was still waiting for the README page-generation stage.
+- **Affected files:** `bucket/android-dex.json` and `docs/manifest-authoring.md`.
+- **Problem:** Archive validation initially failed because `Android_Dex_Windows_x64.zip` did not contain `Android_Dex.exe` at the expected path. After selecting the correct official archive, validation revealed that the current download URL contained the unresolved `$version` variable.
+- **Root cause:** The selected asset did not match the Windows file recommended by the official README. The `$version` update variable was also used in the current-release URL instead of being reserved for the `autoupdate` template.
+- **Resolution:** Used `Android_Dex_Windows.zip` from release `Android-Dex-v.1.4` with the correct SHA-256, and made `architecture.64bit.url` a fixed URL for the current release. Kept `$version` only in `autoupdate.architecture.64bit.url`.
+- **Verification:** Formatting passed in [41193383683](https://github.com/kiro5678/kirobucket/actions/runs/41193383683). `checkver` passed in both PowerShell and pwsh in [41193419418](https://github.com/kiro5678/kirobucket/actions/runs/41193419418). SHA-256 and archive-path validation passed in [41193462723](https://github.com/kiro5678/kirobucket/actions/runs/41193462723). The `autoupdate` test passed in [41193496154](https://github.com/kiro5678/kirobucket/actions/runs/41193496154), and CI passed in both PowerShell and pwsh in [41193538127](https://github.com/kiro5678/kirobucket/actions/runs/41193538127). Do not mark the combined Manifest Pipeline run fully successful until the README table-generation stage has completed.
+- **Prevention:** Put a real, version-specific release URL in `architecture.<arch>.url`. Use `$version` only in `autoupdate.url` templates, then verify archive extraction and the presence of every file referenced by `bin` and shortcuts.
 
 
-## 2026-10-31 — حذف Wintor لارتباط تثبيته بـwinget
 
-- **الحالة:** تم حذف `bucket/wintor.json` بناءً على طلب المستخدم.
-- **الملفات المتأثرة:** `bucket/wintor.json`، `docs/manifest-portability.md`، `docs/categories.md`، `.github/workflows/manifest-table.yml`.
-- **السبب:** كان المانيفست يعتمد على تشغيل `winget install --source msstore` لتثبيت تطبيق Microsoft Store، بدلاً من تنزيل حزمة Windows وإدارتها مباشرةً بواسطة Scoop.
-- **الحل:** حذف المانيفست وإزالة إدخاله من فهرس الفئات وماب مولّد README، مع تحديث العدد الكلي إلى 834 والعدد Nonportable إلى 57.
-- **التحقق:** يجب التأكد بعد الدفع من غياب الملف والروابط المرجعية ومن نجاح توليد جدول README. لم يُنفذ التثبيت عبر winget كجزء من هذا الحذف.
-- **الوقاية:** لا تضف مانيفستاً يشغّل winget أو مدير حزم خارجي لتثبيت تطبيق آخر إلا إذا طلب المستخدم ذلك صراحةً؛ فضّل روابط الحزم المباشرة التي يستطيع Scoop تنزيلها وإدارتها.
+## 2026-10-31 — Scoop repository checkout failed because of the GitHub API rate limit
+
+- **Status:** The authentication configuration fix was applied; operational verification after the change is still pending.
+- **Affected files:** `.github/workflows/scoop-checkver-validation.yml`, `.github/workflows/ci.yml`, and `.github/workflows/scoop-autoupdate-validation.yml`.
+- **Problem:** Checkver and CI jobs failed during the `Checkout Scoop` step before manifest checks started, with the explicit error `API rate limit exceeded for installation`. Manifest Pipeline stopped at the first failed child stage, so the 48-manifest batch and the Fig/Nook rechecks were not completed.
+- **Root cause:** The `actions/checkout` step for `ScoopInstaller/Scoop` automatically used `github.token`, which was associated with a GitHub App installation and had reached its API request limit. The logs confirm that the failure occurred during checkout, not inside Scoop `checkver` or the manifest Regex patterns.
+- **Resolution:** Added `${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}` to the Scoop repository checkout steps in all three workflows. When available, the PAT stored in `CHECKVER_GITHUB_TOKEN` is used, with the default GitHub token retained as a fallback.
+- **Verification:** Logs from [41194974061](https://github.com/kiro5678/kirobucket/actions/runs/41194974061) and [41194857644](https://github.com/kiro5678/kirobucket/actions/runs/41194857644) confirmed that Scoop checkout stopped with the API-limit error before Checkver/CI began. The edits were inspected as text before being pushed; the jobs have not yet been rerun, so the API-limit issue has not yet been proven resolved.
+- **Prevention:** Use a dedicated token with its own API rate limit when checking out the Scoop repository or making frequent GitHub API requests. Do not report a Checkver failure as a manifest error when checkout failed before Checkver ran. Report test-environment setup results separately from the actual test results in Manifest Pipeline reports.
 
 
-## 2026-10-31 — إزالة مانيفستي Cliptray وYerel
+## 2026-10-31 — Add Wintor, Cliptray, Yerel, and Anton to the bucket with validation statuses
 
-- **التغيير:** حُذف `bucket/cliptray.json` و`bucket/yerel.json` بطلب المستخدم.
-- **السياق:** كلا المانيفستين كانا يجلبان Source ZIP من GitHub ويبنيان التطبيق محلياً، ولم يكن بناء Windows وتشغيل التطبيقين قد تم التحقق منهما.
-- **تحديث الفهارس:** أزيلت الإدخالات من `docs/categories.md` و`docs/manifest-portability.md` ومن خريطة الفئات في `.github/workflows/manifest-table.yml`.
-- **الأعداد:** 832 مانيفستاً: 771 Portable و56 Nonportable و5 Review. عدد ZIP archive أصبح 560 بدلاً من 562.
-- **التحقق:** تُفحص شجرة GitHub وتشغيلات Actions بعد التحديث للتأكد من اختفاء الملفين وتحديث README.
+- **Status:** All four manifests were added to `bucket/`. The Review classifications for the source-build projects and Anton are provisional pending operational verification. No successful installation or local build is claimed at this stage.
+- **Affected files:** `bucket/wintor.json`, `bucket/cliptray.json`, `bucket/yerel.json`, `bucket/anton.json`, `docs/manifest-portability.md`, `docs/categories.md`, and `.github/workflows/manifest-table.yml`.
+- **Problem:** Not all four applications provided a ready-to-use Windows asset with a published download URL and checksum. Wintor is distributed through Microsoft Store; Cliptray and Yerel do not publish Windows release assets in the specified repositories; and Anton's official Windows URL redirects to a setup EXE without a publicly available checksum.
+- **Resolution:** Added Wintor through its official Store Product ID using winget, with removal of the per-user package on uninstall. Added Cliptray and Yerel as source-build manifests pinned to full Git commit hashes, with build dependencies and shortcuts created by a hook after a successful build. Added Anton as a Review entry that downloads, but does not run, the official setup file and detects the version from the redirect URL.
+- **Evidence available before execution:** The README, `Package.appxmanifest`, and repository source confirm Wintor's distribution method and Cliptray/Yerel requirements. Anton's official URL redirected to Windows version 0.2.48. No published checksum was available for Anton or the source archives; the source repositories were pinned to full Git commit SHA-1 values instead of inventing archive hashes.
+- **Tests not yet performed:** Execution of winget/Microsoft Store, building Cliptray with MSVC, building Yerel through npm, and running Anton Setup on Windows had not been verified. Wait for Scoop Checkver, archive/autoupdate validation, and CI results after the push; these checks do not replace actual installation and build testing.
+- **Prevention:** Do not replace missing release assets with files from a fork or another similarly named project. Do not describe source-build applications as Portable before a successful build and launch test, and do not run an uninspected setup file or assume its data/integration behavior.
+
+
+## 2026-10-31 — Remove Wintor because its installation depended on winget
+
+- **Status:** Deleted `bucket/wintor.json` at the user's request.
+- **Affected files:** `bucket/wintor.json`, `docs/manifest-portability.md`, `docs/categories.md`, and `.github/workflows/manifest-table.yml`.
+- **Reason:** The manifest relied on `winget install --source msstore` to install a Microsoft Store application instead of downloading and managing a Windows package directly through Scoop.
+- **Resolution:** Deleted the manifest and removed its entry from the category index and generated README map, updating the total manifest count to 834 and the Nonportable count to 57.
+- **Verification:** After pushing, the absence of the file and its references, as well as successful README table generation, needed to be confirmed. The winget installation itself was not run as part of this deletion.
+- **Prevention:** Do not add a manifest that invokes winget or another external package manager to install a separate application unless the user explicitly requests it. Prefer direct package URLs that Scoop can download and manage.
+
+
+## 2026-10-31 — Remove the Cliptray and Yerel manifests
+
+- **Change:** Deleted `bucket/cliptray.json` and `bucket/yerel.json` at the user's request.
+- **Context:** Both manifests downloaded a source ZIP from GitHub and built the application locally. Neither Windows build nor application launch had been verified.
+- **Index updates:** Removed the entries from `docs/categories.md`, `docs/manifest-portability.md`, and the category map in `.github/workflows/manifest-table.yml`.
+- **Counts:** 832 manifests: 771 Portable, 56 Nonportable, and 5 Review. The ZIP archive count decreased from 562 to 560.
+- **Verification:** The GitHub tree and Actions runs were to be checked after the update to confirm that both files were gone and the README had been regenerated.
 
 
 ---
@@ -606,92 +606,92 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - Research notes: the [Detect It Easy project](https://github.com/horsicq/Detect-It-Easy) describes a signature/heuristic-based static file-identification engine, and its CLI documents deep and heuristic scan options. [Universal Extractor 2](https://github.com/Bioruebe/UniExtract2) advertises scan-only identification and lists many installer families in its [format table](https://github.com/Bioruebe/UniExtract2/blob/master/docs/FORMATS.md), but its latest published GitHub release is v2.0.0-rc.3 from 2020 and its release API entry does not publish an asset digest. It was therefore evaluated as a reference, not added as an unverified/stale binary dependency.
 - The workflow produces a signature report, a deep/heuristic Detect It Easy report, step summaries, and the downloadable installer-type-inspection-report artifact. Verification so far is static: the latest file was read back from master and the manual trigger, both identification paths, read-only MSI inspection, and report artifact were checked. **No live Actions run has yet tested the full workflow against a user-supplied installer URL.**
 
-### 2026-10-31 — تعديلات مصادقة Scoop والتحقق من GitHub API
+### 2026-10-31 — Scoop authentication and GitHub API validation changes
 
-- **Commit `de54ed5`:** أضيف استخدام `CHECKVER_GITHUB_TOKEN` كرمز مفضل مع fallback إلى `github.token` عند تحميل مستودع `ScoopInstaller/Scoop` في:
+- **Commit `de54ed5`:** Added `CHECKVER_GITHUB_TOKEN` as the preferred token, with fallback to `github.token`, when checking out `ScoopInstaller/Scoop` in:
   - `.github/workflows/ci.yml`
   - `.github/workflows/scoop-checkver-validation.yml`
   - `.github/workflows/scoop-autoupdate-validation.yml`
-  كان الهدف معالجة فشل `Checkout Scoop` برسالة `API rate limit exceeded for installation` الذي ظهر قبل بدء اختبارات Scoop.
+  The purpose was to address the `Checkout Scoop` failure with `API rate limit exceeded for installation`, which occurred before the Scoop tests began.
   [Commit](https://github.com/kiro5678/kirobucket/commit/de54ed5001db6c0b37eb1be720e652fd97ca934f).
 
-- **Commit `86d2f18`:** عُدّل متغير البيئة `GITHUB_TOKEN` في `scoop-checkver-validation.yml` ليستخدم `CHECKVER_GITHUB_TOKEN || github.token` أيضًا أثناء طلبات GitHub API التي ينفذها سكريبت Scoop Checkver، بدل اقتصار المصادقة على خطوة Checkout.
+- **Commit `86d2f18`:** Updated the `GITHUB_TOKEN` environment variable in `scoop-checkver-validation.yml` so that Scoop's Checkver script also uses `CHECKVER_GITHUB_TOKEN || github.token` for GitHub API requests, rather than limiting authentication to the checkout step.
   [Commit](https://github.com/kiro5678/kirobucket/commit/86d2f1870d79ba7cb84605c53bb764615cb21dc5).
 
-- **Commit `3de0205`:** أضيف Workflow باسم `.github/workflows/verify-scoop-api-auth.yml` لتشغيل CI ثم فحص Checkver منفصلًا لكل من `bucket/fig.json` و`bucket/nook.json`، ومتابعة نتائج التشغيلات والتحقق من اكتمالها على الفرع `master`.
+- **Commit `3de0205`:** Added `.github/workflows/verify-scoop-api-auth.yml` to run CI and then validate Checkver separately for `bucket/fig.json` and `bucket/nook.json`, monitoring the child runs and confirming their completion on `master`.
   [Commit](https://github.com/kiro5678/kirobucket/commit/3de0205d5c0090937da6be35f1e28fd947afdff9).
 
-- **نتيجة التحقق:** شُغّل CI على commit `3de0205` في [41197637353](https://github.com/kiro5678/kirobucket/actions/runs/41197637353)، وفشل في خطوة `Checkout Scoop` في كل من PowerShell وpwsh برسالة `API rate limit exceeded for installation`. لم تبدأ اختبارات Scoop الفعلية. بدأ Workflow التحقق الجديد [41197628621](https://github.com/kiro5678/kirobucket/actions/runs/41197628621)، لكنه توقف بعد فشل CI؛ لذلك لم يصل إلى فحص Fig أو Nook.
-- **الحالة:** التعديلات البرمجية وسجل الاختبار أُضيفت، لكن مشكلة GitHub API rate limit **ما زالت غير محلولة وغير مثبت تجاوزها**. لا يوجد حتى الآن دليل تشغيلي على نجاح استخدام `CHECKVER_GITHUB_TOKEN` في Checkout؛ كما لا يمكن استنتاج وجود الـSecret أو عدمه من سجلات التشغيل المتاحة.
-- **ملاحظة:** الـfallback إلى `github.token` لا يضمن تجاوز حد الطلبات إذا لم يكن `CHECKVER_GITHUB_TOKEN` مضبوطًا أو لم يُستخدم بنجاح. لا تعتبر نجاح Workflow التحقق أو Checkout مثبتًا إلا بعد نجاح Checkout Scoop وتشغيل اختبارات CI وCheckver على commit التعديل.
+- **Verification result:** CI ran on commit `3de0205` in [41197637353](https://github.com/kiro5678/kirobucket/actions/runs/41197637353), and both PowerShell and pwsh failed during `Checkout Scoop` with `API rate limit exceeded for installation`. The actual Scoop tests did not start. The new verification workflow started in [41197628621](https://github.com/kiro5678/kirobucket/actions/runs/41197628621), but stopped after CI failed, so it never reached Fig or Nook Checkver validation.
+- **Status:** The code changes and test log were added, but the GitHub API rate-limit issue **remained unresolved and had not been proven fixed**. There was no operational evidence yet that `CHECKVER_GITHUB_TOKEN` worked for checkout; the available logs also did not establish whether the secret existed.
+- **Note:** Falling back to `github.token` does not guarantee that the rate limit will be avoided if `CHECKVER_GITHUB_TOKEN` is not configured or is not used successfully. Do not consider the verification workflow or checkout successful until Scoop checkout and the CI/Checkver tests complete on the amended commit.
 
 
 
-### 2026-10-31 — إضافات وإصلاحات Pipeline والتحقق من ملفات Workflows
+### 2026-10-31 — Pipeline improvements and workflow validation
 
-#### تشغيل CI مرة واحدة لكل دفعة Manifest
-- **Commit [8cf8a91](https://github.com/kiro5678/kirobucket/commit/8cf8a91ebec5ae0283b366528786ba4be1d67105):** نُقل استدعاء `ci.yml` إلى ما بعد حلقة معالجة المانيفستات في `manifest-pipeline.yml`.
-- أصبح Pipeline ينفّذ مراحل الفحص الخاصة بكل Manifest أولًا، ثم يستدعي CI مرة واحدة فقط إذا كانت قائمة المانيفستات غير فارغة. هذا يمنع تشغيل CI الكامل مرة لكل Manifest عند وصول عدة ملفات في Push واحد.
-- **حالة الاختبار:** تمت مراجعة موضع الاستدعاء والحارس `$manifestPaths.Count -gt 0` ساكنًا. لم يظهر تشغيل Pipeline مرتبط بهذا الـ Commit في سجل Actions المتاح؛ لذلك لم يُثبت بعد اختبار Push واحد يحتوي على أكثر من Manifest.
+#### Run CI once per manifest batch
+- **Commit [8cf8a91](https://github.com/kiro5678/kirobucket/commit/8cf8a91ebec5ae0283b366528786ba4be1d67105):** Moved the `ci.yml` invocation to after the manifest-processing loop in `manifest-pipeline.yml`.
+- Pipeline now runs the validation stages for each manifest first, then invokes CI only once if the manifest list is not empty. This prevents the full CI suite from running once per manifest when a single push contains multiple manifest files.
+- **Test status:** The invocation location and `$manifestPaths.Count -gt 0` guard were reviewed statically. No Pipeline run associated with this commit appeared in the available Actions history, so a single push containing multiple manifests has not yet been tested end to end.
 
-#### منع إلغاء تحديث جدول المانيفستات الجاري
-- **Commit [5f26826](https://github.com/kiro5678/kirobucket/commit/5f26826b907cdf69295b8effbb85ec3636e77244):** تغيّر `cancel-in-progress` في `.github/workflows/manifest-table.yml` من `true` إلى `false` مع الإبقاء على مجموعة التزامن نفسها.
-- يمنع ذلك تشغيلًا أحدث من إلغاء تحديث الجدول الذي بدأ بالفعل. تظل GitHub Actions تحتفظ بتشغيل منتظر واحد فقط لكل مجموعة تزامن؛ ويمكن أن يحل تشغيل أحدث محل تشغيل آخر ما زال منتظرًا.
-- **نتيجة الاختبار:** [Run 41204460600](https://github.com/kiro5678/kirobucket/actions/runs/41204460600) — اكتمل Workflow تحديث الجدول بنجاح بعد الـ Commit، ونجحت خطوات Checkout وتوليد الجداول وCommit الملفات.
+#### Prevent cancellation of an active manifest-table update
+- **Commit [5f26826](https://github.com/kiro5678/kirobucket/commit/5f26826b907cdf69295b8effbb85ec3636e77244):** Changed `cancel-in-progress` in `.github/workflows/manifest-table.yml` from `true` to `false`, keeping the same concurrency group.
+- This prevents a newer run from cancelling a table update that has already started. GitHub Actions still retains only one pending run per concurrency group; a newer run can replace another run that is still pending.
+- **Test result:** [Run 41204460600](https://github.com/kiro5678/kirobucket/actions/runs/41204460600) — the manifest-table update workflow completed successfully after the commit. Checkout, table generation, and file commit steps all passed.
 
-#### توحيد مصادقة Checkver وتثبيت مرجع Scoop
-- **Commit [82534c1](https://github.com/kiro5678/kirobucket/commit/82534c128134b3f4f19c8931cc04712d42ebe4a0):** في `scoop-checkver-validation.yml`:
-  - ثُبّت مرجع Checkout لمستودع `ScoopInstaller/Scoop` على الفرع `master` بدل ترك Checkout يكتشف الفرع الافتراضي.
-  - وُحّد متغير `GITHUB_TOKEN` في خطوة Checkver ليستخدم `secrets.CHECKVER_GITHUB_TOKEN || github.token`، كما في خطوات Checkout وتهيئة Checkver.
-  - أُضيف متغير منفصل `CHECKVER_GITHUB_TOKEN` للحفاظ على شرط وجود PAT مخصص عند طلب فحص المستودع كاملًا؛ استخدام fallback في طلبات API لا يلغي ذلك الشرط.
-- **نتائج الاختبار:**
-  - [Run 41204936131](https://github.com/kiro5678/kirobucket/actions/runs/41204936131) — نجح Checkver في كل من PowerShell وpwsh؛ نجح Checkout Scoop وخطوة المصادقة وخطوة التحقق في المحركين.
-  - [Run 41205112575](https://github.com/kiro5678/kirobucket/actions/runs/41205112575) و[Run 41205289517](https://github.com/kiro5678/kirobucket/actions/runs/41205289517) — اكتمل تشغيل Checkver بنجاح في المحركين أيضًا على رأس الفرع اللاحق.
-- هذه النتائج تثبت نجاح التشغيلات المذكورة دون أخطاء Checkout أو أخطاء مصادقة ظاهرة فيها؛ لكنها لا تثبت وحدها أن جميع حالات GitHub API rate limit المستقبلية قد انتهت.
+#### Unify Checkver authentication and pin the Scoop ref
+- **Commit [82534c1](https://github.com/kiro5678/kirobucket/commit/82534c128134b3f4f19c8931cc04712d42ebe4a0):** In `scoop-checkver-validation.yml`:
+  - Pinned the `ScoopInstaller/Scoop` checkout reference to the `master` branch instead of relying on checkout to discover the default branch.
+  - Unified the `GITHUB_TOKEN` variable in the Checkver step to use `secrets.CHECKVER_GITHUB_TOKEN || github.token`, matching the checkout and Checkver setup steps.
+  - Added a separate `CHECKVER_GITHUB_TOKEN` variable to preserve the requirement for a dedicated PAT when requesting a full-repository check; the API-request fallback does not remove that requirement.
+- **Test results:**
+  - [Run 41204936131](https://github.com/kiro5678/kirobucket/actions/runs/41204936131) — Checkver passed in both PowerShell and pwsh; Scoop checkout, authentication, and validation steps succeeded in both engines.
+  - [Run 41205112575](https://github.com/kiro5678/kirobucket/actions/runs/41205112575) and [Run 41205289517](https://github.com/kiro5678/kirobucket/actions/runs/41205289517) — Checkver also completed successfully in both engines on the later branch head.
+- These results confirm that the cited runs succeeded without visible checkout or authentication errors. They do not, by themselves, prove that every future GitHub API rate-limit condition has been eliminated.
 
-#### إضافة فحص مستقل لملفات GitHub Actions
-- **Commit [60fedd2](https://github.com/kiro5678/kirobucket/commit/60fedd2cb4b9d4c4db62c358345455a733d9cda1):** أُضيف الملف `.github/workflows/validate-workflows.yml`.
-- يعمل الفحص عند:
-  - Push إلى `master` يتضمن تغييرات داخل `.github/workflows/**`.
-  - Pull Request يستهدف `master` ويتضمن تغييرات في المسار نفسه.
-  - التشغيل اليدوي عبر `workflow_dispatch`.
-- يثبت Workflow إصدار `actionlint 1.7.12` ثم يفحص جميع ملفات GitHub Actions في المستودع. صلاحياته محدودة إلى `contents: read` ولا يشغّل Workflows التطبيقية أو يغيّر المانيفستات.
-- **نتيجة الاختبار:** [Run 41205075323](https://github.com/kiro5678/kirobucket/actions/runs/41205075323) — نجح التثبيت وفحص جميع ملفات Workflows، وكانت نتيجة Job هي `success`.
-- **تشغيلات تحقق إضافية على Commit نفسه:** [Archive validation 41205166964](https://github.com/kiro5678/kirobucket/actions/runs/41205166964)، [Autoupdate validation 41205203402](https://github.com/kiro5678/kirobucket/actions/runs/41205203402)، و[Format manifests 41205251867](https://github.com/kiro5678/kirobucket/actions/runs/41205251867) اكتملت جميعها بنجاح. هذه تشغيلات منفصلة ولا تعني أن actionlint نفّذ الاختبارات الوظيفية لهذه الأنظمة.
+#### Add an independent validator for GitHub Actions workflow files
+- **Commit [60fedd2](https://github.com/kiro5678/kirobucket/commit/60fedd2cb4b9d4c4db62c358345455a733d9cda1):** Added `.github/workflows/validate-workflows.yml`.
+- The validator runs on:
+  - Pushes to `master` that include changes under `.github/workflows/**`.
+  - Pull requests targeting `master` that include changes under the same path.
+  - Manual `workflow_dispatch` triggers.
+- The workflow installs `actionlint` version `1.7.12` and checks all GitHub Actions workflow files in the repository. Its permissions are limited to `contents: read`; it does not run application workflows or modify manifests.
+- **Test result:** [Run 41205075323](https://github.com/kiro5678/kirobucket/actions/runs/41205075323) — installation and validation of all workflow files passed; the job conclusion was `success`.
+- **Additional validation runs on the same commit:** [Archive validation 41205166964](https://github.com/kiro5678/kirobucket/actions/runs/41205166964), [Autoupdate validation 41205203402](https://github.com/kiro5678/kirobucket/actions/runs/41205203402), and [Format manifests 41205251867](https://github.com/kiro5678/kirobucket/actions/runs/41205251867) all completed successfully. These were separate runs; they do not mean that actionlint executed the functional tests for those systems.
 
-#### الحالة العامة وحدود التحقق
-- تم حفظ التغييرات التالية على `master`: نقل تشغيل CI مرة واحدة، منع إلغاء تحديث الجدول الجاري، توحيد إعداد Token في Checkver وتثبيت مرجع Scoop، وإضافة فحص actionlint المستقل.
-- توجد نتائج Actions ناجحة موثقة لتحديث الجدول وCheckver وفحص actionlint والتحقق من الأرشيف والتحديث وتنسيق المانيفستات.
-- يظل إثبات تشغيل `ci.yml` مرة واحدة عند Push واحد يضم ملفي Manifest أو أكثر اختبارًا منفصلًا مطلوبًا؛ التعديل نُفّذ، لكن لم يُسجّل هنا تشغيل End-to-End يثبت هذا السيناريو.
-- أُضيف هذا القسم في نهاية السجل فقط. لم تُحذف أو تُعدّل أي سجلات أو أقسام سابقة.
+#### Overall status and verification limits
+- The following changes were saved to `master`: run CI once per batch, prevent cancellation of an active table update, unify Checkver token configuration and pin the Scoop reference, and add the independent actionlint check.
+- Successful Actions results are recorded for table updates, Checkver, actionlint, archive validation, autoupdate validation, and manifest formatting.
+- An end-to-end test is still needed to prove that `ci.yml` runs only once for a single push containing two or more manifest files. The change was implemented, but no run demonstrating this scenario has been recorded here.
+- This section was appended to the end of the log. No earlier records or sections were deleted or modified.
 
-### 2026-10-31 — تحديد نوع مثبّت Now Bar وعدم استخدام #/dl.7z
+### 2026-10-31 — Identify the Now Bar installer type; do not use #/dl.7z
 
-- الهدف: تحديد نوع `nowbar-setup.exe` للإصدار `v0.4.1` قبل اختيار طريقة Scoop.
-- ملف الاختبار: `https://github.com/nixesty/now-bar/releases/download/v0.4.1/nowbar-setup.exe`.
-- SHA-256 المتحقق منه: `e9c6c29f58b10f8c3ddc7c7c404de971d7036329de0e5493db9fa3f29a06172b`.
-- نتيجة Detect It Easy 3.21 في [Run 41207438698](https://github.com/kiro5678/kirobucket/actions/runs/41207438698):
+- **Objective:** Identify the type of `nowbar-setup.exe` for release `v0.4.1` before selecting the Scoop installation method.
+- **Test file:** `https://github.com/nixesty/now-bar/releases/download/v0.4.1/nowbar-setup.exe`.
+- **Verified SHA-256:** `e9c6c29f58b10f8c3ddc7c7c404de971d7036329de0e5493db9fa3f29a06172b`.
+- **Detect It Easy 3.21 result** in [Run 41207438698](https://github.com/kiro5678/kirobucket/actions/runs/41207438698):
   - `PE64`
   - `Compiler: Rust`
   - `Library: Direct2D`
   - `Library: OpenGL`
   - `Debug data: Records[codeview]`
-  - لم تُظهر نتيجة DIE محرك NSIS أو Inno Setup.
-- نتيجة Authenticode: `NotSigned`. تم تنزيل الملف وفحصه استاتيكيًا فقط؛ لم يتم تشغيله.
-- فحص المصدر upstream يؤكد أن `setup/src/main.rs` و`setup/src/install.rs` و`setup/src/uninstall.rs` تنفذ مُثبّتًا مخصصًا بـRust/Slint، يتعامل مع فك payload ونسخ EXE وكتابة إعدادات التشغيل والاختصارات ومعلومات الإزالة. هذا ليس مشروع NSIS أو Inno.
-- تجربة 7-Zip 26.04 السابقة تعرّفت على الملف كـPE واستخرجت 20 عنصرًا، لكنها لم تكشف `nowbar.exe` أو `nowbar-settings.exe`. لا تعتبر نتيجة `Type = PE` دليلًا على أن الملف أرشيف تثبيت قابلًا للاستخراج، ولا تضف `#/dl.7z` لمجرد أن 7-Zip استطاع استخراج عناصر من ملف PE.
-- طريقة Scoop الصحيحة لهذا الإصدار: تنزيل ملفي الإصدار الرسميين مباشرةً `nowbar.exe` و`nowbar-settings.exe` إلى مجلد التطبيق نفسه، مع SHA-256 المنشور لكل ملف. التطبيق يحتاج الملفين جنبًا إلى جنب؛ لا تستخدم `nowbar-setup.exe` في المانيفست ولا تشغّله.
-- أُحدّث `bucket/now-bar.json` لتوثيق أن المثبّت الرسمي مخصص بـRust/Slint وأنه لا يستخدم `#/dl.7z`. أُضيف تصنيف Now Bar كـPortable في `docs/manifest-portability.md` لأن المانيفست ينزّل ملفات التطبيق المباشرة ولا يشغّل روتين تثبيت Windows.
-- نتائج التحقق من المانيفست: [Checkver 41206687666](https://github.com/kiro5678/kirobucket/actions/runs/41206687666)، [Archive validation 41206750389](https://github.com/kiro5678/kirobucket/actions/runs/41206750389)، [AutoUpdate validation 41206788998](https://github.com/kiro5678/kirobucket/actions/runs/41206788998)، [README manifest table 41206673761](https://github.com/kiro5678/kirobucket/actions/runs/41206673761) — جميعها اكتملت بنجاح.
-- Workflow التشخيص المؤقت أُضيف لتشغيل فحص DIE على هذا الملف فقط، ثم أُزيل بعد توثيق النتيجة. بقي Workflow العام `.github/workflows/detect-it-easy-api.yml` كما هو.
+  - The DIE result did not identify NSIS or Inno Setup.
+- **Authenticode result:** `NotSigned`. The file was downloaded and statically inspected only; it was not executed.
+- Upstream source inspection confirms that `setup/src/main.rs`, `setup/src/install.rs`, and `setup/src/uninstall.rs` implement a custom Rust/Slint installer that extracts the payload, copies the EXE, writes startup settings and shortcuts, and records uninstall information. It is not an NSIS or Inno installer.
+- A previous 7-Zip 26.04 test recognized the file as a PE and extracted 20 items, but did not reveal `nowbar.exe` or `nowbar-settings.exe`. Do not treat `Type = PE` as proof that the file is an extractable installer archive, and do not add `#/dl.7z` merely because 7-Zip can extract items from a PE file.
+- The correct Scoop method for this release is to download the two official release files, `nowbar.exe` and `nowbar-settings.exe`, directly into the same application directory, using each file's published SHA-256. The application requires both files side by side; do not use or execute `nowbar-setup.exe` in the manifest.
+- Updated `bucket/now-bar.json` to state that the official installer is a custom Rust/Slint installer and does not use `#/dl.7z`. Classified Now Bar as Portable in `docs/manifest-portability.md` because the manifest downloads the application files directly and does not run the Windows installation routine.
+- **Manifest validation results:** [Checkver 41206687666](https://github.com/kiro5678/kirobucket/actions/runs/41206687666), [Archive validation 41206750389](https://github.com/kiro5678/kirobucket/actions/runs/41206750389), [AutoUpdate validation 41206788998](https://github.com/kiro5678/kirobucket/actions/runs/41206788998), and [README manifest table 41206673761](https://github.com/kiro5678/kirobucket/actions/runs/41206673761) all completed successfully.
+- A temporary diagnostic workflow was added to run DIE against this file only, then removed after recording the result. The general-purpose `.github/workflows/detect-it-easy-api.yml` workflow remained unchanged.
 
 
-## 2026-10-31 — التحقق من نوع مثبّت Nook وطريقة إدخاله إلى Scoop
+## 2026-10-31 — Verify the Nook installer type and Scoop packaging method
 
-- **المانيفست:** `bucket/nook.json`، الإصدار `0.2.1`.
-- **نوع المثبّت المؤكد:** Inno Setup، وليس NSIS. ملف المصدر `installer/nook.iss` عند Tag `v0.2.1` يحتوي أقسام Inno Setup مثل `[Setup]` و`[Files]`، وسكربت `installer/build.ps1` يطلب Inno Setup 6.7 أو أحدث ويشغّل `ISCC.exe` لإنتاج `Nook-Setup-0.2.1.exe`.
-- **التحقق من الإصدار:** GitHub Release `v0.2.1` ينشر `Nook-Setup-0.2.1.exe` مع SHA-256 المعلن `00d6cc4bd58d3fd14fe6ceef9002f39ef60348dc03aa808dbc9120a1cce03446)، وهو مطابق لقيمة المانيفست الحالية.
-- **طريقة Scoop المناسبة:** الإبقاء على `innosetup: true`؛ يستخدم Scoop دالة `Expand-InnoArchive` ومساعد `innounp` لاستخراج محتويات `{app}` إلى مجلد إصدار Scoop بدلاً من تشغيل المثبّت الأصلي. لا تستخدم `#/dl.7z` لهذا الملف.
-- **بنية الملفات المتوقعة من سكربت المصدر:** `nook.exe` و`LICENSE.txt` في جذر `{app}`؛ لذلك اختصار Start Menu الحالي إلى `nook.exe` يطابق مسار التثبيت داخل سكربت Inno.
-- **سلوك النظام:** سكربت Inno يسجل بروتوكول `nook://` تحت HKCU ويتيح مهمة تشغيل عند تسجيل الدخول. تشغيل Scoop للاستخراج لا ينفذ أقسام `[Registry]` أو `[Run]` الخاصة بالمثبّت؛ التطبيق نفسه يسجل البروتوكول عند تشغيله. المانيفست يبقى **Nonportable** وفق فهرس المشروع بسبب تسجيل البروتوكول في HKCU عند تشغيل التطبيق.
-- **التحقق التشغيلي:** تحديث المانيفست سيطلق Manifest Pipeline، التي تستخدم `innounp` نفسه وتتحقق من تنزيل الملف وSHA-256 ووجود ملفات `{app}` ومسارات التشغيل. لا تسجل نجاح الاستخراج أو التثبيت قبل اكتمال تشغيل Archive Validation.
+- **Manifest:** `bucket/nook.json`, version `0.2.1`.
+- **Confirmed installer type:** Inno Setup, not NSIS. The source file `installer/nook.iss` at tag `v0.2.1` contains Inno Setup sections such as `[Setup]` and `[Files]`. The `installer/build.ps1` script requires Inno Setup 6.7 or later and invokes `ISCC.exe` to generate `Nook-Setup-0.2.1.exe`.
+- **Release verification:** GitHub Release `v0.2.1` publishes `Nook-Setup-0.2.1.exe` with the declared SHA-256 `00d6cc4bd58d3fd14fe6ceef9002f39ef60348dc03aa808dbc9120a1cce03446`, which matches the current manifest value.
+- **Appropriate Scoop method:** Keep `innosetup: true`. Scoop uses `Expand-InnoArchive` and the `innounp` helper to extract `{app}` contents into the Scoop version directory instead of running the original installer. Do not use `#/dl.7z` for this file.
+- **Expected file layout from the source script:** `nook.exe` and `LICENSE.txt` are at the root of `{app}`, so the current Start Menu shortcut to `nook.exe` matches the path created by the Inno script.
+- **System behavior:** The Inno script registers the `nook://` protocol under HKCU and offers a run-at-login task. Scoop's extraction does not execute the installer `[Registry]` or `[Run]` sections; the application itself registers the protocol when launched. The manifest remains **Nonportable** in the project inventory because the application registers the protocol under HKCU at runtime.
+- **Operational verification:** Updating the manifest will trigger Manifest Pipeline, which uses the same `innounp` helper and checks the download, SHA-256, presence of `{app}` files, and launch paths. Do not record extraction or installation as successful until Archive Validation has completed.
