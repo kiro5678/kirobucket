@@ -64,12 +64,12 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 55 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 56 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
 | NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 20 |
-| Inno | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 4 |
+| Inno | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 5 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json) | 4 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
@@ -92,7 +92,7 @@ This index groups the 55 Nonportable manifests by the exact installer/package la
 | Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
-| **Total** | **All Nonportable manifests** | **55** |
+| **Total** | **All Nonportable manifests** | **56** |
 
 ## Nonportable manifests
 
@@ -130,6 +130,7 @@ The installer type describes the package or setup technology used by the manifes
 | [mumuplayer-android15](../bucket/mumuplayer-android15.json) | Vendor-specific EXE component installer | Executes the Android 15 engine setup workflow and modifies the existing MuMuPlayer installation directory. |
 | [mumuplayer-online](../bucket/mumuplayer-online.json) | Vendor EXE silent installer (engine unverified) | Runs the MuMuPlayer setup silently with elevated rights. |
 | [nightlight-launcher](../bucket/nightlight-launcher.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
+| [nook](../bucket/nook.json) | Inno | The application registers the `nook://` protocol under HKCU when it starts; the manifest removes that registration on uninstall only when it still points to this Scoop installation. |
 | [npcap-np](../bucket/npcap-np.json) | Npcap EXE driver installer (engine unspecified) | Runs the Npcap setup through AutoHotkey with elevation; installs a network driver/component. |
 | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json) | NVIDIA self-extracting EXE + setup.exe | Runs the extracted NVIDIA setup silently with elevation; installs the display driver. |
 | [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | NVIDIA self-extracting EXE + setup.exe | Runs the extracted NVIDIA setup silently with elevation; installs the notebook display driver. |
