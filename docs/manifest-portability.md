@@ -22,7 +22,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 786 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 787 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 5 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
 | **Total** | **847** | Multiple package types | Current JSON files in `bucket/` on `master`. |
@@ -51,6 +51,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 - [`ezoo-download`](../bucket/ezoo-download.json) — **Portable**: uses `innosetup: true` to extract the official Inno Setup payload without running the vendor's installation tasks, registry writes, startup task or shortcuts. The app data remains under `%APPDATA%\\Ezoo\\EzooDownload\\data`; the portable copy does not use the installed-copy self-updater.
 - [`prism`](../bucket/prism.json) — **Portable**: uses the official Windows portable ZIP with `portable.txt`; settings, history and tools live in the adjacent `data` folder, which Scoop persists. The app registers its browser native-messaging host at runtime; `pre_uninstall` removes only registrations that point to this Scoop copy.
 - [`veloxfetch`](../bucket/veloxfetch.json) — **Portable**: uses the official Windows portable ZIP. The v2.0.1 release packaging script places `velox-desktop.exe` and `velox-native-host.exe` under `VeloxFetch-portable\\`; the portable build has no uninstaller and opens the release page for updates.
+- [`biniware-run`](../bucket/biniware-run.json) — **Portable**: the official publisher identifies Biniware Run as a portable application distributed as a single executable. The manifest downloads the .NET Framework 4.8 build directly (`brun.exe`) without running a setup routine; its version 7.9.0.0 SHA-256 matches the official checksum.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
@@ -201,7 +202,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | Direct NSIS payload extraction | NSIS EXE whose files are directly readable by 7-Zip | [rust-meow](../bucket/rust-meow.json) | `#/dl.7z` extracts the NSIS container directly; 7-Zip 26.05 verified extraction of `rust-meow.exe` and `rust-meow-backend.exe` without executing the setup routine. |
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | Their manifest passes the application's explicit portable-mode option. |
 | Setup executable used only as an extractor | Portable self-extracting EXE or Inno Setup portable bundle | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
-| File-only or direct portable payload | ZIP, 7Z, or standalone EXE | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [dlives](../bucket/dlives.json), [qnotch](../bucket/qnotch.json), [winisland](../bucket/winisland.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
+| File-only or direct portable payload | ZIP, 7Z, or standalone EXE | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [dlives](../bucket/dlives.json), [qnotch](../bucket/qnotch.json), [winisland](../bucket/winisland.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json), [biniware-run](../bucket/biniware-run.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
 
 ### Portable does not mean system-neutral at runtime
 
