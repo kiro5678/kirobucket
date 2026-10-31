@@ -255,41 +255,11 @@ jobs:
                               Add-Report "=== Reconstructed Inno Setup script: $($scriptFile.FullName) ==="
                               $scriptLines = Get-Content -LiteralPath $scriptFile.FullName
                               Add-Report "Script line count: $($scriptLines.Count)"
-                              $wantedSections = @('Setup', 'Tasks', 'Files', 'Icons', 'Registry', 'Run', 'UninstallRun', 'Code')
-                              foreach ($section in $wantedSections) {
-                                  $sectionStart = -1
-                                  for ($i = 0; $i -lt $scriptLines.Count; $i++) {
-                                      if ($scriptLines[$i] -match ('^\\[' + [regex]::Escape($section) + '\\]$')) {
-                                          $sectionStart = $i
-                                          break
-                                      }
-                                  }
-                                  if ($sectionStart -lt 0) { continue }
-
-                                  $sectionEnd = $scriptLines.Count
-                                  for ($i = $sectionStart + 1; $i -lt $scriptLines.Count; $i++) {
-                                      if ($scriptLines[$i] -match '^\\[[^\\]]+\\]$') {
-                                          $sectionEnd = $i
-                                          break
-                                      }
-                                  }
-                                  Add-Report "[$section]"
-                                  for ($i = $sectionStart + 1; $i -lt $sectionEnd; $i++) {
-                                      $line = [string]$scriptLines[$i]
-                                      $keep = switch ($section) {
-                                          'Setup' { $line -match '^\\s*(AppId|AppName|AppVersion|DefaultDirName|DefaultGroupName|PrivilegesRequired|ArchitecturesInstallIn64BitMode|WizardStyle|UninstallDisplayIcon|DisableProgramGroupPage|ChangesAssociations|CreateUninstallRegKey|Uninstallable)\\s*=' }
-                                          'Tasks' { $line -match '^\\s*(Name|Description|GroupDescription|Flags)\\s*:' }
-                                          'Files' { $line -match '^\\s*(Source|DestDir|DestName|Flags|Permissions|Tasks)\\s*:' }
-                                          'Icons' { $line -match '^\\s*(Name|Filename|Parameters|WorkingDir|Tasks|IconFilename)\\s*:' }
-                                          'Registry' { $line -match '^\\s*(Root|Subkey|ValueType|ValueName|ValueData|Flags)\\s*:' }
-                                          'Run' { $line -match '^\\s*(Filename|Parameters|Description|Flags|StatusMsg|RunOnceId)\\s*:' }
-                                          'UninstallRun' { $line -match '^\\s*(Filename|Parameters|Description|Flags|RunOnceId)\\s*:' }
-                                          'Code' { $line -match '(?i)\\b(RegWrite|RegDelete|RegQuery|Exec|ShellExec|CreateShellLink|CreateDir|DeleteFile|DeleteDir|CurStepChanged|InitializeSetup|DeinitializeSetup|Register|Unregister|CreateInputOptionPage|CreateOutputMsgPage)\\b|^\\s*procedure\\s+|^\\s*function\\s+' }
-                                      }
-                                      if ($keep) { Add-Report $line.TrimEnd() }
-                                  }
+                              Add-Report '---- Complete reconstructed Inno Setup script ----'
+                              foreach ($scriptLine in $scriptLines) {
+                                  Add-Report ([string]$scriptLine)
                               }
-                          }
+                           }
                       } else {
                           Add-Report "No reconstructed .iss script file was found after full extraction."
                       }
