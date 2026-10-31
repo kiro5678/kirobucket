@@ -1,5 +1,18 @@
 # Manifest Portability Inventory
 
+## Mandatory problem-resolution rule for portability audits
+
+When creating, reviewing, or changing a manifest's Portable / Nonportable / Review classification:
+
+- Base the decision on the manifest's actual install and extraction behavior, verified package contents, installer execution, and Windows integration. Do not infer portability from a file extension or from the fact that files are placed under the Scoop directory.
+- When a classification or extraction test fails, investigate and fix the cause using evidence from the source package, manifest, Scoop behavior, and test output.
+- **After resolving the problem, add or update its incident entry in [Problem Resolution Knowledge Base](problem-resolution-knowledge-base.md) in the same task.** Include the manifest path, observed failure, confirmed root cause, exact correction, verification evidence, and regression-prevention rule.
+- Do not label a fix as verified unless the relevant classification/extraction/install checks were actually rerun successfully. State partial test scope and any remaining uncertainty.
+- If the issue reveals a reusable classification rule, update this inventory's definitions or classification rules and the detailed [Manifest Authoring and Maintenance Rules](manifest-authoring.md). Search the knowledge base before investigating repeat failures.
+
+See [Manifest Authoring and Maintenance Rules](manifest-authoring.md) for the complete creation, update, archive, installer, and validation requirements.
+
+
 **Audit target:** `master`
 
 **Portability audit coverage:** 825 manifests (audit snapshot; the installer-type inventory below is regenerated from the current bucket).
