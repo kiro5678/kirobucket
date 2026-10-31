@@ -1,0 +1,106 @@
+name: Verify Scoop GitHub API Authentication
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/verify-scoop-api-auth.yml
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  verify:
+    name: Verify CI and targeted Checkver runs
+    runs-on: windows-latest
+    steps:
+      - name: Dispatch and verify CI, Fig, and Nook
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ github.sha }}
+          GH_REPOSITORY: ${{ github.repository }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $apiRoot = "https://api.github.com/repos/$env:GH_REPOSITORY"
+          $headers = @{
+            Authorization = "Bearer $env:GH_TOKEN"
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
+          }
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('## Scoop GitHub API authentication verification')
+          $summary.Add('')
+          $summary.Add("- Repository commit: $env:EXPECTED_SHA")
+          $summary.Add('')
+
+          function Invoke-AndWaitWorkflow {
+            param(
+              [Parameter(Mandatory)][string]$WorkflowFile,
+              [hashtable]$Inputs = @{}
+            )
+
+            Write-Host "Dispatching $WorkflowFile"
+            $runsUri = "$apiRoot/actions/workflows/$WorkflowFile/runs?branch=master&event=workflow_dispatch&per_page=100"
+            $before = Invoke-RestMethod -Method Get -Uri $runsUri -Headers $headers -TimeoutSec 30
+            $knownIds = @($before.workflow_runs | ForEach-Object { [string]$_.id })
+            $dispatchTime = [DateTimeOffset]::UtcNow
+            $payload = @{
+              ref = 'master'
+              inputs = $Inputs
+            } | ConvertTo-Json -Depth 10 -Compress
+
+            Invoke-RestMethod -Method Post -Uri "$apiRoot/actions/workflows/$WorkflowFile/dispatches" -Headers $headers -ContentType 'application/json' -Body $payload -TimeoutSec 30 | Out-Null
+
+            $run = $null
+            $createDeadline = [DateTimeOffset]::UtcNow.AddMinutes(5)
+            while ([DateTimeOffset]::UtcNow -lt $createDeadline -and $null -eq $run) {
+              Start-Sleep -Seconds 5
+              $current = Invoke-RestMethod -Method Get -Uri $runsUri -Headers $headers -TimeoutSec 30
+              $matches = @($current.workflow_runs | Where-Object {
+                ([string]$_.head_sha -eq $env:EXPECTED_SHA) -and
+                ($knownIds -notcontains [string]$_.id) -and
+                ([DateTimeOffset]::Parse([string]$_.created_at) -ge $dispatchTime.AddSeconds(-10))
+              } | Sort-Object { [DateTimeOffset]::Parse([string]$_.created_at) } -Descending)
+              if ($matches.Count -gt 0) { $run = $matches[0] }
+            }
+
+            if ($null -eq $run) {
+              throw "GitHub did not create a workflow_dispatch run for $WorkflowFile on $env:EXPECTED_SHA."
+            }
+
+            $runId = [string]$run.id
+            $runUrl = [string]$run.html_url
+            Write-Host "Waiting for $WorkflowFile run $runId : $runUrl"
+            $runDeadline = [DateTimeOffset]::UtcNow.AddMinutes(40)
+            do {
+              $run = Invoke-RestMethod -Method Get -Uri "$apiRoot/actions/runs/$runId" -Headers $headers -TimeoutSec 30
+              if ($run.status -eq 'completed') { break }
+              Start-Sleep -Seconds 10
+            } while ([DateTimeOffset]::UtcNow -lt $runDeadline)
+
+            if ($run.status -ne 'completed') {
+              throw "$WorkflowFile run $runId did not complete within 40 minutes: $runUrl"
+            }
+            if ($run.conclusion -ne 'success') {
+              $summary.Add("- FAIL: $WorkflowFile — $($run.conclusion) — $runUrl")
+              $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+              throw "$WorkflowFile failed with conclusion '$($run.conclusion)': $runUrl"
+            }
+
+            $summary.Add("- PASS: $WorkflowFile — $runUrl")
+            Write-Host "PASS: $WorkflowFile"
+            $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          }
+
+          Invoke-AndWaitWorkflow -WorkflowFile 'ci.yml'
+          Invoke-AndWaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = 'bucket/fig.json' }
+          Invoke-AndWaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = 'bucket/nook.json' }
+
+          $summary.Add('')
+          $summary.Add('All targeted authentication and validation runs passed.')
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          Write-Host 'All targeted authentication and validation runs passed.'
