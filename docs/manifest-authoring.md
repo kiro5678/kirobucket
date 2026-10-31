@@ -1,196 +1,224 @@
-# Manifest Authoring and Maintenance Rules
+# دليل إنشاء وصيانة مانيفستات Scoop وتصنيف Portable / Nonportable
 
-This is the repository's mandatory reference for creating, changing, troubleshooting, or reviewing any Scoop manifest. Read it before working on manifests. For the repository-wide process for investigating, fixing, verifying, and recording problems, follow the [Problem Resolution Knowledge Base](problem-resolution-knowledge-base.md). After resolving a manifest-related problem, add its evidence-backed incident entry to that knowledge base in the same task. When the failure reveals a missing manifest-specific rule, update this document as well.
+هذا هو المرجع الإلزامي لإنشاء أي مانيفست في مستودع `kirobucket` أو تعديله أو إصلاحه أو مراجعته أو تصنيفه. اقرأ الدليل قبل بدء العمل. يجمع هذا الملف قواعد إنشاء المانيفستات، وأولوية Portable، وطرق استخراج المثبّتات، وتصنيف Portable / Nonportable / Review، والتحقق من التحديث والتثبيت والإزالة.
 
-For the current Portable / Nonportable classification of every bucket manifest, see [Manifest Portability Inventory](manifest-portability.md). Reclassify entries whenever their installer, extraction method, or installation hooks change.
+للاطلاع على التصنيف الحالي لجميع مانيفستات `bucket/`، راجع [جرد قابلية النقل](manifest-portability.md). يجب تحديث الجرد عند تغيير طريقة تنزيل أي برنامج أو استخراجه أو تثبيته أو تسجيل مكوناته.
 
-The detailed Arabic source policy for creating manifests and choosing Portable / Nonportable extraction methods is [Scoop Manifest Portability Rules](scoop-manifest-portability-rules.md). Treat it as a mandatory companion to this guide, especially for MSI, Inno Setup, NSIS, EXE, ZIP, and 7Z packages.
+## 1. القواعد الأساسية لتصنيف قابلية النقل
 
-## Mandatory problem-resolution and knowledge-base update rule
+### أولوية Portable
 
-This rule applies to every manifest-authoring, manifest-maintenance, and validation task:
+الأولوية دائماً هي اختيار طريقة تجعل البرنامج **Portable** متى أمكن إثبات ذلك عملياً. المقصود أن يحصل Scoop على ملفات البرنامج ويستخرجها إلى مجلد التطبيق دون تشغيل إجراء التثبيت الاعتيادي للمورّد أو تسجيل مكونات البرنامج في Windows، وأن يمكن تشغيل البرنامج من مجلد التطبيق على إصدار Windows متوافق دون الحاجة إلى تثبيت البرنامج أو تسجيل مكونات أساسية له في النظام.
 
-1. Investigate each real failure until its cause is supported by evidence. Do not treat an error message, a guessed explanation, or a workaround as a confirmed root cause.
-2. Fix the underlying issue where possible, not merely the visible symptom.
-3. After the fix, run the relevant validation again. Depending on the change, this may include JSON/schema validation, Scoop `checkver`, autoupdate simulation, archive inspection, extraction-path checks, installation/uninstallation tests, shortcut checks, and the relevant GitHub Actions workflow.
-4. **After resolving the problem, add or update its incident entry in [Problem Resolution Knowledge Base](problem-resolution-knowledge-base.md) in the same task.** Record the affected manifest/file, symptoms, confirmed root cause, exact fix, verification performed and its result, and a prevention/regression check.
-5. Mark an issue **Resolved and verified** only when the fix was actually tested or independently confirmed. State clearly when any verification remains pending or when only part of a batch was tested.
-6. If the incident exposes a general rule for creating, updating, extracting, installing, or classifying manifests, update this guide and/or the [Manifest Portability Inventory](manifest-portability.md) in the same task. Do not leave the lesson only in chat, a commit message, or a workflow log.
+لا يشترط أن تكون بيانات البرنامج وإعداداته محمولة بالكامل؛ فقد يحفظ البرنامج إعداداته أو قواعد بياناته أو سجلاته في `%APPDATA%` أو `%LOCALAPPDATA%` أو Documents أو مكان آخر خارج مجلد Scoop. هذا وحده لا يجعل البرنامج Nonportable. وثّق مسارات البيانات واستخدم `persist` فقط عندما يكون ذلك صحيحاً ومطلوباً.
 
-Before investigating a recurring failure, search the problem-resolution knowledge base and reuse still-valid findings. Update an existing incident instead of creating a duplicate when new evidence concerns the same underlying cause.
+**Nonportable:** مانيفست يشغّل إجراء تثبيت فعلياً أو يسجل مكونات Windows، مثل Driver أو Service أو MSIX/AppX أو الخطوط أو معالجات البروتوكولات أو تكامل دائم مع النظام. ويُعد البرنامج أيضاً غير Portable بالكامل عندما تتطلب وظيفته الأساسية تثبيتاً أو تسجيلاً نظامياً لا يمكن الاستغناء عنه. لا يغيّر وضع ملفات البرنامج تحت `$dir` أو داخل مجلد Scoop هذه الحقيقة.
 
-## 1. Non-negotiable rule: automatic updates must work
+**Review (قيد المراجعة):** تصنيف توثيقي مؤقت يُستخدم عندما لا تتوفر أدلة كافية لإثبات طريقة الاستخراج أو التثبيت أو إمكانية تشغيل البرنامج دون تكامل نظامي. ليس Review خاصية في Scoop ولا حقلاً داخل JSON. سجّل المانيفست وسبب عدم حسمه في قسم **Review before classifying** داخل `docs/manifest-portability.md`. انقله إلى Portable أو Nonportable بعد اكتمال الفحص؛ ولا تتركه Review إلا ما دام الدليل غير كافٍ.
 
-A manifest is not finished merely because the current version installs. By default, every manifest must support automatic version and download updates.
+قد يحتوي برنامج Portable على ميزة اختيارية تتطلب Driver أو Service أو صلاحيات إدارية عند تشغيل تلك الميزة. وثّق ذلك بوضوح. أما إذا كان المكوّن النظامي ضرورياً لتشغيل الوظيفة الأساسية، فلا تصف البرنامج بأنه Portable بالكامل؛ استخدم Nonportable أو Review بحسب ما تثبته طريقة التثبيت الفعلية.
 
-- Configure a working `checkver` that detects the intended release channel and extracts the version correctly.
-- Configure `autoupdate` templates for the download URL and every version-dependent field, including `extract_dir` when the archive's root folder changes with the version.
-- Ensure the hash will be refreshed correctly by the current Scoop updater. Never leave an old fixed hash in place while allowing the URL to move to a new version.
-- Test the entire version → URL → hash update path with Scoop's actual `checkver.ps1 -Update`. A successful version lookup alone does **not** prove that automatic updating works.
-- `-Update` only exercises the URL/hash update path when the upstream version is newer. To test templates when the manifest already matches upstream, use `checkver.ps1 -ForceUpdate` against a disposable copy; never force-update the working bucket checkout because Scoop will rewrite the manifest.
-- If upstream genuinely provides no reliable automatic version source, investigate the official API, release feed, or a custom `checkver.script` before considering a manual-only manifest. State the limitation explicitly rather than silently omitting update support.
+### قواعد لا يجوز تجاوزها
 
-`autoupdate` is a template, not a background scheduler. GitHub updates the repository manifest only when an updater such as the repository's Excavator workflow runs successfully and commits the result. User machines receive the updated manifest after their bucket is pulled with `scoop update`.
+- لا تعتمد على امتداد الملف وحده لتحديد نوع المثبّت أو قابلية النقل.
+- لا تعتبر وجود الملفات داخل مجلد Scoop دليلاً على أن البرنامج Portable.
+- لا تصنّف البرنامج Portable لمجرد أن Scoop استطاع استخراج المثبّت.
+- لا تخترع `extract_dir` أو أسماء ملفات التشغيل أو مسارات الاختصارات قبل فحص المحتويات الفعلية.
+- لا تستخدم `#/dl.7z` أو `#/dl.msi` قبل التأكد من أن Scoop سيتعامل مع الملف بالطريقة المقصودة.
+- لا تحذف ملفات التحديث الداخلية للبرنامج ولا تعطّل نظام التحديث الخاص به دون طلب صريح.
+- لا تشغّل مثبتات المتطلبات المسبقة تلقائياً من Hooks لمجرد أنها مرفقة مع الحزمة؛ وثّق الاعتماد واترك التثبيت للمستخدم أو لمسار رسمي يختاره صراحة.
+- عند عدم القدرة على إثبات طريقة التثبيت أو التشغيل، استخدم Review بدلاً من التخمين.
 
-## 2. Research the upstream package before writing JSON
+## 2. البحث في البرنامج والمصدر الرسمي قبل كتابة JSON
 
-Use the project's official release page, repository, documentation, and release API as the source of truth.
+اعتمد على موقع المشروع الرسمي ومستودعه ووثائقه وصفحة الإصدارات وواجهات API الرسمية.
 
-1. Identify the latest intended stable release. Do not accidentally use a pre-release, development build, unrelated tag, or stale release.
-2. Inspect the actual Windows asset names and architecture. Verify the exact URL, release tag, and available checksum/digest.
-3. Determine what the downloaded file actually is: a portable archive, an installer, an Inno Setup installer, an MSI, or a standalone executable. An `.exe` extension does not prove that a file is portable.
-4. Verify the archive or installer contents before choosing `bin`, `shortcuts`, `extract_dir`, `innosetup`, `depends`, or installer extraction options. Never guess internal paths or executable names.
-5. For portable GUI applications, inventory the current archive and add a `shortcuts` entry for the main application executable. Exclude helper tools, bundled runtimes, redistributable installers, and command-line dependencies (for example FFmpeg) from Start Menu shortcuts. Keep the shortcut target and display name grounded in the verified package.
-6. Archive-path validation can only check `bin` or `shortcuts` paths that a manifest already declares; a manifest with no launch entries can pass without exposing its GUI executable. When auditing a group of manifests, inventory the archives and report missing shortcut declarations as well as incorrect declared paths.
-7. Preserve the application's real settings/data location. Add `persist` only for the correct data directory or files. Migration logic must not delete or overwrite the old data; copy only when appropriate and preserve the original if copying fails.
+1. حدد أحدث إصدار مستقر مطلوب. لا تخلط بين Stable وPre-release وNightly وDevelopment أو قنوات مختلفة.
+2. افحص أسماء ملفات Windows المنشورة والمعمارية الفعلية. تحقّق من رابط التنزيل ووسم الإصدار والـ checksum أو digest المتاح.
+3. حدّد ماهية الملف الذي سيتم تنزيله فعلياً: أرشيف Portable أو مثبّت أو Inno Setup أو MSI أو EXE مستقل. امتداد `.exe` لا يثبت أن الملف Portable.
+4. افحص محتويات الأرشيف أو المثبّت قبل تحديد `bin` أو `shortcuts` أو `extract_dir` أو `innosetup` أو `depends` أو خيارات المثبّت. لا تخمّن المسارات الداخلية أو أسماء ملفات التشغيل.
+5. في برامج GUI المحمولة، افحص الأرشيف وأضف اختصاراً للبرنامج الرئيسي فقط. لا تضف أدوات مساعدة أو Runtime أو Redistributable أو أدوات سطر أوامر مثل FFmpeg إلى اختصارات Start Menu إلا إذا كانت هي التطبيق الرئيسي المقصود.
+6. فحص مسارات الأرشيف لا يستطيع التحقق إلا من مسارات `bin` و`shortcuts` المعلنة بالفعل. قد ينجح الفحص لمانيفست لا يعرّف أي نقطة تشغيل، رغم أن الاختصار الرئيسي مفقود؛ عند مراجعة مجموعة مانيفستات، افحص الأرشيفات أيضاً وسجّل الاختصارات المفقودة والمسارات الخاطئة.
+7. حافظ على مكان البيانات والإعدادات الحقيقي. أضف `persist` للمجلدات أو الملفات الصحيحة فقط. يجب ألا تحذف آلية النقل أو الترحيل البيانات القديمة أو تستبدلها؛ انسخ عند الحاجة، واحتفظ بالمصدر إذا فشل النسخ.
 
-Do not copy an existing manifest blindly. Use it as a reference only after verifying it against the current release and current Scoop behavior.
+لا تنسخ مانيفستاً قديماً دون فحصه. استخدمه كمرجع فقط بعد مطابقته مع الإصدار الحالي وسلوك Scoop الحالي.
 
-- When a canonical upstream repository or download page returns 404, verify whether the project has officially moved and whether the new location has real releases/assets. Do not replace a missing source with an unverified fork or hard-code a fake `checkver` result just to make validation pass. If no verifiable canonical download/update source remains, remove the obsolete manifest or report it as blocked.
-- If an upstream repository is renamed, moved, or rebranded, update `checkver`, download, homepage, and `autoupdate` URLs to the current canonical repository. Scope the version regex to the release line whose asset names and installation behavior the manifest actually supports; do not switch a legacy manifest to a new major line until the new assets, hashes, installation method, `bin`, and shortcuts have been verified. Keep a separate manifest when the upstream distribution has changed materially.
+- إذا أعاد المستودع الرسمي أو رابط التنزيل الرسمي خطأ 404، فتحقّق مما إذا كان المشروع قد انتقل رسمياً إلى مكان جديد، وما إذا كان المصدر الجديد يحتوي على إصدارات وملفات تنزيل حقيقية. لا تستبدل المصدر بمستودع Fork غير موثوق ولا تضع إصداراً وهمياً في `checkver` لمجرد تمرير الفحص. إذا لم يعد هناك مصدر رسمي يمكن التحقق منه، احذف المانيفست المتعطل أو سجّله على أنه متوقف.
+- إذا تغيّر اسم مستودع المشروع أو انتقل أو أعيدت تسميته، فحدّث روابط `checkver` والتنزيل و`homepage` و`autoupdate` إلى المصدر الرسمي الحالي. اجعل Regex محدداً لسلسلة الإصدارات التي يدعمها المانيفست فعلياً. لا تنتقل إلى إصدار رئيسي جديد قبل التحقق من الملفات والـ hashes وطريقة التثبيت وملفات التشغيل والاختصارات. أنشئ مانيفستاً منفصلاً عندما يتغير توزيع البرنامج أو طريقة تثبيته بصورة جوهرية.
 
-## 3. Version detection: `checkver`
+## 3. اختيار طريقة الاستخراج حسب نوع المثبّت
 
-- Choose a version source that reliably follows the intended release channel.
-- When a project publishes separate release streams for different operating systems, do not blindly use `/releases/latest` for a platform-specific manifest. Select the intended platform's tag or asset family from the releases API/page, then validate that `checkver` chooses the newest matching release rather than another OS's newer version.
-- For GitHub releases, prefer the explicit current syntax:
+القاعدة العامة: استخرج ملفات البرنامج دون تشغيل إجراء التثبيت الفعلي متى أمكن إثبات أن الملفات الناتجة تشغّل البرنامج بشكل صحيح. يجب اختبار الناتج، لا الاكتفاء بنجاح أداة الاستخراج.
+
+### MSI
+
+- الأولوية لاستخراج محتويات MSI دون تنفيذ التثبيت الفعلي.
+- استخدم رابط MSI مباشرة إذا كان اسم الملف المحلي ينتهي بامتداد `.msi` واضح.
+- استخدم `#/dl.msi` عندما يحتاج Scoop إلى حفظ الملف باسم محلي ينتهي بـ `.msi` حتى يتعرف عليه مستخرج MSI.
+- يعالج Scoop ملفات MSI كأرشيفات عند عدم وجود خاصية `msi` القديمة: يستخدم `msiexec /a` افتراضياً، أو `lessmsi` إذا كان خيار `use_lessmsi` مفعّلاً. لا تفترض أن المستخرجين يعطيان البنية نفسها؛ افحص الناتج الفعلي وسجل الاستخراج عند الفشل.
+- لا تستخدم خاصية `msi` القديمة Deprecated.
+- لا تستخدم `msiexec /i` إلا عندما يكون التثبيت الفعلي ضرورياً. عندها يكون المانيفست Nonportable.
+- لا تفترض أن MSI أرشيف ZIP عادي؛ قد يكشف فحصه أسماء داخلية مثل `FILE_Exe` بدلاً من مسار التثبيت النهائي. تحقّق من طريقة الاستخراج ومن بنية الملفات الناتجة قبل تحديد مسارات التشغيل.
+
+**قاعدة `extract_dir` مع MSI**
+
+قد يحتوي MSI على شجرة مجلدات داخلية متعددة، ولا يكون ملف التشغيل موجوداً في جذر الاستخراج. افحص كل MSI على حدة ولا تفترض أن جميع الحزم تستخدم `PFiles` أو `PFiles64`.
+
+أمثلة موجودة في المستودع:
+
+| البرنامج | `extract_dir` |
+|---|---|
+| FlyPhotos | `PFiles64\RYFTools\FlyPhotos` |
+| SelfPhotos | `PFiles\SelfPhotos` |
+
+اتبع الخطوات التالية:
+
+1. استخرج MSI فعلياً باستخدام Scoop أو أداة استخراج MSI.
+2. افحص شجرة المجلدات الناتجة وحدد مكان ملفات البرنامج الفعلية.
+3. ضع المسار الداخلي الصحيح في `extract_dir`.
+4. عند استخدام `extract_dir`، ينقل Scoop محتويات المجلد المحدد إلى مجلد التطبيق بدلاً من الاحتفاظ بشجرة المجلدات الداخلية كاملة.
+5. اضبط `bin` و`shortcuts` وفق المسارات النهائية بعد الاستخراج والنقل.
+6. اختبر تشغيل البرنامج دون تنفيذ المثبّت الأصلي.
+
+إذا فشل مستخرج MSI، اقرأ سجل `msi.log` وجرّب المستخرج البديل وفق سبب الفشل، ولا تغيّر طريقة الاستخراج عشوائياً.
+
+### Inno Setup
+
+- لا تستخدم `"innosetup": true` إلا بعد التأكد من أن الملف بالفعل مثبّت Inno Setup.
+- عند ثبوت ذلك، استخدم `"innosetup": true` لاستخراج محتويات المثبّت بدلاً من تشغيل إجراء التثبيت المعتاد.
+- استخدم `extract_dir` عند الحاجة وبعد فحص المسار الفعلي.
+- تحقق من وجود ملفات البرنامج المطلوبة ومن إمكانية تشغيله بعد الاستخراج.
+- لا تعتبر استخراج Inno Setup دليلاً كافياً وحده على أن البرنامج Portable؛ اختبر التشغيل والحاجة إلى تسجيل مكونات Windows.
+
+### NSIS
+
+- افحص المثبّت باستخدام 7-Zip أولاً.
+- إذا نجح الاستخراج وأظهر ملفات البرنامج الفعلية التي يمكن تشغيلها دون إجراء تثبيت، يمكن استخدام `#/dl.7z`.
+- إذا فشل الاستخراج أو أظهر ملفات غير كافية أو غير قابلة للتشغيل، فلا تفرض استخدام `#/dl.7z`.
+- ابحث عن طريقة استخراج بديلة موثوقة أو خيار الاستخراج الرسمي للمثبّت.
+- لا تصنف ملف NSIS على أنه Portable لمجرد أن 7-Zip استطاع فتحه.
+- إذا تطلب الأمر تشغيل المثبّت الفعلي أو تسجيل مكونات أساسية في Windows، فصنّف المانيفست Nonportable.
+
+### مثبتات EXE الأخرى
+
+- حدّد نوع المثبّت أولاً، ولا تعتمد على امتداد EXE أو مفاتيح التثبيت الصامتة وحدها.
+- افحص خيارات الاستخراج الرسمية وإمكانية استخدام 7-Zip أو أداة مناسبة أخرى.
+- اختر استخراج الملفات دون تشغيل التثبيت الفعلي متى أمكن.
+- لا تفترض أن كل EXE قابل للاستخراج.
+- لا تستخدم `#/dl.7z` إلا إذا ثبت أن الملف يتعامل فعلياً مع 7-Zip وأن الملفات الناتجة هي ملفات البرنامج الصحيحة.
+- إذا كان الملف Self-extracting أو Bundle installer أو Bootstrapper، افحص ما إذا كان يحتوي على مثبّتات فرعية أو حزم MSI/MSIX أو مكونات نظامية، ولا تخلط بين استخراج الحزمة وتنفيذ التثبيت.
+
+### ZIP و7Z وملفات Portable EXE
+
+- استخدم رابط التنزيل المباشر للأرشيف أو الملف المستقل.
+- افحص بنية الأرشيف قبل تحديد `extract_dir` أو `bin` أو `shortcuts`.
+- لا تثق بامتداد `.7z` وحده؛ قد يُنشر مثبّت Bundle ذاتي الاستخراج باسم ينتهي بـ `.7z`.
+- إذا كان الملف في الحقيقة مثبّتاً، فاتبع طريقة التثبيت الرسمية المثبتة ووثّق مسارات التثبيت والبيانات الخارجية، ولا تعلن أن `bin` أو الاختصارات موجودة تحت `$dir` إذا كان المثبّت يضعها في مكان آخر.
+
+## 4. قواعد التثبيت والاختصارات والبيانات والتبعيات
+
+- اختر حزمة Portable الرسمية المباشرة عندما تكون متاحة ومناسبة، ولا تختَر Setup لمجرد أنه أسهل في العثور عليه.
+- اجعل اختصار Start Menu موجهاً إلى ملف التشغيل الرئيسي الفعلي، مع اسم عرض واضح. لا تضف أدوات مساعدة أو Runtime أو مثبتات المتطلبات المسبقة إلى الاختصارات.
+- افحص وجود الملف قبل إضافة `bin` أو `shortcuts`، وتأكد من أن المسار النهائي بعد `extract_dir` صحيح.
+- لا تستخدم أو تترك `extract_dir` اعتماداً على تخمين. راجع محتويات الأرشيف وحالة الأحرف في المسار. إذا كان المجلد يتغير مع الإصدار، حدّث `autoupdate.extract_dir` أيضاً.
+- بعد أي تغيير في بنية الحزمة من المصدر، أعد فحص الأرشيف ونتائج التحقق قبل تعديل `bin` أو `shortcuts` أو `extract_dir`.
+- لا تصف البرنامج بأنه Portable في الوصف لمجرد أن Scoop يستخرج المثبّت. اشرح التوزيعة وسلوك التثبيت الفعلي بدقة.
+- الأرشيف الذي يحتوي على واجهة GUI فقط لا يمثل تثبيتاً كاملاً إذا كان البرنامج يحتاج إلى Windows Service أو Driver أو مكوّن نظامي آخر لوظيفته الأساسية. تحقق من مسار التثبيت والإزالة الرسميين، ولا تفترض أن إضافة ملف GUI إلى `bin` تجعل البرنامج يعمل.
+- إذا كان البرنامج يحتاج إلى Service، فتحقق أولاً مما إذا كانت الواجهة الرسمية توفر إجراء Install / Repair صريحاً لتسجيل الخدمة. لا تسجل الخدمة أثناء تثبيت Scoop لأول مرة إذا كان المطلوب ترك ذلك للمستخدم بعد اختياره صراحة. عند التحديث، أوقف الخدمة وحدّثها أو أعد تشغيلها فقط إذا كانت مسجلة بالفعل لهذه النسخة التي يديرها Scoop. عند الإزالة، احذف الخدمة فقط إذا كان مسار الملف التنفيذي المسجل تابعاً لهذا التثبيت، ونفّذ ذلك قبل حذف الملفات. لا تستبدل خدمة تخص تثبيتاً آخر ولا تحذفها. ارفض التحديث أو الإزالة عندما يكون البرنامج قيد التشغيل إذا كان ذلك سيترك الخدمة أو الملفات في حالة غير متسقة.
+- إذا كانت الحزمة الرسمية تتضمن مثبت متطلب مسبق مثل VC++ Redistributable، فلا تشغّله تلقائياً من Hooks عندما يكون المطلوب ألا يرفع Scoop صلاحياته لتثبيت المتطلبات. أزل ملف المثبّت المؤقت، ووثّق الاعتماد وتأثير غيابه، واترك تثبيته للمستخدم أو لمسار إعداد رسمي يختاره صراحة. لا تترك ملفات المثبّت المؤقتة داخل مجلد التطبيق إلا إذا كانت مطلوبة وقت التشغيل. وثّق التبعيات النظامية التي تبقى بعد إزالة Scoop.
+
+## 5. اكتشاف الإصدارات: `checkver`
+
+- اختر مصدراً موثوقاً يطابق قناة الإصدار المقصودة.
+- إذا كان المشروع ينشر قنوات منفصلة لأنظمة تشغيل مختلفة، فلا تستخدم `/releases/latest` بلا تحقق لمانيفست Windows. اختر وسم الإصدار أو عائلة الملفات الخاصة بـ Windows، واختبر أن `checkver` يختار أحدث إصدار يضم ملف Windows المطلوب.
+- لإصدارات GitHub، استخدم صيغة Scoop الحالية الصريحة:
   ```json
   "checkver": {
       "github": "https://github.com/OWNER/REPOSITORY"
   }
   ```
-  Use the actual upstream owner and repository. Do not point it at this bucket or a fork unless that fork is the true source.
-- For non-GitHub releases, use a reliable official release/download page, JSON API, XML feed, or a script. Use a regular expression or JSONPath that matches the real response and captures the intended version only.
-- For `checkver.script`, include a sibling `checkver.regex` even when the script already extracts a version. Scoop applies that regex to the script's output to capture the version; without it, the check can report `Version match fail`. Make the script output a plain version string and test the matching capture group against that exact output.
-- When a manifest intentionally tracks a mutable GitHub release channel or tag (for example, `PREVIEW-DEV`) and its autoupdate URL points to that same tag, make `checkver` query that exact tag's release API endpoint rather than `/releases/latest`. Conversely, when selecting an asset family across multiple releases, query enough releases and apply the version regex to the full asset list; querying only the newest release can fail when that release uses another asset naming scheme.
-- For `checkver.script` requests to GitHub's REST API, send `Authorization: Bearer $env:GITHUB_TOKEN` when `GITHUB_TOKEN` is available, while retaining an unauthenticated fallback for local use. In GitHub Actions workflows that run checkver directly, explicitly pass the repository secret `CHECKVER_GITHUB_TOKEN` through the `GITHUB_TOKEN` environment variable when requests to unrelated public repositories need authentication; the variable is not automatically exported to every `run` step. Do not rely on the repository-scoped `github.token` for requests to unrelated public repositories. Do not misreport API request failures or rate limiting as proof that no release exists. When releases mix platforms or channels, select the newest release containing the intended asset instead of relying on a stale tag prefix.
-- Scoop's built-in `checkver.url`/JSONPath path does not attach a token by default. This repository's validation workflow temporarily patches the checked-out Scoop `checkver.ps1` to send the workflow's Bearer token to GitHub API URLs, avoiding shared-runner rate limits without changing Scoop manifests' native lookup semantics. For manifests that need authenticated API requests outside that workflow, use a `checkver.script` that adds the optional Bearer header; do not remove a working manifest or treat HTTP 403 rate limiting as a missing release.
-- In GitHub API mode, Scoop's built-in `checkver.github` reads `tag_name` by default, so its regex must match the tag value itself (for example, `^v(?<version>[\d.]+)# Manifest Authoring and Maintenance Rules
+  استخدم المالك والمستودع الأصليين. لا توجّه `checkver` إلى هذا الـ bucket أو Fork إلا إذا كان هو المصدر الحقيقي.
+- للمصادر غير المستضافة على GitHub، استخدم صفحة الإصدارات أو التنزيل الرسمية أو JSON API أو XML feed أو Script موثوقاً. يجب أن يطابق Regex أو JSONPath الاستجابة الخام ويلتقط الإصدار المقصود فقط.
+- إذا استخدمت `checkver.script`، أضف `checkver.regex` بجانبه حتى لو كان Script يستخرج الإصدار بالفعل. يطبق Scoop الـ Regex على مخرجات Script لالتقاط الإصدار؛ وبدونه قد تظهر `Version match fail`. اجعل المخرجات قيمة إصدار صافية واختبر مجموعة الالتقاط على المخرجات نفسها.
+- إذا كان المانيفست يتتبع قناة GitHub متغيرة أو Tag ثابتاً مثل `PREVIEW-DEV` وكان رابط `autoupdate` يستخدم Tag نفسه، فاجعل `checkver` يستعلم عن API الخاص بذلك Tag بدلاً من `/releases/latest`. وعند الاختيار بين عدة إصدارات، افحص قائمة إصدارات كافية وابحث عن أحدث إصدار يحتوي على ملف Windows المطلوب؛ لا تكتفِ بأحدث إصدار إذا كان يضم ملفات لقناة أو نظام تشغيل آخر.
+- في طلبات GitHub REST API داخل `checkver.script`، أرسل `Authorization: Bearer $env:GITHUB_TOKEN` عندما يكون المتغير متاحاً، مع إبقاء إمكانية التشغيل محلياً دون Token. في GitHub Actions مرّر Secret باسم `CHECKVER_GITHUB_TOKEN` إلى المتغير `GITHUB_TOKEN` صراحة عندما يحتاج Script إلى الاستعلام عن مستودعات عامة أخرى. لا تفترض أن `github.token` الخاص بسياق المستودع يوفّر المصادقة المناسبة لكل المستودعات الأخرى. لا تعتبر HTTP 403 أو Rate Limit دليلاً على عدم وجود إصدار.
+- مسار Scoop الأصلي `checkver.url` مع JSONPath لا يضيف Token تلقائياً. يستخدم Workflow التحقق في هذا المستودع تعديلاً مؤقتاً على نسخة Scoop المستخدمة أثناء التشغيل لتمرير Bearer Token إلى روابط GitHub API. خارج هذا الـ Workflow، استخدم `checkver.script` عند الحاجة إلى مصادقة مخصصة، ولا تحذف مانيفستاً يعمل أو تعتبر Rate Limit دليلاً على اختفاء الإصدار.
+- وضع GitHub API في `checkver.github` يقرأ `tag_name` افتراضياً؛ لذلك يجب أن يطابق Regex قيمة Tag نفسها، مثل `^v(?<version>[\d.]+)`، لا رابط صفحة مثل `releases/tag/v...`.
+- إذا كانت جميع إصدارات المشروع Pre-release فقد يعيد `/releases/latest` خطأ 404. استخدم قائمة الإصدارات أو Endpoint موثوقاً للقناة المطلوبة، واختر إصداراً يحتوي على الملف المطلوب.
+- إذا استخدمت JSONPath، فتأكد أن المصدر يعيد JSON فعلاً. رابط المستودع العادي قد يعيد HTML؛ عند تحليل JSON استخدم API صريحاً مثل `https://api.github.com/repos/OWNER/REPOSITORY/releases/latest`. لا تجمع HTML مع `jsonpath` أو `jp` على افتراض أنه JSON.
+- يضيف `checkver.github` Regex افتراضياً عند عدم تحديد Regex صريح، حتى عند استخدام API URL. إذا اخترت JSONPath حقلاً غير رقمي مثل اسم الإصدار أو `updated_at` فقد يمنع Regex الافتراضي المطابقة. استخدم `checkver.url` مع JSONPath وRegex أو Replace صريحين عندما يلزم.
+- تأكد من توافق الإصدار المستخرج مع قيم `autoupdate`. لا تضف أو تحذف بادئة `v` دون فحص Tag ومخرجات Scoop.
+- عندما يشير رابط التنزيل إلى Alias متغير مثل `nightly` ويعاد نشر الملف تحت الرابط نفسه، فلن يكشف رقم إصدار ثابت تغير المحتوى، وقد لا يتحدّث Hash. استخرج Build ID أو Commit أو وقت بناء موثوقاً لاستخدامه كإصدار Scoop، واستخدم نسخة منفصلة من رقم إصدار التطبيق في رابط التنزيل عند الحاجة.
+- قد تحذف بعض عمليات Nightly الـ Release أو Tag القديم قبل رفع الجديد، ما ينتج عنه 404 مؤقت. استخدم محاولات محدودة في `checkver.script`، ثم أظهر فشلاً واضحاً إذا ظل المصدر غير متاح. لا تتجاوز الفشل ولا تضع إصداراً ثابتاً وهمياً. في الأصول المتغيرة، اجعل إصدار Scoop يتضمن Commit/Build ID حتى يتحدّث Hash مع كل بناء.
+- عند مطابقة صفحة HTML، اكتب Regex على الاستجابة الخام التي ينزّلها Scoop، وليس على النص المعروض في نتائج البحث. قد تكون أعمدة الجدول مفصولة بوسوم HTML أو مسافات بدلاً من الرمز `|`. استخدم نمطاً محدوداً وغير جشع، ثم اختبره على الصفحة الخام.
+- إذا جاء رقم الإصدار بعد وسوم HTML، تجنب أنماطاً مثل `[^\d]*` التي قد تتوقف عند أرقام سمات HTML. استخدم نمطاً محدود النطاق وغير جشعاً، مثل `(?is)LABEL[\s\S]{0,500}?(?<version>\d+(?:\.\d+){3})`، ثم تحقق من النتيجة باستخدام Scoop.
+- فضّل `jsonpath` مع `regex` أو `replace` عندما تستطيع الحقول الأصلية التعبير عن المطلوب. احتفظ بـ `checkver.script` للحالات التي لا يمكن تمثيلها بالخيارات الأصلية؛ فهذا يقلل الطلبات المكررة ويسهّل تصحيح الأخطاء.
+- إذا كانت الصفحة الرئيسية الرسمية تعرض أحدث إصدار بوضوح وكان API غير مستقر، يمكن استخدام الصفحة الرئيسية كمصدر `checkver.url` بديل بعد وضع Regex محافظ واختباره باستخدام Scoop.
+- إذا كان فهرس تنزيلات Directory Index هو المصدر، اختبر الاستجابة بالطريقة نفسها التي يستخدمها Scoop. إذا اختلف رد PowerShell الافتراضي، جرّب User-Agent شبيهاً بالمتصفح أو `curl.exe`، وافشل بوضوح إذا لم يُعثر على اسم الملف.
+- ضع مهلة اتصال ومهلة إجمالية لطلبات Script البعيدة، وأعد المحاولة للأخطاء المؤقتة، وأظهر سبباً واضحاً بدلاً من تثبيت إصدار ثابت عند فشل المصدر.
+- تحقق من اكتشاف الإصدار باستخدام `checkver.ps1` الحالي. قراءة JSON وحدها لا تثبت نجاح `checkver`.
 
-This is the repository's mandatory reference for creating, changing, troubleshooting, or reviewing any Scoop manifest. Read it before working on manifests. When a real failure reveals a missing rule, update this document in the same task so the lesson is not lost.
+## 6. تحديث روابط التنزيل وHashes
 
-## 1. Non-negotiable rule: automatic updates must work
+- ضع رابط التنزيل الحالي الذي تم التحقق منه وSHA-256 الصحيح في معمارية المانيفست المناسبة.
+- أضف قوالب `autoupdate.url` المطابقة، باستخدام متغيرات Scoop المدعومة وطريقة تسمية الملفات الحقيقية لدى المصدر.
+- حافظ على تطابق روابط المعماريات مع قوالب التحديث. لا تضف معمارية أخرى إلا إذا كان المصدر ينشر ملفاً لها وتم التحقق منه.
+- في روابط GitHub Releases، تحقق مما إذا كان Scoop يستطيع جلب Asset Digest بالطريقة الأصلية. لا تضف `autoupdate.hash` مخصصاً دون حاجة؛ فقد تكون الخاصية غير مدعومة أو غير لازمة.
+- في خدمات الاستضافة الأخرى، لا تضف آلية استخراج Hash إلا بعد التحقق من Schema وImplementation الحاليين واختبارها فعلياً.
+- إذا لم ينشر المصدر Checksum صالحاً، فتحقق أن Scoop يستطيع تنزيل الملف الجديد نفسه وحساب SHA-256 له. لا تعِد استخدام Hash الإصدار السابق.
+- تعامل بحذر مع Digest بصيغة `sha256:<hex>`؛ اختبر أن Scoop يحوله إلى SHA-256 المتوقع بدلاً من نسخ نص API إلى المانيفست دون تحقق.
+- اختبر مسار الإصدار → URL → Hash بالكامل باستخدام `checkver.ps1 -Update`. نجاح اكتشاف الإصدار وحده لا يثبت أن التحديث التلقائي يعمل.
+- لا يختبر `-Update` مسار URL/Hash إذا لم يكن إصدار المصدر أحدث. لاختبار القوالب عندما يكون المانيفست محدثاً بالفعل، استخدم `checkver.ps1 -ForceUpdate` على نسخة اختبار منفصلة فقط؛ لا تستخدمه على نسخة bucket العاملة لأن Scoop سيعدّل JSON.
+- إذا لم يوفر المصدر الرسمي آلية إصدار موثوقة، فابحث عن API أو Release Feed أو `checkver.script` مخصص قبل التفكير في مانيفست يدوي التحديث. وثّق القيد بوضوح.
+- `autoupdate` قالب فقط وليس مجدولاً يعمل في الخلفية. يتم تحديث ملفات المستودع عندما يعمل Updater مثل Excavator بنجاح وينشئ Commit. ويحصل المستخدم على التحديث بعد تحديث الـ bucket باستخدام `scoop update`.
 
-A manifest is not finished merely because the current version installs. By default, every manifest must support automatic version and download updates.
+## 7. خط أنابيب المانيفستات والتحقق الآلي في المستودع
 
-- Configure a working `checkver` that detects the intended release channel and extracts the version correctly.
-- Configure `autoupdate` templates for the download URL and every version-dependent field, including `extract_dir` when the archive's root folder changes with the version.
-- Ensure the hash will be refreshed correctly by the current Scoop updater. Never leave an old fixed hash in place while allowing the URL to move to a new version.
-- Test the entire version → URL → hash update path with Scoop's actual `checkver.ps1 -Update`. A successful version lookup alone does **not** prove that automatic updating works.
-- `-Update` only exercises the URL/hash update path when the upstream version is newer. To test templates when the manifest already matches upstream, use `checkver.ps1 -ForceUpdate` against a disposable copy; never force-update the working bucket checkout because Scoop will rewrite the manifest.
-- If upstream genuinely provides no reliable automatic version source, investigate the official API, release feed, or a custom `checkver.script` before considering a manual-only manifest. State the limitation explicitly rather than silently omitting update support.
+ملف Workflow الرئيسي هو `.github/workflows/manifest-pipeline.yml`، ويُشغّل يدوياً. اختر **Manifest Pipeline**، وأدخل مسار مانيفست موجود بالفعل على `master` مثل `bucket/taskexplorer.json`، ثم شغّل الـ Workflow. ينفذ مراحل التحقق بالترتيب ويتوقف عند أول مرحلة فاشلة أو انتهت مهلتها.
 
-`autoupdate` is a template, not a background scheduler. GitHub updates the repository manifest only when an updater such as the repository's Excavator workflow runs successfully and commits the result. User machines receive the updated manifest after their bucket is pulled with `scoop update`.
+يتطلب الـ Pipeline أن يكون المانيفست موجوداً بالفعل على `master`. اترك خيار `force_update` مفعّلاً ما لم تكن تريد تخطي اختبار قوالب التحديث الإجباري عمداً.
 
-## 2. Research the upstream package before writing JSON
+المراحل التي ينفذها المنسّق بالترتيب:
 
-Use the project's official release page, repository, documentation, and release API as the source of truth.
+1. `format-manifests.yml`: تنسيق المانيفست المحدد فقط.
+2. `scoop-checkver-validation.yml`: فحص اكتشاف الإصدار للمانيفست.
+3. `validate-manifest-archives.yml`: التحقق من التنزيلات والـ Hashes ومسارات الأرشيف.
+4. `fxsound.yml`: ينفّذ فقط عندما يكون المانيفست هو `bucket/fxsound.json`، ويختبر FxSound بشكل مستقل.
+5. `scoop-autoupdate-validation.yml`: يختبر قوالب التحديث التلقائي على نسخة معزولة. يفرض المنسّق هذا الاختبار افتراضياً.
+6. `ci.yml`: يشغّل مجموعة اختبارات المستودع القياسية في Windows PowerShell وPowerShell 7.
 
-1. Identify the latest intended stable release. Do not accidentally use a pre-release, development build, unrelated tag, or stale release.
-2. Inspect the actual Windows asset names and architecture. Verify the exact URL, release tag, and available checksum/digest.
-3. Determine what the downloaded file actually is: a portable archive, an installer, an Inno Setup installer, an MSI, or a standalone executable. An `.exe` extension does not prove that a file is portable.
-4. Verify the archive or installer contents before choosing `bin`, `shortcuts`, `extract_dir`, `innosetup`, `depends`, or installer extraction options. Never guess internal paths or executable names.
-5. Preserve the application's real settings/data location. Add `persist` only for the correct data directory or files. Migration logic must not delete or overwrite the old data; copy only when appropriate and preserve the original if copying fails.
+بعد نجاح مراحل التحقق المطلوبة، يعيد `manifest-table.yml` توليد README وفهارس المانيفستات. كما يعمل عند حذف مانيفست يحتاج إلى تحديث الفهارس.
 
-Do not copy an existing manifest blindly. Use it as a reference only after verifying it against the current release and current Scoop behavior.
+تبقى Workflows الفرعية قابلة للتشغيل اليدوي حتى يستطيع المنسّق ترتيبها. أما Manifest Pipeline الرئيسي فهو يدوي فقط. فحوص FxSound وKVRT يدوية فقط. يدعم Excavator التشغيل اليدوي وجدوله الحالي كل أربع ساعات. أما معالجات Issues وPull Requests فتبقى مرتبطة بأحداثها.
 
-- When a canonical upstream repository or download page returns 404, verify whether the project has officially moved and whether the new location has real releases/assets. Do not replace a missing source with an unverified fork or hard-code a fake `checkver` result just to make validation pass. If no verifiable canonical download/update source remains, remove the obsolete manifest or report it as blocked.
+### Workflows المرتبطة
 
-## 3. Version detection: `checkver`
+- `.github/workflows/excavator.yml`: محدّث المانيفستات اليدوي والمجدول كل أربع ساعات، ويحتاج صلاحية كتابة لإنشاء Commit. يضيف أولاً SHA-256 المفقود لمانيفستات Eric Zimmerman المستهدفة، ثم يشغّل إصدار ScoopInstaller المثبت، ويفحص السجل بحثاً عن No-match أو فشل URL أو HTTP 4xx/5xx أو أخطاء تحديث قد يتجاوزها Scoop.
+- **معالجة فشل Excavator:** يجعل `THROW_ERROR: 1` الاستثناءات التي يطلقها مسار التحديث قاتلة، لكن `checkver.ps1` قد يطبع عدم تطابق Regex أو فشل مصدر URL ويكمل إلى المانيفست التالي. لذلك يلتقط Excavator سجل الأداة ويفشل عند اكتشاف هذه الرسائل، بدلاً من الاعتماد على Exit Code وحده.
+- `.github/workflows/scoop-checkver-validation.yml`: يتحقق من اكتشاف الإصدار للمانيفستات، لكنه لا يثبت وحده أن قوالب التحديث تعمل.
+- `.github/workflows/validate-manifest-archives.yml`: يتحقق من الملفات القابلة للتنزيل والـ Hashes ومسارات الأرشيف. يرسل Manifest Pipeline اختبار Autoupdate بعد نجاح هذه المرحلة.
+- `.github/workflows/scoop-autoupdate-validation.yml`: يختبر المانيفستات التي اجتازت فحص الأرشيف فقط، على نسخة معزولة باستخدام `checkver.ps1 -Update`. إذا لم يوجد إصدار أحدث، يذكر أن مسار URL/Hash لم يُختبر بدلاً من ادعاء نجاحه. شغّله يدوياً مع `force_update=true` لاختبار القوالب حتى عندما يكون الإصدار الحالي محدثاً.
+- `.github/workflows/ci.yml`: اختبارات المانيفست العامة.
 
-- Choose a version source that reliably follows the intended release channel.
-- When a project publishes separate release streams for different operating systems, do not blindly use `/releases/latest` for a platform-specific manifest. Select the intended platform's tag or asset family from the releases API/page, then validate that `checkver` chooses the newest matching release rather than another OS's newer version.
-- For GitHub releases, prefer the explicit current syntax:
-  ```json
-  "checkver": {
-      "github": "https://github.com/OWNER/REPOSITORY"
-  }
-  ```
-  Use the actual upstream owner and repository. Do not point it at this bucket or a fork unless that fork is the true source.
-- For non-GitHub releases, use a reliable official release/download page, JSON API, XML feed, or a script. Use a regular expression or JSONPath that matches the real response and captures the intended version only.
-- When a manifest intentionally tracks a mutable GitHub release channel or tag (for example, `PREVIEW-DEV`) and its autoupdate URL points to that same tag, make `checkver` query that exact tag's release API endpoint rather than `/releases/latest`. Conversely, when selecting an asset family across multiple releases, query enough releases and apply the version regex to the full asset list; querying only the newest release can fail when that release uses another asset naming scheme.
-), not a release-page URL fragment such as `releases/tag/v...`. If the upstream's releases are all marked prerelease, `/releases/latest` can return 404; query the releases list or a verified channel endpoint instead, and select only releases that contain the intended asset.
-- If `checkver` uses JSONPath, make sure the configured source actually returns JSON. With GitHub, the repository URL normally makes Scoop read the HTML `releases/latest` page; use an explicit API URL such as `https://api.github.com/repos/OWNER/REPOSITORY/releases/latest` when parsing a JSON response. Never combine an HTML source with `jsonpath`/`jp` and assume it will work.
-- Make sure the extracted version matches the values used in `autoupdate`.
-- Scoop's `checkver.github` mode automatically supplies a default version regex when no regex is set, including when its value is an API URL. If a JSONPath selects a non-version field such as a release name or `updated_at`, that implicit regex can cause a false no-match. For such API lookups, use an explicit `checkver.url` with `jsonpath` and define a matching regex/replacement as needed; don't assume an API URL under `github` disables GitHub defaults.
-- The implicit `/releases/latest` endpoint normally skips pre-releases. For nightly, release-candidate, or other non-default channels, use an explicitly verified releases page/API and test that it selects the intended channel.
-- For a mutable alias asset URL (for example, a fixed `nightly` URL), a constant manifest version will not signal that the bytes changed, so the hash may never refresh automatically. Derive the Scoop version from a reliable build/update timestamp or commit identifier when the same URL is republished, and verify that `checkver.ps1 -Update` refreshes the hash. Keep the version string compatible with Scoop/Windows version handling. For example, if `checkver` returns `2.0.1` while the release tag is `v2.0.1`, the URL template may need `v$version`. Do not add or remove a `v` without checking the actual tag and output.
-- Some upstream nightly workflows delete the previous release/tag before rebuilding and uploading the replacement. If this creates a temporary `404` at the official release API, use bounded retries in a custom `checkver.script`; if the release remains missing, fail with a clear error rather than skipping the manifest or hardcoding a version. For mutable nightly assets, include the source commit/build identifier in the Scoop version and keep the upstream asset version in a separate named capture (for example, `$matchVersion`) for the download URL so new builds refresh the hash even when the app's semantic version stays unchanged.
-- Validate version detection with the current Scoop `checkver.ps1`; do not infer success from reading the JSON.
+عند تعديل مانيفست من Workflow بالبحث عن URL، غيّر قيمة `url` الحالية المقصودة فقط؛ فقد يظهر الرابط نفسه داخل `autoupdate`. أعد تحليل JSON بعد التعديل، ولا تضع Hash ثابتاً داخل `autoupdate`؛ يجب أن تبقى قيمة قالب.
 
-- When matching an HTML page, write the regex against the raw HTML response that Scoop actually downloads, not a text-rendered search result. Table columns may be separate tags or whitespace rather than literal separators such as `|`; use a bounded, case-insensitive single-line pattern where necessary, then validate the extracted version with Scoop.
-- If a version label is followed by markup before its value, avoid patterns like `[^\\d]*` that stop at digits inside HTML attributes. Use a bounded, non-greedy pattern over the raw response (for example, `(?is)LABEL[\\s\\S]{0,500}?(?<version>\\d+(?:\\.\\d+){3})`) and validate it against the live page with Scoop.
+## 8. الاختبارات الإلزامية قبل اعتماد أي مانيفست
 
-- Prefer native `jsonpath` plus `regex`/`replace` when those fields can extract both the release tag and app version; reserve `checkver.script` for cases the built-in fields cannot express. This reduces duplicate requests and makes normal version checks easier to debug.
+نفّذ الاختبارات المناسبة من نسخة اختبار أو Working Copy منفصلة متى أمكن، وافحص Diff الناتج.
 
-- For an upstream whose homepage visibly identifies the latest release, the official homepage can serve as a simpler `checkver.url` fallback when its API endpoint fails inconsistently across PowerShell hosts. Use a conservative regex against the official release label and validate the extracted version with Scoop before relying on it.
+1. **JSON وSchema وBucket CI:** تأكد أن JSON صالح وأن اختبارات CI للمستودع نجحت.
+2. **اكتشاف الإصدار:** شغّل `checkver.ps1` الحالي على المانيفست وتحقق من الإصدار المكتشف.
+3. **محاكاة التحديث التلقائي:** شغّل `checkver.ps1 -Update` في نسخة اختبار. تحقق من تحديث الإصدار والرابط والـ Hash والمسارات التابعة للإصدار. نجاح checkver العادي لا يكفي.
+4. **التحقق من الأرشيف:** شغّل Workflow التحقق من الأرشيفات. تحقق من التنزيل وSHA-256 والاستخراج ومسارات ملفات التشغيل حيثما ينطبق.
+5. **سلوك التثبيت:** عندما يكون ذلك عملياً، ثبّت المانيفست من مساره واختبر عمل ملف التشغيل والاختصار. تحقق من `persist` وآلية نقل البيانات عند وجودها.
+6. **التحديث والإزالة:** اختبر تحديث البرنامج وإزالته عبر Scoop، وتحقق من Hooks والخدمات والتسجيلات التابعة للمانيفست عند وجودها.
+7. **متابعة Workflows:** افتح GitHub Actions وافحص التشغيل الفعلي وسجلات Jobs. لا تعتبر الفحص ناجحاً وهو Queued أو Running. نجاح فحص الأرشيف لا يعني نجاح CI بالكامل.
+8. **التعامل مع Exit Code في PowerShell:** `checkver.ps1` Script PowerShell وليس برنامجاً تنفيذياً أصلياً. لا تستخدم `$LASTEXITCODE` بعد تشغيله؛ فقد تكون القيمة `$null` أو قديمة، فتؤدي إلى تصنيف كل المانيفستات كفاشلة. التقط المخرجات، وعالج Terminating Exceptions، وافحص رسائل Scoop الصريحة مثل No-match وفشل التنزيل وJSON. تأكد أن Workflow يعرض نتائج واقعية لكل مانيفست.
+9. **التحقق من التحديث الحي:** بعد إصدار جديد من المصدر، افحص تشغيل Excavator والـ Commit الناتج. تأكد أن النتيجة `success` وأن الإصدار والرابط وSHA-256 المتوقع قد تحدّثوا.
 
-## 4. Automatic URL and hash updates
+### اختبار تحديث محلي
 
-- Put the current, verified download URL and SHA-256 in the applicable manifest architecture.
-- Add matching `autoupdate.url` templates, using supported Scoop version variables and the actual upstream naming convention.
-- Keep architecture-specific URLs and update templates aligned. Include other architectures only when the corresponding assets are actually published and verified.
-- For GitHub release download URLs, check whether the current Scoop implementation can retrieve the asset digest using its native GitHub hash mode. Do not add a custom `autoupdate.hash` block by habit when native handling already works.
-- For other hosting providers, only configure a hash extraction method after verifying it against the current Scoop schema and implementation. Test it. Never assume an undocumented or unsupported manifest property works.
-- If the upstream does not publish a usable checksum, verify that the current updater can download the exact new asset and compute its SHA-256. Never reuse the old version's hash.
-- Treat GitHub digest values such as `sha256:<hex>` carefully; verify that Scoop resolves them to the expected SHA-256 rather than copying API text into a manifest untested.
-
-## 5. Installer, portable, and archive rules
-
-- Portable archives should be installed from the verified portable asset directly where possible. Do not select a setup installer just because it is easier to find.
-- Do not trust a `.7z` extension alone to prove that a release is a portable app archive. Some projects publish self-extracting Bundle installers under archive-looking extensions. Inspect the actual payload; if it is a setup executable, follow the project's official package-manager instructions and verified silent switch, document its external install/data paths, and do not declare `bin` or shortcuts under `$dir` when the installer places them elsewhere.
-- Use `innosetup: true` and `innounp` only after confirming the asset is genuinely an Inno Setup installer and that extraction is the intended installation method.
-- Never append `#/dl.7z` to an `.exe` or another URL unless the URL is intentionally handled as an archive and that exact extraction behavior has been verified.
-- Set `extract_dir` to the exact directory present in the archive. Confirm the path and capitalization from the actual archive listing. If the root directory is version-dependent, update both the current value and `autoupdate.extract_dir`.
-- After any upstream packaging change, rerun archive validation and inspect the reported paths before changing `bin`, `shortcuts`, or `extract_dir`; do not guess executable names or directory prefixes. For MSI assets, a generic archive listing may expose internal file IDs such as `FILE_Exe` instead of the installed target paths. Treat that as an installer payload, not a portable archive, unless a verified extraction or installation method is available.
-- Do not call an app portable in the description solely because Scoop extracts an installer. Describe the actual distribution and install behavior accurately.
-- A ZIP containing the GUI is not a complete installation when the application also requires a Windows service, driver, or other system-level component. Verify the official install and uninstall path; do not assume that adding the GUI executable to `bin` makes the app functional.
-- For an app that requires a Windows service, first verify whether the upstream GUI provides an explicit in-app install/repair action. If it does, do not register the service during a fresh Scoop install; let the app perform the first-time installation after the user requests it. During Scoop updates, stop and refresh/restart the service only when it was already registered for this Scoop-managed installation. On uninstall, remove the service only when its registered executable belongs to this installation, and do so before Scoop deletes that executable. If upstream provides no in-app install flow, handle the full service lifecycle deliberately. In all cases, guard against overwriting or removing a service registered by another installation, and refuse update/uninstall while the GUI is running if that would leave the service or files inconsistent.
-- If an official payload bundles a prerequisite installer (for example, a VC++ redistributable), do not launch it automatically from a Scoop hook when the package is expected not to trigger elevation for prerequisites. Remove the temporary payload, document the dependency and how it affects the app if absent, and leave installation to the user or the application's own explicit setup flow. Do not leave transient installer payloads in the installed app directory unless needed at runtime. Document machine-wide dependencies that remain after Scoop uninstall.
-
-## Manifest pipeline and automatic validation
-
-The `.github/workflows/manifest-pipeline.yml` workflow is manually triggered. Select **Manifest Pipeline**, enter one manifest already committed to `master` such as `bucket/taskexplorer.json`, and run it. It processes the selected manifest through the validation stages in order, stopping when a stage fails or times out.
-
-The pipeline requires a manifest path that already exists on `master`. Leave `force_update` enabled unless you intentionally want to skip the forced autoupdate-template test.
-
-For each changed manifest, the orchestrator dispatches and waits for these stages in order:
-
-1. `format-manifests.yml` normalizes the selected manifest only.
-2. `scoop-checkver-validation.yml` checks version detection for that manifest.
-3. `validate-manifest-archives.yml` checks downloadable assets, hashes, and archive paths.
-4. `fxsound.yml` is included when the selected manifest is `bucket/fxsound.json`. The orchestrator dispatches the standalone FxSound test and waits for it to finish.
-5. `scoop-autoupdate-validation.yml` checks automatic-update templates in an isolated copy. The orchestrator forces this check by default.
-6. `ci.yml` runs the repository's standard test suite in Windows PowerShell and PowerShell 7.
-
-After all required validation stages pass, `manifest-table.yml` regenerates the README and manifest indexes. It also runs when a manifest deletion needs the indexes refreshed. The orchestrator stops at the first failed or timed-out validation stage.
-
-The child validation workflows remain manually dispatchable so the orchestrator can sequence them. The main Manifest Pipeline is manual-only. FxSound and KVRT verification are manual-only; Excavator supports both manual dispatch and its existing four-hour schedule. The issue and pull-request handlers remain event-driven because they respond to issue/PR events, not direct manifest changes.
-
-## 6. Required validation before considering work complete
-
-Run the relevant checks from a disposable checkout or working copy where practical, and inspect the resulting diff.
-
-1. **JSON/schema and bucket CI:** confirm the manifest parses and the repository's CI passes.
-2. **Version detection:** run the current Scoop `checkver.ps1` against the manifest and inspect the detected version.
-3. **Autoupdate simulation:** run `checkver.ps1 -Update` in a test copy. Confirm that the version, URL, hash, and version-dependent paths update correctly. A manifest that only passes a normal `checkver` lookup has not passed this test.
-4. **Archive validation:** run the repository's manifest archive validation workflow. Confirm download, SHA-256, extraction, and executable-path checks succeed where applicable.
-5. **Installation behavior:** where practical, install the manifest from its file path and verify that the declared executable and shortcut work. Check persistence/migration behavior when relevant.
-6. **Workflow follow-through:** inspect the actual GitHub Actions runs and job logs. Do not claim a check passed while it is queued or running. Do not equate a successful archive check with a successful full CI run.
-7. **PowerShell workflow exit handling:** `checkver.ps1` is a PowerShell script, not a native executable. Do not use `$LASTEXITCODE` after invoking it; that variable may be `$null` or stale and can incorrectly mark every manifest as failed. Capture its output, handle terminating exceptions, and detect Scoop's explicit no-match/download/JSON diagnostics (some checkver failures are printed without setting a native process exit code). Confirm the workflow reports realistic per-manifest results instead of counting successful version lookups as failures.
-8. **Live update verification:** because Excavator has both a manual trigger and a four-hour schedule, inspect its actual run and commit after an upstream release. Confirm its conclusion is `success` and that the expected manifest version, URL, and SHA-256 were updated.
-
-The repository currently has these related workflows:
-- `.github/workflows/excavator.yml`: manual and scheduled manifest updater (every four hours); requires write permission to commit changes. It first seeds missing SHA-256 values for the targeted Eric Zimmerman manifests, then runs the pinned ScoopInstaller action and scans its captured log for checkver no-match, failed URL, HTTP 4xx/5xx, or update-error diagnostics that Scoop may otherwise skip.
-- Important failure-handling detail: `THROW_ERROR: 1` makes exceptions raised by Scoop's update path fatal, but Scoop's `checkver.ps1` can log a regex no-match or failed source URL and continue to the next manifest. Excavator now captures the pinned action's output and fails when it detects these diagnostics, rather than relying solely on the action's exit code.
-
-- When workflow code edits a manifest by matching a URL string, replace only the intended current `url` entry; the same URL may also appear under `autoupdate`. Re-parse the edited JSON and never write a fixed `hash` inside `autoupdate`; that section must remain a template.
-- `.github/workflows/scoop-checkver-validation.yml`: validates version detection for every manifest; it does not by itself prove that update templates work.
-- `.github/workflows/validate-manifest-archives.yml`: validates downloadable assets, hashes, and archive paths. The main Manifest Pipeline dispatches autoupdate validation after this stage succeeds.
-- `.github/workflows/scoop-autoupdate-validation.yml`: tests only the archive-validated manifest(s) against an isolated copy with Scoop's `checkver.ps1 -Update`. If there is no newer upstream version, it reports that the URL/hash path was not exercised rather than falsely claiming a full test. Manually dispatch it with `force_update=true` to exercise URL/hash templates even when the current version is already up to date.
-- `.github/workflows/ci.yml`: general manifest tests.
-
-For a local update test, run from the bucket repository root in a disposable working copy:
+نفّذ الأوامر من جذر المستودع داخل Working Copy قابلة للتخلص منها:
 
 ```powershell
 $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
@@ -199,33 +227,45 @@ $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
 git diff -- .\bucket\taskexplorer.json
 ```
 
-Replace `taskexplorer` with the manifest basename, without `.json`. Review every changed field. Keep valid generated changes; revert accidental or incorrect changes. If Scoop is installed at a nonstandard location, resolve the actual path to its current `bin\checkver.ps1` rather than assuming the example path.
+استبدل `taskexplorer` باسم المانيفست دون `.json`. راجع كل تغيير، واحتفظ بالتعديلات الصحيحة فقط، وتراجع عن أي تعديل عرضي أو خاطئ. إذا كان Scoop مثبتاً في مسار غير قياسي، فاكتشف مكان `checkver.ps1` الفعلي بدلاً من افتراض المسار الموجود في المثال.
 
-## 7. Repository-specific working rules
+## 9. توثيق المشكلات والحلول: قاعدة إلزامية
 
-- Read this document first for every manifest creation, update, repair, or review task in this repository.
-- Prefer verified official Scoop manifest properties and behavior over assumptions, copied snippets, or unsupported fields.
-- Check the current Scoop documentation, schema, and implementation whenever a property or update behavior is uncertain.
-- Before finishing, explicitly verify automatic updating—not just the current download. If it cannot be made automatic, report exactly what blocks it.
-- When a task uncovers a new recurring failure or a correction to these rules, update this document as part of that task and verify the doc change in GitHub.
-- Report the commit and validation links, and distinguish successful checks from checks that have not completed.
+عند مواجهة مشكلة حقيقية في إنشاء مانيفست أو تحديثه أو استخراجه أو تثبيته أو إزالته أو تصنيفه:
 
-## Installer type in generated catalogs
+1. ابحث أولاً في [قاعدة معرفة المشكلات والحلول](problem-resolution-knowledge-base.md) عن مشكلات مشابهة.
+2. افحص الخطأ والسجل والملف والمصدر وسلوك Scoop حتى تصل إلى سبب تدعمه الأدلة. لا تعتبر التخمين أو رسالة الخطأ وحدها سبباً جذرياً مؤكداً.
+3. أصلح السبب الحقيقي قدر الإمكان، وليس العرض الظاهر فقط.
+4. أعد الاختبار المرتبط بالمشكلة بعد الإصلاح، وسجّل النتائج الفعلية.
+5. **بعد حل المشكلة والتحقق من الإصلاح، أضف أو حدّث سجل المشكلة في قاعدة المعرفة في المهمة نفسها.** اكتب المانيفست أو الملف المتأثر، والأعراض، والسبب الجذري المؤكد، والتغيير الذي أصلح المشكلة، والاختبارات وروابط GitHub Actions أو Commit، وطريقة منع تكرارها.
+6. استخدم حالة **تم الحل والتحقق** فقط عندما يكون الإصلاح قد اختُبر فعلياً أو تم تأكيده بصورة مستقلة. إذا كان الاختبار جزئياً أو لم يكتمل، فاذكر ذلك صراحة ولا تدّعِ نجاح المجموعة كلها.
+7. إذا كشفت المشكلة عن قاعدة عامة جديدة لإنشاء المانيفست أو استخراجه أو تصنيفه، فحدّث هذا الدليل أو [جرد قابلية النقل](manifest-portability.md) في المهمة نفسها. لا تترك الحل في المحادثة أو رسالة Commit أو سجل Workflow فقط.
+8. حدّث السجل القديم بدلاً من إنشاء إدخال مكرر عندما يتضح أن المشكلة الجديدة لها السبب الجذري نفسه، مع الاحتفاظ بالأدلة الجديدة.
 
-Manifest catalog tables include an **Installer Type** field. It is derived from the manifest's declared download URL, Scoop URL fragment, and explicit installer metadata such as `innosetup: true`. It identifies the package format or installer family when the manifest provides enough evidence.
+يجب أن يحتوي كل سجل مشكلة على التاريخ، ووصف المشكلة وأعراضها، والسبب الجذري أو توضيح أن السبب لا يزال غير محسوم، والحل، والتحقق المنفذ ونتيجته، وإجراء منع التكرار.
 
-Do not label an EXE as NSIS, Inno Setup, or another installer engine from its extension or silent switches alone. Use **EXE setup (engine unverified)** unless the engine is explicitly declared or independently fingerprinted. The catalog is metadata-based and is not a substitute for inspecting the actual downloaded installer with the separate installer-type inspection workflow.
+## 10. قواعد العمل الخاصة بالمستودع
 
-## Official references
+- اقرأ هذا الدليل قبل كل مهمة إنشاء أو تحديث أو إصلاح أو مراجعة لأي مانيفست في المستودع.
+- فضّل خصائص Scoop الرسمية وسلوكها المثبت على الافتراضات أو المقاطع المنسوخة أو الحقول غير المدعومة.
+- ارجع إلى وثائق Scoop وSchema وImplementation الحالية كلما كان سلوك خاصية غير واضح.
+- تحقق من التحديث التلقائي، وليس من التنزيل الحالي فقط. إذا تعذر جعله تلقائياً، فاشرح العائق تحديداً.
+- لا تعدّل ملفات تحديث البرنامج الداخلية ولا تحذفها ولا تعطّل فحص تحديثاته دون طلب صريح.
+- حدّث هذا الدليل وقاعدة المعرفة عند اكتشاف خطأ متكرر أو قاعدة ناقصة، وتحقق من ظهور التغيير في GitHub.
+- اذكر Commit وروابط التحقق، وافصل بوضوح بين الفحوص الناجحة والفحوص التي لم تكتمل.
 
-- [Scoop App Manifests](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests)
-- [Scoop App Manifest Autoupdate](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate)
-- [Scoop manifest schema](https://github.com/ScoopInstaller/Scoop/blob/master/schema.json)
-- [Scoop checkver implementation](https://github.com/ScoopInstaller/Scoop/blob/master/bin/checkver.ps1)
-- [Scoop autoupdate implementation](https://github.com/ScoopInstaller/Scoop/blob/master/lib/autoupdate.ps1)
-- [ScoopInstaller/GithubActions and Excavator](https://github.com/ScoopInstaller/GithubActions)
+## 11. نوع المثبّت في الفهارس المُولّدة
 
-- For version-history pages rendered as HTML tables, do not require a literal `|` after the version: the raw response may separate the version and date with HTML cell tags. Match the version near the `Version History` heading and validate it against the raw response.
-- For directory-index checkver scripts, test the raw response from the same request method used by Scoop. If PowerShell's default request receives a different response, use a browser-like User-Agent or `curl.exe`, and fail explicitly when no artifact filename is found.
-- If an upstream project has shut down and its official download assets return 404, do not replace them with an unverified third-party mirror. Remove the unusable manifest or restore it only after an official source is available.
-- For remote checkver scripts, set connection and total timeouts, retry transient failures, and report a clear error instead of hardcoding a version when the upstream request fails.
+يحتوي جدول المانيفستات في الفهارس على حقل **Installer Type**. يُستنتج هذا الحقل من رابط التنزيل وURL Fragment وبيانات المثبّت الصريحة في المانيفست، مثل `innosetup: true`. يصف نوع الحزمة أو عائلة المثبّت عندما تتوفر أدلة كافية.
+
+لا تصنّف EXE على أنه NSIS أو Inno Setup أو أي محرك آخر اعتماداً على الامتداد أو مفاتيح التثبيت الصامتة فقط. استخدم **EXE setup (engine unverified)** ما لم يكن المحرك مصرحاً به صراحة أو تم تحديده بفحص مستقل. الفهرس مبني على بيانات المانيفست ولا يغني عن فحص ملف المثبّت نفسه باستخدام Workflow فحص أنواع المثبّتات.
+
+## 12. المراجع الرسمية
+
+- [Scoop App Manifests](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests) — خصائص المانيفست وطريقة معالجة الأرشيفات وMSI وURL Fragments.
+- [Scoop App Manifest Autoupdate](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate) — قوالب التحديث التلقائي.
+- [Scoop Manifest Schema](https://github.com/ScoopInstaller/Scoop/blob/master/schema.json) — مخطط الخصائص المدعومة.
+- [Scoop Decompression Implementation](https://github.com/ScoopInstaller/Scoop/blob/master/lib/decompress.ps1) — آلية استخراج ZIP وMSI وInno Setup وغيرها.
+- [Scoop Checkver Implementation](https://github.com/ScoopInstaller/Scoop/blob/master/bin/checkver.ps1) — آلية اكتشاف الإصدارات.
+- [Scoop Autoupdate Implementation](https://github.com/ScoopInstaller/Scoop/blob/master/lib/autoupdate.ps1) — تنفيذ التحديث التلقائي.
+- [ScoopInstaller/GithubActions and Excavator](https://github.com/ScoopInstaller/GithubActions) — إجراءات GitHub وExcavator.
