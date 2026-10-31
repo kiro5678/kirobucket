@@ -837,5 +837,5 @@ Installer Type is inferred from manifest metadata and the declared download form
 | [fig](bucket/fig.json) | Media & Audio/Video | 1.0.1 | EXE payload (standalone/extractor not verified) | 2026-10-31 | 2026-10-19 | [Homepage](https://github.com/Skynse/Fig) | Open-source non-linear video editor with a timeline, effects and keyframes |
 | [imgconv](bucket/imgconv.json) | Images & Photos | 1.2 | EXE setup (engine unverified) | 2026-10-31 | 2026-10-29 | [Homepage](https://github.com/kiranohaiiro/ImgConv) | Tiny Windows tray image converter with batch resizing and Explorer integration |
 | [nook](bucket/nook.json) | Windows Customization | 0.2.1 | Inno | 2026-10-31 | 2026-10-30 | [Homepage](https://github.com/Geguchh024/nook) | Floating Windows desktop notch with a customizable utility panel |
-| [rust-meow](bucket/rust-meow.json) | Browsers & Communication | 0.2.0 | EXE setup (engine unverified) | 2026-10-31 | 2026-08-09 | [Homepage](https://github.com/thinkter/rust-meow) | Unofficial WhatsApp desktop linked-device client built with Tauri and whatsmeow. |
+| [rust-meow](bucket/rust-meow.json) | Browsers & Communication | 0.2.0 | NSIS | 2026-10-31 | 2026-08-09 | [Homepage](https://github.com/thinkter/rust-meow) | Unofficial WhatsApp desktop linked-device client built with Tauri and whatsmeow. |
 
