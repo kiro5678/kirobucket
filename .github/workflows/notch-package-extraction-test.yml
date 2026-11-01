@@ -300,7 +300,11 @@ jobs:
                   $nestedExit = $LASTEXITCODE
                   $nestedOutput | Set-Content -LiteralPath (Join-Path $targetRoot 'nested-7zip-extraction.log') -Encoding utf8
                   if ($nestedExit -ne 0) { throw "Quick Pill app-64.7z extraction failed ($nestedExit)." }
-                  Add-Report 'Quick Pill nested app-64.7z extraction: PASS.'
+                  $quickPillExe = Join-Path $extractRoot $target.AppExe
+                  if (-not (Test-Path -LiteralPath $quickPillExe -PathType Leaf)) {
+                    throw "Quick Pill nested archive did not produce $($target.AppExe) at the payload root."
+                  }
+                  Add-Report "Quick Pill nested app-64.7z extraction and EXE path: PASS ($($target.AppExe))."
                 }
                 'Direct' {
                   $destination = Join-Path $extractRoot ([string]$target.AppExe -replace '/', [System.IO.Path]::DirectorySeparatorChar)
