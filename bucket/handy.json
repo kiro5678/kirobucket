@@ -1,0 +1,52 @@
+{
+    "version": "0.9.8",
+    "description": "Offline speech-to-text desktop app with local Whisper and Parakeet transcription.",
+    "homepage": "https://handy.computer/",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/cjpais/Handy/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/cjpais/Handy/releases/download/v0.9.8/Handy_0.9.8_x64-setup.exe",
+            "hash": "4212edb5658ec2867855fc2ee83ac16ec5bbad09db3c2da8d3d9d5f8bd5eeccc"
+        },
+        "arm64": {
+            "url": "https://github.com/cjpais/Handy/releases/download/v0.9.8/Handy_0.9.8_arm64-setup.exe",
+            "hash": "c023ff141c76417dd7891dd1454b25de09e3fbcfeb6a560373655fdb66140a4d"
+        }
+    },
+    "installer": {
+        "args": [
+            "/S",
+            "/PORTABLE",
+            "/D=$dir"
+        ]
+    },
+    "bin": "handy.exe",
+    "shortcuts": [
+        [
+            "handy.exe",
+            "Handy"
+        ]
+    ],
+    "persist": "Data",
+    "checkver": {
+        "github": "https://github.com/cjpais/Handy",
+        "regex": "v(?<version>[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/cjpais/Handy/releases/download/v$version/Handy_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/cjpais/Handy/releases/download/v$version/Handy_$version_arm64-setup.exe"
+            }
+        }
+    },
+    "notes": [
+        "The Windows EXE is a custom NSIS installer. The official installer explicitly supports portable mode; Scoop runs it silently with /PORTABLE and targets the version directory with /D=$dir. The upstream Windows build workflow uses the same switches and verifies handy.exe plus every staged runtime DLL.",
+        "Portable mode stores settings, models, recordings, databases, and logs under Data, which Scoop persists across updates. Handy's portable in-app updater is manual; update the Scoop-managed copy with 'scoop update handy'."
+    ]
+}
