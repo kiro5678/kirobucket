@@ -17,26 +17,26 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 53 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
-| Media & Audio/Video | 49 | [View](#media-audio-video) |
+| NaN | 49 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
-| Notch | 22 | [View](#notch) |
+| NaN | 22 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 2 | [View](#other-utilities) |
+| NaN | 2 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
-| System Monitoring & Hardware | 73 | [View](#system-monitoring-hardware) |
+| NaN | 73 | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 92 | [View](#windows-customization) |
+| NaN | 92 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 864**
+**Total unique manifests: 873**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -450,6 +450,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [fig](../bucket/fig.json) | 1.0.1 | 64bit: 107.4 MiB | 2026-10-19 | Open-source non-linear video editor with a timeline, effects and keyframes. | [Homepage](https://github.com/Skynse/Fig) |
 | [funk-ssd](../bucket/funk-ssd.json) | 4 | 535.3 KiB | 2025-06-25 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | 64bit: 75.6 MiB / arm64: 67.1 MiB | 2026-10-12 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
+| [handy](../bucket/handy.json) | 0.9.8 | 64bit: 18.7 MiB / arm64: 12.8 MiB | 2026-10-03 | Offline speech-to-text desktop app with local Whisper and Parakeet transcription. | [Homepage](https://handy.computer/) |
 | [haruna](../bucket/haruna.json) | 1944 | 64bit: 108.1 MiB | 2026-05-19 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
 | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 20.1.0 | — | 2026-10-18 | Mega variant of the K-Lite Codec Pack, a collection of DirectShow filters, VFW/ACM codecs and tools. | [Homepage](https://codecguide.com/about_kl.htm) |
 | [lauschangriff](../bucket/lauschangriff.json) | 2.51 | 64bit: 141.0 KiB | 2021-05-15 | Portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) |
@@ -458,6 +459,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [ncspot](../bucket/ncspot.json) | 1.5.0 | 64bit: 5.8 MiB | 2026-10-01 | ncurses Spotify client written in Rust | [Homepage](https://github.com/hrkfdn/ncspot) |
 | [opennow](../bucket/opennow.json) | 1.0.3 | 95.3 MiB | 2026-10-16 | An open-source GeForce NOW desktop client. | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) |
 | [openscreen](../bucket/openscreen.json) | 2.1.2 | 64bit: 170.6 MiB | 2026-10-19 | Open-source screen recording and video editing tool for creating polished demos. | [Homepage](https://getopenscreen.com/) |
+| [orfeo](../bucket/orfeo.json) | 1.6.0 | 137.1 MiB | 2026-10-31 | Piano-learning and MIDI visualization desktop app with interactive chord tools, note editing, and audio export. | [Homepage](https://orfeo.cc) |
 | [quick-audio-recorder](../bucket/quick-audio-recorder.json) | 1.3.0 | 50.8 MiB | 2026-10-17 | A minimalist Windows audio recorder for microphone, system audio, or both. | [Homepage](https://github.com/lukmay/QuickAudioRecorder) |
 | [recordly](../bucket/recordly.json) | 1.4.0 | 64bit: 176.7 MiB | 2026-09-08 | Open-source screen recorder and editor for polished demo videos. | [Homepage](https://github.com/webadderallorg/Recordly) |
 | [screenbox](../bucket/screenbox.json) | 0.24.0 | 64bit: 167.0 MiB | 2026-10-24 | LibVLC-based media player for the Universal Windows Platform. | [Homepage](https://github.com/huynhsontung/Screenbox) |
@@ -554,9 +556,12 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [dlives](../bucket/dlives.json) | 32162fddd0350e84a8da9a15650519c8d0586fd8 | 63.9 MiB | 2026-08-25 | Windows Dynamic Island with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls. | [Homepage](https://github.com/FuGen-India-Private-Ltd/Dlives) |
 | [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | 117.2 MiB | 2025-10-22 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
 | [halo](../bucket/halo.json) | 4.2.3 | 64bit: 68.2 MiB | 2026-08-29 | Glass Dynamic Island-style pill for Windows with media controls, mirrored notifications, file tray, downloads, Bluetooth battery, and live assistant panels. | [Homepage](https://github.com/phoseinq/Halo) |
+| [lumen](../bucket/lumen.json) | 0.2.1 | 64bit: 9.7 MiB | 2026-06-29 | Windows Dynamic Island with music visualization, synchronized notifications, privacy indicators, and fullscreen-aware behavior. | [Homepage](https://github.com/Risuleia/Lumen) |
+| [myisland](../bucket/myisland.json) | 1.0.0 | 64bit: 8.0 MiB | 2026-06-12 | Windows Dynamic Island for music playback, synchronized lyrics, audio visualization, water reminders, and plugins. | [Homepage](https://github.com/xiaoxiaobaijiangjun/MyIsland) |
 | [nectar](../bucket/nectar.json) | 1.7.0 | 64bit: 9.5 MiB | 2026-10-31 | Animated Windows notch and dock with media controls, widgets, quick settings, system tray integration, and taskbar replacement. | [Homepage](https://nectar.kua8.lol) |
 | [nock](../bucket/nock.json) | 0.12.10 | 64bit: 1.2 MiB | 2026-10-31 | Lightweight native Windows notch and top bar with media controls, quick settings, pinned apps, reminders, calendar, and system information. | [Homepage](https://nock.akhileshvarute.me) |
 | [nook](../bucket/nook.json) | 0.2.1 | 64bit: 9.0 MiB | 2026-10-30 | Floating Windows desktop notch with a customizable utility panel | [Homepage](https://github.com/Geguchh024/nook) |
+| [nook-agent](../bucket/nook-agent.json) | 0.2.2 | 64bit: 5.9 MiB | 2026-10-08 | Windows Dynamic Island for tracking Claude Code, Codex, and Cursor agent sessions, usage limits, permission requests, and replies. | [Homepage](https://github.com/zubairbinshaukat/nook) |
 | [oyenza-studio](../bucket/oyenza-studio.json) | 0.2.22 | 3.8 MiB | 2026-10-31 | Dynamic Island-style living notch for Windows and macOS with synced lyrics, focus timer, file shelf, tasks, clipboard history, and system stats. | [Homepage](https://studio.oyenza.com/) |
 | [pillar](../bucket/pillar.json) | 0.1.4 | 64bit: 3.0 MiB | 2026-08-24 | Dynamic Island-style Windows overlay with media controls, notifications, focus timers, system monitoring, volume mixer, and notes. | [Homepage](https://github.com/warpirate/pillar-dynamic-island-for-windows) |
 | [qnotch](../bucket/qnotch.json) | 0.8.4 | 64bit: 82.6 MiB | 2026-10-30 | Dynamic Island-style Windows notch with media controls, system stats, clipboard history, file tray, notifications, notes, and search. | [Homepage](https://github.com/Somafet/qnotch) |
@@ -566,6 +571,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [v-notch](../bucket/v-notch.json) | 2.2.1 | 64bit: 26.9 MiB | 2026-10-31 | Windows Dynamic Island with media controls, synced lyrics, per-app audio, clipboard, system statistics, privacy indicators, and Spotlight search. | [Homepage](https://github.com/w0otdev/V-Notch) |
 | [venu](../bucket/venu.json) | 0.6.1 | 64bit: 10.5 MiB | 2026-10-27 | Native Windows Dynamic Notch with media controls, desktop notifications, reminders, system information, and AI coding usage panels. | [Homepage](https://venu.nakulsrivastava.com) |
 | [windows-dynamic-island](../bucket/windows-dynamic-island.json) | 0.8.0 | 64bit: 61.1 MiB | 2026-10-05 | macOS-style Windows Dynamic Island with media controls, notifications, microphone indicators, window shelf, virtual-desktop support, and per-monitor islands. | [Homepage](https://github.com/nazimferragh/windows-dynamic-island) |
+| [windows-notch-overlay](../bucket/windows-notch-overlay.json) | 0.4.0 | 64bit: 99.6 MiB | 2026-10-24 | Customizable Windows notch control center with quick settings, media controls, notifications, productivity tools, and system telemetry. | [Homepage](https://github.com/Taxperia/windows-notch-overlay) |
 | [windynamicisland](../bucket/windynamicisland.json) | 1.0.0 | 64bit: 61.6 MiB | 2026-09-25 | macOS-style Dynamic Island for Windows with media controls, dashboard, calendar, timer, file shelf, system information, and quick actions. | [Homepage](https://github.com/uponatime2019/WinDynamicIsland) |
 | [winisland](../bucket/winisland.json) | 1.0.2 | 64bit: 43.2 MiB | 2026-06-16 | Dynamic Island-style Windows overlay with media controls, weather, Pomodoro timer, camera preview, tasks, and notification mirroring. | [Homepage](https://github.com/zHeuzy2/WinIsland) |
 | [winislands](../bucket/winislands.json) | 3.1.1 | 64bit: 43.0 MiB | 2026-10-23 | Customizable Windows Dynamic Island with media controls, 30+ widgets, weather, system monitoring, quick toggles, and local component plugins. | [Homepage](https://winislands.judekwong.com) |
@@ -602,6 +608,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [k-toolz](../bucket/k-toolz.json) | 4.0.2 | 64bit: 9.9 MiB | 2026-10-31 | Gaming suite with an FPS overlay, game streaming, stutter analysis, and virtual gamepad tools. | [Homepage](https://k-toolz.de/en/) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | 82.4 MiB | 2025-04-02 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
 | [softwareok-suite](../bucket/softwareok-suite.json) | 2026.10.27.6 | 64bit: 27.5 MiB | 2026-10-24 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |
 
@@ -838,6 +845,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [print-test-page-ok](../bucket/print-test-page-ok.json) | 3.55 | 64bit: 312.4 KiB | 2026-05-07 | Print Windows test pages. | [Homepage](https://www.softwareok.com/?Download=Print.Test.Page.OK) |
 | [processko](../bucket/processko.json) | 6.77 | 64bit: 182.7 KiB | 2026-05-16 | Quickly terminate running or unresponsive processes. | [Homepage](https://www.softwareok.com/?Download=ProcessKO) |
 | [pulse](../bucket/pulse.json) | 1.6.0 | 35.2 MiB | 2026-10-27 | Read-only Windows diagnostics with Event Log, System Health, inventory, reports and a local AI assistant; requires PulseService. | [Homepage](https://github.com/Regncreative/Pulse) |
+| [pulse-monitor](../bucket/pulse-monitor.json) | 1.3.4 | 64bit: 54.1 MiB | 2026-10-18 | Hardware monitoring overlay for CPU, GPU, memory, temperatures, clocks, power, network, disk activity, and FPS. | [Homepage](https://pulse.reforatech.com) |
 | [quick-memory-test-ok](../bucket/quick-memory-test-ok.json) | 5.55 | 64bit: 314.3 KiB | 2026-06-07 | Test memory for errors. | [Homepage](https://www.softwareok.com/?Download=QuickMemoryTestOK) |
 | [ramagic](../bucket/ramagic.json) | 1.33 | 64bit: 367.1 KiB | 2026-10-14 | Clear outdated working sets and standby cache to free RAM. | [Homepage](https://www.softwareok.com/?Download=RAMagic) |
 | [rigsight](../bucket/rigsight.json) | 0.36.0 | 64bit: 57.3 MiB | 2026-10-30 | Windows hardware and usage monitoring application with CPU and GPU metrics, overlays, taskbar readings, and crash insights. | [Homepage](https://github.com/b0llu/Rigsight) |
@@ -953,6 +961,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [keep-mouse-speed-ok](../bucket/keep-mouse-speed-ok.json) | 3.55 | 64bit: 53.7 KiB | 2026-04-25 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
 | [komorebi](../bucket/komorebi.json) | 0.1.41 | 64bit: 26.7 MiB / arm64: 25.0 MiB | 2026-05-03 | A tiling window manager for Windows | [Homepage](https://github.com/LGUG2Z/komorebi) |
 | [komorebi-nightly](../bucket/komorebi-nightly.json) | 2026-08-22 | 64bit: 31.5 MiB / arm64: 27.0 MiB | 2026-11-01 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
+| [layer](../bucket/layer.json) | 1.11.2 | 64bit: 13.0 MiB / arm64: 12.5 MiB | 2026-10-20 | Transparent, always-on-top desktop widget canvas with notes, clocks, links, media, system stats, and other widgets. | [Homepage](https://layer-desktop.vercel.app) |
 | [lively](../bucket/lively.json) | 2.2.1.0 | 208.0 MiB | 2025-09-18 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
 | [livewallpaper](../bucket/livewallpaper.json) | 4.0.1-alpha.4 | 4.2 MiB | 2026-10-10 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
 | [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 8.6 | 12.2 MiB | 2025-10-25 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
