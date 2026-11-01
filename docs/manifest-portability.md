@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 873 manifests; the aggregate classification totals below have not yet been recalculated after subsequent additions. Each newer manifest is classified individually in the entries below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 874 manifests; the aggregate classification totals below have not yet been recalculated after subsequent additions. Each newer manifest is classified individually in the entries below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,14 +22,14 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 789 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 790 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 57 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 7 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
 | Not reconciled | 20 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **873** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| **Total** | **874** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 853 of the 873 JSON manifests. The remaining 20 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The generated installer-type index below is a separate view and includes all 873 manifests.
+The explicit portability classifications currently cover 854 of the 874 JSON manifests. The remaining 20 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The generated installer-type index below is a separate view and includes all 874 manifests.
 
 ### Newly added manifest classifications
 - [`zapfast`](../bucket/zapfast.json) — **Portable**: uses the official Windows x64 and ARM64 ZIP distributions, without running either the MSI or setup EXE. The upstream release workflow packages `zapfast.exe`, `zapfast-portable.txt`, and the accompanying notices inside a versioned wrapper directory; the architecture-specific `extract_dir` values match those wrapper names. User configuration, encrypted archive/session data, and caches remain in the standard AppData locations outside Scoop. Portable builds register the current-user AppUserModelID for Windows notifications at runtime; Scoop does not execute a setup routine or register it. The app's independent portable updater remains enabled.
@@ -83,6 +83,7 @@ The explicit portability classifications currently cover 853 of the 873 JSON man
 - [`orfeo`](../bucket/orfeo.json) — **Portable**: uses the official Electron Builder Windows `portable` target rather than the NSIS installer. The v1.6.0 release digest is pinned. The portable main process redirects Electron `userData` to `Orfeo-Data` beside the executable, and the manifest persists that directory.
 - [`pulse-monitor`](../bucket/pulse-monitor.json) — **Portable**: uses `innosetup: true` to extract the official Inno Setup payload without running the vendor's setup tasks. The upstream `[Files]` section places `Pulse.exe` and its DLLs under `{app}`. The application itself requests Administrator privileges; Scoop does not install the optional PawnIO driver.
 - [`layer`](../bucket/layer.json) — **Review**: the official x64 and ARM64 downloads are Tauri/NSIS setup executables, with no portable release asset. The Tauri config uses `installMode: both`; a current upstream Tauri issue reports that silent `/D=` installation paths can be ignored in that mode. The manifest stages the installer only until its payload or a Scoop-contained install path is verified. The distributed installer also includes a separate EULA, so its license remains Unknown.
+- [`game-overlay`](../bucket/game-overlay.json) — **Portable**: uses the official 64-bit onedir ZIP, not the single-file self-extracting EXE or a vendor installer. The upstream build script packages the contents of `dist/onedir/GameOverlay`, with `GameOverlay.exe` as the launch target. The application requests UAC elevation at runtime for FPS capture, ping detection, and CPU sensor access; Scoop itself only extracts the archive. Settings are stored outside Scoop under `%APPDATA%\\GameOverlay`. If Windows' vulnerable-driver blocklist prevents CPU temperature readings, the upstream-supported fallback is Core Temp; disabling the blocklist is not recommended.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
@@ -253,6 +254,7 @@ The classification above concerns what the Scoop manifest does during installati
 | [winutil](../bucket/winutil.json) | PowerShell script (.ps1) | The manifest downloads a PowerShell script only; the user may run it elevated to change Windows settings, services, registry, apps, and updates. |
 | [MPOGPUFIX](../bucket/MPOGPUFIX.json) | ZIP archive | The ZIP is extracted; the utility can change Windows graphics settings when the user runs its repair actions. |
 | [deskstats](../bucket/deskstats.json) | Inno Setup payload extraction | The executable requests administrator rights. The bundled PawnIO sensor driver is not installed by Scoop; the user can explicitly install it from DeskStats when needed. Settings and logs are stored under `%LOCALAPPDATA%\\DeskStats`. |
+| [game-overlay](../bucket/game-overlay.json) | ZIP archive | The application self-elevates at runtime for FPS capture, ping detection, and sensor access. Settings remain under `%APPDATA%\\GameOverlay`; if CPU temperatures are blocked by Windows' vulnerable-driver blocklist, the upstream-supported fallback is Core Temp. Scoop does not install a driver or change the blocklist. |
 
 Do not move these runtime caveats into the Nonportable list unless the manifest itself starts the installation or registration during `scoop install`.
 

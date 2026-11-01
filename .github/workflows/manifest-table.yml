@@ -166,6 +166,7 @@ jobs:
               "freefilesync" = "Sync & Backup"
               "fxsound" = "Media & Audio/Video"
               "game-cheats-manager" = "Games & Game Utilities"
+              "game-overlay" = "System Monitoring & Hardware"
               "turkaysoft-glow" = "System Monitoring & Hardware"
               "glowz-dock" = "Windows Customization"
               "gtweak" = "Windows Privacy & Tweaks"
