@@ -1,0 +1,36 @@
+{
+    "version": "1.0.0",
+    "description": "Self-contained macOS-style Dynamic Island for Windows with media controls, dashboard, calendar, timer, file shelf, system information, and quick actions.",
+    "homepage": "https://github.com/uponatime2019/WinDynamicIsland",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/uponatime2019/WinDynamicIsland/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/uponatime2019/WinDynamicIsland/releases/download/v1.0.0/WinDynamicIsland-v1.0.0-win-x64.zip",
+            "hash": "f5638ef72b7d1c26f26b757d57216cd658161f6cc30ae7141a29e51e8d133d33"
+        }
+    },
+    "bin": "WinDynamicIsland.exe",
+    "shortcuts": [
+        [
+            "WinDynamicIsland.exe",
+            "WinDynamicIsland"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/uponatime2019/WinDynamicIsland"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/uponatime2019/WinDynamicIsland/releases/download/v$version/WinDynamicIsland-v$version-win-x64.zip"
+            }
+        }
+    },
+    "notes": [
+        "The upstream release workflow archives the contents of its self-contained win-x64 publish directory; WinDynamicIsland.exe is at the archive root and the .NET/Windows App SDK runtime is bundled.",
+        "Settings, notes, shelf data, and logs are stored under %LOCALAPPDATA%\\WinDynamicIsland. The optional Run-at-startup setting is controlled by the application and is not enabled by this manifest."
+    ]
+}

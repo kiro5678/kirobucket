@@ -1,0 +1,29 @@
+{
+    "version": "4.2.3",
+    "description": "Glass Dynamic Island-style pill for Windows with media controls, mirrored notifications, file tray, downloads, Bluetooth battery, and live assistant panels.",
+    "homepage": "https://github.com/phoseinq/Halo",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/phoseinq/Halo/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/phoseinq/Halo/releases/download/v4.2.3/DynamicWinPortable.zip",
+            "hash": "ba3270f23b22344301168239396f00e9f4ace223dd519dc62025e08742faa085"
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/phoseinq/Halo"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/phoseinq/Halo/releases/download/v$version/DynamicWinPortable.zip"
+            }
+        }
+    },
+    "notes": [
+        "Uses the publisher's x64 portable ZIP rather than DynamicWinSetup.exe; Scoop extracts the archive and does not run the setup or Store package.",
+        "The current public repository does not document the executable's exact path inside this ZIP. No bin shim or shortcut is declared until the archive layout is independently verified; open the extracted app directory to locate the launcher."
+    ]
+}
