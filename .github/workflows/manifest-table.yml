@@ -357,6 +357,7 @@ jobs:
               "fluentstore" = "Package Management"
               "fort" = "Security"
               "haruna" = "Media & Audio/Video"
+              "handy" = "Media & Audio/Video"
               "kalarm" = "Time Tracking & Focus"
               "komi-store" = "Package Management"
               "lively" = "Windows Customization"
