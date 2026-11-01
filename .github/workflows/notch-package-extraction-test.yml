@@ -6,6 +6,22 @@ on:
       - master
     paths:
       - ".github/workflows/notch-package-extraction-test.yml"
+      - "bucket/bloom.json"
+      - "bucket/dlives.json"
+      - "bucket/halo.json"
+      - "bucket/nectar.json"
+      - "bucket/nock.json"
+      - "bucket/pillar.json"
+      - "bucket/qnotch.json"
+      - "bucket/quick-pill.json"
+      - "bucket/shorehue.json"
+      - "bucket/v-notch.json"
+      - "bucket/venu.json"
+      - "bucket/windows-dynamic-island.json"
+      - "bucket/windynamicisland.json"
+      - "bucket/winisland.json"
+      - "bucket/winislands.json"
+      - "bucket/wnotch.json"
   workflow_dispatch:
 
 permissions:
