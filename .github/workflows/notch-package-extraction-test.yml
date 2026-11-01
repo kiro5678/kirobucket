@@ -260,7 +260,10 @@ jobs:
                 $_.Name -match '(?i)(\.runtimeconfig\.json|\.deps\.json|^hostfxr\.dll$|^hostpolicy\.dll$|^coreclr\.dll$|^System\.Private\.CoreLib\.dll$|^dotnet\.exe$)'
               })
               Add-Report "Runtime-related files: $(@($runtimeFiles | ForEach-Object { [System.IO.Path]::GetRelativePath($extractRoot, $_.FullName).Replace('\', '/') }) -join '; ')"
-              foreach ($runtimeConfig in @($runtimeFiles | Where-Object { $_.Name -match '(?i)\.runtimeconfig\.json
+              foreach ($runtimeConfig in @($runtimeFiles | Where-Object { $_.Name -match '(?i)\.runtimeconfig\.json$' })) {
+                Add-Report "Runtime config ($([System.IO.Path]::GetRelativePath($extractRoot, $runtimeConfig.FullName))):"
+                (Get-Content -LiteralPath $runtimeConfig.FullName -Raw).Split([Environment]::NewLine) | ForEach-Object { Add-Report "  $_" }
+              }
             }
             catch {
               $message = "$($target.Name): $($_.Exception.Message)"
@@ -287,10 +290,6 @@ jobs:
           name: notch-package-extraction-report
           path: ${{ runner.temp }}/notch-package-extraction
           if-no-files-found: warn
- })) {
-                Add-Report "Runtime config ($([System.IO.Path]::GetRelativePath($extractRoot, $runtimeConfig.FullName))):"
-                (Get-Content -LiteralPath $runtimeConfig.FullName -Raw).Split([Environment]::NewLine) | ForEach-Object { Add-Report "  $_" }
-              }
               Add-Report 'RESULT: PASS'
             }
             catch {
