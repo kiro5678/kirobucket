@@ -19,6 +19,7 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Keyboard & Language | 14 | [View](#keyboard-language) |
 | Media & Audio/Video | 49 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
+| Notch | 22 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
 | Other Utilities | 2 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
@@ -31,11 +32,11 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 104 | [View](#windows-customization) |
+| Windows Customization | 92 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 
-**Total unique manifests: 854**
+**Total unique manifests: 864**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -545,6 +546,33 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [warpinator](../bucket/warpinator.json) | 1.1 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 | [win-ping](../bucket/win-ping.json) | 2.88 | Run ping tests against network hosts. | [Homepage](https://www.softwareok.com/?Download=WinPing) |
 
+## Notch
+
+| Manifest | Version | Description | Homepage |
+| --- | --- | --- | --- |
+| [bloom](../bucket/bloom.json) | 3.10.1 | Windows notch and dock with media controls, quick settings, system status, and desktop productivity features. | [Homepage](https://github.com/SehajveerSingh2005/bloom) |
+| [dlives](../bucket/dlives.json) | 32162fddd0350e84a8da9a15650519c8d0586fd8 | Windows Dynamic Island with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls. | [Homepage](https://github.com/FuGen-India-Private-Ltd/Dlives) |
+| [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
+| [halo](../bucket/halo.json) | 4.2.3 | Glass Dynamic Island-style pill for Windows with media controls, mirrored notifications, file tray, downloads, Bluetooth battery, and live assistant panels. | [Homepage](https://github.com/phoseinq/Halo) |
+| [nectar](../bucket/nectar.json) | 1.7.0 | Animated Windows notch and dock with media controls, widgets, quick settings, system tray integration, and taskbar replacement. | [Homepage](https://nectar.kua8.lol) |
+| [nock](../bucket/nock.json) | 0.12.10 | Lightweight native Windows notch and top bar with media controls, quick settings, pinned apps, reminders, calendar, and system information. | [Homepage](https://nock.akhileshvarute.me) |
+| [nook](../bucket/nook.json) | 0.2.1 | Floating Windows desktop notch with a customizable utility panel | [Homepage](https://github.com/Geguchh024/nook) |
+| [oyenza-studio](../bucket/oyenza-studio.json) | 0.2.22 | Dynamic Island-style living notch for Windows and macOS with synced lyrics, focus timer, file shelf, tasks, clipboard history, and system stats. | [Homepage](https://studio.oyenza.com/) |
+| [pillar](../bucket/pillar.json) | 0.1.4 | Dynamic Island-style Windows overlay with media controls, notifications, focus timers, system monitoring, volume mixer, and notes. | [Homepage](https://github.com/warpirate/pillar-dynamic-island-for-windows) |
+| [qnotch](../bucket/qnotch.json) | 0.8.4 | Dynamic Island-style Windows notch with media controls, system stats, clipboard history, file tray, notifications, notes, and search. | [Homepage](https://github.com/Somafet/qnotch) |
+| [quick-pill](../bucket/quick-pill.json) | 5.5.1 | Electron-based Dynamic Island for Windows with media controls, system tools, notifications, clipboard, tasks, notes, and an app launcher. | [Homepage](https://github.com/nabil24024004/Quick-Pill-Dynamic-Island-for-Windows) |
+| [shorehue](../bucket/shorehue.json) | 1.1.1 | Dynamic Island-style edge panel and taskbar replacement for Windows with widgets, media controls, picture-in-picture, quick settings, and programmable panels. | [Homepage](https://timecolors.github.io/ShoreHue/) |
+| [snowey-island](../bucket/snowey-island.json) | 1.0.1 | Windows 11 Dynamic Island desktop overlay with media controls, notifications, tasks, focus tools, and customizable pages. | [Homepage](https://www.snoweylabs.com/island/) |
+| [v-notch](../bucket/v-notch.json) | 2.2.1 | Windows Dynamic Island with media controls, synced lyrics, per-app audio, clipboard, system statistics, privacy indicators, and Spotlight search. | [Homepage](https://github.com/w0otdev/V-Notch) |
+| [venu](../bucket/venu.json) | 0.6.1 | Native Windows Dynamic Notch with media controls, desktop notifications, reminders, system information, and AI coding usage panels. | [Homepage](https://venu.nakulsrivastava.com) |
+| [windows-dynamic-island](../bucket/windows-dynamic-island.json) | 0.8.0 | macOS-style Windows Dynamic Island with media controls, notifications, microphone indicators, window shelf, virtual-desktop support, and per-monitor islands. | [Homepage](https://github.com/nazimferragh/windows-dynamic-island) |
+| [windynamicisland](../bucket/windynamicisland.json) | 1.0.0 | macOS-style Dynamic Island for Windows with media controls, dashboard, calendar, timer, file shelf, system information, and quick actions. | [Homepage](https://github.com/uponatime2019/WinDynamicIsland) |
+| [winisland](../bucket/winisland.json) | 1.0.2 | Dynamic Island-style Windows overlay with media controls, weather, Pomodoro timer, camera preview, tasks, and notification mirroring. | [Homepage](https://github.com/zHeuzy2/WinIsland) |
+| [winislands](../bucket/winislands.json) | 3.1.1 | Customizable Windows Dynamic Island with media controls, 30+ widgets, weather, system monitoring, quick toggles, and local component plugins. | [Homepage](https://winislands.judekwong.com) |
+| [winnotch](../bucket/winnotch.json) | 0.7.2 | Dynamic Island-style notch overlay for Windows with media controls, calendar, battery, webcam, volume and brightness HUDs, file staging, and plugins. | [Homepage](https://n3uralcreativity.github.io/WinNotch/) |
+| [wnotch](../bucket/wnotch.json) | 0.22.0 | Windows Dynamic Notch with media controls, system HUDs, file shelf, terminal, agent integrations, widgets, and plugins. | [Homepage](https://github.com/Brick-Bread/WNotch) |
+| [yata](../bucket/yata.json) | 0.7.1 | Windows Dynamic Notch with synchronized lyrics, calendar, reminders, tasks, Pomodoro timer, and animated Raven companion. | [Homepage](https://getyata.app/) |
+
 ## Notes & Knowledge
 
 | Manifest | Version | Description | Homepage |
@@ -894,7 +922,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [alwaysmousewheel](../bucket/alwaysmousewheel.json) | 6.61 | Use the mouse wheel over inactive windows. | [Homepage](https://www.softwareok.com/?Download=AlwaysMouseWheel) |
 | [autohide-desktop-icons](../bucket/autohide-desktop-icons.json) | 7.11 | Automatically hide and show Windows desktop icons. | [Homepage](https://www.softwareok.com/?Download=AutoHideDesktopIcons) |
 | [autohide-mouse-cursor](../bucket/autohide-mouse-cursor.json) | 6.29 | Automatically hide the mouse cursor after inactivity. | [Homepage](https://www.softwareok.com/?Download=AutoHideMouseCursor) |
-| [bloom](../bucket/bloom.json) | 3.10.1 | Windows notch and dock with media controls, quick settings, system status, and productivity features. | [Homepage](https://github.com/SehajveerSingh2005/bloom) |
 | [brightness-manager-ok](../bucket/brightness-manager-ok.json) | 1.88 | Adjust screen brightness on Windows. | [Homepage](https://www.softwareok.com/?Download=Brightness.Manager.OK) |
 | [cedro-modern-dock](../bucket/cedro-modern-dock.json) | 1.2.0 | Modern application dock for Windows. | [Homepage](https://github.com/Cedro-Software/cedro-modern-dock) |
 | [classic-desktop-clock](../bucket/classic-desktop-clock.json) | 5.33 | Display a classic desktop clock. | [Homepage](https://www.softwareok.com/?Download=ClassicDesktopClock) |
@@ -913,9 +940,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [desktop-snow-ok](../bucket/desktop-snow-ok.json) | 7.11 | Display snow effects on the Windows desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopSnowOK) |
 | [desktopframesplus](../bucket/desktopframesplus.json) | 2.7.8.376 | Open-source desktop icon management software for organizing files and shortcuts into virtual frames. | [Homepage](https://github.com/limbo666/DesktopFramesPlus) |
 | [desktopok](../bucket/desktopok.json) | 12.81 | Save and restore the positions of Windows desktop icons. | [Homepage](https://www.softwareok.com/?Download=DesktopOK) |
-| [dlives](../bucket/dlives.json) | 32162fddd0350e84a8da9a15650519c8d0586fd8 | Windows Dynamic Island with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls. | [Homepage](https://github.com/FuGen-India-Private-Ltd/Dlives) |
 | [dragwin](../bucket/dragwin.json) | 1.1.6 | Move and resize Windows without holding Alt or Control. | [Homepage](https://github.com/PinchToDebug/DragWin) |
-| [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
 | [fancywm](../bucket/fancywm.json) | 2.19.0 | Windows tiling window manager designed for power users. | [Homepage](https://github.com/FancyWM/fancywm) |
 | [fancywm-msix-cert](../bucket/fancywm-msix-cert.json) | 2.19.0 | FancyWM MSIX signing certificate (download only; for MSIX installation). | [Homepage](https://github.com/FancyWM/fancywm) |
 | [FoliCon](../bucket/FoliCon.JSON) | 5.3.1 | Folder icon customizer for movies, TV shows, music, games, anime, and books. | [Homepage](https://github.com/DineshSolanki/FoliCon) |
@@ -935,7 +960,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [magic-mouse-trails](../bucket/magic-mouse-trails.json) | 4.51 | Display customizable mouse trails. | [Homepage](https://www.softwareok.com/?Download=MagicMouseTrails) |
 | [mousefx-generator](../bucket/mousefx-generator.json) | 1.1.0 | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. | [Homepage](https://github.com/os4ma31/MouseFX-Generator) |
 | [nofences](../bucket/nofences.json) | 1.8 | Open-source alternative to Fences for organizing the Windows desktop. | [Homepage](https://github.com/Twometer/NoFences) |
-| [nook](../bucket/nook.json) | 0.2.1 | Floating Windows desktop notch with a customizable utility panel. | [Homepage](https://github.com/Geguchh024/nook) |
 | [nomeiryoui](../bucket/nomeiryoui.json) | 3.5.1 | Windows utility for changing system UI fonts and font sizes. | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) |
 | [now-bar](../bucket/now-bar.json) | 0.4.1 | Samsung One UI-inspired live activity bar for the Windows taskbar, with media controls, timers, sports scores, weather, and system status. | [Homepage](https://github.com/nixesty/now-bar) |
 | [ok-its-raining-men](../bucket/ok-its-raining-men.json) | 2.55 | Display customizable raindrop effects on the Windows desktop. | [Homepage](https://www.softwareok.com/?seite=Microsoft/OK.Its.Raining.Men) |
@@ -944,15 +968,11 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [open-shell-nightly](../bucket/open-shell-nightly.json) | 4.4.202 | A collection of utilities bringing back classic features to Windows. Latest Open-Shell pre-release build. | [Homepage](https://github.com/Open-Shell/Open-Shell-Menu) |
 | [openglass](../bucket/openglass.json) | 3.0.2.3749 | A replacement for the Desktop Window Manager glass effect on Windows. | [Homepage](https://github.com/ALTaleX531/OpenGlass) |
 | [openrgb](../bucket/openrgb.json) | 1.1 | RGB lighting control that does not depend on manufacturer software. | [Homepage](https://openrgb.org) |
-| [pillar](../bucket/pillar.json) | 0.1.4 | Dynamic Island-style Windows overlay with media, notifications, focus timers, and system monitoring. | [Homepage](https://github.com/warpirate/pillar-dynamic-island-for-windows) |
 | [pointerstick](../bucket/pointerstick.json) | 7.22 | Display a virtual pointer stick on the desktop for presentations. | [Homepage](https://www.softwareok.com/?Download=PointerStick) |
-| [qnotch](../bucket/qnotch.json) | 0.8.4 | Dynamic Island-style Windows notch with media controls, system stats, clipboard history, and notifications. | [Homepage](https://github.com/Somafet/qnotch) |
 | [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
-| [quick-pill](../bucket/quick-pill.json) | 5.5.1 | Electron-based Dynamic Island for Windows with media controls, system tools, notifications, clipboard, tasks, notes, and an app launcher. | [Homepage](https://github.com/nabil24024004/Quick-Pill-Dynamic-Island-for-Windows) |
 | [rebuild-shell-icon-cache](../bucket/rebuild-shell-icon-cache.json) | 1.3 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |
 | [shuffle-paper](../bucket/shuffle-paper.json) | 0.4.0 | Privacy-friendly wallpaper shuffle and rotation utility for Windows | [Homepage](https://github.com/jcsm/ShufflePaper) |
-| [snowey-island](../bucket/snowey-island.json) | 1.0.1 | Windows 11 Dynamic Island desktop overlay with media controls, notifications, tasks, focus tools, and customizable pages. | [Homepage](https://www.snoweylabs.com/island/) |
 | [sordum-classic-shut-down](../bucket/sordum-classic-shut-down.json) | 1.2 | Portable utility that restores a convenient interface for the classic Windows shutdown options. | [Homepage](https://www.sordum.org/9205/classic-shut-down-v1-2/) |
 | [sordum-desktop-ini-editor](../bucket/sordum-desktop-ini-editor.json) | 1.2 | A simple app that allows users to edit the desktop.ini file in thier folders. | [Homepage](https://www.sordum.org/desktop-ini-editor) |
 | [sordum-easy-context-menu](../bucket/sordum-easy-context-menu.json) | 1.6 | A simple app for editing the context menu. | [Homepage](https://www.sordum.org/easy-context-menu) |
@@ -978,7 +998,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [translucenttb](../bucket/translucenttb.json) | 2026.2 | Lightweight utility for customizing the Windows taskbar appearance. | [Homepage](https://github.com/TranslucentTB/TranslucentTB) |
 | [traytoolbar](../bucket/traytoolbar.json) | 1.8.4 | Custom toolbar for the Windows taskbar replacement menu. | [Homepage](https://github.com/brondavies/TrayToolbar) |
 | [ttf-stix2](../bucket/ttf-stix2.json) | v2.13b171 | OpenType Unicode fonts for Scientific, Technical, and Mathematical texts | [Homepage](https://github.com/stipub/stixfonts) |
-| [v-notch](../bucket/v-notch.json) | 2.2.1 | Windows Dynamic Island with media controls, synced lyrics, per-app audio, clipboard, system statistics, privacy indicators, and Spotlight search. | [Homepage](https://github.com/w0otdev/V-Notch) |
 | [vovsoft-auto-change-screensavers](../bucket/vovsoft-auto-change-screensavers.json) | 2.2 | Portable edition of Vovsoft Auto Change Screensavers. | [Homepage](https://vovsoft.com/software/auto-change-screensavers/) |
 | [vovsoft-auto-change-wallpapers](../bucket/vovsoft-auto-change-wallpapers.json) | 1.4 | Portable edition of Vovsoft Auto Change Wallpapers. | [Homepage](https://vovsoft.com/software/auto-change-wallpapers/) |
 | [vovsoft-auto-mouse-clicker](../bucket/vovsoft-auto-mouse-clicker.json) | 3.2 | Portable edition of Vovsoft Auto Mouse Clicker. | [Homepage](https://vovsoft.com/software/auto-mouse-clicker/) |
@@ -987,8 +1006,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [wincux](../bucket/wincux.json) | 1.1.0 | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. | [Homepage](https://github.com/samcuxx/WinCux) |
 | [windhawk](../bucket/windhawk.json) | 2.0.0-alpha.8 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
-| [wnotch](../bucket/wnotch.json) | 0.22.0 | Windows Dynamic Notch with media controls, system HUDs, file shelf, terminal, agent integrations, widgets, and plugins. | [Homepage](https://github.com/Brick-Bread/WNotch) |
-| [yata](../bucket/yata.json) | 0.7.1 | Windows Dynamic Notch with synchronized lyrics, calendar, reminders, tasks, Pomodoro timer, and animated Raven companion. | [Homepage](https://getyata.app/) |
 | [zigarettenschachtel-spruch](../bucket/zigarettenschachtel-spruch.json) | 2.32 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
 
 ## Windows Privacy & Tweaks
@@ -1039,7 +1056,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sparkle](../bucket/sparkle.json) | 2.25.0 | Windows debloat and optimization tool. | [Homepage](https://getsparkle.net) |
 | [ultimate-settings-panel](../bucket/ultimate-settings-panel.json) | 8.0.4 | 250+ Windows settings, tools, diagnostics and commands in one searchable panel. | [Homepage](https://github.com/techygeekshome/Ultimate-Settings-Panel) |
 | [winhance](../bucket/winhance.json) | 26.06.12 | Windows enhancement, debloating, optimization and customization utility | [Homepage](https://github.com/memstechtips/Winhance) |
-| [winisland](../bucket/winisland.json) | 1.0.2 | Dynamic Island-style Windows overlay with media controls, weather, focus timer, camera preview, tasks, and notifications. | [Homepage](https://github.com/zHeuzy2/WinIsland) |
 | [winscript](../bucket/winscript.json) | 2.27.1 | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. | [Homepage](https://winscript.cc/) |
 | [winutil](../bucket/winutil.json) | 26.10.07 | Windows utility for installing programs, applying system tweaks, troubleshooting, and configuring Windows updates. | [Homepage](https://winutil.christitus.com/) |
 | [winzenith](../bucket/winzenith.json) | 1.3.5 | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. | [Homepage](https://winzenith.github.io/) |
