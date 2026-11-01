@@ -1214,7 +1214,7 @@ jobs:
                   "Installer Type is inferred from manifest metadata and the declared download format; unknown EXE installer engines are labeled unverified, not guessed."
                   ""
                   "| Name | Category | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
-                  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+                  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"
                   ($Items | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
                   ""
               ) -join [Environment]::NewLine
