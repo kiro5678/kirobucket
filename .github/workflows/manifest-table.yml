@@ -577,6 +577,54 @@ jobs:
               return ""
           }
 
+          function Get-ManifestDownloadSizeGroups {
+              param([object]$Manifest)
+              $groups = [System.Collections.Generic.List[object]]::new()
+              $defaultUrls = [System.Collections.Generic.List[string]]::new()
+              if ($Manifest.url -is [string]) {
+                  $defaultUrls.Add($Manifest.url.Trim())
+              } elseif ($Manifest.url -is [array]) {
+                  foreach ($value in $Manifest.url) {
+                      if ($value -is [string]) { $defaultUrls.Add($value.Trim()) }
+                  }
+              }
+              $validDefaultUrls = @($defaultUrls | Where-Object { -not [string]::IsNullOrWhiteSpace($_) -and $_ -notmatch '\$(version|architecture|arch)' })
+              if ($validDefaultUrls.Count -gt 0) {
+                  $groups.Add([PSCustomObject]@{ Label = "Default"; Urls = $validDefaultUrls })
+              }
+              if ($null -ne $Manifest.architecture) {
+                  foreach ($arch in $Manifest.architecture.PSObject.Properties) {
+                      $archUrls = [System.Collections.Generic.List[string]]::new()
+                      if ($arch.Value.url -is [string]) {
+                          $archUrls.Add($arch.Value.url.Trim())
+                      } elseif ($arch.Value.url -is [array]) {
+                          foreach ($value in $arch.Value.url) {
+                              if ($value -is [string]) { $archUrls.Add($value.Trim()) }
+                          }
+                      }
+                      $validArchUrls = @($archUrls | Where-Object { -not [string]::IsNullOrWhiteSpace($_) -and $_ -notmatch '\$(version|architecture|arch)' })
+                      if ($validArchUrls.Count -gt 0) {
+                          $groups.Add([PSCustomObject]@{ Label = [string]$arch.Name; Urls = $validArchUrls })
+                      }
+                  }
+              }
+              return @($groups)
+          }
+
+          function Format-ManifestDownloadSize {
+              param([long]$Bytes)
+              if ($Bytes -ge 1GB) {
+                  return (([math]::Round($Bytes / 1GB, 1)).ToString("0.0", [Globalization.CultureInfo]::InvariantCulture) + " GiB")
+              }
+              if ($Bytes -ge 1MB) {
+                  return (([math]::Round($Bytes / 1MB, 1)).ToString("0.0", [Globalization.CultureInfo]::InvariantCulture) + " MiB")
+              }
+              if ($Bytes -ge 1KB) {
+                  return (([math]::Round($Bytes / 1KB, 1)).ToString("0.0", [Globalization.CultureInfo]::InvariantCulture) + " KiB")
+              }
+              return "$Bytes B"
+          }
+
           function Get-GitHubUpstreamInfo {
               param([string]$Repository)
 
@@ -948,6 +996,7 @@ jobs:
                   }
                   $repo = Get-GitHubRepoCandidate $json
                   $downloadUrl = Get-DownloadUrlFromManifest $json
+                  $downloadSizeGroups = Get-ManifestDownloadSizeGroups $json
                   $installerType = Get-InstallerType $json $file.BaseName
               } else {
                   $versionMatch = [regex]::Match($raw, '(?m)"version"\s*:\s*"([^"]*)"')
@@ -957,6 +1006,7 @@ jobs:
                   $homepage = ""
                   $repo = ""
                   $downloadUrl = ""
+                  $downloadSizeGroups = @()
                   $installerType = "Unknown (invalid manifest JSON)"
               }
 
@@ -972,6 +1022,7 @@ jobs:
                   AddedDate = $addedDate
                   Repo = $repo
                   DownloadUrl = $downloadUrl
+                  DownloadSizeGroups = @($downloadSizeGroups)
                   InstallerType = $installerType
               })
           }
@@ -1021,9 +1072,10 @@ jobs:
               $upstreamCache[$record.Repository] = [string]$record.ReleaseDate
           }
 
-          # If GitHub has no published release date, probe the actual download asset's
-          # Last-Modified header in parallel. Never use manifest commit timestamps.
+          # Probe direct download URLs for Content-Length (size) and, when needed,
+          # Last-Modified (date). Each URL is requested once, with bounded parallelism.
           $urlsToProbe = [System.Collections.Generic.List[string]]::new()
+          $sizeUrlsToProbe = [System.Collections.Generic.List[string]]::new()
           foreach ($item in $manifestData) {
               $hasReleaseDate = $false
               if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
@@ -1033,29 +1085,242 @@ jobs:
                   $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
                   if ($cleanUrl -match '^https://') { $urlsToProbe.Add($cleanUrl) }
               }
+              foreach ($group in $item.DownloadSizeGroups) {
+                  foreach ($candidateUrl in $group.Urls) {
+                      $cleanUrl = ($candidateUrl -split '#', 2)[0]
+                      if ($cleanUrl -match '^https://') { $sizeUrlsToProbe.Add($cleanUrl) }
+                  }
+              }
           }
-
           $downloadDates = @{}
-          $uniqueDownloadUrls = @($urlsToProbe | Sort-Object -Unique)
-          Write-Host "Checking Last-Modified on $($uniqueDownloadUrls.Count) download URL(s) without release dates."
-          $downloadDateRecords = @(
-              $uniqueDownloadUrls | ForEach-Object -Parallel {
+          $downloadSizes = @{}
+          $allUrlsToProbe = @(@($urlsToProbe) + @($sizeUrlsToProbe) | Sort-Object -Unique)
+          Write-Host "Checking sizes for $($sizeUrlsToProbe.Count) URL reference(s) and Last-Modified dates for $($urlsToProbe.Count) URL reference(s)."
+          $downloadRecords = @(
+              $allUrlsToProbe | ForEach-Object -Parallel {
                   $url = [string]$_
                   $date = ""
+                  $sizeBytes = $null
                   try {
-                      $response = Invoke-WebRequest -Uri $url -Method Head -MaximumRedirection 10 -TimeoutSec 12 -ErrorAction Stop
+                      $response = Invoke-WebRequest -Uri $url -Method Head -MaximumRedirection 10 -TimeoutSec 15 -ErrorAction Stop
                       $lastModified = $response.Headers["Last-Modified"]
                       if (-not [string]::IsNullOrWhiteSpace([string]$lastModified)) {
                           $date = ([DateTimeOffset]::Parse([string]$lastModified)).UtcDateTime.ToString("yyyy-MM-dd")
                       }
-                  } catch {
-                      Write-Verbose "No Last-Modified header for $url : $($_.Exception.Message)"
+                      $contentLength = [string]$response.Headers["Content-Length"]
+                      if ($contentLength -match '^\d+
+          $manifests = foreach ($item in $manifestData) {
+              $date = ""
+              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
+                  $date = [string]$upstreamCache[$item.Repo]
+              }
+              if ([string]::IsNullOrWhiteSpace($date) -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
+                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
+                  if ($downloadDates.ContainsKey($cleanUrl)) {
+                      $date = [string]$downloadDates[$cleanUrl]
                   }
-                  [PSCustomObject]@{ Url = $url; Date = $date }
+              }
+              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
+
+              $sizeParts = [System.Collections.Generic.List[string]]::new()
+              foreach ($group in $item.DownloadSizeGroups) {
+                  $totalBytes = 0L
+                  $groupHasCompleteSize = $true
+                  $groupUrlCount = 0
+                  foreach ($candidateUrl in $group.Urls) {
+                      $cleanUrl = ($candidateUrl -split '#', 2)[0]
+                      if ($cleanUrl -notmatch '^https://') { continue }
+                      $groupUrlCount++
+                      if ($downloadSizes.ContainsKey($cleanUrl)) {
+                          $totalBytes += [long]$downloadSizes[$cleanUrl]
+                      } else {
+                          $groupHasCompleteSize = $false
+                      }
+                  }
+                  if ($groupUrlCount -eq 0) { continue }
+                  $sizeText = if ($groupHasCompleteSize) { Format-ManifestDownloadSize $totalBytes } else { "—" }
+                  if ($item.DownloadSizeGroups.Count -eq 1 -and $group.Label -eq "Default") {
+                      $sizeParts.Add($sizeText)
+                  } else {
+                      $sizeParts.Add("$($group.Label): $sizeText")
+                  }
+              }
+              $downloadSize = if ($sizeParts.Count -gt 0) { $sizeParts -join " / " } else { "—" }
+
+              $nameEscaped = $item.Name.Replace("|", "\|")
+              $categoryEscaped = $item.Category.Replace("|", "\|")
+              $versionEscaped = $item.Version.Replace("|", "\|")
+              $installerTypeEscaped = $item.InstallerType.Replace("|", "\|")
+              $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
+              $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
+              $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
+
+              $addedDate = if ([string]::IsNullOrWhiteSpace([string]$item.AddedDate)) { "—" } else { [string]$item.AddedDate }
+
+              [PSCustomObject]@{
+                  Name = $item.Name
+                  Category = $item.Category
+                  Added = $addedDate
+                  Date = $date
+                  Homepage = $item.Homepage
+                  InstallerType = $item.InstallerType
+                  DownloadSize = $downloadSize
+                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $downloadSize | $installerTypeEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
+              }
+          }
+
+          $dateValue = {
+              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
+          }
+          $addedDateValue = {
+              if ($_.Added -eq "—") { [datetime]::MinValue } else { [datetime]$_.Added }
+          }
+
+          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
+          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
+          $addedNewest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $true }, Name
+          $addedOldest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $false }, Name
+          $nameAz = $manifests | Sort-Object Name
+          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
+          $categoryAz = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $false }, Name
+          $categoryZa = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $true }, Name
+
+          function New-View {
+              param(
+                  [string]$Title,
+                  [array]$Items
+              )
+
+              @(
+                  "# KiroBucket Manifest View"
+                  ""
+                  "## $Title"
+                  ""
+                  "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
+                  "Download Size is measured from direct download URLs' HTTP Content-Length headers. Architecture-specific packages are listed separately; a dash means the source did not provide a size."
+                  "Installer Type is inferred from manifest metadata and the declared download format; unknown EXE installer engines are labeled unverified, not guessed."
+                  ""
+                  "| Name | Category | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+                  ($Items | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
+                  ""
+              ) -join [Environment]::NewLine
+          }
+
+          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
+          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
+
+          # Build a complete installer-type inventory from every manifest currently in bucket/.
+          # This is regenerated with the same $manifests data used by all generated manifest views.
+          $portabilityPath = Join-Path $docsPath "manifest-portability.md"
+          $portabilityContent = [System.IO.File]::ReadAllText($portabilityPath)
+          $installerTypeStart = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->"
+          $installerTypeEnd = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->"
+          $installerTypeStartIndex = $portabilityContent.IndexOf($installerTypeStart, [System.StringComparison]::Ordinal)
+          $installerTypeEndIndex = $portabilityContent.IndexOf($installerTypeEnd, [System.StringComparison]::Ordinal)
+          if ($installerTypeStartIndex -lt 0 -or $installerTypeEndIndex -le $installerTypeStartIndex) {
+              throw "Installer-type table markers are missing or out of order in docs/manifest-portability.md."
+          }
+
+          $installerTypeLines = [System.Collections.Generic.List[string]]::new()
+          $installerTypeLines.Add("## All bucket manifests by installer type")
+          $installerTypeLines.Add("")
+          $installerTypeLines.Add('This inventory covers every JSON manifest in bucket/ at generation time. It uses the same Installer Type inference as the generated manifest views; installer engines that cannot be verified remain explicitly unverified.')
+          $installerTypeLines.Add("")
+          $installerTypeLines.Add("| Installer Type | Manifests | Count |")
+          $installerTypeLines.Add("| --- | --- | ---: |")
+          $installerTypeGroups = @($manifests | Group-Object InstallerType | Sort-Object @{ Expression = { $_.Count }; Descending = $true }, Name)
+          foreach ($group in $installerTypeGroups) {
+              $links = @(
+                  $group.Group |
+                      Sort-Object Name |
+                      ForEach-Object { "[$($_.Name)](../bucket/$($_.Name).json)" }
+              ) -join ", "
+              $typeLabel = ([string]$group.Name).Replace("|", "\|")
+              $installerTypeLines.Add("| $typeLabel | $links | $($group.Count) |")
+          }
+          $installerTypeLines.Add("| **Total** | **All bucket manifests** | **$($manifests.Count)** |")
+
+          $installerTypeBlock = $installerTypeStart + [Environment]::NewLine +
+              ($installerTypeLines -join [Environment]::NewLine) + [Environment]::NewLine +
+              $installerTypeEnd
+          $beforeInstallerTypeTable = $portabilityContent.Substring(0, $installerTypeStartIndex)
+          $afterInstallerTypeTable = $portabilityContent.Substring($installerTypeEndIndex + $installerTypeEnd.Length)
+          $portabilityContent = $beforeInstallerTypeTable + $installerTypeBlock + $afterInstallerTypeTable
+          [System.IO.File]::WriteAllText(
+              $portabilityPath,
+              $portabilityContent,
+              [System.Text.UTF8Encoding]::new($false)
+          )
+          Write-Host "Generated installer-type inventory for $($manifests.Count) manifests across $($installerTypeGroups.Count) installer types."
+
+          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-newest.md") -Value (New-View "Manifest additions — newest first" $addedNewest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-added-oldest.md") -Value (New-View "Manifest additions — oldest first" $addedOldest) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-az.md") -Value (New-View "Category A-Z" $categoryAz) -Encoding utf8NoBOM
+          Set-Content -Path (Join-Path $docsPath "manifests-category-za.md") -Value (New-View "Category Z-A" $categoryZa) -Encoding utf8NoBOM
+
+
+
+
+          $manifestPage = @(
+              "# KiroBucket Manifest Inventory"
+              ""
+              "This page contains the complete manifest inventory generated from the JSON files in `bucket/`."
+              ""
+              "Manifest Added is the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
+              ""
+              "Download Size is measured from direct download URLs' HTTP Content-Length headers. Architecture-specific packages are listed separately; a dash means the source did not provide a size."
+              "Installer Type is inferred from manifest metadata and the declared download format. Unknown EXE installer engines are labeled unverified rather than guessed."
+              ""
+              "Use the column links to open alternative views sorted by name, category, manifest-added date, or program-update date."
+              ""
+              $start
+              '<a id="manifests-newest"></a>'
+              "| Name [↑](manifests-name-az.md) [↓](manifests-name-za.md) | Category [↑](manifests-category-az.md) [↓](manifests-category-za.md) | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
+              "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"
+              ($newest | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
+              $end
+              ""
+              "[Back to README](../README.md#manifests)"
+          ) -join [Environment]::NewLine
+
+          $manifestPage = [regex]::Replace($manifestPage, '(?:\r?\n)+\z', '') + "`n"
+          [System.IO.File]::WriteAllText(
+              (Join-Path $docsPath "manifests.md"),
+              $manifestPage,
+              [System.Text.UTF8Encoding]::new($false)
+          )
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- docs; then
+            echo "Generated files are already up to date."
+            exit 0
+          fi
+
+          git add docs
+          git commit -m "docs: update manifest views"
+          git fetch origin master:refs/remotes/origin/master
+          git rebase origin/master
+          git push origin HEAD:master
+) { $sizeBytes = [long]$contentLength }
+                  } catch {
+                      Write-Verbose "Could not read download headers for $url : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{ Url = $url; Date = $date; SizeBytes = $sizeBytes }
               } -ThrottleLimit 20
           )
-          foreach ($record in $downloadDateRecords) {
+          foreach ($record in $downloadRecords) {
               $downloadDates[$record.Url] = [string]$record.Date
+              if ($null -ne $record.SizeBytes) { $downloadSizes[$record.Url] = [long]$record.SizeBytes }
           }
 
           $manifests = foreach ($item in $manifestData) {
@@ -1120,10 +1385,11 @@ jobs:
                   "## $Title"
                   ""
                   "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
+                  "Download Size is measured from direct download URLs' HTTP Content-Length headers. Architecture-specific packages are listed separately; a dash means the source did not provide a size."
                   "Installer Type is inferred from manifest metadata and the declared download format; unknown EXE installer engines are labeled unverified, not guessed."
                   ""
-                  "| Name | Category | Version | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
-                  "| --- | --- | --- | --- | --- | --- | --- | --- |"
+                  "| Name | Category | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
+                  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |
                   ($Items | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
                   ""
               ) -join [Environment]::NewLine
