@@ -485,6 +485,10 @@ jobs:
               "windynamicisland" = "Notch"
               "winislands" = "Notch"
               "winnotch" = "Notch"
+              "lumen" = "Notch"
+              "myisland" = "Notch"
+              "nook-agent" = "Notch"
+              "windows-notch-overlay" = "Notch"
           }
 
           function ConvertTo-DateOnly {

@@ -9,6 +9,10 @@ on:
       - "bucket/bloom.json"
       - "bucket/dlives.json"
       - "bucket/halo.json"
+      - "bucket/lumen.json"
+      - "bucket/myisland.json"
+      - "bucket/nook-agent.json"
+      - "bucket/windows-notch-overlay.json"
       - "bucket/nectar.json"
       - "bucket/nock.json"
       - "bucket/pillar.json"
@@ -122,6 +126,41 @@ jobs:
               AppExe = 'Halo/Halo.App.exe'
               RuntimeConfig = 'Halo/Halo.Settings.runtimeconfig.json'
               RequiredFrameworks = @('Microsoft.NETCore.App', 'Microsoft.WindowsDesktop.App')
+            },
+            @{
+              Name = 'Lumen'
+              Version = '0.2.1'
+              Kind = 'Inno'
+              Url = 'https://github.com/Risuleia/Lumen/releases/download/v0.2.1/Lumen-0.2.1-setup.exe'
+              Sha256 = '7f68b3f90891818988c1089d2ff67aef84f8681bfc1281f4e1783213857dc948'
+              AppExe = 'lumen.exe'
+            },
+            @{
+              Name = 'MyIsland'
+              Version = '1.0.0'
+              Kind = 'Direct'
+              Url = 'https://github.com/xiaoxiaobaijiangjun/MyIsland/releases/download/v1.0.0/MyIsland.exe'
+              Sha256 = '8e14deb23093b6f672cdc3743c2c4d3709b0b14b9ca672fc59d3dcafd329bddd'
+              AppExe = 'MyIsland.exe'
+            },
+            @{
+              Name = 'Nook Agent'
+              Version = '0.2.2'
+              Kind = 'PairDirect'
+              Url = 'https://github.com/zubairbinshaukat/nook/releases/download/v0.2.2/nook.exe'
+              Sha256 = '0db32064755dafd05d1eee8722799c9643c3706e05f2fcf33038e4ab746f41ca'
+              AppExe = 'nook.exe'
+              HelperUrl = 'https://github.com/zubairbinshaukat/nook/releases/download/v0.2.2/nook-hook.exe'
+              HelperSha256 = '3d2d1e66f8093920f0942e1f4c61dba427e62df957d3fe7fc54010e06e959af6'
+              HelperExe = 'nook-hook.exe'
+            },
+            @{
+              Name = 'Windows Notch Overlay'
+              Version = '0.4.0'
+              Kind = 'Direct'
+              Url = 'https://github.com/Taxperia/windows-notch-overlay/releases/download/v0.4.0/Windows.Notch.Overlay.0.4.0.exe'
+              Sha256 = '8c7d66cb2114a0fc184185c0fa4dcddd298c0627af474a34b6c75ee792339f99'
+              AppExe = 'Windows.Notch.Overlay.0.4.0.exe'
             },
             @{
               Name = 'Nectar'
@@ -360,6 +399,15 @@ jobs:
                   }
                   Copy-Item -LiteralPath $installerPath -Destination $destination -Force
                   Add-Report "Standalone EXE placement: PASS ($($target.AppExe))"
+                }
+                'PairDirect' {
+                  $mainDestination = Join-Path $extractRoot ([string]$target.AppExe)
+                  Copy-Item -LiteralPath $installerPath -Destination $mainDestination -Force
+                  $helperPath = Join-Path $targetRoot ([string]$target.HelperExe)
+                  $helperHash = Download-Verified -Url $target.HelperUrl -Path $helperPath -ExpectedSha256 $target.HelperSha256
+                  Copy-Item -LiteralPath $helperPath -Destination (Join-Path $extractRoot ([string]$target.HelperExe)) -Force
+                  Add-Report "Standalone application EXE placement: PASS ($($target.AppExe))"
+                  Add-Report "Standalone helper EXE placement: PASS ($($target.HelperExe)); SHA-256 $helperHash"
                 }
                 'Zip' {
                   $extractOutput = & $sevenZip x $installerPath "-o$extractRoot" '-y' '-bd' 2>&1

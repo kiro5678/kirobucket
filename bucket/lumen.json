@@ -1,0 +1,22 @@
+{
+    "version": "0.2.1",
+    "description": "Windows Dynamic Island with music visualization, synchronized notifications, privacy indicators, and fullscreen-aware behavior.",
+    "homepage": "https://github.com/Risuleia/Lumen",
+    "license": {"identifier": "MIT", "url": "https://github.com/Risuleia/Lumen/blob/main/LICENSE"},
+    "architecture": {"64bit": {
+        "url": "https://github.com/Risuleia/Lumen/releases/download/v0.2.1/Lumen-0.2.1-setup.exe",
+        "hash": "7f68b3f90891818988c1089d2ff67aef84f8681bfc1281f4e1783213857dc948"
+    }},
+    "innosetup": true,
+    "bin": "lumen.exe",
+    "shortcuts": [["lumen.exe", "Lumen"]],
+    "checkver": {"github": "https://github.com/Risuleia/Lumen"},
+    "autoupdate": {"architecture": {"64bit": {
+        "url": "https://github.com/Risuleia/Lumen/releases/download/v$version/Lumen-$version-setup.exe"
+    }}},
+    "notes": [
+        "The official setup.iss confirms this is an Inno Setup package and defines lumen.exe and the assets directory directly under {app}. Scoop uses innosetup extraction and does not execute the vendor installation steps.",
+        "The vendor installer creates an optional startup task and AppUserModelId registry entries. These setup actions are not executed by Scoop's payload extraction.",
+        "The v0.2.1 SHA-256 matches the GitHub Release asset digest. The application's own cache under %LOCALAPPDATA% may remain after Scoop uninstall."
+    ]
+}
