@@ -23,14 +23,13 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 789 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 56 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 8 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
+| Nonportable | 57 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Review | 7 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
 | **Total** | **853** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 ### Newly added manifest classifications
 - [`zapfast`](../bucket/zapfast.json) — **Portable**: uses the official Windows x64 and ARM64 ZIP distributions, without running either the MSI or setup EXE. The upstream release workflow packages `zapfast.exe`, `zapfast-portable.txt`, and the accompanying notices inside a versioned wrapper directory; the architecture-specific `extract_dir` values match those wrapper names. User configuration, encrypted archive/session data, and caches remain in the standard AppData locations outside Scoop. Portable builds register the current-user AppUserModelID for Windows notifications at runtime; Scoop does not execute a setup routine or register it. The app's independent portable updater remains enabled.
 - [`taskslinger`](../bucket/taskslinger.json) — **Review**: the official 0.9.5 Windows x64 download is an EXE setup. The Microsoft winget manifest publishes its SHA-256, per-user scope, default installation path `%LocalAppData%\\Programs\\TaskSlinger`, and silent arguments, but does not establish a supported custom installation directory or portable payload extraction. The Scoop manifest therefore downloads the setup only and must remain Review until a Scoop-contained installation or verified extraction method is established.
-- [`k-toolz`](../bucket/k-toolz.json) — **Review**: the official v4.0.2 release is an NSIS setup EXE with a published GitHub SHA-256 digest. The manifest uses direct 7-Zip extraction and does not execute the setup; keep it Review until the Windows archive-validation workflow confirms the actual `k-toolz.exe` launch path. WebView2 and Visual C++ runtimes may need separate installation, while PawnIO and ViGEmBus are optional drivers installed only through app actions.
 - [`v-notch`](../bucket/v-notch.json) — **Portable**: the manual extraction workflow verified the official NSIS setup's SHA-256 and extracted `V-Notch.exe` at the exact `$PLUGINSDIR/payload` path declared by `extract_dir`. The application targets .NET 8 and requires the .NET 8 Desktop Runtime separately; the vendor setup's runtime-install routine is not executed. The app's own updater remains unchanged.
 - [`wnotch`](../bucket/wnotch.json) — **Portable**: the manual extraction workflow verified the official setup's SHA-256, parsed its documented `NOTCHPAY` trailer, extracted the embedded ZIP, and confirmed `Notch.exe` at the payload root. Scoop's installer script performs the same payload extraction instead of running the vendor setup, so the vendor's uninstall/protocol/PATH/startup registrations are not created.
 - [`yata`](../bucket/yata.json) — **Portable**: the manual extraction workflow verified the official Inno Setup package's SHA-256 and extracted `Yata.exe` and `yata-cli.exe` at the application root. Scoop extracts the Inno payload rather than running vendor setup tasks. The .NET 10 Desktop Runtime remains a separate prerequisite.
@@ -50,6 +49,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 - [`anton`](../bucket/anton.json) — **Review**: the official Windows endpoint redirects to a setup EXE, but its checksum and installer/uninstaller behavior are not verified; the manifest downloads it without executing it.
 - [`fig`](../bucket/fig.json) — **Portable**: uses the publisher's standalone, self-contained Windows executable rather than its setup installer.
 - [`nook`](../bucket/nook.json) — **Nonportable**: the application registers the `nook://` URL scheme under the current user's registry each time it starts. The manifest removes that registration on uninstall only when it still points to this Scoop installation.
+- [`k-toolz`](../bucket/k-toolz.json) — **Nonportable**: although Scoop extracts the official NSIS payload without executing setup, K-Toolz automatically writes the `ktoolz://` and legacy `lumora://` URL handlers under HKCU at startup. Its guarded uninstall hook removes only registrations that still point into this Scoop app root. Optional elevated Task Scheduler jobs and driver installation are initiated separately by explicit in-app actions.
 - [`rust-meow`](../bucket/rust-meow.json) — **Portable**: verified 7-Zip 26.05 extraction of the NSIS EXE produced `rust-meow.exe` and `rust-meow-backend.exe` at the payload root without running the vendor setup routine; Scoop uses `#/dl.7z`. Linked-device credentials and profile data remain under `%LOCALAPPDATA%\\rust-meow` and are not removed by Scoop uninstall.
 - [`now-bar`](../bucket/now-bar.json) — **Portable**: Scoop downloads the two official standalone application binaries directly (`nowbar.exe` and `nowbar-settings.exe`) and places them side by side; it does not run the vendor's custom Rust/Slint setup. Detect It Easy 3.21 identifies `nowbar-setup.exe` as `PE64 / Compiler: Rust`, not NSIS or Inno. Settings and logs remain outside Scoop under `%APPDATA%\\NowBar` and `%LOCALAPPDATA%\\NowBar`.
 - [`qnotch`](../bucket/qnotch.json) — **Portable**: the upstream Windows release workflow creates a self-contained ZIP from `QNotch.exe`; the Scoop manifest extracts the archive and launches that executable. The published release SHA-256 digest is pinned. The Scoop installation workflow has not yet been run.
@@ -110,7 +110,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 56 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 57 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
@@ -138,7 +138,8 @@ This index groups the 56 Nonportable manifests by the exact installer/package la
 | Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
-| **Total** | **All Nonportable manifests** | **56** |
+| NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
+| **Total** | **All Nonportable manifests** | **57** |
 
 ## Nonportable manifests
 
@@ -170,6 +171,7 @@ The installer type describes the package or setup technology used by the manifes
 | [imgconv](../bucket/imgconv.json) | Custom EXE installer | Runs the publisher's silent setup inside the Scoop version directory; enables Explorer context-menu and startup integration, and can register an optional Windows 11 menu package/certificate. |
 | [imazing-np](../bucket/imazing-np.json) | EXE setup (Inno-style switches; engine not confirmed) | Runs the vendor setup silently with administrator rights and a directory override. |
 | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | Inno | Runs the K-Lite setup silently; this is a real codec installation, not archive extraction. |
+| [k-toolz](../bucket/k-toolz.json) | NSIS setup EXE (7-Zip payload extraction) | Scoop extracts the setup payload without running NSIS, but the application automatically registers `ktoolz://` and `lumora://` URL handlers under HKCU at startup. The manifest removes those registrations on uninstall only when they still point to this Scoop installation. |
 | [lapis](../bucket/lapis.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [livewallpaper](../bucket/livewallpaper.json) | Inno | Runs the Inno Setup installer silently with elevated rights and `/DIR=$dir`. |
 | [mumuplayer](../bucket/mumuplayer.json) | Vendor-specific EXE installer/orchestrator | Executes the MuMuPlayer vendor installation workflow (`install_prepare` and `commit`); administrator rights are required. **Manifest issue:** the current file failed JSON parsing during this review because its `pre_install` value contains literal line breaks inside a JSON string; fix the JSON before relying on this manifest. |
@@ -218,7 +220,6 @@ These remaining entries should not be treated as Portable or Nonportable until t
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official redirect supplies a versioned setup EXE, but no checksum or reliable installer/uninstaller behavior is available. The manifest only downloads the setup and deliberately does not execute it. |
 | [pulse-launcher](../bucket/pulse-launcher.json) | Windows setup EXE (engine unverified; pre-release) | The only published Windows asset is `Pulse-Setup-0.1.exe`. GitHub provides its SHA-256 digest, but the installer engine, extraction path, application executable, and uninstall behavior have not been verified. The manifest downloads the setup only and does not execute it. |
 | [taskslinger](../bucket/taskslinger.json) | EXE setup (engine unverified) | The official 0.9.5 Windows x64 download is a setup EXE. Its installer scope and default per-user path are documented, but a Scoop-contained install or portable extraction is not established; the manifest downloads the setup without running it. |
-| [k-toolz](../bucket/k-toolz.json) | NSIS setup EXE (direct 7-Zip extraction) | The official 4.0.2 release publishes a SHA-256 asset digest. The manifest uses `#/dl.7z` without executing NSIS, but the Windows archive-validation workflow must confirm that the declared `k-toolz.exe` launch path exists in the extracted payload. |
 
 ## Portable examples and important exceptions
 
