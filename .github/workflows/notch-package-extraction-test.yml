@@ -87,6 +87,13 @@ jobs:
               AppExe = 'Yata.exe'
             },
             @{
+              Name = 'Halo'
+              Version = '4.2.3'
+              Kind = 'Zip'
+              Url = 'https://github.com/phoseinq/Halo/releases/download/v4.2.3/DynamicWinPortable.zip'
+              Sha256 = 'ba3270f23b22344301168239396f00e9f4ace223dd519dc62025e08742faa085'
+            },
+            @{
               Name = 'Windows Dynamic Island'
               Version = '0.8.0'
               Kind = 'Inno'
@@ -190,6 +197,13 @@ jobs:
                     throw "Expected exact NSIS path '$expectedRelative'. Found: $($found -join ', ')"
                   }
                   Add-Report "NSIS extraction: PASS; exact payload path $expectedRelative."
+                }
+                'Zip' {
+                  $extractOutput = & $sevenZip x $installerPath "-o$extractRoot" '-y' '-bd' 2>&1
+                  $exitCode = $LASTEXITCODE
+                  $extractOutput | Set-Content -LiteralPath (Join-Path $targetRoot '7zip-extraction.log') -Encoding utf8
+                  if ($exitCode -ne 0) { throw "7-Zip ZIP extraction failed ($exitCode)." }
+                  Add-Report 'ZIP extraction: PASS; archive expanded for executable-path inspection.'
                 }
                 'NotchPayload' {
                   $stream = [System.IO.File]::OpenRead($installerPath)
