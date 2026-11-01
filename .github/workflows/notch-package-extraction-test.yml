@@ -55,36 +55,20 @@ jobs:
 
           $targets = @(
             @{
+              Name = 'Bloom'
+              Version = '3.10.1'
+              Kind = 'NSIS'
+              Url = 'https://github.com/SehajveerSingh2005/bloom/releases/download/v3.10.1/bloom_3.10.1_x64-setup.exe'
+              Sha256 = '5cb4d8fe87aaf26f161be61954aebfacb4c9f481b12c5bbcfc48aa6b56db7231'
+              AppExe = 'bloom.exe'
+            },
+            @{
               Name = 'Dlives'
               Version = '1.0.0.1'
               Kind = 'PyInstaller'
               Url = 'https://github.com/FuGen-India-Private-Ltd/Dlives/releases/download/v1.0.0/Dlives_Setup.exe'
               Sha256 = '14a6742997851fb796d99b57b56ac52784d46b812d8138d428b52c68b1ced0f5'
               AppExe = 'Dlives.exe'
-            },
-            @{
-              Name = 'V-Notch'
-              Version = '2.2.1'
-              Kind = 'NSIS'
-              Url = 'https://github.com/w0otdev/V-Notch/releases/download/v2.2.1/V-Notch-Setup.exe'
-              Sha256 = '549fe1cf2c6ae6f493fe2d90fefb1cd9b4d152fe5ca7dcd9d83ed8d4fc5c004b'
-              AppExe = 'V-Notch.exe'
-            },
-            @{
-              Name = 'WNotch'
-              Version = '0.22.0'
-              Kind = 'NotchPayload'
-              Url = 'https://github.com/Brick-Bread/WNotch/releases/download/v0.22.0/Notch-Setup-0.22.0.exe'
-              Sha256 = 'd8e2b78124021463cdbc7156868efa4b63fd789a019c19ce624853d9189b0f16'
-              AppExe = 'Notch.exe'
-            },
-            @{
-              Name = 'Yata'
-              Version = '0.7.1'
-              Kind = 'Inno'
-              Url = 'https://github.com/akaneni/yata/releases/download/v0.7.1/Yata-Setup-0.7.1.exe'
-              Sha256 = '4a979f5777df6751b130881828b97da1f8e41cb80f77ef1e1d678204df23569d'
-              AppExe = 'Yata.exe'
             },
             @{
               Name = 'Halo'
@@ -97,12 +81,108 @@ jobs:
               RequiredFrameworks = @('Microsoft.NETCore.App', 'Microsoft.WindowsDesktop.App')
             },
             @{
+              Name = 'Nectar'
+              Version = '1.7.0'
+              Kind = 'Zip'
+              Url = 'https://github.com/kua8/Nectar/releases/download/v1.7.0/nectar-1.7.0-portable-windows-x64.zip'
+              Sha256 = '3c5c9b256a3b832c9c32de53ce16cd364c385ef968e48474da06500e594927bb'
+              AppExe = 'nectar.exe'
+            },
+            @{
+              Name = 'Nock'
+              Version = '0.12.10'
+              Kind = 'Direct'
+              Url = 'https://github.com/Akhilesh-Varute/Nock/releases/download/v0.12.10/Nock-portable-0.12.10.exe'
+              Sha256 = '21744b1c9c21485d4a7922eecea67367db7870bdc964611108a459d2dbadd5cc'
+              AppExe = 'nock.exe'
+            },
+            @{
+              Name = 'PILLAR'
+              Version = '0.1.4'
+              Kind = 'NSIS'
+              Url = 'https://github.com/warpirate/pillar-dynamic-island-for-windows/releases/download/v0.1.4/PILLAR_0.1.4_x64-setup.exe'
+              Sha256 = 'a2ad2c503303458550a957c5581b8f803ae8ad71a892e9b98a770a051e2012fc'
+              AppExe = 'pillar.exe'
+            },
+            @{
+              Name = 'QNotch'
+              Version = '0.8.4'
+              Kind = 'Zip'
+              Url = 'https://github.com/Somafet/qnotch/releases/download/v0.8.4/QNotch-self-contained.zip'
+              Sha256 = '4cefefadebb0193f2574d0ee8c9d5213ff24315f649d228958985c4c13872913'
+              AppExe = 'QNotch.exe'
+            },
+            @{
+              Name = 'Quick Pill'
+              Version = '5.5.1'
+              Kind = 'QuickPill'
+              Url = 'https://pub-ec47b1fa4cbf4c5ba82408a738fb69d3.r2.dev/QuickPill-Windows-v5.5.1-Setup.exe'
+              Sha256 = '14acfabffd3ddb68d78583f18685c5038bbe67355eabcc284d7760c2cd15548d'
+              AppExe = 'Quick Pill.exe'
+            },
+            @{
+              Name = 'ShoreHue'
+              Version = '1.1.1'
+              Kind = 'Zip'
+              Url = 'https://github.com/timecolors/ShoreHue/releases/download/v1.1.1/ShoreHue-v1.1.1-win-x64.zip'
+              Sha256 = '90c7a65bc0d8a69005f53e88714f1b305821750ef321aa22ab0dd3277fd978ef'
+              AppExe = 'ShoreHue.exe'
+            },
+            @{
+              Name = 'V-Notch'
+              Version = '2.2.1'
+              Kind = 'NSIS'
+              Url = 'https://github.com/w0otdev/V-Notch/releases/download/v2.2.1/V-Notch-Setup.exe'
+              Sha256 = '549fe1cf2c6ae6f493fe2d90fefb1cd9b4d152fe5ca7dcd9d83ed8d4fc5c004b'
+              AppExe = '$PLUGINSDIR/payload/V-Notch.exe'
+            },
+            @{
+              Name = 'Venu'
+              Version = '0.6.1'
+              Kind = 'Direct'
+              Url = 'https://github.com/imnakul/venu---Dynamic-Notch-for-Windows/releases/download/v0.6.1/venu-0.6.1.exe'
+              Sha256 = '96f44ae011a45daa6de3d23a1b19024b3c081cb38beb8bacbb5418b3ffc0761c'
+              AppExe = 'venu.exe'
+            },
+            @{
               Name = 'Windows Dynamic Island'
               Version = '0.8.0'
               Kind = 'Inno'
               Url = 'https://github.com/nazimferragh/windows-dynamic-island/releases/download/v0.8.0/DynamicIsland-Setup-0.8.0.exe'
               Sha256 = 'cf7374f05510fe1e9cbeb47141c7acb45598b525274dc0401c04a9821cb66e49'
               AppExe = 'DynamicIsland.exe'
+            },
+            @{
+              Name = 'WinDynamicIsland'
+              Version = '1.0.0'
+              Kind = 'Zip'
+              Url = 'https://github.com/uponatime2019/WinDynamicIsland/releases/download/v1.0.0/WinDynamicIsland-v1.0.0-win-x64.zip'
+              Sha256 = 'f5638ef72b7d1c26f26b757d57216cd658161f6cc30ae7141a29e51e8d133d33'
+              AppExe = 'WinDynamicIsland.exe'
+            },
+            @{
+              Name = 'WinIsland'
+              Version = '1.0.2'
+              Kind = 'Zip'
+              Url = 'https://github.com/zHeuzy2/WinIsland/releases/download/v1.0.2/WinIsland-1.0.2-portable.zip'
+              Sha256 = 'fa5f49a227ab8f2a79cc9fc05fa8dc5fb9af27bb03edcd012fb304899e7af764'
+              AppExe = 'WinIsland.exe'
+            },
+            @{
+              Name = 'WinIslands'
+              Version = '3.1.1'
+              Kind = 'Direct'
+              Url = 'https://github.com/JudeKwong/WinIslands/releases/download/3.1.1/WinIslands-3.1.1-win-x64.exe'
+              Sha256 = 'a9c73f9952c6390e42cab9aef723f6161f1597a421be1386e4cd66174454df59'
+              AppExe = 'WinIslands.exe'
+            },
+            @{
+              Name = 'WNotch'
+              Version = '0.22.0'
+              Kind = 'NotchPayload'
+              Url = 'https://github.com/Brick-Bread/WNotch/releases/download/v0.22.0/Notch-Setup-0.22.0.exe'
+              Sha256 = 'd8e2b78124021463cdbc7156868efa4b63fd789a019c19ce624853d9189b0f16'
+              AppExe = 'Notch.exe'
             }
           )
 
@@ -192,14 +272,44 @@ jobs:
                   $exitCode = $LASTEXITCODE
                   $extractOutput | Set-Content -LiteralPath (Join-Path $targetRoot '7zip-extraction.log') -Encoding utf8
                   if ($exitCode -ne 0) { throw "7-Zip NSIS extraction failed ($exitCode)." }
-                  $expectedRelative = '$PLUGINSDIR/payload/' + $target.AppExe
-                  $found = @(Get-ChildItem -LiteralPath $extractRoot -Filter $target.AppExe -File -Recurse | ForEach-Object {
+                  $expectedRelative = ([string]$target.AppExe).Replace('\', '/')
+                  $expectedFileName = [System.IO.Path]::GetFileName($expectedRelative)
+                  $found = @(Get-ChildItem -LiteralPath $extractRoot -Filter $expectedFileName -File -Recurse | ForEach-Object {
                     [System.IO.Path]::GetRelativePath($extractRoot, $_.FullName).Replace('\', '/')
                   })
                   if ($found -notcontains $expectedRelative) {
                     throw "Expected exact NSIS path '$expectedRelative'. Found: $($found -join ', ')"
                   }
                   Add-Report "NSIS extraction: PASS; exact payload path $expectedRelative."
+                }
+                'QuickPill' {
+                  $nsisRoot = Join-Path $targetRoot 'nsis-payload'
+                  New-Item -ItemType Directory -Path $nsisRoot -Force | Out-Null
+                  $listing = & $sevenZip l -slt $installerPath 2>&1
+                  if ($LASTEXITCODE -ne 0) { throw '7-Zip could not list the Quick Pill NSIS installer.' }
+                  $listing | Set-Content -LiteralPath (Join-Path $targetRoot '7zip-listing.txt') -Encoding utf8
+                  $extractOutput = & $sevenZip x $installerPath "-o$nsisRoot" '-y' '-bd' 2>&1
+                  $exitCode = $LASTEXITCODE
+                  $extractOutput | Set-Content -LiteralPath (Join-Path $targetRoot '7zip-extraction.log') -Encoding utf8
+                  if ($exitCode -ne 0) { throw "Quick Pill NSIS extraction failed ($exitCode)." }
+                  $nestedArchive = Join-Path $nsisRoot '$PLUGINSDIR\app-64.7z'
+                  if (-not (Test-Path -LiteralPath $nestedArchive -PathType Leaf)) {
+                    throw 'Quick Pill NSIS payload did not contain $PLUGINSDIR/app-64.7z.'
+                  }
+                  $nestedOutput = & $sevenZip x $nestedArchive "-o$extractRoot" '-y' '-bd' 2>&1
+                  $nestedExit = $LASTEXITCODE
+                  $nestedOutput | Set-Content -LiteralPath (Join-Path $targetRoot 'nested-7zip-extraction.log') -Encoding utf8
+                  if ($nestedExit -ne 0) { throw "Quick Pill app-64.7z extraction failed ($nestedExit)." }
+                  Add-Report 'Quick Pill nested app-64.7z extraction: PASS.'
+                }
+                'Direct' {
+                  $destination = Join-Path $extractRoot ([string]$target.AppExe -replace '/', [System.IO.Path]::DirectorySeparatorChar)
+                  $destinationDir = Split-Path -Parent $destination
+                  if (-not (Test-Path -LiteralPath $destinationDir -PathType Container)) {
+                    New-Item -ItemType Directory -Path $destinationDir -Force | Out-Null
+                  }
+                  Copy-Item -LiteralPath $installerPath -Destination $destination -Force
+                  Add-Report "Standalone EXE placement: PASS ($($target.AppExe))"
                 }
                 'Zip' {
                   $extractOutput = & $sevenZip x $installerPath "-o$extractRoot" '-y' '-bd' 2>&1
