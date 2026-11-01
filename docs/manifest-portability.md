@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 874 manifests; the aggregate classification totals below have not yet been recalculated after subsequent additions. Each newer manifest is classified individually in the entries below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 873 manifests; the aggregate classification totals below have not yet been recalculated after subsequent additions. Each newer manifest is classified individually in the entries below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
