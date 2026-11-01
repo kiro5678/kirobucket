@@ -764,3 +764,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Problem:** The earlier `pre_uninstall` removed `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\\EnableSnapBar` whenever the application's `TweaksVersion >= 2`. The upstream application itself documents that a user who changes this setting back after the first run is respected, but the Scoop uninstall script could delete that user change.
 - **Resolution:** Added `pre_install` logic that captures whether `EnableSnapBar` existed and its DWORD value before the app's first run, preserving that backup across upgrades. If `TweaksVersion >= 2` already exists before Scoop captures a backup, the manifest marks the prior state as unknown. On uninstall, it restores/removes the original value only when the current value is still the app-applied `0` and a valid first-run backup exists. If the user changed the value, the backup is incomplete, or the app had already applied the tweak before Scoop took ownership, the current value is preserved instead of guessing. The app's user data and remaining notification/scheduled-task state continue to be preserved.
 - **Required verification:** Run the manifest pipeline and parse both PowerShell lifecycle scripts with PowerShell's AST parser. The extraction workflow alone does not exercise registry lifecycle behavior.
+
+
+## 2026-11-01 — Make Dynamic Island uninstall safe when registry keys are absent
+
+- **Manifest:** `bucket/windows-dynamic-island.json`, version `0.8.0`.
+- **Problem:** `pre_uninstall` read `TweaksVersion`, `ScoopSnapBarBackupCaptured`, and `EnableSnapBar` before checking whether the corresponding per-user registry keys existed. A package removed before first launch, or an older/manual install without those keys, could emit errors during cleanup.
+- **Resolution:** Initialize the values as `$null`, check `Test-Path` for each registry key, and read values only when that key exists. Missing state now follows the preserve-safe path; cleanup commands remain best-effort.
+- **Required verification:** PowerShell AST validation runs in the Notch Package Extraction Test workflow. This parser check confirms syntax, not live registry behavior; a real lifecycle test would require a disposable Windows user profile/VM.
