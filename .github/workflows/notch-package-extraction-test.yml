@@ -159,6 +159,9 @@ jobs:
               Url = 'https://github.com/uponatime2019/WinDynamicIsland/releases/download/v1.0.0/WinDynamicIsland-v1.0.0-win-x64.zip'
               Sha256 = 'f5638ef72b7d1c26f26b757d57216cd658161f6cc30ae7141a29e51e8d133d33'
               AppExe = 'WinDynamicIsland.exe'
+              RuntimeConfig = 'WinDynamicIsland.runtimeconfig.json'
+              RequiredExternalFramework = 'Microsoft.NETCore.App'
+              RequiredExternalVersion = '8.0.0'
             },
             @{
               Name = 'WinIsland'
@@ -341,6 +344,16 @@ jobs:
                       }
                     }
                     Add-Report "Bundled frameworks: PASS ($($includedFrameworks -join ', '))"
+                    if ($target.RequiredExternalFramework) {
+                      $externalFramework = $runtimeConfigData.runtimeOptions.framework
+                      if ($null -eq $externalFramework -or
+                          [string]$externalFramework.name -ne [string]$target.RequiredExternalFramework -or
+                          [string]$externalFramework.version -ne [string]$target.RequiredExternalVersion) {
+                        $foundFramework = if ($null -eq $externalFramework) { '(none)' } else { "$($externalFramework.name) $($externalFramework.version)" }
+                        throw "Expected external framework $($target.RequiredExternalFramework) $($target.RequiredExternalVersion), found $foundFramework."
+                      }
+                      Add-Report "External runtime requirement: PASS ($($externalFramework.name) $($externalFramework.version))"
+                    }
                   }
                 }
                 'NotchPayload' {
