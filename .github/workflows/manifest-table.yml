@@ -1108,7 +1108,20 @@ jobs:
                           $date = ([DateTimeOffset]::Parse([string]$lastModified)).UtcDateTime.ToString("yyyy-MM-dd")
                       }
                       $contentLength = [string]$response.Headers["Content-Length"]
-                      if ($contentLength -match '^\d+
+                      $parsedLength = 0L
+                      if ([long]::TryParse($contentLength, [ref]$parsedLength)) {
+                          $sizeBytes = $parsedLength
+                      }
+                  } catch {
+                      Write-Verbose "Could not read download headers for $url : $($_.Exception.Message)"
+                  }
+                  [PSCustomObject]@{ Url = $url; Date = $date; SizeBytes = $sizeBytes }
+              } -ThrottleLimit 20
+          )
+          foreach ($record in $downloadRecords) {
+              $downloadDates[$record.Url] = [string]$record.Date
+              if ($null -ne $record.SizeBytes) { $downloadSizes[$record.Url] = [long]$record.SizeBytes }
+          }
           $manifests = foreach ($item in $manifestData) {
               $date = ""
               if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
@@ -1282,193 +1295,6 @@ jobs:
               '<a id="manifests-newest"></a>'
               "| Name [↑](manifests-name-az.md) [↓](manifests-name-za.md) | Category [↑](manifests-category-az.md) [↓](manifests-category-za.md) | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
               "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"
-              ($newest | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
-              $end
-              ""
-              "[Back to README](../README.md#manifests)"
-          ) -join [Environment]::NewLine
-
-          $manifestPage = [regex]::Replace($manifestPage, '(?:\r?\n)+\z', '') + "`n"
-          [System.IO.File]::WriteAllText(
-              (Join-Path $docsPath "manifests.md"),
-              $manifestPage,
-              [System.Text.UTF8Encoding]::new($false)
-          )
-
-      - name: Commit generated files
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          if git diff --quiet -- docs; then
-            echo "Generated files are already up to date."
-            exit 0
-          fi
-
-          git add docs
-          git commit -m "docs: update manifest views"
-          git fetch origin master:refs/remotes/origin/master
-          git rebase origin/master
-          git push origin HEAD:master
-) { $sizeBytes = [long]$contentLength }
-                  } catch {
-                      Write-Verbose "Could not read download headers for $url : $($_.Exception.Message)"
-                  }
-                  [PSCustomObject]@{ Url = $url; Date = $date; SizeBytes = $sizeBytes }
-              } -ThrottleLimit 20
-          )
-          foreach ($record in $downloadRecords) {
-              $downloadDates[$record.Url] = [string]$record.Date
-              if ($null -ne $record.SizeBytes) { $downloadSizes[$record.Url] = [long]$record.SizeBytes }
-          }
-
-          $manifests = foreach ($item in $manifestData) {
-              $date = ""
-              if (-not [string]::IsNullOrWhiteSpace($item.Repo) -and $upstreamCache.ContainsKey($item.Repo)) {
-                  $date = [string]$upstreamCache[$item.Repo]
-              }
-              if ([string]::IsNullOrWhiteSpace($date) -and -not [string]::IsNullOrWhiteSpace($item.DownloadUrl)) {
-                  $cleanUrl = ($item.DownloadUrl -split '#', 2)[0]
-                  if ($downloadDates.ContainsKey($cleanUrl)) {
-                      $date = [string]$downloadDates[$cleanUrl]
-                  }
-              }
-              if ([string]::IsNullOrWhiteSpace($date)) { $date = "—" }
-
-              $nameEscaped = $item.Name.Replace("|", "\|")
-              $categoryEscaped = $item.Category.Replace("|", "\|")
-              $versionEscaped = $item.Version.Replace("|", "\|")
-              $installerTypeEscaped = $item.InstallerType.Replace("|", "\|")
-              $descriptionEscaped = $item.Description.Replace("|", "\|").Replace([Environment]::NewLine, " ")
-              $homepageEscaped = $item.Homepage.Replace("|", "\|").Replace(")", "%29")
-              $homepageCell = if ([string]::IsNullOrWhiteSpace($item.Homepage)) { "—" } else { "[Homepage]($homepageEscaped)" }
-
-              $addedDate = if ([string]::IsNullOrWhiteSpace([string]$item.AddedDate)) { "—" } else { [string]$item.AddedDate }
-
-              [PSCustomObject]@{
-                  Name = $item.Name
-                  Category = $item.Category
-                  Added = $addedDate
-                  Date = $date
-                  Homepage = $item.Homepage
-                  InstallerType = $item.InstallerType
-                  Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $installerTypeEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
-              }
-          }
-
-          $dateValue = {
-              if ($_.Date -eq "—") { [datetime]::MinValue } else { [datetime]$_.Date }
-          }
-          $addedDateValue = {
-              if ($_.Added -eq "—") { [datetime]::MinValue } else { [datetime]$_.Added }
-          }
-
-          $newest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $true }, Name
-          $oldest = $manifests | Sort-Object @{ Expression = $dateValue; Descending = $false }, Name
-          $addedNewest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $true }, Name
-          $addedOldest = $manifests | Sort-Object @{ Expression = $addedDateValue; Descending = $false }, Name
-          $nameAz = $manifests | Sort-Object Name
-          $nameZa = $manifests | Sort-Object @{ Expression = { $_.Name }; Descending = $true }
-          $categoryAz = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $false }, Name
-          $categoryZa = $manifests | Sort-Object @{ Expression = { $_.Category }; Descending = $true }, Name
-
-          function New-View {
-              param(
-                  [string]$Title,
-                  [array]$Items
-              )
-
-              @(
-                  "# KiroBucket Manifest View"
-                  ""
-                  "## $Title"
-                  ""
-                  "Manifest Added is the date the manifest first entered this bucket's Git history; later edits do not change it, and renames are followed where Git can detect them. Program Update is the latest published upstream release date, falling back to the downloadable asset's Last-Modified date. A dash means a date was unavailable."
-                  "Download Size is measured from direct download URLs' HTTP Content-Length headers. Architecture-specific packages are listed separately; a dash means the source did not provide a size."
-                  "Installer Type is inferred from manifest metadata and the declared download format; unknown EXE installer engines are labeled unverified, not guessed."
-                  ""
-                  "| Name | Category | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
-                  "| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-                  ($Items | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
-                  ""
-              ) -join [Environment]::NewLine
-          }
-
-          $docsPath = Join-Path $env:GITHUB_WORKSPACE "docs"
-          New-Item -ItemType Directory -Force -Path $docsPath | Out-Null
-
-          # Build a complete installer-type inventory from every manifest currently in bucket/.
-          # This is regenerated with the same $manifests data used by all generated manifest views.
-          $portabilityPath = Join-Path $docsPath "manifest-portability.md"
-          $portabilityContent = [System.IO.File]::ReadAllText($portabilityPath)
-          $installerTypeStart = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->"
-          $installerTypeEnd = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->"
-          $installerTypeStartIndex = $portabilityContent.IndexOf($installerTypeStart, [System.StringComparison]::Ordinal)
-          $installerTypeEndIndex = $portabilityContent.IndexOf($installerTypeEnd, [System.StringComparison]::Ordinal)
-          if ($installerTypeStartIndex -lt 0 -or $installerTypeEndIndex -le $installerTypeStartIndex) {
-              throw "Installer-type table markers are missing or out of order in docs/manifest-portability.md."
-          }
-
-          $installerTypeLines = [System.Collections.Generic.List[string]]::new()
-          $installerTypeLines.Add("## All bucket manifests by installer type")
-          $installerTypeLines.Add("")
-          $installerTypeLines.Add('This inventory covers every JSON manifest in bucket/ at generation time. It uses the same Installer Type inference as the generated manifest views; installer engines that cannot be verified remain explicitly unverified.')
-          $installerTypeLines.Add("")
-          $installerTypeLines.Add("| Installer Type | Manifests | Count |")
-          $installerTypeLines.Add("| --- | --- | ---: |")
-          $installerTypeGroups = @($manifests | Group-Object InstallerType | Sort-Object @{ Expression = { $_.Count }; Descending = $true }, Name)
-          foreach ($group in $installerTypeGroups) {
-              $links = @(
-                  $group.Group |
-                      Sort-Object Name |
-                      ForEach-Object { "[$($_.Name)](../bucket/$($_.Name).json)" }
-              ) -join ", "
-              $typeLabel = ([string]$group.Name).Replace("|", "\|")
-              $installerTypeLines.Add("| $typeLabel | $links | $($group.Count) |")
-          }
-          $installerTypeLines.Add("| **Total** | **All bucket manifests** | **$($manifests.Count)** |")
-
-          $installerTypeBlock = $installerTypeStart + [Environment]::NewLine +
-              ($installerTypeLines -join [Environment]::NewLine) + [Environment]::NewLine +
-              $installerTypeEnd
-          $beforeInstallerTypeTable = $portabilityContent.Substring(0, $installerTypeStartIndex)
-          $afterInstallerTypeTable = $portabilityContent.Substring($installerTypeEndIndex + $installerTypeEnd.Length)
-          $portabilityContent = $beforeInstallerTypeTable + $installerTypeBlock + $afterInstallerTypeTable
-          [System.IO.File]::WriteAllText(
-              $portabilityPath,
-              $portabilityContent,
-              [System.Text.UTF8Encoding]::new($false)
-          )
-          Write-Host "Generated installer-type inventory for $($manifests.Count) manifests across $($installerTypeGroups.Count) installer types."
-
-          Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
-          Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
-          Set-Content -Path (Join-Path $docsPath "manifests-added-newest.md") -Value (New-View "Manifest additions — newest first" $addedNewest) -Encoding utf8NoBOM
-          Set-Content -Path (Join-Path $docsPath "manifests-added-oldest.md") -Value (New-View "Manifest additions — oldest first" $addedOldest) -Encoding utf8NoBOM
-          Set-Content -Path (Join-Path $docsPath "manifests-name-az.md") -Value (New-View "Name A-Z" $nameAz) -Encoding utf8NoBOM
-          Set-Content -Path (Join-Path $docsPath "manifests-name-za.md") -Value (New-View "Name Z-A" $nameZa) -Encoding utf8NoBOM
-          Set-Content -Path (Join-Path $docsPath "manifests-category-az.md") -Value (New-View "Category A-Z" $categoryAz) -Encoding utf8NoBOM
-          Set-Content -Path (Join-Path $docsPath "manifests-category-za.md") -Value (New-View "Category Z-A" $categoryZa) -Encoding utf8NoBOM
-
-
-
-
-          $manifestPage = @(
-              "# KiroBucket Manifest Inventory"
-              ""
-              "This page contains the complete manifest inventory generated from the JSON files in `bucket/`."
-              ""
-              "Manifest Added is the date a manifest first entered this bucket's Git history; later edits or repairs do not change it. Program Update uses the latest published upstream release date when available, falling back to the download asset's Last-Modified date. A dash means a date was unavailable."
-              ""
-              "Installer Type is inferred from manifest metadata and the declared download format. Unknown EXE installer engines are labeled unverified rather than guessed."
-              ""
-              "Use the column links to open alternative views sorted by name, category, manifest-added date, or program-update date."
-              ""
-              $start
-              '<a id="manifests-newest"></a>'
-              "| Name [↑](manifests-name-az.md) [↓](manifests-name-za.md) | Category [↑](manifests-category-az.md) [↓](manifests-category-za.md) | Version | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |"
-              "| --- | --- | --- | --- | --- | --- | --- | --- |"
               ($newest | ForEach-Object { $_.Row -replace '\]\(bucket/', '](../bucket/' })
               $end
               ""
