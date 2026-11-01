@@ -22,7 +22,7 @@
         "url": "https://github.com/lucacadalora/oyenza-studio/releases/download/v$version/Oyenza-Studio-$version-portable.zip"
     },
     "notes": [
-        "Uses the official Windows portable ZIP, not the per-user Setup.exe. The v0.2.22 release notes identify the executable path as Poni\\poni.exe, and GitHub publishes the ZIP's SHA-256 digest; the archive has not yet been independently extracted in this audit, so verify the path with the bucket archive-validation workflow before treating this manifest as fully verified.",
+        "Uses the official Windows portable ZIP, not the per-user Setup.exe. The repository's Validate manifest archives workflow downloaded the v0.2.22 ZIP, verified its published SHA-256, and confirmed that Poni\\poni.exe exists in the archive.",
         "The application stores user data under %APPDATA%\\Poni and cache/log files under %LOCALAPPDATA%\\Poni; these paths are outside the Scoop app directory.",
         "The application's own update mechanism is left unchanged."
     ]
