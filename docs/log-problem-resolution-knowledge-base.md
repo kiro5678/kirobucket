@@ -717,3 +717,12 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Expected file layout from the source script:** `nook.exe` and `LICENSE.txt` are at the root of `{app}`, so the current Start Menu shortcut to `nook.exe` matches the path created by the Inno script.
 - **System behavior:** The Inno script registers the `nook://` protocol under HKCU and offers a run-at-login task. Scoop's extraction does not execute the installer `[Registry]` or `[Run]` sections; the application itself registers the protocol when launched. The manifest remains **Nonportable** in the project inventory because the application registers the protocol under HKCU at runtime.
 - **Operational verification:** Updating the manifest will trigger Manifest Pipeline, which uses the same `innounp` helper and checks the download, SHA-256, presence of `{app}` files, and launch paths. Do not record extraction or installation as successful until Archive Validation has completed.
+
+
+## 2026-11-01 — Correct a one-character SHA-256 mismatch in Nock
+
+- **Manifest:** `bucket/nock.json`, version `0.12.10`.
+- **Problem:** The manifest hash was `21744b1c9c21485d4d7922eecea67367db7870bdc964611108a459d2dbadd5cc`, but the official GitHub release asset `Nock-portable-0.12.10.exe` publishes digest `sha256:21744b1c9c21485d4a7922eecea67367db7870bdc964611108a459d2dbadd5cc`. The two values differ at one hexadecimal character.
+- **Cause:** The version/checkver and archive-path tests do not necessarily recompute an existing pinned hash when the version has not changed. A successful checkver result must not be treated as proof that the manifest hash is correct.
+- **Resolution:** Updated only the manifest SHA-256 to the exact digest published in the official GitHub Release API. The official asset name, URL, version, `bin`, and shortcut remain unchanged.
+- **Required verification:** Run the manifest pipeline after the correction; confirm the official asset download hash and Scoop validation succeed. Do not claim an installation test solely from release metadata.
