@@ -264,6 +264,7 @@ jobs:
                 Add-Report "Runtime config ($([System.IO.Path]::GetRelativePath($extractRoot, $runtimeConfig.FullName))):"
                 (Get-Content -LiteralPath $runtimeConfig.FullName -Raw).Split([Environment]::NewLine) | ForEach-Object { Add-Report "  $_" }
               }
+              Add-Report 'RESULT: PASS'
             }
             catch {
               $message = "$($target.Name): $($_.Exception.Message)"
