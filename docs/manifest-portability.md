@@ -25,7 +25,11 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Portable | 789 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 57 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 7 | Unverified EXE setup, RMSKIN add-on, extracted MSIX | The current manifest does not prove a complete portable extraction or installation path. |
-| **Total** | **853** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+| Not reconciled | 20 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
+| **Total** | **873** | Multiple package types | Current JSON files in `bucket/` on `master`. |
+
+
+The explicit portability classifications currently cover 853 of the 873 JSON manifests. The remaining 20 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The generated installer-type index below is a separate view and includes all 873 manifests.
 
 ### Newly added manifest classifications
 - [`zapfast`](../bucket/zapfast.json) — **Portable**: uses the official Windows x64 and ARM64 ZIP distributions, without running either the MSI or setup EXE. The upstream release workflow packages `zapfast.exe`, `zapfast-portable.txt`, and the accompanying notices inside a versioned wrapper directory; the architecture-specific `extract_dir` values match those wrapper names. User configuration, encrypted archive/session data, and caches remain in the standard AppData locations outside Scoop. Portable builds register the current-user AppUserModelID for Windows notifications at runtime; Scoop does not execute a setup routine or register it. The app's independent portable updater remains enabled.
