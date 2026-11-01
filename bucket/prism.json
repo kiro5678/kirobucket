@@ -1,10 +1,10 @@
 {
-    "version": "1.2.3",
+    "version": "1.2.4",
     "description": "Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents.",
     "homepage": "https://github.com/FortoGraphy/prism-download-manager",
     "license": "MIT",
-    "url": "https://github.com/FortoGraphy/prism-download-manager/releases/download/v1.2.3/Prism-1.2.3-windows-x64-portable.zip",
-    "hash": "7a31b014ac8566084fb2b09dd2d7b2ca46343acbb1f95b5e557b7e916d8162cd",
+    "url": "https://github.com/FortoGraphy/prism-download-manager/releases/download/v1.2.4/Prism-1.2.4-windows-x64-portable.zip",
+    "hash": "c76ec3cf0c3221c64c5b86af1dbb303bf8b63edfa96907638d07988e04584b6e",
     "bin": "prism.exe",
     "shortcuts": [
         [
