@@ -92,6 +92,9 @@ jobs:
               Kind = 'Zip'
               Url = 'https://github.com/phoseinq/Halo/releases/download/v4.2.3/DynamicWinPortable.zip'
               Sha256 = 'ba3270f23b22344301168239396f00e9f4ace223dd519dc62025e08742faa085'
+              AppExe = 'Halo/Halo.App.exe'
+              RuntimeConfig = 'Halo/Halo.Settings.runtimeconfig.json'
+              RequiredFrameworks = @('Microsoft.NETCore.App', 'Microsoft.WindowsDesktop.App')
             },
             @{
               Name = 'Windows Dynamic Island'
@@ -204,6 +207,27 @@ jobs:
                   $extractOutput | Set-Content -LiteralPath (Join-Path $targetRoot '7zip-extraction.log') -Encoding utf8
                   if ($exitCode -ne 0) { throw "7-Zip ZIP extraction failed ($exitCode)." }
                   Add-Report 'ZIP extraction: PASS; archive expanded for executable-path inspection.'
+                  if ($target.AppExe) {
+                    $expectedAppExe = Join-Path $extractRoot ([string]$target.AppExe -replace '/', [System.IO.Path]::DirectorySeparatorChar)
+                    if (-not (Test-Path -LiteralPath $expectedAppExe -PathType Leaf)) {
+                      throw "Expected application executable was not found: $($target.AppExe)"
+                    }
+                    Add-Report "Main application executable path: PASS ($($target.AppExe))"
+                  }
+                  if ($target.RuntimeConfig) {
+                    $runtimeConfigPath = Join-Path $extractRoot ([string]$target.RuntimeConfig -replace '/', [System.IO.Path]::DirectorySeparatorChar)
+                    if (-not (Test-Path -LiteralPath $runtimeConfigPath -PathType Leaf)) {
+                      throw "Expected runtime config was not found: $($target.RuntimeConfig)"
+                    }
+                    $runtimeConfigData = Get-Content -LiteralPath $runtimeConfigPath -Raw | ConvertFrom-Json -ErrorAction Stop
+                    $includedFrameworks = @($runtimeConfigData.runtimeOptions.includedFrameworks | ForEach-Object { [string]$_.name })
+                    foreach ($requiredFramework in $target.RequiredFrameworks) {
+                      if ($includedFrameworks -notcontains [string]$requiredFramework) {
+                        throw "Required bundled framework '$requiredFramework' is missing from $($target.RuntimeConfig). Included: $($includedFrameworks -join ', ')"
+                      }
+                    }
+                    Add-Report "Bundled frameworks: PASS ($($includedFrameworks -join ', '))"
+                  }
                 }
                 'NotchPayload' {
                   $stream = [System.IO.File]::OpenRead($installerPath)
