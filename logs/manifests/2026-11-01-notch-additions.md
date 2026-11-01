@@ -15,9 +15,14 @@ Bloom, Dlives, Halo, Nectar, PILLAR, QNotch, Quick Pill, V-Notch, WNotch, Window
 
 Smart Notch and WinIslandProject/WinIsland currently return HTTP 404 at the supplied repository URLs. Advanced Dynamic Island, Jaswanth1902/Notch, and vyshnav-suresh/windows-notch have no verified Windows release assets in the checked source snapshot. The Prasun Debnath WinNotch ZIP digest is published, but its archive paths were not inspected. eIsland publishes a large Setup EXE whose payload has not been inspected. The two Windhawk projects are mods, not independent desktop applications. Reasons and source URLs are tracked in `docs/pending-notch-manifests.md`.
 
-## Validation boundary
+## Validation results
 
 - New manifest JSON syntax was parsed before writing.
 - Package URLs and SHA-256 digests were taken from upstream GitHub Release metadata; Lumen's Inno Setup type and executable path were checked against its upstream installer script.
-- The Windows extraction workflow was extended to download, verify, and inspect the four added packages on GitHub-hosted Windows runners.
-- No claim is made that the Windows extraction workflow has completed successfully yet. Scoop install/run/uninstall smoke tests remain outstanding.
+- `Notch Package Extraction Test` completed successfully: all four release downloads passed SHA-256 verification and the expected executable paths were found after extraction/placement.
+- `Validate GitHub Actions Workflows` completed successfully.
+- `Validate manifest archives` completed successfully.
+- `Manual Scoop Checkver Validation` completed successfully.
+- `Scoop Autoupdate Validation` completed successfully.
+- `Update Manifest Documentation` completed successfully and regenerated the category/manifest indexes; all four new manifests appear in the Notch category and manifest index.
+- The broader `Manifest Pipeline` was still running when this log was updated. No claim is made that Scoop install/run/uninstall smoke tests have passed; those still require a separate runtime test.
