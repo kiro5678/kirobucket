@@ -85,6 +85,14 @@ jobs:
               Url = 'https://github.com/akaneni/yata/releases/download/v0.7.1/Yata-Setup-0.7.1.exe'
               Sha256 = '4a979f5777df6751b130881828b97da1f8e41cb80f77ef1e1d678204df23569d'
               AppExe = 'Yata.exe'
+            },
+            @{
+              Name = 'Windows Dynamic Island'
+              Version = '0.8.0'
+              Kind = 'Inno'
+              Url = 'https://github.com/nazimferragh/windows-dynamic-island/releases/download/v0.8.0/DynamicIsland-Setup-0.8.0.exe'
+              Sha256 = 'cf7374f05510fe1e9cbeb47141c7acb45598b525274dc0401c04a9821cb66e49'
+              AppExe = 'DynamicIsland.exe'
             }
           )
 
