@@ -726,3 +726,14 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Cause:** The version/checkver and archive-path tests do not necessarily recompute an existing pinned hash when the version has not changed. A successful checkver result must not be treated as proof that the manifest hash is correct.
 - **Resolution:** Updated only the manifest SHA-256 to the exact digest published in the official GitHub Release API. The official asset name, URL, version, `bin`, and shortcut remain unchanged.
 - **Required verification:** Run the manifest pipeline after the correction; confirm the official asset download hash and Scoop validation succeed. Do not claim an installation test solely from release metadata.
+
+
+## 2026-11-01 — Verify Halo portable ZIP layout and bundled .NET runtime
+
+- **Manifest:** `bucket/halo.json`, version `4.2.3`.
+- **Original gap:** The manifest downloaded the publisher's portable ZIP but had no `extract_dir`, `bin`, or shortcut because the archive's internal layout had not been independently established. Do not guess an EXE path from a product name.
+- **Official asset:** `DynamicWinPortable.zip` from the upstream v4.2.3 GitHub Release. Its published digest `ba3270f23b22344301168239396f00e9f4ace223dd519dc62025e08742faa085` matched the downloaded archive in the Windows extraction workflow.
+- **Extraction result:** [Notch Package Extraction Test 41279999730](https://github.com/kiro5678/kirobucket/actions/runs/41279999730) passed. The archive contains `Halo/Halo.App.exe`, `Halo/Halo.Hooks.exe`, and `Halo/Halo.Settings.exe`. Upstream `src/Halo.App/Halo.App.csproj` declares `OutputType=WinExe`, establishing `Halo.App.exe` as the main application executable.
+- **Runtime verification:** The extracted `Halo` folder contains `coreclr.dll`, `hostfxr.dll`, `hostpolicy.dll`, and `System.Private.CoreLib.dll`. `Halo.App.runtimeconfig.json` declares `Microsoft.NETCore.App` 9.0.18 in `includedFrameworks`; `Halo.Settings.runtimeconfig.json` declares both `Microsoft.NETCore.App` and `Microsoft.WindowsDesktop.App` 9.0.18 as included frameworks. The package therefore includes its required runtime and does not need a separate Desktop Runtime suggestion.
+- **Resolution:** Set `extract_dir` to the actual archive wrapper directory `Halo`, declare `bin: Halo.App.exe`, and create the `Halo` shortcut for that executable. Do not point the shim or shortcut at `Halo.Hooks.exe` or `Halo.Settings.exe`; those are companion processes. The vendor setup executable remains unused.
+- **Scope:** The test verified download, checksum, extraction layout, and runtime packaging. It did not execute the application or verify interactive desktop behavior.
