@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 862 manifests; the aggregate classification totals below have not yet been recalculated after subsequent additions. Each newer manifest is classified individually in the entries below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 874 manifests; the aggregate classification totals below have not yet been recalculated after subsequent additions. Each newer manifest is classified individually in the entries below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -75,6 +75,10 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 - [`winnotch`](../bucket/winnotch.json) — **Portable**: uses the official standalone `WinNotch.exe` release asset. The upstream release workflow runs `dotnet publish` with `SelfContained=true`, `PublishSingleFile=true`, and `RuntimeIdentifier=win-x64`; Scoop does not run the separate Setup EXE. The app's built-in updater remains enabled and, when the user applies an update, it launches the vendor Setup EXE outside Scoop.
 - [`oyenza-studio`](../bucket/oyenza-studio.json) — **Portable**: uses the official v0.2.22 Windows portable ZIP rather than the per-user Setup EXE. The archive-validation workflow verified the published SHA-256 and confirmed `Poni\\poni.exe` exists at the declared launch path. User data remains under `%APPDATA%\\Poni`; cache and logs remain under `%LOCALAPPDATA%\\Poni`.
+
+- [`orfeo`](../bucket/orfeo.json) — **Portable**: uses the official Electron Builder Windows `portable` target rather than the NSIS installer. The v1.6.0 release digest is pinned. The portable main process redirects Electron `userData` to `Orfeo-Data` beside the executable, and the manifest persists that directory.
+- [`pulse-monitor`](../bucket/pulse-monitor.json) — **Portable**: uses `innosetup: true` to extract the official Inno Setup payload without running the vendor's setup tasks. The upstream `[Files]` section places `Pulse.exe` and its DLLs under `{app}`. The application itself requests Administrator privileges; Scoop does not install the optional PawnIO driver.
+- [`layer`](../bucket/layer.json) — **Review**: the official x64 and ARM64 downloads are Tauri/NSIS setup executables, with no portable release asset. The Tauri config uses `installMode: both`; a current upstream Tauri issue reports that silent `/D=` installation paths can be ignored in that mode. The manifest stages the installer only until its payload or a Scoop-contained install path is verified. The distributed installer also includes a separate EULA, so its license remains Unknown.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
