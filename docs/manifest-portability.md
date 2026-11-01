@@ -67,6 +67,9 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 - [`ccleaner`](../bucket/ccleaner.json) — **Portable**: uses the publisher's official `ccsetup641.zip` portable download, version 6.41.11567 (23 June 2026). CCleaner 7.x is installer-only and is not the portable branch. The SHA-256 is sourced from a third-party file-tested listing; the ZIP could not be downloaded and independently rehashed during this update.
 
+- [`winnotch`](../bucket/winnotch.json) — **Portable**: uses the official standalone `WinNotch.exe` release asset. The upstream release workflow runs `dotnet publish` with `SelfContained=true`, `PublishSingleFile=true`, and `RuntimeIdentifier=win-x64`; Scoop does not run the separate Setup EXE. The app's built-in updater remains enabled and, when the user applies an update, it launches the vendor Setup EXE outside Scoop.
+- [`oyenza-studio`](../bucket/oyenza-studio.json) — **Review**: uses the official v0.2.22 portable ZIP and its published GitHub SHA-256 digest. The release notes identify `Poni\\poni.exe` as the launch path, but the archive has not yet been independently extracted in this audit; verify the exact path with the manifest archive-validation workflow before reclassifying it as Portable. User data is stored under `%APPDATA%\\Poni`, with cache/log files under `%LOCALAPPDATA%\\Poni`.
+
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
 
