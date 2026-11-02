@@ -6,7 +6,8 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/Lahai-Roi/MDNote/releases/download/v2.0.1/MDNote-2.0.1-portable.zip",
-            "hash": "9b63cb1b806c7a027918a8bd8116b5f57e9d585d12dbcf7963b7814da6667c3d"
+            "hash": "9b63cb1b806c7a027918a8bd8116b5f57e9d585d12dbcf7963b7814da6667c3d",
+            "extract_dir": "MDNote-2.0.1"
         }
     },
     "bin": "MDNote.exe",
@@ -28,7 +29,8 @@
                 "hash": {
                     "url": "https://api.github.com/repos/Lahai-Roi/MDNote/releases/tags/v$version",
                     "regex": "\"name\"\\s*:\\s*\"MDNote-$version-portable\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
-                }
+                },
+                "extract_dir": "MDNote-$version"
             }
         }
     }
