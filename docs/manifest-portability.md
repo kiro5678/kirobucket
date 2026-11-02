@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 869 active manifests. Nine Review manifests are staged outside `bucket/` in `under review kirobucket/`; 19 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 869 active manifests. Ten Review manifests are staged outside `bucket/` in `under review kirobucket/`; 19 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -29,12 +29,13 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **869** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 850 of the 869 active bucket manifests. The remaining 19 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Nine additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 850 of the 869 active bucket manifests. The remaining 19 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ten additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Newly added manifest classifications
 - [`astraeus`](../bucket/astraeus.json) — **Portable**: uses the official v2.2.3 single-file Windows executable; the published SHA-256 digest matches the release metadata and Scoop does not run an installer or register the application. On first launch, the optional start-with-Windows setup can copy the executable to `%LOCALAPPDATA%\\Programs\\Astraeus`, create a Start Menu shortcut, and register a current-user Run entry; decline that option to keep the Scoop-managed copy as the only installation. Preferences are stored under `HKCU\\Software\\Astraeus`, other user data under `%LOCALAPPDATA%\\Astraeus`, and the `astraeus.ini` configuration file is persisted by Scoop. The built-in updater remains enabled by default and can replace the executable independently of Scoop; set `AutoUpdate = false` in `astraeus.ini` to keep updates under Scoop control.
 - [`zapfast`](../bucket/zapfast.json) — **Portable**: uses the official Windows x64 and ARM64 ZIP distributions, without running either the MSI or setup EXE. The upstream release workflow packages `zapfast.exe`, `zapfast-portable.txt`, and the accompanying notices inside a versioned wrapper directory; the architecture-specific `extract_dir` values match those wrapper names. User configuration, encrypted archive/session data, and caches remain in the standard AppData locations outside Scoop. Portable builds register the current-user AppUserModelID for Windows notifications at runtime; Scoop does not execute a setup routine or register it. The app's independent portable updater remains enabled.
 - [`keptinflow`](../under%20review%20kirobucket/keptinflow.json) — **Review**: the official v0.88.0 Windows setup EXE has a SHA-256 digest published in GitHub Release metadata, but its installer engine, payload layout, supported silent switches, custom install-directory support, and portable mode are unverified. The manifest downloads the setup only and must remain Review until a safe Scoop installation or verified extraction method is established.
+- [`out-loud`](../under%20review%20kirobucket/out-loud.json) — **Review**: the official v2.1.2 Windows x64 release provides an NSIS setup EXE with a verified SHA-256 digest. Its custom NSIS install step silently installs the Microsoft Visual C++ 2015-2022 Redistributable required by `onnxruntime-node`; the application payload and a Scoop-contained launch method have not been verified. The manifest stages the setup only and must remain Review until extraction and runtime handling are tested.
 - [`taskslinger`](../under%20review%20kirobucket/taskslinger.json) — **Review**: the official 0.9.5 Windows x64 download is an EXE setup. The Microsoft winget manifest publishes its SHA-256, per-user scope, default installation path `%LocalAppData%\\Programs\\TaskSlinger`, and silent arguments, but does not establish a supported custom installation directory or portable payload extraction. The Scoop manifest therefore downloads the setup only and must remain Review until a Scoop-contained installation or verified extraction method is established.
 - [`v-notch`](../bucket/v-notch.json) — **Portable**: the manual extraction workflow verified the official NSIS setup's SHA-256 and extracted `V-Notch.exe` at the exact `$PLUGINSDIR/payload` path declared by `extract_dir`. The application targets .NET 8 and requires the .NET 8 Desktop Runtime separately; the vendor setup's runtime-install routine is not executed. The app's own updater remains unchanged.
 - [`wnotch`](../bucket/wnotch.json) — **Portable**: the manual extraction workflow verified the official setup's SHA-256, parsed its documented `NOTCHPAY` trailer, extracted the embedded ZIP, and confirmed `Notch.exe` at the payload root. Scoop's installer script performs the same payload extraction instead of running the vendor setup, so the vendor's uninstall/protocol/PATH/startup registrations are not created.
@@ -216,7 +217,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following nine manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
+The following ten manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -229,6 +230,7 @@ The following nine manifests are kept in [`under review kirobucket/`](../under%2
 | [taskslinger](../under%20review%20kirobucket/taskslinger.json) | EXE setup (engine unverified) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](../under%20review%20kirobucket/layer.json) | Tauri/NSIS setup EXE | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
 | [keptinflow](../under%20review%20kirobucket/keptinflow.json) | Windows setup EXE (engine unverified) | The official v0.88.0 setup's installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
+| [out-loud](../under%20review%20kirobucket/out-loud.json) | NSIS setup EXE | The installer runs a custom step that silently installs the Visual C++ 2015-2022 Redistributable; the application payload and a safe Scoop-contained launch method have not been verified. |
 ## Portable examples and important exceptions
 
 The following are examples of Portable manifest techniques in this bucket:
