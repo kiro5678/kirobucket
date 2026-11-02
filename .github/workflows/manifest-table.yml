@@ -386,6 +386,7 @@ jobs:
               "unigetuiglobal" = "Package Management"
               "vcardix" = "File Management"
               "vimera" = "Security"
+              "out-loud" = "Text-to-Speech (TTS)"
               "voicestudio" = "Text-to-Speech (TTS)"
               "vovsoft-clipboard-reader" = "Text-to-Speech (TTS)"
               "vovsoft-read-mode" = "Text-to-Speech (TTS)"
