@@ -29,7 +29,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **877** | Multiple package types | Current JSON files in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 850 of the 877 JSON manifests. The remaining 20 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The generated installer-type index below is a separate view and includes all 875 manifests.
+The explicit portability classifications currently cover 857 of the 877 JSON manifests. The remaining 20 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The generated installer-type index below is a separate view and includes all 877 manifests.
 
 ### Newly added manifest classifications
 - [`astraeus`](../bucket/astraeus.json) — **Portable**: uses the official v2.2.3 single-file Windows executable; the published SHA-256 digest matches the release metadata and Scoop does not run an installer or register the application. On first launch, the optional start-with-Windows setup can copy the executable to `%LOCALAPPDATA%\\Programs\\Astraeus`, create a Start Menu shortcut, and register a current-user Run entry; decline that option to keep the Scoop-managed copy as the only installation. Preferences are stored under `HKCU\\Software\\Astraeus`, other user data under `%LOCALAPPDATA%\\Astraeus`, and the `astraeus.ini` configuration file is persisted by Scoop. The built-in updater remains enabled by default and can replace the executable independently of Scoop; set `AutoUpdate = false` in `astraeus.ini` to keep updates under Scoop control.
