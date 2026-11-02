@@ -9,7 +9,7 @@
         "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
         "if (!(Test-Path \"$dir\\Edge-Drop.exe\" -PathType Leaf)) { throw 'Edge-Drop.exe was not extracted into the Scoop version directory.' }",
         "if (!(Test-Path \"$dir\\resources\\app.asar\" -PathType Leaf)) { throw 'resources\\app.asar was not extracted into the Scoop version directory.' }",
-        "if (!(Test-Path \"$dir\\startup\\EdgeDropStartup.exe\" -PathType Leaf)) { throw 'startup\\EdgeDropStartup.exe was not extracted into the Scoop version directory.' }",
+        "if (!(Test-Path \"$dir\\resources\\startup\\EdgeDropStartup.exe\" -PathType Leaf)) { throw 'resources\\startup\\EdgeDropStartup.exe was not extracted into the Scoop version directory.' }",
         "Remove-Item \"$dir\\`$*\", \"$dir\\Uninstall*\" -Force -Recurse -ErrorAction SilentlyContinue"
     ],
     "bin": "Edge-Drop.exe",
