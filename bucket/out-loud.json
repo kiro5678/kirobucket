@@ -29,11 +29,6 @@
             }
         }
     },
-    "notes": [
-        "The official NSIS setup runs silently with /S and installs into the Scoop version directory using /D=$dir. NSIS requires /D to be the final argument and the path must not be quoted.",
-        "The vendor setup's customInstall routine silently installs the Microsoft Visual C++ 2015-2022 Redistributable required by onnxruntime-node. This shared runtime is intentionally not removed during Scoop uninstall.",
-        "GitHub Actions run 41455667327 verified the release SHA-256 and extracted the NSIS payload with 7-Zip. The application files are inside the nested $PLUGINSDIR/app-64.7z archive; the Scoop manifest runs the official installer instead of using #/dl.7z."
-    ],
     "shortcuts": [
         [
             "Out Loud.exe",
