@@ -9,7 +9,13 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/light-cloud-com/out-loud/releases/download/v2.1.2/Out.Loud.Setup.2.1.2.exe",
-            "hash": "b40e61611b84f46458cdbdbb1c38495381b27f686d022a979ef038f1e7743518"
+            "hash": "b40e61611b84f46458cdbdbb1c38495381b27f686d022a979ef038f1e7743518",
+            "installer": {
+                "args": [
+                    "/S",
+                    "/D=$dir"
+                ]
+            }
         }
     },
     "checkver": {
@@ -24,8 +30,21 @@
         }
     },
     "notes": [
-        "Review status: the official v2.1.2 Windows x64 release provides an NSIS setup EXE. Its SHA-256 is pinned to the digest published in the GitHub Release metadata and on the official website.",
-        "The upstream NSIS customInstall routine extracts vc_redist.x64.exe and silently installs the Microsoft Visual C++ 2015-2022 Redistributable, which is required by onnxruntime-node. The release does not publish a separate Windows portable archive or a documented portable-mode switch.",
-        "Windows GitHub Actions run 41455667327 downloaded the official installer, verified its SHA-256, and successfully extracted the NSIS container with 7-Zip. The application is not directly at the NSIS extraction root: the installer contains $PLUGINSDIR/app-64.7z, whose second-stage extraction exposes Out Loud.exe. The outer payload also contains $PLUGINSDIR/vc_redist.x64.exe. Upstream build-resources/installer.nsh confirms that the vendor setup silently installs the Microsoft Visual C++ 2015-2022 Redistributable because onnxruntime-node requires it. This manifest remains under review: a Scoop post_install second-stage extraction, cleanup, launch/shim/shortcut, persistence behavior, and safe runtime dependency handling still need implementation and validation."
-    ]
+        "Installation uses the official NSIS setup in silent mode with /S and directs it to the Scoop version directory with /D=$dir. NSIS requires /D to be the final argument and the path must not be quoted.",
+        "The upstream NSIS customInstall routine extracts vc_redist.x64.exe and silently installs the Microsoft Visual C++ 2015-2022 Redistributable required by onnxruntime-node. This is a real vendor installation step and may require elevation; the runtime is not removed during Scoop uninstall because it is shared by other applications.",
+        "The Windows GitHub Actions extraction test (run 41455667327) verified the setup SHA-256 and confirmed the app payload is packaged inside $PLUGINSDIR/app-64.7z. This manifest now uses the vendor installer rather than archive extraction. Keep it under review until the silent install path and uninstaller have been exercised through Scoop on a clean Windows runner."
+    ],
+    "shortcuts": [
+        [
+            "Out Loud.exe",
+            "Out Loud"
+        ]
+    ],
+    "uninstaller": {
+        "script": [
+            "if (Test-Path \"$dir\\Uninstall Out Loud.exe\") {",
+            "    Start-Process -FilePath \"$dir\\Uninstall Out Loud.exe\" -ArgumentList @('/S', \"_?=$dir\") -Wait",
+            "}"
+        ]
+    }
 }
