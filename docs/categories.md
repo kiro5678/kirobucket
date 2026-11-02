@@ -2,13 +2,15 @@
 
 This document lists every JSON manifest in `bucket/`, grouped by its primary functional category. Publisher suites are cross-lists by developer/vendor; their entries also remain in their functional categories.
 
+Speech-to-Text (STT) covers automatic speech recognition and audio transcription. Text-to-Speech (TTS) covers speech synthesis, narration, and read-aloud tools. Multi-purpose apps are assigned to their primary category.
+
 ## Category Index
 
 | Category | Manifests | Link |
 | --- | ---: | --- |
 | Android & Device Tools | 9 | [View](#android-device-tools) |
 | Browsers & Communication | 9 | [View](#browsers-communication) |
-| Clipboard & Text | 33 | [View](#clipboard-text) |
+| Clipboard & Text | 32 | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
 | Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
@@ -17,20 +19,22 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 53 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
-| Media & Audio/Video | 51 | [View](#media-audio-video) |
+| Media & Audio/Video | 47 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
 | Notch | 27 | [View](#notch) |
-| Notes & Knowledge | 20 | [View](#notes-knowledge) |
+| Notes & Knowledge | 19 | [View](#notes-knowledge) |
 | Other Utilities | 3 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
+| Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 75 | [View](#system-monitoring-hardware) |
+| Text-to-Speech (TTS) | 5 | [View](#text-to-speech-tts) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
-| Translation & OCR | 13 | [View](#translation-ocr) |
+| Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 94 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
@@ -115,7 +119,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [skyeclip](../bucket/skyeclip.json) | 1.4 | 6.2 MiB | 2026-09-27 | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. | [Homepage](https://github.com/YodeSkye/SkyeClip) |
 | [smart-clipboard](../bucket/smart-clipboard.json) | 1.3.2 | 30.3 MiB | 2026-09-15 | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection | [Homepage](https://github.com/ezeiq7/Smart-Clipboard) |
 | [tiez-clipboard](../bucket/tiez-clipboard.json) | 0.3.3 | 5.7 MiB | 2026-04-11 | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. | [Homepage](https://github.com/jimuzhe/tiez-clipboard) |
-| [vovsoft-clipboard-reader](../bucket/vovsoft-clipboard-reader.json) | 1.4 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Clipboard Reader. | [Homepage](https://vovsoft.com/software/clipboard-reader/) |
 | [vovsoft-collect-url](../bucket/vovsoft-collect-url.json) | 4.2 | 3.0 MiB | 2026-08-13 | Portable edition of Vovsoft Collect URL. | [Homepage](https://vovsoft.com/software/collect-url/) |
 | [vovsoft-compare-two-texts](../bucket/vovsoft-compare-two-texts.json) | 1.5 | 3.4 MiB | 2026-09-24 | Portable edition of Vovsoft Compare Two Texts. | [Homepage](https://vovsoft.com/software/compare-two-texts/) |
 | [vovsoft-keyword-combiner](../bucket/vovsoft-keyword-combiner.json) | 1.2 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Keyword Combiner. | [Homepage](https://vovsoft.com/software/keyword-combiner/) |
@@ -450,7 +453,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [fig](../bucket/fig.json) | 1.0.1 | 64bit: 107.4 MiB | 2026-10-19 | Open-source non-linear video editor with a timeline, effects and keyframes. | [Homepage](https://github.com/Skynse/Fig) |
 | [funk-ssd](../bucket/funk-ssd.json) | 4 | 535.3 KiB | 2025-06-25 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | 64bit: 75.6 MiB / arm64: 67.1 MiB | 2026-10-12 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
-| [handy](../bucket/handy.json) | 0.9.8 | 64bit: 18.7 MiB / arm64: 12.8 MiB | 2026-10-03 | Offline speech-to-text desktop app with local Whisper and Parakeet transcription. | [Homepage](https://handy.computer/) |
 | [haruna](../bucket/haruna.json) | 1944 | 64bit: 108.1 MiB | 2026-05-19 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
 | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 20.1.0 | — | 2026-10-18 | Mega variant of the K-Lite Codec Pack, a collection of DirectShow filters, VFW/ACM codecs and tools. | [Homepage](https://codecguide.com/about_kl.htm) |
 | [lauschangriff](../bucket/lauschangriff.json) | 2.51 | 64bit: 141.0 KiB | 2021-05-15 | Portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) |
@@ -467,9 +469,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sukut](../bucket/sukut.json) | 0.2.33 | 56.8 MiB | 2026-10-20 | Windows x64 audio utility that filters music from app audio to focus on speech. | [Homepage](https://github.com/altarafiya/Sukut) |
 | [ventic](../bucket/ventic.json) | 0.5.0 | 71.3 MiB | 2026-08-28 | A media library and BitTorrent player for the desktop and Android TV. | [Homepage](https://github.com/ventic/ventic) |
 | [video2x](../bucket/video2x.json) | 6.4.0 | 64bit: 217.0 MiB | 2025-01-24 | A Machine learning-based lossless video super resolution framework | [Homepage](https://github.com/k4yt3x/video2x) |
-| [voicestudio](../bucket/voicestudio.json) | 0.5.6 | 64bit: 204.5 MiB | 2026-09-23 | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. | [Homepage](https://voicestudio.sh) |
 | [volumey](../bucket/volumey.json) | 1.5.4.0 | 64bit: 49.3 MiB | 2026-10-31 | Volume mixer with global hotkeys for controlling Windows audio. | [Homepage](https://github.com/G-Stas/Volumey) |
-| [vovsoft-audio-to-lyrics-converter](../bucket/vovsoft-audio-to-lyrics-converter.json) | 1.5 | 146.0 MiB | 2026-08-29 | Portable edition of Vovsoft Audio to Lyrics Converter. | [Homepage](https://vovsoft.com/software/audio-to-lyrics-converter/) |
 | [vovsoft-batch-audio-converter](../bucket/vovsoft-batch-audio-converter.json) | 2.1 | 19.7 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Audio Converter. | [Homepage](https://vovsoft.com/software/batch-audio-converter/) |
 | [vovsoft-batch-video-upscaler](../bucket/vovsoft-batch-video-upscaler.json) | 1.2 | 33.1 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Video Upscaler. | [Homepage](https://vovsoft.com/software/batch-video-upscaler/) |
 | [vovsoft-convert-video-to-audio](../bucket/vovsoft-convert-video-to-audio.json) | 2.4 | 19.5 MiB | 2026-08-13 | Portable edition of Vovsoft Convert Video to Audio. | [Homepage](https://vovsoft.com/software/convert-video-to-audio/) |
@@ -480,7 +480,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-silence-remover](../bucket/vovsoft-silence-remover.json) | 1.4 | 50.4 MiB | 2026-08-13 | Portable edition of Vovsoft Silence Remover. | [Homepage](https://vovsoft.com/software/silence-remover/) |
 | [vovsoft-sound-recorder](../bucket/vovsoft-sound-recorder.json) | 3.3 | 19.6 MiB | 2026-08-13 | Portable edition of Vovsoft Sound Recorder. | [Homepage](https://vovsoft.com/software/sound-recorder/) |
 | [vovsoft-subtitle-renamer](../bucket/vovsoft-subtitle-renamer.json) | 1.7 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Renamer. | [Homepage](https://vovsoft.com/software/subtitle-renamer/) |
-| [vovsoft-text-to-mp3-converter](../bucket/vovsoft-text-to-mp3-converter.json) | 4.7 | 23.4 MiB | 2026-10-04 | Portable edition of Vovsoft Text to MP3 Converter. | [Homepage](https://vovsoft.com/software/text-to-mp3-converter/) |
 | [vovsoft-video-manager](../bucket/vovsoft-video-manager.json) | 1.2 | 26.7 MiB | 2026-08-13 | Portable edition of Vovsoft Video Manager. | [Homepage](https://vovsoft.com/software/video-manager/) |
 | [vovsoft-video-to-photos](../bucket/vovsoft-video-to-photos.json) | 1.6 | 51.1 MiB | 2026-08-13 | Portable edition of Vovsoft Video to Photos. | [Homepage](https://vovsoft.com/software/video-to-photos/) |
 | [vovsoft-vocal-and-instrumental-splitter](../bucket/vovsoft-vocal-and-instrumental-splitter.json) | 1.0 | 91.8 MiB | 2026-09-19 | Portable edition of Vovsoft Vocal and Instrumental Splitter. | [Homepage](https://vovsoft.com/software/vocal-and-instrumental-splitter/) |
@@ -600,7 +599,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [short-door-note](../bucket/short-door-note.json) | 4.18 | 64bit: 338.4 KiB | 2026-03-08 | Create short notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=ShortDoorNote) |
 | [siyuan](../bucket/siyuan.json) | 3.8.8 | 64bit: 227.3 MiB / arm64: 192.6 MiB | 2026-10-29 | Personal knowledge management and note-taking software. | [Homepage](https://github.com/siyuan-note/siyuan) |
 | [tiro-notes](../bucket/tiro-notes.json) | 0.30.3 | 87.6 MiB | 2022-06-05 | Open-source, cross-platform Markdown note-taking app. | [Homepage](https://github.com/dotgreg/tiro-notes) |
-| [vovsoft-read-mode](../bucket/vovsoft-read-mode.json) | 2.7 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Read Mode. | [Homepage](https://vovsoft.com/software/read-mode/) |
 | [vovsoft-vov-sticky-notes](../bucket/vovsoft-vov-sticky-notes.json) | 11.1 | 6.9 MiB | 2026-10-16 | Portable edition of Vovsoft Vov Sticky Notes. | [Homepage](https://vovsoft.com/software/vov-sticky-notes/) |
 | [zinc](../bucket/zinc.json) | 2.0.1 | 37.2 MiB | 2026-10-23 | Offline-first notes app with local Wi-Fi sync between desktop and mobile. | [Homepage](https://zincnotes.com/) |
 | [znote](../bucket/znote.json) | 4.9.3 | 64bit: 224.9 MiB | 2026-09-14 | Markdown-based note-taking app for developers. | [Homepage](https://github.com/alagrede/znote-app) |
@@ -750,6 +748,16 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-password-generator](../bucket/vovsoft-password-generator.json) | 2.2 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Password Generator. | [Homepage](https://vovsoft.com/software/password-generator/) |
 | [yamira](../bucket/yamira.json) | 26.11 | 667.5 KiB | 2026-10-10 | USB drive protection tool for Windows. | [Homepage](https://github.com/turkaysoft/yamira) |
 
+## Speech-to-Text (STT)
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [handy](../bucket/handy.json) | 0.9.8 | 64bit: 18.7 MiB / arm64: 12.8 MiB | 2026-10-03 | Offline speech-to-text desktop app with local Whisper and Parakeet transcription. | [Homepage](https://handy.computer/) |
+| [one-asr](../bucket/one-asr.json) | 1.4.0 | 83.5 MiB | 2026-11-02 | 本地 · 离线 · 批量音视频 → SRT 字幕 | [Homepage](https://github.com/eclipse005/OneAsr) |
+| [vovsoft-audio-to-lyrics-converter](../bucket/vovsoft-audio-to-lyrics-converter.json) | 1.5 | 146.0 MiB | 2026-08-29 | Portable edition of Vovsoft Audio to Lyrics Converter. | [Homepage](https://vovsoft.com/software/audio-to-lyrics-converter/) |
+| [vovsoft-speech-to-subtitle-converter](../bucket/vovsoft-speech-to-subtitle-converter.json) | 2.5 | 166.6 MiB | 2026-09-20 | Portable edition of Vovsoft Speech to Subtitle Converter. | [Homepage](https://vovsoft.com/software/speech-to-subtitle-converter/) |
+| [vovsoft-speech-to-text-converter](../bucket/vovsoft-speech-to-text-converter.json) | 6.0 | 255.1 MiB | 2026-10-07 | Portable edition of Vovsoft Speech to Text Converter. | [Homepage](https://vovsoft.com/software/speech-to-text-converter/) |
+
 ## Storage & Disk Tools
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
@@ -878,6 +886,16 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-vov-system-uptime](../bucket/vovsoft-vov-system-uptime.json) | 1.8 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Vov System Uptime. | [Homepage](https://vovsoft.com/software/vov-system-uptime/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 
+## Text-to-Speech (TTS)
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [voicestudio](../bucket/voicestudio.json) | 0.5.7 | 64bit: 212.0 MiB | 2026-10-26 | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. | [Homepage](https://voicestudio.sh) |
+| [vovsoft-clipboard-reader](../bucket/vovsoft-clipboard-reader.json) | 1.4 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Clipboard Reader. | [Homepage](https://vovsoft.com/software/clipboard-reader/) |
+| [vovsoft-read-mode](../bucket/vovsoft-read-mode.json) | 2.7 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Read Mode. | [Homepage](https://vovsoft.com/software/read-mode/) |
+| [vovsoft-screen-reader](../bucket/vovsoft-screen-reader.json) | 1.5 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Screen Reader. | [Homepage](https://vovsoft.com/software/screen-reader/) |
+| [vovsoft-text-to-mp3-converter](../bucket/vovsoft-text-to-mp3-converter.json) | 4.7 | 23.4 MiB | 2026-10-04 | Portable edition of Vovsoft Text to MP3 Converter. | [Homepage](https://vovsoft.com/software/text-to-mp3-converter/) |
+
 ## Time Tracking & Focus
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
@@ -905,14 +923,10 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [crow-translate](../bucket/crow-translate.json) | 4.1.0 | 64bit: 34.6 MiB | 2024-10-24 | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. | [Homepage](https://apps.kde.org/crowtranslate) |
 | [dpscreenocr](../bucket/dpscreenocr.json) | 1.5.1 | 10.8 MiB | 2026-10-29 | A free and open-source program to recognize text on the screen. | [Homepage](https://danpla.github.io/dpscreenocr/) |
 | [MORT](../bucket/MORT.json) | 1.320 | 64bit: 98.7 MiB | 2026-09-11 | Real-time game translator with OCR and machine translation. | [Homepage](https://github.com/kmonkeyhead/MORT) |
-| [one-asr](../bucket/one-asr.json) | 1.3.0 | 82.0 MiB | 2026-10-15 | 本地 · 离线 · 批量音视频 → SRT 字幕 | [Homepage](https://github.com/eclipse005/OneAsr) |
 | [rstgametranslation](../bucket/rstgametranslation.json) | 6.1 | 64bit: 309.9 MiB | 2026-10-22 | Real-time game screen OCR and translation tool. | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) |
 | [translumo](../bucket/translumo.json) | 1.1.0 | 410.1 MiB | 2026-09-22 | Advanced real-time screen translator. | [Homepage](https://github.com/ramjke/Translumo) |
 | [vovsoft-batch-translator](../bucket/vovsoft-batch-translator.json) | 5.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Translator. | [Homepage](https://vovsoft.com/software/batch-translator/) |
 | [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | 4.3 | 44.3 MiB | 2026-09-09 | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
-| [vovsoft-screen-reader](../bucket/vovsoft-screen-reader.json) | 1.5 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Screen Reader. | [Homepage](https://vovsoft.com/software/screen-reader/) |
-| [vovsoft-speech-to-subtitle-converter](../bucket/vovsoft-speech-to-subtitle-converter.json) | 2.5 | 166.6 MiB | 2026-09-20 | Portable edition of Vovsoft Speech to Subtitle Converter. | [Homepage](https://vovsoft.com/software/speech-to-subtitle-converter/) |
-| [vovsoft-speech-to-text-converter](../bucket/vovsoft-speech-to-text-converter.json) | 6.0 | 255.1 MiB | 2026-10-07 | Portable edition of Vovsoft Speech to Text Converter. | [Homepage](https://vovsoft.com/software/speech-to-text-converter/) |
 | [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
 
 ## Weather & Information
