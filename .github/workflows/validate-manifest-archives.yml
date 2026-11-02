@@ -1,6 +1,11 @@
 name: Validate manifest archives
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/edge-drop.json'
   workflow_dispatch:
     inputs:
       manifest:
@@ -30,7 +35,7 @@ jobs:
         id: archive_validation
         shell: pwsh
         env:
-          BASE_SHA: ${{ github.event.client_payload.base_sha || '' }}
+          BASE_SHA: ${{ github.event.before || github.event.client_payload.base_sha || '' }}
           MANIFEST_INPUT: ${{ inputs.manifest || '' }}
         run: |
           $ErrorActionPreference = 'Stop'
