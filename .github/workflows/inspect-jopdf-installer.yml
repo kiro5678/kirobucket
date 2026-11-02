@@ -142,7 +142,170 @@ jobs:
               signerSubject = if ($payloadMainSignature.SignerCertificate) { $payloadMainSignature.SignerCertificate.Subject } else { $null }
             }
           }
-          $report.extractedExecutables = @($payloadFiles | Where-Object { $_.relativePath -match '\.exe$' } | Select-Object relativePath, length, companyName, productName, productVersion, signatureStatus, signerSubject)
+          $report.extractedExecutables = @($payloadFiles | Where-Object { $_.relativePath -match '\.exe          if ($report.installerType -eq 'Inno Setup') {
+            $report.installTest.attempted = $true
+            New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+            $logPath = Join-Path $root 'inno-install.log'
+            $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', ('/DIR="{0}"' -f $installDir), ('/LOG="{0}"' -f $logPath)) -join ' '
+            $process = Start-Process -FilePath $setup -ArgumentList $arguments -PassThru
+            try {
+              Wait-Process -Id $process.Id -Timeout 180 -ErrorAction Stop
+              $process.Refresh()
+              $report.installTest.exitCode = $process.ExitCode
+            } catch {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+              $report.installTest.timedOut = $true
+              $report.installTest.timeoutNote = 'The silent installer did not exit within 180 seconds; it was terminated on the disposable GitHub-hosted runner.'
+            }
+            $report.installTest.targetDirectory = $installDir
+            $report.installTest.targetDirectoryExists = Test-Path -LiteralPath $installDir
+
+            if (Test-Path -LiteralPath $installDir) {
+              $installed = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+                $f = $_
+                $v = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($f.FullName)
+                [pscustomobject]@{
+                  relativePath = $f.FullName.Substring($installDir.Length).TrimStart('\')
+                  length = $f.Length
+                  productName = $v.ProductName
+                  productVersion = $v.ProductVersion
+                  companyName = $v.CompanyName
+                }
+              })
+              $installed | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root 'installed-files.json') -Encoding UTF8
+              $report.installTest.installedFileCount = $installed.Count
+              $report.installTest.mainExecutables = @($installed | Where-Object { $_.relativePath -match '(^|\\)JOPDF\.exe$' })
+
+              $uninstallMatches = @()
+              $registryPaths = @(
+                'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+                'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+                'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*'
+              )
+              foreach ($registryPath in $registryPaths) {
+                $uninstallMatches += Get-ItemProperty -Path $registryPath -ErrorAction SilentlyContinue |
+                  Where-Object { $_.DisplayName -match 'JOPDF' } |
+                  Select-Object DisplayName, DisplayVersion, Publisher, InstallLocation, UninstallString, QuietUninstallString
+              }
+              $report.installTest.uninstallRegistry = @($uninstallMatches)
+
+              $shortcutPaths = @(
+                [Environment]::GetFolderPath('StartMenu'),
+                [Environment]::GetFolderPath('CommonStartMenu'),
+                [Environment]::GetFolderPath('Desktop'),
+                [Environment]::GetFolderPath('CommonDesktop')
+              ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -Unique
+              $shortcuts = foreach ($shortcutPath in $shortcutPaths) {
+                Get-ChildItem -LiteralPath $shortcutPath -Filter '*.lnk' -Recurse -ErrorAction SilentlyContinue |
+                  Where-Object { $_.Name -match 'JOPDF' } |
+                  Select-Object FullName
+              }
+              $report.installTest.shortcuts = @($shortcuts)
+
+              $app = Get-ChildItem -LiteralPath $installDir -Filter 'JOPDF.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+              if ($app) {
+                $report.installTest.mainExecutable = $app.FullName
+                try {
+                  $appProcess = Start-Process -FilePath $app.FullName -PassThru
+                  Start-Sleep -Seconds 8
+                  $appProcess.Refresh()
+                  $report.installTest.launchStarted = $true
+                  $mainVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($app.FullName)
+                  $mainSignature = Get-AuthenticodeSignature -FilePath $app.FullName
+                  $report.installTest.mainExecutableEvidence = [ordered]@{
+                    sha256 = (Get-FileHash -LiteralPath $app.FullName -Algorithm SHA256).Hash
+                    productVersion = $mainVersion.ProductVersion
+                    fileVersion = $mainVersion.FileVersion
+                    companyName = $mainVersion.CompanyName
+                    signatureStatus = [string]$mainSignature.Status
+                    signerSubject = if ($mainSignature.SignerCertificate) { $mainSignature.SignerCertificate.Subject } else { $null }
+                  }
+                  $report.installTest.processStillRunningAfter8s = (-not $appProcess.HasExited)
+                  if (-not $appProcess.HasExited) { Stop-Process -Id $appProcess.Id -Force -ErrorAction SilentlyContinue }
+                } catch {
+                  $report.installTest.launchError = $_.Exception.Message
+                }
+              } else {
+                $report.installTest.mainExecutable = 'JOPDF.exe not found under target directory'
+              }
+            }
+          } else {
+            $report.installTest.reason = 'The installer type was not positively identified as Inno Setup; the setup executable was not run.'
+          }
+
+          $report | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath (Join-Path $root 'report.json') -Encoding UTF8
+          Write-Host '===== JOPDF INSPECTION SUMMARY ====='
+          Get-Content -LiteralPath (Join-Path $root 'report.json') -Raw
+          Write-Host '===== PAYLOAD INVENTORY (first 150 lines) ====='
+          if (Test-Path -LiteralPath (Join-Path $root 'installer-list.txt')) {
+            Get-Content -LiteralPath (Join-Path $root 'installer-list.txt') -TotalCount 150
+          }
+
+      - name: Upload inspection report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jopdf-installer-inspection
+          path: jopdf-inspection/
+          if-no-files-found: warn
+          retention-days: 14
+ } | Select-Object relativePath, length, companyName, productName, productVersion, signatureStatus, signerSubject)
+
+          # Test the same Inno Setup unpacker currently declared by Scoop's Main bucket.
+          $innounpZip = Join-Path $root 'innounp-2.zip'
+          $innounpUrl = 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/refs/heads/master/innounp-2/bin/innounp-2.zip'
+          $innounpHash = 'F8E45C9676BEBC7D7570108AB572673B541FCF7A7D3D24A04319AC6B5315B4E8'
+          Invoke-WebRequest -Uri $innounpUrl -OutFile $innounpZip -Headers $headers -TimeoutSec 180
+          $actualHelperHash = (Get-FileHash -LiteralPath $innounpZip -Algorithm SHA256).Hash
+          $report.scoopInnounp = [ordered]@{
+            version = '2.71.3'
+            url = $innounpUrl
+            expectedSha256 = $innounpHash
+            actualSha256 = $actualHelperHash
+            hashMatches = ($actualHelperHash -eq $innounpHash)
+          }
+          if ($actualHelperHash -ne $innounpHash) { throw 'Downloaded Scoop innounp helper hash does not match Scoop Main manifest.' }
+
+          $innounpDir = Join-Path $root 'innounp-helper'
+          $innounpPayload = Join-Path $root 'innounp-payload'
+          New-Item -ItemType Directory -Path $innounpDir, $innounpPayload -Force | Out-Null
+          & $sevenZip x $innounpZip "-o$innounpDir" -y 2>&1 | Out-File -LiteralPath (Join-Path $root 'innounp-helper-extract.log') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw 'Could not extract the Scoop innounp helper ZIP.' }
+          $innounp = Get-ChildItem -LiteralPath $innounpDir -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+          if (-not $innounp) { throw 'innounp.exe was not found in the helper archive.' }
+
+          & $innounp.FullName -v -m $setup 2>&1 | Out-File -LiteralPath (Join-Path $root 'innounp-list.txt') -Encoding utf8
+          $report.scoopInnounp.listExitCode = $LASTEXITCODE
+          & $innounp.FullName -x "-d$innounpPayload" $setup '-c{app}' -y 2>&1 | Out-File -LiteralPath (Join-Path $root 'innounp-extract.log') -Encoding utf8
+          $report.scoopInnounp.extractExitCode = $LASTEXITCODE
+          $innounpFiles = @(Get-ChildItem -LiteralPath $innounpPayload -File -Recurse -ErrorAction SilentlyContinue)
+          $report.scoopInnounp.fileCount = $innounpFiles.Count
+          $report.scoopInnounp.mainExecutables = @($innounpFiles | Where-Object { $_.Name -eq 'JOPDF.exe' } | ForEach-Object {
+            $v = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName)
+            $s = Get-AuthenticodeSignature -FilePath $_.FullName
+            [ordered]@{
+              relativePath = $_.FullName.Substring($innounpPayload.Length).TrimStart('\')
+              length = $_.Length
+              sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
+              productVersion = $v.ProductVersion
+              fileVersion = $v.FileVersion
+              companyName = $v.CompanyName
+              signatureStatus = [string]$s.Status
+              signerSubject = if ($s.SignerCertificate) { $s.SignerCertificate.Subject } else { $null }
+            }
+          })
+          $innounpFiles | ForEach-Object {
+            [pscustomobject]@{
+              relativePath = $_.FullName.Substring($innounpPayload.Length).TrimStart('\')
+              length = $_.Length
+            }
+          } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root 'innounp-files.json') -Encoding UTF8
+
+          if ($report.installerType -eq 'Inno Setup' -and $report.scoopInnounp.extractExitCode -eq 0 -and $report.scoopInnounp.mainExecutables.Count -gt 0) {
+            $report.extractionMethod = 'Scoop innosetup:true (innounp helper 2.71.3)'
+          } else {
+            $report.extractionMethod = 'Scoop innounp extraction not verified'
+          }
 
           if ($report.installerType -eq 'Inno Setup') {
             $report.installTest.attempted = $true
