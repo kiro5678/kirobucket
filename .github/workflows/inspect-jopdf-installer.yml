@@ -204,6 +204,34 @@ jobs:
             $report.extractionMethod = 'Scoop innounp extraction not verified'
           }
 
+          $report.extractedLaunchTest = [ordered]@{ attempted = $false }
+          $extractedApp = Join-Path $innounpPayload 'JOPDF.exe'
+          if (Test-Path -LiteralPath $extractedApp -PathType Leaf) {
+            $report.extractedLaunchTest.attempted = $true
+            $launchStartedAt = Get-Date
+            try {
+              $appProcess = Start-Process -FilePath $extractedApp -WorkingDirectory $innounpPayload -PassThru
+              Start-Sleep -Seconds 10
+              $appProcess.Refresh()
+              $report.extractedLaunchTest.processId = $appProcess.Id
+              $report.extractedLaunchTest.processStillRunningAfter10s = (-not $appProcess.HasExited)
+              if ($appProcess.HasExited) {
+                $report.extractedLaunchTest.exitCode = $appProcess.ExitCode
+              } else {
+                $report.extractedLaunchTest.windowTitle = (Get-Process -Id $appProcess.Id -ErrorAction SilentlyContinue).MainWindowTitle
+                Stop-Process -Id $appProcess.Id -Force -ErrorAction SilentlyContinue
+              }
+            } catch {
+              $report.extractedLaunchTest.error = $_.Exception.Message
+            }
+            $appEvents = @(Get-WinEvent -FilterHashtable @{ LogName = 'Application'; StartTime = $launchStartedAt.AddSeconds(-2) } -ErrorAction SilentlyContinue |
+              Where-Object { $_.ProviderName -in 'Application Error', 'Windows Error Reporting', '.NET Runtime' } |
+              Select-Object -First 10 TimeCreated, ProviderName, Id, LevelDisplayName, Message)
+            $report.extractedLaunchTest.applicationEvents = $appEvents
+          } else {
+            $report.extractedLaunchTest.reason = 'JOPDF.exe was not found at the extracted application root.'
+          }
+
 
           if ($report.installerType -eq 'Inno Setup') {
             $report.installTest.attempted = $true
@@ -212,13 +240,13 @@ jobs:
             $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', ('/DIR="{0}"' -f $installDir), ('/LOG="{0}"' -f $logPath)) -join ' '
             $process = Start-Process -FilePath $setup -ArgumentList $arguments -PassThru
             try {
-              Wait-Process -Id $process.Id -Timeout 180 -ErrorAction Stop
+              Wait-Process -Id $process.Id -Timeout 45 -ErrorAction Stop
               $process.Refresh()
               $report.installTest.exitCode = $process.ExitCode
             } catch {
               Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
               $report.installTest.timedOut = $true
-              $report.installTest.timeoutNote = 'The silent installer did not exit within 180 seconds; it was terminated on the disposable GitHub-hosted runner.'
+              $report.installTest.timeoutNote = 'The silent installer did not exit within 45 seconds; it was terminated on the disposable GitHub-hosted runner.'
             }
             $report.installTest.targetDirectory = $installDir
             $report.installTest.targetDirectoryExists = Test-Path -LiteralPath $installDir
