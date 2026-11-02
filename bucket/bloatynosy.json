@@ -1,19 +1,19 @@
 {
-    "version": "1.0.20.522",
+    "version": "1.02.142",
     "description": "Universal debloater and PC manager for Windows 11",
     "homepage": "https://github.com/builtbybel/BloatyNosy",
     "license": "MIT",
-    "url": "https://github.com/builtbybel/Bloatynosy/releases/download/1.0.20.522/Bloatynosy.zip",
-    "hash": "afb079b1b556970e841d9b2685793bd553cd8a9666cc87b339b508d816c05a2c",
-    "bin": "BloatyNosy.exe",
+    "url": "https://github.com/builtbybel/Bloatynosy/releases/download/1.02.142/Bloatynosy-1.02.142.zip",
+    "hash": "8abbd47d5049a67aece062b1d28f1904e9264e93cfc210f407ed46c120792f8e",
+    "bin": "Bloatynosy.exe",
     "shortcuts": [
         [
-            "BloatyNosy.exe",
-            "BloatyNosy"
+            "Bloatynosy.exe",
+            "Bloatynosy"
         ]
     ],
     "checkver": "github",
     "autoupdate": {
-        "url": "https://github.com/builtbybel/Bloatynosy/releases/download/$version/Bloatynosy.zip"
+        "url": "https://github.com/builtbybel/Bloatynosy/releases/download/$version/Bloatynosy-$version.zip"
     }
 }

@@ -77,6 +77,7 @@ jobs:
             $ansiPattern = [string][char]27 + '\[[0-?]*[ -/]*[@-~]'
             $manifestFailures = @{}
             $rateLimitFailures = @{}
+            $transientNetworkFailures = [System.Collections.Generic.List[string]]::new()
             $globalFailures = [System.Collections.Generic.List[string]]::new()
 
             foreach ($rawLine in ($rawLogs -split '\r?\n')) {
@@ -87,7 +88,7 @@ jobs:
               if ($line -match '^\s*(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*):\s*(?<message>.*)$') {
                 $name = $Matches.name
                 $message = $Matches.message
-                if ($message -match "(?i)couldn't\s+(?:match|find|retrieve)|The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|No such host is known|checkver expects|could not retrieve content|URL https?://\S+ is not valid") {
+                if ($message -match "(?i)couldn't\s+(?:match|find|retrieve)|The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|checkver expects|could not retrieve content|URL https?://\S+ is not valid") {
                   if (-not $manifestFailures.ContainsKey($name)) {
                     $manifestFailures[$name] = [System.Collections.Generic.List[string]]::new()
                   }
@@ -95,6 +96,8 @@ jobs:
                   if ($message -match '(?i)API rate limit exceeded|secondary rate limit|\((?:403|429)\)') {
                     $rateLimitFailures[$name] = $true
                   }
+                } elseif ($message -match '(?i)No such host is known|Name or service not known|Temporary failure in name resolution|The remote name could not be resolved|DNS name does not exist') {
+                  $transientNetworkFailures.Add("$($name): $message")
                 }
               } elseif ($line -match '(?i)^\s*ERROR\s+Could not update\s+(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*)') {
                 $name = $Matches.name
@@ -114,6 +117,7 @@ jobs:
             $reportLines.Add("Excavate job result: $env:EXCAVATE_RESULT")
             $reportLines.Add("Unique manifests with checkver/autoupdate errors: $($failedNames.Count)")
             $reportLines.Add("Manifests with HTTP 403/429 or rate-limit responses: $($rateLimitedNames.Count)")
+            $reportLines.Add("Transient DNS/network warnings: $($transientNetworkFailures.Count)")
             $reportLines.Add("Additional global ERROR lines: $($globalFailures.Count)")
             $reportLines.Add('')
 
@@ -131,6 +135,11 @@ jobs:
               $reportLines.Add('Global errors:')
               foreach ($failure in $globalFailures) { $reportLines.Add("- $failure") }
             }
+            if ($transientNetworkFailures.Count -gt 0) {
+              $reportLines.Add('')
+              $reportLines.Add('Transient DNS/network warnings:')
+              foreach ($warning in $transientNetworkFailures) { $reportLines.Add("- $warning") }
+            }
             if ($failedNames.Count -eq 0 -and $globalFailures.Count -eq 0) {
               $reportLines.Add('No manifest checkver/autoupdate errors were found in the completed job log.')
             }
@@ -144,6 +153,10 @@ jobs:
                 Write-Output "::warning title=Manifest check failed::$annotationMessage"
               }
             }
+            foreach ($warning in $transientNetworkFailures) {
+              $annotationMessage = $warning.Replace('%', '%25').Replace([string][char]13, '%0D').Replace([string][char]10, '%0A')
+              Write-Output "::warning title=Transient network issue::$annotationMessage"
+            }
             foreach ($failure in $globalFailures) {
               $annotationMessage = $failure.Replace('%', '%25').Replace([string][char]13, '%0D').Replace([string][char]10, '%0A')
               Write-Output "::error title=Excavator global error::$annotationMessage"
@@ -154,6 +167,7 @@ jobs:
               "- Excavate job result: $env:EXCAVATE_RESULT",
               "- Unique manifests with errors: $($failedNames.Count)",
               "- Manifests with HTTP 403/429 or rate-limit responses: $($rateLimitedNames.Count)",
+              "- Transient DNS/network warnings: $($transientNetworkFailures.Count)",
               "- Additional global errors: $($globalFailures.Count)"
             )
             if ($failedNames.Count -gt 0) {
@@ -165,6 +179,11 @@ jobs:
               $summary += ''
               $summary += '### Global errors'
               foreach ($failure in $globalFailures) { $summary += "- $failure" }
+            }
+            if ($transientNetworkFailures.Count -gt 0) {
+              $summary += ''
+              $summary += '### Transient DNS/network warnings'
+              foreach ($warning in $transientNetworkFailures) { $summary += "- $warning" }
             }
             Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($summary -join [Environment]::NewLine)
 

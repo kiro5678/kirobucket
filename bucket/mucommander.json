@@ -28,8 +28,7 @@
         ".mucommander"
     ],
     "checkver": {
-        "github": "https://github.com/mucommander/mucommander",
-        "regex": "tag/([\\d.-]+)"
+        "github": "https://github.com/mucommander/mucommander"
     },
     "autoupdate": {
         "architecture": {
