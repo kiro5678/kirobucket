@@ -122,6 +122,7 @@ jobs:
               "diskgeek" = "Storage & Disk Tools"
               "dlives" = "Notch"
               "dlman" = "Download Managers"
+              "downloadorganizer" = "File Management"
               "dnschanger" = "Network & DNS"
               "dnschanger-msi" = "Network & DNS"
               "doublecmd" = "File Management"
@@ -495,6 +496,7 @@ jobs:
               "myisland" = "Notch"
               "nook-agent" = "Notch"
               "windows-notch-overlay" = "Notch"
+              "winlestia" = "Windows Customization"
           }
 
           function ConvertTo-DateOnly {
