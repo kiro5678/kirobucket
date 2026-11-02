@@ -1,0 +1,21 @@
+{
+    "version": "2.6.15",
+    "description": "Windows download manager for files, videos, torrents, and supported cloud uploads.",
+    "homepage": "https://github.com/Shalaby2/UDM-Pro",
+    "license": "Unknown",
+    "url": "https://github.com/Shalaby2/UDM-Pro/releases/download/v2.6.15/UltraDownloadManager_Setup.exe",
+    "hash": "c357a697507d8ec66477bf30ea47fb8876abc8ff9ab4d5501ec863fff93dc438",
+    "checkver": {
+        "url": "https://api.github.com/repos/Shalaby2/UDM-Pro/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/Shalaby2/UDM-Pro/releases/download/v$version/UltraDownloadManager_Setup.exe"
+    },
+    "notes": [
+        "Review status: the official v2.6.15 release publishes UltraDownloadManager_Setup.exe for Windows; the SHA-256 is taken from the GitHub Release asset digest.",
+        "The repository currently exposes no license file or installer documentation. Installer engine, embedded payload layout, supported silent switches, custom install-directory behavior, and uninstaller behavior have not been verified.",
+        "This manifest downloads the setup file only. It deliberately does not execute the installer or declare a shim or shortcut. Keep it under review until a safe Scoop-contained installation or verified extraction path is established."
+    ]
+}
