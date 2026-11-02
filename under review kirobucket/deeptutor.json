@@ -1,0 +1,29 @@
+{
+    "version": "1.7.1",
+    "description": "Personalized AI tutoring desktop app with a bundled local runtime and learning workspace.",
+    "homepage": "https://github.com/HKUDS/DeepTutor",
+    "license": "Apache-2.0",
+    "url": "https://github.com/HKUDS/DeepTutor/releases/download/v1.7.1/Open-DeepTutor-Windows-v1.7.1-Portable.zip",
+    "hash": "ad61acecd2c2274241bc154c350b1208e61da72c9483ee5c81751d511e72657f",
+    "checkver": {
+        "script": [
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'KiroBucket-ScoopCheckver' }",
+            "if ($env:GITHUB_TOKEN) { $headers.Authorization = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/HKUDS/DeepTutor/releases?per_page=100' -Headers $headers -TimeoutSec 30 -ErrorAction Stop",
+            "$release = $releases | Where-Object { -not $_.draft -and -not $_.prerelease -and @($_.assets | Where-Object { $_.name -match '^Open-DeepTutor-Windows-v[\\d.]+-Portable\\.zip$' }).Count -gt 0 } | Sort-Object { [datetime]$_.published_at } -Descending | Select-Object -First 1",
+            "if ($null -eq $release) { throw 'No stable DeepTutor Windows portable ZIP release was found.' }",
+            "$tag = [regex]::Match([string]$release.tag_name, '^v(?<version>[\\d.]+)$')",
+            "if (-not $tag.Success) { throw 'The DeepTutor release tag does not match the expected version format.' }",
+            "$tag.Groups['version'].Value"
+        ],
+        "regex": "^(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/HKUDS/DeepTutor/releases/download/v$version/Open-DeepTutor-Windows-v$version-Portable.zip"
+    },
+    "notes": [
+        "Review status: the official v1.7.1 release publishes a Windows asset explicitly named Portable.zip, and its SHA-256 digest is verified. The upstream packaging script builds this ZIP from the packaged Electron application directory.",
+        "The archive has not yet been inspected to confirm its top-level folder, executable location, and runtime launch behavior. No extract_dir, bin, shortcut, or persist path is declared until those details are verified.",
+        "The checkver script selects the newest stable GitHub release that actually contains the Windows portable ZIP, rather than assuming every release has a Windows asset. Keep this manifest under review until the archive and Scoop launch behavior are tested."
+    ]
+}
