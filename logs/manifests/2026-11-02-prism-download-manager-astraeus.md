@@ -20,3 +20,10 @@
 - The SHA-256 is taken from GitHub's published release digest; the binary was not independently downloaded and re-hashed in this session.
 - Windows Scoop install, update, launch, and uninstall tests were not run in this session.
 - Updating `.github/workflows/manifest-table.yml` is intended to trigger the existing documentation-generation workflow after these manifest and inventory changes. Its generated outputs and Actions result must be checked separately.
+
+## Documentation and CI follow-up
+
+- Updated `docs/categories.md`: renamed the Prism entry, added Astraeus, and restored the existing Download Organizer, Game Overlay, and Winlestia entries that were missing from the functional category tables. Rebuilt the Category Index labels and counts from the table rows; the previous `NaN` labels are removed.
+- Added explicit category-map entries for Download Organizer (`File Management`) and Winlestia (`Windows Customization`) so generated manifest documentation does not fall back to the default category.
+- GitHub Actions completed successfully for Update Manifest Documentation, Validate archive paths, Manual Scoop Checkver Validation, Scoop Autoupdate Validation, and Validate GitHub Actions Workflows.
+- Windows Scoop install, launch, upgrade, and uninstall tests were not run.
