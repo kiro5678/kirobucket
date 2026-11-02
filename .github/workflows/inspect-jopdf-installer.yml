@@ -14,7 +14,7 @@ permissions:
 jobs:
   inspect:
     runs-on: windows-2022
-    timeout-minutes: 30
+    timeout-minutes: 12
     steps:
       - name: Download and inspect official JOPDF installers
         shell: pwsh
@@ -58,11 +58,15 @@ jobs:
           $bootstrapper = Join-Path $root 'jopdf-win_installer.exe'
           $setup = Join-Path $root 'jopdf-win-x64_setup.exe'
 
-          Invoke-WebRequest -Uri $report.bootstrapperUrl -OutFile $bootstrapper -Headers $headers
+          Write-Host 'Downloading the official web installer...'
+          Invoke-WebRequest -Uri $report.bootstrapperUrl -OutFile $bootstrapper -Headers $headers -TimeoutSec 180
+          Write-Host 'Bootstrapper downloaded.'
           $report.files += Get-FileEvidence $bootstrapper
 
           try {
-            Invoke-WebRequest -Uri $report.payloadUrl -OutFile $setup -Headers $headers
+            Write-Host 'Downloading the actual Windows setup payload...'
+            Invoke-WebRequest -Uri $report.payloadUrl -OutFile $setup -Headers $headers -TimeoutSec 180
+            Write-Host 'Windows setup payload downloaded.'
             $report.files += Get-FileEvidence $setup
           } catch {
             $report.payloadDownloadError = $_.Exception.Message
@@ -135,8 +139,16 @@ jobs:
             New-Item -ItemType Directory -Path $installDir -Force | Out-Null
             $logPath = Join-Path $root 'inno-install.log'
             $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', ('/DIR="{0}"' -f $installDir), ('/LOG="{0}"' -f $logPath)) -join ' '
-            $process = Start-Process -FilePath $setup -ArgumentList $arguments -Wait -PassThru
-            $report.installTest.exitCode = $process.ExitCode
+            $process = Start-Process -FilePath $setup -ArgumentList $arguments -PassThru
+            try {
+              Wait-Process -Id $process.Id -Timeout 180 -ErrorAction Stop
+              $process.Refresh()
+              $report.installTest.exitCode = $process.ExitCode
+            } catch {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+              $report.installTest.timedOut = $true
+              $report.installTest.timeoutNote = 'The silent installer did not exit within 180 seconds; it was terminated on the disposable GitHub-hosted runner.'
+            }
             $report.installTest.targetDirectory = $installDir
             $report.installTest.targetDirectoryExists = Test-Path -LiteralPath $installDir
 
