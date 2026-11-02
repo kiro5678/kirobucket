@@ -1,0 +1,36 @@
+{
+    "version": "2.4.0",
+    "description": "Cross-device workspace for sharing screens, apps, files, clipboard, input, calls, and notifications across Windows, macOS, Linux, and Android.",
+    "homepage": "https://github.com/InukaAsith/TwinDesk",
+    "license": "GPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/InukaAsith/TwinDesk/releases/download/v2.4.0/TwinDesk-Setup-2.4.0.exe",
+            "hash": "39ffc5458abbedddf9b3d9da23356e70dd688be4c4af6b16ac31478d5f6c8fda"
+        },
+        "arm64": {
+            "url": "https://github.com/InukaAsith/TwinDesk/releases/download/v2.4.0/TwinDesk-Setup-2.4.0-arm64.exe",
+            "hash": "521178dcee5b3fd23d4052d667a0c6230b50e15748c0d3f4369090a882f0c392"
+        }
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/InukaAsith/TwinDesk/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/InukaAsith/TwinDesk/releases/download/v$version/TwinDesk-Setup-$version.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/InukaAsith/TwinDesk/releases/download/v$version/TwinDesk-Setup-$version-arm64.exe"
+            }
+        }
+    },
+    "notes": [
+        "Review status: the stable v2.4.0 x64 and ARM64 setup assets and their SHA-256 digests are verified. The newer v2.5.0-beta.1 is a pre-release, so this manifest tracks the latest stable release.",
+        "The upstream build uses NSIS per-machine installation with elevation. Its custom installer modifies Firewall rules, the WebClient registry setting, TrustedPeople certificate store, and Windows integration for optional calls and virtual-camera features; uninstall performs corresponding system cleanup.",
+        "This manifest downloads the vendor setup only. No Scoop install or uninstall hooks are enabled until every system-wide change and cleanup path can be handled safely and tested."
+    ]
+}
