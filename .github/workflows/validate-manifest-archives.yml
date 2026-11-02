@@ -411,6 +411,48 @@ jobs:
                     }
                   }
 
+                  # Scoop's #/dl.7z flow first extracts the NSIS container into $dir.
+                  # Electron Builder stores the application payload in a nested app-64.7z.
+                  # Reproduce both extraction layers and inspect the files that will live in Scoop.
+                  if ($isForced7zip -and $assetPath.EndsWith('.exe')) {
+                    $outerRoot = Join-Path $env:RUNNER_TEMP "manifest-nsis-$downloadCounter"
+                    New-Item -ItemType Directory -Path $outerRoot -Force | Out-Null
+                    & $sevenZipPath x $archivePath "-o$outerRoot" '-xr!*.nsis' '-y' | Out-Null
+                    if ($LASTEXITCODE -ne 0) {
+                      throw "$relativePath ($($archConfig.Name)): 7-Zip could not extract the outer NSIS container."
+                    }
+
+                    $innerArchive = Get-ChildItem -LiteralPath $outerRoot -Filter 'app-64.7z' -File -Recurse | Select-Object -First 1
+                    if ($null -ne $innerArchive) {
+                      $payloadRoot = Join-Path $env:RUNNER_TEMP "manifest-payload-$downloadCounter"
+                      New-Item -ItemType Directory -Path $payloadRoot -Force | Out-Null
+                      & $sevenZipPath x $innerArchive.FullName "-o$payloadRoot" '-y' | Out-Null
+                      if ($LASTEXITCODE -ne 0) {
+                        throw "$relativePath ($($archConfig.Name)): 7-Zip could not extract the inner Electron app-64.7z payload."
+                      }
+
+                      $payloadFiles = @(Get-ChildItem -LiteralPath $payloadRoot -File -Recurse)
+                      if ($payloadFiles.Count -eq 0) {
+                        throw "$relativePath ($($archConfig.Name)): app-64.7z extracted no application files."
+                      }
+                      $archiveFiles += @($payloadFiles | ForEach-Object {
+                        [System.IO.Path]::GetRelativePath($payloadRoot, $_.FullName).Replace('\', '/')
+                      })
+                      $exeDetails = @($payloadFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+                        [System.IO.Path]::GetRelativePath($payloadRoot, $_.FullName).Replace('\', '/')
+                      })
+                      Write-Host "$relativePath ($($archConfig.Name)): extracted inner Electron payload into the simulated Scoop app directory ($($payloadFiles.Count) files). EXEs: $($exeDetails -join ', ')"
+                      $inspectableArchives++
+                      $archiveOrdinal++
+                      Remove-Item -LiteralPath $outerRoot -Recurse -Force -ErrorAction SilentlyContinue
+                      Remove-Item -LiteralPath $payloadRoot -Recurse -Force -ErrorAction SilentlyContinue
+                      Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
+                      continue
+                    }
+
+                    Remove-Item -LiteralPath $outerRoot -Recurse -Force -ErrorAction SilentlyContinue
+                  }
+
                   if (-not [string]::IsNullOrWhiteSpace($extractDir)) {
                     $prefix = ConvertTo-ArchivePath $extractDir
                     $hasExtractDirectory = @($normalizedEntries | Where-Object {
