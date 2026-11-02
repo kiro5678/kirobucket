@@ -111,7 +111,6 @@ jobs:
               $e = [ordered]@{
                 relativePath = $f.FullName.Substring($payload.Length).TrimStart('\')
                 length = $f.Length
-                sha256 = (Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash
                 companyName = $null
                 productName = $null
                 productVersion = $null
@@ -120,18 +119,29 @@ jobs:
               }
               if ($f.Extension -in '.exe', '.dll') {
                 $v = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($f.FullName)
-                $s = Get-AuthenticodeSignature -FilePath $f.FullName
                 $e.companyName = $v.CompanyName
                 $e.productName = $v.ProductName
                 $e.productVersion = $v.ProductVersion
-                $e.signatureStatus = [string]$s.Status
-                $e.signerSubject = if ($s.SignerCertificate) { $s.SignerCertificate.Subject } else { $null }
               }
               [pscustomobject]$e
             }
           }
           $payloadFiles | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'payload-files.json') -Encoding UTF8
           $report.payloadFileCount = @($payloadFiles).Count
+          $payloadMain = Get-ChildItem -LiteralPath $payload -Filter 'JOPDF.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($payloadMain) {
+            $payloadMainVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($payloadMain.FullName)
+            $payloadMainSignature = Get-AuthenticodeSignature -FilePath $payloadMain.FullName
+            $report.payloadMainExecutable = [ordered]@{
+              relativePath = $payloadMain.FullName.Substring($payload.Length).TrimStart('\')
+              sha256 = (Get-FileHash -LiteralPath $payloadMain.FullName -Algorithm SHA256).Hash
+              productVersion = $payloadMainVersion.ProductVersion
+              fileVersion = $payloadMainVersion.FileVersion
+              companyName = $payloadMainVersion.CompanyName
+              signatureStatus = [string]$payloadMainSignature.Status
+              signerSubject = if ($payloadMainSignature.SignerCertificate) { $payloadMainSignature.SignerCertificate.Subject } else { $null }
+            }
+          }
           $report.extractedExecutables = @($payloadFiles | Where-Object { $_.relativePath -match '\.exe$' } | Select-Object relativePath, length, companyName, productName, productVersion, signatureStatus, signerSubject)
 
           if ($report.installerType -eq 'Inno Setup') {
@@ -202,6 +212,16 @@ jobs:
                   Start-Sleep -Seconds 8
                   $appProcess.Refresh()
                   $report.installTest.launchStarted = $true
+                  $mainVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($app.FullName)
+                  $mainSignature = Get-AuthenticodeSignature -FilePath $app.FullName
+                  $report.installTest.mainExecutableEvidence = [ordered]@{
+                    sha256 = (Get-FileHash -LiteralPath $app.FullName -Algorithm SHA256).Hash
+                    productVersion = $mainVersion.ProductVersion
+                    fileVersion = $mainVersion.FileVersion
+                    companyName = $mainVersion.CompanyName
+                    signatureStatus = [string]$mainSignature.Status
+                    signerSubject = if ($mainSignature.SignerCertificate) { $mainSignature.SignerCertificate.Subject } else { $null }
+                  }
                   $report.installTest.processStillRunningAfter8s = (-not $appProcess.HasExited)
                   if (-not $appProcess.HasExited) { Stop-Process -Id $appProcess.Id -Force -ErrorAction SilentlyContinue }
                 } catch {
