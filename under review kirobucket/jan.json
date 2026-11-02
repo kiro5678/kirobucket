@@ -1,0 +1,36 @@
+{
+    "version": "0.8.8",
+    "description": "Desktop AI assistant for running local language models and managing private, model-powered chats.",
+    "homepage": "https://github.com/janhq/jan",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/janhq/jan/releases/download/v0.8.8/Jan_0.8.8_x64-setup.exe",
+            "hash": "08aca371733b76200e44e95d677cdd15e96609f86f919de57b97a5358ca21e9b"
+        },
+        "arm64": {
+            "url": "https://github.com/janhq/jan/releases/download/v0.8.8/Jan_0.8.8_arm64-setup.exe",
+            "hash": "4df9072f7bc93907c2ae04448120a897a54c0e349cf482adbaecd2f98694c392"
+        }
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/janhq/jan/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/janhq/jan/releases/download/v$version/Jan_$version_x64-setup.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/janhq/jan/releases/download/v$version/Jan_$version_arm64-setup.exe"
+            }
+        }
+    },
+    "notes": [
+        "Review status: the official v0.8.8 x64 and ARM64 Windows setup assets and their SHA-256 digests are verified. The upstream Windows bundle configuration targets NSIS and MSI, but the release assets used here are the architecture-specific setup EXEs.",
+        "No separate Windows portable archive is published with this release. The installer payload, silent/custom-directory behavior, and safe Scoop install/uninstall sequence have not been verified.",
+        "This manifest downloads the setup only and intentionally declares no shim or shortcut. Keep it under review until the Windows installer behavior is inspected and tested."
+    ]
+}
