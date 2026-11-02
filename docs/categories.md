@@ -21,25 +21,25 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Keyboard & Language | 14 | [View](#keyboard-language) |
 | Media & Audio/Video | 46 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
-| Notch | 27 | [View](#notch) |
-| Notes & Knowledge | 19 | [View](#notes-knowledge) |
+| Notch | 28 | [View](#notch) |
+| Notes & Knowledge | 20 | [View](#notes-knowledge) |
 | Other Utilities | 3 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
-| PDF & Documents | 29 | [View](#pdf-documents) |
+| PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
-| Text-to-Speech (TTS) | 5 | [View](#text-to-speech-tts) |
+| Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Time Tracking & Focus | 13 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 92 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 871**
+**Total unique manifests: 875**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -561,6 +561,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [nock](../bucket/nock.json) | 0.12.10 | 64bit: 1.2 MiB | 2026-10-31 | Lightweight native Windows notch and top bar with media controls, quick settings, pinned apps, reminders, calendar, and system information. | [Homepage](https://nock.akhileshvarute.me) |
 | [nook](../bucket/nook.json) | 0.2.1 | 64bit: 9.0 MiB | 2026-10-30 | Floating Windows desktop notch with a customizable utility panel | [Homepage](https://github.com/Geguchh024/nook) |
 | [nook-agent](../bucket/nook-agent.json) | 0.2.2 | 64bit: 5.9 MiB | 2026-10-08 | Windows Dynamic Island for tracking Claude Code, Codex, and Cursor agent sessions, usage limits, permission requests, and replies. | [Homepage](https://github.com/zubairbinshaukat/nook) |
+| [nova-island](../bucket/nova-island.json) | 1.7.0 | — | — | Windows Dynamic Island overlay with media controls, notifications, downloads, prayer times, and desktop widgets. | [Homepage](https://github.com/NOVA-TECH-KIT/nova-island) |
 | [oyenza-studio](../bucket/oyenza-studio.json) | 0.2.22 | 3.8 MiB | 2026-10-31 | Dynamic Island-style living notch for Windows and macOS with synced lyrics, focus timer, file shelf, tasks, clipboard history, and system stats. | [Homepage](https://studio.oyenza.com/) |
 | [pillar](../bucket/pillar.json) | 0.1.4 | 64bit: 3.0 MiB | 2026-08-24 | Dynamic Island-style Windows overlay with media controls, notifications, focus timers, system monitoring, volume mixer, and notes. | [Homepage](https://github.com/warpirate/pillar-dynamic-island-for-windows) |
 | [qnotch](../bucket/qnotch.json) | 0.8.4 | 64bit: 82.6 MiB | 2026-10-30 | Dynamic Island-style Windows notch with media controls, system stats, clipboard history, file tray, notifications, notes, and search. | [Homepage](https://github.com/Somafet/qnotch) |
@@ -593,6 +594,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [helixnotes](../bucket/helixnotes.json) | 1.3.6 | 9.0 MiB | 2026-09-30 | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. | [Homepage](https://helixnotes.com/) |
 | [lapis](../bucket/lapis.json) | 3.0.1 | 10.4 MiB | 2026-09-16 | Local-first note-taking app with AI assistant and peer-to-peer sync. | [Homepage](https://github.com/zexadev/lapisnote) |
 | [markra](../bucket/markra.json) | 2.14.1 | 13.5 MiB | 2026-10-30 | Cross-platform Markdown editor and workspace for local-first notes. | [Homepage](https://github.com/markrahq/markra) |
+| [mdnote](../bucket/mdnote.json) | 2.0.1 | — | — | Lightweight Markdown and plain-text editor with formatted editing, live preview, tables, tabs, and multi-encoding support. | [Homepage](https://github.com/Lahai-Roi/MDNote) |
 | [meshnotes](../bucket/meshnotes.json) | 0.4.1 | 14.2 MiB | 2025-12-20 | Open-source local-first note-taking application with LAN synchronization. | [Homepage](https://github.com/meshnotes/meshnotes) |
 | [paperweight](../bucket/paperweight.json) | 0.6.0 | 88.2 MiB | 2026-08-27 | A local-first desktop app for collecting, organizing, and working with notes and documents | [Homepage](https://github.com/wslyvh/paperweight) |
 | [short-door-note](../bucket/short-door-note.json) | 4.18 | 64bit: 338.4 KiB | 2026-03-08 | Create short notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=ShortDoorNote) |
@@ -633,6 +635,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [file-converter-pro](../bucket/file-converter-pro.json) | 1.0.7 | 154.7 MiB | 2026-08-19 | Free offline all-in-one file converter for Windows. Converts documents, images, audio and video locally. | [Homepage](https://github.com/Hyacinthe-primus/File_Converter_Pro) |
+| [jopdf](../bucket/jopdf.json) | 2.4.2.1 | 64bit: 30.0 MiB | 2026-10-13 | Free Windows PDF editor and reader for editing, annotating, converting, merging, splitting, compressing, and protecting PDF files. | [Homepage](https://www.jopdf.com/) |
 | [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | 16.0.20430.20146 | — | 2026-10-19 | Family of client software, server software and services developed by Microsoft. This package only includes Excel, PowerPoint and Word. | [Homepage](https://www.office.com/) |
 | [pdfcrack](../bucket/pdfcrack.json) | 0.19 | 64bit: 204.9 KiB | 2020-09-08 | A Password Recovery Tool for PDF-files. | [Homepage](https://github.com/machine1337/pdfcrack) |
 | [PdfCraftTool](../bucket/PdfCraftTool.json) | 2026.10.25-6090725 | 456.5 MiB | 2026-10-29 | Free, privacy-focused PDF toolkit with professional tools for editing, converting, merging, splitting, and securing PDF files. | [Homepage](https://github.com/PDFCraftTool/pdfcraft) |
@@ -893,6 +896,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-read-mode](../bucket/vovsoft-read-mode.json) | 2.7 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Read Mode. | [Homepage](https://vovsoft.com/software/read-mode/) |
 | [vovsoft-screen-reader](../bucket/vovsoft-screen-reader.json) | 1.5 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Screen Reader. | [Homepage](https://vovsoft.com/software/screen-reader/) |
 | [vovsoft-text-to-mp3-converter](../bucket/vovsoft-text-to-mp3-converter.json) | 4.7 | 23.4 MiB | 2026-10-04 | Portable edition of Vovsoft Text to MP3 Converter. | [Homepage](https://vovsoft.com/software/text-to-mp3-converter/) |
+| [out-loud](../bucket/out-loud.json) | 2.1.2 | — | — | Offline AI text-to-speech desktop app with natural voices and local speech synthesis. | [Homepage](https://www.out-loud.io/) |
 
 ## Time Tracking & Focus
 
