@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 869 active manifests. Sixteen Review manifests are staged outside `bucket/` in `under review kirobucket/`; 19 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Fifteen Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,16 +22,17 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 792 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 793 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 58 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
-| Not reconciled | 19 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **869** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
+| Not reconciled | 24 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
+| **Total** | **875** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 850 of the 869 active bucket manifests. The remaining 19 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Sixteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 851 of the 875 active bucket manifests (793 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Fifteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Newly added manifest classifications
+- [`jopdf`](../bucket/jopdf.json) — **Portable**: the official x64 Inno Setup 6.4.3 package is version 2.4.2.1, SHA-256 `87e6a08e1ec197bd761e7672ef4a86ae9649795c7e3907f8626daf61646cec13`, and has a valid Authenticode signature from Chengdu Lightspeed Gravity Technology Co., Ltd. Scoop's exact `innounp` 2.71.3 helper (its downloaded SHA-256 matched Scoop Main) extracted 2,492 files with `JOPDF.exe` at the application root; the executable's signature is valid and it launched successfully from the extracted payload, keeping a `JOPDF` window open for 10 seconds. The manifest uses `innosetup: true`, so Scoop extracts `{app}` without running the vendor setup's registry, uninstaller, or shortcut registration tasks.
 - [`mdnote`](../bucket/mdnote.json) — **Portable**: uses the official Windows x64 `MDNote-2.0.1-portable.zip` asset and its SHA-256 digest published in GitHub Release metadata. The archive-validation workflow confirmed that the executable is inside the versioned `MDNote-2.0.1` directory; the manifest extracts that directory and launches `MDNote.exe`. Scoop does not execute the separate NSIS setup. MDNote requires .NET Framework 4.8 (included with Windows 10/11 x64); settings and recovery data are stored in the user's AppData outside Scoop.
 - [`astraeus`](../bucket/astraeus.json) — **Portable**: uses the official v2.2.3 single-file Windows executable; the published SHA-256 digest matches the release metadata and Scoop does not run an installer or register the application. On first launch, the optional start-with-Windows setup can copy the executable to `%LOCALAPPDATA%\\Programs\\Astraeus`, create a Start Menu shortcut, and register a current-user Run entry; decline that option to keep the Scoop-managed copy as the only installation. Preferences are stored under `HKCU\\Software\\Astraeus`, other user data under `%LOCALAPPDATA%\\Astraeus`, and the `astraeus.ini` configuration file is persisted by Scoop. The built-in updater remains enabled by default and can replace the executable independently of Scoop; set `AutoUpdate = false` in `astraeus.ini` to keep updates under Scoop control.
 - [`zapfast`](../bucket/zapfast.json) — **Portable**: uses the official Windows x64 and ARM64 ZIP distributions, without running either the MSI or setup EXE. The upstream release workflow packages `zapfast.exe`, `zapfast-portable.txt`, and the accompanying notices inside a versioned wrapper directory; the architecture-specific `extract_dir` values match those wrapper names. User configuration, encrypted archive/session data, and caches remain in the standard AppData locations outside Scoop. Portable builds register the current-user AppUserModelID for Windows notifications at runtime; Scoop does not execute a setup routine or register it. The app's independent portable updater remains enabled.
@@ -224,7 +225,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following sixteen manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
+The following fifteen manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -243,7 +244,6 @@ The following sixteen manifests are kept in [`under review kirobucket/`](../unde
 | [jan](../under%20review%20kirobucket/jan.json) | Tauri Windows setup EXE | The release provides x64 and ARM64 setup assets but no Windows portable archive; payload extraction, silent installation, and uninstall behavior are unverified. |
 | [deeptutor](../under%20review%20kirobucket/deeptutor.json) | Windows Portable ZIP (launch path unverified) | The official release labels the ZIP Portable, but its archive layout and actual executable path have not been inspected; no launch path is declared. |
 | [twindesk](../under%20review%20kirobucket/twindesk.json) | Per-machine NSIS setup EXE | The custom installer changes Firewall rules, an HKLM WebClient setting, TrustedPeople certificates, and optional AppX/virtual-camera integration; Scoop-safe installation and cleanup are unverified. |
-| [jopdf](../under%20review%20kirobucket/jopdf.json) | Windows online setup EXE (engine unverified) | The official latest-download endpoint provides a setup EXE, but the current checksum, installer engine, payload layout, silent switches, and Scoop-safe install/uninstall behavior are unverified. |
 ## Portable examples and important exceptions
 
 The following are examples of Portable manifest techniques in this bucket:
@@ -251,7 +251,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | Manifest pattern | Installer/package type | Example manifests | Why they are Portable |
 | --- | --- | --- | --- |
 | MSI extraction, not Windows Installer execution | MSI database/payload extracted by Scoop | [rqbit](../bucket/rqbit.json), [sklad](../bucket/sklad.json), [timigs](../bucket/timigs.json), [clipper](../bucket/clipper.json), [cooldesk-msi](../bucket/cooldesk-msi.json), [cedro-modern-dock](../bucket/cedro-modern-dock.json), [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json), [poltertype](../bucket/poltertype.json), [dnschanger-msi](../bucket/dnschanger-msi.json) | Scoop extracts the MSI payload; the manifest does not run `msiexec /i`. |
-| Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [snowey-island](../bucket/snowey-island.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json), [deskstats](../bucket/deskstats.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
+| Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [snowey-island](../bucket/snowey-island.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json), [deskstats](../bucket/deskstats.json), [jopdf](../bucket/jopdf.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
 | EXE/NSIS payload extraction | NSIS containing an embedded application archive (commonly app-64.7z) | [endstate](../bucket/endstate.json), [mechvibes](../bucket/mechvibes.json), [openscreen](../bucket/openscreen.json), [keyboardsounds](../bucket/keyboardsounds.json), [keyboardsounds-pro](../bucket/keyboardsounds-pro.json), [super-productivity](../bucket/super-productivity.json), [safepdf-installer](../bucket/safepdf-installer.json) | The downloaded setup file is treated as an archive or its embedded application archive is extracted; the vendor setup routine is not executed. |
 | Direct NSIS payload extraction | NSIS EXE whose files are directly readable by 7-Zip | [rust-meow](../bucket/rust-meow.json) | `#/dl.7z` extracts the NSIS container directly; 7-Zip 26.05 verified extraction of `rust-meow.exe` and `rust-meow-backend.exe` without executing the setup routine. |
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [handy](../bucket/handy.json), [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | The manifest passes a vendor-supported portable-mode option. Handy's NSIS template and upstream CI validate `/S /PORTABLE /D=$dir`; its `Data` directory is persisted by Scoop. |
