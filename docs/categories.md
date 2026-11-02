@@ -32,10 +32,10 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 93 | [View](#windows-customization) |
+| Windows Customization | 94 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 876**
+**Total unique manifests: 877**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
