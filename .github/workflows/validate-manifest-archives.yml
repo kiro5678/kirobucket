@@ -453,9 +453,9 @@ jobs:
                         })
                         $missingPayloadPaths = @($requiredPayloadPaths | Where-Object { $_ -notin $payloadPaths })
                         if ($missingPayloadPaths.Count -gt 0) {
-                          throw "$relativePath: missing required application files after nested extraction: $($missingPayloadPaths -join ', ')"
+                          throw "${relativePath}: missing required application files after nested extraction: $($missingPayloadPaths -join ', ')"
                         }
-                        Write-Host "$relativePath: all required Edge-Drop application files exist in the simulated Scoop version directory."
+                        Write-Host "${relativePath}: all required Edge-Drop application files exist in the simulated Scoop version directory."
                       }
                       Write-Host "$relativePath ($($archConfig.Name)): extracted inner Electron payload into the simulated Scoop app directory ($($payloadFiles.Count) files). EXEs: $($exeDetails -join ', ')"
                       $inspectableArchives++
