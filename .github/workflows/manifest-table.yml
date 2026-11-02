@@ -8,6 +8,7 @@ on:
       - master
     paths:
       - .github/workflows/manifest-table.yml
+      - bucket/**
 
 concurrency:
   group: manifest-table-${{ github.ref }}
@@ -196,6 +197,7 @@ jobs:
               "langover" = "Keyboard & Language"
               "lapis" = "Notes & Knowledge"
               "jamrah" = "Productivity & Launchers"
+              "jopdf" = "PDF & Documents"
               "lettuce-window-switcher" = "Productivity & Launchers"
               "livewallpaper" = "Windows Customization"
               "local-desktop-store" = "Package Management"
