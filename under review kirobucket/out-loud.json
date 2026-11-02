@@ -1,0 +1,31 @@
+{
+    "version": "2.1.2",
+    "description": "Offline AI text-to-speech desktop app with natural voices and local speech synthesis.",
+    "homepage": "https://www.out-loud.io/",
+    "license": {
+        "identifier": "PolyForm-Noncommercial-1.0.0",
+        "url": "https://polyformproject.org/licenses/noncommercial/1.0.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/light-cloud-com/out-loud/releases/download/v2.1.2/Out.Loud.Setup.2.1.2.exe",
+            "hash": "b40e61611b84f46458cdbdbb1c38495381b27f686d022a979ef038f1e7743518"
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/light-cloud-com/out-loud",
+        "regex": "v(?<version>[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/light-cloud-com/out-loud/releases/download/v$version/Out.Loud.Setup.$version.exe"
+            }
+        }
+    },
+    "notes": [
+        "Review status: the official v2.1.2 Windows x64 release provides an NSIS setup EXE. Its SHA-256 is pinned to the digest published in the GitHub Release metadata and on the official website.",
+        "The upstream NSIS customInstall routine extracts vc_redist.x64.exe and silently installs the Microsoft Visual C++ 2015-2022 Redistributable, which is required by onnxruntime-node. The release does not publish a separate Windows portable archive or a documented portable-mode switch.",
+        "This manifest intentionally stages the official setup file only. It does not execute the vendor installer, install the Redistributable, or declare an executable, shim, shortcut, or persistence path. Keep it in under review kirobucket until the actual NSIS payload is inspected and a working Scoop-contained launch method and runtime-dependency handling are verified."
+    ]
+}
