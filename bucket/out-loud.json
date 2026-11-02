@@ -1,0 +1,50 @@
+{
+    "version": "2.1.2",
+    "description": "Offline AI text-to-speech desktop app with natural voices and local speech synthesis.",
+    "homepage": "https://www.out-loud.io/",
+    "license": {
+        "identifier": "PolyForm-Noncommercial-1.0.0",
+        "url": "https://polyformproject.org/licenses/noncommercial/1.0.0"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/light-cloud-com/out-loud/releases/download/v2.1.2/Out.Loud.Setup.2.1.2.exe",
+            "hash": "b40e61611b84f46458cdbdbb1c38495381b27f686d022a979ef038f1e7743518",
+            "installer": {
+                "args": [
+                    "/S",
+                    "/D=$dir"
+                ]
+            }
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/light-cloud-com/out-loud",
+        "regex": "v(?<version>[\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/light-cloud-com/out-loud/releases/download/v$version/Out.Loud.Setup.$version.exe"
+            }
+        }
+    },
+    "notes": [
+        "The official NSIS setup runs silently with /S and installs into the Scoop version directory using /D=$dir. NSIS requires /D to be the final argument and the path must not be quoted.",
+        "The vendor setup's customInstall routine silently installs the Microsoft Visual C++ 2015-2022 Redistributable required by onnxruntime-node. This shared runtime is intentionally not removed during Scoop uninstall.",
+        "GitHub Actions run 41455667327 verified the release SHA-256 and extracted the NSIS payload with 7-Zip. The application files are inside the nested $PLUGINSDIR/app-64.7z archive; the Scoop manifest runs the official installer instead of using #/dl.7z."
+    ],
+    "shortcuts": [
+        [
+            "Out Loud.exe",
+            "Out Loud"
+        ]
+    ],
+    "uninstaller": {
+        "script": [
+            "if (Test-Path \"$dir\\Uninstall Out Loud.exe\") {",
+            "    Start-Process -FilePath \"$dir\\Uninstall Out Loud.exe\" -ArgumentList @('/S', \"_?=$dir\") -Wait",
+            "}"
+        ]
+    }
+}
