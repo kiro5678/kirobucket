@@ -29,4 +29,4 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [taskslinger](taskslinger.json) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](layer.json) | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
 | [keptinflow](keptinflow.json) | Official setup EXE; installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
-| [out-loud](out-loud.json) | NSIS setup silently installs the Visual C++ 2015-2022 Redistributable; the app payload and Scoop-contained launch method still need verification. |
+| [out-loud](out-loud.json) | Windows Actions verified the NSIS 7-Zip extraction and found the app in nested `$PLUGINSDIR/app-64.7z`; a second extraction stage and separate Visual C++ 2015-2022 runtime handling are still required. |
