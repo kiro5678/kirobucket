@@ -17,7 +17,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | File Management | 72 | [View](#file-management) |
 | Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
-| Images & Photos | 53 | [View](#images-photos) |
+| Images & Photos | 54 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
 | Media & Audio/Video | 46 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
@@ -26,7 +26,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Other Utilities | 3 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
-| Productivity & Launchers | 33 | [View](#productivity-launchers) |
+| Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
@@ -39,7 +39,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Windows Customization | 92 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 869**
+**Total unique manifests: 871**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -386,6 +386,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [photomanager](../bucket/photomanager.json) | 1.0.0.22 | 62.0 MiB | 2026-06-05 | Cross-platform photo manager and lightweight digital asset manager. | [Homepage](https://github.com/Hawkynt/PhotoManager) |
 | [photomanager-nightly](../bucket/photomanager-nightly.json) | 2026.09.11 | 62.0 MiB | 2026-09-11 | Cross-platform photo manager and lightweight digital asset manager (nightly channel). | [Homepage](https://github.com/Hawkynt/PhotoManager) |
 | [pictkura](../bucket/pictkura.json) | 1.0.1 | 64bit: 10.8 MiB | 2026-10-23 | Photo manager for importing from camera cards and browsing RAW, HEIC, AVIF, video and other image files. | [Homepage](https://harusame64.github.io/pictkura/) |
+| [screenit](../bucket/screenit.json) | 0.2.2 | 6.5 MiB | 2026-11-02 | Native Windows screenshot, screen recording, annotation, and OCR tool. | [Homepage](https://github.com/Busbar2297/screenit) |
 | [selfphotos](../bucket/selfphotos.json) | 0.9.0 | 346.1 MiB | 2026-10-24 | Cross-platform photo and video management desktop app with local-first privacy. | [Homepage](https://selfphotos.com/) |
 | [tagstudio](../bucket/tagstudio.json) | 9.6.4 | 152.6 MiB | 2026-10-02 | A user-focused photo and file management system. | [Homepage](https://github.com/TagStudioDev/TagStudio) |
 | [tagstudio-x86_64](../bucket/tagstudio-x86_64.json) | 9.6.4 | 158.0 MiB | 2026-10-02 | A user-focused photo and file management system. | [Homepage](https://github.com/TagStudioDev/TagStudio) |
@@ -673,6 +674,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [favoritenfreund](../bucket/favoritenfreund.json) | 1.34 | 64bit: 54.3 KiB | 2007-11-12 | Manage favorites in a small Windows utility. | [Homepage](https://www.softwareok.com/?Download=FavoritenFreund) |
 | [flashlaunch](../bucket/flashlaunch.json) | 1.0.9 | 1.9 MiB | 2026-10-08 | Lightweight keyboard-first application launcher for Windows. | [Homepage](https://github.com/SingCJ/FlashLaunch) |
 | [flow](../bucket/flow.json) | 0.7.0 | 64bit: 38.6 MiB | 2026-10-30 | Open-source event, calendar, and time management app for Windows. | [Homepage](https://github.com/LinwoodDev/Flow) |
+| [jamrah](../bucket/jamrah.json) | 5.0.0 | 145.6 MiB | 2026-10-23 | Local-first productivity app for tasks, goals, Pomodoro focus sessions, bookmarks, and prayer times. | [Homepage](https://github.com/AhmMed29/jamrah) |
 | [launchyqt](../bucket/launchyqt.json) | 3.1.9 | 64bit: 25.1 MiB | 2026-10-03 | Qt-based Windows application launcher with a searchable catalog, global hotkey, plugins, and skins. | [Homepage](https://github.com/samsonwang/LaunchyQt) |
 | [lettuce-window-switcher](../bucket/lettuce-window-switcher.json) | 0.3.70 | 1.5 MiB | 2026-09-08 | Windows 11 application switcher with live DWM previews and multiple switcher views | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) |
 | [merkuro-calendar](../bucket/merkuro-calendar.json) | 6719 | 64bit: 229.4 MiB | 2026-10-12 | Calendar application for managing tasks and events | [Homepage](https://apps.kde.org/merkuro.calendar/) |

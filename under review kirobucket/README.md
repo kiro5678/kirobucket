@@ -29,3 +29,4 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [taskslinger](taskslinger.json) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](layer.json) | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
 | [keptinflow](keptinflow.json) | Official setup EXE; installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
+| [nova-island](nova-island.json) | Latest release publishes an NSIS installer only; auto-update is enabled by default and can modify Scoop-managed files. Verify silent install, uninstaller, and updater handling before promotion. |
