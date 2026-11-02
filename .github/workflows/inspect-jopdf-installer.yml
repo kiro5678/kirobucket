@@ -1,0 +1,221 @@
+name: Inspect JOPDF Installer
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/inspect-jopdf-installer.yml
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Download and inspect official JOPDF installers
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = Join-Path $env:GITHUB_WORKSPACE 'jopdf-inspection'
+          $payload = Join-Path $root 'payload'
+          $installDir = Join-Path $env:RUNNER_TEMP 'JOPDF-TestInstall'
+          New-Item -ItemType Directory -Path $root, $payload -Force | Out-Null
+          $report = [ordered]@{
+            inspectedAtUtc = [DateTime]::UtcNow.ToString('o')
+            sourcePage = 'https://www.jopdf.com/download-center/'
+            bootstrapperUrl = 'https://cdn.jopdf.com/download/jopdf/jopdf-win_installer.exe'
+            payloadUrl = 'https://cdn.jopdf.com/download/jopdf/jopdf-win-x64_setup.exe'
+            files = @()
+            installerType = 'Unknown'
+            extractionExitCode = $null
+            installTest = [ordered]@{ attempted = $false }
+          }
+
+          function Get-FileEvidence([string]$Path) {
+            $item = Get-Item -LiteralPath $Path
+            $sig = Get-AuthenticodeSignature -FilePath $Path
+            $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Path)
+            return [ordered]@{
+              name = $item.Name
+              length = $item.Length
+              sha256 = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash
+              signatureStatus = [string]$sig.Status
+              signerSubject = if ($sig.SignerCertificate) { $sig.SignerCertificate.Subject } else { $null }
+              signerThumbprint = if ($sig.SignerCertificate) { $sig.SignerCertificate.Thumbprint } else { $null }
+              companyName = $version.CompanyName
+              productName = $version.ProductName
+              productVersion = $version.ProductVersion
+              fileVersion = $version.FileVersion
+              originalFilename = $version.OriginalFilename
+            }
+          }
+
+          $headers = @{ 'User-Agent' = 'kirobucket-jopdf-installer-inspector' }
+          $bootstrapper = Join-Path $root 'jopdf-win_installer.exe'
+          $setup = Join-Path $root 'jopdf-win-x64_setup.exe'
+
+          Invoke-WebRequest -Uri $report.bootstrapperUrl -OutFile $bootstrapper -Headers $headers
+          $report.files += Get-FileEvidence $bootstrapper
+
+          try {
+            Invoke-WebRequest -Uri $report.payloadUrl -OutFile $setup -Headers $headers
+            $report.files += Get-FileEvidence $setup
+          } catch {
+            $report.payloadDownloadError = $_.Exception.Message
+            $report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $root 'report.json') -Encoding UTF8
+            throw
+          }
+
+          $bytes = [System.IO.File]::ReadAllBytes($setup)
+          $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+          $unicode = [System.Text.Encoding]::Unicode.GetString($bytes)
+          $stringEvidence = [ordered]@{
+            innoSetup = ($ascii -match 'Inno Setup Setup Data|Inno Setup' -or $unicode -match 'Inno Setup Setup Data|Inno Setup')
+            nsis = ($ascii -match 'NullsoftInst|NSIS' -or $unicode -match 'NullsoftInst|NSIS')
+            installShield = ($ascii -match 'InstallShield' -or $unicode -match 'InstallShield')
+            wix = ($ascii -match 'WixBundle|Burn v[0-9]' -or $unicode -match 'WixBundle|Burn v[0-9]')
+          }
+          $report.stringEvidence = $stringEvidence
+          if ($stringEvidence.innoSetup) { $report.installerType = 'Inno Setup' }
+          elseif ($stringEvidence.nsis) { $report.installerType = 'NSIS' }
+          elseif ($stringEvidence.installShield) { $report.installerType = 'InstallShield' }
+          elseif ($stringEvidence.wix) { $report.installerType = 'WiX Burn' }
+
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            choco install 7zip -y --no-progress
+            $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          }
+          if (-not (Test-Path -LiteralPath $sevenZip)) { throw '7-Zip executable was not found.' }
+
+          & $sevenZip l -slt $setup 2>&1 | Out-File -LiteralPath (Join-Path $root 'installer-list.txt') -Encoding utf8
+          $listExit = $LASTEXITCODE
+          $report.archiveListExitCode = $listExit
+          if ($listExit -eq 0) {
+            & $sevenZip x $setup "-o$payload" -y 2>&1 | Out-File -LiteralPath (Join-Path $root 'extract.log') -Encoding utf8
+            $report.extractionExitCode = $LASTEXITCODE
+          }
+
+          $payloadFiles = @()
+          if (Test-Path -LiteralPath $payload) {
+            $payloadFiles = Get-ChildItem -LiteralPath $payload -File -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+              $f = $_
+              $e = [ordered]@{
+                relativePath = $f.FullName.Substring($payload.Length).TrimStart('\')
+                length = $f.Length
+                sha256 = (Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash
+                companyName = $null
+                productName = $null
+                productVersion = $null
+                signatureStatus = $null
+                signerSubject = $null
+              }
+              if ($f.Extension -in '.exe', '.dll') {
+                $v = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($f.FullName)
+                $s = Get-AuthenticodeSignature -FilePath $f.FullName
+                $e.companyName = $v.CompanyName
+                $e.productName = $v.ProductName
+                $e.productVersion = $v.ProductVersion
+                $e.signatureStatus = [string]$s.Status
+                $e.signerSubject = if ($s.SignerCertificate) { $s.SignerCertificate.Subject } else { $null }
+              }
+              [pscustomobject]$e
+            }
+          }
+          $payloadFiles | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'payload-files.json') -Encoding UTF8
+          $report.payloadFileCount = @($payloadFiles).Count
+          $report.extractedExecutables = @($payloadFiles | Where-Object { $_.relativePath -match '\.exe$' } | Select-Object relativePath, length, companyName, productName, productVersion, signatureStatus, signerSubject)
+
+          if ($report.installerType -eq 'Inno Setup') {
+            $report.installTest.attempted = $true
+            New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+            $logPath = Join-Path $root 'inno-install.log'
+            $arguments = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/SP-', ('/DIR="{0}"' -f $installDir), ('/LOG="{0}"' -f $logPath)) -join ' '
+            $process = Start-Process -FilePath $setup -ArgumentList $arguments -Wait -PassThru
+            $report.installTest.exitCode = $process.ExitCode
+            $report.installTest.targetDirectory = $installDir
+            $report.installTest.targetDirectoryExists = Test-Path -LiteralPath $installDir
+
+            if (Test-Path -LiteralPath $installDir) {
+              $installed = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+                $f = $_
+                $v = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($f.FullName)
+                [pscustomobject]@{
+                  relativePath = $f.FullName.Substring($installDir.Length).TrimStart('\')
+                  length = $f.Length
+                  productName = $v.ProductName
+                  productVersion = $v.ProductVersion
+                  companyName = $v.CompanyName
+                }
+              })
+              $installed | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root 'installed-files.json') -Encoding UTF8
+              $report.installTest.installedFileCount = $installed.Count
+              $report.installTest.mainExecutables = @($installed | Where-Object { $_.relativePath -match '(^|\\)JOPDF\.exe$' })
+
+              $uninstallMatches = @()
+              $registryPaths = @(
+                'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+                'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+                'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*'
+              )
+              foreach ($registryPath in $registryPaths) {
+                $uninstallMatches += Get-ItemProperty -Path $registryPath -ErrorAction SilentlyContinue |
+                  Where-Object { $_.DisplayName -match 'JOPDF' } |
+                  Select-Object DisplayName, DisplayVersion, Publisher, InstallLocation, UninstallString, QuietUninstallString
+              }
+              $report.installTest.uninstallRegistry = @($uninstallMatches)
+
+              $shortcutPaths = @(
+                [Environment]::GetFolderPath('StartMenu'),
+                [Environment]::GetFolderPath('CommonStartMenu'),
+                [Environment]::GetFolderPath('Desktop'),
+                [Environment]::GetFolderPath('CommonDesktop')
+              ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) } | Select-Object -Unique
+              $shortcuts = foreach ($shortcutPath in $shortcutPaths) {
+                Get-ChildItem -LiteralPath $shortcutPath -Filter '*.lnk' -Recurse -ErrorAction SilentlyContinue |
+                  Where-Object { $_.Name -match 'JOPDF' } |
+                  Select-Object FullName
+              }
+              $report.installTest.shortcuts = @($shortcuts)
+
+              $app = Get-ChildItem -LiteralPath $installDir -Filter 'JOPDF.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+              if ($app) {
+                $report.installTest.mainExecutable = $app.FullName
+                try {
+                  $appProcess = Start-Process -FilePath $app.FullName -PassThru
+                  Start-Sleep -Seconds 8
+                  $appProcess.Refresh()
+                  $report.installTest.launchStarted = $true
+                  $report.installTest.processStillRunningAfter8s = (-not $appProcess.HasExited)
+                  if (-not $appProcess.HasExited) { Stop-Process -Id $appProcess.Id -Force -ErrorAction SilentlyContinue }
+                } catch {
+                  $report.installTest.launchError = $_.Exception.Message
+                }
+              } else {
+                $report.installTest.mainExecutable = 'JOPDF.exe not found under target directory'
+              }
+            }
+          } else {
+            $report.installTest.reason = 'The installer type was not positively identified as Inno Setup; the setup executable was not run.'
+          }
+
+          $report | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath (Join-Path $root 'report.json') -Encoding UTF8
+          Write-Host '===== JOPDF INSPECTION SUMMARY ====='
+          Get-Content -LiteralPath (Join-Path $root 'report.json') -Raw
+          Write-Host '===== PAYLOAD INVENTORY (first 150 lines) ====='
+          if (Test-Path -LiteralPath (Join-Path $root 'installer-list.txt')) {
+            Get-Content -LiteralPath (Join-Path $root 'installer-list.txt') -TotalCount 150
+          }
+
+      - name: Upload inspection report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jopdf-installer-inspection
+          path: jopdf-inspection/
+          if-no-files-found: warn
+          retention-days: 14
