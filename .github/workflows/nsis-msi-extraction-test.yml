@@ -141,6 +141,15 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Deskboard\.exe$"
+            },
+            @{
+              Name = "Out Loud"
+              Version = "2.1.2"
+              NsisUrl = "https://github.com/light-cloud-com/out-loud/releases/download/v2.1.2/Out.Loud.Setup.2.1.2.exe"
+              NsisSha256 = "b40e61611b84f46458cdbdbb1c38495381b27f686d022a979ef038f1e7743518"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Out Loud\.exe$"
             }
           )
 
