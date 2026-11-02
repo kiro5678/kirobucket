@@ -1,0 +1,21 @@
+{
+    "version": "0.1.4",
+    "description": "Local-first Windows companion for Android phones with encrypted notifications, messages, calls, file transfer, and screen mirroring.",
+    "homepage": "https://github.com/thtbee/nectarlink",
+    "license": "GPL-3.0-or-later",
+    "url": "https://github.com/thtbee/nectarlink/releases/download/v0.1.4/Nectarlink-0.1.4-x64-setup.exe",
+    "hash": "afdf6d9c1b94647a7888735193cfab24f6bb3236c98b8da51533ee0ffb516528",
+    "checkver": {
+        "url": "https://api.github.com/repos/thtbee/nectarlink/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/thtbee/nectarlink/releases/download/v$version/Nectarlink-$version-x64-setup.exe"
+    },
+    "notes": [
+        "Review status: the official v0.1.4 Windows x64 release asset and its SHA-256 digest are verified. The source identifies the setup as NSIS.",
+        "The vendor installer performs a machine-wide installation and configures Windows Firewall rules, a scheduled update task, an AppX sparse package, HKLM install/uninstall registration, and shortcuts. The application also has its own updater.",
+        "This manifest downloads the setup only; it does not run the vendor installer. Verify a Scoop-compatible install and complete uninstall flow before promotion. Windows ARM64 is not offered in this release."
+    ]
+}
