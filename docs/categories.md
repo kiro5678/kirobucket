@@ -12,31 +12,30 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
 | Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
-| File Management | 71 | [View](#file-management) |
+| File Management | 72 | [View](#file-management) |
 | Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 53 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
-| NaN | 49 | [View](#media-audio-video) |
+| Media & Audio/Video | 51 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
-| NaN | 22 | [View](#notch) |
+| Notch | 27 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| NaN | 2 | [View](#other-utilities) |
+| Other Utilities | 3 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
-| NaN | 73 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 75 | [View](#system-monitoring-hardware) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 13 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| NaN | 92 | [View](#windows-customization) |
+| Windows Customization | 93 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-
-**Total unique manifests: 873**
+**Total unique manifests: 876**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -189,7 +188,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [imfile](../bucket/imfile.json) | 2.3.4 | 64bit: 152.0 MiB / arm64: 141.8 MiB | 2026-08-13 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
 | [motrix](../bucket/motrix.json) | 2.0.1 | 64bit: 159.8 MiB / arm64: 157.3 MiB | 2026-10-29 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
 | [motrix-next](../bucket/motrix-next.json) | 3.9.9 | 64bit: 24.6 MiB / arm64: 21.8 MiB | 2026-10-25 | Legacy Motrix Next 3.x download manager for HTTP, FTP, BitTorrent and Magnet links. | [Homepage](https://github.com/AnInsomniacy/rayburst) |
-| [prism](../bucket/prism.json) | 1.2.3 | 16.5 MiB | 2026-10-31 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
+| [prism-download-manager](../bucket/prism-download-manager.json) | 1.2.4 | 16.5 MiB | 2026-11-01 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
 | [nanaget](../bucket/nanaget.json) | 1.3.1609.0 | 3.8 MiB | 2026-09-20 | Lightweight file transfer utility based on aria2 and XAML Islands. | [Homepage](https://github.com/M2Team/NanaGet) |
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
 | [qbittorrent-lt20](../bucket/qbittorrent-lt20.json) | 5.2.4 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). | [Homepage](https://www.qbittorrent.org) |
@@ -240,6 +239,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [delete-on-reboot](../bucket/delete-on-reboot.json) | 3.47 | 64bit: 226.3 KiB | 2026-03-13 | Schedule files for deletion during the next reboot. | [Homepage](https://www.softwareok.com/?Download=Delete.On.Reboot) |
 | [dirprintok](../bucket/dirprintok.json) | 7.69 | 64bit: 852.5 KiB | 2026-10-20 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
 | [doublecmd](../bucket/doublecmd.json) | 1.2.9 | 64bit: — / 32bit: — | — | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
+| [downloadorganizer](../bucket/downloadorganizer.json) | 0.1.0 | 2.7 MiB | 2026-11-01 | Organize downloads by file type with change previews, undo history and optional automatic sorting. | [Homepage](https://github.com/thonyydev/DownloadOrganizer) |
 | [dude](../bucket/dude.json) | 2.0763.579 | 73.4 MiB | 2026-06-24 | Disk usage analyzer and file browser for Windows. | [Homepage](https://github.com/PJDude/dude) |
 | [ef-commander](../bucket/ef-commander.json) | 26.10 | 64bit: 7.5 MiB | 2026-08-24 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
 | [ef-duplicate-files-manager](../bucket/ef-duplicate-files-manager.json) | 26.10 | 64bit: 3.1 MiB | 2026-08-24 | Finds duplicate files by name, size, or content, including files inside supported archives. | [Homepage](https://efsoftware.com/dm/e.htm) |
@@ -552,6 +552,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [astraeus](../bucket/astraeus.json) | 2.2.3 | 2.5 MiB | 2026-10-29 | Native Windows edge dashboard with music controls, synced lyrics, system stats, and quick controls. | [Homepage](https://github.com/Icetist/Astraeus) |
 | [bloom](../bucket/bloom.json) | 3.10.1 | 64bit: 13.9 MiB | 2026-10-22 | Windows notch and dock with media controls, quick settings, system status, and desktop productivity features. | [Homepage](https://github.com/SehajveerSingh2005/bloom) |
 | [dlives](../bucket/dlives.json) | 32162fddd0350e84a8da9a15650519c8d0586fd8 | 63.9 MiB | 2026-08-25 | Windows Dynamic Island with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls. | [Homepage](https://github.com/FuGen-India-Private-Ltd/Dlives) |
 | [dynamicwin](../bucket/dynamicwin.json) | 2.0.3 | 117.2 MiB | 2025-10-22 | Dynamic Island-inspired Windows app with a media controller, calendar integration, Bluetooth status, and a file tray. | [Homepage](https://github.com/FlorianButz/DynamicWin) |
@@ -819,6 +820,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [firemin](../bucket/firemin.json) | 11.8.3.8520 | 3.9 MiB | 2024-12-09 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [fluent-sensors](../bucket/fluent-sensors.json) | 1.7.0 | 101.9 MiB | 2026-10-28 | Native Windows hardware monitoring app. | [Homepage](https://github.com/cechout/fluent-sensors) |
 | [freetoken-desktop.beta](../bucket/freetoken-desktop.beta.json) | 0.2.0-beta.25 | 6.7 MiB | 2026-10-24 | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. | [Homepage](https://www.flashml.ai) |
+| [game-overlay](../bucket/game-overlay.json) | 1.0.20 | 64bit: 13.6 MiB | 2026-08-11 | Customizable in-game overlay for FPS, frame-time lows, CPU/GPU usage and temperatures, ping, and packet loss. | [Homepage](https://github.com/kynemyers/game-overlay) |
 | [grc-clickey](../bucket/grc-clickey.json) | 2005.10.29 | 46.4 KiB | 2005-10-29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
 | [grc-dcombobulator](../bucket/grc-dcombobulator.json) | 2004.05.24 | 39.4 KiB | 2004-05-24 | GRC DCOMbobulator: Legacy utility for checking and enabling/disabling the historical Windows DCOM vulnerability mitigation. | [Homepage](https://www.grc.com/freeware/dcom.htm) |
 | [grc-id-serve](../bucket/grc-id-serve.json) | 2003.08.26 | 36.4 KiB | 2003-08-27 | GRC ID Serve: Identifies web-server software and version information exposed by an Internet server. | [Homepage](https://www.grc.com/id/idserve.htm) |
@@ -1015,6 +1017,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [wincux](../bucket/wincux.json) | 1.1.0 | 5.7 MiB | 2026-04-21 | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. | [Homepage](https://github.com/samcuxx/WinCux) |
 | [windhawk](../bucket/windhawk.json) | 2.0.0-alpha.8 | 142.0 MiB | 2025-12-08 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | 64bit: 9.1 MiB / 32bit: 8.6 MiB / arm64: 8.3 MiB | 2025-09-18 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
+| [winlestia](../bucket/winlestia.json) | 0.9.0 | 184.0 MiB | 2026-11-01 | Caelestia-inspired Windows 11 desktop shell with a customizable dock, dynamic themes, glass effects and desktop tools. | [Homepage](https://github.com/lilidoxdev/winlestia) |
 | [zigarettenschachtel-spruch](../bucket/zigarettenschachtel-spruch.json) | 2.32 | 64bit: 64.7 KiB | 2021-05-31 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
 
 ## Windows Privacy & Tweaks
