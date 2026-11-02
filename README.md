@@ -38,4 +38,6 @@ See [the source-site software catalog](docs/software-by-developer.md) for a deve
 
 The complete, automatically generated manifest inventory is maintained in [`docs/manifests.md`](docs/manifests.md). It includes each app's category, version, installer type, manifest-added date, upstream program-update date, homepage, and description.
 
-Use the links in the inventory to view manifests sorted by name, category, or date. The page is regenerated from the JSON files in `bucket/` by the [manifest documentation workflow](.github/workflows/manifest-table.yml).
+Use the links in the inventory to view active manifests sorted by name, category, or date. The page is regenerated from the JSON files in `bucket/` by the [manifest documentation workflow](.github/workflows/manifest-table.yml).
+
+Manifests awaiting verification, needing repairs, or having unresolved installer behavior are staged in [`under review kirobucket/`](under%20review%20kirobucket/). Files in that folder are outside `bucket/` and are not installable until they pass review.

@@ -12,34 +12,34 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Browsers & Communication | 9 | [View](#browsers-communication) |
 | Clipboard & Text | 32 | [View](#clipboard-text) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
-| Download Managers | 20 | [View](#download-managers) |
+| Download Managers | 19 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
 | Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 53 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
-| Media & Audio/Video | 47 | [View](#media-audio-video) |
+| Media & Audio/Video | 46 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
 | Notch | 27 | [View](#notch) |
 | Notes & Knowledge | 19 | [View](#notes-knowledge) |
 | Other Utilities | 3 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 29 | [View](#pdf-documents) |
-| Productivity & Launchers | 34 | [View](#productivity-launchers) |
+| Productivity & Launchers | 33 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
-| System Monitoring & Hardware | 75 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 5 | [View](#text-to-speech-tts) |
-| Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
+| Time Tracking & Focus | 13 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 94 | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 47 | [View](#windows-privacy-tweaks) |
+| Windows Customization | 92 | [View](#windows-customization) |
+| Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 877**
+**Total unique manifests: 869**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -190,7 +190,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [ezoo-download](../bucket/ezoo-download.json) | 1.0.8 | 36.3 MiB | 2026-10-31 | Rust download manager for Windows with browser integration, video downloads and torrent support. | [Homepage](https://github.com/AhmedEzo686/ezoo-download) |
 | [imfile](../bucket/imfile.json) | 2.3.4 | 64bit: 152.0 MiB / arm64: 141.8 MiB | 2026-08-13 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
 | [motrix](../bucket/motrix.json) | 2.0.1 | 64bit: 159.8 MiB / arm64: 157.3 MiB | 2026-10-29 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
-| [motrix-next](../bucket/motrix-next.json) | 3.9.9 | 64bit: 24.6 MiB / arm64: 21.8 MiB | 2026-10-25 | Legacy Motrix Next 3.x download manager for HTTP, FTP, BitTorrent and Magnet links. | [Homepage](https://github.com/AnInsomniacy/rayburst) |
 | [prism-download-manager](../bucket/prism-download-manager.json) | 1.2.4 | 16.5 MiB | 2026-11-01 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
 | [nanaget](../bucket/nanaget.json) | 1.3.1609.0 | 3.8 MiB | 2026-09-20 | Lightweight file transfer utility based on aria2 and XAML Islands. | [Homepage](https://github.com/M2Team/NanaGet) |
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
@@ -443,7 +442,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [allplayer](../bucket/allplayer.json) | 9.6 | 88.4 MiB | 2026-02-24 | Free multimedia player with built-in codecs and automatic subtitles. | [Homepage](https://allplayer.com/) |
-| [anton](../bucket/anton.json) | 0.2.48 | 95.4 MiB | 2026-10-29 | AI-assisted desktop video editor with a manual timeline and local rendering. | [Homepage](https://antonvideo.app/) |
 | [blur](../bucket/blur.json) | 2.45 | 64bit: 7.3 MiB | 2026-05-12 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. | [Homepage](https://github.com/f0e/blur) |
 | [cue](../bucket/cue.json) | 1.1 | 16.7 MiB | 2026-10-31 | Free Windows video and audio player with subtitles and playback-position saving. | [Homepage](https://github.com/tinypeep/cue) |
 | [drift](../bucket/drift.json) | 0.8.0 | 145.1 MiB | 2026-10-13 | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). | [Homepage](https://github.com/CutWire-Studios/Drift) |
@@ -679,7 +677,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [lettuce-window-switcher](../bucket/lettuce-window-switcher.json) | 0.3.70 | 1.5 MiB | 2026-09-08 | Windows 11 application switcher with live DWM previews and multiple switcher views | [Homepage](https://github.com/Himanshu-Singh-Chauhan/lettuce-window-switcher-for-windows-11) |
 | [merkuro-calendar](../bucket/merkuro-calendar.json) | 6719 | 64bit: 229.4 MiB | 2026-10-12 | Calendar application for managing tasks and events | [Homepage](https://apps.kde.org/merkuro.calendar/) |
 | [quickpanel](../bucket/quickpanel.json) | 1.0.12 | 72.3 MiB | 2026-07-07 | A floating Windows panel for launching web apps in native WebView2 windows. | [Homepage](https://github.com/lucasgiusiano/QuickPanel) |
-| [pulse-launcher](../bucket/pulse-launcher.json) | 0.1 | 24.3 MiB | 2026-08-08 | Windows application launcher with app search and the global Alt + Space hotkey. Review status: setup download only; installer behavior has not been verified. | [Homepage](https://github.com/thefxng/Pulse) |
 | [rizonesoft-office](../bucket/rizonesoft-office.json) | 2023.9.27.1794 | 145.1 MiB | 2023-09-29 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
 | [run-command](../bucket/run-command.json) | 6.41 | 64bit: 233.3 KiB / 32bit: 186.6 KiB | 2026-05-06 | Portable replacement for the Windows Run dialog, with favorites and elevated command execution. | [Homepage](https://www.softwareok.com/?seite=Microsoft/Run-Command) |
 | [shortercut](../bucket/shortercut.json) | 1.0.0.7 | 5.0 MiB | 2024-03-07 | Free and lightweight app launcher and desktop organizer. | [Homepage](https://www.getshortercut.com/) |
@@ -870,7 +867,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sysmanager](../bucket/sysmanager.json) | 1.131.3 | 81.3 MiB | 2026-10-31 | Modern Windows system monitoring and management toolkit. | [Homepage](https://github.com/laurentiu021/SystemManager) |
 | [systeminformer](../bucket/systeminformer.json) | 4.0.26241.138 | 21.1 MiB | 2026-08-29 | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. | [Homepage](https://systeminformer.com/) |
 | [taskexplorer](../bucket/taskexplorer.json) | 2.0.1 | 64bit: 17.8 MiB | 2026-10-12 | Advanced process and system monitoring tool | [Homepage](https://github.com/DavidXanatos/TaskExplorer) |
-| [taskslinger](../bucket/taskslinger.json) | 0.9.5 | 2.6 MiB | — | Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections. | [Homepage](https://taskslinger.net/) |
 | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | 1.4.1 | 273.8 KiB | 2026-07-28 | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
 | [turkaysoft-glow](../bucket/turkaysoft-glow.json) | 26.14 | 1.9 MiB | 2026-10-16 | Advanced system analysis software for Windows. | [Homepage](https://github.com/turkaysoft/glow) |
 | [uefitool](../bucket/uefitool.json) | A76 | 64bit: 6.8 MiB / 32bit: 5.1 MiB | 2026-10-24 | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. | [Homepage](https://github.com/LongSoft/UEFITool) |
@@ -913,7 +909,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-health-break-reminder](../bucket/vovsoft-health-break-reminder.json) | 2.5 | 3.2 MiB | 2026-10-29 | Portable edition of Vovsoft Health Break Reminder. | [Homepage](https://vovsoft.com/software/health-break-reminder/) |
 | [vovsoft-time-sync](../bucket/vovsoft-time-sync.json) | 3.2 | 2.9 MiB | 2026-08-13 | A lightweight utility for synchronizing the Windows clock with NTP servers. | [Homepage](https://vovsoft.com/software/time-sync/) |
 | [zenbreak](../bucket/zenbreak.json) | 1.0.3 | 64bit: 54.6 MiB | 2024-09-01 | Desktop break reminder application for reducing screen fatigue and improving well-being. | [Homepage](https://zenbreak.app) |
-| [zenbreak-msix](../bucket/zenbreak-msix.json) | 1.0.3 | 64bit: 55.8 MiB | 2024-09-01 | Desktop break reminder application for reducing screen fatigue and improving well-being. | [Homepage](https://zenbreak.app) |
 
 ## Translation & OCR
 
@@ -977,7 +972,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [keep-mouse-speed-ok](../bucket/keep-mouse-speed-ok.json) | 3.55 | 64bit: 53.7 KiB | 2026-04-25 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
 | [komorebi](../bucket/komorebi.json) | 0.1.41 | 64bit: 26.7 MiB / arm64: 25.0 MiB | 2026-05-03 | A tiling window manager for Windows | [Homepage](https://github.com/LGUG2Z/komorebi) |
 | [komorebi-nightly](../bucket/komorebi-nightly.json) | 2026-08-22 | 64bit: 31.5 MiB / arm64: 27.0 MiB | 2026-11-01 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
-| [layer](../bucket/layer.json) | 1.11.2 | 64bit: 13.0 MiB / arm64: 12.5 MiB | 2026-10-20 | Transparent, always-on-top desktop widget canvas with notes, clocks, links, media, system stats, and other widgets. | [Homepage](https://layer-desktop.vercel.app) |
 | [lively](../bucket/lively.json) | 2.2.1.0 | 208.0 MiB | 2025-09-18 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
 | [livewallpaper](../bucket/livewallpaper.json) | 4.0.1-alpha.4 | 4.2 MiB | 2026-10-10 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
 | [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 8.6 | 12.2 MiB | 2025-10-25 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
@@ -994,7 +988,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [openglass](../bucket/openglass.json) | 3.0.2.3749 | 3.9 MiB | 2026-10-05 | A replacement for the Desktop Window Manager glass effect on Windows. | [Homepage](https://github.com/ALTaleX531/OpenGlass) |
 | [openrgb](../bucket/openrgb.json) | 1.1 | 64bit: 21.0 MiB / 32bit: 17.2 MiB | 2026-10-16 | RGB lighting control that does not depend on manufacturer software. | [Homepage](https://openrgb.org) |
 | [pointerstick](../bucket/pointerstick.json) | 7.22 | 64bit: 749.0 KiB | 2026-10-26 | Display a virtual pointer stick on the desktop for presentations. | [Homepage](https://www.softwareok.com/?Download=PointerStick) |
-| [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | 14.7 MiB | 2025-07-18 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
 | [rebuild-shell-icon-cache](../bucket/rebuild-shell-icon-cache.json) | 1.3 | 788.1 KiB | 2021-11-23 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | 4.8 MiB | 2026-10-03 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |
 | [shuffle-paper](../bucket/shuffle-paper.json) | 0.4.0 | 11.7 MiB | 2026-09-24 | Privacy-friendly wallpaper shuffle and rotation utility for Windows | [Homepage](https://github.com/jcsm/ShufflePaper) |
@@ -1056,7 +1049,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [fluenttweaker](../bucket/fluenttweaker.json) | 26.06.02 | 43.0 MiB | 2026-06-07 | Windows tweaking and optimization utility with AppX debloating, Winget integration, and customizable system tweaks. | [Homepage](https://github.com/builtbybel/FluentTweaker) |
 | [flyoobe](../bucket/flyoobe.json) | 3.03.100 | 680.2 KiB | 2026-09-28 | Windows setup, customization, debloating, and system management utility. | [Homepage](https://github.com/builtbybel/Flyoobe) |
 | [funk-hmw](../bucket/funk-hmw.json) | 4 | 576.6 KiB | 2025-06-25 | Portable utility for hiding selected Windows applications and windows. | [Homepage](https://funk.eu/hmw/) |
-| [go-away-edge-installer](../bucket/go-away-edge-installer.json) | 2.0.3 | 46.1 MiB | 2026-04-04 | GoAwayEdge is designed for those who, like me, aren’t fans of Microsoft Edge or Windows Copilot. | [Homepage](https://github.com/valnoxy/GoAwayEdge) |
 | [grc-incontrol](../bucket/grc-incontrol.json) | 2022.02.13 | 83.4 KiB | 2022-02-14 | GRC InControl: Controls Windows 10/11 feature updates while allowing monthly security updates. | [Homepage](https://www.grc.com/incontrol.htm) |
 | [grc-inspectre](../bucket/grc-inspectre.json) | 2018.01.15 | 128.4 KiB | 2018-01-16 | GRC InSpectre: Legacy Meltdown/Spectre mitigation and performance diagnostic for older Windows systems. | [Homepage](https://www.grc.com/inspectre.htm) |
 | [grc-never10](../bucket/grc-never10.json) | 2019.04.21 | 87.4 KiB | 2019-04-21 | GRC Never10: Legacy utility for controlling the Windows 7/8.1 upgrade offer to Windows 10. | [Homepage](https://www.grc.com/never10.htm) |
