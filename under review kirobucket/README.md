@@ -29,4 +29,3 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [taskslinger](taskslinger.json) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](layer.json) | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
 | [keptinflow](keptinflow.json) | Official setup EXE; installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
-| [out-loud](out-loud.json) | The manifest now runs the NSIS setup with `/S /D=$dir` and uses its generated uninstaller; the actual silent install and uninstall still need a Windows Scoop test. The vendor setup also installs the shared Visual C++ 2015-2022 Redistributable. |
