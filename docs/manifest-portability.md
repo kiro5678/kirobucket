@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Fifteen Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Seventeen Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -29,7 +29,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **878** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 854 of the 878 active bucket manifests (796 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Sixteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 854 of the 878 active bucket manifests (796 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Seventeen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Newly added manifest classifications
 - [`matrixrain`](../bucket/matrixrain.json) — **Portable**: uses the official standalone Windows executable for x64 or ARM64, with SHA-256 digests published in the GitHub release metadata. Scoop does not run the application's `/install` command; optional Windows System32 and screen-saver registry integration remains a separate, administrator-approved user action. Run `/uninstall` before removing the Scoop copy if that integration was enabled.
@@ -229,7 +229,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following sixteen manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
+The following seventeen manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -238,6 +238,7 @@ The following sixteen manifests are kept in [`under review kirobucket/`](../unde
 | [quanto-flx](../under%20review%20kirobucket/quanto-flx.json) | Rainmeter RMSKIN add-on package | Rainmeter RMSKIN add-on, not a standalone application; it requires Rainmeter's SkinInstaller workflow. |
 | [zenbreak-msix](../under%20review%20kirobucket/zenbreak-msix.json) | MSIX package extracted as 7Z | MSIX file is being unpacked as a 7-Zip archive; the unpackaged executable still needs a runtime/launch test. |
 | [anton](../under%20review%20kirobucket/anton.json) | Windows setup EXE (engine unverified) | Official endpoint redirects to a setup EXE, but the publisher checksum and installer/uninstaller behavior are not verified. |
+| [autooff](../under%20review%20kirobucket/autooff.json) | Windows setup EXE (engine unverified) | The official 4.25 GitHub release does not publish SHA-256; external documentation identifies the file as a setup installer and reports that AutoOff is not portable. Installer engine, payload extraction, silent switches, custom installation path, and behavior after copying installed files have not been verified. The manifest downloads the setup only. |
 | [pulse-launcher](../under%20review%20kirobucket/pulse-launcher.json) | Windows setup EXE (engine unverified; pre-release) | Only a pre-release setup EXE is published; installer engine, payload layout, and uninstall behavior are unverified. |
 | [taskslinger](../under%20review%20kirobucket/taskslinger.json) | EXE setup (engine unverified) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](../under%20review%20kirobucket/layer.json) | Tauri/NSIS setup EXE | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
