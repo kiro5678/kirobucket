@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Manifest path under bucket/, e.g. bucket/taskexplorer.json"
+        description: "Manifest path under bucket/ or under review scoop bucket/"
         required: true
         type: string
       force_update:
@@ -59,10 +59,13 @@ jobs:
             $manifestPaths = @(ConvertFrom-Json -InputObject $env:MANIFESTS_JSON)
           } else {
             $inputPath = $env:MANUAL_MANIFEST.Trim().Replace('\', '/')
-            if ($inputPath -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
-              throw "Provide one manifest filename or bucket/filename.json. Received: $inputPath"
+            if ($inputPath -match '(?i)^[^/]+\.json$') {
+              $inputPath = "bucket/$inputPath"
             }
-            $manifestPaths = @("bucket/$($Matches.name)")
+            if ($inputPath -notmatch '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$') {
+              throw "Provide bucket/filename.json or under review scoop bucket/filename.json. Received: $inputPath"
+            }
+            $manifestPaths = @($inputPath)
           }
 
           if ($manifestPaths.Count -eq 0) {
@@ -77,7 +80,7 @@ jobs:
 
           foreach ($candidate in $manifestPaths) {
             $relativePath = ([string]$candidate).Trim().Replace('\', '/')
-            if ($relativePath -notmatch '(?i)^bucket/[^/]+\.json$') {
+            if ($relativePath -notmatch '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$') {
               $failures += "$relativePath : invalid manifest path in dispatch payload."
               Write-Host "FAILED: $relativePath - invalid manifest path." -ForegroundColor Red
               continue
