@@ -1,0 +1,63 @@
+name: Test LiveWallpaper NSIS dl.7z extraction
+
+on:
+  push:
+    branches:
+      - test-livewallpaper-dl7z
+    paths:
+      - .github/workflows/test-livewallpaper-dl7z.yml
+
+jobs:
+  extract:
+    runs-on: windows-latest
+    steps:
+      - name: Download and verify release installer
+        shell: pwsh
+        run: |
+          $url = 'https://github.com/GiantappMan/livewallpaper/releases/download/v4.0.1-alpha.4/GiantappWallpaper_4.0.1-alpha.4_x64-setup.exe'
+          $installer = Join-Path $env:RUNNER_TEMP 'dl.7z'
+          Invoke-WebRequest -Uri $url -OutFile $installer
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expected = 'de94726bbad684840fad871dbeec2d292e9c6ebfd90c3bdce4a60c8f5af77ca3'
+          if ($actual -ne $expected) { throw "SHA256 mismatch: $actual" }
+          "Verified SHA256: $actual" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+
+      - name: List and extract with 7-Zip
+        shell: pwsh
+        run: |
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path $sevenZip)) { throw "7-Zip not found: $sevenZip" }
+          $installer = Join-Path $env:RUNNER_TEMP 'dl.7z'
+          $destination = Join-Path $env:RUNNER_TEMP 'livewallpaper-extracted'
+          New-Item -ItemType Directory -Path $destination -Force | Out-Null
+          & $sevenZip l $installer
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip could not list the NSIS installer (exit $LASTEXITCODE)" }
+          & $sevenZip x $installer "-o$destination" -y
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip extraction failed (exit $LASTEXITCODE)" }
+
+          $files = Get-ChildItem -LiteralPath $destination -File -Recurse
+          if (-not $files) { throw '7-Zip reported success but extracted no files.' }
+          $report = @()
+          $report += '## Extracted file tree'
+          $report += ''
+          $report += '| Relative path | Size (bytes) |'
+          $report += '|---|---:|'
+          foreach ($file in $files) {
+            $relative = $file.FullName.Substring($destination.Length).TrimStart('\','/')
+            $report += "| $relative | $($file.Length) |"
+          }
+          $report += ''
+          $report += '## Executables'
+          $report += ''
+          foreach ($file in ($files | Where-Object Extension -eq '.exe')) {
+            $report += "- $($file.FullName.Substring($destination.Length).TrimStart('\','/'))"
+          }
+          $report | Add-Content -Path $env:GITHUB_STEP_SUMMARY
+          $files | Select-Object FullName, Length | Format-Table -AutoSize
+
+      - name: Upload extracted files for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: livewallpaper-dl7z-extracted
+          path: ${{ runner.temp }}/livewallpaper-extracted/**
+          if-no-files-found: error
