@@ -55,6 +55,19 @@ jobs:
           $report | Add-Content -Path $env:GITHUB_STEP_SUMMARY
           $files | Select-Object FullName, Length | Format-Table -AutoSize
 
+      - name: Smoke-test extracted executable
+        shell: pwsh
+        run: |
+          $destination = Join-Path $env:RUNNER_TEMP 'livewallpaper-extracted'
+          $exe = Join-Path $destination 'giantapp-wallpaper.exe'
+          if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Executable missing: $exe" }
+          $process = Start-Process -FilePath $exe -WorkingDirectory $destination -PassThru
+          Start-Sleep -Seconds 12
+          $process.Refresh()
+          if ($process.HasExited) { throw "The extracted application exited during startup with code $($process.ExitCode)." }
+          "The extracted executable remained running for 12 seconds (PID $($process.Id))." | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          & taskkill.exe /PID $process.Id /T /F | Out-Null
+
       - name: Upload extracted files for inspection
         uses: actions/upload-artifact@v4
         with:
