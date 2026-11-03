@@ -1,6 +1,11 @@
 name: Normalize manifest newlines
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'under review scoop bucket/*.json'
   workflow_dispatch:
     inputs:
       manifest:
@@ -29,6 +34,9 @@ jobs:
       - name: Normalize manifest endings
         shell: pwsh
         env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_BEFORE: ${{ github.event.before || '' }}
+          PUSH_SHA: ${{ github.sha }}
           MANIFEST_INPUT: ${{ inputs.manifest || '' }}
         run: |
           $ErrorActionPreference = "Stop"
@@ -50,6 +58,28 @@ jobs:
               throw "Manifest does not exist: $manifestInput"
             }
             $manifestFiles = @(Get-Item -LiteralPath $manifestPath)
+          } elseif ($env:EVENT_NAME -eq 'push') {
+            $before = [string]$env:PUSH_BEFORE
+            $after = [string]$env:PUSH_SHA
+            if ([string]::IsNullOrWhiteSpace($before) -or $before -match '^0+$') {
+              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after -- "under review scoop bucket")
+            } else {
+              $changedFiles = @(git diff --name-only $before $after -- "under review scoop bucket")
+            }
+            if ($LASTEXITCODE -ne 0) {
+              throw "Could not determine changed review manifests for push $before..$after."
+            }
+
+            $manifestFiles = @(
+              foreach ($file in $changedFiles) {
+                $normalized = ([string]$file).Replace('\', '/')
+                if ($normalized -match '(?i)^under review scoop bucket/[^/]+\.json$' -and
+                    (Test-Path -LiteralPath $normalized -PathType Leaf)) {
+                  Get-Item -LiteralPath $normalized
+                }
+              }
+            )
+            Write-Host "Found $($manifestFiles.Count) changed review manifest(s) to normalize."
           } else {
             $manifestFiles = @(
               foreach ($relativeRoot in @('bucket', 'under review scoop bucket')) {
@@ -87,16 +117,22 @@ jobs:
       - name: Commit normalization changes
         id: commit
         shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           $ErrorActionPreference = "Stop"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- bucket "under review scoop bucket"
+          if ($env:EVENT_NAME -eq 'push') {
+            git add -- "under review scoop bucket"
+          } else {
+            git add -- bucket "under review scoop bucket"
+          }
           git diff --cached --quiet
           $diffExitCode = $LASTEXITCODE
 
           if ($diffExitCode -eq 0) {
-            Write-Host "All manifests in both folders already have exactly one CRLF at end of file."
+            Write-Host "All selected manifests already have exactly one CRLF at end of file."
             "changed=false" >> $env:GITHUB_OUTPUT
           } elseif ($diffExitCode -eq 1) {
             git commit -m "chore: remove extra manifest newlines"
