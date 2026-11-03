@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Twenty Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Twenty-one Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -29,7 +29,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **878** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 854 of the 878 active bucket manifests (796 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Seventeen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 854 of the 878 active bucket manifests (796 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Twenty-one additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Newly added manifest classifications
 - [`matrixrain`](../bucket/matrixrain.json) — **Portable**: uses the official standalone Windows executable for x64 or ARM64, with SHA-256 digests published in the GitHub release metadata. Scoop does not run the application's `/install` command; optional Windows System32 and screen-saver registry integration remains a separate, administrator-approved user action. Run `/uninstall` before removing the Scoop copy if that integration was enabled.
@@ -233,7 +233,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following seventeen manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
+The following manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -248,10 +248,10 @@ The following seventeen manifests are kept in [`under review kirobucket/`](../un
 | [taskslinger](../under%20review%20kirobucket/taskslinger.json) | EXE setup (engine unverified) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](../under%20review%20kirobucket/layer.json) | Tauri/NSIS setup EXE | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
 | [keptinflow](../under%20review%20kirobucket/keptinflow.json) | Windows setup EXE (engine unverified) | The official v0.88.0 setup's installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
-| [nova-island](../under%20review%20kirobucket/nova-island.json) | NSIS setup EXE | Only the NSIS installer is published; its installer enables an auto-update feature that can replace Scoop-managed files. Verify silent installation, uninstall cleanup, and updater control before promotion. |
 | [udm-pro](../under%20review%20kirobucket/udm-pro.json) | Windows setup EXE (engine unverified) | The 236 MB setup has no published installer documentation or repository license file; installer engine, payload, silent switches, and uninstall behavior are unverified. |
 | [nectarlink](../under%20review%20kirobucket/nectarlink.json) | NSIS setup EXE | The vendor setup adds Firewall rules, a scheduled update task, an AppX sparse package, HKLM uninstall metadata, and shortcuts; a Scoop-safe install/uninstall flow has not been tested. |
 | [jan](../under%20review%20kirobucket/jan.json) | Tauri Windows setup EXE | The release provides x64 and ARM64 setup assets but no Windows portable archive; payload extraction, silent installation, and uninstall behavior are unverified. |
+| [ipban](../under%20review%20kirobucket/ipban.json) | Windows x64/x86 ZIP (service package) | The upstream installer changes Windows audit policies and registers/starts an IPBan service. This staged manifest downloads only; verify archive layout, service installation/upgrades/removal, configuration persistence, and audit-policy handling before promotion. |
 | [deeptutor](../under%20review%20kirobucket/deeptutor.json) | Windows Portable ZIP (launch path unverified) | The official release labels the ZIP Portable, but its archive layout and actual executable path have not been inspected; no launch path is declared. |
 | [twindesk](../under%20review%20kirobucket/twindesk.json) | Per-machine NSIS setup EXE | The custom installer changes Firewall rules, an HKLM WebClient setting, TrustedPeople certificates, and optional AppX/virtual-camera integration; Scoop-safe installation and cleanup are unverified. |
 | [mystify](../under%20review%20kirobucket/mystify.json) | Windows x64 ZIP (standalone GUI app) | No SHA-256 is published; archive layout, executable path, and .NET runtime availability have not been verified. It is not a native `.scr` screen saver. |
