@@ -22,16 +22,19 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 793 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 796 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 58 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
 | Not reconciled | 24 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **875** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
+| **Total** | **878** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 851 of the 875 active bucket manifests (793 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Fifteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 854 of the 878 active bucket manifests (796 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Sixteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Newly added manifest classifications
+- [`matrixrain`](../bucket/matrixrain.json) — **Portable**: uses the official standalone Windows executable for x64 or ARM64, with SHA-256 digests published in the GitHub release metadata. Scoop does not run the application's `/install` command; optional Windows System32 and screen-saver registry integration remains a separate, administrator-approved user action. Run `/uninstall` before removing the Scoop copy if that integration was enabled.
+- [`matrixcode`](../bucket/matrixcode.json) — **Portable**: uses the official architecture-specific portable ZIP rather than the MSI. The upstream Windows release script stages `MatrixCode.exe` and `Matrix Code.scr` at the package root before creating the ZIP; the release publishes SHA-256 digests for both architectures. Scoop does not install the `.scr` into System32 or register it in Windows Screen Saver Settings.
+- [`ghost-saver`](../bucket/ghost-saver.json) — **Portable**: downloads the official self-contained `ghost-saver.scr` directly. The release publishes its SHA-256 digest, and the project documents that the single file has no external dependencies. Scoop only stores the file and creates a shortcut; Windows screen-saver registration remains a manual right-click → Install action.
 - [`jopdf`](../bucket/jopdf.json) — **Portable**: the official x64 Inno Setup 6.4.3 package is version 2.4.2.1, SHA-256 `87e6a08e1ec197bd761e7672ef4a86ae9649795c7e3907f8626daf61646cec13`, and has a valid Authenticode signature from Chengdu Lightspeed Gravity Technology Co., Ltd. Scoop's exact `innounp` 2.71.3 helper (its downloaded SHA-256 matched Scoop Main) extracted 2,492 files with `JOPDF.exe` at the application root; the executable's signature is valid and it launched successfully from the extracted payload, keeping a `JOPDF` window open for 10 seconds. The manifest uses `innosetup: true`, so Scoop extracts `{app}` without running the vendor setup's registry, uninstaller, or shortcut registration tasks.
 - [`mdnote`](../bucket/mdnote.json) — **Portable**: uses the official Windows x64 `MDNote-2.0.1-portable.zip` asset and its SHA-256 digest published in GitHub Release metadata. The archive-validation workflow confirmed that the executable is inside the versioned `MDNote-2.0.1` directory; the manifest extracts that directory and launches `MDNote.exe`. Scoop does not execute the separate NSIS setup. MDNote requires .NET Framework 4.8 (included with Windows 10/11 x64); settings and recovery data are stored in the user's AppData outside Scoop.
 - [`astraeus`](../bucket/astraeus.json) — **Portable**: uses the official v2.2.3 single-file Windows executable; the published SHA-256 digest matches the release metadata and Scoop does not run an installer or register the application. On first launch, the optional start-with-Windows setup can copy the executable to `%LOCALAPPDATA%\\Programs\\Astraeus`, create a Start Menu shortcut, and register a current-user Run entry; decline that option to keep the Scoop-managed copy as the only installation. Preferences are stored under `HKCU\\Software\\Astraeus`, other user data under `%LOCALAPPDATA%\\Astraeus`, and the `astraeus.ini` configuration file is persisted by Scoop. The built-in updater remains enabled by default and can replace the executable independently of Scoop; set `AutoUpdate = false` in `astraeus.ini` to keep updates under Scoop control.
@@ -225,7 +228,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following fifteen manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
+The following sixteen manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -244,6 +247,7 @@ The following fifteen manifests are kept in [`under review kirobucket/`](../unde
 | [jan](../under%20review%20kirobucket/jan.json) | Tauri Windows setup EXE | The release provides x64 and ARM64 setup assets but no Windows portable archive; payload extraction, silent installation, and uninstall behavior are unverified. |
 | [deeptutor](../under%20review%20kirobucket/deeptutor.json) | Windows Portable ZIP (launch path unverified) | The official release labels the ZIP Portable, but its archive layout and actual executable path have not been inspected; no launch path is declared. |
 | [twindesk](../under%20review%20kirobucket/twindesk.json) | Per-machine NSIS setup EXE | The custom installer changes Firewall rules, an HKLM WebClient setting, TrustedPeople certificates, and optional AppX/virtual-camera integration; Scoop-safe installation and cleanup are unverified. |
+| [mystify](../under%20review%20kirobucket/mystify.json) | Windows x64 ZIP (standalone GUI app) | No SHA-256 is published; archive layout, executable path, and .NET runtime availability have not been verified. It is not a native `.scr` screen saver. |
 ## Portable examples and important exceptions
 
 The following are examples of Portable manifest techniques in this bucket:

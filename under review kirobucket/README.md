@@ -34,3 +34,4 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [jan](jan.json) | Tauri Windows setup only (x64 and ARM64); no Windows portable archive is published. Installer payload, silent install path, and uninstall behavior remain unverified. |
 | [deeptutor](deeptutor.json) | Official Windows Portable ZIP is published, but its archive layout and actual application executable path have not yet been verified. |
 | [twindesk](twindesk.json) | Per-machine NSIS setup uses Firewall rules, an HKLM WebClient setting, TrustedPeople certificate registration, and optional AppX/virtual-camera integration; Scoop-safe install and uninstall are unverified. |
+| [mystify](mystify.json) | Official Windows ZIP has no published SHA-256; archive layout, executable path, and .NET runtime availability are unverified. It is an animation app rather than a native `.scr` screen saver. |
