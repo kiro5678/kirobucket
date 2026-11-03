@@ -25,6 +25,7 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [quanto-flx](quanto-flx.json) | Rainmeter RMSKIN add-on, not a standalone application; it requires Rainmeter's SkinInstaller workflow. |
 | [zenbreak-msix](zenbreak-msix.json) | MSIX file is being unpacked as a 7-Zip archive; the unpackaged executable still needs a runtime/launch test. |
 | [anton](anton.json) | Official endpoint redirects to a setup EXE, but the publisher checksum and installer/uninstaller behavior are not verified. |
+| [autooff](autooff.json) | Official 4.25 setup EXE has no upstream SHA-256; installer engine, payload, silent switches, custom install path, and portable extraction are unverified. |
 | [pulse-launcher](pulse-launcher.json) | Only a pre-release setup EXE is published; installer engine, payload layout, and uninstall behavior are unverified. |
 | [taskslinger](taskslinger.json) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](layer.json) | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
