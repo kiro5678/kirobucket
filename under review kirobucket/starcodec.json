@@ -1,0 +1,19 @@
+{
+    "version": "20261016",
+    "description": "Windows codec pack that installs audio and video codecs, DirectShow filters, subtitle support, and related media utilities.",
+    "homepage": "https://www.starcodec.com/en/",
+    "license": "Freeware",
+    "url": "https://www.starcodec.com/en/downloading.php?type=starcodec&ver=20261016",
+    "checkver": {
+        "url": "https://www.starcodec.com/en/",
+        "regex": "StarCodec (?<version>\\d{8})"
+    },
+    "autoupdate": {
+        "url": "https://www.starcodec.com/en/downloading.php?type=starcodec&ver=$version"
+    },
+    "notes": [
+        "Review status: the official website lists the standard StarCodec 20261016 package (45.5 MB), plus separate Lite and Classic variants. A separate 64-bit package is published on another page and is not included in this manifest.",
+        "The official download link points to the version-specific downloading.php endpoint. The final binary URL/redirect, SHA-256, installer engine, silent-install arguments, installed file layout, codec registration, and uninstall behavior have not been verified. No hash, bin, shortcut, or installer instructions are guessed.",
+        "This staged manifest is outside bucket/ and is not installable. Keep it under review until the official download can be obtained and inspected, the SHA-256 is calculated, and the install/uninstall process is tested. StarCodec warns that installing multiple codec packs can cause conflicts and recommends avoiding an unnecessary Full installation."
+    ]
+}
