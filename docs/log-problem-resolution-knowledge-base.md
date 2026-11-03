@@ -772,3 +772,14 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Problem:** `pre_uninstall` read `TweaksVersion`, `ScoopSnapBarBackupCaptured`, and `EnableSnapBar` before checking whether the corresponding per-user registry keys existed. A package removed before first launch, or an older/manual install without those keys, could emit errors during cleanup.
 - **Resolution:** Initialize the values as `$null`, check `Test-Path` for each registry key, and read values only when that key exists. Missing state now follows the preserve-safe path; cleanup commands remain best-effort.
 - **Required verification:** PowerShell AST validation runs in the Notch Package Extraction Test workflow. This parser check confirms syntax, not live registry behavior; a real lifecycle test would require a disposable Windows user profile/VM.
+
+
+### 2026-11-03 — Correct stale MSI filename in the CrowdSec manifest
+
+- **Status:** Resolved, Scoop validation pending.
+- **Affected area:** `bucket/crowdsec.json`.
+- **Problem:** The manifest's current download URL and SHA-256 were for CrowdSec `1.8.2`, but `installer.file` still named `crowdsec_1.8.1.msi`. That filename did not match the versioned MSI asset downloaded by the manifest.
+- **Root cause:** The `installer.file` value had not been updated with the versioned download asset when the manifest moved to `1.8.2`. The download URL and installer file name were maintained separately.
+- **Resolution:** Changed `installer.file` to `crowdsec_$version.msi` so the declared installer name tracks the manifest version and the published filename pattern.
+- **Verification:** Confirmed that the official `v1.8.2` release publishes `crowdsec_1.8.2.msi` and its SHA-256 matches the manifest. Parsed the edited manifest as JSON and read it back from branch `add-security-monitor-and-crowdsec-bouncer-review`; it contains `installer.file = crowdsec_$version.msi`. Scoop's checkver/autoupdate pipeline and an actual MSI installation were not run, so variable expansion and install behavior remain to be validated.
+- **Prevention:** Keep `installer.file` aligned with the actual local download filename whenever the installer property is used. For versioned filenames, prefer a `$version` template only after confirming Scoop expands it in that field; run the isolated autoupdate validation before merging.
