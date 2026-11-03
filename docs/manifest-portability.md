@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Twenty-one Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Twenty-three Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -29,7 +29,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **878** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 854 of the 878 active bucket manifests (796 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Twenty-one additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 854 of the 878 active bucket manifests (796 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Twenty-three additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Newly added manifest classifications
 - [`matrixrain`](../bucket/matrixrain.json) — **Portable**: uses the official standalone Windows executable for x64 or ARM64, with SHA-256 digests published in the GitHub release metadata. Scoop does not run the application's `/install` command; optional Windows System32 and screen-saver registry integration remains a separate, administrator-approved user action. Run `/uninstall` before removing the Scoop copy if that integration was enabled.
@@ -255,6 +255,8 @@ The following manifests are kept in [`under review kirobucket/`](../under%20revi
 | [deeptutor](../under%20review%20kirobucket/deeptutor.json) | Windows Portable ZIP (launch path unverified) | The official release labels the ZIP Portable, but its archive layout and actual executable path have not been inspected; no launch path is declared. |
 | [twindesk](../under%20review%20kirobucket/twindesk.json) | Per-machine NSIS setup EXE | The custom installer changes Firewall rules, an HKLM WebClient setting, TrustedPeople certificates, and optional AppX/virtual-camera integration; Scoop-safe installation and cleanup are unverified. |
 | [mystify](../under%20review%20kirobucket/mystify.json) | Windows x64 ZIP (standalone GUI app) | No SHA-256 is published; archive layout, executable path, and .NET runtime availability have not been verified. It is not a native `.scr` screen saver. |
+| [snitch](../under%20review%20kirobucket/snitch.json) | Windows x64 NSIS setup EXE (electron-builder) | The upstream build configuration confirms NSIS, and the current release publishes an asset SHA-256. Inspect the installer payload and verify silent Scoop-contained installation, uninstaller location, and cleanup before promotion. Live packet capture requires Npcap, which is not bundled and cannot be redistributed under the free Npcap license. |
+| [argus](../under%20review%20kirobucket/argus.json) | Windows amd64 ZIP | GitHub publishes a SHA-256 asset digest, and the release notes describe a statically linked `argus.exe` plus the full `.rule/` bundle. Inspect the actual archive to verify executable and rules paths, then test scanning, update behavior, and persistence before declaring launch or persistence paths. |
 ## Portable examples and important exceptions
 
 The following are examples of Portable manifest techniques in this bucket:
