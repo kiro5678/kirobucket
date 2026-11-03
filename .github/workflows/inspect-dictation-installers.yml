@@ -19,122 +19,64 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Resolve and download official installers
+      - name: Resolve official sources and download available installers
         id: download
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: @@{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
           $root = Join-Path $env:RUNNER_TEMP "dictation-installer-inspection"
           New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $whisperPath = ""
+          $blabbyPath = ""
 
-          function Get-PageLinks {
-            param([string]$PageUrl, [string]$Html)
-            $items = [System.Collections.Generic.List[object]]::new()
-            foreach ($match in [regex]::Matches($Html, '(?is)<(?<tag>a|button)\b(?<attrs>[^>]*)>(?<body>.*?)</\k<tag>>')) {
-              $attrs = $match.Groups["attrs"].Value
-              $hrefMatch = [regex]::Match($attrs, '(?is)\b(?:href|data-href|data-url|data-download-url|data-installer-url)\s*=\s*["''](?<href>[^"'']+)["'']')
-              if (-not $hrefMatch.Success) { continue }
-              $href = [System.Net.WebUtility]::HtmlDecode($hrefMatch.Groups["href"].Value.Trim())
-              if ([string]::IsNullOrWhiteSpace($href) -or $href.StartsWith("#")) { continue }
-              try { $absolute = [System.Uri]::new([System.Uri]$PageUrl, $href).AbsoluteUri } catch { continue }
-              $label = [regex]::Replace($match.Groups["body"].Value, '<[^>]+>', ' ')
-              $label = [System.Net.WebUtility]::HtmlDecode(($label -replace '\s+', ' ').Trim())
-              $items.Add([PSCustomObject]@{ Url = $absolute; Label = $label; Tag = $match.Groups["tag"].Value })
-            }
-            return @($items)
-          }
-          function Save-Installer {
-            param([string]$Name, [string]$Url, [string]$Destination, [string]$ExpectedSha256)
-            $uri = [System.Uri]::new($Url)
-            if ($uri.Scheme -ne "https" -or $uri.UserInfo) { throw "$($Name): only credential-free HTTPS URLs are accepted." }
-            Write-Host "$Name download URL: $Url"
-            Invoke-WebRequest -Uri $uri.AbsoluteUri -OutFile $Destination -MaximumRedirection 10 -TimeoutSec 900 -ErrorAction Stop
-            $item = Get-Item -LiteralPath $Destination
-            if ($item.Length -lt 1MB -or $item.Length -gt 1.5GB) {
-              throw "$($Name): unexpected download size ($($item.Length) bytes)."
-            }
-            $stream = [System.IO.File]::OpenRead($Destination)
-            try { $header = [byte[]]::new(2); $read = $stream.Read($header, 0, 2) } finally { $stream.Dispose() }
-            if ($read -ne 2 -or $header[0] -ne 0x4D -or $header[1] -ne 0x5A) {
-              throw "$($Name): response is not a Windows PE executable (MZ header missing)."
-            }
-            $sha = (Get-FileHash -LiteralPath $Destination -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($ExpectedSha256 -and $sha -ine $ExpectedSha256.ToLowerInvariant()) {
-              throw "$($Name): SHA-256 mismatch. Expected $ExpectedSha256, got $sha."
-            }
-            $signature = Get-AuthenticodeSignature -LiteralPath $Destination
-            $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($Destination)
-            $signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { "(no signer certificate)" }
-            [PSCustomObject]@{
-              Name = $Name
-              Url = $Url
-              File = $Destination
-              FileName = $item.Name
-              SizeBytes = $item.Length
-              SHA256 = $sha
-              ExpectedSHA256 = $ExpectedSha256
-              AuthenticodeStatus = [string]$signature.Status
-              Signer = $signer
-              ProductName = [string]$version.ProductName
-              FileDescription = [string]$version.FileDescription
-              FileVersion = [string]$version.FileVersion
-            }
-          }
-
-          # Whisperstream: resolve the Windows download from its official site.
-          $whisperPage = "https://whisperstream.io/download"
+          # Whisperstream: download only when the official site publishes a direct EXE/MSI URL.
+          # Its interactive form is never submitted by automation.
           try {
-            $page = Invoke-WebRequest -Uri $whisperPage -MaximumRedirection 10 -TimeoutSec 90 -ErrorAction Stop
-            $whisperHtml = [string]$page.Content
-          } catch {
-            $whisperPage = "https://whisperstream.io/"
-            $page = Invoke-WebRequest -Uri $whisperPage -MaximumRedirection 10 -TimeoutSec 90 -ErrorAction Stop
-            $whisperHtml = [string]$page.Content
-          }
-          Set-Content -LiteralPath (Join-Path $root "whisperstream-download-page.html") -Value $whisperHtml -Encoding utf8
-          $links = @(Get-PageLinks -PageUrl $whisperPage -Html $whisperHtml)
-          $links | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $root "whisperstream-page-links.json") -Encoding utf8
-          $links | ForEach-Object { Write-Host "Whisperstream page link: tag=$($_.Tag); text=$($_.Label); url=$($_.Url)" }
-          $pageUri = [System.Uri]$whisperPage
-          $candidates = @($links | Where-Object {
-            ($_.Label -match '(?i)windows' -or $_.Url -match '(?i)windows|win') -and
-            ([System.Uri]$_.Url).AbsolutePath -ne $pageUri.AbsolutePath -and
-            $_.Url -notmatch '(?i)\.(dmg|pkg)(\?|$)'
-          })
-          if (-not $candidates.Count) {
-            $rawUrls = [regex]::Matches($whisperHtml, '(?i)https?://[^""''\s<>]+') |
-              ForEach-Object { $_.Value.TrimEnd(')', ']', ',', ';') } |
-              Where-Object { $_ -match '(?i)whisper|download|\.exe' } |
-              Sort-Object -Unique
-            $rawUrls | Set-Content -LiteralPath (Join-Path $root "whisperstream-raw-url-candidates.txt") -Encoding utf8
-            $scriptCandidates = [regex]::Matches($whisperHtml, '(?is)(?:downloadUrl|installerUrl|windowsDownload|windowsInstaller|href)\s*[:=]\s*["''](?<url>[^"'']+)["'']') |
-              ForEach-Object { [System.Net.WebUtility]::HtmlDecode($_.Groups["url"].Value) } |
-              Where-Object { $_ -match '(?i)whisper|download|\.exe|windows' } |
-              Sort-Object -Unique
-            $scriptCandidates | Set-Content -LiteralPath (Join-Path $root "whisperstream-script-url-candidates.txt") -Encoding utf8
-            foreach ($candidate in $scriptCandidates) {
-              try {
-                $absolute = [System.Uri]::new([System.Uri]$whisperPage, $candidate).AbsoluteUri
-                if (([System.Uri]$absolute).AbsolutePath -ne $pageUri.AbsolutePath -and $absolute -match '(?i)windows|win|\.exe|download') {
-                  $candidates += [PSCustomObject]@{ Url = $absolute; Label = "Embedded download URL"; Tag = "script" }
-                }
-              } catch {}
-            }
-          }
-          if (-not $candidates.Count) {
-            throw "Could not resolve a Windows installer URL. HTML, page links, and candidate URLs were saved as artifacts."
-          }
-          $whisperCandidate = $candidates |
-            Sort-Object @{Expression = { if ($_.Url -match '(?i)\.exe(\?|$)') { 0 } elseif ($_.Label -match '(?i)windows') { 1 } else { 2 } }} |
-            Select-Object -First 1
-          Write-Host "Whisperstream candidate: $($whisperCandidate.Label) -> $($whisperCandidate.Url)"
-          $whisperPath = Join-Path $root "Whisperstream-Windows-Setup.exe"
-          $whisper = Save-Installer -Name "Whisperstream" -Url $whisperCandidate.Url -Destination $whisperPath -ExpectedSha256 ""
+            $pageUrl = "https://whisperstream.io/download"
+            $page = Invoke-WebRequest -Uri $pageUrl -MaximumRedirection 10 -TimeoutSec 90 -ErrorAction Stop
+            $html = [string]$page.Content
+            Set-Content -LiteralPath (Join-Path $root "whisperstream-download-page.html") -Value $html -Encoding utf8
+            $formNotes = @()
+            if ($html -match '(?i)InstallerDownloadController|installerForm') { $formNotes += "The official page embeds an installer download form/controller." }
+            if ($html -match '(?i)name or company') { $formNotes += "The form asks for a name or company." }
+            if ($html -match '(?i)email address') { $formNotes += "The form asks for an email address." }
+            if ($html -match '(?i)Starting your download|Your download has started') { $formNotes += "The page indicates the download starts after form submission." }
 
-          # BlabbyAI: latest Windows installer from the release repository linked by the official website.
+            $links = [regex]::Matches($html, '(?is)<a\b(?<attrs>[^>]*)>(?<body>.*?)</a>') | ForEach-Object {
+              $href = [regex]::Match($_.Groups["attrs"].Value, '(?is)\bhref\s*=\s*["''](?<href>[^"'']+)["'']')
+              if ($href.Success) {
+                $label = [regex]::Replace($_.Groups["body"].Value, '<[^>]+>', ' ')
+                [PSCustomObject]@{ Label = ($label -replace '\s+', ' ').Trim(); Href = [System.Net.WebUtility]::HtmlDecode($href.Groups["href"].Value) }
+              }
+            }
+            $links | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $root "whisperstream-page-links.json") -Encoding utf8
+            $formNotes | Set-Content -LiteralPath (Join-Path $root "whisperstream-form-evidence.txt") -Encoding utf8
+
+            $directUrls = @([regex]::Matches($html, '(?i)https://[^""''\s<>]+(?:\.exe|\.msi)(?:\?[^""''\s<>]*)?') |
+              ForEach-Object { $_.Value.TrimEnd(')', ']', ',', ';') } | Sort-Object -Unique)
+            if ($directUrls.Count -gt 0) {
+              $whisperUrl = $directUrls | Select-Object -First 1
+              $whisperPath = Join-Path $root "Whisperstream-Windows-Setup.exe"
+              Invoke-WebRequest -Uri $whisperUrl -OutFile $whisperPath -MaximumRedirection 10 -TimeoutSec 900 -ErrorAction Stop
+              $file = Get-Item -LiteralPath $whisperPath
+              if ($file.Length -lt 1MB -or $file.Length -gt 1.5GB) { throw "Whisperstream download is not a plausible installer file." }
+              $signature = Get-AuthenticodeSignature -LiteralPath $whisperPath
+              $sha = (Get-FileHash -LiteralPath $whisperPath -Algorithm SHA256).Hash.ToLowerInvariant()
+              [PSCustomObject]@{ Name="Whisperstream"; Url=$whisperUrl; FileName=$file.Name; SizeBytes=$file.Length; SHA256=$sha; AuthenticodeStatus=$signature.Status; Signer=$signature.SignerCertificate.Subject } |
+                ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $root "whisperstream-inventory.json") -Encoding utf8
+            } else {
+              Write-Warning "Whisperstream has no direct static EXE/MSI URL in the public page. The form was not submitted and no user data was fabricated."
+              $formNotes | ForEach-Object { Write-Host $_ }
+            }
+          } catch {
+            Write-Warning "Whisperstream inspection could not resolve a direct installer: $($_.Exception.Message)"
+            $_.Exception.ToString() | Set-Content -LiteralPath (Join-Path $root "whisperstream-page-error.txt") -Encoding utf8
+          }
+
+          # BlabbyAI: latest Windows setup from the release repository linked by the official site.
           $headers = @{
             Accept = "application/vnd.github+json"
             "User-Agent" = "KiroBucket-Dictation-Installer-Inspection"
@@ -143,42 +85,61 @@ jobs:
           if ($env:GITHUB_TOKEN) { $headers.Authorization = "Bearer $env:GITHUB_TOKEN" }
           $release = Invoke-RestMethod -Uri "https://api.github.com/repos/sumbatx15/blabby-updater/releases/latest" -Headers $headers -TimeoutSec 60 -ErrorAction Stop
           $asset = $release.assets | Where-Object { $_.name -match '^blabby-[\d.]+-setup\.exe$' } | Select-Object -First 1
-          if (-not $asset) { throw "Latest BlabbyAI release $($release.tag_name) has no matching Windows setup executable." }
+          if (-not $asset) { throw "Latest BlabbyAI release has no matching Windows setup executable." }
           $expected = ""
           if ($asset.digest -match '^sha256:(?<value>[0-9a-fA-F]{64})$') { $expected = $Matches.value }
           $blabbyPath = Join-Path $root $asset.name
-          $blabby = Save-Installer -Name "BlabbyAI $($release.tag_name)" -Url $asset.browser_download_url -Destination $blabbyPath -ExpectedSha256 $expected
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $blabbyPath -TimeoutSec 900 -ErrorAction Stop
+          $blabbyFile = Get-Item -LiteralPath $blabbyPath
+          if ($blabbyFile.Length -lt 1MB -or $blabbyFile.Length -gt 1.5GB) { throw "BlabbyAI setup size is outside the accepted range." }
+          $blabbySha = (Get-FileHash -LiteralPath $blabbyPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($expected -and $blabbySha -ine $expected.ToLowerInvariant()) { throw "BlabbyAI SHA-256 mismatch against GitHub release digest." }
+          $blabbySignature = Get-AuthenticodeSignature -LiteralPath $blabbyPath
+          $blabbyInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($blabbyPath)
+          $signer = if ($blabbySignature.SignerCertificate) { $blabbySignature.SignerCertificate.Subject } else { "(no signer certificate)" }
+          [PSCustomObject]@{
+            Name = "BlabbyAI"
+            Version = $release.tag_name
+            PublishedAt = $release.published_at
+            Url = $asset.browser_download_url
+            FileName = $blabbyFile.Name
+            SizeBytes = $blabbyFile.Length
+            SHA256 = $blabbySha
+            ExpectedSHA256 = $expected
+            AuthenticodeStatus = [string]$blabbySignature.Status
+            Signer = $signer
+            ProductName = [string]$blabbyInfo.ProductName
+            FileDescription = [string]$blabbyInfo.FileDescription
+            FileVersion = [string]$blabbyInfo.FileVersion
+          } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root "blabby-inventory.json") -Encoding utf8
 
-          foreach ($assetName in @("builder-effective-config.yaml", "latest.yml")) {
-            $metadataAsset = $release.assets | Where-Object { $_.name -eq $assetName } | Select-Object -First 1
+          foreach ($metadataName in @("builder-effective-config.yaml", "latest.yml")) {
+            $metadataAsset = $release.assets | Where-Object { $_.name -eq $metadataName } | Select-Object -First 1
             if ($metadataAsset) {
-              try {
-                Invoke-WebRequest -Uri $metadataAsset.browser_download_url -OutFile (Join-Path $root "blabby-$assetName") -TimeoutSec 60 -ErrorAction Stop
-              } catch { Write-Warning "Could not download optional Blabby metadata $($assetName): $($_.Exception.Message)" }
+              try { Invoke-WebRequest -Uri $metadataAsset.browser_download_url -OutFile (Join-Path $root "blabby-$metadataName") -TimeoutSec 60 -ErrorAction Stop }
+              catch { Write-Warning "Could not download optional Blabby release metadata $metadataName: $($_.Exception.Message)" }
             }
           }
 
-          $inventory = @($whisper, $blabby)
-          $inventory | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root "installer-inventory.json") -Encoding utf8
-          foreach ($item in $inventory) {
-            Write-Host "$($item.Name): $($item.FileName), $($item.SizeBytes) bytes, SHA256 $($item.SHA256)"
-            Write-Host "Authenticode: $($item.AuthenticodeStatus); signer: $($item.Signer); file version: $($item.FileVersion)"
-          }
-          @(
-            "## Downloaded official Windows installers"
-            ""
-            "| Program | File | Bytes | SHA-256 | Authenticode | Signer |"
-            "|---|---|---:|---|---|---|"
-            foreach ($item in $inventory) {
-              "| $($item.Name) | $($item.FileName) | $($item.SizeBytes) | $($item.SHA256) | $($item.AuthenticodeStatus) | $($item.Signer -replace '\|','/') |"
-            }
-            ""
-            "BlabbyAI release: $($release.tag_name) ($($release.published_at))"
-            "The installers were downloaded but not executed."
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-
+          Write-Host "BlabbyAI version: $($release.tag_name)"
+          Write-Host "BlabbyAI asset: $($blabbyFile.Name) ($($blabbyFile.Length) bytes)"
+          Write-Host "BlabbyAI SHA-256: $blabbySha"
+          Write-Host "BlabbyAI Authenticode: $($blabbySignature.Status); signer: $signer"
           "whisperstream_path=$whisperPath" >> $env:GITHUB_OUTPUT
           "blabby_path=$blabbyPath" >> $env:GITHUB_OUTPUT
+          @(
+            "## Official Windows installer downloads"
+            ""
+            "- **BlabbyAI version:** $($release.tag_name)"
+            "- **File:** $($blabbyFile.Name)"
+            "- **Bytes:** $($blabbyFile.Length)"
+            "- **SHA-256:** $blabbySha"
+            "- **Authenticode:** $($blabbySignature.Status)"
+            "- **Signer:** $signer"
+            "- **Whisperstream direct installer resolved:** $([bool]$whisperPath)"
+            ""
+            "Neither installer was executed. No Whisperstream form was submitted."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
       - name: Download Detect It Easy
         id: die
@@ -215,7 +176,7 @@ jobs:
           "die_release=$($release.tag_name)" >> $env:GITHUB_OUTPUT
 
       - name: Statically identify installers and test archive extraction
-        if: steps.download.outcome == 'success' && steps.die.outcome == 'success'
+        if: steps.die.outcome == 'success'
         shell: pwsh
         env:
           WHISPERSTREAM_PATH: ${ steps.download.outputs.whisperstream_path }}
