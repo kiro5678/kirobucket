@@ -26,6 +26,7 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [zenbreak-msix](zenbreak-msix.json) | MSIX file is being unpacked as a 7-Zip archive; the unpackaged executable still needs a runtime/launch test. |
 | [anton](anton.json) | Official endpoint redirects to a setup EXE, but the publisher checksum and installer/uninstaller behavior are not verified. |
 | [autooff](autooff.json) | Official 4.25 setup EXE has no upstream SHA-256; installer engine, payload, silent switches, custom install path, and portable extraction are unverified. |
+| [starcodec](starcodec.json) | Official 20261016 download page lists the standard 45.5 MB package, but the final binary URL, SHA-256, installer engine, silent arguments, codec registration, and uninstall behavior are unverified. |
 | [pulse-launcher](pulse-launcher.json) | Only a pre-release setup EXE is published; installer engine, payload layout, and uninstall behavior are unverified. |
 | [taskslinger](taskslinger.json) | Official setup has no verified Scoop-contained install path or portable extraction method. |
 | [layer](layer.json) | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
