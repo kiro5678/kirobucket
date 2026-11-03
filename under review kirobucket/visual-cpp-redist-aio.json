@@ -1,0 +1,20 @@
+{
+    "version": "0.106.0",
+    "description": "All-in-one package of Microsoft Visual C++ Redistributable runtimes for x86 and x64, including legacy and current runtime packages.",
+    "homepage": "https://github.com/abbodi1406/vcredist",
+    "license": "Unlicense",
+    "url": "https://github.com/abbodi1406/vcredist/releases/download/v0.106.0/VisualCppRedist_AIO_x86_x64_106.zip",
+    "hash": "8614b20c7f1d63ccc85214efea1b9a36c44c3cb02c96f24ec107853f10b37194",
+    "checkver": {
+        "url": "https://api.github.com/repos/abbodi1406/vcredist/releases/latest",
+        "regex": "\"tag_name\":\\s*\"v(?<version>[\\d.]+)\"[\\s\\S]*?VisualCppRedist_AIO_x86_x64_(?<build>\\d+)\\.zip"
+    },
+    "autoupdate": {
+        "url": "https://github.com/abbodi1406/vcredist/releases/download/v$version/VisualCppRedist_AIO_x86_x64_$matchBuild.zip"
+    },
+    "notes": [
+        "Review status: standalone manifest created separately from vcredist-aio.json. The official v0.106.0 ZIP publishes the SHA-256 digest recorded above.",
+        "The upstream README instructs users to extract the package and run Installer.cmd as administrator. Its installer checks for and removes existing non-compliant Visual C++ runtimes before installing the bundled runtimes.",
+        "This staged manifest only downloads and extracts the ZIP. It does not execute Installer.cmd or any runtime installer. The archive payload and exact script path have not been inspected; verify the contents and install/uninstall behavior before promotion to bucket/."
+    ]
+}
