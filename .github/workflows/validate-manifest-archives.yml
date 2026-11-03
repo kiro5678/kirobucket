@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Manifest path, e.g. bucket/winzenith.json"
+        description: "Manifest path under bucket/ or under review scoop bucket/"
         required: true
         type: string
 
@@ -57,8 +57,8 @@ jobs:
           $manifestPaths = @()
           if (-not [string]::IsNullOrWhiteSpace($env:MANIFEST_INPUT)) {
             $manualPath = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
-            if ($manualPath -notmatch '(?i)^bucket/.+\.json$') {
-              throw "Manual validation requires a path under bucket/, such as bucket/winzenith.json. Received: $manualPath"
+            if ($manualPath -notmatch '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$') {
+              throw "Manual validation requires bucket/filename.json or under review scoop bucket/filename.json. Received: $manualPath"
             }
             if (-not (Test-Path -LiteralPath (Join-Path $repoRoot $manualPath) -PathType Leaf)) {
               throw "Manifest does not exist: $manualPath"
@@ -77,7 +77,7 @@ jobs:
             if ($LASTEXITCODE -ne 0) {
               throw "Could not compare $baseSha with HEAD."
             }
-            $manifestPaths = @($changedPaths | Where-Object { $_ -match '(?i)^bucket/.+\.json$' } | Sort-Object -Unique)
+            $manifestPaths = @($changedPaths | Where-Object { $_ -match '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$' } | Sort-Object -Unique)
           }
 
           if ($manifestPaths.Count -eq 0) {
