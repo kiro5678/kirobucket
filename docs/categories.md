@@ -11,6 +11,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Android & Device Tools | 9 | [View](#android-device-tools) |
 | Browsers & Communication | 9 | [View](#browsers-communication) |
 | Clipboard & Text | 32 | [View](#clipboard-text) |
+| Codec Pack | 1 | [View](#codec-pack) |
 | Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
 | Download Managers | 19 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
@@ -19,7 +20,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
-| Media & Audio/Video | 46 | [View](#media-audio-video) |
+| Media & Audio/Video | 45 | [View](#media-audio-video) |
 | Network & DNS | 52 | [View](#network-dns) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
@@ -127,6 +128,14 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-text-edit-plus](../bucket/vovsoft-text-edit-plus.json) | 16.7 | 4.8 MiB | 2026-09-25 | Portable edition of Vovsoft Text Edit Plus. | [Homepage](https://vovsoft.com/software/text-edit-plus/) |
 | [vovsoft-text-filter](../bucket/vovsoft-text-filter.json) | 1.1 | 2.2 MiB | 2026-08-13 | Portable edition of Vovsoft Text Filter. | [Homepage](https://vovsoft.com/software/text-filter/) |
 | [vovsoft-url-extractor](../bucket/vovsoft-url-extractor.json) | 2.7 | 4.6 MiB | 2026-10-08 | Portable edition of Vovsoft URL Extractor. | [Homepage](https://vovsoft.com/software/url-extractor/) |
+
+## Codec Pack
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 20.1.0 | — | 2026-10-18 | Mega variant of the K-Lite Codec Pack, a collection of DirectShow filters, VFW/ACM codecs and tools. | [Homepage](https://codecguide.com/about_kl.htm) |
+
+StarCodec 20261016 is staged for verification in [under review kirobucket](../under%20review%20kirobucket/starcodec.json). It is not in the active bucket and cannot be installed through KiroBucket until its installer, checksum, and uninstall behavior are verified.
 
 ## Developer & Technical Tools
 
@@ -453,7 +462,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [funk-ssd](../bucket/funk-ssd.json) | 4 | 535.3 KiB | 2025-06-25 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | 64bit: 75.6 MiB / arm64: 67.1 MiB | 2026-10-12 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
 | [haruna](../bucket/haruna.json) | 1944 | 64bit: 108.1 MiB | 2026-05-19 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
-| [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 20.1.0 | — | 2026-10-18 | Mega variant of the K-Lite Codec Pack, a collection of DirectShow filters, VFW/ACM codecs and tools. | [Homepage](https://codecguide.com/about_kl.htm) |
+
 | [lauschangriff](../bucket/lauschangriff.json) | 2.51 | 64bit: 141.0 KiB | 2021-05-15 | Portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) |
 | [mediaplayerok](../bucket/mediaplayerok.json) | 1.01 | 64bit: 229.0 KiB | 2026-06-11 | Portable media player with playlists and automatic resume playback. | [Homepage](https://www.softwareok.com/?Download=MediaPlayerOK) |
 | [moviebox-tui](../bucket/moviebox-tui.json) | 0.1.27 | 4.9 MiB | 2026-10-29 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. | [Homepage](https://github.com/mesamirh/MovieBox-Tui) |
