@@ -4,7 +4,7 @@
     "homepage": "https://forums.peerblock.com/",
     "license": "zlib-acknowledgement",
     "url": "https://s3.amazonaws.com/hn62xeffkz4xd8g3qnq8/software/PeerBlock-Setup_v1.2_r693.exe",
-    "hash": "47209321e48bcc5b2ce62c444ba125cdd01ff0b465f38feb9251a3e16e6fdb3f",
+    "hash": "5f42d76212e6f0dc625e0e19dd532651daa1afb9f3a0ef428d3a6121eb97f16f",
     "innosetup": true,
     "architecture": {
         "64bit": {
