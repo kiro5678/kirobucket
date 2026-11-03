@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Optional single manifest path under bucket/, e.g. bucket/taskexplorer.json. Leave empty to normalize all manifests."
+        description: "Optional path under bucket/ or under review scoop bucket/. Leave empty to normalize both folders."
         required: false
         type: string
 
@@ -35,21 +35,30 @@ jobs:
           git fetch origin master
           git reset --hard origin/master
 
-          $bucketPath = Join-Path $env:GITHUB_WORKSPACE "bucket"
-
+          $repoRoot = $env:GITHUB_WORKSPACE
           $manifestFiles = @()
           $manifestInput = $env:MANIFEST_INPUT.Trim().Replace('\', '/')
           if (-not [string]::IsNullOrWhiteSpace($manifestInput)) {
-            if ($manifestInput -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
-              throw "Provide one manifest filename or bucket/filename.json. Received: $manifestInput"
+            if ($manifestInput -match '(?i)^[^/]+\.json$') {
+              $manifestInput = "bucket/$manifestInput"
             }
-            $manifestPath = Join-Path $bucketPath $Matches.name
+            if ($manifestInput -notmatch '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$') {
+              throw "Provide bucket/filename.json or under review scoop bucket/filename.json. Received: $manifestInput"
+            }
+            $manifestPath = Join-Path $repoRoot $manifestInput
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-              throw "Manifest does not exist: bucket/$($Matches.name)"
+              throw "Manifest does not exist: $manifestInput"
             }
             $manifestFiles = @(Get-Item -LiteralPath $manifestPath)
           } else {
-            $manifestFiles = @(Get-ChildItem -Path $bucketPath -Filter '*.json' -File -Recurse)
+            $manifestFiles = @(
+              foreach ($relativeRoot in @('bucket', 'under review scoop bucket')) {
+                $rootPath = Join-Path $repoRoot $relativeRoot
+                if (Test-Path -LiteralPath $rootPath -PathType Container) {
+                  Get-ChildItem -LiteralPath $rootPath -Filter '*.json' -File -Recurse
+                }
+              }
+            )
           }
 
           $manifestFiles | ForEach-Object {
@@ -82,12 +91,12 @@ jobs:
           $ErrorActionPreference = "Stop"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- bucket
+          git add -- bucket "under review scoop bucket"
           git diff --cached --quiet
           $diffExitCode = $LASTEXITCODE
 
           if ($diffExitCode -eq 0) {
-            Write-Host "All manifests already have exactly one CRLF at end of file."
+            Write-Host "All manifests in both folders already have exactly one CRLF at end of file."
             "changed=false" >> $env:GITHUB_OUTPUT
           } elseif ($diffExitCode -eq 1) {
             git commit -m "chore: remove extra manifest newlines"
