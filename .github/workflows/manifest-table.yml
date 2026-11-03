@@ -360,6 +360,7 @@ jobs:
               "xyplorer" = "File Management"
               "yt-dlp-gui" = "Download Managers"
               "zapzap" = "Other Utilities"
+              "zen-desktop" = "Security"
               "zenbreak" = "Time Tracking & Focus"
               "zenbreak-msix" = "Time Tracking & Focus"
               "zexor" = "File Management"

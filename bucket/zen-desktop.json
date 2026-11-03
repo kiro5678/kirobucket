@@ -1,0 +1,42 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json",
+    "version": "0.29.0",
+    "description": "System-wide ad blocker and privacy guard for Windows, macOS, and Linux.",
+    "homepage": "https://irbis.sh/zen",
+    "license": "MIT",
+    "notes": [
+        "On first run, Zen prompts to install a local root certificate required for HTTPS filtering and changes the current user's Windows proxy settings.",
+        "Zen stores application data under %LOCALAPPDATA%\\Zen; Scoop does not redirect this data into its persist directory.",
+        "The official portable ZIP includes Zen's self-update feature, which may update the executable independently of Scoop."
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/irbis-sh/zen-desktop/releases/download/v0.29.0/Zen_windows_amd64.zip",
+            "hash": "af59bdb3443b136c9ef27c13a378027806861d472542900edda63a3885763d61"
+        },
+        "arm64": {
+            "url": "https://github.com/irbis-sh/zen-desktop/releases/download/v0.29.0/Zen_windows_arm64.zip",
+            "hash": "9f6fdcbd26377d019f6c6d81c93ef176475c1cfc4e17622b273bee78f345e5b1"
+        }
+    },
+    "bin": "Zen.exe",
+    "shortcuts": [
+        [
+            "Zen.exe",
+            "Zen"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/irbis-sh/zen-desktop"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/irbis-sh/zen-desktop/releases/download/v$version/Zen_windows_amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/irbis-sh/zen-desktop/releases/download/v$version/Zen_windows_arm64.zip"
+            }
+        }
+    }
+}
