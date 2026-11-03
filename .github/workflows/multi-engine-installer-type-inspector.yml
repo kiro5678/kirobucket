@@ -17,6 +17,10 @@ on:
         required: false
         default: ""
         type: string
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "under review kirobucket/autooff.json"
 
 permissions:
   contents: read
@@ -28,10 +32,17 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
       - name: Validate and download target file
         id: target
         shell: pwsh
         env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
           INSTALLER_URL: ${{ inputs.installer_url }}
           INSTALLER_NAME: ${{ inputs.installer_name }}
           EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
@@ -39,8 +50,29 @@ jobs:
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
 
+          $downloadUrl = $env:INSTALLER_URL.Trim()
+          $nameInput = $env:INSTALLER_NAME.Trim()
+          if ($env:GITHUB_EVENT_NAME -eq "pull_request") {
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE "under review kirobucket/autooff.json"
+            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+              throw "The pull request did not provide under review kirobucket/autooff.json."
+            }
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+            if ($manifest.url -is [array]) {
+              throw "AutoOff review manifest must contain one direct URL for installer inspection."
+            }
+            $downloadUrl = [string]$manifest.url
+            if ([string]::IsNullOrWhiteSpace($downloadUrl)) {
+              throw "AutoOff review manifest does not contain a direct URL."
+            }
+            if ([string]::IsNullOrWhiteSpace($nameInput)) {
+              $nameInput = [System.IO.Path]::GetFileName(([System.Uri]$downloadUrl).AbsolutePath)
+            }
+            Write-Host "Pull request manifest: $manifestPath"
+          }
+
           try {
-            $uri = [System.Uri]::new($env:INSTALLER_URL)
+            $uri = [System.Uri]::new($downloadUrl)
           } catch {
             throw "installer_url is not a valid absolute URL."
           }
@@ -66,7 +98,6 @@ jobs:
             throw "expected_sha256 must be exactly 64 hexadecimal characters."
           }
 
-          $nameInput = $env:INSTALLER_NAME.Trim()
           if ($nameInput) {
             if ([System.IO.Path]::GetFileName($nameInput) -ne $nameInput -or
                 $nameInput -match '[<>:"/\\|?*\x00-\x1F]' -or
