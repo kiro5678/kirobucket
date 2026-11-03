@@ -1,0 +1,15 @@
+{
+    "version": "1.6.4",
+    "description": "Privacy-focused real-time network monitor and application firewall with per-process traffic attribution and opt-in IP threat intelligence.",
+    "homepage": "https://github.com/aixisstudio/Snitch",
+    "license": "AGPL-3.0-or-later",
+    "url": "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe",
+    "hash": "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263",
+    "checkver": {
+        "github": "https://github.com/aixisstudio/Snitch",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/aixisstudio/Snitch/releases/download/v$version/Snitch-Setup-windows.exe"
+    }
+}
