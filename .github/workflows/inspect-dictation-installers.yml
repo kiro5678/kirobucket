@@ -23,7 +23,7 @@ jobs:
         id: download
         shell: pwsh
         env:
-          GITHUB_TOKEN: @@{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
@@ -179,10 +179,10 @@ jobs:
         if: steps.die.outcome == 'success'
         shell: pwsh
         env:
-          WHISPERSTREAM_PATH: ${ steps.download.outputs.whisperstream_path }}
-          BLABBY_PATH: ${ steps.download.outputs.blabby_path }}
-          DIEC_PATH: ${ steps.die.outputs.diec_path }}
-          DIE_RELEASE: ${ steps.die.outputs.die_release }}
+          WHISPERSTREAM_PATH: ${{ steps.download.outputs.whisperstream_path }}
+          BLABBY_PATH: ${{ steps.download.outputs.blabby_path }}
+          DIEC_PATH: ${{ steps.die.outputs.diec_path }}
+          DIE_RELEASE: ${{ steps.die.outputs.die_release }}
         run: |
           $ErrorActionPreference = "Stop"
           $root = Join-Path $env:RUNNER_TEMP "dictation-installer-inspection"
