@@ -117,7 +117,7 @@ jobs:
             $metadataAsset = $release.assets | Where-Object { $_.name -eq $metadataName } | Select-Object -First 1
             if ($metadataAsset) {
               try { Invoke-WebRequest -Uri $metadataAsset.browser_download_url -OutFile (Join-Path $root "blabby-$metadataName") -TimeoutSec 60 -ErrorAction Stop }
-              catch { Write-Warning "Could not download optional Blabby release metadata $metadataName: $($_.Exception.Message)" }
+              catch { Write-Warning "Could not download optional Blabby release metadata $($metadataName): $($_.Exception.Message)" }
             }
           }
 
