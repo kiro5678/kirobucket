@@ -1,5 +1,5 @@
 {
-    "version": "6.61",
+    "version": "6.66",
     "description": "Use the mouse wheel over inactive windows.",
     "homepage": "https://www.softwareok.com/?Download=AlwaysMouseWheel",
     "license": {
@@ -9,7 +9,7 @@
     "architecture": {
         "64bit": {
             "url": "https://www.softwareok.com/Download/AlwaysMouseWheel_Portable_x64.zip",
-            "hash": "5d302c6fa166d38189e92678d48f1a905353e916673f7a37adfac9cd269c89ef"
+            "hash": "92b19ee54748a9669b1c3236396bc84fe181d531cb6cd30516fa662355bfd0eb"
         }
     },
     "bin": [
