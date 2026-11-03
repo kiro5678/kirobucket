@@ -15,6 +15,7 @@
     "notes": [
         "Review status: the official AutoOff page links to the GitHub 4.25 release. Its release metadata lists AutoOff_4.25.exe (713,376 bytes) but does not publish a SHA-256 digest. No hash is recorded; do not substitute an unverified third-party checksum.",
         "Independent documentation identifies the executable as a setup installer, and the Portable Freeware Collection reports that AutoOff is not portable. The installer engine, extracted payload, supported silent switches, custom installation directory, and behavior after copying installed files have not been verified.",
-        "This staged manifest downloads the official setup file only. It does not run the installer or declare a shim or shortcut. Keep it in under review kirobucket until the installer and a Scoop-contained install or verified extraction/uninstall method have been tested."
+        "This staged manifest downloads the official setup file only. It does not run the installer or declare a shim or shortcut. Keep it in under review kirobucket until the installer and a Scoop-contained install or verified extraction/uninstall method have been tested.",
+        "Pull-request verification: the Multi-Engine Installer Type Inspector reads this staged manifest when a pull request changes it. The inspection is static and does not execute the installer."
     ]
 }
