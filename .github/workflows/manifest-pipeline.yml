@@ -6,11 +6,10 @@ on:
       - master
     paths:
       - 'bucket/*.json'
-      - 'under review scoop bucket/*.json'
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Manifest path in bucket/ or under review scoop bucket/, e.g. under review scoop bucket/taskexplorer.json"
+        description: "Manifest already committed to master that you want to validate, e.g. bucket/taskexplorer.json"
         required: true
         type: string
       force_update:
@@ -53,21 +52,18 @@ jobs:
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $path = ([string]$env:MANIFEST_INPUT).Trim().Replace('\', '/')
-            if ($path -match '(?i)^[^/]+\.json$') {
-              $path = "bucket/$path"
+            if ($path -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
+              throw "Provide one manifest filename or bucket/filename.json. Received: $path"
             }
-            if ($path -notmatch '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$') {
-              throw "Provide bucket/filename.json or under review scoop bucket/filename.json. Received: $path"
-            }
-            $manifestPaths.Add($path)
-            $needsTable = $path -match '(?i)^bucket/'
+            $manifestPaths.Add("bucket/$($Matches.name)")
+            $needsTable = $true
           } else {
             $before = [string]$env:PUSH_BEFORE
             $after = [string]$env:PUSH_SHA
             if ([string]::IsNullOrWhiteSpace($before) -or $before -match '^0+$') {
-              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after -- bucket "under review scoop bucket")
+              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after -- bucket)
             } else {
-              $changedFiles = @(git diff --name-only $before $after -- bucket "under review scoop bucket")
+              $changedFiles = @(git diff --name-only $before $after -- bucket)
             }
             if ($LASTEXITCODE -ne 0) {
               throw "Could not determine changed files for push $before..$after."
@@ -75,10 +71,8 @@ jobs:
 
             foreach ($file in $changedFiles) {
               $normalized = ([string]$file).Replace('\', '/')
-              if ($normalized -match '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$') {
-                if ($normalized -match '(?i)^bucket/') {
-                  $needsTable = $true
-                }
+              if ($normalized -match '(?i)^bucket/[^/]+\.json$') {
+                $needsTable = $true
                 if (Test-Path -LiteralPath $normalized -PathType Leaf) {
                   $manifestPaths.Add($normalized)
                 }
@@ -91,7 +85,7 @@ jobs:
             "has_manifests=false" >> $env:GITHUB_OUTPUT
             "needs_table=$($needsTable.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
             "manifests=" >> $env:GITHUB_OUTPUT
-            Write-Host "No supported manifest JSON files changed."
+            Write-Host "No existing root-level manifest files changed."
             exit 0
           }
 
