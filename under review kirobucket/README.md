@@ -37,3 +37,4 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [deeptutor](deeptutor.json) | Official Windows Portable ZIP is published, but its archive layout and actual application executable path have not yet been verified. |
 | [twindesk](twindesk.json) | Per-machine NSIS setup uses Firewall rules, an HKLM WebClient setting, TrustedPeople certificate registration, and optional AppX/virtual-camera integration; Scoop-safe install and uninstall are unverified. |
 | [mystify](mystify.json) | Official Windows ZIP has no published SHA-256; archive layout, executable path, and .NET runtime availability are unverified. It is an animation app rather than a native `.scr` screen saver. |
+| [vcredist-aio](vcredist-aio.json) | The release ZIP checksum is published, but its payload has not been inspected. The upstream installer must be run manually as administrator and changes system-wide Visual C++ runtimes; Scoop must not execute it automatically. |
