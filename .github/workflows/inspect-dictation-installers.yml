@@ -244,6 +244,104 @@ jobs:
               }
             } else { $report.Add($sevenZipResult) }
 
+            # BlabbyAI's NSIS payload contains an inner app-64.7z. List it without running setup.
+            if ($target.Name -eq "BlabbyAI") {
+              $innerArchive = Join-Path $extractDir '$PLUGINSDIR\app-64.7z'
+              if (Test-Path -LiteralPath $innerArchive -PathType Leaf) {
+                $innerList = @(& $sevenZip.Source l -slt -- $innerArchive 2>&1 | ForEach-Object { "$_" })
+                $innerExit = $LASTEXITCODE
+                $innerListPath = Join-Path $root "7zip-list-BlabbyAI-app64.txt"
+                $innerList | Set-Content -LiteralPath $innerListPath -Encoding utf8
+                $report.Add("Nested application archive listing: $innerListPath (exit $innerExit)")
+                if ($innerExit -eq 0) {
+                  $innerPaths = @($innerList | Where-Object { "$_" -match '^Path = ' } | ForEach-Object { "$_" -replace '^Path = ', '' } | Where-Object { $_ -and $_ -ne '[0]' -and $_ -notmatch '^[A-Za-z]:\\' })
+                  $report.Add("Nested archive entries (selected):")
+                  foreach ($entry in ($innerPaths | Where-Object { $_ -match '(?i)(Blabby\.exe|Uninstall Blabby\.exe|app\.asar|app-update\.yml|electron-updater)' } | Select-Object -First 80)) {
+                    $report.Add(" - $entry")
+                  }
+
+                  $asarEntry = $innerPaths | Where-Object { $_ -match '(?i)(^|[\\/])app\.asar
+            $bytes = [System.IO.File]::ReadAllBytes($path)
+            $text = [System.Text.Encoding]::ASCII.GetString($bytes) + [Environment]::NewLine + [System.Text.Encoding]::Unicode.GetString($bytes)
+            $switches = [regex]::Matches($text, '(?i)(?:/S\b|/D=|/silent\b|/quiet\b|/verysilent\b|--silent\b|--dir\b|--targetdir\b|/allusers\b|/currentuser\b|/help\b|--help\b)') |
+              ForEach-Object { $_.Value } | Sort-Object -Unique
+            if ($switches.Count) { foreach ($switch in $switches) { $report.Add(" - $switch") } }
+            else { $report.Add(" - No common installer switches found in the scanned strings.") }
+            $report.Add("")
+            $report.Add("Safety: installer executable was not launched. 7-Zip only listed/extracted package data.")
+            $reportPath = Join-Path $root ("$($target.Name -replace '[^A-Za-z0-9_-]', '-').txt")
+            $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+            $report | ForEach-Object { Write-Output $_ }
+            $results.Add([PSCustomObject]@{
+              Name = $target.Name
+              DetectItEasyExitCode = $scanExit
+              DetectItEasy = $scan -join [Environment]::NewLine
+              SevenZip = $sevenZipResult
+              SwitchStrings = @($switches)
+              Report = $reportPath
+            })
+          }
+
+          $results | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root "inspection-results.json") -Encoding utf8
+          @(
+            ""
+            "## Static installer identification and extraction"
+            ""
+            "Detect It Easy release: $env:DIE_RELEASE"
+            "No installer was executed."
+            ""
+            "| Program | Detect It Easy exit | 7-Zip result |"
+            "|---|---:|---|"
+            foreach ($r in $results) { "| $($r.Name) | $($r.DetectItEasyExitCode) | $($r.SevenZip) |" }
+            ""
+            "Full reports, archive listings, and extracted files are in the workflow artifact."
+            "Switch strings are heuristic evidence only, not confirmation of silent installation support."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload inspection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dictation-installer-inspection
+          path: |
+            ${{ runner.temp }}/dictation-installer-inspection/whisperstream-download-form-evidence.txt
+            ${{ runner.temp }}/dictation-installer-inspection/whisperstream-page-links.json
+            ${{ runner.temp }}/dictation-installer-inspection/Whisperstream.txt
+            ${{ runner.temp }}/dictation-installer-inspection/BlabbyAI.txt
+            ${{ runner.temp }}/dictation-installer-inspection/blabby-inventory.json
+            ${{ runner.temp }}/dictation-installer-inspection/blabby-builder-effective-config.yaml
+            ${{ runner.temp }}/dictation-installer-inspection/blabby-latest.yml
+            ${{ runner.temp }}/dictation-installer-inspection/7zip-list-BlabbyAI.txt
+            ${{ runner.temp }}/dictation-installer-inspection/7zip-list-BlabbyAI-app64.txt
+            ${{ runner.temp }}/dictation-installer-inspection/inspection-results.json
+          if-no-files-found: warn
+          retention-days: 14
+ } | Select-Object -First 1
+                  if ($asarEntry) {
+                    $asarOutput = Join-Path $root "asar-inspection"
+                    New-Item -ItemType Directory -Path $asarOutput -Force | Out-Null
+                    $asarArgs = @("e", "-y", "-o$asarOutput", "-bd", "--", $innerArchive, $asarEntry)
+                    $null = & $sevenZip.Source @asarArgs 2>&1
+                    $asarExit = $LASTEXITCODE
+                    $asarFile = Get-ChildItem -LiteralPath $asarOutput -Filter "app.asar" -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1
+                    $report.Add("app.asar targeted extraction exit: $asarExit")
+                    if ($asarFile) {
+                      $asarBytes = [System.IO.File]::ReadAllBytes($asarFile.FullName)
+                      $asarText = [System.Text.Encoding]::ASCII.GetString($asarBytes) + [Environment]::NewLine + [System.Text.Encoding]::Unicode.GetString($asarBytes)
+                      $appMarkers = [regex]::Matches($asarText, '(?i)electron-updater|autoUpdater|checkForUpdates(?:AndNotify)?|quitAndInstall|userData|app\.getPath|latest\.yml') |
+                        ForEach-Object { $_.Value } | Sort-Object -Unique
+                      $report.Add("Static app.asar markers (presence is not proof of execution):")
+                      foreach ($appMarker in $appMarkers) { $report.Add(" - $appMarker") }
+                    }
+                  } else {
+                    $report.Add("No app.asar entry was found in the nested archive listing.")
+                  }
+                }
+              } else {
+                $report.Add("The outer NSIS archive did not expose the app-64.7z payload.")
+              }
+            }
+
             $report.Add("")
             $report.Add("Embedded installer switches (string heuristic only; not proof they are supported):")
             $bytes = [System.IO.File]::ReadAllBytes($path)
