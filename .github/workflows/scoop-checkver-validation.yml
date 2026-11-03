@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Optional path under bucket/ or under review scoop bucket/. Leave empty to check the full bucket."
+        description: "Optional single manifest path under bucket/, e.g. bucket/taskexplorer.json. Leave empty to check the full bucket."
         required: false
         type: string
 
@@ -77,16 +77,13 @@ jobs:
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $manualManifest = $env:MANUAL_MANIFEST.Trim().Replace('\', '/')
             if (-not [string]::IsNullOrWhiteSpace($manualManifest)) {
-              if ($manualManifest -match '(?i)^[^/]+\.json$') {
-                $manualManifest = "bucket/$manualManifest"
-              }
-              if ($manualManifest -notmatch '(?i)^(?:bucket|under review scoop bucket)/[^/]+\.json$') {
-                throw "Provide bucket/filename.json or under review scoop bucket/filename.json. Received: $manualManifest"
+              if ($manualManifest -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
+                throw "Provide one manifest filename or bucket/filename.json. Received: $manualManifest"
               }
               $repoRoot = Split-Path $bucket -Parent
-              $manifestPath = Join-Path $repoRoot $manualManifest
+              $manifestPath = Join-Path (Join-Path $repoRoot 'bucket') $Matches.name
               if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-                throw "Manifest does not exist: $manualManifest"
+                throw "Manifest does not exist: bucket/$($Matches.name)"
               }
               $manifests = @(Get-Item -LiteralPath $manifestPath)
             } else {
