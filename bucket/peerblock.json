@@ -1,0 +1,56 @@
+{
+    "version": "1.2.0.693",
+    "description": "An IP-based firewall for Windows that blocks traffic to and from selected IP ranges.",
+    "homepage": "https://www.peerblock.com/",
+    "license": "zlib-acknowledgement",
+    "url": "https://s3.amazonaws.com/hn62xeffkz4xd8g3qnq8/software/PeerBlock-Setup_v1.2_r693.exe",
+    "hash": "47209321e48bcc5b2ce62c444ba125cdd01ff0b465f38feb9251a3e16e6fdb3f",
+    "innosetup": true,
+    "architecture": {
+        "64bit": {
+            "installer": {
+                "script": [
+                    "Rename-Item \"$dir\\pbfilter,4.sys\" \"$dir\\pbfilter.sys\"",
+                    "Remove-Item \"$dir\\pbfilter,*.sys\"",
+                    "Rename-Item \"$dir\\peerblock,4.exe\" \"$dir\\peerblock.exe\"",
+                    "Remove-Item \"$dir\\peerblock,*.exe\""
+                ]
+            }
+        },
+        "32bit": {
+            "installer": {
+                "script": [
+                    "Rename-Item \"$dir\\pbfilter,3.sys\" \"$dir\\pbfilter.sys\"",
+                    "Remove-Item \"$dir\\pbfilter,*.sys\"",
+                    "Rename-Item \"$dir\\peerblock,3.exe\" \"$dir\\peerblock.exe\"",
+                    "Remove-Item \"$dir\\peerblock,*.exe\""
+                ]
+            }
+        }
+    },
+    "shortcuts": [
+        [
+            "peerblock.exe",
+            "PeerBlock"
+        ]
+    ],
+    "persist": [
+        "lists",
+        "cache.p2b",
+        "peerblock.conf",
+        "peerblock.conf.bak",
+        "peerblock.conf.failed"
+    ],
+    "pre_install": [
+        "function CreateFile([String] $file, [String] $content = $null) {",
+        "    if(!(Test-Path \"$persist_dir\\$file\")) {",
+        "        Write-Host \"Create placeholder for peerblock: $file\"",
+        "        New-Item -Force -Path \"$persist_dir\\$file\" -ItemType file -Value $content | Out-Null",
+        "    }",
+        "}",
+        "CreateFile 'cache.p2b'",
+        "CreateFile 'peerblock.conf'",
+        "CreateFile 'peerblock.conf.bak'",
+        "CreateFile 'peerblock.conf.failed'"
+    ]
+}
