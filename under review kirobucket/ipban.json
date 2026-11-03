@@ -1,0 +1,44 @@
+{
+    "version": "4.1.0",
+    "description": "Windows intrusion-prevention service that detects failed logins and blocks abusive IP addresses using Windows Firewall.",
+    "homepage": "https://github.com/DigitalRuby/IPBan",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/DigitalRuby/IPBan/releases/download/4.1.0/IPBan-Windows-x64_4_1_0.zip",
+            "hash": "08867379f6fc165e71ea7c8ecb38cf3661a212737b41d9a480d721e5fb4f97d7"
+        },
+        "32bit": {
+            "url": "https://github.com/DigitalRuby/IPBan/releases/download/4.1.0/IPBan-Windows-x86_4_1_0.zip",
+            "hash": "471eb6656e46fa39a705616c85e18441b0856aa3281050addc2f67f5c2b14f93"
+        }
+    },
+    "checkver": {
+        "script": [
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'KiroBucket-ScoopCheckver' }",
+            "if ($env:GITHUB_TOKEN) { $headers.Authorization = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$release = Invoke-RestMethod -Uri 'https://api.github.com/repos/DigitalRuby/IPBan/releases/latest' -Headers $headers -TimeoutSec 30 -ErrorAction Stop",
+            "$asset = $release.assets | Where-Object { $_.name -match '^IPBan-Windows-x64_(?<major>[\\d]+)_(?<minor>[\\d]+)_(?<patch>[\\d]+)\\.zip$' } | Select-Object -First 1",
+            "if ($null -eq $asset) { throw 'No stable IPBan Windows x64 ZIP asset was found in the latest release.' }",
+            "$asset.name"
+        ],
+        "regex": "^IPBan-Windows-x64_(?<major>[\\d]+)_(?<minor>[\\d]+)_(?<patch>[\\d]+)\\.zip$",
+        "replace": "${major}.${minor}.${patch}"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/DigitalRuby/IPBan/releases/download/$version/IPBan-Windows-x64_$matchMajor_$matchMinor_$matchPatch.zip"
+            },
+            "32bit": {
+                "url": "https://github.com/DigitalRuby/IPBan/releases/download/$version/IPBan-Windows-x86_$matchMajor_$matchMinor_$matchPatch.zip"
+            }
+        }
+    },
+    "notes": [
+        "Review status: the official Windows ZIP distributions are available for x64 and x86. The 4.1.0 SHA-256 digests in this manifest are taken from the official GitHub release API.",
+        "The upstream Windows installer extracts IPBan into C:\\Program Files\\IPBan, changes Windows audit policy settings, creates the IPBan Windows service, and starts it by default. IPBan Free runs as a background service and does not include a standalone GUI.",
+        "This staged manifest only downloads the release ZIP. It intentionally defines no service installation, start, stop, or removal hooks and no executable shim or shortcut because the archive layout and a Scoop-safe service lifecycle have not been tested.",
+        "Keep this manifest in under review kirobucket until the archive contents, runtime requirements, elevated service registration, configuration/database persistence, upgrade behavior, audit-policy handling, and complete service cleanup on uninstall have been verified."
+    ]
+}
