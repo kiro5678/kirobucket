@@ -23,7 +23,7 @@ jobs:
         id: download
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
@@ -33,19 +33,19 @@ jobs:
           function Get-PageLinks {
             param([string]$PageUrl, [string]$Html)
             $items = [System.Collections.Generic.List[object]]::new()
-            foreach ($match in [regex]::Matches($Html, '(?is)<a\b(?<attrs>[^>]*)>(?<body>.*?)</a>')) {
-              $hrefMatch = [regex]::Match($match.Groups["attrs"].Value, '(?is)\bhref\s*=\s*["''](?<href>[^"'']+)["'']')
+            foreach ($match in [regex]::Matches($Html, '(?is)<(?<tag>a|button)\b(?<attrs>[^>]*)>(?<body>.*?)</\k<tag>>')) {
+              $attrs = $match.Groups["attrs"].Value
+              $hrefMatch = [regex]::Match($attrs, '(?is)\b(?:href|data-href|data-url|data-download-url|data-installer-url)\s*=\s*["''](?<href>[^"'']+)["'']')
               if (-not $hrefMatch.Success) { continue }
               $href = [System.Net.WebUtility]::HtmlDecode($hrefMatch.Groups["href"].Value.Trim())
               if ([string]::IsNullOrWhiteSpace($href) -or $href.StartsWith("#")) { continue }
               try { $absolute = [System.Uri]::new([System.Uri]$PageUrl, $href).AbsoluteUri } catch { continue }
               $label = [regex]::Replace($match.Groups["body"].Value, '<[^>]+>', ' ')
               $label = [System.Net.WebUtility]::HtmlDecode(($label -replace '\s+', ' ').Trim())
-              $items.Add([PSCustomObject]@{ Url = $absolute; Label = $label })
+              $items.Add([PSCustomObject]@{ Url = $absolute; Label = $label; Tag = $match.Groups["tag"].Value })
             }
             return @($items)
           }
-
           function Save-Installer {
             param([string]$Name, [string]$Url, [string]$Destination, [string]$ExpectedSha256)
             $uri = [System.Uri]::new($Url)
@@ -97,8 +97,11 @@ jobs:
           Set-Content -LiteralPath (Join-Path $root "whisperstream-download-page.html") -Value $whisperHtml -Encoding utf8
           $links = @(Get-PageLinks -PageUrl $whisperPage -Html $whisperHtml)
           $links | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $root "whisperstream-page-links.json") -Encoding utf8
+          $links | ForEach-Object { Write-Host "Whisperstream page link: tag=$($_.Tag); text=$($_.Label); url=$($_.Url)" }
+          $pageUri = [System.Uri]$whisperPage
           $candidates = @($links | Where-Object {
             ($_.Label -match '(?i)windows' -or $_.Url -match '(?i)windows|win') -and
+            ([System.Uri]$_.Url).AbsolutePath -ne $pageUri.AbsolutePath -and
             $_.Url -notmatch '(?i)\.(dmg|pkg)(\?|$)'
           })
           if (-not $candidates.Count) {
@@ -107,10 +110,25 @@ jobs:
               Where-Object { $_ -match '(?i)whisper|download|\.exe' } |
               Sort-Object -Unique
             $rawUrls | Set-Content -LiteralPath (Join-Path $root "whisperstream-raw-url-candidates.txt") -Encoding utf8
-            throw "Could not resolve a Windows installer link from the official Whisperstream page. HTML and links were saved as artifacts."
+            $scriptCandidates = [regex]::Matches($whisperHtml, '(?is)(?:downloadUrl|installerUrl|windowsDownload|windowsInstaller|href)\s*[:=]\s*["''](?<url>[^"'']+)["'']') |
+              ForEach-Object { [System.Net.WebUtility]::HtmlDecode($_.Groups["url"].Value) } |
+              Where-Object { $_ -match '(?i)whisper|download|\.exe|windows' } |
+              Sort-Object -Unique
+            $scriptCandidates | Set-Content -LiteralPath (Join-Path $root "whisperstream-script-url-candidates.txt") -Encoding utf8
+            foreach ($candidate in $scriptCandidates) {
+              try {
+                $absolute = [System.Uri]::new([System.Uri]$whisperPage, $candidate).AbsoluteUri
+                if (([System.Uri]$absolute).AbsolutePath -ne $pageUri.AbsolutePath -and $absolute -match '(?i)windows|win|\.exe|download') {
+                  $candidates += [PSCustomObject]@{ Url = $absolute; Label = "Embedded download URL"; Tag = "script" }
+                }
+              } catch {}
+            }
+          }
+          if (-not $candidates.Count) {
+            throw "Could not resolve a Windows installer URL. HTML, page links, and candidate URLs were saved as artifacts."
           }
           $whisperCandidate = $candidates |
-            Sort-Object @{Expression = { if ($_.Url -match '(?i)\.exe(\?|$)') { 0 } else { 1 } }} |
+            Sort-Object @{Expression = { if ($_.Url -match '(?i)\.exe(\?|$)') { 0 } elseif ($_.Label -match '(?i)windows') { 1 } else { 2 } }} |
             Select-Object -First 1
           Write-Host "Whisperstream candidate: $($whisperCandidate.Label) -> $($whisperCandidate.Url)"
           $whisperPath = Join-Path $root "Whisperstream-Windows-Setup.exe"
@@ -167,7 +185,7 @@ jobs:
         if: always()
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
@@ -309,6 +327,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: dictation-installer-inspection
-          path: ${ runner.temp }}/dictation-installer-inspection/
+          path: ${{ runner.temp }}/dictation-installer-inspection/
           if-no-files-found: warn
           retention-days: 14
