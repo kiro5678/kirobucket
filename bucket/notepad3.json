@@ -4,8 +4,7 @@
     "homepage": "https://www.rizonesoft.com/downloads/notepad3/",
     "license": "BSD-3-Clause",
     "notes": [
-        "To add Notepad3 to right-click context menu, run:",
-        "reg import \"$dir\\install-context.reg\""
+        "To add Notepad3 to the right-click context menu, run: reg import \"$dir\\install-context.reg\""
     ],
     "architecture": {
         "64bit": {
