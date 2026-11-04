@@ -7,8 +7,7 @@
     "hash": "aeb664b7416b2d527ba2b8b9df219d800e66e5234787b35f07864360a261b841",
     "bin": "SBECmd.exe",
     "notes": [
-        "Requires the .NET 10 Runtime.",
-        "The upstream site does not publish a static SHA-256 checksum. The initial checksum is calculated from its official archive; Scoop recalculates it when updating the manifest."
+        "Requires the .NET 10 Runtime."
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",
