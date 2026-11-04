@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 875 active manifests. Twenty-three Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 877 active manifests. Twenty-one Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
