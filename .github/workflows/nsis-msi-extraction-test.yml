@@ -150,6 +150,16 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Out Loud\.exe$"
+            },
+            @{
+              Name = "Snitch"
+              Version = "1.6.4"
+              # Match Scoop's #/dl.7z handling for the official NSIS installer.
+              NsisUrl = "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe#/dl.7z"
+              NsisSha256 = "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Snitch\.exe$"
             }
           )
 
