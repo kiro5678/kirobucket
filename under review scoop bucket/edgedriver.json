@@ -6,7 +6,7 @@
         "identifier": "Freeware",
         "url": "https://msedgedriver.microsoft.com/EULA"
     },
-    "notes": "For legacy (EdgeHTML) version, see 'versions/edgedriver-legacy'.",
+    "notes": "For legacy EdgeHTML applications, use `versions/edgedriver-legacy`.",
     "architecture": {
         "64bit": {
             "url": "https://msedgedriver.microsoft.com/156.0.4314.50/edgedriver_win64.zip",
