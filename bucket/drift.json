@@ -21,7 +21,6 @@
         "url": "https://github.com/CutWire-Studios/Drift/releases/download/v$version/Drift-Portable-$version-x64.zip"
     },
     "notes": [
-        "This is the official portable ZIP, not the setup installer. The ZIP contains a Drift folder; Scoop extracts that folder's contents and launches drift.exe.",
-        "Portable does not mean self-contained: settings, add-ons, models, and caches are stored under %APPDATA%\\Drift and are shared between copies. Fonts, stickers, speech models, and GPU/CPU acceleration runtimes are not bundled; add optional assets through Drift's Addon Manager."
+        "Settings, add-ons, models and caches are stored under %APPDATA%\\Drift, outside the Scoop app directory. Optional fonts, stickers, speech models and GPU/CPU acceleration runtimes are not bundled."
     ]
 }
