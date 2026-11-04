@@ -27,8 +27,5 @@
                 "url": "https://github.com/xanasoft/MajorPrivacy/releases/download/v$version/MajorPrivacy-v$version.exe"
             }
         }
-    },
-    "notes": [
-        "Scoop extracts the Inno Setup payload only; it does not install or start the required PrivacyAgent service or install the bundled Visual C++ runtime. MajorPrivacy may not work fully until these prerequisites are installed separately."
-    ]
+    }
 }
