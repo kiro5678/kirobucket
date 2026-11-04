@@ -4,8 +4,8 @@
     "homepage": "https://chrisant996.github.io/clink/",
     "license": "GPL-3.0-only",
     "notes": [
-        "Run 'clink inject' to start clink on the current cmd",
-        "Run 'clink autorun install' to auto start clink"
+        "Run `clink inject` to enable Clink in the current cmd.exe session.",
+        "Run `clink autorun install` to enable automatic injection in future cmd.exe sessions."
     ],
     "url": "https://github.com/chrisant996/clink/releases/download/v1.9.35/clink.1.9.35.fa48d0.zip",
     "hash": "5ae6862a703d43ff9250716277fd0811b7b6c344771d17911723e7078d9509f8",
