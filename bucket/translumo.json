@@ -13,7 +13,7 @@
         ]
     ],
     "notes": [
-        "DeepL and Yandex translation require API keys in Translumo settings."
+        "DeepL and Yandex translation require API keys configured in Translumo settings."
     ],
     "checkver": {
         "script": [
