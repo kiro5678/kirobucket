@@ -1,0 +1,43 @@
+{
+    "version": "1.6.4",
+    "description": "Local-first application firewall and real-time network monitor with per-process traffic attribution, connection history, and IP threat intelligence.",
+    "homepage": "https://github.com/aixisstudio/Snitch",
+    "license": "AGPL-3.0-or-later",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe#/dl.7z",
+            "hash": "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263"
+        }
+    },
+    "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+    "post_install": "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\`$R0\" -Recurse -Force -ErrorAction SilentlyContinue",
+    "bin": "Snitch.exe",
+    "shortcuts": [
+        [
+            "Snitch.exe",
+            "Snitch"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/aixisstudio/Snitch/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/aixisstudio/Snitch/releases/download/v$version/Snitch-Setup-windows.exe#/dl.7z",
+                "hash": {
+                    "url": "https://api.github.com/repos/aixisstudio/Snitch/releases/tags/v$version",
+                    "regex": "\"name\"\\s*:\\s*\"Snitch-Setup-windows\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+                }
+            }
+        }
+    },
+    "notes": [
+        "Verified with KiroBucket's NSIS extraction workflow: Scoop extracts the official installer through #/dl.7z, then pre_install extracts the nested $PLUGINSDIR/app-64.7z payload. The inner archive contains Snitch.exe at its root, resources/app.asar, resources/frontend_dist, and resources/snitch-backend/snitch-backend.exe. The vendor NSIS installation routine is not executed.",
+        "Npcap is not bundled. Install Npcap separately for live packet capture; this manifest does not install its driver.",
+        "Snitch stores its database, settings, and logs under %LOCALAPPDATA%\\Snitch. Scoop does not relocate or remove this user data.",
+        "The built-in updater is enabled by default, checks periodically, downloads updates, and can install them when Snitch exits. Disable update checks in Snitch Settings or set SNITCH_NO_UPDATE=1 to keep updates under Scoop control."
+    ]
+}

@@ -17,10 +17,18 @@ on:
         required: false
         default: ""
         type: string
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/multi-engine-installer-type-inspector.yml'
+      - 'under review kirobucket/majorprivacy.json'
   pull_request:
     types: [opened, synchronize, reopened]
+    branches:
+      - master
     paths:
-      - "under review kirobucket/autooff.json"
+      - 'under review kirobucket/autooff.json'
 
 permissions:
   contents: read
@@ -32,47 +40,69 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository for manifest inspection
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
+      - name: Resolve installer URL and checksum
+        id: source
+        shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_INSTALLER_URL: ${{ inputs.installer_url }}
+          INPUT_INSTALLER_NAME: ${{ inputs.installer_name }}
+          INPUT_EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+            $url = $env:INPUT_INSTALLER_URL.Trim()
+            $name = $env:INPUT_INSTALLER_NAME.Trim()
+            $expectedHash = $env:INPUT_EXPECTED_SHA256.Trim()
+            if ([string]::IsNullOrWhiteSpace($url)) { throw 'workflow_dispatch requires installer_url.' }
+          } elseif ($env:EVENT_NAME -eq 'push') {
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/majorprivacy.json'
+            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            $url = [string]$manifest.url
+            $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
+            $expectedHash = [string]$manifest.hash
+            if ($url -notlike 'https://github.com/xanasoft/MajorPrivacy/releases/download/*') { throw 'Manifest URL is not an official MajorPrivacy release asset.' }
+            if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw 'Manifest hash must be a 64-character SHA-256 digest.' }
+          } elseif ($env:EVENT_NAME -eq 'pull_request') {
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/autooff.json'
+            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            $url = [string]$manifest.url
+            if ($url -notlike 'https://github.com/pintosoft/AutoOff/releases/download/*') { throw 'Manifest URL is not an official AutoOff release asset.' }
+            $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
+            $expectedHash = [string]$manifest.hash
+            if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Manifest hash, when supplied, must be a 64-character SHA-256 digest.' }
+          } else {
+            throw "Unsupported event '$($env:EVENT_NAME)'."
+          }
+
+          "installer_url=$url" >> $env:GITHUB_OUTPUT
+          "installer_name=$name" >> $env:GITHUB_OUTPUT
+          "expected_sha256=$expectedHash" >> $env:GITHUB_OUTPUT
+          Write-Output "Inspection target resolved for event $($env:EVENT_NAME): $name"
+
       - name: Validate and download target file
         id: target
         shell: pwsh
         env:
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-          INSTALLER_URL: ${{ inputs.installer_url }}
-          INSTALLER_NAME: ${{ inputs.installer_name }}
-          EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+          INSTALLER_URL: ${{ steps.source.outputs.installer_url }}
+          INSTALLER_NAME: ${{ steps.source.outputs.installer_name }}
+          EXPECTED_SHA256: ${{ steps.source.outputs.expected_sha256 }}
         run: |
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
 
-          $downloadUrl = $env:INSTALLER_URL.Trim()
-          $nameInput = $env:INSTALLER_NAME.Trim()
-          if ($env:GITHUB_EVENT_NAME -eq "pull_request") {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE "under review kirobucket/autooff.json"
-            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-              throw "The pull request did not provide under review kirobucket/autooff.json."
-            }
-            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-            if ($manifest.url -is [array]) {
-              throw "AutoOff review manifest must contain one direct URL for installer inspection."
-            }
-            $downloadUrl = [string]$manifest.url
-            if ([string]::IsNullOrWhiteSpace($downloadUrl)) {
-              throw "AutoOff review manifest does not contain a direct URL."
-            }
-            if ([string]::IsNullOrWhiteSpace($nameInput)) {
-              $nameInput = [System.IO.Path]::GetFileName(([System.Uri]$downloadUrl).AbsolutePath)
-            }
-            Write-Host "Pull request manifest: $manifestPath"
-          }
-
           try {
-            $uri = [System.Uri]::new($downloadUrl)
+            $uri = [System.Uri]::new($env:INSTALLER_URL)
           } catch {
             throw "installer_url is not a valid absolute URL."
           }
@@ -98,6 +128,7 @@ jobs:
             throw "expected_sha256 must be exactly 64 hexadecimal characters."
           }
 
+          $nameInput = $env:INSTALLER_NAME.Trim()
           if ($nameInput) {
             if ([System.IO.Path]::GetFileName($nameInput) -ne $nameInput -or
                 $nameInput -match '[<>:"/\\|?*\x00-\x1F]' -or

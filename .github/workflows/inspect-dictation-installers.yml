@@ -1,0 +1,293 @@
+name: Inspect Whisperstream and BlabbyAI Installers
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - .github/workflows/inspect-dictation-installers.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download and statically inspect official Windows installers
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Resolve official sources and download available installers
+        id: download
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $root = Join-Path $env:RUNNER_TEMP "dictation-installer-inspection"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $whisperPath = ""
+          $blabbyPath = ""
+
+          # Whisperstream: download only when the official site publishes a direct EXE/MSI URL.
+          # Its interactive form is never submitted by automation.
+          try {
+            $pageUrl = "https://whisperstream.io/download"
+            $page = Invoke-WebRequest -Uri $pageUrl -MaximumRedirection 10 -TimeoutSec 90 -ErrorAction Stop
+            $html = [string]$page.Content
+            Set-Content -LiteralPath (Join-Path $root "whisperstream-download-page.html") -Value $html -Encoding utf8
+            $formNotes = @()
+            if ($html -match '(?i)InstallerDownloadController|installerForm') { $formNotes += "The official page embeds an installer download form/controller." }
+            if ($html -match '(?i)name or company') { $formNotes += "The form asks for a name or company." }
+            if ($html -match '(?i)email address') { $formNotes += "The form asks for an email address." }
+            if ($html -match '(?i)Starting your download|Your download has started') { $formNotes += "The page indicates the download starts after form submission." }
+
+            $links = [regex]::Matches($html, '(?is)<a\b(?<attrs>[^>]*)>(?<body>.*?)</a>') | ForEach-Object {
+              $href = [regex]::Match($_.Groups["attrs"].Value, '(?is)\bhref\s*=\s*["''](?<href>[^"'']+)["'']')
+              if ($href.Success) {
+                $label = [regex]::Replace($_.Groups["body"].Value, '<[^>]+>', ' ')
+                [PSCustomObject]@{ Label = ($label -replace '\s+', ' ').Trim(); Href = [System.Net.WebUtility]::HtmlDecode($href.Groups["href"].Value) }
+              }
+            }
+            $links | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $root "whisperstream-page-links.json") -Encoding utf8
+            $formNotes | Set-Content -LiteralPath (Join-Path $root "whisperstream-form-evidence.txt") -Encoding utf8
+
+            $directUrls = @([regex]::Matches($html, '(?i)https://[^""''\s<>]+(?:\.exe|\.msi)(?:\?[^""''\s<>]*)?') |
+              ForEach-Object { $_.Value.TrimEnd(')', ']', ',', ';') } | Sort-Object -Unique)
+            if ($directUrls.Count -gt 0) {
+              $whisperUrl = $directUrls | Select-Object -First 1
+              $whisperPath = Join-Path $root "Whisperstream-Windows-Setup.exe"
+              Invoke-WebRequest -Uri $whisperUrl -OutFile $whisperPath -MaximumRedirection 10 -TimeoutSec 900 -ErrorAction Stop
+              $file = Get-Item -LiteralPath $whisperPath
+              if ($file.Length -lt 1MB -or $file.Length -gt 1.5GB) { throw "Whisperstream download is not a plausible installer file." }
+              $signature = Get-AuthenticodeSignature -LiteralPath $whisperPath
+              $sha = (Get-FileHash -LiteralPath $whisperPath -Algorithm SHA256).Hash.ToLowerInvariant()
+              [PSCustomObject]@{ Name="Whisperstream"; Url=$whisperUrl; FileName=$file.Name; SizeBytes=$file.Length; SHA256=$sha; AuthenticodeStatus=$signature.Status; Signer=$signature.SignerCertificate.Subject } |
+                ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $root "whisperstream-inventory.json") -Encoding utf8
+            } else {
+              Write-Warning "Whisperstream has no direct static EXE/MSI URL in the public page. The form was not submitted and no user data was fabricated."
+              $formNotes | ForEach-Object { Write-Host $_ }
+            }
+          } catch {
+            Write-Warning "Whisperstream inspection could not resolve a direct installer: $($_.Exception.Message)"
+            $_.Exception.ToString() | Set-Content -LiteralPath (Join-Path $root "whisperstream-page-error.txt") -Encoding utf8
+          }
+
+          # BlabbyAI: latest Windows setup from the release repository linked by the official site.
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            "User-Agent" = "KiroBucket-Dictation-Installer-Inspection"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          if ($env:GITHUB_TOKEN) { $headers.Authorization = "Bearer $env:GITHUB_TOKEN" }
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/sumbatx15/blabby-updater/releases/latest" -Headers $headers -TimeoutSec 60 -ErrorAction Stop
+          $asset = $release.assets | Where-Object { $_.name -match '^blabby-[\d.]+-setup\.exe$' } | Select-Object -First 1
+          if (-not $asset) { throw "Latest BlabbyAI release has no matching Windows setup executable." }
+          $expected = ""
+          if ($asset.digest -match '^sha256:(?<value>[0-9a-fA-F]{64})$') { $expected = $Matches.value }
+          $blabbyPath = Join-Path $root $asset.name
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $blabbyPath -TimeoutSec 900 -ErrorAction Stop
+          $blabbyFile = Get-Item -LiteralPath $blabbyPath
+          if ($blabbyFile.Length -lt 1MB -or $blabbyFile.Length -gt 1.5GB) { throw "BlabbyAI setup size is outside the accepted range." }
+          $blabbySha = (Get-FileHash -LiteralPath $blabbyPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($expected -and $blabbySha -ine $expected.ToLowerInvariant()) { throw "BlabbyAI SHA-256 mismatch against GitHub release digest." }
+          $blabbySignature = Get-AuthenticodeSignature -LiteralPath $blabbyPath
+          $blabbyInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($blabbyPath)
+          $signer = if ($blabbySignature.SignerCertificate) { $blabbySignature.SignerCertificate.Subject } else { "(no signer certificate)" }
+          [PSCustomObject]@{
+            Name = "BlabbyAI"
+            Version = $release.tag_name
+            PublishedAt = $release.published_at
+            Url = $asset.browser_download_url
+            FileName = $blabbyFile.Name
+            SizeBytes = $blabbyFile.Length
+            SHA256 = $blabbySha
+            ExpectedSHA256 = $expected
+            AuthenticodeStatus = [string]$blabbySignature.Status
+            Signer = $signer
+            ProductName = [string]$blabbyInfo.ProductName
+            FileDescription = [string]$blabbyInfo.FileDescription
+            FileVersion = [string]$blabbyInfo.FileVersion
+          } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root "blabby-inventory.json") -Encoding utf8
+
+          foreach ($metadataName in @("builder-effective-config.yaml", "latest.yml")) {
+            $metadataAsset = $release.assets | Where-Object { $_.name -eq $metadataName } | Select-Object -First 1
+            if ($metadataAsset) {
+              try { Invoke-WebRequest -Uri $metadataAsset.browser_download_url -OutFile (Join-Path $root "blabby-$metadataName") -TimeoutSec 60 -ErrorAction Stop }
+              catch { Write-Warning "Could not download optional Blabby release metadata $($metadataName): $($_.Exception.Message)" }
+            }
+          }
+
+          Write-Host "BlabbyAI version: $($release.tag_name)"
+          Write-Host "BlabbyAI asset: $($blabbyFile.Name) ($($blabbyFile.Length) bytes)"
+          Write-Host "BlabbyAI SHA-256: $blabbySha"
+          Write-Host "BlabbyAI Authenticode: $($blabbySignature.Status); signer: $signer"
+          "whisperstream_path=$whisperPath" >> $env:GITHUB_OUTPUT
+          "blabby_path=$blabbyPath" >> $env:GITHUB_OUTPUT
+          @(
+            "## Official Windows installer downloads"
+            ""
+            "- **BlabbyAI version:** $($release.tag_name)"
+            "- **File:** $($blabbyFile.Name)"
+            "- **Bytes:** $($blabbyFile.Length)"
+            "- **SHA-256:** $blabbySha"
+            "- **Authenticode:** $($blabbySignature.Status)"
+            "- **Signer:** $signer"
+            "- **Whisperstream direct installer resolved:** $([bool]$whisperPath)"
+            ""
+            "Neither installer was executed. No Whisperstream form was submitted."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Download Detect It Easy
+        id: die
+        if: always()
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            "User-Agent" = "KiroBucket-Detect-It-Easy"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          if ($env:GITHUB_TOKEN) { $headers.Authorization = "Bearer $env:GITHUB_TOKEN" }
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/horsicq/DIE-engine/releases/latest" -Headers $headers -TimeoutSec 60 -ErrorAction Stop
+          $asset = $release.assets | Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } | Select-Object -First 1
+          if (-not $asset) { throw "No Windows x64 portable Detect It Easy release asset was found." }
+
+          $root = Join-Path $env:RUNNER_TEMP "dictation-installer-inspection"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $zip = Join-Path $root $asset.name
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip -TimeoutSec 300 -ErrorAction Stop
+          if ($asset.digest -match '^sha256:(?<expected>[0-9a-fA-F]{64})$') {
+            $actual = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash
+            if ($actual -ine $Matches.expected) { throw "Detect It Easy archive SHA-256 mismatch." }
+          }
+          $toolDir = Join-Path $root "die-tool"
+          Expand-Archive -LiteralPath $zip -DestinationPath $toolDir -Force
+          $diec = Get-ChildItem -LiteralPath $toolDir -Filter "diec.exe" -Recurse -File | Select-Object -First 1
+          if (-not $diec) { throw "diec.exe was not found after extracting the portable archive." }
+          "diec_path=$($diec.FullName)" >> $env:GITHUB_OUTPUT
+          "die_release=$($release.tag_name)" >> $env:GITHUB_OUTPUT
+
+      - name: Statically identify installers and test archive extraction
+        if: steps.die.outcome == 'success'
+        shell: pwsh
+        env:
+          WHISPERSTREAM_PATH: ${{ steps.download.outputs.whisperstream_path }}
+          BLABBY_PATH: ${{ steps.download.outputs.blabby_path }}
+          DIEC_PATH: ${{ steps.die.outputs.diec_path }}
+          DIE_RELEASE: ${{ steps.die.outputs.die_release }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $root = Join-Path $env:RUNNER_TEMP "dictation-installer-inspection"
+          $sevenZip = Get-Command 7z.exe -ErrorAction SilentlyContinue
+          if (-not $sevenZip) {
+            $candidate = Join-Path $env:ProgramFiles "7-Zip\7z.exe"
+            if (Test-Path -LiteralPath $candidate) { $sevenZip = [PSCustomObject]@{ Source = $candidate } }
+          }
+          $targets = @(
+            [PSCustomObject]@{ Name = "Whisperstream"; Path = $env:WHISPERSTREAM_PATH },
+            [PSCustomObject]@{ Name = "BlabbyAI"; Path = $env:BLABBY_PATH }
+          )
+          $results = [System.Collections.Generic.List[object]]::new()
+
+          foreach ($target in $targets) {
+            $path = $target.Path
+            if ([string]::IsNullOrWhiteSpace($path) -or !(Test-Path -LiteralPath $path -PathType Leaf)) {
+              Write-Warning "$($target.Name): download step did not produce a file."
+              continue
+            }
+            $report = [System.Collections.Generic.List[string]]::new()
+            $report.Add("Installer inspection: $($target.Name)")
+            $report.Add("File: $(Split-Path -Leaf $path)")
+            $report.Add("Size: $((Get-Item -LiteralPath $path).Length) bytes")
+            $report.Add("SHA-256: $((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash)")
+            $signature = Get-AuthenticodeSignature -LiteralPath $path
+            $report.Add("Authenticode: $($signature.Status)")
+            if ($signature.SignerCertificate) { $report.Add("Signer: $($signature.SignerCertificate.Subject)") }
+            $report.Add("Detect It Easy release: $env:DIE_RELEASE")
+            $report.Add("")
+
+            $scan = @(& $env:DIEC_PATH -d -u -b -a $path 2>&1 | ForEach-Object { "$_" })
+            $scanExit = $LASTEXITCODE
+            $report.Add("Detect It Easy output:")
+            $report.AddRange([string[]]$scan)
+            $report.Add("DIE exit code: $scanExit")
+
+            $sevenZipResult = "7-Zip was not available on this runner."
+            $extractDir = Join-Path $root ("extracted-" + ($target.Name -replace '[^A-Za-z0-9_-]', '-'))
+            if ($sevenZip) {
+              $list = @(& $sevenZip.Source l -slt -- $path 2>&1 | ForEach-Object { "$_" })
+              $listExit = $LASTEXITCODE
+              $listPath = Join-Path $root ("7zip-list-" + ($target.Name -replace '[^A-Za-z0-9_-]', '-') + ".txt")
+              $list | Set-Content -LiteralPath $listPath -Encoding utf8
+              if ($listExit -eq 0) {
+                New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+                $null = & $sevenZip.Source x -y "-o$extractDir" -bd -- $path 2>&1
+                $extractExit = $LASTEXITCODE
+                $fileCount = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force -ErrorAction SilentlyContinue).Count
+                $sevenZipResult = "Listing succeeded; extraction exit code $extractExit; extracted files: $fileCount."
+                $report.Add("7-Zip listing: $listPath")
+                $report.Add("7-Zip extraction: $sevenZipResult")
+                foreach ($f in (Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force | Select-Object -First 80)) {
+                  $report.Add(" - $($f.FullName.Substring($extractDir.Length).TrimStart('\')) [$($f.Length) bytes]")
+                }
+              } else {
+                $sevenZipResult = "7-Zip could not list installer (exit code $listExit)."
+                $report.Add($sevenZipResult)
+              }
+            } else { $report.Add($sevenZipResult) }
+
+            $report.Add("")
+            $report.Add("Embedded installer switches (string heuristic only; not proof they are supported):")
+            $bytes = [System.IO.File]::ReadAllBytes($path)
+            $text = [System.Text.Encoding]::ASCII.GetString($bytes) + [Environment]::NewLine + [System.Text.Encoding]::Unicode.GetString($bytes)
+            $switches = [regex]::Matches($text, '(?i)(?:/S\b|/D=|/silent\b|/quiet\b|/verysilent\b|--silent\b|--dir\b|--targetdir\b|/allusers\b|/currentuser\b|/help\b|--help\b)') |
+              ForEach-Object { $_.Value.ToLowerInvariant() } | Sort-Object -Unique
+            if ($switches.Count) { foreach ($switch in $switches) { $report.Add(" - $switch") } }
+            else { $report.Add(" - No common installer switches found in the scanned strings.") }
+            $report.Add("")
+            $report.Add("Safety: installer executable was not launched. 7-Zip only listed/extracted package data.")
+            $reportPath = Join-Path $root ("$($target.Name -replace '[^A-Za-z0-9_-]', '-').txt")
+            $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+            $report | ForEach-Object { Write-Output $_ }
+            $results.Add([PSCustomObject]@{
+              Name = $target.Name
+              DetectItEasyExitCode = $scanExit
+              DetectItEasy = $scan -join [Environment]::NewLine
+              SevenZip = $sevenZipResult
+              SwitchStrings = @($switches)
+              Report = $reportPath
+            })
+          }
+
+          $results | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root "inspection-results.json") -Encoding utf8
+          @(
+            ""
+            "## Static installer identification and extraction"
+            ""
+            "Detect It Easy release: $env:DIE_RELEASE"
+            "No installer was executed."
+            ""
+            "| Program | Detect It Easy exit | 7-Zip result |"
+            "|---|---:|---|"
+            foreach ($r in $results) { "| $($r.Name) | $($r.DetectItEasyExitCode) | $($r.SevenZip) |" }
+            ""
+            "Full reports, archive listings, and extracted files are in the workflow artifact."
+            "Switch strings are heuristic evidence only, not confirmation of silent installation support."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload inspection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dictation-installer-inspection
+          path: ${{ runner.temp }}/dictation-installer-inspection/
+          if-no-files-found: warn
+          retention-days: 14

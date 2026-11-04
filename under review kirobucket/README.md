@@ -21,7 +21,6 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | Manifest | Reason |
 | --- | --- |
 | [go-away-edge-installer](go-away-edge-installer.json) | Installer type and extraction behavior are unknown; the manifest declares a shortcut but no verified setup or payload handling. |
-| [motrix-next](motrix-next.json) | Deprecated manifest for the Rayburst rename; its current extracted launch path and Scoop installation behavior are not sufficiently verified. |
 | [quanto-flx](quanto-flx.json) | Rainmeter RMSKIN add-on, not a standalone application; it requires Rainmeter's SkinInstaller workflow. |
 | [zenbreak-msix](zenbreak-msix.json) | MSIX file is being unpacked as a 7-Zip archive; the unpackaged executable still needs a runtime/launch test. |
 | [anton](anton.json) | Official endpoint redirects to a setup EXE, but the publisher checksum and installer/uninstaller behavior are not verified. |
@@ -38,3 +37,6 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [twindesk](twindesk.json) | Per-machine NSIS setup uses Firewall rules, an HKLM WebClient setting, TrustedPeople certificate registration, and optional AppX/virtual-camera integration; Scoop-safe install and uninstall are unverified. |
 | [mystify](mystify.json) | Official Windows ZIP has no published SHA-256; archive layout, executable path, and .NET runtime availability are unverified. It is an animation app rather than a native `.scr` screen saver. |
 | [vcredist-aio](vcredist-aio.json) | The release ZIP checksum is published, but its payload has not been inspected. The upstream installer must be run manually as administrator and changes system-wide Visual C++ runtimes; Scoop must not execute it automatically. |
+| [visual-cpp-redist-aio](visual-cpp-redist-aio.json) | x86/x64 ZIP manifest; the official Installer.cmd is invoked in quiet mode with administrator approval. Confirm the archive root layout and installation behavior before promotion. |
+| [visual-cpp-redist-aio-arm64](visual-cpp-redist-aio-arm64.json) | ARM64 SFX EXE manifest; the vendor's quiet installer is invoked with administrator approval. Verify installation behavior before promotion. |
+

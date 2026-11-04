@@ -4,6 +4,8 @@ This document lists every JSON manifest in `bucket/`, grouped by its primary fun
 
 Speech-to-Text (STT) covers automatic speech recognition and audio transcription. Text-to-Speech (TTS) covers speech synthesis, narration, and read-aloud tools. Multi-purpose apps are assigned to their primary category.
 
+Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, and system-wide network request filtering.
+
 ## Category Index
 
 | Category | Manifests | Link |
@@ -16,19 +18,20 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Download Managers | 19 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
-| Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
+| Forensics & Diagnostics | 33 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
 | Media & Audio/Video | 45 | [View](#media-audio-video) |
-| Network & DNS | 52 | [View](#network-dns) |
+| Network & DNS | 49 | [View](#network-dns) |
+| Network Security | 10 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
 | Other Utilities | 3 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
-| Security | 41 | [View](#security) |
+| Security | 37 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
@@ -38,9 +41,9 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 92 | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
+| Windows Privacy & Tweaks | 45 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 875**
+**Total unique manifests: 878**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -312,6 +315,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [argus](../bucket/argus.json) | 3.0.0 | 16.6 MiB | 2026-05-07 | Offline-first incident response and threat-hunting CLI with host forensics, YARA-X malware scanning, and structured reports. | [Homepage](https://github.com/25smoking/Argus) |
 | [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | 11.3.1.1992 | 3.9 MiB | 2024-12-09 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
 | [eric-amcacheparser](../bucket/eric-amcacheparser.json) | 2026.10.1 | 4.9 MiB | 2026-10-25 | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-appcompatcacheparser](../bucket/eric-appcompatcacheparser.json) | 2026.10.1 | 2.2 MiB | 2026-10-25 | Eric Zimmerman's AppCompatCacheParser: Parser for Windows AppCompatCache (ShimCache) artifacts. | [Homepage](https://ericzimmerman.github.io/) |
@@ -522,9 +526,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [npcap-np](../bucket/npcap-np.json) | 1.90 | 64bit: — | 2026-10-21 | A packet capture (and sending) library for Microsoft Windows. | [Homepage](https://npcap.com/) |
 | [opennetmeter](../bucket/opennetmeter.json) | 0.15.0 | 64bit: 35.9 MiB | 2026-09-20 | A simple program to monitor your network/data usage. | [Homepage](https://github.com/Ashfaaq18/OpenNetMeter) |
 | [sordum-6to4-remover](../bucket/sordum-6to4-remover.json) | 1.2 | 281.0 KiB | 2017-05-07 | Utility for removing unwanted Microsoft 6to4 tunnel adapters from Windows. | [Homepage](https://www.sordum.org/6423/tunnel-adapter-microsoft-6to4-adapter-remover/) |
-| [sordum-bluelife-hosts-editor](../bucket/sordum-bluelife-hosts-editor.json) | 1.6 | 1.1 MiB | 2026-06-17 | A simple app that allows for easy changes to the hosts file. | [Homepage](https://www.sordum.org/bluelifehosts-editor) |
 | [sordum-copy-public-ip](../bucket/sordum-copy-public-ip.json) | 1.4 | 968.0 KiB | 2025-04-23 | Portable utility that displays the public IP address and copies it to the clipboard. | [Homepage](https://www.sordum.org/9201/) |
-| [sordum-dns-angel](../bucket/sordum-dns-angel.json) | 1.8 | 1.2 MiB | 2025-07-09 | Sordum's DNS Angel. Filter and block vast and uncensored content on the internet. | [Homepage](https://www.sordum.org/8127/dns-angel-v1-8/) |
 | [sordum-dns-jumper](../bucket/sordum-dns-jumper.json) | 2.3 | 630.0 KiB | 2026-05-19 | Quickly and easily change IPv4 and IPv6 DNS settings. | [Homepage](https://www.sordum.org/dns-jumper/) |
 | [sordum-dns-lock](../bucket/sordum-dns-lock.json) | 1.5 | 1005.5 KiB | 2023-01-09 | Utility that protects configured IPv4 and IPv6 DNS addresses from being changed by other software. | [Homepage](https://www.sordum.org/9432/dns-lock-v1-5/) |
 | [sordum-net-disabler](../bucket/sordum-net-disabler.json) | 1.2 | 1.4 MiB | 2026-01-26 | Portable utility to disable and re-enable Internet connectivity using network adapter, DNS, proxy, or Windows Firewall methods. | [Homepage](https://www.sordum.org/9660/net-disabler-v1-2/) |
@@ -534,7 +536,6 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [traceroute-ok](../bucket/traceroute-ok.json) | 3.55 | 64bit: 118.9 KiB | 2026-10-30 | Trace network routes to hosts. | [Homepage](https://www.softwareok.com/?Download=TraceRouteOK) |
 | [ubiquiti-wifiman-desktop](../bucket/ubiquiti-wifiman-desktop.json) | 1.2.8 | 64bit: 16.2 MiB / arm64: 15.4 MiB | 2025-12-01 | Desktop application for discovering UniFi devices, Wi-Fi scanning, speed testing, and Teleport VPN | [Homepage](https://ui.com/download/app/wifiman-desktop) |
 | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | 1.2.8 | 64bit: 16.2 MiB / arm64: 15.4 MiB | 2025-12-01 | Desktop application for discovering UniFi devices, Wi-Fi scanning, speed testing, and Teleport VPN | [Homepage](https://ui.com/download/app/wifiman-desktop) |
-| [ublockdnsclient](../bucket/ublockdnsclient.json) | 0.3.4 | 64bit: 7.7 MiB / arm64: 7.0 MiB | 2026-10-22 | Cross-platform system DNS client for uBlockDNS with device-wide ad and tracker blocking. | [Homepage](https://github.com/ugzv/ublockdnsclient) |
 | [vovsoft-broken-link-detector](../bucket/vovsoft-broken-link-detector.json) | 4.3 | 3.0 MiB | 2026-08-13 | Portable edition of Vovsoft Broken Link Detector. | [Homepage](https://vovsoft.com/software/broken-link-detector/) |
 | [vovsoft-bulk-domain-appraisal](../bucket/vovsoft-bulk-domain-appraisal.json) | 4.1 | 8.3 MiB | 2026-08-13 | Portable edition of Vovsoft Bulk Domain Appraisal. | [Homepage](https://vovsoft.com/software/bulk-domain-appraisal/) |
 | [vovsoft-domain-checker](../bucket/vovsoft-domain-checker.json) | 10.5 | 6.8 MiB | 2026-08-13 | Portable edition of Vovsoft Domain Checker. | [Homepage](https://vovsoft.com/software/domain-checker/) |
@@ -554,6 +555,21 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [vovsoft-website-watcher](../bucket/vovsoft-website-watcher.json) | 2.3 | 5.3 MiB | 2026-08-13 | Portable edition of Vovsoft Website Watcher. | [Homepage](https://vovsoft.com/software/website-watcher/) |
 | [warpinator](../bucket/warpinator.json) | 1.1 | 12.9 MiB | 2025-12-29 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 | [win-ping](../bucket/win-ping.json) | 2.88 | 64bit: 144.0 KiB | 2026-03-18 | Run ping tests against network hosts. | [Homepage](https://www.softwareok.com/?Download=WinPing) |
+
+## Network Security
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [ai-security-monitor](../bucket/ai-security-monitor.json) | 0.8.5 | 64bit: 8.4 MiB | 2026-10-19 | Open-source desktop security monitor for Windows with network connection analysis, threat-intelligence feeds, and firewall management. | [Homepage](https://github.com/markku636/ai-security-monitor) |
+| [fort](../bucket/fort.json) | 3.20.8 | 7.9 MiB | 2026-10-24 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
+| [minimal-firewall](../bucket/minimal-firewall.json) | 2.8.6 | 1.8 MiB | 2026-10-11 | A lightweight frontend for Windows Firewall. | [Homepage](https://github.com/deminimis/minimalfirewall) |
+| [peerblock](../bucket/peerblock.json) | 1.2.0.693 | 2.3 MiB | 2020-01-19 | An IP filter for Windows 7/10, forked from PeerGuardian 2 | [Homepage](https://forums.peerblock.com/) |
+| [sordum-bluelife-hosts-editor](../bucket/sordum-bluelife-hosts-editor.json) | 1.6 | 1.1 MiB | 2026-06-17 | A simple app that allows for easy changes to the hosts file. | [Homepage](https://www.sordum.org/bluelifehosts-editor) |
+| [sordum-dns-angel](../bucket/sordum-dns-angel.json) | 1.8 | 1.2 MiB | 2025-07-09 | Sordum's DNS Angel. Filter and block vast and uncensored content on the internet. | [Homepage](https://www.sordum.org/8127/dns-angel-v1-8/) |
+| [sordum-firewall-app-blocker](../bucket/sordum-firewall-app-blocker.json) | 1.9 | 1.2 MiB | 2026-06-15 | Use Windows Firewall to block or unblock certain applications. | [Homepage](https://www.sordum.org/firewall-app-blocker) |
+| [sordum-url-disabler](../bucket/sordum-url-disabler.json) | 1.4 | 1.1 MiB | 2026-05-19 | Portable utility for blocking URLs in supported browsers, including Chrome, Firefox, Edge, Brave, and Yandex. | [Homepage](https://www.sordum.org/13075/url-disabler-v1-4/) |
+| [ublockdnsclient](../bucket/ublockdnsclient.json) | 0.3.4 | 64bit: 7.7 MiB / arm64: 7.0 MiB | 2026-10-22 | Cross-platform system DNS client for uBlockDNS with device-wide ad and tracker blocking. | [Homepage](https://github.com/ugzv/ublockdnsclient) |
+| [zen-desktop](../bucket/zen-desktop.json) | 0.29.0 | 64bit: 10.9 MiB / arm64: 10.3 MiB | 2026-11-02 | System-wide ad blocker and privacy guard for Windows, macOS, and Linux. | [Homepage](https://irbis.sh/zen) |
 
 ## Notch
 
@@ -726,7 +742,6 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [easylpac](../bucket/easylpac.json) | 0.8.1.1 | 64bit: 21.9 MiB | 2026-08-23 | lpac GUI Frontend | [Homepage](https://github.com/creamlike1024/EasyLPAC) |
 | [ef-checksum-manager](../bucket/ef-checksum-manager.json) | 26.10 | 64bit: 1.9 MiB | 2026-08-24 | Creates and verifies file checksums, including SFV/CRC32, MD5, BLAKE3, and SHA-family formats. | [Homepage](https://efsoftware.com/cm/e.htm) |
 | [encryphix](../bucket/encryphix.json) | 26.11 | 724.9 KiB | 2026-10-10 | AES-256 file and folder encryption utility for Windows. | [Homepage](https://github.com/turkaysoft/encryphix) |
-| [fort](../bucket/fort.json) | 3.20.8 | 7.9 MiB | 2026-10-24 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
 | [grc-leaktest](../bucket/grc-leaktest.json) | 2008.03.13 | 25.0 KiB | 2008-03-13 | GRC LeakTest: Legacy outbound-firewall leakage test utility. | [Homepage](https://www.grc.com/lt/leaktest.htm) |
 | [grc-securable](../bucket/grc-securable.json) | 2013.02.22 | 119.4 KiB | 2013-02-22 | GRC SecurAble: Reports processor support for 64-bit instructions, hardware DEP/NX, and virtualization. | [Homepage](https://www.grc.com/securable.htm) |
 | [grc-unplug-n-pray](../bucket/grc-unplug-n-pray.json) | 2001.12.28 | 32.4 KiB | 2001-12-28 | GRC UnPlug n' Pray: Legacy utility for checking and enabling/disabling the historical Windows UPnP service. | [Homepage](https://www.grc.com/unpnp/unpnp.htm) |
@@ -737,10 +752,10 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [permissionscope](../bucket/permissionscope.json) | 1.0.1 | 64bit: 71.5 MiB / arm64: 68.2 MiB | 2026-09-11 | Windows utility for inspecting and explaining file and folder permissions. | [Homepage](https://github.com/MukaSanches/PermissionScope) |
 | [sandboxie-plus](../bucket/sandboxie-plus.json) | 1.18.8 | 23.8 MiB | 2026-10-17 | Sandboxie Plus sandboxing software for Windows. | [Homepage](https://github.com/sandboxie-plus/Sandboxie) |
 | [smarttextcrypter](../bucket/smarttextcrypter.json) | 1.04 | 64bit: 315.0 KiB | 2026-10-18 | Encrypt and decrypt text. | [Homepage](https://www.softwareok.com/?Download=SmartTextCrypter) |
+| [snitch](../bucket/snitch.json) | 1.6.4 | 189.3 MiB | 2026-10-23 | Privacy-focused real-time network monitor and application firewall with per-process traffic attribution, local traffic history, and opt-in IP threat intelligence. | [Homepage](https://github.com/aixisstudio/Snitch) |
 | [sordum-askadmin](../bucket/sordum-askadmin.json) | 2.1 | 1.2 MiB | 2026-09-07 | Block access to chosen applications, files, and folder contents. | [Homepage](https://www.sordum.org/7941/askadmin-v2-1/) |
 | [sordum-bluelife-keyfreeze](../bucket/sordum-bluelife-keyfreeze.json) | 1.4 | 911.7 KiB | 2024-12-02 | A free Windows application that blocks your keyboard and mouse without “locking” the screen. | [Homepage](https://www.sordum.org/7921/bluelife-keyfreeze-v1-4-block-keyboard-and-mouse/) |
 | [sordum-defender-exclusion-tool](../bucket/sordum-defender-exclusion-tool.json) | 1.4 | 534.4 KiB | 2025-06-23 | Sordum's Defender Exclusion Tool. Add/Remove exclusions to Windows Defender. | [Homepage](https://www.sordum.org/10636/defender-exclusion-tool-v1-4/) |
-| [sordum-firewall-app-blocker](../bucket/sordum-firewall-app-blocker.json) | 1.9 | 1.2 MiB | 2026-06-15 | Use Windows Firewall to block or unblock certain applications. | [Homepage](https://www.sordum.org/firewall-app-blocker) |
 | [sordum-ntfs-drive-protection](../bucket/sordum-ntfs-drive-protection.json) | 1.5 | 1.0 MiB | 2022-04-22 | Protect your removable drives, preventing malware from creating its needed autorun.inf file. | [Homepage](https://www.sordum.org/8117/ntfs-drive-protection-v1-5/) |
 | [sordum-password-generator](../bucket/sordum-password-generator.json) | 2020.10.23 | 366.4 KiB | 2020-10-23 | Portable random password generator. The upstream page does not publish a semantic version; this manifest uses its published release date. | [Homepage](https://www.sordum.org/10946/sordum-random-password-generator/) |
 | [sordum-powerrun](../bucket/sordum-powerrun.json) | 1.9 | 1.2 MiB | 2026-07-15 | PowerRun (Run with highest privileges) 可以使用TrustedInstaller/System的权限来启动一些程序 | [Homepage](https://www.sordum.org/9416/powerrun-v1-9-run-with-highest-privileges/) |
@@ -748,7 +763,6 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [sordum-runastool](../bucket/sordum-runastool.json) | 1.7 | 1.2 MiB | 2026-09-15 | A simple app that allows users to run a specific program with administrator privileges without the need to enter the administrator password. | [Homepage](https://www.sordum.org/runastool) |
 | [sordum-simple-run-blocker](../bucket/sordum-simple-run-blocker.json) | 1.5 | 417.4 KiB | 2021-09-24 | Portable utility for blocking selected Windows applications, with a whitelist mode. | [Homepage](https://www.sordum.org/8486/simple-run-blocker-v1-5/) |
 | [sordum-skip-uac-prompt](../bucket/sordum-skip-uac-prompt.json) | 1.4 | 1.1 MiB | 2026-09-23 | This utility also allows you to enable or disable UAC for the apps of your choosing without entirely deactivating UAC systemwide. | [Homepage](https://www.sordum.org/16219/skip-uac-prompt-v1-4/) |
-| [sordum-url-disabler](../bucket/sordum-url-disabler.json) | 1.4 | 1.1 MiB | 2026-05-19 | Portable utility for blocking URLs in supported browsers, including Chrome, Firefox, Edge, Brave, and Yandex. | [Homepage](https://www.sordum.org/13075/url-disabler-v1-4/) |
 | [sordum-webcam-on-off](../bucket/sordum-webcam-on-off.json) | 1.4 | 478.0 KiB | 2026-02-25 | A simple app that allows you to turn your webcam on or off. | [Homepage](https://www.sordum.org/webcam-on-off) |
 | [veracrypt](../bucket/veracrypt.json) | 1.26.30 | 64bit: 40.5 MiB / arm64: 40.5 MiB | 2026-10-25 | Open-source disk encryption software for creating and mounting encrypted volumes. | [Homepage](https://veracrypt.io/) |
 | [vimera](../bucket/vimera.json) | 26.11 | 702.4 KiB | 2026-10-10 | File and text hash analysis and verification tool for Windows. | [Homepage](https://github.com/turkaysoft/vimera) |
@@ -1072,7 +1086,6 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [gtweak-exe](../bucket/gtweak-exe.json) | 5.5.6 | 6.6 MiB | 2026-09-30 | Portable Windows tweaking and customization tool. | [Homepage](https://github.com/Greedeks/GTweak) |
 | [kudu](../bucket/kudu.json) | 3.10.0 | 179.4 MiB | 2026-10-30 | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. | [Homepage](https://github.com/AdventDevInc/kudu) |
 | [lynxoptimizer](../bucket/lynxoptimizer.json) | 0.216.2 | 64bit: 28.7 KiB | 2026-10-10 | Windows system optimization utility. | [Homepage](https://github.com/caxzy/LynxOptimizer) |
-| [minimal-firewall](../bucket/minimal-firewall.json) | 2.8.6 | 1.8 MiB | 2026-10-11 | A lightweight frontend for Windows Firewall. | [Homepage](https://github.com/deminimis/minimalfirewall) |
 | [nixthis](../bucket/nixthis.json) | 0.42.2 | 569.0 KiB | 2026-10-04 | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. | [Homepage](https://github.com/builtbybel/NixThis) |
 | [optimizerduck](../bucket/optimizerduck.json) | 2.29.0 | 83.3 MiB | 2026-10-07 | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. | [Homepage](https://github.com/itsfatduck/optimizerDuck) |
 | [prevent-turn-off](../bucket/prevent-turn-off.json) | 3.63 | 64bit: 264.2 KiB | 2026-05-13 | Prevent Windows from shutting down or entering sleep mode. | [Homepage](https://www.softwareok.com/?Download=PreventTurnOff) |
@@ -1507,7 +1520,6 @@ Publisher cross-list of 63 manifests associated with Sordum. Each entry is also 
 | [sordum-6to4-remover](../bucket/sordum-6to4-remover.json) | 1.2 | 281.0 KiB | 2017-05-07 | Utility for removing unwanted Microsoft 6to4 tunnel adapters from Windows. | [Homepage](https://www.sordum.org/6423/tunnel-adapter-microsoft-6to4-adapter-remover/) |
 | [sordum-askadmin](../bucket/sordum-askadmin.json) | 2.1 | 1.2 MiB | 2026-09-07 | Block access to chosen applications, files, and folder contents. | [Homepage](https://www.sordum.org/7941/askadmin-v2-1/) |
 | [sordum-backup-start-menu-layout](../bucket/sordum-backup-start-menu-layout.json) | 1.6 | 987.9 KiB | 2024-07-27 | A simple app that allows users to backup and restore their StartMenu layout. | [Homepage](https://www.sordum.org/backup-start-menu-layout) |
-| [sordum-bluelife-hosts-editor](../bucket/sordum-bluelife-hosts-editor.json) | 1.6 | 1.1 MiB | 2026-06-17 | A simple app that allows for easy changes to the hosts file. | [Homepage](https://www.sordum.org/bluelifehosts-editor) |
 | [sordum-bluelife-keyfreeze](../bucket/sordum-bluelife-keyfreeze.json) | 1.4 | 911.7 KiB | 2024-12-02 | A free Windows application that blocks your keyboard and mouse without “locking” the screen. | [Homepage](https://www.sordum.org/7921/bluelife-keyfreeze-v1-4-block-keyboard-and-mouse/) |
 | [sordum-bluetooth-version-finder](../bucket/sordum-bluetooth-version-finder.json) | 1.7 | 1.0 MiB | 2026-02-11 | Free software that shows the Bluetooth version in Windows 11 and 10. | [Homepage](https://www.sordum.org/10772/bluetooth-version-finder-v1-7/) |
 | [sordum-bpuzzle](../bucket/sordum-bpuzzle.json) | 1.2 | 2.3 MiB | 2023-06-20 | Portable sliding-tile puzzle game with multiple difficulty levels. | [Homepage](https://www.sordum.org/8058/bpuzzle-v1-2/) |
@@ -1515,7 +1527,6 @@ Publisher cross-list of 63 manifests associated with Sordum. Each entry is also 
 | [sordum-copy-public-ip](../bucket/sordum-copy-public-ip.json) | 1.4 | 968.0 KiB | 2025-04-23 | Portable utility that displays the public IP address and copies it to the clipboard. | [Homepage](https://www.sordum.org/9201/) |
 | [sordum-defender-exclusion-tool](../bucket/sordum-defender-exclusion-tool.json) | 1.4 | 534.4 KiB | 2025-06-23 | Sordum's Defender Exclusion Tool. Add/Remove exclusions to Windows Defender. | [Homepage](https://www.sordum.org/10636/defender-exclusion-tool-v1-4/) |
 | [sordum-desktop-ini-editor](../bucket/sordum-desktop-ini-editor.json) | 1.2 | 982.5 KiB | 2026-04-08 | A simple app that allows users to edit the desktop.ini file in thier folders. | [Homepage](https://www.sordum.org/desktop-ini-editor) |
-| [sordum-dns-angel](../bucket/sordum-dns-angel.json) | 1.8 | 1.2 MiB | 2025-07-09 | Sordum's DNS Angel. Filter and block vast and uncensored content on the internet. | [Homepage](https://www.sordum.org/8127/dns-angel-v1-8/) |
 | [sordum-dns-jumper](../bucket/sordum-dns-jumper.json) | 2.3 | 630.0 KiB | 2026-05-19 | Quickly and easily change IPv4 and IPv6 DNS settings. | [Homepage](https://www.sordum.org/dns-jumper/) |
 | [sordum-dns-lock](../bucket/sordum-dns-lock.json) | 1.5 | 1005.5 KiB | 2023-01-09 | Utility that protects configured IPv4 and IPv6 DNS addresses from being changed by other software. | [Homepage](https://www.sordum.org/9432/dns-lock-v1-5/) |
 | [sordum-drive-letter-changer](../bucket/sordum-drive-letter-changer.json) | 1.4 | 916.4 KiB | 2025-06-01 | A simple app that allows you to change the letter of your hard drives. | [Homepage](https://www.sordum.org/drive-letter-changer) |
@@ -1523,7 +1534,6 @@ Publisher cross-list of 63 manifests associated with Sordum. Each entry is also 
 | [sordum-easy-service-optimizer](../bucket/sordum-easy-service-optimizer.json) | 1.2 | 490.2 KiB | 2025-05-27 | A portable freeware to optimize services for almost all Windows versions (except for Win 98 and before). | [Homepage](https://www.sordum.org/easy-service-optimizer) |
 | [sordum-edge-blocker](../bucket/sordum-edge-blocker.json) | 2.1 | 1.2 MiB | 2026-10-13 | block edge | [Homepage](https://www.sordum.org/9312/edge-blocker-v2-1/) |
 | [sordum-find-prime-numbers](../bucket/sordum-find-prime-numbers.json) | 1.1 | 288.0 KiB | 2017-05-07 | Portable benchmark that tests CPU performance by searching for prime numbers across a selected range. | [Homepage](https://www.sordum.org/9207/find-prime-numbers-v1-1/) |
-| [sordum-firewall-app-blocker](../bucket/sordum-firewall-app-blocker.json) | 1.9 | 1.2 MiB | 2026-06-15 | Use Windows Firewall to block or unblock certain applications. | [Homepage](https://www.sordum.org/firewall-app-blocker) |
 | [sordum-fix-print-spooler](../bucket/sordum-fix-print-spooler.json) | 1.3 | 921.1 KiB | 2026-08-22 | A small tool for fixing or disabling the Print Spooler service in Windows. | [Homepage](https://www.sordum.org/fix-print-spooler) |
 | [sordum-folder-painter](../bucket/sordum-folder-painter.json) | 1.3 | 2.8 MiB | 2026-06-21 | Allows you to change the icon color of a chosen folder to any color you like | [Homepage](https://www.sordum.org/folder-painter) |
 | [sordum-hibernate-enable-or-disable](../bucket/sordum-hibernate-enable-or-disable.json) | 1.5 | 1.1 MiB | 2025-07-08 | A very simple portable Utility to Disable or Enable Hibernation. | [Homepage](https://www.sordum.org/9502/hibernate-enable-or-disable-v1-5/) |
@@ -1560,7 +1570,6 @@ Publisher cross-list of 63 manifests associated with Sordum. Each entry is also 
 | [sordum-switch-power-scheme](../bucket/sordum-switch-power-scheme.json) | 1.3 | 904.0 KiB | 2025-03-29 | Portable utility for switching, importing, exporting, and managing Windows power plans. | [Homepage](https://www.sordum.org/12818/switch-power-scheme-v1-3/) |
 | [sordum-temp-cleaner](../bucket/sordum-temp-cleaner.json) | 1.3 | 825.3 KiB | 2020-07-26 | Sordum's Temp Cleaner | [Homepage](https://www.sordum.org/9190/temp-cleaner-v1-3/) |
 | [sordum-update-time](../bucket/sordum-update-time.json) | 1.4 | 986.5 KiB | 2026-08-18 | Portable utility for synchronizing and correcting the Windows system date and time. | [Homepage](https://www.sordum.org/9203/update-time-v1-4/) |
-| [sordum-url-disabler](../bucket/sordum-url-disabler.json) | 1.4 | 1.1 MiB | 2026-05-19 | Portable utility for blocking URLs in supported browsers, including Chrome, Firefox, Edge, Brave, and Yandex. | [Homepage](https://www.sordum.org/13075/url-disabler-v1-4/) |
 | [sordum-webcam-on-off](../bucket/sordum-webcam-on-off.json) | 1.4 | 478.0 KiB | 2026-02-25 | A simple app that allows you to turn your webcam on or off. | [Homepage](https://www.sordum.org/webcam-on-off) |
 | [sordum-wifi-filter-tool](../bucket/sordum-wifi-filter-tool.json) | 1.2 | 1.0 MiB | 2025-10-01 | Wi-Fi Filter Tool is a lightweight application that allows you to hide unknown wireless networks (SSID) from the list of available networks. | [Homepage](https://www.sordum.org/16523/wi-fi-filter-tool-v1-2/) |
 | [sordum-win11-classic-context-menu](../bucket/sordum-win11-classic-context-menu.json) | 1.2 | 64bit: 481.0 KiB | 2026-02-11 | An application that allows Windows 11 users to revert back to the classic Windows 10 context menu. | [Homepage](https://www.sordum.org/windows-11-classic-context-menu) |

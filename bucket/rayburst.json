@@ -1,12 +1,11 @@
 {
-    "##": "Deprecate this manifest after 2027-01-01.",
     "version": "4.1.1",
-    "description": "A full-featured download manager — rebuilt from the ground up.",
+    "description": "A full-featured download manager — rebuilt from the ground up (formerly Motrix Next).",
     "homepage": "https://rayburst.pages.dev",
     "license": "MIT",
     "notes": [
-        "Motrix Next is now Rayburst. For more information, visit https://rayburst.pages.dev/",
-        "This manifest is deprecated and scheduled for removal on January 1, 2027. Please use `extras/rayburst` instead."
+        "This manifest extracts the NSIS payload without running the vendor installer hooks. Windows protocol handlers, .torrent file association, and browser native-messaging registration are not added. Use the vendor installer when these integrations are required.",
+        "KiroBucket's NSIS extraction workflow verified the x64 and ARM64 payloads and confirmed rayburst.exe at the extraction root. The workflow did not launch the application."
     ],
     "architecture": {
         "64bit": {
@@ -22,7 +21,7 @@
     "shortcuts": [
         [
             "rayburst.exe",
-            "Motrix Next (Renamed to rayburst; please reinstall)"
+            "Rayburst"
         ]
     ],
     "checkver": {

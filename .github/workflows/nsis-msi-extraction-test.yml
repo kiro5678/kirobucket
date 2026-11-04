@@ -143,6 +143,15 @@ jobs:
               AppExePattern = "(?i)^Deskboard\.exe$"
             },
             @{
+              Name = "AI Security Monitor"
+              Version = "0.8.5"
+              NsisUrl = "https://github.com/markku636/ai-security-monitor/releases/download/v0.8.5/AI-Security-Monitor-0.8.5-windows-x64-setup.exe"
+              NsisSha256 = "9d826aafa2754a835b764be15dce033a93ac65f207f3f4493e2f07a4cf6a1da6"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^ai-security-monitor-desktop\.exe$"
+            },
+            @{
               Name = "Out Loud"
               Version = "2.1.2"
               NsisUrl = "https://github.com/light-cloud-com/out-loud/releases/download/v2.1.2/Out.Loud.Setup.2.1.2.exe"
@@ -150,6 +159,45 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Out Loud\.exe$"
+            },
+            @{
+              Name = "Snitch"
+              Version = "1.6.4"
+              # Match Scoop's #/dl.7z handling for the official NSIS installer.
+              NsisUrl = "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe#/dl.7z"
+              NsisSha256 = "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Snitch\.exe$"
+            },
+            @{
+              Name = "Bargozin"
+              Version = "0.2.0"
+              # Mirror Scoop's #/dl.7z download filename behavior for the Tauri NSIS setup.
+              NsisUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64-setup.exe#/dl.7z"
+              NsisSha256 = "5a558389fbd8394bf5f20b51e7782feccbcb9797f42704e6f9b4002cc71c5bf8"
+              MsiUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64_en-US.msi"
+              MsiSha256 = "570d34e68724c35ae604c57afd8a970bb313b372bf982b07494808ff03febe57"
+              AppExePattern = "(?i)^Bargozin\.exe$"
+            },
+            @{
+              Name = "Rayburst x64"
+              Version = "4.1.1"
+              # Match the official Scoop Extras manifest's NSIS extraction URL and published SHA-256.
+              NsisUrl = "https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.1/Rayburst_4.1.1_x64-setup.exe#/dl.7z"
+              NsisSha256 = "1c82b728f95e310699d0a44f822b089d3f50b1593fe4417742efbe56914a8c45"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^rayburst\.exe$"
+            },
+            @{
+              Name = "Rayburst ARM64"
+              Version = "4.1.1"
+              NsisUrl = "https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.1/Rayburst_4.1.1_arm64-setup.exe#/dl.7z"
+              NsisSha256 = "190be7269341f87256e6ea3d7c82a9001024e7e5d16afb1a3f2e486c694bff52"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^rayburst\.exe$"
             }
           )
 
@@ -161,7 +209,10 @@ jobs:
             Add-Report "============================================================"
 
             $appRoot = Join-Path $root ($app.Name -replace '[^A-Za-z0-9_-]', '-')
-            $nsisDownload = Join-Path $appRoot "installer.exe"
+            # Scoop renames assets using the #/dl.7z fragment before extraction.
+            $nsisFileName = "installer.exe"
+            if ($app.NsisUrl.Contains("#/dl.7z")) { $nsisFileName = "dl.7z" }
+            $nsisDownload = Join-Path $appRoot $nsisFileName
             $nsisExtract = Join-Path $appRoot "nsis-extracted"
             New-Item -ItemType Directory -Path $appRoot -Force | Out-Null
 
@@ -316,7 +367,7 @@ jobs:
 
             # Keep the diagnostic artifact small: retain logs and inventories, discard downloaded/extracted binaries.
             Get-ChildItem -LiteralPath $appRoot -File -Force -ErrorAction SilentlyContinue |
-              Where-Object { $_.Name -in @("installer.exe", "fallback.msi") } |
+              Where-Object { $_.Name -in @("installer.exe", "dl.7z", "fallback.msi") } |
               Remove-Item -Force -ErrorAction SilentlyContinue
             Get-ChildItem -LiteralPath $appRoot -Directory -Force -ErrorAction SilentlyContinue |
               Where-Object { $_.Name -match '^(nsis-extracted|msi-admin-extracted|lessmsi-tool|nested-)' } |

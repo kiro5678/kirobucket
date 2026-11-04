@@ -1,0 +1,57 @@
+{
+    "version": "1.2.0.693",
+    "description": "An IP filter for Windows 7/10, forked from PeerGuardian 2",
+    "homepage": "https://forums.peerblock.com/",
+    "license": "zlib-acknowledgement",
+    "url": "https://s3.amazonaws.com/hn62xeffkz4xd8g3qnq8/software/PeerBlock-Setup_v1.2_r693.exe",
+    "hash": "5f42d76212e6f0dc625e0e19dd532651daa1afb9f3a0ef428d3a6121eb97f16f",
+    "innosetup": true,
+    "architecture": {
+        "64bit": {
+            "installer": {
+                "script": [
+                    "Rename-Item \"$dir\\pbfilter,4.sys\" \"$dir\\pbfilter.sys\"",
+                    "Remove-Item \"$dir\\pbfilter,*.sys\"",
+                    "Rename-Item \"$dir\\peerblock,4.exe\" \"$dir\\peerblock.exe\"",
+                    "Remove-Item \"$dir\\peerblock,*.exe\""
+                ]
+            }
+        },
+        "32bit": {
+            "installer": {
+                "script": [
+                    "Rename-Item \"$dir\\pbfilter,3.sys\" \"$dir\\pbfilter.sys\"",
+                    "Remove-Item \"$dir\\pbfilter,*.sys\"",
+                    "Rename-Item \"$dir\\peerblock,3.exe\" \"$dir\\peerblock.exe\"",
+                    "Remove-Item \"$dir\\peerblock,*.exe\""
+                ]
+            }
+        }
+    },
+    "shortcuts": [
+        [
+            "peerblock.exe",
+            "PeerBlock"
+        ]
+    ],
+    "persist": [
+        "lists",
+        "cache.p2b",
+        "peerblock.conf",
+        "peerblock.conf.bak",
+        "peerblock.conf.failed"
+    ],
+    "pre_install": [
+        "   #Create placeholder files",
+        "function CreateFile([String] $file, [String] $content = $null) {",
+        "    if(!(Test-Path \"$persist_dir\\$file\")) {",
+        "        Write-Host \"Create placeholder for peerblock: $file\"",
+        "        New-Item -Force -Path \"$persist_dir\\$file\" -ItemType file -Value $content | Out-Null",
+        "    }",
+        "}",
+        "CreateFile 'cache.p2b'",
+        "CreateFile 'peerblock.conf'",
+        "CreateFile 'peerblock.conf.bak'",
+        "CreateFile 'peerblock.conf.failed'"
+    ]
+}
