@@ -22,7 +22,7 @@ on:
       - master
     paths:
       - '.github/workflows/multi-engine-installer-type-inspector.yml'
-      - 'under review kirobucket/majorprivacy.json'
+      - 'bucket/majorprivacy.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -64,7 +64,7 @@ jobs:
             $expectedHash = $env:INPUT_EXPECTED_SHA256.Trim()
             if ([string]::IsNullOrWhiteSpace($url)) { throw 'workflow_dispatch requires installer_url.' }
           } elseif ($env:EVENT_NAME -eq 'push') {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/majorprivacy.json'
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/majorprivacy.json'
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
             $url = [string]$manifest.url
