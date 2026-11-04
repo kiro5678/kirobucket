@@ -3,21 +3,32 @@
     "description": "Windows privacy and isolation tool with process protection, file access controls, and network filtering.",
     "homepage": "https://github.com/xanasoft/MajorPrivacy",
     "license": "Proprietary",
-    "url": "https://github.com/xanasoft/MajorPrivacy/releases/download/v0.101.0/MajorPrivacy-v0.101.0.exe",
-    "hash": "1b9d4ac9fcaa5825dfc10359a0c01856919b7d9dd91f405ddb258d1ec471e7b4",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/xanasoft/MajorPrivacy/releases/download/v0.101.0/MajorPrivacy-v0.101.0.exe",
+            "hash": "1b9d4ac9fcaa5825dfc10359a0c01856919b7d9dd91f405ddb258d1ec471e7b4"
+        }
+    },
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "MajorPrivacy.exe",
+            "MajorPrivacy"
+        ]
+    ],
     "checkver": {
         "url": "https://api.github.com/repos/xanasoft/MajorPrivacy/releases/latest",
         "jsonpath": "$.tag_name",
         "regex": "^v(?<version>[\\d.]+)$"
     },
     "autoupdate": {
-        "url": "https://github.com/xanasoft/MajorPrivacy/releases/download/v$version/MajorPrivacy-v$version.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/xanasoft/MajorPrivacy/releases/download/v$version/MajorPrivacy-v$version.exe"
+            }
+        }
     },
     "notes": [
-        "Review status: this is the official MajorPrivacy v0.101.0 Inno Setup release asset. The SHA-256 value is the digest published for this exact asset by the GitHub Releases API.",
-        "The upstream Installer/MajorPrivacy.iss source documents /PORTABLE=1 and /CURRENTUSER. Portable mode skips PrivacyAgent service installation, normal uninstaller registration, desktop/autostart tasks, and the optional ImDisk driver task.",
-        "The x64 Inno Setup [Run] section also launches the bundled VC_redist.x64.exe with /q /norestart and has no explicit portable-mode Check condition. Verify whether this causes a system-wide Visual C++ runtime installation or elevation before automating the portable installer. The vendor's download instructions currently tell users to run the installer as Administrator.",
-        "This staged manifest only downloads the official setup EXE. It does not run or unpack the installer, and intentionally declares no shim, shortcut, persistence, or install hooks. Keep it outside bucket/ until the portable mode, runtime behavior, application launch, data persistence, architecture support, upgrades, and cleanup have been tested.",
-        "The upstream custom license permits noncommercial use and free redistribution of original unmodified binaries; commercial use requires a business license, and advanced functionality requires a license from Xanasoft. See https://github.com/xanasoft/MajorPrivacy/blob/main/LICENSE."
+        "Requires the Windows service PrivacyAgent and the kernel isolation driver; extracting the Inno Setup payload does not install these components."
     ]
 }
