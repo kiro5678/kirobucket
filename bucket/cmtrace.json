@@ -4,9 +4,7 @@
     "homepage": "https://cmtraceopen.com",
     "license": "MIT",
     "notes": [
-        "Startup update checks are disabled by default. Run 'scoop update cmtrace' to upgrade.",
-        "Open a log from the shell with 'cmtrace <path-to-log>'.",
-        "Not affiliated with or endorsed by Microsoft."
+        "Open a log file from the shell with cmtrace <path-to-log>."
     ],
     "architecture": {
         "64bit": {
