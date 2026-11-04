@@ -170,6 +170,16 @@ jobs:
               MsiSha256 = ""
               AppExePattern = "(?i)^Snitch\.exe$"
             }
+            @{
+              Name = "Bargozin"
+              Version = "0.2.0"
+              # Mirror Scoop's #/dl.7z download filename behavior for the Tauri NSIS setup.
+              NsisUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64-setup.exe#/dl.7z"
+              NsisSha256 = "5a558389fbd8394bf5f20b51e7782feccbcb9797f42704e6f9b4002cc71c5bf8"
+              MsiUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64_en-US.msi"
+              MsiSha256 = "570d34e68724c35ae604c57afd8a970bb313b372bf982b07494808ff03febe57"
+              AppExePattern = "(?i)^Bargozin\.exe$"
+            },
           )
 
           $lessmsiExe = $null
@@ -366,16 +376,6 @@ jobs:
             ""
             "Detailed EXE and file paths are in the `nsis-msi-extraction-results` artifact."
             "No installer or extracted application was executed."
-            @{
-              Name = "Bargozin"
-              Version = "0.2.0"
-              # Mirror Scoop's #/dl.7z download filename behavior for the Tauri NSIS setup.
-              NsisUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64-setup.exe#/dl.7z"
-              NsisSha256 = "5a558389fbd8394bf5f20b51e7782feccbcb9797f42704e6f9b4002cc71c5bf8"
-              MsiUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64_en-US.msi"
-              MsiSha256 = "570d34e68724c35ae604c57afd8a970bb313b372bf982b07494808ff03febe57"
-              AppExePattern = "(?i)^Bargozin\.exe$"
-            },
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
           if (@($results | Where-Object { $_.SelectedPackage -eq "none" }).Count -gt 0) {
