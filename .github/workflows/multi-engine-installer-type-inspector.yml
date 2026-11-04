@@ -67,11 +67,12 @@ jobs:
             $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/majorprivacy.json'
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
-            $url = [string]$manifest.url
+            $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
+            $url = [string]$source.url
             $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
-            $expectedHash = [string]$manifest.hash
+            $expectedHash = [string]$source.hash
             if ($url -notlike 'https://github.com/xanasoft/MajorPrivacy/releases/download/*') { throw 'Manifest URL is not an official MajorPrivacy release asset.' }
-            if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw 'Manifest hash must be a 64-character SHA-256 digest.' }
+            if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw 'Manifest architecture hash must be a 64-character SHA-256 digest.' }
           } elseif ($env:EVENT_NAME -eq 'pull_request') {
             $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/autooff.json'
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
