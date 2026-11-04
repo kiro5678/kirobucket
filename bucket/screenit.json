@@ -37,7 +37,6 @@
         }
     },
     "notes": [
-        "Uses the official portable ZIP release, not the MSI. The archive contains screenit.exe, screenit-cli.exe, and locales under the versioned release folder.",
-        "The upstream README documents Windows 10 (1903 or later) and Windows 11, 64-bit."
+        "Requires Windows 10 version 1903 or later, or Windows 11 (64-bit)."
     ]
 }
