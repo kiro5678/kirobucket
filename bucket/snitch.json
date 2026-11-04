@@ -1,0 +1,33 @@
+{
+    "version": "1.6.4",
+    "description": "Privacy-focused real-time network monitor and application firewall with per-process traffic attribution, local traffic history, and opt-in IP threat intelligence.",
+    "homepage": "https://github.com/aixisstudio/Snitch",
+    "license": "AGPL-3.0-or-later",
+    "url": "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe",
+    "hash": "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263",
+    "installer": {
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
+    },
+    "uninstaller": {
+        "script": "$uninstaller = Get-ChildItem -LiteralPath $dir -Filter 'Uninstall*.exe' -File | Select-Object -First 1; if ($uninstaller) { Invoke-ExternalCommand $uninstaller.FullName -ArgumentList '/S' | Out-Null }"
+    },
+    "bin": "Snitch.exe",
+    "shortcuts": [
+        [
+            "Snitch.exe",
+            "Snitch"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/aixisstudio/Snitch/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/aixisstudio/Snitch/releases/download/v$version/Snitch-Setup-windows.exe"
+    },
+    "notes": "Live packet capture requires Npcap, which is not bundled; install it separately from https://npcap.com/. Packet capture also requires Snitch to run with administrator privileges. Snitch stores its database and settings in %LOCALAPPDATA%\\Snitch; Scoop does not remove that data."
+}
