@@ -4,17 +4,8 @@
     "homepage": "https://strawberryperl.com",
     "license": "GPL-1.0-or-later|Artistic-1.0-Perl",
     "notes": [
-        "To avoid conflicts with other C/C++ compilers, '$dir\\c\\bin' will not be added to the PATH.",
-        "For more information, see: https://github.com/ScoopInstaller/Main/pull/2832",
-        "",
-        "This may cause some preinstalled Perl modules to fail.",
-        "If you encounter this issue, please run the following command to manually add it to the PATH:",
-        "",
-        "# To add to the user PATH, run PowerShell and execute:",
-        "[Environment]::SetEnvironmentVariable(\"Path\", $env:Path + \";$dir\\c\\bin\", 'User')",
-        "",
-        "# To add to the system PATH instead, run PowerShell as administrator and execute:",
-        "[Environment]::SetEnvironmentVariable(\"Path\", $env:Path + \";$dir\\c\\bin\", 'Machine')"
+        "To avoid conflicts with other C/C++ compilers, `$dir\\c\\bin` is not added to PATH automatically. Some preinstalled Perl modules may fail until you add this directory to your user PATH.",
+        "To add it to the user PATH, run in PowerShell: `[Environment]::SetEnvironmentVariable('Path', $env:Path + ';$dir\\c\\bin', 'User')`."
     ],
     "architecture": {
         "64bit": {
