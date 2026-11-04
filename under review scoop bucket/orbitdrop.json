@@ -42,10 +42,7 @@
         }
     },
     "notes": [
-        "Uses the official portable ZIP rather than the setup executable, so Scoop controls the application files and updates.",
-        "OrbitDrop stores settings in %APPDATA%\\OrbitDrop and logs in %LOCALAPPDATA%\\OrbitDrop; these locations are outside the Scoop app directory and remain after uninstall.",
-        "The portable build does not install updates itself. Use 'scoop update orbitdrop' to update this Scoop-managed copy.",
-        "The current upstream release is 0.6.0-alpha. The project notes that multi-monitor, mixed-DPI, and Windows 10 validation is still pending.",
-        "The app registers its File Explorer context-menu handler under HKCU. pre_uninstall removes the associated per-user registry entries and startup value."
+        "Settings are stored under %APPDATA%\\OrbitDrop and logs under %LOCALAPPDATA%\\OrbitDrop; these locations remain after Scoop uninstall.",
+        "OrbitDrop registers a File Explorer context-menu handler under HKCU. The manifest removes its registry entries and startup value during uninstall."
     ]
 }
