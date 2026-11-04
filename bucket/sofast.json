@@ -32,5 +32,7 @@
             }
         }
     },
-    "notes": "Requires Microsoft Edge WebView2 Runtime. Scoop does not install the WebView2 Runtime automatically because it may already be installed system-wide."
+    "notes": [
+        "Requires Microsoft Edge WebView2 Runtime. Scoop does not install this runtime automatically because it may already be installed system-wide."
+    ]
 }
