@@ -23,6 +23,12 @@ on:
     paths:
       - '.github/workflows/multi-engine-installer-type-inspector.yml'
       - 'under review kirobucket/majorprivacy.json'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'under review kirobucket/autooff.json'
 
 permissions:
   contents: read
@@ -34,9 +40,12 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository for push-triggered manifest inspection
-        if: github.event_name == 'push'
+      - name: Checkout repository for manifest inspection
+        if: github.event_name == 'push' || github.event_name == 'pull_request'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
 
       - name: Resolve installer URL and checksum
         id: source
@@ -63,6 +72,15 @@ jobs:
             $expectedHash = [string]$manifest.hash
             if ($url -notlike 'https://github.com/xanasoft/MajorPrivacy/releases/download/*') { throw 'Manifest URL is not an official MajorPrivacy release asset.' }
             if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw 'Manifest hash must be a 64-character SHA-256 digest.' }
+          } elseif ($env:EVENT_NAME -eq 'pull_request') {
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/autooff.json'
+            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            $url = [string]$manifest.url
+            if ($url -notlike 'https://github.com/pintosoft/AutoOff/releases/download/*') { throw 'Manifest URL is not an official AutoOff release asset.' }
+            $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
+            $expectedHash = [string]$manifest.hash
+            if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Manifest hash, when supplied, must be a 64-character SHA-256 digest.' }
           } else {
             throw "Unsupported event '$($env:EVENT_NAME)'."
           }
