@@ -30,7 +30,6 @@
         }
     },
     "notes": [
-        "Uses the self-contained Windows x64 release archive; no separate .NET Desktop Runtime installation is required.",
-        "QNotch stores settings and logs under %APPDATA%\\QNotch. This data is outside the Scoop app directory."
+        "QNotch stores settings and logs under %APPDATA%\\QNotch, outside the Scoop app directory."
     ]
 }
