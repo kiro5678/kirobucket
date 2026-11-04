@@ -21,7 +21,6 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | Manifest | Reason |
 | --- | --- |
 | [go-away-edge-installer](go-away-edge-installer.json) | Installer type and extraction behavior are unknown; the manifest declares a shortcut but no verified setup or payload handling. |
-| [motrix-next](motrix-next.json) | Deprecated manifest for the Rayburst rename; its current extracted launch path and Scoop installation behavior are not sufficiently verified. |
 | [quanto-flx](quanto-flx.json) | Rainmeter RMSKIN add-on, not a standalone application; it requires Rainmeter's SkinInstaller workflow. |
 | [zenbreak-msix](zenbreak-msix.json) | MSIX file is being unpacked as a 7-Zip archive; the unpackaged executable still needs a runtime/launch test. |
 | [anton](anton.json) | Official endpoint redirects to a setup EXE, but the publisher checksum and installer/uninstaller behavior are not verified. |
