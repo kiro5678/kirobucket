@@ -28,7 +28,5 @@
             }
         }
     },
-    "notes": [
-        "Requires the Windows service PrivacyAgent and the kernel isolation driver; extracting the Inno Setup payload does not install these components."
-    ]
+    "notes": "Requires the Windows service PrivacyAgent and the kernel isolation driver; extracting the Inno Setup payload does not install these components."
 }
