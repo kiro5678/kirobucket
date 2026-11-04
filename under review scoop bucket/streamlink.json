@@ -3,7 +3,7 @@
     "description": "A command-line utility that pipes video streams from various services into a video player.",
     "homepage": "https://streamlink.github.io/",
     "license": "BSD-2-Clause",
-    "notes": "You will find your config file here: '$dir\\config'. To customise it, read the docs here: https://streamlink.github.io/cli/config.html#syntax",
+    "notes": "The configuration file is `$dir\\config`; see https://streamlink.github.io/cli/config.html#syntax for its options.",
     "suggest": {
         "ffmpeg": "ffmpeg",
         "VLC player": "extras/vlc",
