@@ -6,7 +6,6 @@
         "identifier": "Freeware",
         "url": "https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx"
     },
-    "notes": "You can now remove all vcredist installers with 'scoop uninstall vcredist2005 vcredist2008 vcredist2010 vcredist2012 vcredist2013 vcredist'",
     "depends": [
         "extras/vcredist2005",
         "extras/vcredist2008",

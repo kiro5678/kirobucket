@@ -7,8 +7,7 @@
         "url": "https://xdebug.org/license"
     },
     "notes": [
-        "Xdebug is already enabled if PHP was installed through scoop!",
-        "Otherwise add '$dir\\php_xdebug.dll' to your php.ini"
+        "Xdebug is enabled automatically when PHP is installed through Scoop. For another PHP installation, add `$dir\\php_xdebug.dll` to `php.ini`."
     ],
     "architecture": {
         "64bit": {

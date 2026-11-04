@@ -7,12 +7,7 @@
         "url": "https://github.com/git-for-windows/git/blob/HEAD/COPYING"
     },
     "notes": [
-        "To get Git to recognise OpenSSH, you will need to run",
-        "",
-        "scoop install openssh",
-        "[environment]::setenvironmentvariable('GIT_SSH', (resolve-path (scoop which ssh)), 'USER')",
-        "",
-        "and then restart powershell."
+        "To use OpenSSH with MinGit, install it with `scoop install openssh`, then set the `GIT_SSH` user environment variable to the path returned by `scoop which ssh` and restart PowerShell."
     ],
     "architecture": {
         "64bit": {

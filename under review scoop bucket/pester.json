@@ -3,10 +3,7 @@
     "description": "Pester is a test and mock framework for PowerShell.",
     "homepage": "https://pester.dev",
     "license": "Apache-2.0",
-    "notes": [
-        "'Pester' is currently installed as a PS module",
-        "For more information, visit: 'https://pester.dev/docs/quick-start'"
-    ],
+    "notes": "Pester is installed as a PowerShell module; import it with `Import-Module Pester`.",
     "url": "https://globalcdn.nuget.org/packages/pester.6.2.0.nupkg",
     "hash": "f7a97aae1ce55199fa8b6f385442c99c120dbcc2dd19509d03a44b14475e367f",
     "extract_dir": "tools",

@@ -31,10 +31,5 @@
                 "url": "https://github.com/samsonwang/LaunchyQt/releases/download/v$version/Launchy-$version-win-x64.7z"
             }
         }
-    },
-    "notes": [
-        "The official Windows x64 release is a runnable 7-Zip archive. Its installed archive layout places the executable at Launchy/Launchy.exe; the upstream build workflow validates the executable and the packaged application tree.",
-        "Scoop persists Launchy/config, which is beside the executable in the application directory. Launchy detects this directory and uses its portable configuration mode, keeping launchy.ini, catalog.json, and history.json across updates and reinstalls.",
-        "The application also searches the current user's Launchy data directory for additional user plugins and skins; those optional user-added files remain outside the Scoop app directory."
-    ]
+    }
 }

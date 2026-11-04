@@ -3,7 +3,7 @@
     "description": "Open with++ context menu shell extension",
     "homepage": "https://github.com/stax76/OpenWithPlusPlus",
     "license": "MIT",
-    "notes": ".Net framework 4.8 is required",
+    "notes": "Requires .NET Framework 4.8.",
     "suggest": {
         "vcredist": "extras/vcredist2022"
     },

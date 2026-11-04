@@ -30,8 +30,7 @@
         }
     },
     "notes": [
-        "Verified with 7-Zip 26.05: the official NSIS package extracts bloom.exe at the payload root. Scoop uses #/dl.7z and does not run the vendor setup routine.",
-        "The NSIS payload also contains $TEMP/MicrosoftEdgeWebview2Setup.exe. Scoop does not execute this bootstrapper; Microsoft Edge WebView2 Runtime must already be present or be installed separately.",
-        "Upstream first-run code enables Bloom autostart when it is not already enabled. This creates Windows startup integration on first launch; the manifest leaves this application behavior unchanged."
+        "Requires Microsoft Edge WebView2 Runtime. Install it separately only if it is missing from Windows.",
+        "Bloom enables its own Windows startup integration on first launch."
     ]
 }

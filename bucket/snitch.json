@@ -35,9 +35,8 @@
         }
     },
     "notes": [
-        "Verified with KiroBucket's NSIS extraction workflow: Scoop extracts the official installer through #/dl.7z, then pre_install extracts the nested $PLUGINSDIR/app-64.7z payload. The inner archive contains Snitch.exe at its root, resources/app.asar, resources/frontend_dist, and resources/snitch-backend/snitch-backend.exe. The vendor NSIS installation routine is not executed.",
-        "Npcap is not bundled. Install Npcap separately for live packet capture; this manifest does not install its driver.",
-        "Snitch stores its database, settings, and logs under %LOCALAPPDATA%\\Snitch. Scoop does not relocate or remove this user data.",
-        "The built-in updater is enabled by default, checks periodically, downloads updates, and can install them when Snitch exits. Disable update checks in Snitch Settings or set SNITCH_NO_UPDATE=1 to keep updates under Scoop control."
+        "Live packet capture requires Npcap, which must be installed separately; this manifest does not install its driver.",
+        "Snitch stores its database, settings and logs under %LOCALAPPDATA%\\Snitch, outside the Scoop app directory.",
+        "The built-in updater is enabled by default and can update files independently of Scoop. Disable update checks in Snitch Settings or set SNITCH_NO_UPDATE=1 to keep updates under Scoop control."
     ]
 }

@@ -6,10 +6,7 @@
         "identifier": "GPL-2.0-only",
         "url": "https://github.com/LibreCAD/LibreCAD/blob/HEAD/LICENSE"
     },
-    "notes": [
-        "To register file associations, please execute the following command:",
-        "reg import \"$dir\\install-associations.reg\""
-    ],
+    "notes": "To register file associations, run: `reg import \"$dir\\install-associations.reg\"`.",
     "suggest": {
         "vcredist": "extras/vcredist2022"
     },

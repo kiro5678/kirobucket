@@ -3,7 +3,6 @@
     "description": "Count your code, quickly.",
     "homepage": "https://github.com/XAMPPRocky/tokei",
     "license": "Apache-2.0",
-    "notes": "For demo configure file 'tokei.toml', please see https://github.com/XAMPPRocky/tokei/blob/v12.0.4/tokei.example.toml",
     "architecture": {
         "64bit": {
             "url": "https://github.com/XAMPPRocky/tokei/releases/download/v12.1.2/tokei-x86_64-pc-windows-msvc.exe#/tokei.exe",

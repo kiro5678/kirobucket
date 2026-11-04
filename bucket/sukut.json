@@ -1,29 +1,26 @@
 {
-    "version": "0.4.2",
-    "description": "Windows x64 audio utility that filters music from app audio to focus on speech.",
-    "homepage": "https://github.com/altarafiya/Sukut",
-    "license": {
-        "identifier": "Proprietary",
-        "url": "https://github.com/altarafiya/Sukut/blob/main/LICENSE"
-    },
-    "url": "https://github.com/altarafiya/Sukut/releases/download/v0.4.2/Sukut-0.4.2-Windows-x64.zip",
-    "hash": "9f08af95a916ccc935ee3e50922d164922f30e0a15a2dfdf94044fcb3e2fb7ac",
-    "bin": "Sukut.exe",
-    "shortcuts": [
-        [
-            "Sukut.exe",
-            "Sukut"
-        ]
-    ],
-    "checkver": {
-        "github": "https://github.com/altarafiya/Sukut",
-        "regex": "v([\\d.]+)"
-    },
-    "autoupdate": {
-        "url": "https://github.com/altarafiya/Sukut/releases/download/v$version/Sukut-$version-Windows-x64.zip"
-    },
-    "notes": [
-        "The official Windows release is a portable ZIP archive; extract the whole folder and run Sukut.exe.",
-        "VB-CABLE is not installed by this manifest. Sukut audio processing requires VB-CABLE; install it separately from https://vb-audio.com/Cable/ and reboot as instructed."
-    ]
+ "version": "0.4.2",
+ "description": "Windows x64 audio utility that filters music from app audio to focus on speech.",
+ "homepage": "https://github.com/altarafiya/Sukut",
+ "license": {
+  "identifier": "Proprietary",
+  "url": "https://github.com/altarafiya/Sukut/blob/main/LICENSE"
+ },
+ "url": "https://github.com/altarafiya/Sukut/releases/download/v0.4.2/Sukut-0.4.2-Windows-x64.zip",
+ "hash": "9f08af95a916ccc935ee3e50922d164922f30e0a15a2dfdf94044fcb3e2fb7ac",
+ "bin": "Sukut.exe",
+ "shortcuts": [
+  [
+   "Sukut.exe",
+   "Sukut"
+  ]
+ ],
+ "checkver": {
+  "github": "https://github.com/altarafiya/Sukut",
+  "regex": "v([\\d.]+)"
+ },
+ "autoupdate": {
+  "url": "https://github.com/altarafiya/Sukut/releases/download/v$version/Sukut-$version-Windows-x64.zip"
+ },
+ "notes": "Sukut audio processing requires VB-CABLE, which must be installed separately. Follow the vendor's installation instructions and reboot when prompted: https://vb-audio.com/Cable/."
 }

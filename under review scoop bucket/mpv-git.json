@@ -4,8 +4,7 @@
     "homepage": "https://mpv.io",
     "license": "LGPL-2.1-or-later,GPL-2.0-or-later",
     "notes": [
-        "To set and unset file type associations and AutoPlay handlers, run '$dir\\mpv-register.bat' and '$dir\\mpv-unregister.bat', respectively.",
-        "You can use Icaros ('nonportable/icaros-np') to enable thumbnails for all media types."
+        "Run `$dir\\mpv-register.bat` to register file associations and AutoPlay handlers; run `$dir\\mpv-unregister.bat` to remove them."
     ],
     "suggest": {
         "yt-dlp": "yt-dlp"

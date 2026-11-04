@@ -4,10 +4,8 @@
     "homepage": "https://www.clamav.net",
     "license": "GPL-2.0-only",
     "notes": [
-        "To run first time setup ",
-        "Edit Configuration files clamd.conf, freshclam.conf @ $dir",
-        "Run freshclam.exe before running first scan",
-        "visit https://docs.clamav.net/manual/Usage/Configuration.html"
+        "Before the first scan, edit `clamd.conf` and `freshclam.conf` in `$dir`, then run `freshclam.exe` to download the virus definitions.",
+        "See https://docs.clamav.net/manual/Usage/Configuration.html for configuration details."
     ],
     "architecture": {
         "64bit": {

@@ -6,11 +6,7 @@
         "identifier": "Shareware",
         "url": "https://tern.1c7.me/pricing"
     },
-    "notes": [
-        "The application itself is free to use forever.",
-        "However, translation services are billed separately and charged based on actual usage.",
-        "For more details on translator service pricing and available plans, please refer to https://doc.tern.1c7.me/folder/pricing."
-    ],
+    "notes": "The application is free, but translation services are billed separately according to actual usage: https://doc.tern.1c7.me/folder/pricing.",
     "architecture": {
         "64bit": {
             "url": "https://github.com/1c7/Translate-Subtitle-File/releases/download/v5.3.7/Windows-win32-x64-5.3.7.zip",
