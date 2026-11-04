@@ -16,7 +16,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Download Managers | 19 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
-| Forensics & Diagnostics | 32 | [View](#forensics-diagnostics) |
+| Forensics & Diagnostics | 33 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
@@ -24,11 +24,11 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Network & DNS | 52 | [View](#network-dns) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 3 | [View](#other-utilities) |
+| Other Utilities | 4 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
-| Security | 41 | [View](#security) |
+| Security | 42 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
@@ -40,7 +40,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Windows Customization | 92 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 875**
+**Total unique manifests: 878**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -312,6 +312,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [argus](../bucket/argus.json) | 3.0.0 | 16.6 MiB | 2026-05-07 | Offline-first incident response and threat-hunting CLI with host forensics, YARA-X malware scanning, and structured reports. | [Homepage](https://github.com/25smoking/Argus) |
 | [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | 11.3.1.1992 | 3.9 MiB | 2024-12-09 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
 | [eric-amcacheparser](../bucket/eric-amcacheparser.json) | 2026.10.1 | 4.9 MiB | 2026-10-25 | Eric Zimmerman's AmcacheParser: Parser for Windows Amcache.hve forensic artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-appcompatcacheparser](../bucket/eric-appcompatcacheparser.json) | 2026.10.1 | 2.2 MiB | 2026-10-25 | Eric Zimmerman's AppCompatCacheParser: Parser for Windows AppCompatCache (ShimCache) artifacts. | [Homepage](https://ericzimmerman.github.io/) |
@@ -617,6 +618,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [ai-security-monitor](../bucket/ai-security-monitor.json) | 0.8.5 | 64bit: 8.4 MiB | 2026-10-19 | Open-source desktop security monitor for Windows with network connection analysis, threat-intelligence feeds, and firewall management. | [Homepage](https://github.com/markku636/ai-security-monitor) |
 | [k-toolz](../bucket/k-toolz.json) | 4.0.2 | 64bit: 9.9 MiB | 2026-10-31 | Gaming suite with an FPS overlay, game streaming, stutter analysis, and virtual gamepad tools. | [Homepage](https://k-toolz.de/en/) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | 82.4 MiB | 2025-04-02 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
 | [softwareok-suite](../bucket/softwareok-suite.json) | 2026.10.27.6 | 64bit: 27.5 MiB | 2026-10-24 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |
@@ -737,6 +739,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [permissionscope](../bucket/permissionscope.json) | 1.0.1 | 64bit: 71.5 MiB / arm64: 68.2 MiB | 2026-09-11 | Windows utility for inspecting and explaining file and folder permissions. | [Homepage](https://github.com/MukaSanches/PermissionScope) |
 | [sandboxie-plus](../bucket/sandboxie-plus.json) | 1.18.8 | 23.8 MiB | 2026-10-17 | Sandboxie Plus sandboxing software for Windows. | [Homepage](https://github.com/sandboxie-plus/Sandboxie) |
 | [smarttextcrypter](../bucket/smarttextcrypter.json) | 1.04 | 64bit: 315.0 KiB | 2026-10-18 | Encrypt and decrypt text. | [Homepage](https://www.softwareok.com/?Download=SmartTextCrypter) |
+| [snitch](../bucket/snitch.json) | 1.6.4 | 189.3 MiB | 2026-10-23 | Privacy-focused real-time network monitor and application firewall with per-process traffic attribution, local traffic history, and opt-in IP threat intelligence. | [Homepage](https://github.com/aixisstudio/Snitch) |
 | [sordum-askadmin](../bucket/sordum-askadmin.json) | 2.1 | 1.2 MiB | 2026-09-07 | Block access to chosen applications, files, and folder contents. | [Homepage](https://www.sordum.org/7941/askadmin-v2-1/) |
 | [sordum-bluelife-keyfreeze](../bucket/sordum-bluelife-keyfreeze.json) | 1.4 | 911.7 KiB | 2024-12-02 | A free Windows application that blocks your keyboard and mouse without “locking” the screen. | [Homepage](https://www.sordum.org/7921/bluelife-keyfreeze-v1-4-block-keyboard-and-mouse/) |
 | [sordum-defender-exclusion-tool](../bucket/sordum-defender-exclusion-tool.json) | 1.4 | 534.4 KiB | 2025-06-23 | Sordum's Defender Exclusion Tool. Add/Remove exclusions to Windows Defender. | [Homepage](https://www.sordum.org/10636/defender-exclusion-tool-v1-4/) |

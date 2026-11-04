@@ -159,6 +159,16 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Out Loud\.exe$"
+            },
+            @{
+              Name = "Snitch"
+              Version = "1.6.4"
+              # Match Scoop's #/dl.7z handling for the official NSIS installer.
+              NsisUrl = "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe#/dl.7z"
+              NsisSha256 = "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Snitch\.exe$"
             }
           )
 
@@ -170,7 +180,10 @@ jobs:
             Add-Report "============================================================"
 
             $appRoot = Join-Path $root ($app.Name -replace '[^A-Za-z0-9_-]', '-')
-            $nsisDownload = Join-Path $appRoot "installer.exe"
+            # Scoop renames assets using the #/dl.7z fragment before extraction.
+            $nsisFileName = "installer.exe"
+            if ($app.NsisUrl.Contains("#/dl.7z")) { $nsisFileName = "dl.7z" }
+            $nsisDownload = Join-Path $appRoot $nsisFileName
             $nsisExtract = Join-Path $appRoot "nsis-extracted"
             New-Item -ItemType Directory -Path $appRoot -Force | Out-Null
 
@@ -325,7 +338,7 @@ jobs:
 
             # Keep the diagnostic artifact small: retain logs and inventories, discard downloaded/extracted binaries.
             Get-ChildItem -LiteralPath $appRoot -File -Force -ErrorAction SilentlyContinue |
-              Where-Object { $_.Name -in @("installer.exe", "fallback.msi") } |
+              Where-Object { $_.Name -in @("installer.exe", "dl.7z", "fallback.msi") } |
               Remove-Item -Force -ErrorAction SilentlyContinue
             Get-ChildItem -LiteralPath $appRoot -Directory -Force -ErrorAction SilentlyContinue |
               Where-Object { $_.Name -match '^(nsis-extracted|msi-admin-extracted|lessmsi-tool|nested-)' } |
