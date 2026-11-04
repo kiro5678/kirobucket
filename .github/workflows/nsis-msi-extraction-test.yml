@@ -199,7 +199,6 @@ jobs:
               MsiSha256 = ""
               AppExePattern = "(?i)^rayburst\.exe$"
             }
-            }
           )
 
           $lessmsiExe = $null
