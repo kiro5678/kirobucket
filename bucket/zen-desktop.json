@@ -19,11 +19,16 @@
             "hash": "9f6fdcbd26377d019f6c6d81c93ef176475c1cfc4e17622b273bee78f345e5b1"
         }
     },
-    "bin": "Zen.exe",
+    "bin": [
+        [
+            "Zen.exe",
+            "zen-desktop"
+        ]
+    ],
     "shortcuts": [
         [
             "Zen.exe",
-            "Zen"
+            "Zen Desktop"
         ]
     ],
     "checkver": {
