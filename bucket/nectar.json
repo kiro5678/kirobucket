@@ -1,35 +1,33 @@
 {
-    "version": "1.8.0",
-    "description": "Animated Windows notch and dock with media controls, widgets, quick settings, system tray integration, and taskbar replacement.",
-    "homepage": "https://nectar.kua8.lol",
-    "license": {
-        "identifier": "GPL-3.0",
-        "url": "https://github.com/kua8/Nectar/blob/main/LICENSE"
-    },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/kua8/Nectar/releases/download/v1.8.0/nectar-1.8.0-portable-windows-x64.zip",
-            "hash": "d5fcde70fe47bdfb997e35c68cbb49f4c9287869c185edbd0a00c8546e4be362"
-        }
-    },
-    "bin": "nectar.exe",
-    "shortcuts": [
-        [
-            "nectar.exe",
-            "Nectar"
-        ]
-    ],
-    "checkver": {
-        "github": "https://github.com/kua8/Nectar"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/kua8/Nectar/releases/download/v$version/nectar-$version-portable-windows-x64.zip"
-            }
-        }
-    },
-    "notes": [
-        "Nectar's optional Dock can hide the native Windows taskbar. Turn Dock off or exit Nectar normally to restore the taskbar."
-    ]
+ "version": "1.8.0",
+ "description": "Animated Windows notch and dock with media controls, widgets, quick settings, system tray integration, and taskbar replacement.",
+ "homepage": "https://nectar.kua8.lol",
+ "license": {
+  "identifier": "GPL-3.0",
+  "url": "https://github.com/kua8/Nectar/blob/main/LICENSE"
+ },
+ "architecture": {
+  "64bit": {
+   "url": "https://github.com/kua8/Nectar/releases/download/v1.8.0/nectar-1.8.0-portable-windows-x64.zip",
+   "hash": "d5fcde70fe47bdfb997e35c68cbb49f4c9287869c185edbd0a00c8546e4be362"
+  }
+ },
+ "bin": "nectar.exe",
+ "shortcuts": [
+  [
+   "nectar.exe",
+   "Nectar"
+  ]
+ ],
+ "checkver": {
+  "github": "https://github.com/kua8/Nectar"
+ },
+ "autoupdate": {
+  "architecture": {
+   "64bit": {
+    "url": "https://github.com/kua8/Nectar/releases/download/v$version/nectar-$version-portable-windows-x64.zip"
+   }
+  }
+ },
+ "notes": "Nectar's optional Dock can hide the native Windows taskbar. Turn Dock off or exit Nectar normally to restore the taskbar."
 }

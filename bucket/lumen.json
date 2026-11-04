@@ -1,36 +1,34 @@
 {
-    "version": "0.2.1",
-    "description": "Windows Dynamic Island with music visualization, synchronized notifications, privacy indicators, and fullscreen-aware behavior.",
-    "homepage": "https://github.com/Risuleia/Lumen",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/Risuleia/Lumen/blob/main/LICENSE"
-    },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/Risuleia/Lumen/releases/download/v0.2.1/Lumen-0.2.1-setup.exe",
-            "hash": "7f68b3f90891818988c1089d2ff67aef84f8681bfc1281f4e1783213857dc948"
-        }
-    },
-    "innosetup": true,
-    "bin": "lumen.exe",
-    "shortcuts": [
-        [
-            "lumen.exe",
-            "Lumen"
-        ]
-    ],
-    "checkver": {
-        "github": "https://github.com/Risuleia/Lumen"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/Risuleia/Lumen/releases/download/v$version/Lumen-$version-setup.exe"
-            }
-        }
-    },
-    "notes": [
-        "Application cache is stored under %LOCALAPPDATA% and may remain after Scoop uninstall."
-    ]
+ "version": "0.2.1",
+ "description": "Windows Dynamic Island with music visualization, synchronized notifications, privacy indicators, and fullscreen-aware behavior.",
+ "homepage": "https://github.com/Risuleia/Lumen",
+ "license": {
+  "identifier": "MIT",
+  "url": "https://github.com/Risuleia/Lumen/blob/main/LICENSE"
+ },
+ "architecture": {
+  "64bit": {
+   "url": "https://github.com/Risuleia/Lumen/releases/download/v0.2.1/Lumen-0.2.1-setup.exe",
+   "hash": "7f68b3f90891818988c1089d2ff67aef84f8681bfc1281f4e1783213857dc948"
+  }
+ },
+ "innosetup": true,
+ "bin": "lumen.exe",
+ "shortcuts": [
+  [
+   "lumen.exe",
+   "Lumen"
+  ]
+ ],
+ "checkver": {
+  "github": "https://github.com/Risuleia/Lumen"
+ },
+ "autoupdate": {
+  "architecture": {
+   "64bit": {
+    "url": "https://github.com/Risuleia/Lumen/releases/download/v$version/Lumen-$version-setup.exe"
+   }
+  }
+ },
+ "notes": "Application cache is stored under %LOCALAPPDATA% and may remain after Scoop uninstall."
 }

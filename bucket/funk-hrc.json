@@ -1,24 +1,22 @@
 {
-    "version": "2.1",
-    "description": "Tray utility for assigning hotkeys to switch between display resolutions.",
-    "homepage": "https://funk.eu/hrc/",
-    "license": "CC-BY-NC-SA-3.0",
-    "url": "https://funk.eu/downloads/hrc/HRC_-_HotKey_Resolution_Changer_v2_1.exe.zip",
-    "checkver": {
-        "url": "https://funk.eu/hrc/",
-        "regex": "(?is)HRC.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
-    },
-    "autoupdate": {
-        "url": "https://funk.eu/downloads/hrc/HRC_-_HotKey_Resolution_Changer_v2_1.exe.zip"
-    },
-    "shortcuts": [
-        [
-            "HRC.exe",
-            "Funk.eu HotKey Resolution Changer"
-        ]
-    ],
-    "hash": "ad732a02cb54ef731aecafc5041b6263f3ab1fa025202ef781d2814a9336da32",
-    "notes": [
-        "The publisher's license is Creative Commons BY-NC-SA 3.0 and requires attribution and a link back to the source."
-    ]
+ "version": "2.1",
+ "description": "Tray utility for assigning hotkeys to switch between display resolutions.",
+ "homepage": "https://funk.eu/hrc/",
+ "license": "CC-BY-NC-SA-3.0",
+ "url": "https://funk.eu/downloads/hrc/HRC_-_HotKey_Resolution_Changer_v2_1.exe.zip",
+ "checkver": {
+  "url": "https://funk.eu/hrc/",
+  "regex": "(?is)HRC.{0,120}?\\bv(?<version>\\d+(?:\\.\\d+)*)"
+ },
+ "autoupdate": {
+  "url": "https://funk.eu/downloads/hrc/HRC_-_HotKey_Resolution_Changer_v2_1.exe.zip"
+ },
+ "shortcuts": [
+  [
+   "HRC.exe",
+   "Funk.eu HotKey Resolution Changer"
+  ]
+ ],
+ "hash": "ad732a02cb54ef731aecafc5041b6263f3ab1fa025202ef781d2814a9336da32",
+ "notes": "The publisher's license is Creative Commons BY-NC-SA 3.0 and requires attribution and a link back to the source."
 }

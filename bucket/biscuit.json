@@ -1,42 +1,40 @@
 {
-    "version": "2.2.4",
-    "description": "Electron-based workspace browser for organizing web apps and tabs.",
-    "homepage": "https://eatbiscuit.com/",
-    "license": "Proprietary",
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/agata/dl.biscuit/releases/download/2.2.4/Biscuit-2.2.4-setup.exe#/dl.7z",
-            "hash": "3e513006ae4cabe838a473d8e75ce902f5dba8038817a46d6c9058f69bdca7ca",
-            "pre_install": [
-                "$payload = Join-Path $dir '$PLUGINSDIR\\app-64.7z'",
-                "if (-not (Test-Path -LiteralPath $payload -PathType Leaf)) { throw \"Biscuit payload archive was not found: $payload\" }",
-                "Expand-7zipArchive $payload $dir -Removal",
-                "$mainExe = Join-Path $dir 'Biscuit.exe'",
-                "if (-not (Test-Path -LiteralPath $mainExe -PathType Leaf)) { throw \"Biscuit payload extraction did not create the expected executable: $mainExe\" }"
-            ]
-        }
-    },
-    "post_install": "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Force -Recurse -ErrorAction SilentlyContinue",
-    "bin": "Biscuit.exe",
-    "shortcuts": [
-        [
-            "Biscuit.exe",
-            "Biscuit"
-        ]
-    ],
-    "checkver": {
-        "url": "https://api.github.com/repos/agata/dl.biscuit/releases?per_page=100",
-        "jsonpath": "$[0].tag_name",
-        "regex": "^(?<version>[\\d.]+)$"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/agata/dl.biscuit/releases/download/$version/Biscuit-$version-setup.exe#/dl.7z"
-            }
-        }
-    },
-    "notes": [
-        "Biscuit includes its own Electron updater, which may update files independently of Scoop."
-    ]
+ "version": "2.2.4",
+ "description": "Electron-based workspace browser for organizing web apps and tabs.",
+ "homepage": "https://eatbiscuit.com/",
+ "license": "Proprietary",
+ "architecture": {
+  "64bit": {
+   "url": "https://github.com/agata/dl.biscuit/releases/download/2.2.4/Biscuit-2.2.4-setup.exe#/dl.7z",
+   "hash": "3e513006ae4cabe838a473d8e75ce902f5dba8038817a46d6c9058f69bdca7ca",
+   "pre_install": [
+    "$payload = Join-Path $dir '$PLUGINSDIR\\app-64.7z'",
+    "if (-not (Test-Path -LiteralPath $payload -PathType Leaf)) { throw \"Biscuit payload archive was not found: $payload\" }",
+    "Expand-7zipArchive $payload $dir -Removal",
+    "$mainExe = Join-Path $dir 'Biscuit.exe'",
+    "if (-not (Test-Path -LiteralPath $mainExe -PathType Leaf)) { throw \"Biscuit payload extraction did not create the expected executable: $mainExe\" }"
+   ]
+  }
+ },
+ "post_install": "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Force -Recurse -ErrorAction SilentlyContinue",
+ "bin": "Biscuit.exe",
+ "shortcuts": [
+  [
+   "Biscuit.exe",
+   "Biscuit"
+  ]
+ ],
+ "checkver": {
+  "url": "https://api.github.com/repos/agata/dl.biscuit/releases?per_page=100",
+  "jsonpath": "$[0].tag_name",
+  "regex": "^(?<version>[\\d.]+)$"
+ },
+ "autoupdate": {
+  "architecture": {
+   "64bit": {
+    "url": "https://github.com/agata/dl.biscuit/releases/download/$version/Biscuit-$version-setup.exe#/dl.7z"
+   }
+  }
+ },
+ "notes": "Biscuit includes its own Electron updater, which may update files independently of Scoop."
 }

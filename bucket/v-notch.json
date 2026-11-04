@@ -1,39 +1,37 @@
 {
-    "version": "2.2.1",
-    "description": "Windows Dynamic Island with media controls, synced lyrics, per-app audio, clipboard, system statistics, privacy indicators, and Spotlight search.",
-    "homepage": "https://github.com/w0otdev/V-Notch",
-    "license": {
-        "identifier": "Apache-2.0",
-        "url": "https://github.com/w0otdev/V-Notch/blob/master/LICENSE"
-    },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/w0otdev/V-Notch/releases/download/v2.2.1/V-Notch-Setup.exe#/dl.7z",
-            "hash": "549fe1cf2c6ae6f493fe2d90fefb1cd9b4d152fe5ca7dcd9d83ed8d4fc5c004b"
-        }
-    },
-    "extract_dir": "$PLUGINSDIR\\payload",
-    "bin": "V-Notch.exe",
-    "shortcuts": [
-        [
-            "V-Notch.exe",
-            "V-Notch"
-        ]
-    ],
-    "suggest": {
-        ".NET 8 Desktop Runtime": "versions/windowsdesktop-runtime-8.0"
-    },
-    "checkver": {
-        "github": "https://github.com/w0otdev/V-Notch"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/w0otdev/V-Notch/releases/download/v$version/V-Notch-Setup.exe#/dl.7z"
-            }
-        }
-    },
-    "notes": [
-        "Requires the .NET 8 Desktop Runtime. Scoop does not run the NSIS bootstrapper that would install this prerequisite; install it separately if missing."
-    ]
+ "version": "2.2.1",
+ "description": "Windows Dynamic Island with media controls, synced lyrics, per-app audio, clipboard, system statistics, privacy indicators, and Spotlight search.",
+ "homepage": "https://github.com/w0otdev/V-Notch",
+ "license": {
+  "identifier": "Apache-2.0",
+  "url": "https://github.com/w0otdev/V-Notch/blob/master/LICENSE"
+ },
+ "architecture": {
+  "64bit": {
+   "url": "https://github.com/w0otdev/V-Notch/releases/download/v2.2.1/V-Notch-Setup.exe#/dl.7z",
+   "hash": "549fe1cf2c6ae6f493fe2d90fefb1cd9b4d152fe5ca7dcd9d83ed8d4fc5c004b"
+  }
+ },
+ "extract_dir": "$PLUGINSDIR\\payload",
+ "bin": "V-Notch.exe",
+ "shortcuts": [
+  [
+   "V-Notch.exe",
+   "V-Notch"
+  ]
+ ],
+ "suggest": {
+  ".NET 8 Desktop Runtime": "versions/windowsdesktop-runtime-8.0"
+ },
+ "checkver": {
+  "github": "https://github.com/w0otdev/V-Notch"
+ },
+ "autoupdate": {
+  "architecture": {
+   "64bit": {
+    "url": "https://github.com/w0otdev/V-Notch/releases/download/v$version/V-Notch-Setup.exe#/dl.7z"
+   }
+  }
+ },
+ "notes": "Requires the .NET 8 Desktop Runtime. Scoop does not run the NSIS bootstrapper that would install this prerequisite; install it separately if missing."
 }

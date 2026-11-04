@@ -1,24 +1,22 @@
 {
-    "version": "3.6",
-    "description": "Portable edition of Vovsoft Tree Notes.",
-    "homepage": "https://vovsoft.com/software/tree-notes/",
-    "license": "Proprietary",
-    "url": "https://vovsoft.com/files/tree-notes-portable.zip?v=3.6",
-    "checkver": {
-        "url": "https://vovsoft.com/download/tree-notes-portable/",
-        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
-    },
-    "autoupdate": {
-        "url": "https://vovsoft.com/files/tree-notes-portable.zip?v=$version"
-    },
-    "shortcuts": [
-        [
-            "treenotes.exe",
-            "Vovsoft Tree Notes"
-        ]
-    ],
-    "pre_install": [
-        "if (-not (Test-Path -LiteralPath \"$dir\\key.txt\" -PathType Leaf)) { New-Item -ItemType File -Path \"$dir\\key.txt\" | Out-Null }"
-    ],
-    "persist": "key.txt"
+ "version": "3.6",
+ "description": "Portable edition of Vovsoft Tree Notes.",
+ "homepage": "https://vovsoft.com/software/tree-notes/",
+ "license": "Proprietary",
+ "url": "https://vovsoft.com/files/tree-notes-portable.zip?v=3.6",
+ "checkver": {
+  "url": "https://vovsoft.com/download/tree-notes-portable/",
+  "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+ },
+ "autoupdate": {
+  "url": "https://vovsoft.com/files/tree-notes-portable.zip?v=$version"
+ },
+ "shortcuts": [
+  [
+   "treenotes.exe",
+   "Vovsoft Tree Notes"
+  ]
+ ],
+ "pre_install": "if (-not (Test-Path -LiteralPath \"$dir\\key.txt\" -PathType Leaf)) { New-Item -ItemType File -Path \"$dir\\key.txt\" | Out-Null }",
+ "persist": "key.txt"
 }

@@ -1,35 +1,33 @@
 {
-    "version": "0.13.0",
-    "description": "Lightweight native Windows notch and top bar with media controls, quick settings, pinned apps, reminders, calendar, and system information.",
-    "homepage": "https://nock.akhileshvarute.me",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/Akhilesh-Varute/Nock/blob/main/LICENSE"
-    },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/Akhilesh-Varute/Nock/releases/download/v0.13.0/Nock-portable-0.13.0.exe#/nock.exe",
-            "hash": "95f312d24b4a977345d12cbb384ddb4c261bac3abb4c773c111fd1ac3a55bf94"
-        }
-    },
-    "bin": "nock.exe",
-    "shortcuts": [
-        [
-            "nock.exe",
-            "Nock"
-        ]
-    ],
-    "checkver": {
-        "github": "https://github.com/Akhilesh-Varute/Nock"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/Akhilesh-Varute/Nock/releases/download/v$version/Nock-portable-$version.exe#/nock.exe"
-            }
-        }
-    },
-    "notes": [
-        "User settings are stored under %APPDATA%\\Nock, outside the Scoop app directory."
-    ]
+ "version": "0.13.0",
+ "description": "Lightweight native Windows notch and top bar with media controls, quick settings, pinned apps, reminders, calendar, and system information.",
+ "homepage": "https://nock.akhileshvarute.me",
+ "license": {
+  "identifier": "MIT",
+  "url": "https://github.com/Akhilesh-Varute/Nock/blob/main/LICENSE"
+ },
+ "architecture": {
+  "64bit": {
+   "url": "https://github.com/Akhilesh-Varute/Nock/releases/download/v0.13.0/Nock-portable-0.13.0.exe#/nock.exe",
+   "hash": "95f312d24b4a977345d12cbb384ddb4c261bac3abb4c773c111fd1ac3a55bf94"
+  }
+ },
+ "bin": "nock.exe",
+ "shortcuts": [
+  [
+   "nock.exe",
+   "Nock"
+  ]
+ ],
+ "checkver": {
+  "github": "https://github.com/Akhilesh-Varute/Nock"
+ },
+ "autoupdate": {
+  "architecture": {
+   "64bit": {
+    "url": "https://github.com/Akhilesh-Varute/Nock/releases/download/v$version/Nock-portable-$version.exe#/nock.exe"
+   }
+  }
+ },
+ "notes": "User settings are stored under %APPDATA%\\Nock, outside the Scoop app directory."
 }

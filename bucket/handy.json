@@ -1,51 +1,49 @@
 {
-    "version": "0.10.0",
-    "description": "Offline speech-to-text desktop app with local Whisper and Parakeet transcription.",
-    "homepage": "https://handy.computer/",
-    "license": {
-        "identifier": "MIT",
-        "url": "https://github.com/cjpais/Handy/blob/main/LICENSE"
-    },
-    "architecture": {
-        "64bit": {
-            "url": "https://github.com/cjpais/Handy/releases/download/v0.10.0/Handy_0.10.0_x64-setup.exe",
-            "hash": "d4c02386d6b4b2a8ef8e53a7ce5c6c417d554005e91b3529def3920e0e786d03"
-        },
-        "arm64": {
-            "url": "https://github.com/cjpais/Handy/releases/download/v0.10.0/Handy_0.10.0_arm64-setup.exe",
-            "hash": "2cec8defbe193d9cf837ac7e2f55880d685c486b0f15d2da11fa71f36de4c3d1"
-        }
-    },
-    "installer": {
-        "args": [
-            "/S",
-            "/PORTABLE",
-            "/D=$dir"
-        ]
-    },
-    "bin": "handy.exe",
-    "shortcuts": [
-        [
-            "handy.exe",
-            "Handy"
-        ]
-    ],
-    "persist": "Data",
-    "checkver": {
-        "github": "https://github.com/cjpais/Handy",
-        "regex": "v(?<version>[\\d.]+)"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://github.com/cjpais/Handy/releases/download/v$version/Handy_$version_x64-setup.exe"
-            },
-            "arm64": {
-                "url": "https://github.com/cjpais/Handy/releases/download/v$version/Handy_$version_arm64-setup.exe"
-            }
-        }
-    },
-    "notes": [
-        "Portable settings, models, recordings, databases and logs are stored under Data, which Scoop persists across updates. Use scoop update handy to update the Scoop-managed copy."
-    ]
+ "version": "0.10.0",
+ "description": "Offline speech-to-text desktop app with local Whisper and Parakeet transcription.",
+ "homepage": "https://handy.computer/",
+ "license": {
+  "identifier": "MIT",
+  "url": "https://github.com/cjpais/Handy/blob/main/LICENSE"
+ },
+ "architecture": {
+  "64bit": {
+   "url": "https://github.com/cjpais/Handy/releases/download/v0.10.0/Handy_0.10.0_x64-setup.exe",
+   "hash": "d4c02386d6b4b2a8ef8e53a7ce5c6c417d554005e91b3529def3920e0e786d03"
+  },
+  "arm64": {
+   "url": "https://github.com/cjpais/Handy/releases/download/v0.10.0/Handy_0.10.0_arm64-setup.exe",
+   "hash": "2cec8defbe193d9cf837ac7e2f55880d685c486b0f15d2da11fa71f36de4c3d1"
+  }
+ },
+ "installer": {
+  "args": [
+   "/S",
+   "/PORTABLE",
+   "/D=$dir"
+  ]
+ },
+ "bin": "handy.exe",
+ "shortcuts": [
+  [
+   "handy.exe",
+   "Handy"
+  ]
+ ],
+ "persist": "Data",
+ "checkver": {
+  "github": "https://github.com/cjpais/Handy",
+  "regex": "v(?<version>[\\d.]+)"
+ },
+ "autoupdate": {
+  "architecture": {
+   "64bit": {
+    "url": "https://github.com/cjpais/Handy/releases/download/v$version/Handy_$version_x64-setup.exe"
+   },
+   "arm64": {
+    "url": "https://github.com/cjpais/Handy/releases/download/v$version/Handy_$version_arm64-setup.exe"
+   }
+  }
+ },
+ "notes": "Portable settings, models, recordings, databases and logs are stored under Data, which Scoop persists across updates. Use scoop update handy to update the Scoop-managed copy."
 }
