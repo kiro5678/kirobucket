@@ -33,8 +33,6 @@
         }
     },
     "notes": [
-        "The publisher's installer/build.ps1 defines a custom appended-payload format: [setup executable][ZIP payload][8-byte ZIP length][NOTCHPAY]. The Scoop installer script extracts that embedded ZIP and verifies Notch.exe without running the publisher's registration/setup routine. The extraction script must be exercised on Windows before this manifest is considered fully verified.",
-        "The upstream setup normally registers a per-user uninstall entry, notch:// protocol, PATH entry, shortcuts, and startup behavior. Those setup-time registrations are intentionally not created by this portable Scoop extraction.",
-        "Settings are stored under %APPDATA%\\\\Notch. The application's update notices remain enabled; updates require explicit user action in the app."
+        "Scoop does not register Notch's notch:// URL protocol, PATH entry or startup integration. Settings are stored under %APPDATA%\\Notch."
     ]
 }
