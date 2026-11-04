@@ -143,6 +143,15 @@ jobs:
               AppExePattern = "(?i)^Deskboard\.exe$"
             },
             @{
+              Name = "AI Security Monitor"
+              Version = "0.8.5"
+              NsisUrl = "https://github.com/markku636/ai-security-monitor/releases/download/v0.8.5/AI-Security-Monitor-0.8.5-windows-x64-setup.exe"
+              NsisSha256 = "9d826aafa2754a835b764be15dce033a93ac65f207f3f4493e2f07a4cf6a1da6"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^ai-security-monitor-desktop\.exe$"
+            },
+            @{
               Name = "Out Loud"
               Version = "2.1.2"
               NsisUrl = "https://github.com/light-cloud-com/out-loud/releases/download/v2.1.2/Out.Loud.Setup.2.1.2.exe"
