@@ -29,5 +29,5 @@
     "autoupdate": {
         "url": "https://github.com/aixisstudio/Snitch/releases/download/v$version/Snitch-Setup-windows.exe"
     },
-    "notes": "Live packet capture requires Npcap, which is not bundled; install it separately from https://npcap.com/. Packet capture also requires Snitch to run with administrator privileges. Snitch stores its database and settings in %LOCALAPPDATA%\\Snitch; Scoop does not remove that data."
+    "notes": "Live packet capture requires Npcap, which is not bundled; install it separately from https://npcap.com/. Packet capture also requires Snitch to run with administrator privileges. Snitch stores its database and settings in %LOCALAPPDATA%\\Snitch; Scoop does not remove that data. The built-in updater remains enabled and can replace Scoop-managed files independently of Scoop; it can be disabled in Snitch Settings or with SNITCH_NO_UPDATE=1 if you prefer Scoop-controlled updates."
 }
