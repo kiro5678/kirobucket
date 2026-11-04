@@ -179,6 +179,26 @@ jobs:
               MsiUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64_en-US.msi"
               MsiSha256 = "570d34e68724c35ae604c57afd8a970bb313b372bf982b07494808ff03febe57"
               AppExePattern = "(?i)^Bargozin\.exe$"
+            },
+            @{
+              Name = "Rayburst x64"
+              Version = "4.1.1"
+              # Match the official Scoop Extras manifest's NSIS extraction URL and published SHA-256.
+              NsisUrl = "https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.1/Rayburst_4.1.1_x64-setup.exe#/dl.7z"
+              NsisSha256 = "1c82b728f95e310699d0a44f822b089d3f50b1593fe4417742efbe56914a8c45"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^rayburst\.exe$"
+            },
+            @{
+              Name = "Rayburst ARM64"
+              Version = "4.1.1"
+              NsisUrl = "https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.1/Rayburst_4.1.1_arm64-setup.exe#/dl.7z"
+              NsisSha256 = "190be7269341f87256e6ea3d7c82a9001024e7e5d16afb1a3f2e486c694bff52"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^rayburst\.exe$"
+            }
             }
           )
 
