@@ -4,11 +4,8 @@
     "homepage": "https://www.duplicati.com/",
     "license": "MIT",
     "notes": [
-        "If you want Duplicati to run at the startup of your system, run: (requires administrator privileges)",
-        "start \"$dir\\Duplicati.WindowsService.exe\" -Verb 'RunAs' -ArgumentList 'install'",
-        "",
-        "To remove Duplicati from startup, run: (requires administrator privileges)",
-        "start \"$dir\\Duplicati.WindowsService.exe\" -Verb 'RunAs' -ArgumentList 'uninstall'"
+        "To install Duplicati as a Windows startup service, run PowerShell as administrator and execute: `Start-Process \"$dir\\Duplicati.WindowsService.exe\" -Verb RunAs -ArgumentList 'install'`.",
+        "To remove the startup service, run the same command with `uninstall` instead of `install`."
     ],
     "architecture": {
         "32bit": {
