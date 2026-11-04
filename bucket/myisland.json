@@ -1,33 +1,33 @@
 {
- "version": "1.0.0",
- "description": "Windows Dynamic Island for music playback, synchronized lyrics, audio visualization, water reminders, and plugins.",
- "homepage": "https://github.com/xiaoxiaobaijiangjun/MyIsland",
- "license": {
-  "identifier": "GPL-3.0",
-  "url": "https://github.com/xiaoxiaobaijiangjun/MyIsland/blob/main/LICENSE"
- },
- "architecture": {
-  "64bit": {
-   "url": "https://github.com/xiaoxiaobaijiangjun/MyIsland/releases/download/v1.0.0/MyIsland.exe",
-   "hash": "8e14deb23093b6f672cdc3743c2c4d3709b0b14b9ca672fc59d3dcafd329bddd"
-  }
- },
- "bin": "MyIsland.exe",
- "shortcuts": [
-  [
-   "MyIsland.exe",
-   "MyIsland"
-  ]
- ],
- "checkver": {
-  "github": "https://github.com/xiaoxiaobaijiangjun/MyIsland"
- },
- "autoupdate": {
-  "architecture": {
-   "64bit": {
-    "url": "https://github.com/xiaoxiaobaijiangjun/MyIsland/releases/download/v$version/MyIsland.exe"
-   }
-  }
- },
- "notes": "User data is stored under %APPDATA%\\MyIsland, outside the Scoop app directory."
+    "version": "1.0.0",
+    "description": "Windows Dynamic Island for music playback, synchronized lyrics, audio visualization, water reminders, and plugins.",
+    "homepage": "https://github.com/xiaoxiaobaijiangjun/MyIsland",
+    "license": {
+        "identifier": "GPL-3.0",
+        "url": "https://github.com/xiaoxiaobaijiangjun/MyIsland/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/xiaoxiaobaijiangjun/MyIsland/releases/download/v1.0.0/MyIsland.exe",
+            "hash": "8e14deb23093b6f672cdc3743c2c4d3709b0b14b9ca672fc59d3dcafd329bddd"
+        }
+    },
+    "bin": "MyIsland.exe",
+    "shortcuts": [
+        [
+            "MyIsland.exe",
+            "MyIsland"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/xiaoxiaobaijiangjun/MyIsland"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/xiaoxiaobaijiangjun/MyIsland/releases/download/v$version/MyIsland.exe"
+            }
+        }
+    },
+    "notes": "User data is stored under %APPDATA%\\MyIsland, outside the Scoop app directory."
 }

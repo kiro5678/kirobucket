@@ -1,23 +1,23 @@
 {
- "version": "32162fddd0350e84a8da9a15650519c8d0586fd8",
- "description": "Windows Dynamic Island with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls.",
- "homepage": "https://github.com/FuGen-India-Private-Ltd/Dlives",
- "license": "MIT",
- "url": "https://raw.githubusercontent.com/FuGen-India-Private-Ltd/Dlives/32162fddd0350e84a8da9a15650519c8d0586fd8/Dlives_Payload.bin#/Dlives.exe",
- "hash": "513016e242e67a7f794508ae222df130d5a411caebb28472a63dd0391b773309",
- "bin": "Dlives.exe",
- "shortcuts": [
-  [
-   "Dlives.exe",
-   "Dlives"
-  ]
- ],
- "checkver": {
-  "url": "https://api.github.com/repos/FuGen-India-Private-Ltd/Dlives/commits?path=Dlives_Payload.bin&per_page=1",
-  "jsonpath": "$[0].sha"
- },
- "autoupdate": {
-  "url": "https://raw.githubusercontent.com/FuGen-India-Private-Ltd/Dlives/$version/Dlives_Payload.bin#/Dlives.exe"
- },
- "notes": "User data is stored under %APPDATA%\\Dlives. Enabling Start with Windows in the application creates a per-user startup entry."
+    "version": "32162fddd0350e84a8da9a15650519c8d0586fd8",
+    "description": "Windows Dynamic Island with media controls, system monitoring, calendar, notes, tasks, alarms, and quick controls.",
+    "homepage": "https://github.com/FuGen-India-Private-Ltd/Dlives",
+    "license": "MIT",
+    "url": "https://raw.githubusercontent.com/FuGen-India-Private-Ltd/Dlives/32162fddd0350e84a8da9a15650519c8d0586fd8/Dlives_Payload.bin#/Dlives.exe",
+    "hash": "513016e242e67a7f794508ae222df130d5a411caebb28472a63dd0391b773309",
+    "bin": "Dlives.exe",
+    "shortcuts": [
+        [
+            "Dlives.exe",
+            "Dlives"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/FuGen-India-Private-Ltd/Dlives/commits?path=Dlives_Payload.bin&per_page=1",
+        "jsonpath": "$[0].sha"
+    },
+    "autoupdate": {
+        "url": "https://raw.githubusercontent.com/FuGen-India-Private-Ltd/Dlives/$version/Dlives_Payload.bin#/Dlives.exe"
+    },
+    "notes": "User data is stored under %APPDATA%\\Dlives. Enabling Start with Windows in the application creates a per-user startup entry."
 }

@@ -1,37 +1,37 @@
 {
- "version": "2.45",
- "description": "Native desktop application for adding motion blur to videos through frame blending and frame interpolation.",
- "homepage": "https://github.com/f0e/blur",
- "license": "GPL-3.0-or-later",
- "suggest": {
-  "FFmpeg": "ffmpeg"
- },
- "notes": "Requires FFmpeg, FFprobe, VapourSynth and vspipe to be installed and available in PATH.",
- "architecture": {
-  "64bit": {
-   "url": "https://github.com/f0e/blur/releases/download/v2.45/blur-Windows-Release-x64.exe",
-   "hash": "0b0178a40d121b6b562cdda4c6feffa231e9bfe980f88ce7bffebff04c263a14"
-  }
- },
- "bin": "blur-gui.exe",
- "shortcuts": [
-  [
-   "blur-gui.exe",
-   "Blur"
-  ]
- ],
- "checkver": {
-  "github": "https://github.com/f0e/blur"
- },
- "autoupdate": {
-  "architecture": {
-   "64bit": {
-    "url": "https://github.com/f0e/blur/releases/download/v$version/blur-Windows-Release-x64.exe",
-    "hash": {
-     "url": "https://api.github.com/repos/f0e/blur/releases/tags/v$version",
-     "jsonpath": "$.assets[?(@.name == '$basename')].digest"
+    "version": "2.45",
+    "description": "Native desktop application for adding motion blur to videos through frame blending and frame interpolation.",
+    "homepage": "https://github.com/f0e/blur",
+    "license": "GPL-3.0-or-later",
+    "suggest": {
+        "FFmpeg": "ffmpeg"
+    },
+    "notes": "Requires FFmpeg, FFprobe, VapourSynth and vspipe to be installed and available in PATH.",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/f0e/blur/releases/download/v2.45/blur-Windows-Release-x64.exe",
+            "hash": "0b0178a40d121b6b562cdda4c6feffa231e9bfe980f88ce7bffebff04c263a14"
+        }
+    },
+    "bin": "blur-gui.exe",
+    "shortcuts": [
+        [
+            "blur-gui.exe",
+            "Blur"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/f0e/blur"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/f0e/blur/releases/download/v$version/blur-Windows-Release-x64.exe",
+                "hash": {
+                    "url": "https://api.github.com/repos/f0e/blur/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == '$basename')].digest"
+                }
+            }
+        }
     }
-   }
-  }
- }
 }

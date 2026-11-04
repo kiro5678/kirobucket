@@ -1,83 +1,83 @@
 {
- "version": "0.22.0",
- "description": "Windows Dynamic Notch with media controls, system HUDs, file shelf, terminal, agent integrations, widgets, and plugins.",
- "homepage": "https://github.com/Brick-Bread/WNotch",
- "license": {
-  "identifier": "MIT",
-  "url": "https://github.com/Brick-Bread/WNotch/blob/main/LICENSE"
- },
- "architecture": {
-  "64bit": {
-   "url": "https://github.com/Brick-Bread/WNotch/releases/download/v0.22.0/Notch-Setup-0.22.0.exe",
-   "hash": "d8e2b78124021463cdbc7156868efa4b63fd789a019c19ce624853d9189b0f16"
-  }
- },
- "installer": {
-  "script": [
-   "$setupPath = Join-Path $dir $fname",
-   "$payloadZip = Join-Path $dir '.notch-payload.zip'",
-   "$stream = [System.IO.File]::OpenRead($setupPath)",
-   "$output = $null",
-   "try {",
-   "if ($stream.Length -lt 16) { throw 'Notch setup is too small to contain its payload trailer.' }",
-   "$stream.Position = $stream.Length - 16",
-   "$trailer = New-Object byte[] 16",
-   "$totalRead = 0",
-   "while ($totalRead -lt 16) {",
-   "$read = $stream.Read($trailer, $totalRead, 16 - $totalRead)",
-   "if ($read -le 0) { throw 'Could not read the Notch payload trailer.' }",
-   "$totalRead += $read",
-   "}",
-   "$magic = [System.Text.Encoding]::ASCII.GetString($trailer, 8, 8)",
-   "if ($magic -cne 'NOTCHPAY') { throw 'The downloaded file does not contain the expected NOTCHPAY payload marker.' }",
-   "$zipLength = [System.BitConverter]::ToInt64($trailer, 0)",
-   "$zipOffset = $stream.Length - 16 - $zipLength",
-   "if ($zipLength -le 0 -or $zipOffset -le 0) { throw 'The Notch setup payload length is invalid.' }",
-   "$stream.Position = $zipOffset",
-   "$output = [System.IO.File]::Create($payloadZip)",
-   "$buffer = New-Object byte[] 65536",
-   "$remaining = $zipLength",
-   "while ($remaining -gt 0) {",
-   "$count = [int][Math]::Min([long]$buffer.Length, $remaining)",
-   "$read = $stream.Read($buffer, 0, $count)",
-   "if ($read -le 0) { throw 'The embedded Notch payload ended unexpectedly.' }",
-   "$output.Write($buffer, 0, $read)",
-   "$remaining -= $read",
-   "}",
-   "$output.Flush()",
-   "}",
-   "finally {",
-   "if ($null -ne $output) { $output.Dispose() }",
-   "$stream.Dispose()",
-   "}",
-   "try {",
-   "Expand-Archive -LiteralPath $payloadZip -DestinationPath $dir -Force",
-   "if (-not (Test-Path -LiteralPath (Join-Path $dir 'Notch.exe') -PathType Leaf)) {",
-   "throw 'The embedded Notch payload did not produce Notch.exe at its root.'",
-   "}",
-   "}",
-   "finally {",
-   "Remove-Item -LiteralPath $payloadZip -Force -ErrorAction SilentlyContinue",
-   "}",
-   "Remove-Item -LiteralPath $setupPath -Force"
-  ]
- },
- "bin": "Notch.exe",
- "shortcuts": [
-  [
-   "Notch.exe",
-   "Notch"
-  ]
- ],
- "checkver": {
-  "github": "https://github.com/Brick-Bread/WNotch"
- },
- "autoupdate": {
-  "architecture": {
-   "64bit": {
-    "url": "https://github.com/Brick-Bread/WNotch/releases/download/v$version/Notch-Setup-$version.exe"
-   }
-  }
- },
- "notes": "Scoop does not register Notch's notch:// URL protocol, PATH entry or startup integration. Settings are stored under %APPDATA%\\Notch."
+    "version": "0.22.0",
+    "description": "Windows Dynamic Notch with media controls, system HUDs, file shelf, terminal, agent integrations, widgets, and plugins.",
+    "homepage": "https://github.com/Brick-Bread/WNotch",
+    "license": {
+        "identifier": "MIT",
+        "url": "https://github.com/Brick-Bread/WNotch/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Brick-Bread/WNotch/releases/download/v0.22.0/Notch-Setup-0.22.0.exe",
+            "hash": "d8e2b78124021463cdbc7156868efa4b63fd789a019c19ce624853d9189b0f16"
+        }
+    },
+    "installer": {
+        "script": [
+            "$setupPath = Join-Path $dir $fname",
+            "$payloadZip = Join-Path $dir '.notch-payload.zip'",
+            "$stream = [System.IO.File]::OpenRead($setupPath)",
+            "$output = $null",
+            "try {",
+            "if ($stream.Length -lt 16) { throw 'Notch setup is too small to contain its payload trailer.' }",
+            "$stream.Position = $stream.Length - 16",
+            "$trailer = New-Object byte[] 16",
+            "$totalRead = 0",
+            "while ($totalRead -lt 16) {",
+            "$read = $stream.Read($trailer, $totalRead, 16 - $totalRead)",
+            "if ($read -le 0) { throw 'Could not read the Notch payload trailer.' }",
+            "$totalRead += $read",
+            "}",
+            "$magic = [System.Text.Encoding]::ASCII.GetString($trailer, 8, 8)",
+            "if ($magic -cne 'NOTCHPAY') { throw 'The downloaded file does not contain the expected NOTCHPAY payload marker.' }",
+            "$zipLength = [System.BitConverter]::ToInt64($trailer, 0)",
+            "$zipOffset = $stream.Length - 16 - $zipLength",
+            "if ($zipLength -le 0 -or $zipOffset -le 0) { throw 'The Notch setup payload length is invalid.' }",
+            "$stream.Position = $zipOffset",
+            "$output = [System.IO.File]::Create($payloadZip)",
+            "$buffer = New-Object byte[] 65536",
+            "$remaining = $zipLength",
+            "while ($remaining -gt 0) {",
+            "$count = [int][Math]::Min([long]$buffer.Length, $remaining)",
+            "$read = $stream.Read($buffer, 0, $count)",
+            "if ($read -le 0) { throw 'The embedded Notch payload ended unexpectedly.' }",
+            "$output.Write($buffer, 0, $read)",
+            "$remaining -= $read",
+            "}",
+            "$output.Flush()",
+            "}",
+            "finally {",
+            "if ($null -ne $output) { $output.Dispose() }",
+            "$stream.Dispose()",
+            "}",
+            "try {",
+            "Expand-Archive -LiteralPath $payloadZip -DestinationPath $dir -Force",
+            "if (-not (Test-Path -LiteralPath (Join-Path $dir 'Notch.exe') -PathType Leaf)) {",
+            "throw 'The embedded Notch payload did not produce Notch.exe at its root.'",
+            "}",
+            "}",
+            "finally {",
+            "Remove-Item -LiteralPath $payloadZip -Force -ErrorAction SilentlyContinue",
+            "}",
+            "Remove-Item -LiteralPath $setupPath -Force"
+        ]
+    },
+    "bin": "Notch.exe",
+    "shortcuts": [
+        [
+            "Notch.exe",
+            "Notch"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Brick-Bread/WNotch"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Brick-Bread/WNotch/releases/download/v$version/Notch-Setup-$version.exe"
+            }
+        }
+    },
+    "notes": "Scoop does not register Notch's notch:// URL protocol, PATH entry or startup integration. Settings are stored under %APPDATA%\\Notch."
 }

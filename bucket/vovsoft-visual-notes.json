@@ -1,22 +1,22 @@
 {
- "version": "1.6",
- "description": "Portable edition of Vovsoft Visual Notes.",
- "homepage": "https://vovsoft.com/software/visual-notes/",
- "license": "Proprietary",
- "url": "https://vovsoft.com/files/visual-notes-portable.zip?v=1.6",
- "checkver": {
-  "url": "https://vovsoft.com/download/visual-notes-portable/",
-  "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
- },
- "autoupdate": {
-  "url": "https://vovsoft.com/files/visual-notes-portable.zip?v=$version"
- },
- "shortcuts": [
-  [
-   "vnotes.exe",
-   "Vovsoft Visual Notes"
-  ]
- ],
- "pre_install": "if (-not (Test-Path -LiteralPath \"$dir\\key.txt\" -PathType Leaf)) { New-Item -ItemType File -Path \"$dir\\key.txt\" | Out-Null }",
- "persist": "key.txt"
+    "version": "1.6",
+    "description": "Portable edition of Vovsoft Visual Notes.",
+    "homepage": "https://vovsoft.com/software/visual-notes/",
+    "license": "Proprietary",
+    "url": "https://vovsoft.com/files/visual-notes-portable.zip?v=1.6",
+    "checkver": {
+        "url": "https://vovsoft.com/download/visual-notes-portable/",
+        "regex": "(?is)Version\\s*(?:<[^>]*>\\s*)*:?\\s*(?:<[^>]*>\\s*)*(?<version>\\d+(?:\\.\\d+)+)"
+    },
+    "autoupdate": {
+        "url": "https://vovsoft.com/files/visual-notes-portable.zip?v=$version"
+    },
+    "shortcuts": [
+        [
+            "vnotes.exe",
+            "Vovsoft Visual Notes"
+        ]
+    ],
+    "pre_install": "if (-not (Test-Path -LiteralPath \"$dir\\key.txt\" -PathType Leaf)) { New-Item -ItemType File -Path \"$dir\\key.txt\" | Out-Null }",
+    "persist": "key.txt"
 }
