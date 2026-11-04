@@ -26,7 +26,7 @@
         "url": "https://github.com/KnifeLemon/Filee/releases/download/v$version/Filee-$version-win-Portable.zip"
     },
     "notes": [
-        "Uses the official Windows portable ZIP; the setup installer is not executed. This does not add Filee's Explorer menu, file associations, startup integration, or a system-wide PATH entry.",
-        "By default, settings are stored under %APPDATA%\\Filee and downloaded optional conversion engines under %LOCALAPPDATA%\\Filee\\engines. These locations are outside the Scoop app directory and are not moved to D: automatically."
+        "This Scoop package does not add Filee's Explorer menu, file associations, startup integration or a system-wide PATH entry.",
+        "Downloaded conversion engines are stored under %LOCALAPPDATA%\\Filee\\engines, outside the Scoop app directory."
     ]
 }
