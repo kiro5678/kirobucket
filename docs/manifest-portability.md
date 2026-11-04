@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 878 active manifests. Twenty-one Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 878 active manifests. Twenty-three Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -258,6 +258,8 @@ The following manifests are kept in [`under review kirobucket/`](../under%20revi
 | [deeptutor](../under%20review%20kirobucket/deeptutor.json) | Windows Portable ZIP (launch path unverified) | The official release labels the ZIP Portable, but its archive layout and actual executable path have not been inspected; no launch path is declared. |
 | [twindesk](../under%20review%20kirobucket/twindesk.json) | Per-machine NSIS setup EXE | The custom installer changes Firewall rules, an HKLM WebClient setting, TrustedPeople certificates, and optional AppX/virtual-camera integration; Scoop-safe installation and cleanup are unverified. |
 | [mystify](../under%20review%20kirobucket/mystify.json) | Windows x64 ZIP (standalone GUI app) | No SHA-256 is published; archive layout, executable path, and .NET runtime availability have not been verified. It is not a native `.scr` screen saver. |
+| [majorprivacy](../under%20review%20kirobucket/majorprivacy.json) | Inno Setup EXE with vendor portable mode | `/PORTABLE=1` skips PrivacyAgent service installation and the ImDisk task, while `/CURRENTUSER` is documented for per-user operation. However, the x64 setup also runs bundled `VC_redist.x64.exe` from `[Run]` without an explicit portable-mode condition. Verify whether this installs a system-wide runtime or requests elevation before automating setup; keep the manifest download-only until launch, persistence, architecture, upgrade, and cleanup are tested. |
+
 ## Portable examples and important exceptions
 
 The following are examples of Portable manifest techniques in this bucket:
