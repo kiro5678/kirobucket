@@ -169,7 +169,7 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Snitch\.exe$"
-            }
+            },
             @{
               Name = "Bargozin"
               Version = "0.2.0"
@@ -179,7 +179,7 @@ jobs:
               MsiUrl = "https://github.com/403unlocker/bargozin-desktop/releases/download/app-v0.2.0/Bargozin_0.2.0_x64_en-US.msi"
               MsiSha256 = "570d34e68724c35ae604c57afd8a970bb313b372bf982b07494808ff03febe57"
               AppExePattern = "(?i)^Bargozin\.exe$"
-            },
+            }
           )
 
           $lessmsiExe = $null
