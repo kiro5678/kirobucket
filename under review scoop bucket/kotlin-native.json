@@ -3,7 +3,7 @@
     "description": "An LLVM backend for the Kotlin compiler, runtime implementation, and native code generation facility using the LLVM toolchain for native binaries runnable without a virtual machine.",
     "homepage": "https://kotlinlang.org",
     "license": "Apache-2.0",
-    "notes": "Please keep in mind that this is still marked as an experimental feature!",
+    "notes": "Kotlin/Native is still marked as an experimental feature.",
     "suggest": {
         "Kotlin": "kotlin"
     },
