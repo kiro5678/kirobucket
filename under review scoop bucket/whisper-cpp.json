@@ -3,10 +3,7 @@
     "description": "High-performance inference of OpenAI's Whisper automatic speech recognition (ASR) model",
     "homepage": "https://github.com/ggml-org/whisper.cpp",
     "license": "MIT",
-    "notes": [
-        "Whisper Model files are not included. You can download them here:",
-        "https://huggingface.co/ggerganov/whisper.cpp/tree/main"
-    ],
+    "notes": "Whisper model files are not included. Download a model from https://huggingface.co/ggerganov/whisper.cpp.",
     "architecture": {
         "64bit": {
             "url": "https://github.com/ggml-org/whisper.cpp/releases/download/b5454/whisper-bin-x64.zip",
