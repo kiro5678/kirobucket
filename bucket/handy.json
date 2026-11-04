@@ -46,7 +46,6 @@
         }
     },
     "notes": [
-        "The Windows EXE is a custom NSIS installer. The official installer explicitly supports portable mode; Scoop runs it silently with /PORTABLE and targets the version directory with /D=$dir. The upstream Windows build workflow uses the same switches and verifies handy.exe plus every staged runtime DLL.",
-        "Portable mode stores settings, models, recordings, databases, and logs under Data, which Scoop persists across updates. Handy's portable in-app updater is manual; update the Scoop-managed copy with 'scoop update handy'."
+        "Portable settings, models, recordings, databases and logs are stored under Data, which Scoop persists across updates. Use scoop update handy to update the Scoop-managed copy."
     ]
 }
