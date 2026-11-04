@@ -144,6 +144,7 @@ jobs:
               "ecopaste-nightly" = "Clipboard & Text"
               "encryphix" = "Security"
               "peerblock" = "Security"
+              "snitch" = "Security"
               "veracrypt" = "Security"
               "edge-drop" = "Clipboard & Text"
               "everything-cmdpal" = "File Management"
