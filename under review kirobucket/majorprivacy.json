@@ -6,31 +6,9 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/xanasoft/MajorPrivacy/releases/download/v0.101.0/MajorPrivacy-v0.101.0.exe",
-            "hash": "1b9d4ac9fcaa5825dfc10359a0c01856919b7d9dd91f405ddb258d1ec471e7b4",
-            "installer": {
-                "args": [
-                    "/VERYSILENT",
-                    "/SUPPRESSMSGBOXES",
-                    "/NORESTART",
-                    "/SP-",
-                    "/NOICONS",
-                    "/DIR=\"$dir\"",
-                    "/MERGETASKS=!DesktopIcon,!AutoStartEntry"
-                ]
-            },
-            "uninstaller": {
-                "file": "unins000.exe",
-                "args": [
-                    "/VERYSILENT",
-                    "/SUPPRESSMSGBOXES",
-                    "/NORESTART",
-                    "/NOCANCEL"
-                ]
-            }
+            "hash": "1b9d4ac9fcaa5825dfc10359a0c01856919b7d9dd91f405ddb258d1ec471e7b4"
         }
     },
-    "pre_install": "if (-not (is_admin)) { error \"Administrator rights are required to install $app. Use an elevated PowerShell session.\"; return }",
-    "pre_uninstall": "if (-not (is_admin)) { error \"Administrator rights are required to uninstall $app. Use an elevated PowerShell session.\"; return }",
     "shortcuts": [
         [
             "MajorPrivacy.exe",
@@ -51,10 +29,11 @@
     },
     "notes": [
         "Installer engine: Detect It Easy 3.21 identified this exact release asset as Inno Setup Module 6.3.0 in KiroBucket workflow run 41903467568. The downloaded file's SHA-256 matched the manifest and its Authenticode signature was Valid.",
-        "This is a Nonportable installation candidate. The vendor's normal install path invokes PrivacyAgent.exe -install and starts the PrivacyAgent Windows service. The application depends on its service/kernel isolation component, so extracting the Inno payload alone is not an equivalent installation.",
-        "The x64 setup also runs its bundled VC_redist.x64.exe with /q /norestart. Installing or updating MajorPrivacy may therefore change the system-wide Visual C++ runtime state. Administrator rights are required.",
-        "Scoop passes /DIR=\"$dir\" so the program files and Inno uninstaller are placed inside the versioned Scoop app directory. The manifest disables the vendor DesktopIcon and AutoStartEntry tasks and creates a Scoop-managed Start Menu shortcut instead.",
-        "The vendor uninstaller runs PrivacyAgent.exe -remove before deleting the application files. The exact install, service lifecycle, update from an existing Scoop version, uninstall-after-update, and service cleanup have not been exercised on Windows yet. Keep this manifest under review until those checks pass.",
+        "The manifest uses innosetup: true, so Scoop extracts the installer's {app} payload with innounp into the app directory; it does not run the vendor setup program.",
+        "Important limitation: extracting {app} does not execute the vendor [Run] actions. In particular, it does not run PrivacyAgent.exe -install, start the PrivacyAgent Windows service, install the bundled VC_redist.x64.exe, or run the optional ImDisk setup. The application therefore must not be considered fully installed or functionally verified with this extraction-only manifest.",
+        "MajorPrivacy depends on its service/kernel isolation component. Keep this manifest in under review until a Scoop-compatible, administrator-approved service and prerequisite setup/cleanup strategy is implemented and tested, including upgrade sequencing and removal of the service.",
+        "The x64 setup asset is used because the release inspected by the KiroBucket workflow was built as x64. No x86 or ARM64 package payload has been verified.",
         "The upstream custom license permits noncommercial use and free redistribution of original unmodified binaries; commercial use requires a business license, and advanced functionality requires a license from Xanasoft. See https://github.com/xanasoft/MajorPrivacy/blob/main/LICENSE."
-    ]
+    ],
+    "innosetup": true
 }
