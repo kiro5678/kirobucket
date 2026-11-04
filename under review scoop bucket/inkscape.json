@@ -4,9 +4,7 @@
     "homepage": "https://inkscape.org",
     "license": "GPL-3.0-or-later",
     "notes": [
-        "Due to an issue with the previous versioning scheme, Scoop may incorrectly identify the older version as newer.",
-        "Please run the following command to force an update if the update is not triggered despite a new version being available: scoop update inkscape --force",
-        "For more details, see: https://github.com/ScoopInstaller/Extras/issues/17136"
+        "If Scoop does not detect a new Inkscape release, force the manifest update with `scoop update inkscape --force`."
     ],
     "architecture": {
         "64bit": {
