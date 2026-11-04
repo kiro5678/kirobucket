@@ -6,8 +6,7 @@
     "url": "https://download.ericzimmermanstools.com/net/rla.zip",
     "bin": "rla.exe",
     "notes": [
-        "Requires the .NET 10 Runtime.",
-        "The upstream site does not publish a static SHA256 checksum for this archive. The manifest omits hash; Scoop may warn until a hash is populated."
+        "Requires the .NET 10 Runtime."
     ],
     "checkver": {
         "url": "https://raw.githubusercontent.com/EricZimmerman/ericzimmerman.github.io/master/docs/index.md",
