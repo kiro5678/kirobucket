@@ -6,7 +6,6 @@
         "identifier": "MIT",
         "url": "https://github.com/skywind3000/z.lua/blob/HEAD/LICENSE"
     },
-    "notes": "Configure accordingly to 'https://github.com/skywind3000/z.lua#install'",
     "depends": "lua",
     "url": "https://github.com/skywind3000/z.lua/archive/refs/tags/1.8.27.zip",
     "hash": "90d86300de410779c89cc5e6081dff00c6880cae83eb651cbbaad22af4595b75",
