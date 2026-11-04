@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 877 active manifests. Twenty-one Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 878 active manifests. Twenty-one Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,16 +22,17 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 798 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 799 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 58 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
 | Not reconciled | 24 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **880** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
+| **Total** | **881** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 856 of the 880 active bucket manifests (798 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Twenty-one additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 857 of the 881 active bucket manifests (799 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Twenty-one additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Newly added manifest classifications
+- [`ai-security-monitor`](../bucket/ai-security-monitor.json) — **Portable**: the official v0.8.5 Windows NSIS installer was inspected by the `NSIS and MSI Payload Extraction Test` workflow ([run 41788601720](https://github.com/kiro5678/kirobucket/actions/runs/41788601720)). The published SHA-256 matched, 7-Zip extracted the package successfully, and `ai-security-monitor-desktop.exe` was found at the extraction root without a nested archive. The manifest uses `#/dl.7z` and removes only the NSIS `$PLUGINSDIR` and unused `uninstall.exe`. The workflow verified extraction and executable path only; it did not launch the app. The extracted Tauri app relies on the WebView2 runtime, which is supplied by supported modern Windows versions; systems missing it must install it separately.
 - [`argus`](../bucket/argus.json) — **Portable**: uses the official Windows amd64 ZIP release and its published SHA-256 digest. The upstream release package provides `argus.exe` and the matching `.rule/` directory side by side; the manifest exposes `argus.exe` through a Scoop shim and does not run an installer or register Windows components. Keep `.rule/` alongside the executable. Reports go to the current working directory by default and can be redirected with `--output-dir`.
 - [`snitch`](../bucket/snitch.json) — **Portable**: uses the official Windows x64 NSIS asset with `#/dl.7z` and a verified second-stage extraction of `$PLUGINSDIR/app-64.7z`. The KiroBucket workflow confirmed `Snitch.exe`, `resources/app.asar`, `resources/frontend_dist/index.html`, and `resources/snitch-backend/snitch-backend.exe` in the nested payload. The manifest does not execute NSIS installation tasks or register Start Menu/Desktop shortcuts outside Scoop. Npcap remains a separate prerequisite for live packet capture. Snitch data stays under `%LOCALAPPDATA%\Snitch`; the built-in updater can independently download/apply updates unless disabled in Snitch Settings or with `SNITCH_NO_UPDATE=1`.
 - [`matrixrain`](../bucket/matrixrain.json) — **Portable**: uses the official standalone Windows executable for x64 or ARM64, with SHA-256 digests published in the GitHub release metadata. Scoop does not run the application's `/install` command; optional Windows System32 and screen-saver registry integration remains a separate, administrator-approved user action. Run `/uninstall` before removing the Scoop copy if that integration was enabled.

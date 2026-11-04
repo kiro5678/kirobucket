@@ -1,0 +1,22 @@
+{
+    "version": "0.0.6",
+    "description": "CrowdSec Windows Firewall remediation component that applies CrowdSec ban decisions to Windows Firewall.",
+    "homepage": "https://github.com/crowdsecurity/cs-windows-firewall-bouncer",
+    "license": "MIT",
+    "url": "https://github.com/crowdsecurity/cs-windows-firewall-bouncer/releases/download/v0.0.6/cs_windows_firewall_bouncer_setup.msi",
+    "hash": "7e5696a6d6d1ec1e33ed953b809792f5d46ea0785a8ea8cb04afccc36fbcb3cd",
+    "checkver": {
+        "github": "https://github.com/crowdsecurity/cs-windows-firewall-bouncer",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/crowdsecurity/cs-windows-firewall-bouncer/releases/download/v$version/cs_windows_firewall_bouncer_setup.msi"
+    },
+    "notes": [
+        "Review status: this is an MSI-based Windows service, not a portable application. The upstream WiX installer installs and registers a Windows service and runs a custom action to register the bouncer with an existing CrowdSec engine.",
+        "The bouncer requires the .NET 10 runtime. The MSI launch condition checks for this runtime; the upstream Chocolatey package installs it, but this manifest does not yet provide an equivalent Scoop dependency/install flow.",
+        "Do not use a plain Scoop MSI extraction as a substitute for installation: it would not execute the service-install and bouncer-registration custom actions. Scoop's legacy msi manifest property is deprecated, and the upstream WiX source generates the MSI ProductCode rather than declaring a stable ProductCode suitable for a verified manifest.",
+        "Keep under review until a supported install/uninstall strategy handles the .NET 10 dependency, Windows service lifecycle, bouncer registration, and upgrades.",
+        "Upstream issue #73, opened 2026-11-02, reports that a failed startup decision pull is not retried and can leave the firewall blocklist empty after reboot: https://github.com/crowdsecurity/cs-windows-firewall-bouncer/issues/73"
+    ]
+}

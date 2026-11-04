@@ -24,7 +24,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Network & DNS | 52 | [View](#network-dns) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 3 | [View](#other-utilities) |
+| Other Utilities | 4 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
@@ -40,7 +40,7 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 | Windows Customization | 92 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 877**
+**Total unique manifests: 878**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -618,6 +618,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [ai-security-monitor](../bucket/ai-security-monitor.json) | 0.8.5 | 64bit: 8.4 MiB | 2026-10-19 | Open-source desktop security monitor for Windows with network connection analysis, threat-intelligence feeds, and firewall management. | [Homepage](https://github.com/markku636/ai-security-monitor) |
 | [k-toolz](../bucket/k-toolz.json) | 4.0.2 | 64bit: 9.9 MiB | 2026-10-31 | Gaming suite with an FPS overlay, game streaming, stutter analysis, and virtual gamepad tools. | [Homepage](https://k-toolz.de/en/) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | 82.4 MiB | 2025-04-02 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
 | [softwareok-suite](../bucket/softwareok-suite.json) | 2026.10.27.6 | 64bit: 27.5 MiB | 2026-10-24 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |

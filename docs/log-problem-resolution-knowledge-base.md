@@ -772,3 +772,14 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Problem:** `pre_uninstall` read `TweaksVersion`, `ScoopSnapBarBackupCaptured`, and `EnableSnapBar` before checking whether the corresponding per-user registry keys existed. A package removed before first launch, or an older/manual install without those keys, could emit errors during cleanup.
 - **Resolution:** Initialize the values as `$null`, check `Test-Path` for each registry key, and read values only when that key exists. Missing state now follows the preserve-safe path; cleanup commands remain best-effort.
 - **Required verification:** PowerShell AST validation runs in the Notch Package Extraction Test workflow. This parser check confirms syntax, not live registry behavior; a real lifecycle test would require a disposable Windows user profile/VM.
+
+
+### 2026-11-03 — Correct stale MSI filename in the CrowdSec manifest
+
+- **Status:** Resolved, Scoop validation pending.
+- **Affected area:** `bucket/crowdsec.json`.
+- **Problem:** The manifest's current download URL and SHA-256 were for CrowdSec `1.8.2`, but `installer.file` still named `crowdsec_1.8.1.msi`. The installer file name did not match the versioned MSI asset.
+- **Root cause:** The stale literal `installer.file` value was left behind when the download URL moved to `1.8.2`. Inspection of Scoop's current `lib/install.ps1` confirms that it uses `installer.file` literally (or falls back to the downloaded URL filename); it substitutes `$version` in `installer.args`, not in `installer.file`.
+- **Resolution:** Removed `installer.file` from the manifest. Because the URL points directly to the correct MSI asset, Scoop can use the downloaded filename automatically. The `/quiet` and `/norestart` arguments remain unchanged.
+- **Verification:** Confirmed that the official `v1.8.2` release publishes `crowdsec_1.8.2.msi` and that its SHA-256 matches the manifest. Parsed the edited manifest as JSON and read it back from the PR branch; the stale `installer.file` field is absent. Scoop's checkver/autoupdate pipeline and an actual MSI installation were not run, so the runtime install path remains to be validated.
+- **Prevention:** Do not place `$version` in `installer.file`. Omit the property when the downloaded URL is itself the installer; otherwise set the actual extracted filename literally. Check Scoop's current installer implementation when uncertain.

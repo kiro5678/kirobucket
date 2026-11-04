@@ -61,6 +61,7 @@ jobs:
               "wnotch" = "Notch"
               "yata" = "Notch"
               "amule" = "Network & DNS"
+              "ai-security-monitor" = "Other Utilities"
               "android-dex" = "Android & Device Tools"
               "antalogy" = "Notes & Knowledge"
               "anti-yandex" = "Windows Privacy & Tweaks"
