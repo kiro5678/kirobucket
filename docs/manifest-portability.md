@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 878 active manifests. Twenty-one Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 878 active manifests. Twenty-three Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -308,3 +308,4 @@ Do not move these runtime caveats into the Nonportable list unless the manifest 
 
 - [Scoop App Manifests](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests) — installer, MSI extraction, Inno Setup, and archive URL-fragment behavior.
 - [Scoop README](https://github.com/ScoopInstaller/Scoop) — overview of Scoop's portable-app model and the separate `nonportable` bucket.
+| [majorprivacy](../under%20review%20kirobucket/majorprivacy.json) | Inno Setup EXE with vendor portable mode | `/PORTABLE=1` skips PrivacyAgent service installation and the ImDisk task, while `/CURRENTUSER` is documented for per-user operation. However, the x64 setup also runs bundled `VC_redist.x64.exe` from `[Run]` without an explicit portable-mode condition. Verify whether this installs a system-wide runtime or requests elevation before automating setup; keep the manifest download-only until launch, persistence, architecture, upgrade, and cleanup are tested. |
