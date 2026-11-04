@@ -26,6 +26,5 @@
                 "url": "https://github.com/memstechtips/Winhance/releases/download/v$version/Winhance.Installer.exe"
             }
         }
-    },
-    "notes": "The official Winhance installer supports a portable installation mode. This manifest invokes that mode with /TASKS=\"portableinstall\" and installs the resulting files directly into the Scoop app directory."
+    }
 }
