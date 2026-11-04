@@ -64,6 +64,7 @@ jobs:
               "android-dex" = "Android & Device Tools"
               "antalogy" = "Notes & Knowledge"
               "anti-yandex" = "Windows Privacy & Tweaks"
+              "argus" = "Forensics & Diagnostics"
               "astel" = "Security"
               "astraeus" = "Notch"
               "babyshark" = "Network & DNS"
