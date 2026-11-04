@@ -5,9 +5,8 @@
     "homepage": "https://irbis.sh/zen",
     "license": "MIT",
     "notes": [
-        "On first run, Zen prompts to install a local root certificate required for HTTPS filtering and changes the current user's Windows proxy settings.",
-        "Zen stores application data under %LOCALAPPDATA%\\Zen; Scoop does not redirect this data into its persist directory.",
-        "The official portable ZIP includes Zen's self-update feature, which may update the executable independently of Scoop."
+        "On first run, Zen installs a local root certificate for HTTPS filtering and changes the current user's Windows proxy settings.",
+        "Zen's built-in updater can update the executable independently of Scoop."
     ],
     "architecture": {
         "64bit": {
