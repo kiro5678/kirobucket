@@ -7,8 +7,7 @@
         "url": "https://github.com/qbittorrent/qBittorrent/blob/HEAD/COPYING"
     },
     "notes": [
-        "For file associations, run:",
-        "reg import \"$dir\\install-associations.reg\""
+        "To add qBittorrent file associations, run: reg import \"$dir\\install-associations.reg\""
     ],
     "architecture": {
         "64bit": {
