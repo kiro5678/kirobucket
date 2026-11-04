@@ -9,6 +9,7 @@
             "hash": "1b9d4ac9fcaa5825dfc10359a0c01856919b7d9dd91f405ddb258d1ec471e7b4"
         }
     },
+    "innosetup": true,
     "shortcuts": [
         [
             "MajorPrivacy.exe",
@@ -26,14 +27,5 @@
                 "url": "https://github.com/xanasoft/MajorPrivacy/releases/download/v$version/MajorPrivacy-v$version.exe"
             }
         }
-    },
-    "notes": [
-        "Installer engine: Detect It Easy 3.21 identified this exact release asset as Inno Setup Module 6.3.0 in KiroBucket workflow run 41903467568. The downloaded file's SHA-256 matched the manifest and its Authenticode signature was Valid.",
-        "The manifest uses innosetup: true, so Scoop extracts the installer's {app} payload with innounp into the app directory; it does not run the vendor setup program.",
-        "Important limitation: extracting {app} does not execute the vendor [Run] actions. In particular, it does not run PrivacyAgent.exe -install, start the PrivacyAgent Windows service, install the bundled VC_redist.x64.exe, or run the optional ImDisk setup. The application therefore must not be considered fully installed or functionally verified with this extraction-only manifest.",
-        "MajorPrivacy depends on its service/kernel isolation component. Keep this manifest in under review until a Scoop-compatible, administrator-approved service and prerequisite setup/cleanup strategy is implemented and tested, including upgrade sequencing and removal of the service.",
-        "The x64 setup asset is used because the release inspected by the KiroBucket workflow was built as x64. No x86 or ARM64 package payload has been verified.",
-        "The upstream custom license permits noncommercial use and free redistribution of original unmodified binaries; commercial use requires a business license, and advanced functionality requires a license from Xanasoft. See https://github.com/xanasoft/MajorPrivacy/blob/main/LICENSE."
-    ],
-    "innosetup": true
+    }
 }
