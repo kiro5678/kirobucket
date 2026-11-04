@@ -1,19 +1,16 @@
 {
     "version": "1.6.4",
-    "description": "Privacy-focused real-time network monitor and application firewall with per-process traffic attribution, local traffic history, and opt-in IP threat intelligence.",
+    "description": "Local-first application firewall and real-time network monitor with per-process traffic attribution, connection history, and IP threat intelligence.",
     "homepage": "https://github.com/aixisstudio/Snitch",
     "license": "AGPL-3.0-or-later",
-    "url": "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe",
-    "hash": "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263",
-    "installer": {
-        "args": [
-            "/S",
-            "/D=$dir"
-        ]
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/aixisstudio/Snitch/releases/download/v1.6.4/Snitch-Setup-windows.exe#/dl.7z",
+            "hash": "1a7ebbb0ef0f5530e505c2768c4535d6e3ead5f084ede9a2c54a1be29f5a8263"
+        }
     },
-    "uninstaller": {
-        "script": "$uninstaller = Get-ChildItem -LiteralPath $dir -Filter 'Uninstall*.exe' -File | Select-Object -First 1; if ($uninstaller) { Invoke-ExternalCommand $uninstaller.FullName -ArgumentList '/S' | Out-Null }"
-    },
+    "pre_install": "Expand-7zipArchive \"$dir\\`$PLUGINSDIR\\app-64.7z\" \"$dir\"",
+    "post_install": "Remove-Item \"$dir\\`$PLUGINSDIR\", \"$dir\\`$R0\" -Recurse -Force -ErrorAction SilentlyContinue",
     "bin": "Snitch.exe",
     "shortcuts": [
         [
@@ -27,7 +24,20 @@
         "regex": "v([\\d.]+)"
     },
     "autoupdate": {
-        "url": "https://github.com/aixisstudio/Snitch/releases/download/v$version/Snitch-Setup-windows.exe"
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/aixisstudio/Snitch/releases/download/v$version/Snitch-Setup-windows.exe#/dl.7z",
+                "hash": {
+                    "url": "https://api.github.com/repos/aixisstudio/Snitch/releases/tags/v$version",
+                    "regex": "\"name\"\\s*:\\s*\"Snitch-Setup-windows\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+                }
+            }
+        }
     },
-    "notes": "Live packet capture requires Npcap, which is not bundled; install it separately from https://npcap.com/. Packet capture also requires Snitch to run with administrator privileges. Snitch stores its database and settings in %LOCALAPPDATA%\\Snitch; Scoop does not remove that data. The built-in updater remains enabled and can replace Scoop-managed files independently of Scoop; it can be disabled in Snitch Settings or with SNITCH_NO_UPDATE=1 if you prefer Scoop-controlled updates."
+    "notes": [
+        "Verified with KiroBucket's NSIS extraction workflow: Scoop extracts the official installer through #/dl.7z, then pre_install extracts the nested $PLUGINSDIR/app-64.7z payload. The inner archive contains Snitch.exe at its root, resources/app.asar, resources/frontend_dist, and resources/snitch-backend/snitch-backend.exe. The vendor NSIS installation routine is not executed.",
+        "Npcap is not bundled. Install Npcap separately for live packet capture; this manifest does not install its driver.",
+        "Snitch stores its database, settings, and logs under %LOCALAPPDATA%\\Snitch. Scoop does not relocate or remove this user data.",
+        "The built-in updater is enabled by default, checks periodically, downloads updates, and can install them when Snitch exits. Disable update checks in Snitch Settings or set SNITCH_NO_UPDATE=1 to keep updates under Scoop control."
+    ]
 }
