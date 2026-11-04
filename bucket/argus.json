@@ -14,5 +14,7 @@
     "autoupdate": {
         "url": "https://github.com/25smoking/Argus/releases/download/v$version/argus-v$version-windows-amd64.zip"
     },
-    "notes": "The release includes the YARA-X-enabled Windows binary and its matching .rule directory. Keep argus.exe and .rule together. The CLI writes reports to its working directory by default; use --output-dir to choose another location."
+    "notes": [
+        "Keep argus.exe beside its matching .rule directory. By default, CLI reports are written to the current working directory; use --output-dir to choose another location."
+    ]
 }
