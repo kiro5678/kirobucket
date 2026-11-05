@@ -94,7 +94,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [DVD Drive Repair](https://rizonesoft.com/downloads/dvd-drive-repair/) | Diagnose and repair DVD drive issues | Storage & Disk Tools | [dvd-drive-repair](../bucket/dvd-drive-repair.json) |
 | [EdgeMin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Microsoft Edge | System Monitoring & Hardware | [edgemin](../bucket/edgemin.json) |
 | [Firemin](https://rizonesoft.com/downloads/firemin/) | Reduce browser memory usage | System Monitoring & Hardware | [firemin](../bucket/firemin.json) |
-| [Notepad3](https://rizonesoft.com/downloads/notepad3/) | Scintilla-based text editor with syntax highlighting | Clipboard & Text | [notepad3](../bucket/notepad3.json) |
+| [Notepad3](https://rizonesoft.com/downloads/notepad3/) | Scintilla-based text editor with syntax highlighting | Text Utilities | [notepad3](../bucket/notepad3.json) |
 | [Pixel Repair](https://rizonesoft.com/downloads/pixel-repair/) | Detect and attempt to repair stuck display pixels | System Monitoring & Hardware | [pixel-repair](../bucket/pixel-repair.json) |
 | [Rizonesoft Office Alpha 5](https://rizonesoft.com/downloads/rizonesoft-office/) | Collection of office and productivity applications | Productivity & Launchers | [rizonesoft-office](../bucket/rizonesoft-office.json) |
 | [Resolute](https://rizonesoft.com/downloads/resolute/) | Collection of Windows repair, maintenance, and diagnostic utilities | Other Utilities | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) |
