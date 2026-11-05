@@ -109,6 +109,10 @@ The explicit portability classifications currently cover 857 of the 881 active b
 - [`twindesk`](../under%20review%20kirobucket/twindesk.json) — **Review**: the stable v2.4.0 x64 and ARM64 NSIS setup assets and SHA-256 digests are pinned; v2.5.0-beta.1 is excluded as a pre-release. The per-machine installer adds Firewall rules, changes the HKLM WebClient file-size setting, adds a certificate to TrustedPeople, and manages optional AppX/virtual-camera integration. Scoop-safe cleanup has not been implemented or tested.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
+### Updated extraction layouts
+
+- [`detect-it-easy`](../bucket/detect-it-easy.json) — **Portable**: updated to the official Detect It Easy 4.0.0 x64 and x86 ZIP assets. Both archives place the payload at their root, so the manifest intentionally omits `extract_dir`. Archive validation ([run 42007599251](https://github.com/kiro5678/kirobucket/actions/runs/42007599251)) verified both SHA-256 hashes and confirmed that `die.exe`, `diec.exe`, and `diel.exe` plus the declared shortcut target exist for both architectures. The workflow verified archive layout and paths only; it did not launch the application.
+
 ## All bucket manifests by installer type
 
 This inventory covers every JSON manifest in bucket/ at generation time. It uses the same Installer Type inference as the generated manifest views; installer engines that cannot be verified remain explicitly unverified.
