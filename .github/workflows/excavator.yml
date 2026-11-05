@@ -1,6 +1,11 @@
 name: Excavator
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/excavator.yml'
   workflow_dispatch:
   schedule:
     # run every 4 hours
