@@ -50,6 +50,15 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-05 — Keep missing category mappings non-blocking
+
+- **Status:** Implemented; workflow verification pending.
+- **Affected area:** `.github/workflows/manifest-table.yml`; `docs/manifest-authoring.md`.
+- **Problem:** A strict validation change made the documentation generator fail when a bucket manifest had no functional category mapping. That is not the required behavior for this repository.
+- **Resolution:** Keep `docs/categories.md` as the category source of truth, but treat missing mappings as non-blocking: issue a warning and assign the manifest to `Other Utilities`. Stale mappings also produce a warning and are ignored. Do not throw or stop the workflow for either condition.
+- **Prevention:** Missing classifications must always fall back to `Other Utilities`; the documentation generator must continue to completion.
+
+
 ### 2026-11-05 — Eliminate 407 missing-category warnings in manifest documentation generation
 
 - **Status:** Resolved and verified.
