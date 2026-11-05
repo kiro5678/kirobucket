@@ -8,6 +8,7 @@ on:
       - master
     paths:
       - .github/workflows/manifest-table.yml
+      - docs/categories.md
       - bucket/**
 
 concurrency:
