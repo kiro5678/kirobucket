@@ -200,6 +200,24 @@ jobs:
               AppExePattern = "(?i)^rayburst\.exe$"
             },
             @{
+              Name = "TwinDesk x64"
+              Version = "2.5.3"
+              NsisUrl = "https://github.com/InukaAsith/TwinDesk/releases/download/v2.5.3/TwinDesk-Setup-2.5.3.exe#/dl.7z"
+              NsisSha256 = "cc1fc31912350d6ea513e25e70769aba0d34643ed64ca82a67b8823b2a636b5a"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^TwinDesk.exe$"
+            },
+            @{
+              Name = "TwinDesk ARM64"
+              Version = "2.5.3"
+              NsisUrl = "https://github.com/InukaAsith/TwinDesk/releases/download/v2.5.3/TwinDesk-Setup-2.5.3-arm64.exe#/dl.7z"
+              NsisSha256 = "c91e89462271e027f81bee2bb47cb15775f18d066442de9d7d3a4702dab8559e"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^TwinDesk.exe$"
+            },
+            @{
               Name = "Nova Island"
               Version = "1.8.2"
               # Mirror Scoop's #/dl.7z filename behavior for the published NSIS setup.

@@ -6,21 +6,22 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 
 Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, and system-wide network request filtering.
 
-Local File Sharing groups direct file-transfer tools for moving files between devices on a local network. Clipboard Tools covers clipboard history, capture, paste, and cross-device clipboard synchronization. Text Utilities covers text editing, reusable snippets, and text processing.
+Local File Sharing groups tools focused primarily on direct file transfer between devices. Cross-Device Integration covers paired phone/computer or computer/computer workflows such as notification sync, shared clipboard, calls and messages, remote input, media control, and device-to-device file access. Clipboard Tools covers clipboard history, capture, paste, and clipboard synchronization. Text Utilities covers text editing, reusable snippets, and text processing.
 
 ## Category Index
 
 | Category | Manifests | Link |
 | --- | ---: | --- |
-| Android & Device Tools | 9 | [View](#android-device-tools) |
+| Android & Device Tools | 8 | [View](#android-device-tools) |
 | Browsers & Communication | 9 | [View](#browsers-communication) |
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
+| Cross-Device Integration | 3 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
 | Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
-| Local File Sharing | 2 | [View](#local-file-sharing) |
+| Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 33 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
@@ -47,7 +48,7 @@ Local File Sharing groups direct file-transfer tools for moving files between de
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 886**
+**Total unique manifests: 887**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -75,7 +76,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [adb-device-manager](../bucket/adb-device-manager.json) | 1.8 | 64bit: 165.6 MiB | 2026-07-12 | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) |
 | [air-server-np](../bucket/air-server-np.json) | 5.7.2 | 64bit: 19.8 MiB / 32bit: 20.4 MiB | 2025-07-28 | AirServer is the most advanced screen mirroring receiver for Mac and PC. | [Homepage](https://www.airserver.com) |
 | [android-dex](../bucket/android-dex.json) | 1.4 | 64bit: 220.4 MiB | 2026-10-31 | Android desktop experience for controlling and mirroring Android devices. | [Homepage](https://github.com/Shrey113/Android-Dex) |
 | [another](../bucket/another.json) | 0.4.4 | 64bit: 13.1 MiB | 2026-10-06 | A desktop app for mirroring and controlling Android devices over USB. | [Homepage](https://github.com/Zfinix/another) |
@@ -129,6 +129,14 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 20.1.0 | — | 2026-10-18 | Mega variant of the K-Lite Codec Pack, a collection of DirectShow filters, VFW/ACM codecs and tools. | [Homepage](https://codecguide.com/about_kl.htm) |
 
 StarCodec 20261016 is staged for verification in [under review kirobucket](../under%20review%20kirobucket/starcodec.json). It is not in the active bucket and cannot be installed through KiroBucket until its installer, checksum, and uninstall behavior are verified.
+
+## Cross-Device Integration
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [adb-device-manager](../bucket/adb-device-manager.json) | 1.8 | 64bit: 165.6 MiB | 2026-07-12 | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) |
+| [deskdrop](../bucket/deskdrop.json) | 1.3.3 | 287.8 MiB | 2026-09-05 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
+| [twindesk](../bucket/twindesk.json) | 2.5.3 | 64bit: 121.5 MiB / arm64: 122.2 MiB | 2026-11-05 | Cross-device workspace for sharing screens, apps, files, clipboard, input, calls, and notifications across Windows, macOS, Linux, and Android. | [Homepage](https://github.com/InukaAsith/TwinDesk) |
 
 ## Developer & Technical Tools
 
@@ -307,7 +315,6 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [deskdrop](../bucket/deskdrop.json) | 1.3.3 | 287.8 MiB | 2026-09-05 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
 | [warpinator](../bucket/warpinator.json) | 1.1 | 12.9 MiB | 2025-12-29 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 
 ## Forensics & Diagnostics
