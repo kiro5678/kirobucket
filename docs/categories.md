@@ -14,8 +14,8 @@ Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, an
 | Browsers & Communication | 9 | [View](#browsers-communication) |
 | Clipboard & Text | 32 | [View](#clipboard-text) |
 | Codec Pack | 1 | [View](#codec-pack) |
-| Developer & Technical Tools | 44 | [View](#developer-technical-tools) |
-| Download Managers | 19 | [View](#download-managers) |
+| Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
+| Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
 | Forensics & Diagnostics | 33 | [View](#forensics-diagnostics) |
@@ -31,7 +31,7 @@ Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, an
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
-| Security | 37 | [View](#security) |
+| Security | 39 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
@@ -40,10 +40,10 @@ Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, an
 | Time Tracking & Focus | 13 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 92 | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 45 | [View](#windows-privacy-tweaks) |
+| Windows Customization | 95 | [View](#windows-customization) |
+| Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 878**
+**Total unique manifests: 886**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -166,6 +166,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [pyinstxtractor-ng](../bucket/pyinstxtractor-ng.json) | 2026.07.03 | 7.6 MiB | 2026-07-03 | pyinstxtractor-ng is a tool to extract the contents of a Pyinstaller generated executable file. | [Homepage](https://github.com/pyinstxtractor/pyinstxtractor-ng) |
 | [sordum-reg-converter](../bucket/sordum-reg-converter.json) | 1.2 | 439.0 KiB | 2021-03-27 | Reg Converter is a portable freeware utility to convert .reg data to .bat, .vbs, or .au3. (RegConverter可以将.reg文件转换为.bat，.vbs或.au3。这对于需要管理员权限才能合并到注册表中的文件或无人参与的自动化安装时特别有用。) | [Homepage](https://www.sordum.org/8478/reg-converter-v1-2/) |
 | [sordum-registry-key-jumper](../bucket/sordum-registry-key-jumper.json) | 1.3 | 964.8 KiB | 2025-12-01 | A tool that helps the user navigate to a user-defined registry key with minimal effort. | [Homepage](https://www.sordum.org/registry-key-jumper) |
+| [vcredist](../bucket/vcredist.json) | 14.51.36247.0 | 24.5 MiB | 2026-05-29 | Microsoft Visual C++ Redistributables bundle for all major versions. | [Homepage](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) |
 | [vovsoft-ai-automator](../bucket/vovsoft-ai-automator.json) | 1.5 | 30.9 MiB | 2026-08-13 | Portable edition of Vovsoft AI Automator. | [Homepage](https://vovsoft.com/software/ai-automator/) |
 | [vovsoft-ai-requester](../bucket/vovsoft-ai-requester.json) | 5.4 | 2.5 MiB | 2026-09-29 | Portable edition of Vovsoft AI Requester. | [Homepage](https://vovsoft.com/software/ai-requester/) |
 | [vovsoft-executable-bit-scanner](../bucket/vovsoft-executable-bit-scanner.json) | 1.0 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Executable Bit Scanner. | [Homepage](https://vovsoft.com/software/executable-bit-scanner/) |
@@ -206,6 +207,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [nanaget](../bucket/nanaget.json) | 1.3.1609.0 | 3.8 MiB | 2026-09-20 | Lightweight file transfer utility based on aria2 and XAML Islands. | [Homepage](https://github.com/M2Team/NanaGet) |
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
 | [qbittorrent-lt20](../bucket/qbittorrent-lt20.json) | 5.2.4 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). | [Homepage](https://www.qbittorrent.org) |
+| [rayburst](../bucket/rayburst.json) | 4.1.1 | 64bit: 24.6 MiB / arm64: 21.8 MiB | 2026-10-25 | A full-featured download manager — rebuilt from the ground up (formerly Motrix Next). | [Homepage](https://rayburst.pages.dev) |
 | [rqbit](../bucket/rqbit.json) | 9.0.1 | 6.9 MiB | 2026-10-29 | A BitTorrent client with a desktop GUI, HTTP API and Web UI. | [Homepage](https://github.com/ikatson/rqbit) |
 | [varia](../bucket/varia.json) | 2026.8.5-1 | 64bit: 141.3 MiB | 2026-08-23 | Download manager for files, torrents and videos. | [Homepage](https://github.com/giantpinkrobots/varia) |
 | [veloxfetch](../bucket/veloxfetch.json) | 2.0.1 | 104.5 MiB | 2026-10-30 | Rust-based download manager with multi-connection downloads, browser integration, video and playlist downloads. | [Homepage](https://github.com/IlyesBs/VeloxFetch) |
@@ -996,6 +998,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [funk-hrc](../bucket/funk-hrc.json) | 2.1 | 471.4 KiB | 2025-06-25 | Tray utility for assigning hotkeys to switch between display resolutions. | [Homepage](https://funk.eu/hrc/) |
 | [funk-icu](../bucket/funk-icu.json) | 6 | 1.7 MiB | 2025-06-25 | Saves and restores Windows desktop icon layouts after display changes or icons being rearranged. | [Homepage](https://funk.eu/icu-icon-configuration-utility/) |
 | [get-pixel-color](../bucket/get-pixel-color.json) | 3.55 | 64bit: 144.3 KiB | 2026-06-30 | Read the color of a pixel on screen. | [Homepage](https://www.softwareok.com/?Download=GetPixelColor) |
+| [ghost-saver](../bucket/ghost-saver.json) | 1.0.0 | 160.2 KiB | 2026-09-19 | Open-source Windows screensaver with a color-cycling display and animated fireworks. | [Homepage](https://github.com/dmongrel/ghost-saver) |
 | [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | 122.5 MiB | 2026-09-26 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
 | [iconswappergui](../bucket/iconswappergui.json) | 2.1.2 | 3.3 MiB | 2026-05-31 | Portable GUI for swapping Windows file and folder icons. | [Homepage](https://github.com/aj-phillips/IconSwapperGui) |
 | [keep-mouse-speed-ok](../bucket/keep-mouse-speed-ok.json) | 3.55 | 64bit: 53.7 KiB | 2026-04-25 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
@@ -1006,6 +1009,8 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 8.6 | 12.2 MiB | 2025-10-25 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
 | [magic-mouse-move](../bucket/magic-mouse-move.json) | 1.04 | 64bit: 198.5 KiB | 2026-10-25 | Move the mouse pointer automatically. | [Homepage](https://www.softwareok.com/?Download=MagicMouseMove) |
 | [magic-mouse-trails](../bucket/magic-mouse-trails.json) | 4.51 | 64bit: 273.2 KiB | 2026-10-26 | Display customizable mouse trails. | [Homepage](https://www.softwareok.com/?Download=MagicMouseTrails) |
+| [matrixcode](../bucket/matrixcode.json) | 1.1.0 | 64bit: 865.0 KiB / arm64: 789.6 KiB | 2026-10-14 | Open-source Matrix digital-rain application with a native Windows screensaver. | [Homepage](https://github.com/JamesBedford/MatrixCode) |
+| [matrixrain](../bucket/matrixrain.json) | 1.7.0 | 64bit: 1.2 MiB / arm64: 1.2 MiB | 2026-09-25 | Open-source Matrix digital-rain screensaver and desktop app with configurable density, colors, glow, and HDR support. | [Homepage](https://github.com/relmer/MatrixRain) |
 | [mousefx-generator](../bucket/mousefx-generator.json) | 1.1.0 | 64bit: 72.7 MiB | 2026-02-10 | Windows utility for customizable mouse cursor highlights, click animations, spotlight effects, and click sounds. | [Homepage](https://github.com/os4ma31/MouseFX-Generator) |
 | [nofences](../bucket/nofences.json) | 1.8 | 55.0 KiB | 2022-05-17 | Open-source alternative to Fences for organizing the Windows desktop. | [Homepage](https://github.com/Twometer/NoFences) |
 | [nomeiryoui](../bucket/nomeiryoui.json) | 3.5.1 | 389.3 KiB | 2026-09-06 | Windows utility for changing system UI fonts and font sizes. | [Homepage](https://github.com/Tatsu-syo/noMeiryoUI) |
@@ -1086,6 +1091,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [gtweak-exe](../bucket/gtweak-exe.json) | 5.5.6 | 6.6 MiB | 2026-09-30 | Portable Windows tweaking and customization tool. | [Homepage](https://github.com/Greedeks/GTweak) |
 | [kudu](../bucket/kudu.json) | 3.10.0 | 179.4 MiB | 2026-10-30 | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. | [Homepage](https://github.com/AdventDevInc/kudu) |
 | [lynxoptimizer](../bucket/lynxoptimizer.json) | 0.216.2 | 64bit: 28.7 KiB | 2026-10-10 | Windows system optimization utility. | [Homepage](https://github.com/caxzy/LynxOptimizer) |
+| [majorprivacy](../bucket/majorprivacy.json) | 0.101.0 | 64bit: 45.3 MiB | 2026-10-27 | Windows privacy and isolation tool with process protection, file access controls, and network filtering. | [Homepage](https://github.com/xanasoft/MajorPrivacy) |
 | [nixthis](../bucket/nixthis.json) | 0.42.2 | 569.0 KiB | 2026-10-04 | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. | [Homepage](https://github.com/builtbybel/NixThis) |
 | [optimizerduck](../bucket/optimizerduck.json) | 2.29.0 | 83.3 MiB | 2026-10-07 | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. | [Homepage](https://github.com/itsfatduck/optimizerDuck) |
 | [prevent-turn-off](../bucket/prevent-turn-off.json) | 3.63 | 64bit: 264.2 KiB | 2026-05-13 | Prevent Windows from shutting down or entering sleep mode. | [Homepage](https://www.softwareok.com/?Download=PreventTurnOff) |
