@@ -198,6 +198,16 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^rayburst\.exe$"
+            },
+            @{
+              Name = "Nova Island"
+              Version = "1.8.2"
+              # Mirror Scoop's #/dl.7z filename behavior for the published NSIS setup.
+              NsisUrl = "https://github.com/NOVA-TECH-KIT/nova-island/releases/download/v1.8.2/Nova-Island-Setup-1.8.2.exe#/dl.7z"
+              NsisSha256 = "e685721a69189f3eb0c339175f040affde65471660ec98743a8e40c34a3ac9c0"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Nova Island\.exe$"
             }
           )
 
