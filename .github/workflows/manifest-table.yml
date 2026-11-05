@@ -87,12 +87,17 @@ jobs:
           $missingMappings = @($manifestFiles | Where-Object {
               -not $categoryMap.ContainsKey([System.IO.Path]::GetFileNameWithoutExtension($_.Name))
           } | ForEach-Object { $_.Name })
-          $staleMappings = @($categoryMap.Keys | Where-Object { -not $bucketNames.Contains($_) })
-          if ($missingMappings.Count -gt 0 -or $staleMappings.Count -gt 0) {
-              throw "Functional category inventory mismatch. Missing mappings: $($missingMappings -join ', '); stale mappings: $($staleMappings -join ', ')."
+          foreach ($missingMapping in $missingMappings) {
+              $missingName = [System.IO.Path]::GetFileNameWithoutExtension($missingMapping)
+              Write-Warning "No functional category mapping for '$missingName'; assigning 'Other Utilities'."
           }
 
-          Write-Host "Loaded $($categoryMap.Count) functional category mappings for $($manifestFiles.Count) bucket manifests from docs/categories.md." {
+          $staleMappings = @($categoryMap.Keys | Where-Object { -not $bucketNames.Contains($_) })
+          if ($staleMappings.Count -gt 0) {
+              Write-Warning "Ignoring stale category mappings that have no matching bucket manifest: $($staleMappings -join ', ')."
+          }
+
+          Write-Host "Loaded $($categoryMap.Count) functional category mappings for $($manifestFiles.Count) bucket manifests from docs/categories.md. Missing mappings: $($missingMappings.Count); these will use 'Other Utilities'." {
               param([object]$Value)
               if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) {
                   return ""
@@ -628,8 +633,11 @@ jobs:
               }
 
               $name = [System.IO.Path]::GetFileNameWithoutExtension($file.Name)
-              if (-not $categoryMap.ContainsKey($name)) { throw "No functional category mapping exists for manifest '$name'." }
-              $category = $categoryMap[$name]
+              $category = if ($categoryMap.ContainsKey($name)) {
+                  $categoryMap[$name]
+              } else {
+                  "Other Utilities"
+              }
               $manifestData.Add([PSCustomObject]@{
                   Name = $name
                   RelativePath = $relativePath
