@@ -483,9 +483,6 @@ jobs:
                       $archiveOrdinal++
                       Remove-Item -LiteralPath $outerRoot -Recurse -Force -ErrorAction SilentlyContinue
                       Remove-Item -LiteralPath $payloadRoot -Recurse -Force -ErrorAction SilentlyContinue
-                  if ($null -ne $tarExtractRoot) {
-                    Remove-Item -LiteralPath $tarExtractRoot -Recurse -Force -ErrorAction SilentlyContinue
-                  }
                       Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
                       continue
                     }
@@ -518,6 +515,9 @@ jobs:
                   }
                   $inspectableArchives++
                   $archiveOrdinal++
+                  if ($null -ne $tarExtractRoot) {
+                    Remove-Item -LiteralPath $tarExtractRoot -Recurse -Force -ErrorAction SilentlyContinue
+                  }
                   Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
                 }
 
