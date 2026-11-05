@@ -89,14 +89,16 @@ jobs:
               if ($line -match '^\s*(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*):\s*(?<message>.*)$') {
                 $name = $Matches.name
                 $message = $Matches.message
-                if ($message -match "(?i)couldn't\s+(?:match|find|retrieve)|The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|checkver expects|could not retrieve content|URL https?://\S+ is not valid") {
+                if ($message -match '(?i)The remote server returned an error:\s*\((?:408|429|5\d\d)\)|API rate limit exceeded|secondary rate limit|rate limit exceeded|timed out|gateway time-out|bad gateway|service unavailable') {
+                  $transientNetworkFailures.Add("$($name): $message")
+                  if ($message -match '(?i)API rate limit exceeded|secondary rate limit|rate limit exceeded|\((?:403|429)\)') {
+                    $rateLimitFailures[$name] = $true
+                  }
+                } elseif ($message -match "(?i)couldn't\s+(?:match|find|retrieve)|The remote server returned an error:\s*\((?:403|404)\)|checkver expects|could not retrieve content|URL https?://\S+ is not valid") {
                   if (-not $manifestFailures.ContainsKey($name)) {
                     $manifestFailures[$name] = [System.Collections.Generic.List[string]]::new()
                   }
                   $manifestFailures[$name].Add($message)
-                  if ($message -match '(?i)API rate limit exceeded|secondary rate limit|\((?:403|429)\)') {
-                    $rateLimitFailures[$name] = $true
-                  }
                 } elseif ($message -match '(?i)No such host is known|Name or service not known|Temporary failure in name resolution|The remote name could not be resolved|DNS name does not exist') {
                   $transientNetworkFailures.Add("$($name): $message")
                 }
