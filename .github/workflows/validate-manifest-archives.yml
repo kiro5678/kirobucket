@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'bucket/edge-drop.json'
+      - 'bucket/0install-win.json'
   workflow_dispatch:
     inputs:
       manifest:
