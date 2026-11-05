@@ -75,38 +75,38 @@ jobs:
               $rawLogs = [System.IO.File]::ReadAllText($zipPath)
             }
 
-            $ansiPattern = [string][char]27 + '\\[[0-?]*[ -/]*[@-~]'
+            $ansiPattern = [string][char]27 + '\[[0-?]*[ -/]*[@-~]'
             $manifestFailures = @{}
             $rateLimitFailures = @{}
             $transientNetworkFailures = [System.Collections.Generic.List[string]]::new()
             $globalFailures = [System.Collections.Generic.List[string]]::new()
 
-            foreach ($rawLine in ($rawLogs -split '\\r?\\n')) {
+            foreach ($rawLine in ($rawLogs -split '\r?\n')) {
               $line = ([string]$rawLine) -replace $ansiPattern, ''
-              $line = $line -replace '^\\uFEFF', ''
-              $line = $line -replace '^\\d{4}-\\d{2}-\\d{2}T[^\\s]+Z\\s*', ''
+              $line = $line -replace '^\uFEFF', ''
+              $line = $line -replace '^\d{4}-\d{2}-\d{2}T[^\s]+Z\s*', ''
 
-              if ($line -match '^\\s*(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*):\\s*(?<message>.*)$') {
+              if ($line -match '^\s*(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*):\s*(?<message>.*)$') {
                 $name = $Matches.name
                 $message = $Matches.message
-                if ($message -match "(?i)couldn't\\s+(?:match|find|retrieve)|The remote server returned an error:\\s*\\((?:403|404|408|429|5\\d\\d)\\)|checkver expects|could not retrieve content|URL https?://\\S+ is not valid") {
+                if ($message -match "(?i)couldn't\s+(?:match|find|retrieve)|The remote server returned an error:\s*\((?:403|404|408|429|5\d\d)\)|checkver expects|could not retrieve content|URL https?://\S+ is not valid") {
                   if (-not $manifestFailures.ContainsKey($name)) {
                     $manifestFailures[$name] = [System.Collections.Generic.List[string]]::new()
                   }
                   $manifestFailures[$name].Add($message)
-                  if ($message -match '(?i)API rate limit exceeded|secondary rate limit|\\((?:403|429)\\)') {
+                  if ($message -match '(?i)API rate limit exceeded|secondary rate limit|\((?:403|429)\)') {
                     $rateLimitFailures[$name] = $true
                   }
                 } elseif ($message -match '(?i)No such host is known|Name or service not known|Temporary failure in name resolution|The remote name could not be resolved|DNS name does not exist') {
                   $transientNetworkFailures.Add("$($name): $message")
                 }
-              } elseif ($line -match '(?i)^\\s*ERROR\\s+Could not update\\s+(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*)') {
+              } elseif ($line -match '(?i)^\s*ERROR\s+Could not update\s+(?<name>[a-zA-Z0-9][a-zA-Z0-9._+-]*)') {
                 $name = $Matches.name
                 if (-not $manifestFailures.ContainsKey($name)) {
                   $manifestFailures[$name] = [System.Collections.Generic.List[string]]::new()
                 }
                 $manifestFailures[$name].Add($line.Trim())
-              } elseif ($line -match '(?i)^\\s*ERROR\\s+(?<message>.+)$') {
+              } elseif ($line -match '(?i)^\s*ERROR\s+(?<message>.+)$') {
                 $globalFailures.Add($line.Trim())
               }
             }
