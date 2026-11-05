@@ -121,9 +121,11 @@ jobs:
               New-Item -ItemType Directory -Path $installDir -Force | Out-Null
 
               # NSIS requires /D= as the final argument and without quotes.
+              $setupExe = Join-Path $root 'Nova-Island-Setup-1.8.2.exe'
+              Copy-Item -LiteralPath $setup -Destination $setupExe -Force
               $arguments = @('/S', "/D=$installDir")
-              Add-Report "Command: dl.7z /S /D=$installDir"
-              $process = Start-Process -FilePath $setup -ArgumentList $arguments -PassThru
+              Add-Report "Command: Nova-Island-Setup-1.8.2.exe /S /D=$installDir"
+              $process = Start-Process -FilePath $setupExe -ArgumentList $arguments -PassThru
               try {
                 Wait-Process -Id $process.Id -Timeout 600 -ErrorAction Stop
               } catch {
