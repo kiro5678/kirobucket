@@ -17,5 +17,6 @@
     },
     "autoupdate": {
         "url": "https://github.com/0install/0install-win/releases/download/$version/0install-win-$version.tar.gz"
-    }
+    },
+    "notes": "The upstream package defines 0install.exe as the command-line client and 0install-win.exe as the Windows GUI launcher."
 }
