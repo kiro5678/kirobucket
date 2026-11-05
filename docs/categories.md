@@ -6,24 +6,27 @@ Speech-to-Text (STT) covers automatic speech recognition and audio transcription
 
 Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, and system-wide network request filtering.
 
+Local File Sharing groups direct file-transfer tools for moving files between devices on a local network. Clipboard Tools covers clipboard history, capture, paste, and cross-device clipboard synchronization. Text Utilities covers text editing, reusable snippets, and text processing.
+
 ## Category Index
 
 | Category | Manifests | Link |
 | --- | ---: | --- |
 | Android & Device Tools | 9 | [View](#android-device-tools) |
 | Browsers & Communication | 9 | [View](#browsers-communication) |
-| Clipboard & Text | 32 | [View](#clipboard-text) |
+| Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
 | Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
+| Local File Sharing | 2 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 33 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
 | Media & Audio/Video | 45 | [View](#media-audio-video) |
-| Network & DNS | 49 | [View](#network-dns) |
+| Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 10 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
@@ -37,6 +40,7 @@ Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, an
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
+| Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 13 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
@@ -95,7 +99,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [zapfast](../bucket/zapfast.json) | 0.20.1 | 64bit: 29.4 MiB / arm64: 27.9 MiB | 2026-10-24 | Unofficial native WhatsApp desktop client built with Rust, with linked devices, chat history, media, calls, and notifications. | [Homepage](https://zapfast.rocks/) |
 | [zapzap](../bucket/zapzap.json) | 7.5.1 | 64bit: 195.5 MiB / arm64: 166.1 MiB | 2026-10-15 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafatosta/zapzap) |
 
-## Clipboard & Text
+## Clipboard Tools
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -106,31 +110,17 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [clipto](../bucket/clipto.json) | 7.2.17 | 66.3 MiB | 2021-12-07 | Cross-platform clipboard manager and notes app | [Homepage](https://clipto.pro/) |
 | [cliptype](../bucket/cliptype.json) | 2.0.0 | 64bit: 972.0 KiB | 2026-04-29 | Clipboard injector that types clipboard contents using native keystrokes | [Homepage](https://github.com/ahmedthebest31/ClipType) |
 | [clustercut](../bucket/clustercut.json) | 0.5.0 | 8.6 MiB | 2026-10-24 | Secure, local clipboard synchronization across Windows, macOS, and Linux. | [Homepage](https://github.com/keithvassallomt/ClusterCut) |
-| [colorconsole](../bucket/colorconsole.json) | 7.44 | 64bit: 407.5 KiB | 2026-03-21 | Portable enhanced Windows console. | [Homepage](https://www.softwareok.com/?Download=ColorConsole) |
 | [copyq](../bucket/copyq.json) | 17.0.0 | 64bit: 24.0 MiB | 2026-10-06 | Clipboard manager | [Homepage](https://hluk.github.io/CopyQ/) |
 | [crosspaste](../bucket/crosspaste.json) | 2.3.0.2767 | 169.6 MiB | 2026-10-28 | Universal pasteboard across devices. | [Homepage](https://crosspaste.com/en/) |
 | [cursortip](../bucket/cursortip.json) | 1.4.1 | 669.0 KiB | 2026-10-20 | Lightweight Windows desktop status notifications for Caps Lock, input method, and clipboard activity. | [Homepage](https://github.com/zeno528/CursorTip) |
-| [deskdrop](../bucket/deskdrop.json) | 1.3.3 | 287.8 MiB | 2026-09-05 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
 | [ecopaste](../bucket/ecopaste.json) | 1.1.0 | 64bit: 6.6 MiB / arm64: 5.8 MiB | 2026-07-22 | Open-source clipboard manager for Windows and macOS. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
 | [ecopaste-nightly](../bucket/ecopaste-nightly.json) | 1.1.1-nightly.20260813.1 | 64bit: 6.6 MiB / arm64: 5.8 MiB | 2026-08-13 | Open-source clipboard manager for Windows and macOS. Nightly build. | [Homepage](https://github.com/EcoPasteHub/EcoPaste) |
 | [edge-drop](../bucket/edge-drop.json) | 0.3.2 | 129.5 MiB | 2026-10-30 | Clipboard manager that lives on the left edge of your screen. | [Homepage](https://github.com/Deepender25/Edge-Drop) |
-| [get-window-text](../bucket/get-window-text.json) | 5.31 | 64bit: 109.2 KiB | 2026-04-26 | Read text from Windows controls and windows. | [Homepage](https://www.softwareok.com/?Download=GetWindowText) |
 | [multi-clipboard-slots](../bucket/multi-clipboard-slots.json) | 3.61 | 64bit: 157.6 KiB | 2026-05-03 | Manage multiple clipboard slots. | [Homepage](https://www.softwareok.com/?Download=MultiClipBoardSlots) |
-| [notepad3](../bucket/notepad3.json) | 7.26.602.1 | 64bit: 6.6 MiB / 32bit: 6.2 MiB | 2026-06-02 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
 | [pastebar](../bucket/pastebar.json) | 0.7.0 | 64bit: 34.3 MiB / arm64: 33.8 MiB | 2025-06-25 | Limitless, Free Clipboard Manager for Mac and Windows | [Homepage](https://www.pastebar.app/) |
-| [quicktextpaste](../bucket/quicktextpaste.json) | 9.61 | 64bit: 355.0 KiB / 32bit: 285.9 KiB | 2026-10-15 | Paste predefined text using keyboard shortcuts. | [Homepage](https://www.softwareok.com/?Download=QuickTextPaste) |
-| [sklad](../bucket/sklad.json) | 0.2.3 | 4.8 MiB | 2026-09-13 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text | [Homepage](https://github.com/Rench321/sklad) |
 | [skyeclip](../bucket/skyeclip.json) | 1.4 | 6.2 MiB | 2026-09-27 | Lightweight Windows clipboard manager with history, profiles, rules, and SQLite storage. | [Homepage](https://github.com/YodeSkye/SkyeClip) |
 | [smart-clipboard](../bucket/smart-clipboard.json) | 1.3.2 | 30.3 MiB | 2026-09-15 | Free Windows clipboard manager with clipboard history, search, smart paste, and source app detection | [Homepage](https://github.com/ezeiq7/Smart-Clipboard) |
 | [tiez-clipboard](../bucket/tiez-clipboard.json) | 0.3.3 | 5.7 MiB | 2026-04-11 | Windows clipboard manager with rich-text history, tags, global search, privacy masking, and device sync. | [Homepage](https://github.com/jimuzhe/tiez-clipboard) |
-| [vovsoft-collect-url](../bucket/vovsoft-collect-url.json) | 4.2 | 3.0 MiB | 2026-08-13 | Portable edition of Vovsoft Collect URL. | [Homepage](https://vovsoft.com/software/collect-url/) |
-| [vovsoft-compare-two-texts](../bucket/vovsoft-compare-two-texts.json) | 1.5 | 3.4 MiB | 2026-09-24 | Portable edition of Vovsoft Compare Two Texts. | [Homepage](https://vovsoft.com/software/compare-two-texts/) |
-| [vovsoft-keyword-combiner](../bucket/vovsoft-keyword-combiner.json) | 1.2 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Keyword Combiner. | [Homepage](https://vovsoft.com/software/keyword-combiner/) |
-| [vovsoft-markdown-converter](../bucket/vovsoft-markdown-converter.json) | 1.3 | 2.5 MiB | 2026-08-13 | Portable edition of Vovsoft Markdown Converter. | [Homepage](https://vovsoft.com/software/markdown-converter/) |
-| [vovsoft-random-wordlist-generator](../bucket/vovsoft-random-wordlist-generator.json) | 2.0 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Random Wordlist Generator. | [Homepage](https://vovsoft.com/software/random-wordlist-generator/) |
-| [vovsoft-text-edit-plus](../bucket/vovsoft-text-edit-plus.json) | 16.7 | 4.8 MiB | 2026-09-25 | Portable edition of Vovsoft Text Edit Plus. | [Homepage](https://vovsoft.com/software/text-edit-plus/) |
-| [vovsoft-text-filter](../bucket/vovsoft-text-filter.json) | 1.1 | 2.2 MiB | 2026-08-13 | Portable edition of Vovsoft Text Filter. | [Homepage](https://vovsoft.com/software/text-filter/) |
-| [vovsoft-url-extractor](../bucket/vovsoft-url-extractor.json) | 2.7 | 4.6 MiB | 2026-10-08 | Portable edition of Vovsoft URL Extractor. | [Homepage](https://vovsoft.com/software/url-extractor/) |
 
 ## Codec Pack
 
@@ -312,6 +302,13 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [winbin2iso](../bucket/winbin2iso.json) | 6.79 | 64bit: 157.6 KiB | 2026-10-19 | Convert BIN CD images to ISO images. | [Homepage](https://www.softwareok.com/?Download=WinBin2Iso) |
 | [xyplorer](../bucket/xyplorer.json) | 28.40.0600 | — | — | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. | [Homepage](https://www.xyplorer.com/) |
 | [zexor](../bucket/zexor.json) | 1.16.0 | 63.9 MiB | 2026-10-04 | Visual Windows file manager with instant previews and the proprietary .zex container format. | [Homepage](https://github.com/metalbug/Zexor) |
+
+## Local File Sharing
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [deskdrop](../bucket/deskdrop.json) | 1.3.3 | 287.8 MiB | 2026-09-05 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
+| [warpinator](../bucket/warpinator.json) | 1.1 | 12.9 MiB | 2025-12-29 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 
 ## Forensics & Diagnostics
 
@@ -555,7 +552,6 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [vovsoft-website-screenshot-generator](../bucket/vovsoft-website-screenshot-generator.json) | 2.5 | 117.8 MiB | 2026-08-13 | Portable edition of Vovsoft Website Screenshot Generator. | [Homepage](https://vovsoft.com/software/website-screenshot-generator/) |
 | [vovsoft-website-spell-checker](../bucket/vovsoft-website-spell-checker.json) | 1.5 | 16.7 MiB | 2026-08-13 | Portable edition of Vovsoft Website Spell Checker. | [Homepage](https://vovsoft.com/software/website-spell-checker/) |
 | [vovsoft-website-watcher](../bucket/vovsoft-website-watcher.json) | 2.3 | 5.3 MiB | 2026-08-13 | Portable edition of Vovsoft Website Watcher. | [Homepage](https://vovsoft.com/software/website-watcher/) |
-| [warpinator](../bucket/warpinator.json) | 1.1 | 12.9 MiB | 2025-12-29 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 | [win-ping](../bucket/win-ping.json) | 2.88 | 64bit: 144.0 KiB | 2026-03-18 | Run ping tests against network hosts. | [Homepage](https://www.softwareok.com/?Download=WinPing) |
 
 ## Network Security
@@ -922,6 +918,24 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [vovsoft-screen-reader](../bucket/vovsoft-screen-reader.json) | 1.5 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Screen Reader. | [Homepage](https://vovsoft.com/software/screen-reader/) |
 | [vovsoft-text-to-mp3-converter](../bucket/vovsoft-text-to-mp3-converter.json) | 4.7 | 23.4 MiB | 2026-10-04 | Portable edition of Vovsoft Text to MP3 Converter. | [Homepage](https://vovsoft.com/software/text-to-mp3-converter/) |
 | [out-loud](../bucket/out-loud.json) | 2.1.2 | — | — | Offline AI text-to-speech desktop app with natural voices and local speech synthesis. | [Homepage](https://www.out-loud.io/) |
+
+## Text Utilities
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [colorconsole](../bucket/colorconsole.json) | 7.44 | 64bit: 407.5 KiB | 2026-03-21 | Portable enhanced Windows console. | [Homepage](https://www.softwareok.com/?Download=ColorConsole) |
+| [get-window-text](../bucket/get-window-text.json) | 5.31 | 64bit: 109.2 KiB | 2026-04-26 | Read text from Windows controls and windows. | [Homepage](https://www.softwareok.com/?Download=GetWindowText) |
+| [notepad3](../bucket/notepad3.json) | 7.26.602.1 | 64bit: 6.6 MiB / 32bit: 6.2 MiB | 2026-06-02 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
+| [quicktextpaste](../bucket/quicktextpaste.json) | 9.61 | 64bit: 355.0 KiB / 32bit: 285.9 KiB | 2026-10-15 | Paste predefined text using keyboard shortcuts. | [Homepage](https://www.softwareok.com/?Download=QuickTextPaste) |
+| [sklad](../bucket/sklad.json) | 0.2.3 | 4.8 MiB | 2026-09-13 | Local-only, tray-first snippet manager for storing, organizing, searching, and securely accessing reusable text | [Homepage](https://github.com/Rench321/sklad) |
+| [vovsoft-collect-url](../bucket/vovsoft-collect-url.json) | 4.2 | 3.0 MiB | 2026-08-13 | Portable edition of Vovsoft Collect URL. | [Homepage](https://vovsoft.com/software/collect-url/) |
+| [vovsoft-compare-two-texts](../bucket/vovsoft-compare-two-texts.json) | 1.5 | 3.4 MiB | 2026-09-24 | Portable edition of Vovsoft Compare Two Texts. | [Homepage](https://vovsoft.com/software/compare-two-texts/) |
+| [vovsoft-keyword-combiner](../bucket/vovsoft-keyword-combiner.json) | 1.2 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Keyword Combiner. | [Homepage](https://vovsoft.com/software/keyword-combiner/) |
+| [vovsoft-markdown-converter](../bucket/vovsoft-markdown-converter.json) | 1.3 | 2.5 MiB | 2026-08-13 | Portable edition of Vovsoft Markdown Converter. | [Homepage](https://vovsoft.com/software/markdown-converter/) |
+| [vovsoft-random-wordlist-generator](../bucket/vovsoft-random-wordlist-generator.json) | 2.0 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Random Wordlist Generator. | [Homepage](https://vovsoft.com/software/random-wordlist-generator/) |
+| [vovsoft-text-edit-plus](../bucket/vovsoft-text-edit-plus.json) | 16.7 | 4.8 MiB | 2026-09-25 | Portable edition of Vovsoft Text Edit Plus. | [Homepage](https://vovsoft.com/software/text-edit-plus/) |
+| [vovsoft-text-filter](../bucket/vovsoft-text-filter.json) | 1.1 | 2.2 MiB | 2026-08-13 | Portable edition of Vovsoft Text Filter. | [Homepage](https://vovsoft.com/software/text-filter/) |
+| [vovsoft-url-extractor](../bucket/vovsoft-url-extractor.json) | 2.7 | 4.6 MiB | 2026-10-08 | Portable edition of Vovsoft URL Extractor. | [Homepage](https://vovsoft.com/software/url-extractor/) |
 
 ## Time Tracking & Focus
 
