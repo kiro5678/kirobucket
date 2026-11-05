@@ -50,6 +50,17 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-05 — Eliminate 407 missing-category warnings in manifest documentation generation
+
+- **Status:** Resolved and verified.
+- **Affected area:** `.github/workflows/manifest-table.yml`; `docs/categories.md`; generated manifest views; `docs/manifest-authoring.md`.
+- **Problem:** `Update Manifest Documentation` completed successfully but emitted 407 warnings of the form `No category mapping for '<manifest>'; using 'Other Utilities'.` This silently put many manifests in the wrong generated category. The existing hard-coded `$categoryMap` had drifted from the functional categories already maintained in `docs/categories.md`. The bucket also contains `FoliCon.JSON` with an uppercase extension, which the old Linux `Get-ChildItem -Filter *.json` enumeration could miss.
+- **Root cause:** Two independent sources of category data were maintained: a large static PowerShell hashtable and the functional-category tables in `docs/categories.md`. They had diverged. In addition, extension matching was case-sensitive on the Ubuntu generator runner.
+- **Resolution:** Removed the static category list and made `docs/categories.md` the single source of truth. The workflow now parses only the functional-category sections (not publisher cross-lists), enumerates `.json` filenames case-insensitively, and fails on either missing category mappings or stale mappings instead of silently falling back to `Other Utilities`. Added the six missing functional-category rows for `ghost-saver`, `majorprivacy`, `matrixcode`, `matrixrain`, `rayburst`, and `vcredist`; corrected the functional category counts and total to 886. The existing `FoliCon.JSON` row is now included by case-insensitive extension handling. Also documented the source-of-truth rule in `docs/manifest-authoring.md`.
+- **Verification:** [Workflow lint run 42016219972](https://github.com/kiro5678/kirobucket/actions/runs/42016219972) passed. [Manifest documentation generation run 42016220005](https://github.com/kiro5678/kirobucket/actions/runs/42016220005) completed successfully. Its log states `Loaded 886 functional category mappings for 886 bucket manifests from docs/categories.md` and `Generated installer-type inventory for 886 manifests across 19 installer types.` The completed log contains **zero** `No category mapping` warnings, **zero** other `WARNING:` lines, and **zero** error lines. The generated views were committed at [6d97e1e](https://github.com/kiro5678/kirobucket/commit/6d97e1e68a35f96f8d8991d68fed01677534a0bb). Final `docs/categories.md` reports 886 unique functional manifests.
+- **Prevention:** Keep functional manifest categories in `docs/categories.md` only. The generator validates one-to-one coverage against all JSON files in `bucket/`, including uppercase extensions. Do not reintroduce a separately maintained category hashtable or a silent fallback category. Publisher-suite lists remain cross-lists and do not replace each manifest's functional category.
+
+
 ### 2026-11-05 — Correct Detect It Easy 4.0.0 archive layout
 
 - **Status:** Resolved and verified.
