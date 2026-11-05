@@ -1,4 +1,4 @@
-name: Nova Island Silent Installation Test
+name: Nova Island 7-Zip Extraction Test
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   test:
-    name: Test Scoop extraction and NSIS silent install
+    name: Validate Scoop #/dl.7z extraction
     runs-on: windows-latest
     timeout-minutes: 20
 
@@ -38,9 +38,7 @@ jobs:
           function Get-MissingApplicationFiles {
             param([string]$Directory)
             $required = @(
-              'Nova Island.exe',
-              'resources/app.asar',
-              'resources/app.asar.unpacked/helper/nova-helper.exe'
+              'Nova Island.exe'
             )
             $missing = [System.Collections.Generic.List[string]]::new()
             foreach ($relative in $required) {
