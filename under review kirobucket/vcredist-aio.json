@@ -7,7 +7,7 @@
     "hash": "8614b20c7f1d63ccc85214efea1b9a36c44c3cb02c96f24ec107853f10b37194",
     "checkver": {
         "url": "https://api.github.com/repos/abbodi1406/vcredist/releases/latest",
-        "regex": "\\"tag_name\\":\\s*\\"v(?<version>[\\d.]+)\\"[\\s\\S]*?VisualCppRedist_AIO_x86_x64_(?<build>\\d+)\\.zip"
+        "regex": "\"tag_name\":\\s*\"v(?<version>[\\d.]+)\"[\\s\\S]*?VisualCppRedist_AIO_x86_x64_(?<build>\\d+)\\.zip"
     },
     "autoupdate": {
         "url": "https://github.com/abbodi1406/vcredist/releases/download/v$version/VisualCppRedist_AIO_x86_x64_$matchBuild.zip"
