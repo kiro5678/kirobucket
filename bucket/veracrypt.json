@@ -1,12 +1,12 @@
 {
-    "version": "1.26.30",
+    "version": "1.26.31",
     "description": "Open-source disk encryption software for creating and mounting encrypted volumes.",
     "homepage": "https://veracrypt.io/",
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.30/VeraCrypt.Portable.1.26.30.exe#/setup.exe",
-            "hash": "8891f597054ca9dc2d9182d607b02278fa728d6be2d5116330a02de3dffa8da3",
+            "url": "https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.31/VeraCrypt.Portable.1.26.31.exe#/setup.exe",
+            "hash": "05712c10d0e27b88a2e16ae62b807a77afd2d11c48847fccb2e51d004bd4252b",
             "bin": [
                 [
                     "VeraCrypt-x64.exe",
@@ -37,8 +37,8 @@
             ]
         },
         "arm64": {
-            "url": "https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.30/VeraCrypt.Portable.1.26.30.exe#/setup.exe",
-            "hash": "8891f597054ca9dc2d9182d607b02278fa728d6be2d5116330a02de3dffa8da3",
+            "url": "https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_1.26.31/VeraCrypt.Portable.1.26.31.exe#/setup.exe",
+            "hash": "05712c10d0e27b88a2e16ae62b807a77afd2d11c48847fccb2e51d004bd4252b",
             "bin": [
                 [
                     "VeraCrypt-arm64.exe",
