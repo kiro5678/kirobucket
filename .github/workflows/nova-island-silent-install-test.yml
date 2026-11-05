@@ -1,4 +1,4 @@
-name: Nova Island 7-Zip Extraction Test
+name: Nova Island Installer Method Validation
 
 on:
   push:
@@ -12,21 +12,21 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: Validate Scoop #/dl.7z extraction
+  validate:
+    name: Validate NSIS extraction, silent install, and uninstall
     runs-on: windows-latest
     timeout-minutes: 20
 
     steps:
-      - name: Download, extract, and test silent installation
+      - name: Test both installation methods and NSIS uninstaller
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
 
-          $root = Join-Path $env:RUNNER_TEMP 'nova-island-silent-test'
+          $root = Join-Path $env:RUNNER_TEMP 'nova-island-method-test'
           New-Item -ItemType Directory -Path $root -Force | Out-Null
-          $reportPath = Join-Path $root 'nova-island-test-report.txt'
+          $reportPath = Join-Path $root 'nova-island-method-report.txt'
           $report = [System.Collections.Generic.List[string]]::new()
 
           function Add-Report {
@@ -35,33 +35,57 @@ jobs:
             Write-Host $Text
           }
 
-          function Get-MissingApplicationFiles {
+          function Get-Paths {
             param([string]$Directory)
-            $required = @(
-              'Nova Island.exe'
+            if (-not (Test-Path -LiteralPath $Directory -PathType Container)) { return @() }
+            return @(
+              Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue |
+                ForEach-Object { $_.FullName }
             )
-            $missing = [System.Collections.Generic.List[string]]::new()
-            foreach ($relative in $required) {
-              $candidate = Join-Path $Directory ($relative.Replace('/', '\'))
-              if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
-                $missing.Add($relative)
+          }
+
+          function Get-NovaUninstallEntries {
+            $roots = @(
+              'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
+            )
+            $entries = [System.Collections.Generic.List[string]]::new()
+            foreach ($registryRoot in $roots) {
+              if (Test-Path -LiteralPath $registryRoot) {
+                foreach ($key in Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue) {
+                  $properties = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+                  if ($properties.DisplayName -match '(?i)Nova Island') {
+                    $entries.Add("$registryRoot\$($key.PSChildName) [$($properties.DisplayName)]")
+                  }
+                }
               }
             }
-            return @($missing)
+            return @($entries)
+          }
+
+          function Get-RelativeInventory {
+            param([string]$Directory)
+            return @(
+              Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue |
+                Sort-Object FullName |
+                ForEach-Object {
+                  $relative = [System.IO.Path]::GetRelativePath($Directory, $_.FullName)
+                  "$relative [$($_.Length) bytes]"
+                }
+            )
           }
 
           try {
             $url = 'https://github.com/NOVA-TECH-KIT/nova-island/releases/download/v1.8.2/Nova-Island-Setup-1.8.2.exe'
             $expectedHash = 'e685721a69189f3eb0c339175f040affde65471660ec98743a8e40c34a3ac9c0'
-            $setup = Join-Path $root 'dl.7z'
+            $setup = Join-Path $root 'Nova-Island-Setup-1.8.2.exe'
 
-            Add-Report 'Nova Island 1.8.2 installer test'
+            Add-Report 'Nova Island 1.8.2 installer validation'
             Add-Report "Download URL: $url"
             Invoke-WebRequest -Uri $url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
-
-            $item = Get-Item -LiteralPath $setup
             $actualHash = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
-            Add-Report "Downloaded size: $($item.Length) bytes"
+            Add-Report "Downloaded size: $((Get-Item -LiteralPath $setup).Length) bytes"
             Add-Report "SHA-256: $actualHash"
             if ($actualHash -ne $expectedHash) {
               throw "SHA-256 mismatch. Expected $expectedHash; got $actualHash."
@@ -69,129 +93,156 @@ jobs:
 
             $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
             if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
-              $command = Get-Command '7z.exe' -ErrorAction Stop
-              $sevenZip = $command.Source
+              $sevenZip = (Get-Command '7z.exe' -ErrorAction Stop).Source
             }
 
-            $outerDir = Join-Path $root 'scoop-dl7z-extraction'
-            New-Item -ItemType Directory -Path $outerDir -Force | Out-Null
-
-            Add-Report ''
-            Add-Report '=== Stage 1: Scoop-style #/dl.7z extraction ==='
             $listing = & $sevenZip l -slt $setup 2>&1
             $listExit = $LASTEXITCODE
-            $listing | Set-Content -LiteralPath (Join-Path $root 'outer-7zip-listing.txt') -Encoding utf8
-            Add-Report "7-Zip list exit code: $listExit"
+            $listing | Set-Content -LiteralPath (Join-Path $root 'nsis-listing.txt') -Encoding utf8
+            Add-Report "7-Zip listing exit code: $listExit"
+            if ($listExit -ne 0) { throw '7-Zip could not inspect the installer.' }
+            $isNsis = [bool](($listing -join "`n") -match '(?im)^Type = Nsis\s*$')
+            Add-Report "Detected NSIS package: $isNsis"
+            if (-not $isNsis) { throw 'The installer was not identified as an NSIS package.' }
 
-            $extractOutput = & $sevenZip x $setup "-o$outerDir" -y -bd 2>&1
-            $extractExit = $LASTEXITCODE
-            $extractOutput | Set-Content -LiteralPath (Join-Path $root 'outer-7zip-extraction.log') -Encoding utf8
-            Add-Report "7-Zip extraction exit code: $extractExit"
-
-            $payloads = @(
-              Get-ChildItem -LiteralPath $outerDir -File -Recurse -Force -ErrorAction SilentlyContinue |
-                Where-Object { $_.Name -ieq 'app-64.7z' }
-            )
-            if ($payloads.Count -gt 0) {
-              Add-Report "Found app-64.7z: $($payloads[0].FullName)"
-              $payloadOutput = & $sevenZip x $payloads[0].FullName "-o$outerDir" -y -bd 2>&1
-              $payloadExit = $LASTEXITCODE
-              $payloadOutput | Set-Content -LiteralPath (Join-Path $root 'app-64-extraction.log') -Encoding utf8
-              Add-Report "app-64.7z extraction exit code: $payloadExit"
-              if ($payloadExit -ne 0) {
-                throw 'The inner app-64.7z archive exists but could not be extracted.'
-              }
-            } else {
-              Add-Report 'app-64.7z was not present in the outer NSIS extraction.'
-            }
-
-            $directMissing = @(Get-MissingApplicationFiles -Directory $outerDir)
-            if ($listExit -eq 0 -and $extractExit -eq 0 -and $directMissing.Count -eq 0) {
-              Add-Report 'PASS: the Scoop-style extraction contains the complete application payload.'
-              $selectedMethod = 'direct 7-Zip extraction'
-              $finalDir = $outerDir
-            } else {
-              Add-Report "Direct extraction is incomplete. Missing: $($directMissing -join ', ')"
-              Add-Report ''
-              Add-Report '=== Stage 2: NSIS silent install into a Scoop-style target directory ==='
-
-              $installDir = Join-Path $root 'scoop-target'
-              New-Item -ItemType Directory -Path $installDir -Force | Out-Null
-
-              # NSIS requires /D= as the final argument and without quotes.
-              $setupExe = Join-Path $root 'Nova-Island-Setup-1.8.2.exe'
-              Copy-Item -LiteralPath $setup -Destination $setupExe -Force
-              $arguments = @('/S', "/D=$installDir")
-              Add-Report "Command: Nova-Island-Setup-1.8.2.exe /S /D=$installDir"
-              $process = Start-Process -FilePath $setupExe -ArgumentList $arguments -PassThru
-              try {
-                Wait-Process -Id $process.Id -Timeout 600 -ErrorAction Stop
-              } catch {
-                Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
-                throw 'NSIS silent installation did not finish within 10 minutes.'
-              }
-              $process.Refresh()
-              Add-Report "Silent installer exit code: $($process.ExitCode)"
-
-              Start-Sleep -Seconds 3
-              $silentMissing = @(Get-MissingApplicationFiles -Directory $installDir)
-              if ($process.ExitCode -eq 0 -and $silentMissing.Count -eq 0) {
-                Add-Report 'PASS: silent installation placed the complete application payload in the requested target directory.'
-                $selectedMethod = 'NSIS silent install into Scoop target directory'
-                $finalDir = $installDir
-              } else {
-                Add-Report "Silent installation is incomplete. Missing from target directory: $($silentMissing -join ', ')"
-                $programsDir = Join-Path $env:LOCALAPPDATA 'Programs'
-                if (Test-Path -LiteralPath $programsDir -PathType Container) {
-                  Add-Report 'Possible per-user install locations:'
-                  Get-ChildItem -LiteralPath $programsDir -Directory -Force -ErrorAction SilentlyContinue |
-                    Where-Object { $_.Name -match '(?i)nova' } |
-                    ForEach-Object { Add-Report "  $($_.FullName)" }
-                }
-                throw 'Neither direct extraction nor NSIS silent installation produced the complete application payload in the target directory.'
-              }
-
-              Get-Process -Name 'Nova Island' -ErrorAction SilentlyContinue |
-                Stop-Process -Force -ErrorAction SilentlyContinue
-            }
-
+            # Test the archive extraction path independently.
             Add-Report ''
-            Add-Report "Selected method: $selectedMethod"
-            Add-Report 'Final application files:'
-            Get-ChildItem -LiteralPath $finalDir -File -Recurse -Force -ErrorAction SilentlyContinue |
-              Where-Object { $_.Name -in @('Nova Island.exe', 'app.asar', 'nova-helper.exe') } |
-              ForEach-Object {
-                $relative = [System.IO.Path]::GetRelativePath($finalDir, $_.FullName)
-                Add-Report "  $relative [$($_.Length) bytes]"
-              }
+            Add-Report '=== Test A: Scoop #/dl.7z extraction ==='
+            $extractDir = Join-Path $root 'direct-extraction'
+            New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+            $extractOutput = & $sevenZip x $setup "-o$extractDir" -y -bd 2>&1
+            $extractExit = $LASTEXITCODE
+            $extractOutput | Set-Content -LiteralPath (Join-Path $root 'direct-extraction.log') -Encoding utf8
+            Add-Report "Direct extraction exit code: $extractExit"
+            $directExe = Join-Path $extractDir 'Nova Island.exe'
+            if ($extractExit -ne 0 -or -not (Test-Path -LiteralPath $directExe -PathType Leaf)) {
+              throw 'Direct NSIS extraction did not produce Nova Island.exe.'
+            }
+            Add-Report 'PASS: direct extraction produced Nova Island.exe.'
+            $innerArchives = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force | Where-Object { $_.Name -ieq 'app-64.7z' })
+            Add-Report "Nested app-64.7z count: $($innerArchives.Count)"
+
+            # Record the clean runner state before the silent installation.
+            $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+            $desktop = [Environment]::GetFolderPath('Desktop')
+            $startMenuBefore = @(Get-Paths -Directory $startMenu)
+            $desktopBefore = @(Get-Paths -Directory $desktop)
+            $uninstallBefore = @(Get-NovaUninstallEntries)
+
+            # Always run the silent installer, even when direct extraction passed.
+            Add-Report ''
+            Add-Report '=== Test B: NSIS silent install using /S /D=$dir ==='
+            $installDir = Join-Path $root 'Nova Island Scoop Test\apps\nova-island\1.8.2'
+            New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+            $arguments = @('/S', "/D=$installDir")
+            Add-Report "Command: Nova-Island-Setup-1.8.2.exe /S /D=$installDir"
+            $process = Start-Process -FilePath $setup -ArgumentList $arguments -PassThru
+            try {
+              Wait-Process -Id $process.Id -Timeout 600 -ErrorAction Stop
+            } catch {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+              throw 'Silent installation did not finish within 10 minutes.'
+            }
+            $process.Refresh()
+            Add-Report "Silent installer exit code: $($process.ExitCode)"
+            if ($process.ExitCode -ne 0) { throw 'NSIS silent installer returned a non-zero exit code.' }
+
+            $installedExe = Join-Path $installDir 'Nova Island.exe'
+            $uninstaller = Join-Path $installDir 'Uninstall Nova Island.exe'
+            if (-not (Test-Path -LiteralPath $installedExe -PathType Leaf)) {
+              throw 'Silent installer did not place Nova Island.exe in the requested Scoop target directory.'
+            }
+            if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
+              throw 'Silent installer did not place its uninstaller inside the Scoop target directory.'
+            }
+            Add-Report 'PASS: the application executable and NSIS uninstaller are both inside the requested target directory.'
+            Add-Report 'Files created in install directory:'
+            foreach ($item in Get-RelativeInventory -Directory $installDir) { Add-Report "  $item" }
+
+            $startMenuAfter = @(Get-Paths -Directory $startMenu)
+            $desktopAfter = @(Get-Paths -Directory $desktop)
+            $uninstallAfter = @(Get-NovaUninstallEntries)
+            $newStartMenu = @($startMenuAfter | Where-Object { $_ -notin $startMenuBefore })
+            $newDesktop = @($desktopAfter | Where-Object { $_ -notin $desktopBefore })
+            $newRegistry = @($uninstallAfter | Where-Object { $_ -notin $uninstallBefore })
+            Add-Report "New Start Menu files: $($newStartMenu.Count)"
+            foreach ($path in $newStartMenu) { Add-Report "  $path" }
+            Add-Report "New Desktop files: $($newDesktop.Count)"
+            foreach ($path in $newDesktop) { Add-Report "  $path" }
+            Add-Report "New Nova Island uninstall registry entries: $($newRegistry.Count)"
+            foreach ($entry in $newRegistry) { Add-Report "  $entry" }
+
+            # Exercise the generated uninstaller exactly as Scoop's uninstaller configuration would.
+            Add-Report ''
+            Add-Report '=== Test C: NSIS silent uninstall ==='
+            $uninstallArgs = @('/S', "_?=$installDir")
+            Add-Report "Command: Uninstall Nova Island.exe /S _?=$installDir"
+            $uninstallProcess = Start-Process -FilePath $uninstaller -ArgumentList $uninstallArgs -PassThru
+            try {
+              Wait-Process -Id $uninstallProcess.Id -Timeout 600 -ErrorAction Stop
+            } catch {
+              Stop-Process -Id $uninstallProcess.Id -Force -ErrorAction SilentlyContinue
+              throw 'Silent uninstallation did not finish within 10 minutes.'
+            }
+            $uninstallProcess.Refresh()
+            Add-Report "Silent uninstaller exit code: $($uninstallProcess.ExitCode)"
+            Start-Sleep -Seconds 2
+            if (Test-Path -LiteralPath $installedExe -PathType Leaf) {
+              throw 'The silent uninstaller left Nova Island.exe in the target directory.'
+            }
+            Add-Report 'PASS: the generated uninstaller removed Nova Island.exe from the target directory.'
+
+            $startMenuFinal = @(Get-Paths -Directory $startMenu)
+            $desktopFinal = @(Get-Paths -Directory $desktop)
+            $uninstallFinal = @(Get-NovaUninstallEntries)
+            $leftStartMenu = @($startMenuFinal | Where-Object { $_ -notin $startMenuBefore })
+            $leftDesktop = @($desktopFinal | Where-Object { $_ -notin $desktopBefore })
+            $leftRegistry = @($uninstallFinal | Where-Object { $_ -notin $uninstallBefore })
+            Add-Report "Start Menu files remaining after uninstall: $($leftStartMenu.Count)"
+            foreach ($path in $leftStartMenu) { Add-Report "  $path" }
+            Add-Report "Desktop files remaining after uninstall: $($leftDesktop.Count)"
+            foreach ($path in $leftDesktop) { Add-Report "  $path" }
+            Add-Report "Nova Island uninstall registry entries remaining: $($leftRegistry.Count)"
+            foreach ($entry in $leftRegistry) { Add-Report "  $entry" }
+
+            $externalPrograms = @()
+            $programsDir = Join-Path $env:LOCALAPPDATA 'Programs'
+            if (Test-Path -LiteralPath $programsDir -PathType Container) {
+              $externalPrograms = @(Get-ChildItem -LiteralPath $programsDir -Directory -Force | Where-Object { $_.Name -match '(?i)Nova Island|Nova' })
+            }
+            Add-Report "Nova-named folders under LOCALAPPDATA\Programs: $($externalPrograms.Count)"
+            foreach ($folder in $externalPrograms) { Add-Report "  $($folder.FullName)" }
 
             @(
-              '## Nova Island 1.8.2 installation test'
+              '## Nova Island 1.8.2 installation method validation'
               ''
               '- **Result:** PASS'
-              "- **Selected method:** $selectedMethod"
-              "- **Installer SHA-256:** $actualHash"
+              '- **NSIS package identification:** PASS'
+              '- **Scoop-style direct extraction:** PASS'
+              '- **NSIS silent install to a path containing spaces:** PASS'
+              '- **Generated silent uninstaller:** PASS'
+              '- **Application launch:** Not tested'
               ''
-              'The installed application was not launched for this test.'
-            ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+              'See the artifact report for Start Menu, Desktop, and uninstall-registry side effects.'
+            ) | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
           } catch {
             Add-Report "FAIL: $($_.Exception.Message)"
             @(
-              '## Nova Island 1.8.2 installation test'
+              '## Nova Island 1.8.2 installation method validation'
               ''
               '- **Result:** FAILED'
               "- **Reason:** $($_.Exception.Message)"
-            ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+            ) | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
             throw
           } finally {
             $report | Set-Content -LiteralPath $reportPath -Encoding utf8
           }
 
-      - name: Upload installation test report
+      - name: Upload validation report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: nova-island-silent-install-test
-          path: ${{ runner.temp }}/nova-island-silent-test/
+          name: nova-island-method-validation
+          path: ${{ runner.temp }}/nova-island-method-test/
           if-no-files-found: warn
           retention-days: 14
