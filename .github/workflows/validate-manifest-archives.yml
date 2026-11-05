@@ -7,6 +7,8 @@ on:
     paths:
       - 'bucket/edge-drop.json'
       - 'bucket/0install-win.json'
+      - 'bucket/detect-it-easy.json'
+      - 'bucket/die-engine.json'
   workflow_dispatch:
     inputs:
       manifest:
