@@ -108,6 +108,10 @@ The explicit portability classifications currently cover 857 of the 881 active b
 - [`deeptutor`](../under%20review%20kirobucket/deeptutor.json) — **Review**: the official v1.7.1 Windows Portable ZIP and SHA-256 are pinned. The upstream packaging script creates the ZIP from the packaged Electron app directory, but the archive's top-level layout and executable path have not been inspected. No `extract_dir`, `bin`, shortcut, or `persist` path is guessed.
 - [`twindesk`](../under%20review%20kirobucket/twindesk.json) — **Review**: the stable v2.4.0 x64 and ARM64 NSIS setup assets and SHA-256 digests are pinned; v2.5.0-beta.1 is excluded as a pre-release. The per-machine installer adds Firewall rules, changes the HKLM WebClient file-size setting, adds a certificate to TrustedPeople, and manages optional AppX/virtual-camera integration. Scoop-safe cleanup has not been implemented or tested.
 
+### Detect It Easy 4.0.0 archive layout
+
+- [`detect-it-easy`](../bucket/detect-it-easy.json) — **Portable**: the official x64 and x86 4.0.0 ZIP assets place application files at the archive root, so the manifest intentionally omits `extract_dir`. [Archive validation run 42007599251](https://github.com/kiro5678/kirobucket/actions/runs/42007599251) verified both SHA-256 hashes and confirmed `die.exe`, `diec.exe`, and `diel.exe` plus the declared shortcut target exist for both architectures. The test verified archive contents and paths only; it did not launch the application.
+
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
 
