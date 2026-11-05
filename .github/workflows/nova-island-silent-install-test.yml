@@ -238,6 +238,264 @@ jobs:
             $report | Set-Content -LiteralPath $reportPath -Encoding utf8
           }
 
+      - name: Verify actual Scoop install and uninstall lifecycle
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $root = Join-Path $env:RUNNER_TEMP 'nova-island-method-test'
+          $testRoot = Join-Path $root 'real-scoop-lifecycle'
+          New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
+          $report = [System.Collections.Generic.List[string]]::new()
+          $reportPath = Join-Path $testRoot 'scoop-lifecycle-report.txt'
+
+          function Add-Report {
+            param([string]$Text)
+            $report.Add($Text)
+            Write-Host $Text
+          }
+
+          function Get-FilePaths {
+            param([string]$Directory)
+            if (-not (Test-Path -LiteralPath $Directory -PathType Container)) { return @() }
+            return @(
+              Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue |
+                ForEach-Object { $_.FullName }
+            )
+          }
+
+          function Get-NovaRegistryEntries {
+            $roots = @(
+              'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+              'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
+            )
+            $found = [System.Collections.Generic.List[string]]::new()
+            foreach ($registryRoot in $roots) {
+              if (Test-Path -LiteralPath $registryRoot) {
+                foreach ($key in Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue) {
+                  $properties = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+                  if ($properties.DisplayName -match '(?i)Nova Island') {
+                    $found.Add("$registryRoot\$($key.PSChildName)")
+                  }
+                }
+              }
+            }
+            return @($found)
+          }
+
+          try {
+            $setup = Join-Path $root 'Nova-Island-Setup-1.8.2.exe'
+            if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) {
+              throw "The previously verified installer is missing: $setup"
+            }
+
+            $scoopRoot = Join-Path $testRoot 'Scoop Root With Spaces'
+            $scoopCache = Join-Path $testRoot 'Scoop Cache'
+            $scoopGlobal = Join-Path $testRoot 'Scoop Global'
+            $env:SCOOP = $scoopRoot
+            $env:SCOOP_CACHE = $scoopCache
+            $env:SCOOP_GLOBAL = $scoopGlobal
+
+            $manifestPath = Join-Path $testRoot 'nova-island.json'
+            $manifestText = @'
+          {
+            "version": "1.8.2",
+            "description": "Windows Dynamic Island overlay with media controls, notifications, downloads, prayer times, and desktop widgets.",
+            "homepage": "https://github.com/NOVA-TECH-KIT/nova-island",
+            "license": {
+              "identifier": "GPL-3.0-only",
+              "url": "https://github.com/NOVA-TECH-KIT/nova-island/blob/main/LICENSE"
+            },
+            "url": "https://github.com/NOVA-TECH-KIT/nova-island/releases/download/v1.8.2/Nova-Island-Setup-1.8.2.exe",
+            "hash": "e685721a69189f3eb0c339175f040affde65471660ec98743a8e40c34a3ac9c0",
+            "installer": {
+              "args": [
+                "/S",
+                "/D=$dir"
+              ]
+            },
+            "uninstaller": {
+              "file": "Uninstall Nova Island.exe",
+              "args": [
+                "/S",
+                "_?=$dir"
+              ]
+            },
+            "post_install": [
+              "$settingsDir = Join-Path $env:APPDATA 'dynamic-nova'",
+              "New-Item -ItemType Directory -Path $settingsDir -Force | Out-Null",
+              "$featuresPath = Join-Path $settingsDir 'features.json'",
+              "$features = [ordered]@{}",
+              "if (Test-Path -LiteralPath $featuresPath -PathType Leaf) {",
+              "    $existing = Get-Content -LiteralPath $featuresPath -Raw | ConvertFrom-Json -ErrorAction Stop",
+              "    if ($null -ne $existing) { foreach ($property in $existing.PSObject.Properties) { $features[$property.Name] = $property.Value } }",
+              "}",
+              "$features['autoUpdate'] = $false",
+              "[System.IO.File]::WriteAllText($featuresPath, ($features | ConvertTo-Json -Depth 100), [System.Text.UTF8Encoding]::new($false))"
+            ],
+            "bin": [
+              [
+                "Nova Island.exe",
+                "nova-island"
+              ]
+            ],
+            "shortcuts": [
+              [
+                "Nova Island.exe",
+                "Nova Island"
+              ]
+            ]
+          }
+          '@
+            Set-Content -LiteralPath $manifestPath -Value $manifestText -Encoding utf8
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            if ($manifest.installer.args[1] -ne '/D=$dir' -or $manifest.uninstaller.args[1] -ne '_?=$dir') {
+              throw 'The test manifest installer or uninstaller arguments do not match the required Scoop substitutions.'
+            }
+            Add-Report 'Test manifest uses the official NSIS installer URL without #/dl.7z.'
+            Add-Report 'installer.args = /S /D=$dir'
+            Add-Report 'uninstaller.file = Uninstall Nova Island.exe'
+            Add-Report 'uninstaller.args = /S _?=$dir'
+
+            $bootstrap = Join-Path $testRoot 'scoop-install.ps1'
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ScoopInstaller/Install/master/install.ps1' -OutFile $bootstrap -TimeoutSec 120 -ErrorAction Stop
+            $pwsh = (Get-Command pwsh -ErrorAction Stop).Source
+            Add-Report 'Bootstrapping a private Scoop installation under the temporary test root.'
+            & $pwsh -NoProfile -ExecutionPolicy Bypass -File $bootstrap -ScoopDir $scoopRoot -ScoopGlobalDir $scoopGlobal -ScoopCacheDir $scoopCache
+            if ($LASTEXITCODE -ne 0) { throw "Scoop bootstrap failed with exit code $LASTEXITCODE." }
+
+            $scoopCli = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+            if (-not (Test-Path -LiteralPath $scoopCli -PathType Leaf)) {
+              throw "Scoop CLI was not found after bootstrap: $scoopCli"
+            }
+            Add-Report "Scoop CLI: $scoopCli"
+            $scoopVersion = & $scoopCli --version 2>&1
+            Add-Report "Scoop version output: $($scoopVersion -join ' ')"
+
+            $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+            $desktop = [Environment]::GetFolderPath('Desktop')
+            $startBefore = @(Get-FilePaths -Directory $startMenu)
+            $desktopBefore = @(Get-FilePaths -Directory $desktop)
+            $registryBefore = @(Get-NovaRegistryEntries)
+
+            Add-Report ''
+            Add-Report '=== Test D: actual Scoop install from the local manifest ==='
+            $installOutput = & $scoopCli install $manifestPath 2>&1
+            $installExit = $LASTEXITCODE
+            $installOutput | Set-Content -LiteralPath (Join-Path $testRoot 'scoop-install.log') -Encoding utf8
+            Add-Report "scoop install exit code: $installExit"
+            if ($installExit -ne 0) {
+              $installOutput | ForEach-Object { Add-Report "$_" }
+              throw 'Scoop install failed with the local NSIS installer manifest.'
+            }
+
+            $appVersionDir = Join-Path $scoopRoot 'apps\nova-island\1.8.2'
+            $appCurrentDir = Join-Path $scoopRoot 'apps\nova-island\current'
+            $installedExe = Join-Path $appVersionDir 'Nova Island.exe'
+            $uninstaller = Join-Path $appVersionDir 'Uninstall Nova Island.exe'
+            if (-not (Test-Path -LiteralPath $installedExe -PathType Leaf)) {
+              throw 'Scoop install did not leave Nova Island.exe in apps\nova-island\1.8.2.'
+            }
+            if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
+              throw 'Scoop install did not leave the configured uninstaller inside the version directory.'
+            }
+            if (Test-Path -LiteralPath (Join-Path $appVersionDir 'Nova-Island-Setup-1.8.2.exe')) {
+              throw 'Scoop did not remove the downloaded installer after successful installation.'
+            }
+            if (-not (Test-Path -LiteralPath $appCurrentDir)) {
+              throw 'Scoop did not create the current version junction.'
+            }
+            $shimFiles = @(Get-ChildItem -LiteralPath (Join-Path $scoopRoot 'shims') -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'nova-island*' })
+            if ($shimFiles.Count -eq 0) { throw 'Scoop did not create the nova-island command shim.' }
+            Add-Report 'PASS: Scoop installed the app into its version directory, created current and generated the command shim.'
+            Add-Report "Application file size: $((Get-Item -LiteralPath $installedExe).Length) bytes"
+            Add-Report "Uninstaller file size: $((Get-Item -LiteralPath $uninstaller).Length) bytes"
+            Add-Report "Shim files: $($shimFiles.Name -join ', ')"
+
+            $settingsPath = Join-Path $env:APPDATA 'dynamic-nova\features.json'
+            if (-not (Test-Path -LiteralPath $settingsPath -PathType Leaf)) {
+              throw 'The manifest post_install hook did not create dynamic-nova\features.json.'
+            }
+            $settings = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            if ($settings.autoUpdate -ne $false) {
+              throw 'The manifest post_install hook did not disable Nova Island auto-update.'
+            }
+            Add-Report 'PASS: post_install preserved the settings JSON and disabled autoUpdate.'
+
+            $startAfter = @(Get-FilePaths -Directory $startMenu)
+            $desktopAfter = @(Get-FilePaths -Directory $desktop)
+            $registryAfter = @(Get-NovaRegistryEntries)
+            $newStart = @($startAfter | Where-Object { $_ -notin $startBefore })
+            $newDesktop = @($desktopAfter | Where-Object { $_ -notin $desktopBefore })
+            $newRegistry = @($registryAfter | Where-Object { $_ -notin $registryBefore })
+            Add-Report "New Start Menu entries after Scoop install: $($newStart.Count)"
+            foreach ($entry in $newStart) { Add-Report "  $entry" }
+            Add-Report "New Desktop entries after Scoop install: $($newDesktop.Count)"
+            foreach ($entry in $newDesktop) { Add-Report "  $entry" }
+            Add-Report "New Nova Island uninstall registry entries: $($newRegistry.Count)"
+            foreach ($entry in $newRegistry) { Add-Report "  $entry" }
+
+            Add-Report ''
+            Add-Report '=== Test E: actual Scoop uninstall ==='
+            $uninstallOutput = & $scoopCli uninstall nova-island 2>&1
+            $uninstallExit = $LASTEXITCODE
+            $uninstallOutput | Set-Content -LiteralPath (Join-Path $testRoot 'scoop-uninstall.log') -Encoding utf8
+            Add-Report "scoop uninstall exit code: $uninstallExit"
+            if ($uninstallExit -ne 0) {
+              $uninstallOutput | ForEach-Object { Add-Report "$_" }
+              throw 'Scoop uninstall failed with the configured NSIS uninstaller.'
+            }
+
+            Start-Sleep -Seconds 2
+            if (Test-Path -LiteralPath $appVersionDir) { throw 'Scoop uninstall left the application version directory behind.' }
+            if (Test-Path -LiteralPath $appCurrentDir) { throw 'Scoop uninstall left the current junction behind.' }
+            $remainingShims = @(Get-ChildItem -LiteralPath (Join-Path $scoopRoot 'shims') -File -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like 'nova-island*' })
+            if ($remainingShims.Count -gt 0) { throw "Scoop uninstall left command shim files: $($remainingShims.Name -join ', ')" }
+
+            $startFinal = @(Get-FilePaths -Directory $startMenu)
+            $desktopFinal = @(Get-FilePaths -Directory $desktop)
+            $registryFinal = @(Get-NovaRegistryEntries)
+            $leftStart = @($startFinal | Where-Object { $_ -notin $startBefore })
+            $leftDesktop = @($desktopFinal | Where-Object { $_ -notin $desktopBefore })
+            $leftRegistry = @($registryFinal | Where-Object { $_ -notin $registryBefore })
+            Add-Report "Start Menu entries remaining after Scoop uninstall: $($leftStart.Count)"
+            foreach ($entry in $leftStart) { Add-Report "  $entry" }
+            Add-Report "Desktop entries remaining after Scoop uninstall: $($leftDesktop.Count)"
+            foreach ($entry in $leftDesktop) { Add-Report "  $entry" }
+            Add-Report "Nova Island uninstall registry entries remaining: $($leftRegistry.Count)"
+            foreach ($entry in $leftRegistry) { Add-Report "  $entry" }
+            if ($leftStart.Count -gt 0 -or $leftDesktop.Count -gt 0 -or $leftRegistry.Count -gt 0) {
+              throw 'Scoop uninstall left Nova Island shortcuts or uninstall registry entries behind.'
+            }
+
+            Add-Report 'PASS: real Scoop install and uninstall lifecycle completed with no leftover shortcuts or uninstall registry entries.'
+            @(
+              '## Actual Scoop lifecycle validation'
+              ''
+              '- **Result:** PASS'
+              '- **Local manifest install:** PASS'
+              '- **NSIS silent installer args and $dir substitution:** PASS'
+              '- **Scoop shims and current junction:** PASS'
+              '- **Post-install updater setting:** PASS'
+              '- **Scoop uninstall via configured NSIS uninstaller:** PASS'
+              '- **Shortcut and uninstall-registry cleanup:** PASS'
+              '- **Application launch:** Not tested'
+            ) | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          } catch {
+            Add-Report "FAIL: $($_.Exception.Message)"
+            @(
+              '## Actual Scoop lifecycle validation'
+              ''
+              '- **Result:** FAILED'
+              "- **Reason:** $($_.Exception.Message)"
+            ) | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+            throw
+          } finally {
+            $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          }
+
       - name: Upload validation report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
