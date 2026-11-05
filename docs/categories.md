@@ -16,7 +16,7 @@ Local File Sharing groups tools focused primarily on direct file transfer betwee
 | Browsers & Communication | 9 | [View](#browsers-communication) |
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
-| Cross-Device Integration | 2 | [View](#cross-device-integration) |
+| Cross-Device Integration | 3 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
 | Download Managers | 20 | [View](#download-managers) |
 | Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
@@ -48,7 +48,7 @@ Local File Sharing groups tools focused primarily on direct file transfer betwee
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 886**
+**Total unique manifests: 887**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -136,6 +136,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | --- | --- | --- | --- | --- | --- |
 | [adb-device-manager](../bucket/adb-device-manager.json) | 1.8 | 64bit: 165.6 MiB | 2026-07-12 | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) |
 | [deskdrop](../bucket/deskdrop.json) | 1.3.3 | 287.8 MiB | 2026-09-05 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
+| [twindesk](../bucket/twindesk.json) | 2.5.3 | 64bit: 121.5 MiB / arm64: 122.2 MiB | 2026-11-05 | Cross-device workspace for sharing screens, apps, files, clipboard, input, calls, and notifications across Windows, macOS, Linux, and Android. | [Homepage](https://github.com/InukaAsith/TwinDesk) |
 
 ## Developer & Technical Tools
 
