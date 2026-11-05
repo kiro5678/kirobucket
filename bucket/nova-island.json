@@ -49,10 +49,5 @@
             "url": "https://api.github.com/repos/NOVA-TECH-KIT/nova-island/releases/tags/v$version",
             "jsonpath": "$.assets[?(@.name == 'Nova-Island-Setup-$version.exe')].digest"
         }
-    },
-    "notes": [
-        "Uses the Electron Builder NSIS payload directly: Scoop extracts $PLUGINSDIR/app-64.7z into the version directory instead of running the setup program.",
-        "Scoop manages updates. The post-install hook sets autoUpdate=false in %APPDATA%\\dynamic-nova\\features.json because the application's built-in updater can replace files outside Scoop's version tracking.",
-        "Application settings and local data remain in %APPDATA%\\dynamic-nova after uninstall; they are not stored in the Scoop version directory."
-    ]
+    }
 }
