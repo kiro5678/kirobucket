@@ -192,6 +192,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: nova-island-silent-install-test
-          path: \${{ runner.temp }}/nova-island-silent-test/
+          path: ${{ runner.temp }}/nova-island-silent-test/
           if-no-files-found: warn
           retention-days: 14
