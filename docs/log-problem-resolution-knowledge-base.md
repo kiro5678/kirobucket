@@ -50,6 +50,17 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-05 — Correct Detect It Easy 4.0.0 archive layout
+
+- **Status:** Resolved and verified.
+- **Affected area:** `bucket/detect-it-easy.json`.
+- **Problem:** After updating Detect It Easy to release 4.0.0, archive validation failed with `extract_dir 'die' does not exist in the archive`. The 4.0.0 release also replaced the older `die_win64_portable_4.0.0_x64.zip` / `die_win32_portable_4.0.0_x86.zip` asset names with `die_win64_4.0.0.zip` and `die_win32_4.0.0.zip`.
+- **Root cause:** The updated ZIP files contain the application files directly at the archive root; there is no top-level `die/` directory. The previous `extract_dir` value was stale and would cause Scoop to look for a path that is not present.
+- **Resolution:** Updated both architecture URLs, SHA-256 hashes, and their `autoupdate.url` templates to the official 4.0.0 asset names. Removed `extract_dir: "die"` so Scoop extracts the archive root directly into the version directory. Kept the declared `die.exe`, `diec.exe`, and `diel.exe` launch paths unchanged.
+- **Verification:** [Archive validation run 42007599251](https://github.com/kiro5678/kirobucket/actions/runs/42007599251) passed with zero failures. It downloaded the x64 and x86 archives, verified both SHA-256 hashes, and confirmed that all declared `bin` and shortcut paths exist in both archives. Commit: [0c0733e](https://github.com/kiro5678/kirobucket/commit/0c0733e9257aec5ebc5feb53a89ec578894e6d33). The workflow validates archive contents and launch paths; it does not launch the application.
+- **Prevention:** Never infer `extract_dir` from a product name or a previous release. Inspect the current archive for every architecture. Use `extract_dir` only when the exact directory exists; omit it when files are already at the archive root. Keep the archive-path validator in the manifest pipeline.
+
+
 ### 2026-10-31 — Use Deskboard's official Windows updater metadata for checkver
 
 - **Status:** Resolved and verified.
