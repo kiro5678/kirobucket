@@ -1,0 +1,42 @@
+{
+    "version": "0.14.0",
+    "description": "All-in-one desktop download manager for courses, videos, music, and 1,800+ websites, with built-in media and study tools.",
+    "homepage": "https://github.com/OpenSelena/omniget",
+    "license": "GPL-3.0-only",
+    "notes": [
+        "Uses the upstream standalone Windows portable executable, not the NSIS setup installer or MSI package.",
+        "Creates portable.txt beside the executable so settings, databases, cookies, plugins, caches, downloader tools, and WebView2 data are stored in the persisted data directory.",
+        "The app supports in-place portable self-updates. Prefer updating through Scoop so the installed version metadata remains synchronized."
+    ],
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/OpenSelena/omniget/releases/download/v0.14.0/omniget_0.14.0_x64-portable.exe",
+            "hash": "83a5137ab8700f9b45635b5512eec9c07c010bc114df85c224589ac4339e897a"
+        }
+    },
+    "pre_install": [
+        "$portableExe = Get-ChildItem -LiteralPath $dir -Filter 'omniget_*_x64-portable.exe' -File | Select-Object -First 1",
+        "if ($null -eq $portableExe) { throw 'OmniGet portable executable was not found.' }",
+        "Rename-Item -LiteralPath $portableExe.FullName -NewName 'OmniGet.exe'",
+        "New-Item -ItemType File -Path (Join-Path $dir 'portable.txt') -Force | Out-Null"
+    ],
+    "persist": "data",
+    "shortcuts": [
+        [
+            "OmniGet.exe",
+            "OmniGet"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/OpenSelena/omniget/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/OpenSelena/omniget/releases/download/v$version/omniget_$version_x64-portable.exe"
+            }
+        }
+    }
+}

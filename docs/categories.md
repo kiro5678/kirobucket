@@ -18,8 +18,8 @@ Local File Sharing groups tools focused primarily on direct file transfer betwee
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 3 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
-| Download Managers | 20 | [View](#download-managers) |
-| Emulators & Compatibility | 15 | [View](#emulators-compatibility) |
+| Download Managers | 21 | [View](#download-managers) |
+| Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 33 | [View](#forensics-diagnostics) |
@@ -48,7 +48,7 @@ Local File Sharing groups tools focused primarily on direct file transfer betwee
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 887**
+**Total unique manifests: 889**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -201,6 +201,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [ezoo-download](../bucket/ezoo-download.json) | 1.0.8 | 36.3 MiB | 2026-10-31 | Rust download manager for Windows with browser integration, video downloads and torrent support. | [Homepage](https://github.com/AhmedEzo686/ezoo-download) |
 | [imfile](../bucket/imfile.json) | 2.3.4 | 64bit: 152.0 MiB / arm64: 141.8 MiB | 2026-08-13 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
 | [motrix](../bucket/motrix.json) | 2.0.1 | 64bit: 159.8 MiB / arm64: 157.3 MiB | 2026-10-29 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
+| [omniget](../bucket/omniget.json) | 0.14.0 | — | 2026-10-31 | All-in-one desktop download manager for courses, videos, music, and 1,800+ websites, with built-in media and study tools. | [Homepage](https://github.com/OpenSelena/omniget) |
 | [prism-download-manager](../bucket/prism-download-manager.json) | 1.2.4 | 16.5 MiB | 2026-11-01 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
 | [nanaget](../bucket/nanaget.json) | 1.3.1609.0 | 3.8 MiB | 2026-09-20 | Lightweight file transfer utility based on aria2 and XAML Islands. | [Homepage](https://github.com/M2Team/NanaGet) |
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
@@ -229,6 +230,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [mumuplayer-online](../bucket/mumuplayer-online.json) | 6.0.2 | 64bit: 5.8 MiB | 2026-08-12 | MuMuPlayer international online installer for installing its available Android engines | [Homepage](https://www.mumuplayer.com/) |
 | [nglide](../bucket/nglide.json) | 2.10 | — | — | 3Dfx Voodoo Glide wrapper for playing Glide games using modern graphics APIs. | [Homepage](https://www.zeus-software.com/games/nglide) |
 | [rpcs3](../bucket/rpcs3.json) | 0.0.43-20410 | 35.5 MiB | 2026-10-31 | Open-source PlayStation 3 emulator and debugger. | [Homepage](https://rpcs3.net/) |
+| [rom-converto](../bucket/rom-converto.json) | 0.24.0 | — | 2026-10-11 | Desktop GUI for converting, compressing, decompressing, encrypting, and inspecting ROMs and disc images. | [Homepage](https://github.com/DevYukine/rom-converto) |
 | [ruffle](../bucket/ruffle.json) | 0.7.1 | 20.5 MiB | 2026-10-07 | Flash Player emulator and SWF player written in Rust. | [Homepage](https://ruffle.rs/) |
 | [ruffle-nightly](../bucket/ruffle-nightly.json) | 2026-09-04 | 20.4 MiB | 2026-09-04 | Nightly build of the Ruffle Flash Player emulator and SWF player written in Rust. | [Homepage](https://ruffle.rs/) |
 | [sordum-qemu-simple-boot](../bucket/sordum-qemu-simple-boot.json) | 1.3 | — | — | Sordum's Qemu Simple Boot. Quickly test images in Qemu. | [Homepage](https://www.sordum.org/7763/qemu-simple-boot-v1-3/) |
