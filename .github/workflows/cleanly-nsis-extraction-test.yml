@@ -1,0 +1,144 @@
+name: Cleanly NSIS Extraction Test
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/cleanly-nsis-extraction-test.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/cleanly-nsis-extraction-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Extract Cleanly NSIS payload without running setup
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Download and inspect official NSIS setup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $root = Join-Path $env:RUNNER_TEMP "cleanly-nsis-inspection"
+          $setup = Join-Path $root "Cleanly-setup.exe"
+          $outer = Join-Path $root "outer-extracted"
+          $payload = Join-Path $root "application-payload"
+          New-Item -ItemType Directory -Path $root, $outer, $payload -Force | Out-Null
+
+          $url = "https://github.com/0xCodez/cleanly/releases/download/v0.2.0/Cleanly-setup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 900
+          if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) {
+            throw "The official Cleanly setup download did not create a file."
+          }
+
+          $sha256 = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "Official Cleanly-setup.exe SHA-256: $sha256"
+          "Cleanly-setup.exe SHA-256: $sha256" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+          $sevenZip = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+          if (-not $sevenZip) {
+            choco install 7zip -y --no-progress
+            $candidate = Join-Path $env:ProgramFiles "7-Zip\7z.exe"
+            if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
+              throw "7-Zip installation did not provide $candidate"
+            }
+            $sevenZipPath = $candidate
+          } else {
+            $sevenZipPath = $sevenZip.Source
+          }
+
+          $listing = & $sevenZipPath l -slt $setup 2>&1
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $root "nsis-listing.txt") -Encoding utf8
+          Write-Host "7-Zip NSIS listing exit code: $listExit"
+          if ($listExit -ne 0) {
+            throw "7-Zip cannot list the official Cleanly setup as an archive."
+          }
+
+          $extractOutput = & $sevenZipPath x $setup "-o$outer" -y -bd 2>&1
+          $extractExit = $LASTEXITCODE
+          $extractOutput | Set-Content -LiteralPath (Join-Path $root "outer-extraction.log") -Encoding utf8
+          Write-Host "7-Zip NSIS extraction exit code: $extractExit"
+          if ($extractExit -ne 0) {
+            throw "7-Zip failed to extract Cleanly-setup.exe."
+          }
+
+          $outerFiles = @(Get-ChildItem -LiteralPath $outer -File -Recurse -Force)
+          Write-Host "Outer extracted files: $($outerFiles.Count)"
+          $outerFiles | ForEach-Object {
+            $relative = [System.IO.Path]::GetRelativePath($outer, $_.FullName).Replace('\', '/')
+            Write-Host ("OUTER {0} [{1} bytes]" -f $relative, $_.Length)
+          }
+
+          $nestedArchives = @(
+            Get-ChildItem -LiteralPath $outer -File -Recurse -Force |
+              Where-Object { $_.Extension -in @(".7z", ".zip", ".cab") }
+          )
+          if ($nestedArchives.Count -eq 0) {
+            throw "The NSIS payload did not expose a nested 7z, ZIP, or CAB application archive."
+          }
+
+          foreach ($archive in $nestedArchives) {
+            $archiveName = [System.IO.Path]::GetFileNameWithoutExtension($archive.Name)
+            $destination = Join-Path $payload ($archiveName -replace "[^A-Za-z0-9_-]", "-")
+            New-Item -ItemType Directory -Path $destination -Force | Out-Null
+            Write-Host "Extracting nested payload: $($archive.FullName)"
+            $nestedOutput = & $sevenZipPath x $archive.FullName "-o$destination" -y -bd 2>&1
+            $nestedExit = $LASTEXITCODE
+            $nestedOutput | Set-Content -LiteralPath (Join-Path $root ("nested-" + $archive.Name + ".log")) -Encoding utf8
+            Write-Host "Nested extraction exit code ($($archive.Name)): $nestedExit"
+            if ($nestedExit -ne 0) {
+              throw "Failed to extract nested payload archive $($archive.Name)."
+            }
+
+            Get-ChildItem -LiteralPath $destination -File -Recurse -Force |
+              ForEach-Object {
+                $relative = [System.IO.Path]::GetRelativePath($destination, $_.FullName).Replace('\', '/')
+                Write-Host ("PAYLOAD {0} [{1} bytes]" -f $relative, $_.Length)
+              }
+          }
+
+          $mainExecutables = @(
+            Get-ChildItem -LiteralPath $payload -Filter "Cleanly.exe" -File -Recurse -Force
+          )
+          if ($mainExecutables.Count -ne 1) {
+            throw "Expected exactly one Cleanly.exe in the extracted payload; found $($mainExecutables.Count)."
+          }
+
+          $appAsars = @(
+            Get-ChildItem -LiteralPath $payload -Filter "app.asar" -File -Recurse -Force
+          )
+          if ($appAsars.Count -ne 1) {
+            throw "Expected exactly one resources\app.asar in the extracted payload; found $($appAsars.Count)."
+          }
+
+          $mainRelative = [System.IO.Path]::GetRelativePath($payload, $mainExecutables[0].FullName).Replace('\', '/')
+          $asarRelative = [System.IO.Path]::GetRelativePath($payload, $appAsars[0].FullName).Replace('\', '/')
+          Write-Host "VERIFIED main executable: $mainRelative"
+          Write-Host "VERIFIED application bundle: $asarRelative"
+          @(
+            ""
+            "NSIS extraction: PASS"
+            "Nested payload extraction: PASS"
+            "Main executable: $mainRelative"
+            "Electron app bundle: $asarRelative"
+            "The setup executable was never launched."
+            "The extracted application was never launched."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload installer inspection logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cleanly-nsis-inspection
+          path: ${{ runner.temp }}/cleanly-nsis-inspection/
+          if-no-files-found: warn
+          retention-days: 14
