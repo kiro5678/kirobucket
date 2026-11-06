@@ -31,7 +31,6 @@ A manifest belongs here when it is newly added but still needs verification, whe
 | [layer](layer.json) | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
 | [keptinflow](keptinflow.json) | Official setup EXE; installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
 | [udm-pro](udm-pro.json) | 236 MB Windows setup EXE; no upstream license file or installer instructions. Installer engine, payload, silent/custom-directory switches, and uninstall behavior are unverified. |
-| [nectarlink](nectarlink.json) | NSIS setup locks new install-directory ACLs and adds Firewall, scheduled-task, AppX, HKLM, and shortcut entries; `/S /D=$dir` is unsafe for Scoop, and no supported portable Windows build is published. |
 | [jan](jan.json) | Tauri Windows setup only (x64 and ARM64); no Windows portable archive is published. Installer payload, silent install path, and uninstall behavior remain unverified. |
 | [deeptutor](deeptutor.json) | Official Windows Portable ZIP is published, but its archive layout and actual application executable path have not yet been verified. |
 | [twindesk](twindesk.json) | Per-machine NSIS setup uses Firewall rules, an HKLM WebClient setting, TrustedPeople certificate registration, and optional AppX/virtual-camera integration; Scoop-safe install and uninstall are unverified. |
