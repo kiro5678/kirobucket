@@ -1,0 +1,30 @@
+{
+    "version": "0.1.4",
+    "description": "Local-first desktop companion connecting Android phones and Windows PCs for notifications, messages, calls, clipboard, file transfers, screen mirroring, phone apps, and media controls.",
+    "homepage": "https://github.com/thtbee/nectarlink",
+    "license": "GPL-3.0-or-later",
+    "url": "https://github.com/thtbee/nectarlink/releases/download/v0.1.4/Nectarlink-0.1.4-x64-setup.exe",
+    "hash": "afdf6d9c1b94647a7888735193cfab24f6bb3236c98b8da51533ee0ffb516528",
+    "checkver": {
+        "url": "https://api.github.com/repos/thtbee/nectarlink/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/thtbee/nectarlink/releases/download/v$version/Nectarlink-$version-x64-setup.exe"
+    },
+    "installer": {
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
+    },
+    "uninstaller": {
+        "file": "uninstall.exe",
+        "args": [
+            "/S",
+            "_?=$dir"
+        ]
+    },
+    "bin": "nectarlink-desktop.exe"
+}
