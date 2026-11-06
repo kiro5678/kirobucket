@@ -2,6 +2,7 @@
     "version": "0.2.0",
     "description": "Windows PC cleaner for temporary files, caches, large files, duplicates, and startup entries.",
     "homepage": "https://github.com/0xCodez/cleanly",
+    "license": "Unknown",
     "notes": [
         "Uses the upstream standalone Windows portable executable. Cleanly-setup.exe is the separate NSIS installer.",
         "Settings and encrypted API keys are stored in Electron's per-user userData directory under %APPDATA%, not inside the Scoop app folder. They remain outside Scoop when the app is uninstalled.",
