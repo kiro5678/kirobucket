@@ -1,6 +1,6 @@
 {
     "version": "0.1.4",
-    "description": "Local-first Windows companion for Android phones with encrypted notifications, messages, calls, file transfer, and screen mirroring.",
+    "description": "Local-first desktop companion connecting Android phones and Windows PCs for notifications, messages, calls, clipboard, file transfers, screen mirroring, phone apps, and media controls.",
     "homepage": "https://github.com/thtbee/nectarlink",
     "license": "GPL-3.0-or-later",
     "url": "https://github.com/thtbee/nectarlink/releases/download/v0.1.4/Nectarlink-0.1.4-x64-setup.exe",
@@ -14,8 +14,10 @@
         "url": "https://github.com/thtbee/nectarlink/releases/download/v$version/Nectarlink-$version-x64-setup.exe"
     },
     "notes": [
-        "Review status: the official v0.1.4 Windows x64 release asset and its SHA-256 digest are verified. The source identifies the setup as NSIS.",
-        "The vendor installer performs a machine-wide installation and configures Windows Firewall rules, a scheduled update task, an AppX sparse package, HKLM install/uninstall registration, and shortcuts. The application also has its own updater.",
-        "This manifest downloads the setup only; it does not run the vendor installer. Verify a Scoop-compatible install and complete uninstall flow before promotion. Windows ARM64 is not offered in this release."
+        "Review status (2026-11-06): the official v0.1.4 Windows x64 installer and SHA-256 below are verified. v0.1.5 is now the latest stable release and adds Windows ARM64; its release asset checksum has not yet been independently verified here, so this manifest retains the last verified v0.1.4 artifact.",
+        "The Windows download is an NSIS setup executable, not a portable build. The upstream setup first unpacks files to a temporary directory to launch its custom setup UI, then performs a machine-wide installation.",
+        "The NSIS installer changes ACLs on new install directories with icacls, adds Windows Firewall rules, creates a scheduled update task, registers an AppX sparse package, writes HKLM install/uninstall metadata, and creates Start Menu/Desktop shortcuts. NectarLink also has its own updater.",
+        "Passing Scoop's $dir with /D is unsafe: the installer can lock the target directory ACL and prevent Scoop's normal update/uninstall operations. Extracting the NSIS payload without running setup would bypass the vendor's supported setup and cleanup routines and is not an officially published portable build.",
+        "Keep this manifest under review. Do not promote it to bucket/ until upstream provides a Windows portable archive or a supported Scoop-compatible installation mode with a user-writable install directory, controlled update behavior, and a tested uninstall routine."
     ]
 }
