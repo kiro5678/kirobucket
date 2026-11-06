@@ -1105,7 +1105,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [gtweak](../bucket/gtweak.json) | 5.5.6 | 4.6 MiB | 2026-09-30 | Portable Windows tweaking and customization tool. | [Homepage](https://github.com/Greedeks/GTweak) |
 | [gtweak-exe](../bucket/gtweak-exe.json) | 5.5.6 | 6.6 MiB | 2026-09-30 | Portable Windows tweaking and customization tool. | [Homepage](https://github.com/Greedeks/GTweak) |
 | [kudu](../bucket/kudu.json) | 3.10.0 | 179.4 MiB | 2026-10-30 | Free, open-source system cleaner and security scanner for Windows, macOS, and Linux. | [Homepage](https://github.com/AdventDevInc/kudu) |
-| [lynxoptimizer](../bucket/lynxoptimizer.json) | 0.216.2 | 64bit: 28.7 KiB | 2026-10-10 | Windows system optimization utility. | [Homepage](https://github.com/caxzy/LynxOptimizer) |
+| [lynxoptimizer](../bucket/lynxoptimizer.json) | 0.300.0 | 64bit: 85.2 KiB | 2026-10-31 | Preview-only Windows 10/11 optimization and tweaking panel. | [Homepage](https://github.com/caxzy/LynxOptimizer) |
 | [majorprivacy](../bucket/majorprivacy.json) | 0.101.0 | 64bit: 45.3 MiB | 2026-10-27 | Windows privacy and isolation tool with process protection, file access controls, and network filtering. | [Homepage](https://github.com/xanasoft/MajorPrivacy) |
 | [nixthis](../bucket/nixthis.json) | 0.42.2 | 569.0 KiB | 2026-10-04 | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. | [Homepage](https://github.com/builtbybel/NixThis) |
 | [optimizerduck](../bucket/optimizerduck.json) | 2.29.0 | 83.3 MiB | 2026-10-07 | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. | [Homepage](https://github.com/itsfatduck/optimizerDuck) |
