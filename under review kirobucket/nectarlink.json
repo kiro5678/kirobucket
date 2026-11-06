@@ -13,11 +13,17 @@
     "autoupdate": {
         "url": "https://github.com/thtbee/nectarlink/releases/download/v$version/Nectarlink-$version-x64-setup.exe"
     },
-    "notes": [
-        "Review status (2026-11-06): the official v0.1.4 Windows x64 installer and SHA-256 below are verified. v0.1.5 is now the latest stable release and adds Windows ARM64; its release asset checksum has not yet been independently verified here, so this manifest retains the last verified v0.1.4 artifact.",
-        "The Windows download is an NSIS setup executable, not a portable build. The upstream setup first unpacks files to a temporary directory to launch its custom setup UI, then performs a machine-wide installation.",
-        "The NSIS installer changes ACLs on new install directories with icacls, adds Windows Firewall rules, creates a scheduled update task, registers an AppX sparse package, writes HKLM install/uninstall metadata, and creates Start Menu/Desktop shortcuts. NectarLink also has its own updater.",
-        "Passing Scoop's $dir with /D is unsafe: the installer can lock the target directory ACL and prevent Scoop's normal update/uninstall operations. Extracting the NSIS payload without running setup would bypass the vendor's supported setup and cleanup routines and is not an officially published portable build.",
-        "Keep this manifest under review. Do not promote it to bucket/ until upstream provides a Windows portable archive or a supported Scoop-compatible installation mode with a user-writable install directory, controlled update behavior, and a tested uninstall routine."
-    ]
+    "installer": {
+        "args": [
+            "/S",
+            "/D=$dir"
+        ]
+    },
+    "uninstaller": {
+        "file": "$dir\\uninstall.exe",
+        "args": [
+            "/S",
+            "_?=$dir"
+        ]
+    }
 }
