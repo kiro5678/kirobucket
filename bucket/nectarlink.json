@@ -1,10 +1,10 @@
 {
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Local-first desktop companion connecting Android phones and Windows PCs for notifications, messages, calls, clipboard, file transfers, screen mirroring, phone apps, and media controls.",
     "homepage": "https://github.com/thtbee/nectarlink",
     "license": "GPL-3.0-or-later",
-    "url": "https://github.com/thtbee/nectarlink/releases/download/v0.1.4/Nectarlink-0.1.4-x64-setup.exe",
-    "hash": "afdf6d9c1b94647a7888735193cfab24f6bb3236c98b8da51533ee0ffb516528",
+    "url": "https://github.com/thtbee/nectarlink/releases/download/v0.1.5/Nectarlink-0.1.5-x64-setup.exe",
+    "hash": "9db9066b7024283a22db0ea026cd52584a0646a888239c559c0417eac6f32ac4",
     "checkver": {
         "url": "https://api.github.com/repos/thtbee/nectarlink/releases/latest",
         "jsonpath": "$.tag_name",
@@ -22,7 +22,27 @@
             "$tempLiteral = \"'\" + $setupTempPath.Replace(\"'\", \"''\") + \"'\"",
             "$dirLiteral = \"'\" + $dir.Replace(\"'\", \"''\") + \"'\"",
             "$sidLiteral = \"'\" + $callerSid.Replace(\"'\", \"''\") + \"'\"",
-            "$adminScript = @'\n$ErrorActionPreference = 'Stop'\n$setupPath = __SETUP_PATH__\n$setupTempPath = __SETUP_TEMP_PATH__\n$installDir = __INSTALL_DIR__\n$callerSid = __CALLER_SID__\n$icacls = Join-Path $env:SystemRoot 'System32\\icacls.exe'\n& $icacls $installDir /reset /T /C /Q | Out-Null\nif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }\nMove-Item -LiteralPath $setupPath -Destination $setupTempPath -Force\nGet-ChildItem -LiteralPath $installDir -Force | Remove-Item -Recurse -Force\n$process = Start-Process -FilePath $setupTempPath -ArgumentList \"/S /D=$installDir\" -Wait -PassThru\nif ($process.ExitCode -ne 0) { exit $process.ExitCode }\n$grant = '*{0}:(OI)(CI)M' -f $callerSid\n& $icacls $installDir /grant $grant /T /C /Q | Out-Null\nif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }\n$app = Join-Path $installDir 'nectarlink-desktop.exe'\nif (-not (Test-Path -LiteralPath $app -PathType Leaf)) { exit 2 }\nRemove-Item -LiteralPath $setupTempPath -Force\nexit 0\n'@",
+            "$adminScript = @'
+$ErrorActionPreference = 'Stop'
+$setupPath = __SETUP_PATH__
+$setupTempPath = __SETUP_TEMP_PATH__
+$installDir = __INSTALL_DIR__
+$callerSid = __CALLER_SID__
+$icacls = Join-Path $env:SystemRoot 'System32\\icacls.exe'
+& $icacls $installDir /reset /T /C /Q | Out-Null
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+Move-Item -LiteralPath $setupPath -Destination $setupTempPath -Force
+Get-ChildItem -LiteralPath $installDir -Force | Remove-Item -Recurse -Force
+$process = Start-Process -FilePath $setupTempPath -ArgumentList \"/S /D=$installDir\" -Wait -PassThru
+if ($process.ExitCode -ne 0) { exit $process.ExitCode }
+$grant = '*{0}:(OI)(CI)M' -f $callerSid
+& $icacls $installDir /grant $grant /T /C /Q | Out-Null
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+$app = Join-Path $installDir 'nectarlink-desktop.exe'
+if (-not (Test-Path -LiteralPath $app -PathType Leaf)) { exit 2 }
+Remove-Item -LiteralPath $setupTempPath -Force
+exit 0
+'@",
             "$adminScript = $adminScript.Replace('__SETUP_PATH__', $setupLiteral).Replace('__SETUP_TEMP_PATH__', $tempLiteral).Replace('__INSTALL_DIR__', $dirLiteral).Replace('__CALLER_SID__', $sidLiteral)",
             "$encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($adminScript))",
             "$powershellPath = (Get-Process -Id $PID).Path",
@@ -42,7 +62,14 @@
             "        $callerSid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value",
             "        $uninstallerLiteral = \"'\" + $uninstallerPath.Replace(\"'\", \"''\") + \"'\"",
             "        $dirLiteral = \"'\" + $dir.Replace(\"'\", \"''\") + \"'\"",
-            "        $adminScript = @'\n$ErrorActionPreference = 'Stop'\n$uninstallerPath = __UNINSTALLER_PATH__\n$installDir = __INSTALL_DIR__\n$process = Start-Process -FilePath $uninstallerPath -ArgumentList \"/S _?=$installDir\" -Wait -PassThru\nif ($process.ExitCode -ne 0) { exit $process.ExitCode }\nexit 0\n'@",
+            "        $adminScript = @'
+$ErrorActionPreference = 'Stop'
+$uninstallerPath = __UNINSTALLER_PATH__
+$installDir = __INSTALL_DIR__
+$process = Start-Process -FilePath $uninstallerPath -ArgumentList \"/S _?=$installDir\" -Wait -PassThru
+if ($process.ExitCode -ne 0) { exit $process.ExitCode }
+exit 0
+'@",
             "        $adminScript = $adminScript.Replace('__UNINSTALLER_PATH__', $uninstallerLiteral).Replace('__INSTALL_DIR__', $dirLiteral)",
             "        $encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($adminScript))",
             "        $powershellPath = (Get-Process -Id $PID).Path",
