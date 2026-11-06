@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 878 active manifests. Twenty-three Review manifests are staged outside `bucket/` in `under review kirobucket/`; 24 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 891 active manifests. Eighteen Review manifests are staged outside `bucket/` in `under review kirobucket/`; 33 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -23,13 +23,13 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 799 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 58 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Nonportable | 59 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
-| Not reconciled | 24 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **881** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
+| Not reconciled | 33 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
+| **Total** | **891** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 857 of the 881 active bucket manifests (799 Portable and 58 Nonportable). The remaining 24 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Twenty-one additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 858 of the 891 active bucket manifests (799 Portable and 59 Nonportable). The remaining 33 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Eighteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Detect It Easy 4.0.0 archive layout
 
@@ -66,12 +66,11 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-| [nectarlink](../bucket/nectarlink.json) | NSIS installer (Scoop-wrapped) | Scoop moves the downloaded setup outside the version directory, runs it elevated and waits for completion, then restores the installing user's Modify permission so Scoop can update/remove the version. The vendor setup still registers Firewall, scheduled-task (Program Files installs), AppX, HKLM, and shortcut integrations; on explicit uninstall its NSIS uninstaller is run elevated. |
-This index groups the 58 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 59 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
-| NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 21 |
+| NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 22 |
 | Inno | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 5 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json) | 4 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
@@ -96,7 +95,7 @@ This index groups the 58 Nonportable manifests by the exact installer/package la
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
 | NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
-| **Total** | **All Nonportable manifests** | **58** |
+| **Total** | **All Nonportable manifests** | **59** |
 
 ## Nonportable manifests
 
@@ -135,6 +134,7 @@ The installer type describes the package or setup technology used by the manifes
 | [mumuplayer](../bucket/mumuplayer.json) | Vendor-specific EXE installer/orchestrator | Executes the MuMuPlayer vendor installation workflow (`install_prepare` and `commit`); administrator rights are required. **Manifest issue:** the current file failed JSON parsing during this review because its `pre_install` value contains literal line breaks inside a JSON string; fix the JSON before relying on this manifest. |
 | [mumuplayer-android15](../bucket/mumuplayer-android15.json) | Vendor-specific EXE component installer | Executes the Android 15 engine setup workflow and modifies the existing MuMuPlayer installation directory. |
 | [mumuplayer-online](../bucket/mumuplayer-online.json) | Vendor EXE silent installer (engine unverified) | Runs the MuMuPlayer setup silently with elevated rights. |
+| [nectarlink](../bucket/nectarlink.json) | NSIS (Scoop-wrapped) | Moves the downloaded setup out of the version directory, runs it elevated and waits, then restores Modify access for the Scoop user's SID. It invokes the vendor setup silently with `/S /D=$dir`; the setup still creates Firewall, AppX, HKLM and shortcut integrations. The elevated uninstaller runs only on explicit uninstall; Scoop replaces old versions itself during update. |
 | [nightlight-launcher](../bucket/nightlight-launcher.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [nook](../bucket/nook.json) | Inno | The application registers the `nook://` protocol under HKCU when it starts; the manifest removes that registration on uninstall only when it still points to this Scoop installation. |
 | [npcap-np](../bucket/npcap-np.json) | Npcap EXE driver installer (engine unspecified) | Runs the Npcap setup through AutoHotkey with elevation; installs a network driver/component. |
@@ -182,7 +182,7 @@ The following manifests are kept in [`under review kirobucket/`](../under%20revi
 | [layer](../under%20review%20kirobucket/layer.json) | Tauri/NSIS setup EXE | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
 | [keptinflow](../under%20review%20kirobucket/keptinflow.json) | Windows setup EXE (engine unverified) | The official v0.88.0 setup's installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
 | [udm-pro](../under%20review%20kirobucket/udm-pro.json) | Windows setup EXE (engine unverified) | The 236 MB setup has no published installer documentation or repository license file; installer engine, payload, silent switches, and uninstall behavior are unverified. |
-| [nectarlink](../under%20review%20kirobucket/nectarlink.json) | NSIS setup EXE | The vendor setup adds Firewall rules, a scheduled update task, an AppX sparse package, HKLM uninstall metadata, and shortcuts; a Scoop-safe install/uninstall flow has not been tested. |
+
 | [jan](../under%20review%20kirobucket/jan.json) | Tauri Windows setup EXE | The release provides x64 and ARM64 setup assets but no Windows portable archive; payload extraction, silent installation, and uninstall behavior are unverified. |
 | [ipban](../under%20review%20kirobucket/ipban.json) | Windows x64/x86 ZIP (service package) | The upstream installer changes Windows audit policies and registers/starts an IPBan service. This staged manifest downloads only; verify archive layout, service installation/upgrades/removal, configuration persistence, and audit-policy handling before promotion. |
 | [deeptutor](../under%20review%20kirobucket/deeptutor.json) | Windows Portable ZIP (launch path unverified) | The official release labels the ZIP Portable, but its archive layout and actual executable path have not been inspected; no launch path is declared. |
