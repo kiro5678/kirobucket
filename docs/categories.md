@@ -1,13 +1,3 @@
-# KiroBucket Categories
-
-This document lists every JSON manifest in `bucket/`, grouped by its primary functional category. Publisher suites are cross-lists by developer/vendor; their entries also remain in their functional categories.
-
-Speech-to-Text (STT) covers automatic speech recognition and audio transcription. Text-to-Speech (TTS) covers speech synthesis, narration, and read-aloud tools. Multi-purpose apps are assigned to their primary category.
-
-Network Security groups firewalls, IP and domain blocking, DNS/URL filtering, and system-wide network request filtering.
-
-Local File Sharing groups tools focused primarily on direct file transfer between devices. Cross-Device Integration covers paired phone/computer or computer/computer workflows such as notification sync, shared clipboard, calls and messages, remote input, media control, and device-to-device file access. Clipboard Tools covers clipboard history, capture, paste, and clipboard synchronization. Text Utilities covers text editing, reusable snippets, and text processing.
-
 ## Category Index
 
 | Category | Manifests | Link |
