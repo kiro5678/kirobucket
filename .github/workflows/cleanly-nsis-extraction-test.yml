@@ -134,6 +134,16 @@ jobs:
             "The extracted application was never launched."
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+      - name: Remove downloaded and extracted binaries before uploading logs
+        if: always()
+        shell: pwsh
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP "cleanly-nsis-inspection"
+          foreach ($name in @("Cleanly-setup.exe", "outer-extracted", "application-payload")) {
+            $path = Join-Path $root $name
+            Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
       - name: Upload installer inspection logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
