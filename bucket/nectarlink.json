@@ -14,16 +14,42 @@
         "url": "https://github.com/thtbee/nectarlink/releases/download/v$version/Nectarlink-$version-x64-setup.exe"
     },
     "installer": {
-        "args": [
-            "/S",
-            "/D=$dir"
+        "script": [
+            "$setupPath = Join-Path $dir $fname",
+            "$setupTempPath = Join-Path $env:TEMP ('Nectarlink-' + $version + '-setup-' + [guid]::NewGuid().ToString('N') + '.exe')",
+            "Move-Item -LiteralPath $setupPath -Destination $setupTempPath -Force",
+            "$callerSid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value",
+            "$setupLiteral = \"'\" + $setupTempPath.Replace(\"'\", \"''\") + \"'\"",
+            "$dirLiteral = \"'\" + $dir.Replace(\"'\", \"''\") + \"'\"",
+            "$sidLiteral = \"'\" + $callerSid.Replace(\"'\", \"''\") + \"'\"",
+            "$adminScript = @'\n$ErrorActionPreference = 'Stop'\n$setupPath = __SETUP_PATH__\n$installDir = __INSTALL_DIR__\n$callerSid = __CALLER_SID__\n$icacls = Join-Path $env:SystemRoot 'System32\\icacls.exe'\n& $icacls $installDir /reset /T /C /Q | Out-Null\nif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }\nGet-ChildItem -LiteralPath $installDir -Force | Remove-Item -Recurse -Force\n$process = Start-Process -FilePath $setupPath -ArgumentList \"/S /D=$installDir\" -Wait -PassThru\nif ($process.ExitCode -ne 0) { exit $process.ExitCode }\n$grant = '*{0}:(OI)(CI)M' -f $callerSid\n& $icacls $installDir /grant $grant /T /C /Q | Out-Null\nif ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }\n$app = Join-Path $installDir 'nectarlink-desktop.exe'\nif (-not (Test-Path -LiteralPath $app -PathType Leaf)) { exit 2 }\nRemove-Item -LiteralPath $setupPath -Force\nexit 0\n'@",
+            "$adminScript = $adminScript.Replace('__SETUP_PATH__', $setupLiteral).Replace('__INSTALL_DIR__', $dirLiteral).Replace('__CALLER_SID__', $sidLiteral)",
+            "$encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($adminScript))",
+            "$powershellPath = (Get-Process -Id $PID).Path",
+            "try {",
+            "    $process = Start-Process -FilePath $powershellPath -ArgumentList \"-NoProfile -ExecutionPolicy Bypass -EncodedCommand $encodedCommand\" -Verb RunAs -Wait -PassThru",
+            "    if ($process.ExitCode -ne 0) { throw \"NectarLink installer failed with exit code $($process.ExitCode).\" }",
+            "} finally {",
+            "    Remove-Item -LiteralPath $setupTempPath -Force -ErrorAction SilentlyContinue",
+            "}"
         ]
     },
     "uninstaller": {
-        "file": "uninstall.exe",
-        "args": [
-            "/S",
-            "_?=$dir"
+        "script": [
+            "if ($cmd -ne 'update') {",
+            "    $uninstallerPath = Join-Path $dir 'uninstall.exe'",
+            "    if (Test-Path -LiteralPath $uninstallerPath -PathType Leaf) {",
+            "        $callerSid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value",
+            "        $uninstallerLiteral = \"'\" + $uninstallerPath.Replace(\"'\", \"''\") + \"'\"",
+            "        $dirLiteral = \"'\" + $dir.Replace(\"'\", \"''\") + \"'\"",
+            "        $adminScript = @'\n$ErrorActionPreference = 'Stop'\n$uninstallerPath = __UNINSTALLER_PATH__\n$installDir = __INSTALL_DIR__\n$process = Start-Process -FilePath $uninstallerPath -ArgumentList \"/S _?=$installDir\" -Wait -PassThru\nif ($process.ExitCode -ne 0) { exit $process.ExitCode }\nexit 0\n'@",
+            "        $adminScript = $adminScript.Replace('__UNINSTALLER_PATH__', $uninstallerLiteral).Replace('__INSTALL_DIR__', $dirLiteral)",
+            "        $encodedCommand = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($adminScript))",
+            "        $powershellPath = (Get-Process -Id $PID).Path",
+            "        $process = Start-Process -FilePath $powershellPath -ArgumentList \"-NoProfile -ExecutionPolicy Bypass -EncodedCommand $encodedCommand\" -Verb RunAs -Wait -PassThru",
+            "        if ($process.ExitCode -ne 0) { throw \"NectarLink uninstaller failed with exit code $($process.ExitCode).\" }",
+            "    }",
+            "}"
         ]
     },
     "bin": "nectarlink-desktop.exe"
