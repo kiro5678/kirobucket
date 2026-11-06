@@ -2,10 +2,11 @@
     "version": "0.2.0",
     "description": "Windows PC cleaner for temporary files, caches, large files, duplicates, and startup entries.",
     "homepage": "https://github.com/0xCodez/cleanly",
+    "license": "Unknown",
     "notes": [
-        "UNDER REVIEW: upstream package.json declares the package license as UNLICENSED, and the repository has no LICENSE file. This conflicts with the README's open-source wording. Do not move this manifest to bucket/ until the upstream licensing is clarified.",
-        "The selected Cleanly-portable.exe is electron-builder's configured Windows portable target; Cleanly-setup.exe is the separate NSIS installer.",
-        "The upstream safety model permanently deletes caches, temporary files, and logs. Review the selected cleanup categories carefully before running cleanup."
+        "Uses the upstream standalone Windows portable executable. Cleanly-setup.exe is the separate NSIS installer.",
+        "Settings and encrypted API keys are stored in Electron's per-user userData directory under %APPDATA%, not inside the Scoop app folder. They remain outside Scoop when the app is uninstalled.",
+        "The upstream safety model permanently deletes selected caches, temporary files, and logs. Review the selected cleanup categories carefully before running cleanup."
     ],
     "architecture": {
         "64bit": {

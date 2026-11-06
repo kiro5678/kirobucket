@@ -37,7 +37,7 @@ Local File Sharing groups tools focused primarily on direct file transfer betwee
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
 | Security | 39 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
-| Storage & Disk Tools | 27 | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 28 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
@@ -45,7 +45,7 @@ Local File Sharing groups tools focused primarily on direct file transfer betwee
 | Time Tracking & Focus | 13 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 95 | [View](#windows-customization) |
+| Windows Customization | 94 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 **Total unique manifests: 889**
@@ -799,6 +799,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | 26.4 MiB | 2026-04-29 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
 | [carbon-cd](../bucket/carbon-cd.json) | 1.0.8 | 1.4 MiB | 2023-09-29 | Portable CD cloning and disc-image utility. | [Homepage](https://rizonesoft.com/downloads/carbon-cd/) |
 | [ccleaner](../bucket/ccleaner.json) | 6.41.11567 | 77.6 MiB | 2026-06-23 | Portable utility for cleaning temporary files and browser/system junk. | [Homepage](https://www.ccleaner.com/ccleaner) |
+| [cleanly](../bucket/cleanly.json) | 0.2.0 | 105.9 MiB | 2026-11-03 | Windows cleaner for caches, temporary files, large files, duplicate files, and startup entries. | [Homepage](https://github.com/0xCodez/cleanly) |
 | [compactgui](../bucket/compactgui.json) | 4.0.0-beta.12 | 64bit: 2.8 MiB | 2025-02-24 | Reduce the space taken up by games and programs on disk by using native Windows APIs. | [Homepage](https://github.com/IridiumIO/CompactGUI) |
 | [diskgeek](../bucket/diskgeek.json) | 1.1.1 | 32.1 MiB | 2026-09-26 | A free, self-contained disk space analyser for Windows. | [Homepage](https://github.com/techygeekshome/DiskGeek) |
 | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | 11.2.3.2920 | 2.5 MiB | 2024-02-26 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
