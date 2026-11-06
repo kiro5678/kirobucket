@@ -66,6 +66,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
+| [nectarlink](../bucket/nectarlink.json) | NSIS installer (Scoop-wrapped) | Scoop moves the downloaded setup outside the version directory, runs it elevated and waits for completion, then restores the installing user's Modify permission so Scoop can update/remove the version. The vendor setup still registers Firewall, scheduled-task (Program Files installs), AppX, HKLM, and shortcut integrations; on explicit uninstall its NSIS uninstaller is run elevated. |
 This index groups the 58 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
