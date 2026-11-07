@@ -456,7 +456,129 @@ jobs:
           if (-not $release) { throw "GitHub did not return the latest Detect It Easy release." }
 
           $asset = $release.assets |
-            Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } |
+            Where-Object { $_.name -match '^die_win64_(?:portable_[\d.]+_x64|[\d.]+)\.zip
+            Select-Object -First 1
+          if (-not $asset) {
+            throw "Could not find a Windows x64 portable ZIP in Detect It Easy release $($release.tag_name)."
+          }
+
+          $workDir = Join-Path $env:RUNNER_TEMP "detect-it-easy-api"
+          $zip = Join-Path $workDir $asset.name
+          $toolDir = Join-Path $workDir "die-tool"
+          try {
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip -MaximumRedirection 10 -TimeoutSec 300 -ErrorAction Stop
+          } catch {
+            throw "Could not download the Detect It Easy release asset. Error type: $($_.Exception.GetType().FullName)"
+          }
+
+          $archive = Get-Item -LiteralPath $zip
+          if ($archive.Length -lt 100000) {
+            throw "Detect It Easy archive is unexpectedly small ($($archive.Length) bytes)."
+          }
+          $stream = [System.IO.File]::OpenRead($zip)
+          try {
+            $signatureBytes = [byte[]]::new(2)
+            $bytesRead = $stream.Read($signatureBytes, 0, 2)
+          } finally {
+            $stream.Dispose()
+          }
+          if ($bytesRead -ne 2 -or $signatureBytes[0] -ne 0x50 -or $signatureBytes[1] -ne 0x4B) {
+            throw "The Detect It Easy download does not have a ZIP header."
+          }
+
+          if ($asset.digest -match '^sha256:(?<expected>[0-9a-fA-F]{64})$') {
+            $actualDigest = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash
+            if ($actualDigest -ine $Matches.expected) {
+              throw "Detect It Easy archive SHA-256 mismatch. Expected $($Matches.expected), received $actualDigest."
+            }
+            Write-Output "Detect It Easy archive SHA-256 verified: $actualDigest"
+          } else {
+            Write-Warning "GitHub did not provide a SHA-256 digest for this release asset; ZIP structure was checked, but publisher checksum verification was unavailable."
+          }
+
+          Expand-Archive -LiteralPath $zip -DestinationPath $toolDir -Force
+          $diec = Get-ChildItem -LiteralPath $toolDir -Filter "diec.exe" -Recurse -File | Select-Object -First 1
+          if (-not $diec) { throw "diec.exe was not found in the portable release archive." }
+
+          Write-Output "Detect It Easy release: $($release.tag_name)"
+          "release_tag=$($release.tag_name)" >> $env:GITHUB_OUTPUT
+          "diec_path=$($diec.FullName)" >> $env:GITHUB_OUTPUT
+
+          @(
+            ""
+            "## Detect It Easy tool"
+            ""
+            "- **Release:** $($release.tag_name)"
+            "- **Asset:** $($asset.name)"
+            "- **SHA-256 digest:** $($asset.digest)"
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Run static identification
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          INSTALLER_NAME: ${{ steps.target.outputs.installer_name }}
+          INSTALLER_SHA256: ${{ steps.target.outputs.sha256 }}
+          SOURCE_HOST: ${{ steps.target.outputs.source_host }}
+          DIE_RELEASE: ${{ steps.die.outputs.release_tag }}
+          DIEC_PATH: ${{ steps.die.outputs.diec_path }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $workDir = Join-Path $env:RUNNER_TEMP "detect-it-easy-api"
+          $scanLog = Join-Path $workDir "detect-it-easy-scan.txt"
+
+          Write-Output "Detect It Easy release: $env:DIE_RELEASE"
+          Write-Output "Scanning $env:INSTALLER_NAME (SHA-256 $env:INSTALLER_SHA256)"
+          Write-Output "Deep + heuristic static analysis only; the target file will not be executed."
+
+          $scanOutput = @(& $env:DIEC_PATH -d -u -b -a $env:INSTALLER_PATH 2>&1 | ForEach-Object { "$_" })
+          $scanExitCode = $LASTEXITCODE
+          $scanOutput | ForEach-Object { Write-Output $_ }
+
+          if ($scanOutput.Count -eq 0) {
+            throw "Detect It Easy returned no output."
+          }
+          if ($scanExitCode -ne 0) {
+            throw "Detect It Easy exited with code $scanExitCode; treat the scan as failed."
+          }
+
+          $report = @(
+            "Multi-Engine Installer Type Inspector"
+            "============================"
+            "Detect It Easy release: $env:DIE_RELEASE"
+            "Source host: $env:SOURCE_HOST"
+            "Target filename: $env:INSTALLER_NAME"
+            "Target SHA-256: $env:INSTALLER_SHA256"
+            "Scan exit code: $scanExitCode"
+            ""
+            "Detect It Easy output (deep scan + heuristics + verbose mode):"
+            $scanOutput
+            ""
+            "Safety note: the target file was not executed."
+          )
+          $report | Set-Content -LiteralPath $scanLog -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+
+          @(
+            ""
+            "## Detect It Easy identification result"
+            ""
+            "- **Target file:** $env:INSTALLER_NAME"
+            "- **SHA-256:** $env:INSTALLER_SHA256"
+            "- **Detect It Easy release:** $env:DIE_RELEASE"
+            "- **Scan exit code:** $scanExitCode"
+            ""
+            $scanOutput
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: installer-type-inspection-report
+          path: ${{ runner.temp }}/detect-it-easy-api/*.txt
+          if-no-files-found: ignore
+ } |
             Select-Object -First 1
           if (-not $asset) {
             throw "Could not find a Windows x64 portable ZIP in Detect It Easy release $($release.tag_name)."
