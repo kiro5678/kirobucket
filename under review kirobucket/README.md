@@ -18,7 +18,7 @@ A manifest belongs here when it is newly added but still needs verification, whe
 
 ## Current review queue
 
-The folder currently contains **18 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
+The folder currently contains **19 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
 
 | Manifest | Reason |
 | --- | --- |
@@ -31,6 +31,7 @@ The folder currently contains **18 staged manifests**. The placeholder file is n
 | [jan](jan.json) | The official release provides x64 and ARM64 setup EXEs but no Windows portable archive. Payload extraction, silent/custom installation, and uninstall behavior are unverified. |
 | [keptinflow](keptinflow.json) | The official v0.89.0 setup EXE and digest are available, but the installer engine, payload, silent switches, custom install path, and uninstall behavior are unknown. |
 | [layer](layer.json) | The official x64/ARM64 assets are Tauri/NSIS setup EXEs. Custom install-directory behavior, payload layout, and a Scoop-contained install/uninstall path remain unverified. |
+| [mcpr](mcpr.json) | The official WinGet manifest lists MCPR 10.5.374.0 as portable and supplies a SHA-256, but an independent scan reports a different hash for the same version. The vendor EXE is an NSIS self-extracting package that launches McClnUI.exe from Windows Temp; verify the current download hash, runtime extraction, and shim behavior before activating it. |
 | [mystify](mystify.json) | The official ZIP has no published SHA-256. Archive layout, executable path, and required .NET runtime availability have not been verified. |
 | [pulse-launcher](pulse-launcher.json) | Only the v0.1 pre-release setup EXE is published. Installer engine, embedded payload layout, and install/uninstall behavior are unverified. |
 | [quanto-flx](quanto-flx.json) | This is a Rainmeter RMSKIN add-on, not a standalone application. The manifest downloads the skin package but does not apply it through Rainmeter's SkinInstaller. |
