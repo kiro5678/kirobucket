@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 895 active manifests. Ninety-seven Review manifests are staged outside `bucket/` in `under review kirobucket/`; 35 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 895 active manifests. Ninety-eight Review manifests are staged outside `bucket/` in `under review kirobucket/`; 35 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -29,7 +29,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **895** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 860 of the 895 active bucket manifests (800 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-seven additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 860 of the 895 active bucket manifests (800 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-eight additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Detect It Easy 4.0.0 archive layout
 
@@ -169,7 +169,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following 19 manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
+The following 20 manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -187,6 +187,7 @@ The following 19 manifests are kept in [`under review kirobucket/`](../under%20r
 | [quanto-flx](../under%20review%20kirobucket/quanto-flx.json) | Rainmeter RMSKIN add-on | This is a Rainmeter skin package, not a standalone application; the manifest does not apply it through Rainmeter's SkinInstaller. |
 | [starcodec](../under%20review%20kirobucket/starcodec.json) | Windows codec-pack setup (engine unverified) | The official page lists the 20261016 package, but the final binary URL, SHA-256, installer engine, codec registration, and uninstall behavior are unverified. |
 | [taskslinger](../under%20review%20kirobucket/taskslinger.json) | Per-user Windows setup EXE | The official installer targets `%LocalAppData%\Programs\TaskSlinger`; a Scoop-contained installation or verified portable extraction method is not established. |
+| [tinywall](../under%20review%20kirobucket/tinywall.json) | MSI / privileged Windows service / WFP integration | The WiX installer runs custom actions to register TinyWall and start its controller; Scoop's MSI archive extraction does not execute those actions. The WiX source auto-generates the ProductCode, and the current MSI SHA-256 plus a supported elevated install/update/uninstall lifecycle are unverified. |
 | [udm-pro](../under%20review%20kirobucket/udm-pro.json) | Windows setup EXE (engine unverified) | The official v2.6.35 setup and digest are available, but installer engine, payload, silent/custom-directory switches, and uninstall behavior are unverified. |
 | [vcredist-aio](../under%20review%20kirobucket/vcredist-aio.json) | x86/x64 ZIP / system runtime installer | The archive contains an administrator-run Visual C++ runtime installer. Its payload and effects on existing system runtimes need inspection. |
 | [visual-cpp-redist-aio](../under%20review%20kirobucket/visual-cpp-redist-aio.json) | x86/x64 ZIP / system runtime installer | The manifest runs Installer.cmd quietly with elevation. Verify the archive root, installer behavior, and system-wide runtime changes before promotion. |
