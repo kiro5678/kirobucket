@@ -1,0 +1,40 @@
+{
+    "version": "1.26.4.12",
+    "description": "Portable utility for analyzing and safely extracting files from antivirus quarantine stores.",
+    "homepage": "https://www.unquar.com/",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://www.unquar.com/bin/unQuar.exe",
+            "shortcuts": [
+                [
+                    "unQuar.exe",
+                    "unQuar"
+                ]
+            ]
+        },
+        "32bit": {
+            "url": "https://www.unquar.com/bin/unQuar.32.exe",
+            "shortcuts": [
+                [
+                    "unQuar.32.exe",
+                    "unQuar"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://www.unquar.com/",
+        "regex": "(?i)current version of unQuar is ([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://www.unquar.com/bin/unQuar.exe"
+            },
+            "32bit": {
+                "url": "https://www.unquar.com/bin/unQuar.32.exe"
+            }
+        }
+    }
+}
