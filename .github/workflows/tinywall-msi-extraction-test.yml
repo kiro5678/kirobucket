@@ -47,13 +47,13 @@ jobs:
           if (-not $versionMatch.Success -or $versionMatch.Groups[1].Value -ne $manifest.version) {
             throw "The official download page does not match manifest version $($manifest.version)."
           }
-          Add-Report "Manifest version and checkver source verified: $($manifest.version)"
-
           function Add-Report {
             param([string]$Text)
             $report.Add($Text)
             Write-Host $Text
           }
+
+          Add-Report "Manifest version and checkver source verified: $($manifest.version)"
 
           function Get-PeArchitecture {
             param([string]$Path)
