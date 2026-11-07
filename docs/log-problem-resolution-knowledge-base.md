@@ -879,3 +879,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
   - Corrected the category index counts: 891 unique manifests, 95 Windows Customization entries, and 59 Sordum Suite entries.
 - **Verification:** All 18 remaining review JSON files were fetched from `master` and parsed successfully. The Git tree contains 891 active bucket JSON files and 18 review JSON files. Both review documentation tables contain 18 entries; the obsolete ZenBreak reference is absent from them; the format workflow has no remaining reference to the old folder. The three updated download URLs and SHA-256 values match their exact official GitHub Release assets. Windows Scoop Checkver, archive validation, install/update/uninstall tests, and full GitHub Actions conclusions were not run or independently confirmed as part of this task.
 - **Prevention:** Keep the README and portability review table synchronized with the actual review-folder JSON files; update all workflows when a staging-folder path changes; use case-insensitive matching for manifest extensions in documentation generation and CI filters; keep internal review reasoning in the staging README/docs rather than in manifest `notes`.
+
+### 2026-11-07 — Correct JSON quoting in the staged TinyWall manifest
+
+- **Problem:** The first committed `under review kirobucket/tinywall.json` revision was invalid JSON because the Product Id explanation contained unescaped double quotes inside a `notes` string.
+- **Root cause:** A quote-bearing XML attribute expression was inserted literally within a JSON string.
+- **Resolution:** Reworded the note to describe the wildcard Product Id without nested quotation marks; kept the manifest in the review folder because the current MSI hash and safe elevated lifecycle are still unverified.
+- **Verification:** Refetched the manifest from `master`, parsed it with `JSON.parse`, and confirmed the `checkver` regex captures `3.6.1` from the official download-page version label. Confirmed TinyWall is listed in the README and portability review queue, with the review count updated to 98. No Scoop workflow or MSI installation test was run.
+- **Prevention:** Avoid unescaped double quotes inside JSON string values; parse every staged manifest after creating or updating it.
