@@ -43,8 +43,6 @@
         }
     },
     "notes": [
-        "Review only: the repository README describes this fork as experimental and a work in progress.",
-        "The latest release workflow publishes ModernTinyWall client ZIPs only. The README states that the updated TinyWall service must be installed and running for data-usage collection, and the client controller communicates with the TinyWall service. The published ZIPs do not provide a verified standalone service installation and lifecycle.",
-        "The ZIP payload layout and launch behavior have not been inspected. The shortcut target is based on the ModernTinyWall project output name and must be confirmed against the extracted archive before promotion to bucket/."
+        "This release ZIP contains the ModernTinyWall desktop client only. A compatible TinyWall Windows service must already be installed and running for the client to control the firewall; the ZIP does not install or register that service."
     ]
 }
