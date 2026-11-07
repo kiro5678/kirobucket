@@ -176,12 +176,10 @@ The installer type describes the package or setup technology used by the manifes
 
 The following table explicitly lists the manifests transferred into `bucket/`: the 98 JSON manifests moved out of `under review kirobucket/`, plus `tinywall-shirazadam.json`, which was restored directly in `bucket/` after it had previously been removed. All 99 entries are linked to their current files in `bucket/`. Their presence here records pending review only; it does not mean every item has passed archive, installation, launch, update, or uninstall testing. Do not create or store JSON manifests in `under review kirobucket/`. Record outstanding review status here.
 
-Related review records:
-- [under review kirobucket/README.md](../under%20review%20kirobucket/README.md) — explains the purpose and contents of the retained review directory.
-- [Pending Dynamic Island manifests](pending-notch-manifests.md) — tracks notch projects that still lack a verified, installable Scoop manifest.
-
-| Manifest | Installer/package type | Why it needs review |
+| Manifest or review document | Installer/package type / document type | Why it needs review |
 | --- | --- | --- |
+| [under review kirobucket/README.md](../under%20review%20kirobucket/README.md) | Review directory documentation | Explains the purpose and contents of the retained review directory and confirms that JSON manifests must not be stored there. |
+| [Pending Dynamic Island manifests](pending-notch-manifests.md) | Pending notch-project inventory | Tracks notch projects that do not yet have a verified, installable Scoop manifest. |
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official endpoint redirects to a setup EXE, but no publisher SHA-256 is available and installer/uninstaller behavior is unknown. |
 | [autooff](../bucket/autooff.json) | Windows setup EXE (engine unverified) | The official 4.25 release has no published SHA-256. Installer engine, payload extraction, silent switches, custom installation path, and cleanup remain unverified. |
 | [crowdsec-windows-firewall-bouncer](../bucket/crowdsec-windows-firewall-bouncer.json) | MSI / Windows service | The MSI registers a Windows service and performs bouncer-registration custom actions; it requires .NET 10. A Scoop-safe dependency and service lifecycle have not been established. |
