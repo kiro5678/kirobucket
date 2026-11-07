@@ -10,10 +10,5 @@
     },
     "autoupdate": {
         "url": "https://github.com/swharden/Mystify/releases/download/$version/Mystify-Windows-x64.zip"
-    },
-    "notes": [
-        "Review status: the official GitHub release does not publish a SHA-256 digest for Mystify-Windows-x64.zip. No hash is recorded; calculate and verify it before moving this manifest into bucket/.",
-        "The release ZIP has not yet been inspected. Its executable path, archive layout, and whether the .NET runtime and native dependencies are bundled remain unverified. No bin or shortcut is declared.",
-        "The source project targets net6.0-windows and uses Windows Forms, SkiaSharp, and FFMpegCore. Mystify is a standalone animation application, not a native Windows .scr screen saver."
-    ]
+    }
 }
