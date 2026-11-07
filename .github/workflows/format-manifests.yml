@@ -123,11 +123,7 @@ jobs:
           $ErrorActionPreference = "Stop"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if ($env:EVENT_NAME -eq 'push') {
-            git add -- bucket
-          } else {
-            git add -- bucket
-          }
+          git add -- bucket
           git diff --cached --quiet
           $diffExitCode = $LASTEXITCODE
 
