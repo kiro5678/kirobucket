@@ -18,7 +18,7 @@ A manifest belongs here when it is newly added but still needs verification, whe
 
 ## Current review queue
 
-The folder currently contains **18 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
+The folder currently contains **19 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
 
 | Manifest | Reason |
 | --- | --- |
@@ -40,3 +40,4 @@ The folder currently contains **18 staged manifests**. The placeholder file is n
 | [vcredist-aio](vcredist-aio.json) | The ZIP contains a system-wide Visual C++ runtime installer that must be run manually as administrator. The archive and its broad runtime replacement/removal behavior still need inspection. |
 | [visual-cpp-redist-aio](visual-cpp-redist-aio.json) | The x86/x64 manifest runs the upstream Installer.cmd quietly with elevation. Verify the archive root, script behavior, effects on existing runtimes, and update/uninstall implications. |
 | [visual-cpp-redist-aio-arm64](visual-cpp-redist-aio-arm64.json) | The ARM64 SFX is run quietly with elevation. Confirm the vendor switches and system-wide installation behavior; Scoop uninstall intentionally does not remove the installed runtimes. |
+| [vtuploader](vtuploader.json) | The official site advertises v1.26.4.12 and separate portable x86/x64 EXEs, but publishes no SHA-256. The binaries could not be downloaded for independent hashing or inspection in this pass. A third-party AI-heuristic warning for a file with the same x64 filename is not independently verified and must not be treated as a confirmed malware verdict. |
