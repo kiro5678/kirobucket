@@ -174,7 +174,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following 99 items are review records maintained in this document. Their JSON files are now located in `bucket/` following the requested move; this does not mean every item has passed archive, installation, launch, update, or uninstall testing. Do not create or store JSON manifests in `under review kirobucket/`. Record outstanding review status here.
+The following table explicitly lists the manifests transferred into `bucket/`: the 98 JSON manifests moved out of `under review kirobucket/`, plus `tinywall-shirazadam.json`, which was restored directly in `bucket/` after it had previously been removed. All 99 entries are linked to their current files in `bucket/`. Their presence here records pending review only; it does not mean every item has passed archive, installation, launch, update, or uninstall testing. Do not create or store JSON manifests in `under review kirobucket/`. Record outstanding review status here.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
