@@ -1,4 +1,5 @@
 {
+    "##": "Installer Type: Inno Setup",
     "version": "7.02",
     "description": "Windows startup manager for reviewing and controlling auto-start entries",
     "homepage": "https://www.chemtable.com/autorun-organizer.htm",
@@ -10,26 +11,31 @@
         "args": [
             "/VERYSILENT",
             "/SUPPRESSMSGBOXES",
-            "/NORESTART"
+            "/NORESTART",
+            "/SP-",
+            "/DIR=$dir"
         ]
     },
+    "bin": "AutorunOrganizer,1.exe",
+    "shortcuts": [
+        [
+            "AutorunOrganizer,1.exe",
+            "Autorun Organizer"
+        ]
+    ],
+    "pre_uninstall": "if (!(is_admin)) { error \"$app requires administrator rights to $cmd\"; break }",
     "uninstaller": {
         "script": [
-            "$uninstallKeys = @(",
-            "    'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',",
-            "    'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'",
-            ")",
-            "$entry = Get-ItemProperty -Path $uninstallKeys -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like 'Autorun Organizer*' -and $_.UninstallString } | Select-Object -First 1",
-            "if (-not $entry) { Write-Host 'No machine-wide Autorun Organizer uninstall entry was found; skipping external uninstall.'; return }",
-            "$match = [regex]::Match($entry.UninstallString, '\"(?<path>[^\"]+\\.exe)\"|(?<path>.+?\\.exe)(?:\\s|$)', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)",
-            "if (-not $match.Success) { throw 'Could not determine the Autorun Organizer uninstaller path from its registry entry.' }",
-            "$uninstaller = $match.Groups['path'].Value.Trim()",
-            "if (-not (Test-Path -LiteralPath $uninstaller)) { throw \"The Autorun Organizer uninstaller does not exist: $uninstaller\" }",
-            "$process = Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Verb RunAs -Wait -PassThru",
+            "$uninstaller = Join-Path $dir 'unins000.exe'",
+            "if (-not (Test-Path -LiteralPath $uninstaller)) {",
+            "    Write-Host 'No Inno Setup uninstaller found; this version may have been installed by the previous extraction-only manifest.'",
+            "    return",
+            "}",
+            "$process = Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru",
             "if ($process.ExitCode -ne 0) { throw \"Autorun Organizer uninstaller exited with code $($process.ExitCode).\" }"
         ]
     },
-    "notes": "Requires an elevated PowerShell session. The publisher's setup performs a normal Windows installation outside the Scoop app directory.",
+    "notes": "Requires administrator rights. The normal Inno Setup installation runs at system scope, while /DIR keeps the application files in this Scoop version directory.",
     "checkver": {
         "script": [
             "$html = (Invoke-WebRequest -Uri 'https://www.chemtable.com/autorun-organizer.htm' -UseBasicParsing).Content",

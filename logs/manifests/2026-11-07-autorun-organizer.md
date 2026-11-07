@@ -1,23 +1,27 @@
-# Autorun Organizer 7.02 — Nonportable installation
+# Autorun Organizer 7.02 — system-scope Inno Setup inside Scoop
 
-## Previous behavior
+## Verified design
 
-The manifest used `innosetup: true`, which extracts the Inno Setup payload instead of running the publisher's normal setup routine. It therefore placed the application files under Scoop and did not create the Windows installation and uninstall registration supplied by the installer.
+The official ChemTable page identifies version 7.02 and lists Administrator rights in the system requirements. The previous manifest used `innosetup: true`, which extracted the payload and did not run the publisher's normal setup routine. That was insufficient for the requested system installation.
 
-## Change
+Inno Setup's documented default for `PrivilegesRequired` is `admin`; this runs Setup in administrative install mode and requests elevation when needed. Its `/DIR` switch overrides the application destination directory. Scoop officially substitutes `$dir` in `installer.args` and provides `uninstaller` handling for both uninstall and update operations.
 
-- Kept the official 7.02 installer URL and existing SHA-256 value.
-- Replaced Inno payload extraction with the publisher's silent setup arguments: `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART`.
-- Added an administrator check before installation so the setup is not run from a non-elevated shell.
-- Added an uninstaller script that locates the machine-wide uninstall entry under HKLM and runs its registered Inno uninstaller elevated. If no machine-wide entry exists (for example, an older extraction-only install), the script leaves that state untouched.
-- Removed `bin` and Scoop `shortcuts` entries because the normal installer places the program outside the Scoop version directory; retaining those paths would create broken shims or shortcuts.
-- Reclassified the manifest as **Nonportable** in `docs/manifest-portability.md`. It remains in `bucket/`; this repository tracks portability in the inventory rather than a separate on-disk folder.
+## Manifest change
 
-## Scope evidence and limitations
+- Runs the official Inno Setup file with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR=$dir`.
+- Requires an elevated Scoop session before installation and uninstallation.
+- Keeps the original `bin` and Start Menu shortcut, targeting `AutorunOrganizer,1.exe` inside the application directory.
+- Uses the Inno uninstaller under `$dir\unins000.exe`; safely skips it only for an older extraction-only installation that has no registered Inno uninstaller.
+- Does not add `/ALLUSERS`: Inno documents that it only has an effect when the installer script enables `PrivilegesRequiredOverridesAllowed=commandline`. The default `admin` mode already selects administrative installation.
+- Adds the Scoop-supported `##` comment marker `Installer Type: Inno Setup` so the generated inventory records the verified engine without setting `innosetup: true` (which would select extraction rather than normal setup execution).
+- Keeps the manifest classified as **Nonportable**. The installed application files are under the Scoop version directory, but normal setup registration is still performed in Windows.
 
-- The official ChemTable product page identifies the current release as 7.02 and lists administrator rights in the system requirements: https://www.chemtable.com/autorun-organizer.htm
-- Installer metadata for the same product identifies the Inno Setup package as machine-scope and documents the silent switches: https://wingetly.io/apps/chem-table-software/autorun-organizer/silent-install
-- Inno Setup's official documentation confirms the silent, message-suppression, and no-restart switches. It also states that `/ALLUSERS` only works when the install script explicitly enables command-line privilege overrides: https://jrsoftware.org/ishelp/topic_setupcmdline.htm
-- Scoop supports explicit `installer` and `uninstaller` instructions in app manifests: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests
+## Documentation and references
 
-The 7.02 installer was not executed in a Windows test environment during this edit. The hash was retained from the existing manifest rather than independently recalculated. Confirm the install path, HKLM uninstall registration, and update/uninstall flow through repository CI or a Windows test before treating runtime installation as verified.
+- Official ChemTable product page (7.02; Administrator rights): https://www.chemtable.com/autorun-organizer.htm
+- Inno Setup `/DIR`, `/VERYSILENT`, `/SUPPRESSMSGBOXES`, `/NORESTART`, and `/SP-`: https://jrsoftware.org/ishelp/topic_setupcmdline.htm
+- Inno Setup default `PrivilegesRequired=admin`: https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm
+- Scoop installer/uninstaller args and `$dir`: https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests
+- Scoop script path variables and `$dir` version-path behavior: https://github.com/ScoopInstaller/Scoop/wiki/Pre-Post-%28un%29install-scripts
+
+The installer was not executed in a Windows test environment during this documentation and manifest edit. The hash was retained from the previous manifest. CI and a Windows install/update/uninstall test are still required to confirm the actual output paths and registry behavior.

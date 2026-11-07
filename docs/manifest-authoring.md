@@ -88,9 +88,25 @@
 
 ### Inno Setup
 
-- استخدم `"innosetup": true` لاستخراج محتويات المثبّت دون تشغيل إجراء التثبيت المعتاد. هذه الطريقة لا تنفّذ تسجيلات المثبّت أو مكوّنات النظام.
-- إذا كان التثبيت الفعلي مطلوباً، احذف `innosetup` واستخدم `installer.args` بمفاتيح Inno Setup الموثّقة. تحقّق من نطاق التثبيت ومن الحاجة إلى صلاحيات المسؤول، وأضف `uninstaller` مناسباً إذا كان البرنامج يُثبّت خارج مجلد Scoop.
-- لا تضف `/ALLUSERS` دون إثبات أن سكريبت المثبّت يسمح بتجاوز وضع الصلاحيات عبر `PrivilegesRequiredOverridesAllowed=commandline`؛ وإلا فلن يكون للمفتاح أثر.
+- استخدم `"innosetup": true` لاستخراج محتويات المثبّت فقط؛ هذا لا يشغّل أقسام التثبيت أو التسجيل الخاصة بالناشر. لا تستخدم هذا الحقل عندما يكون المطلوب تنفيذ التثبيت الفعلي.
+- لتشغيل المثبّت الحقيقي مع إبقاء ملفات التطبيق داخل مجلد إصدار Scoop، احذف `innosetup` واستخدم `installer.args`، مثلاً:
+
+```json
+"installer": {
+    "args": [
+        "/VERYSILENT",
+        "/SUPPRESSMSGBOXES",
+        "/NORESTART",
+        "/SP-",
+        "/DIR=$dir"
+    ]
+}
+```
+
+- يحدد `/DIR=$dir` **مكان ملفات التطبيق** فقط؛ ولا يحدد ما إذا كان التثبيت لكل المستخدمين أم للمستخدم الحالي. يحدد ذلك إعداد Inno `PrivilegesRequired`: قيمته الافتراضية `admin` وتشغّل التثبيت في الوضع الإداري مع طلب UAC عند الحاجة. إذا كان المثبّت يحدد `lowest` أو إعداداً مخصصاً، فلا تفترض أنه تثبيت نظامي.
+- لا تضف `/ALLUSERS` تلقائياً. هذا الخيار لا يعمل إلا إذا سمح سكريبت Inno نفسه بـ `PrivilegesRequiredOverridesAllowed=commandline`. عند استخدام الوضع الإداري الافتراضي لا تحتاج إليه.
+- يعرّف Scoop متغير `$dir` داخل `installer.args` ويدعم `uninstaller` أثناء التحديث والإزالة. إذا كان Inno يستخدم المسار الافتراضي `UninstallFilesDir={app}`، يكون ملف الإزالة عادةً `unins000.exe` داخل مجلد التطبيق؛ افحص مسار الناشر الفعلي ولا تفترضه عند اختلاف إعداد المثبّت.
+- تشغيل المثبّت الحقيقي يظل **Nonportable** حتى عندما يكون مجلد ملفات البرنامج داخل Scoop، لأنه ينفذ تسجيلات وتكاملات Windows الخاصة بالناشر. حدّث تصنيف المانيفست وسجل الإزالة بما يتوافق مع نطاق التثبيت الفعلي.
 
 ### NSIS
  إذا ثبت البرنامج nsis ، استخدم رابط المثبّت مع `#/dl.7z`.
@@ -289,6 +305,10 @@ git diff -- .\bucket\taskexplorer.json
 لا تصنّف EXE على أنه NSIS أو Inno Setup أو أي محرك آخر اعتماداً على الامتداد أو مفاتيح التثبيت الصامتة فقط. استخدم **EXE setup (engine unverified)** ما لم يكن المحرك مصرحاً به صراحة أو تم تحديده بفحص مستقل. الفهرس مبني على بيانات المانيفست ولا يغني عن فحص ملف المثبّت نفسه باستخدام Workflow فحص أنواع المثبّتات.
 
 ## 12. المراجع الرسمية
+
+- [Inno Setup Help — Setup Command-Line Parameters](https://jrsoftware.org/ishelp/topic_setupcmdline.htm) — `/DIR`، `/VERYSILENT`، `/SP-`، وقيود `/ALLUSERS`.
+- [Inno Setup Help — PrivilegesRequired](https://jrsoftware.org/ishelp/topic_setup_privilegesrequired.htm) — الوضع الإداري الافتراضي `admin` مقابل وضع المستخدم `lowest`.
+- [Scoop Pre/Post (un)install Scripts](https://github.com/ScoopInstaller/Scoop/wiki/Pre-Post-%28un%29install-scripts) — المتغيرات `$dir` و`$original_dir` في سكريبتات المانيفست.
 
 - [Scoop App Manifests](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests) — خصائص المانيفست وطريقة معالجة الأرشيفات وMSI وURL Fragments.
 - [Scoop App Manifest Autoupdate](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifest-Autoupdate) — قوالب التحديث التلقائي.
