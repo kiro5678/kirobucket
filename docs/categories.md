@@ -12,7 +12,7 @@
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 72 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
-| Forensics & Diagnostics | 33 | [View](#forensics-diagnostics) |
+| Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
 | Keyboard & Language | 14 | [View](#keyboard-language) |
@@ -347,6 +347,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [eric-vscmount](../bucket/eric-vscmount.json) | 2026.10.0 | 1.1 MiB | 2026-10-23 | Eric Zimmerman's VSCMount: Mount Windows Volume Shadow Copies to a drive letter. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-wxtcmd](../bucket/eric-wxtcmd.json) | 2026.10.1 | 3.7 MiB | 2026-10-25 | Eric Zimmerman's WxTCmd: Parser for Windows 10/11 Timeline database artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-xwfim](../bucket/eric-xwfim.json) | 2026.10.1 | 89.6 MiB | 2026-10-26 | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. | [Homepage](https://ericzimmerman.github.io/) |
+| [joas-drivertrust-auditor](../bucket/joas-drivertrust-auditor.json) | 5 | 48.5 KiB source + PySide6 | 2025-08-25 | DriverTrust Auditor: inventories Windows drivers, verifies signatures, and evaluates WDAC/HVCI and LOLDrivers risk. | [Homepage](https://github.com/JoasASantos/DriverTrust-Auditor) |
 
 ## Games & Game Utilities
 
