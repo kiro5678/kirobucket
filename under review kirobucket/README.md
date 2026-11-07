@@ -18,7 +18,7 @@ A manifest belongs here when it is newly added but still needs verification, whe
 
 ## Current review queue
 
-The folder currently contains **97 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
+The folder currently contains **98 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
 
 | Manifest | Reason |
 | --- | --- |
@@ -36,6 +36,7 @@ The folder currently contains **97 staged manifests**. The placeholder file is n
 | [quanto-flx](quanto-flx.json) | This is a Rainmeter RMSKIN add-on, not a standalone application. The manifest downloads the skin package but does not apply it through Rainmeter's SkinInstaller. |
 | [starcodec](starcodec.json) | The official page lists the 20261016 package, but the final download target, SHA-256, installer engine, codec registration, and uninstall behavior remain unverified. |
 | [taskslinger](taskslinger.json) | The official setup is a per-user installer targeting %LocalAppData%\Programs\TaskSlinger. No verified Scoop-contained installation or portable extraction method is available. |
+| [tinywall](tinywall.json) | The official download is an MSI whose WiX custom actions invoke `TinyWall.exe /install` and `/uninstall`; the application requires a privileged service to manage Windows Filtering Platform rules. Scoop's default MSI extraction does not run those actions, the legacy `msi` property is deprecated, and a safe elevated install/update/uninstall lifecycle plus the current SHA-256 remain unverified. |
 | [udm-pro](udm-pro.json) | The official v2.6.35 setup EXE and digest are available, but the installer engine, payload, silent/custom-directory switches, and uninstall behavior are unverified. |
 | [vcredist-aio](vcredist-aio.json) | The ZIP contains a system-wide Visual C++ runtime installer that must be run manually as administrator. The archive and its broad runtime replacement/removal behavior still need inspection. |
 | [visual-cpp-redist-aio](visual-cpp-redist-aio.json) | The x86/x64 manifest runs the upstream Installer.cmd quietly with elevation. Verify the archive root, script behavior, effects on existing runtimes, and update/uninstall implications. |
