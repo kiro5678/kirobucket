@@ -12,11 +12,5 @@
     },
     "autoupdate": {
         "url": "https://github.com/thefxng/Pulse/releases/download/v$version/Pulse-Setup-$version.exe#/Pulse-Setup.exe"
-    },
-    "notes": [
-        "Review status: the upstream project currently publishes v0.1 as a pre-release and provides only Pulse-Setup-0.1.exe for Windows.",
-        "The SHA-256 is taken from the GitHub Release asset digest.",
-        "The installer engine and extracted application layout have not been verified. This manifest intentionally downloads the setup file only; it does not execute the installer, register the application, or create an unverified shortcut.",
-        "Do not classify this manifest as Portable or use it as a completed Scoop installation until the installer is inspected and the application launch and uninstall behavior are verified."
-    ]
+    }
 }
