@@ -41,7 +41,8 @@ jobs:
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
           if ($manifest.version -ne '3.6.1') { throw "Unexpected TinyWall manifest version: $($manifest.version)" }
           if ($manifest.hash -ne $manifest.architecture.'64bit'.hash) { throw 'The root hash and 64-bit architecture hash differ.' }
-          if ($manifest.bin -ne 'ProgramFiles\TinyWall\TinyWall.exe') { throw "Unexpected TinyWall bin path: $($manifest.bin)" }
+          $normalizedBin = ([string]$manifest.bin).Replace([char]92, '/').Replace('//', '/')
+          if ($normalizedBin -ne 'ProgramFiles/TinyWall/TinyWall.exe') { throw "Unexpected TinyWall bin path: $($manifest.bin)" }
           $downloadPage = Invoke-WebRequest -Uri ([string]$manifest.checkver.url) -TimeoutSec 120
           $versionMatch = [regex]::Match($downloadPage.Content, [string]$manifest.checkver.regex)
           if (-not $versionMatch.Success -or $versionMatch.Groups[1].Value -ne $manifest.version) {
@@ -229,9 +230,9 @@ jobs:
               $adminInventory = @(Get-Inventory -Directory $adminOut -Label "$slug-admin")
               $adminMain = @($adminInventory | Where-Object { $_.Path -match '(^|/)TinyWall\.exe$' })
               $requiredPayloadFiles = @(
-                (Join-Path $adminOut 'ProgramFiles\TinyWall\TinyWall.exe'),
-                (Join-Path $adminOut 'CommonAppData\TinyWall\profiles.json'),
-                (Join-Path $adminOut 'CommonAppData\TinyWall\hosts.custom')
+                (Join-Path $adminOut (Join-Path 'ProgramFiles' (Join-Path 'TinyWall' 'TinyWall.exe'))),
+                (Join-Path $adminOut (Join-Path 'CommonAppData' (Join-Path 'TinyWall' 'profiles.json'))),
+                (Join-Path $adminOut (Join-Path 'CommonAppData' (Join-Path 'TinyWall' 'hosts.custom')))
               )
               $missingPayloadFiles = @($requiredPayloadFiles | Where-Object { -not (Test-Path -LiteralPath $_ -PathType Leaf) })
               if ($process.ExitCode -eq 0 -and $adminMain.Count -gt 0 -and $missingPayloadFiles.Count -eq 0) {
