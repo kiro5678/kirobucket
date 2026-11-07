@@ -21,7 +21,7 @@
 | Network Security | 10 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 3 | [View](#other-utilities) |
+| Other Utilities | 104 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 892**
+**Total unique manifests: 995**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -632,9 +632,110 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [anton](../bucket/anton.json) | 0.2.48 | 95.4 MiB | 2026-10-29 | AI-assisted desktop video editor with a manual timeline and local rendering | [Homepage](https://antonvideo.app/) |
+| [autooff](../bucket/autooff.json) | 4.25 | 696.7 KiB | 2023-08-09 | Schedule Windows shutdown, restart, sleep, hibernate, display power, lock, alarms, and program tasks. | [Homepage](https://www.starcodec.com/en/autooff/) |
+| [crowdsec-windows-firewall-bouncer](../bucket/crowdsec-windows-firewall-bouncer.json) | 0.0.6 | 2.1 MiB | 2026-06-01 | CrowdSec Windows Firewall remediation component that applies CrowdSec ban decisions to Windows Firewall. | [Homepage](https://github.com/crowdsecurity/cs-windows-firewall-bouncer) |
+| [deeptutor](../bucket/deeptutor.json) | 1.7.2 | 499.9 MiB | 2026-11-06 | Personalized AI tutoring desktop app with a bundled local runtime and learning workspace. | [Homepage](https://github.com/HKUDS/DeepTutor) |
+| [go-away-edge-installer](../bucket/go-away-edge-installer.json) | 2.0.3 | 46.1 MiB | 2026-04-04 | GoAwayEdge is designed for those who, like me, aren’t fans of Microsoft Edge or Windows Copilot. | [Homepage](https://github.com/valnoxy/GoAwayEdge) |
+| [ipban](../bucket/ipban.json) | 4.1.0 | 64bit: 13.8 MiB / 32bit: 13.2 MiB | 2026-09-28 | Windows intrusion-prevention service that detects failed logins and blocks abusive IP addresses using Windows Firewall. | [Homepage](https://github.com/DigitalRuby/IPBan) |
+| [jan](../bucket/jan.json) | 0.8.8 | 64bit: 545.2 MiB / arm64: 320.0 MiB | 2026-10-27 | Desktop AI assistant for running local language models and managing private, model-powered chats. | [Homepage](https://github.com/janhq/jan) |
 | [k-toolz](../bucket/k-toolz.json) | 4.0.2 | 64bit: 9.9 MiB | 2026-10-31 | Gaming suite with an FPS overlay, game streaming, stutter analysis, and virtual gamepad tools. | [Homepage](https://k-toolz.de/en/) |
+| [layer](../bucket/layer.json) | 1.11.2 | 64bit: 13.0 MiB / arm64: 12.5 MiB | 2026-10-20 | Transparent, always-on-top desktop widget canvas with notes, clocks, links, media, system stats, and other widgets. | [Homepage](https://layer-desktop.vercel.app) |
+| [mcafee-software-removal](../bucket/mcafee-software-removal.json) | 10.5.374.0 | 12.1 MiB | 2024-11-14 | McAfee Consumer Product Removal tool for removing supported McAfee home security products. | [Homepage](https://www.mcafee.com/support/s/article/000001616?language=en_US) |
+| [mystify](../bucket/mystify.json) | 1.1 | 8.4 MiB | 2022-04-07 | Modern Windows Forms recreation of the classic Mystify Your Mind animation. | [Homepage](https://github.com/swharden/Mystify) |
+| [peerblock-np](../bucket/peerblock-np.json) | 1.2.0.1 | 3.5 MiB | 2023-12-04 | PeerBlock Plus Portable with a combined blocklist that is automatically updated daily. | [Homepage](https://portableapps.com/apps/security/peerblock-portable) |
+| [pulse-launcher](../bucket/pulse-launcher.json) | 0.1 | 24.3 MiB | 2026-08-08 | Lightweight Qt/QML application launcher for Windows with a global Alt+Space hotkey and Start Menu application discovery. | [Homepage](https://github.com/thefxng/Pulse) |
+| [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | 14.7 MiB | 2025-07-18 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | 82.4 MiB | 2025-04-02 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
+| [skwire-album-printer](../bucket/skwire-album-printer.json) | 1.0.7 | 845.6 KiB | 2026-09-11 | Build a list of artists and albums in a music collection. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/album-printer/) |
+| [skwire-anuran](../bucket/skwire-anuran.json) | 1.1.2 | 1.2 MiB | 2026-09-11 | Rotating, automatically prompted personal text log. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/anuran/) |
+| [skwire-arti](../bucket/skwire-arti.json) | 1.0.3 | 472.4 KiB | 2026-09-11 | List and compare image aspect ratios. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/arti/) |
+| [skwire-barbecue](../bucket/skwire-barbecue.json) | 1.1.1 | 535.3 KiB | 2026-09-11 | Generate progress bars for projects. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/barbecue/) |
+| [skwire-bestimate](../bucket/skwire-bestimate.json) | 1.0.6 | 441.0 KiB | 2026-09-11 | Track the accuracy of goals, estimates, and predictions. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/bestimate/) |
+| [skwire-birthdays](../bucket/skwire-birthdays.json) | 1.1.0 | 543.6 KiB | 2026-09-11 | Simple birthday tracker. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/birthdays/) |
+| [skwire-boot-snooze](../bucket/skwire-boot-snooze.json) | 1.0.5 | 493.5 KiB | 2026-09-11 | Reboot Windows and automatically enter standby or hibernation after a countdown. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/boot-snooze/) |
+| [skwire-brickview](../bucket/skwire-brickview.json) | 1.0.0.1 | 1021.9 KiB | 2026-09-11 | View LEGO set information from Brickset.com. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/brickview/) |
+| [skwire-chopping-list](../bucket/skwire-chopping-list.json) | 1.0.5 | 409.8 KiB | 2026-09-11 | Split text files into multiple files using a custom delimiter. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/chopping-list/) |
+| [skwire-cliptrap](../bucket/skwire-cliptrap.json) | 1.2.2 | 437.1 KiB | 2026-09-11 | Aggregate text copied to the clipboard. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/cliptrap/) |
+| [skwire-comic-book-archive-creator](../bucket/skwire-comic-book-archive-creator.json) | 1.0.5 | 2.6 MiB | 2026-09-11 | Create comic book archive files from PDF and image files. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/comic-book-archive-creator/) |
+| [skwire-covart-ops](../bucket/skwire-covart-ops.json) | 1.1.3 | 1.3 MiB | 2026-09-11 | Find album folders that are missing cover artwork. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/covart-ops/) |
+| [skwire-deletist](../bucket/skwire-deletist.json) | 1.0.3 | 368.8 KiB | 2026-09-11 | Delete files and folders listed by their full paths in a text file. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/deletist/) |
+| [skwire-dimensions-2-folders](../bucket/skwire-dimensions-2-folders.json) | 1.0.8 | 469.8 KiB | 2026-09-11 | Sort image files into folders according to their dimensions. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/dimensions-2-folders/) |
+| [skwire-drive-letters-tool](../bucket/skwire-drive-letters-tool.json) | 1.0.1 | 455.6 KiB | 2026-09-11 | Customize how drive letters appear in Windows Explorer and file dialogs. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/drive-letters-tool/) |
+| [skwire-drop-zone](../bucket/skwire-drop-zone.json) | 1.0.3 | 720.8 KiB | 2026-09-11 | Drag-and-drop windows for quickly copying or moving files. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/drop-zone/) |
+| [skwire-earl](../bucket/skwire-earl.json) | 1.0.0 | 457.1 KiB | 2026-09-11 | Convert Windows internet shortcut (.URL) files into .LNK shortcuts. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/earl/) |
+| [skwire-epcheck](../bucket/skwire-epcheck.json) | 1.1.5 | 858.9 KiB | 2026-09-11 | Track and view TV series information. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/epcheck/) |
+| [skwire-file-bucket](../bucket/skwire-file-bucket.json) | 1.1.0 | 1.1 MiB | 2026-09-11 | Collect files from several locations and copy them to a destination. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/file-bucket/) |
+| [skwire-file-punter](../bucket/skwire-file-punter.json) | 1.0.8 | 480.2 KiB | 2026-09-11 | Copy or move files into dynamically generated folders using regular expressions. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/file-punter/) |
+| [skwire-files-2-folder](../bucket/skwire-files-2-folder.json) | 1.1.7 | 326.2 KiB | 2026-09-11 | Windows shell extension to create a folder and move selected files into it. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/files-2-folder/) |
+| [skwire-frameless](../bucket/skwire-frameless.json) | 1.1.8 | 426.1 KiB | 2026-09-11 | Borderless image viewer with command-line placement options. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/frameless/) |
+| [skwire-ie-proxy-toggle](../bucket/skwire-ie-proxy-toggle.json) | 1.0.4 | 400.7 KiB | 2026-09-11 | Quickly toggle the Internet Explorer proxy setting. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/ie-proxy-toggle/) |
+| [skwire-ipmi-tool-gui](../bucket/skwire-ipmi-tool-gui.json) | 1.0.1 | 3.8 MiB | 2026-09-11 | Graphical interface for IPMI Tool and server hardware management. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/ipmi-tool-gui/) |
+| [skwire-keycounter](../bucket/skwire-keycounter.json) | 1.1.0 | 334.7 KiB | 2026-09-11 | Count keyboard key presses. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/keycounter/) |
+| [skwire-kled](../bucket/skwire-kled.json) | 1.0.3 | 479.7 KiB | 2026-09-11 | System tray indicators for Num Lock, Caps Lock, and Scroll Lock. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/kled/) |
+| [skwire-list-numberer](../bucket/skwire-list-numberer.json) | 1.1.0 | 463.2 KiB | 2026-09-11 | Number text listings in several formats. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/list-numberer/) |
+| [skwire-looper](../bucket/skwire-looper.json) | 1.0.9 | 402.8 KiB | 2026-09-11 | Play an audio file in a gapless loop. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/looper/) |
+| [skwire-lucidity](../bucket/skwire-lucidity.json) | 1.0.6 | 521.3 KiB | 2026-09-11 | Apply a translucent visual effect to the desktop. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/lucidity/) |
+| [skwire-mat](../bucket/skwire-mat.json) | 1.0.3 | 252.0 KiB | 2026-09-11 | Change mouse acceleration, pointer speed, and cursor through command-line options. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/mat/) |
+| [skwire-mpcpled](../bucket/skwire-mpcpled.json) | 1.0.2 | 447.5 KiB | 2026-09-11 | Edit and reorder Media Player Classic playlist files. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/mpcpled/) |
+| [skwire-mph](../bucket/skwire-mph.json) | 1.1.5 | 696.8 KiB | 2026-09-11 | Control media players using global hotkeys. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/mph/) |
+| [skwire-mycoff](../bucket/skwire-mycoff.json) | 1.0.1 | 935.5 KiB | 2026-09-11 | Mute a microphone input with a global hotkey. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/mycoff/) |
+| [skwire-omdb-tool](../bucket/skwire-omdb-tool.json) | 1.0.2 | 440.5 KiB | 2026-09-11 | Look up IMDb data through the OMDb API and format the results. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/omdb-tool/) |
+| [skwire-pdfinfogui](../bucket/skwire-pdfinfogui.json) | 1.1.0 | 1.0 MiB | 2026-09-11 | Graphical front-end for pdfinfo from the Xpdf package. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/pdfinfogui/) |
+| [skwire-piggy-banks](../bucket/skwire-piggy-banks.json) | 1.0.4 | 440.5 KiB | 2026-09-11 | Track savings funds and projected completion dates. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/piggy-banks/) |
+| [skwire-playtime](../bucket/skwire-playtime.json) | 1.5.3 | 2.3 MiB | 2026-09-11 | Calculate total playtime for a list of music and movie files. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/playtime/) |
+| [skwire-power-scheme-toggler](../bucket/skwire-power-scheme-toggler.json) | 1.0.4 | 258.7 KiB | 2026-09-11 | Switch between two Windows power schemes. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/power-scheme-toggler/) |
+| [skwire-recursiview](../bucket/skwire-recursiview.json) | 1.0.3 | 570.2 KiB | 2026-09-11 | Browse images throughout a folder hierarchy. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/recursiview/) |
+| [skwire-scheckbook](../bucket/skwire-scheckbook.json) | 1.1.3 | 470.4 KiB | 2026-09-11 | Simple checkbook and bank account register. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/scheckbook/) |
+| [skwire-schecklist](../bucket/skwire-schecklist.json) | 1.1.7 | 493.2 KiB | 2026-09-11 | Simple reusable checklist application. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/schecklist/) |
+| [skwire-scurled](../bucket/skwire-scurled.json) | 1.0.0 | 462.9 KiB | 2026-09-11 | Batch-edit Windows shortcut (.LNK) and internet shortcut (.URL) files. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/scurled/) |
+| [skwire-sensatronics-tray-tool](../bucket/skwire-sensatronics-tray-tool.json) | 1.0.5 | 454.3 KiB | 2026-09-11 | Monitor Sensatronics E4 and U16 temperature sensors from the system tray. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/sensatronics-tray-tool/) |
+| [skwire-sfv-ninja](../bucket/skwire-sfv-ninja.json) | 1.3.6 | 499.0 KiB | 2026-09-11 | Create and verify SFV file checksums. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/sfv-ninja/) |
+| [skwire-sigcheckgui](../bucket/skwire-sigcheckgui.json) | 1.1.3 | 485.2 KiB | 2026-09-11 | GUI front-end for Microsoft Sysinternals Sigcheck to inspect file signatures, metadata, hashes, and VirusTotal results. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/sigcheckgui/) |
+| [skwire-simguruploader](../bucket/skwire-simguruploader.json) | 1.0.4 | 407.0 KiB | 2026-09-11 | Command-line tool to upload an image to Imgur and copy the resulting URL. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/simguruploader/) |
+| [skwire-simple-word-gen](../bucket/skwire-simple-word-gen.json) | 1.0.3 | 366.0 KiB | 2026-09-11 | Generate random word lists using a consonant-vowel-consonant pattern. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/simple-word-gen/) |
+| [skwire-size-matters](../bucket/skwire-size-matters.json) | 1.0.0 | 535.7 KiB | 2026-09-11 | Track lists of files and their sizes. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/size-matters/) |
+| [skwire-slyrics](../bucket/skwire-slyrics.json) | 1.0.3 | 450.9 KiB | 2026-09-11 | Find song lyrics through the ChartLyrics service. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/slyrics/) |
+| [skwire-snap-db](../bucket/skwire-snap-db.json) | 1.5.1 | 506.6 KiB | 2026-09-11 | Simple flat-file database and list application. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/snap-db/) |
+| [skwire-spews](../bucket/skwire-spews.json) | 1.1.3 | 609.5 KiB | 2026-09-11 | Wallpaper switcher with additional display options. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/spews/) |
+| [skwire-spinger](../bucket/skwire-spinger.json) | 1.0.1 | 2.7 MiB | 2026-09-11 | Ping multiple IP addresses and hostnames. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/spinger/) |
+| [skwire-spinzip](../bucket/skwire-spinzip.json) | 1.0.5 | 950.8 KiB | 2026-09-11 | Create ZIP files using several compression methods. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/spinzip/) |
+| [skwire-splat](../bucket/skwire-splat.json) | 1.1.8 | 1.1 MiB | 2026-09-11 | Profile-based program launcher. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/splat/) |
+| [skwire-splaylistmaker](../bucket/skwire-splaylistmaker.json) | 1.1.0 | 524.1 KiB | 2026-09-11 | Recursively create M3U playlist files. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/splaylistmaker/) |
+| [skwire-squeaky-mouse](../bucket/skwire-squeaky-mouse.json) | 1.0.3 | 537.9 KiB | 2026-09-11 | Play sounds when mouse buttons are clicked. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/squeaky-mouse/) |
+| [skwire-sspeedtest](../bucket/skwire-sspeedtest.json) | 1.0.5 | 1.4 MiB | 2026-09-11 | GUI for running Ookla Speedtest measurements. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/sspeedtest/) |
+| [skwire-ssurfer](../bucket/skwire-ssurfer.json) | 0.0.1 | 5.1 MiB | 2026-09-11 | Generate web traffic for firewall logging and policy testing. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/ssurfer/) |
+| [skwire-steam-url-converter](../bucket/skwire-steam-url-converter.json) | 1.0.2 | 437.5 KiB | 2026-09-11 | Convert Steam URL shortcuts into standard Windows shortcuts. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/steam-url-converter/) |
+| [skwire-stray](../bucket/skwire-stray.json) | 1.0.2 | 407.5 KiB | 2026-09-11 | Tray utility for shutdown, restart, log off, lock, sleep, and hibernate. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/stray/) |
+| [skwire-subahk](../bucket/skwire-subahk.json) | 1.0.0 | 452.6 KiB | 2026-09-11 | Subsonic desktop client focused on playlist management. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/subahk/) |
+| [skwire-swavplayer](../bucket/skwire-swavplayer.json) | 1.0.2 | 383.4 KiB | 2026-09-11 | Command-line WAV file player. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/swavplayer/) |
+| [skwire-sweather](../bucket/skwire-sweather.json) | 1.8.2 | 2.5 MiB | 2026-09-11 | Tray-based weather application with multiple location support. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/sweather/) |
+| [skwire-switcheroo](../bucket/skwire-switcheroo.json) | 1.0.3 | 339.9 KiB | 2026-09-11 | Swap two file names using a drag-and-drop interface. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/switcheroo/) |
+| [skwire-tags-2-folders](../bucket/skwire-tags-2-folders.json) | 1.1.2 | 720.8 KiB | 2026-09-11 | Sort audio files into folders based on their tags. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/tags-2-folders/) |
+| [skwire-ten-timer](../bucket/skwire-ten-timer.json) | 1.0.8 | 541.1 KiB | 2026-09-11 | Simple multiple-timer application. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/ten-timer/) |
+| [skwire-text-2-folders](../bucket/skwire-text-2-folders.json) | 1.1.6 | 410.7 KiB | 2026-09-11 | Create multiple folders from a simple text file. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/text-2-folders/) |
+| [skwire-tiffinfogui](../bucket/skwire-tiffinfogui.json) | 1.1.1 | 861.0 KiB | 2026-09-11 | View information about TIFF image files. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/tiffinfogui/) |
+| [skwire-tiffsy-turvy](../bucket/skwire-tiffsy-turvy.json) | 1.0.2 | 3.5 MiB | 2026-09-11 | Extract, rotate, and export multi-page TIFF images to JPG. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/tiffsy-turvy/) |
+| [skwire-title-bar-battery](../bucket/skwire-title-bar-battery.json) | 1.0.0 | 706.6 KiB | 2026-09-11 | Display battery percentage in window title bars. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/title-bar-battery/) |
+| [skwire-trackerr](../bucket/skwire-trackerr.json) | 1.0.0 | 1.1 MiB | 2026-09-11 | Find malformed or DRM-protected audio tracks in a collection. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/trackerr/) |
+| [skwire-tray-host-checker](../bucket/skwire-tray-host-checker.json) | 1.0.3 | 469.6 KiB | 2026-09-11 | Periodically ping a hostname or IP address and show its status in the system tray. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/tray-host-checker/) |
+| [skwire-traylang](../bucket/skwire-traylang.json) | 1.0.1 | 7.3 MiB | 2026-09-11 | Show the currently selected keyboard layout with a system tray icon. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/traylang/) |
+| [skwire-trout](../bucket/skwire-trout.json) | 1.0.6.76 | 1.7 MiB | 2026-09-11 | Music player (upstream version 1.0.6, build 76). | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/trout/) |
+| [skwire-video-2-mp3](../bucket/skwire-video-2-mp3.json) | 1.0.3 | 6.8 MiB | 2026-09-11 | Extract audio from a video file and create an MP3. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/video-2-mp3/) |
+| [skwire-wallpaper-welder](../bucket/skwire-wallpaper-welder.json) | 1.0.0 | 450.2 KiB | 2026-09-11 | Create a multi-monitor wallpaper from separate images. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/wallpaper-welder/) |
+| [skwire-waste-not](../bucket/skwire-waste-not.json) | 1.0.7 | 433.1 KiB | 2026-09-11 | Track refrigerator contents and expiration dates. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/waste-not/) |
+| [skwire-what](../bucket/skwire-what.json) | 1.0.2 | 471.3 KiB | 2026-09-11 | Assign hotkeys to activate or focus selected windows. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/what/) |
+| [skwire-zero-zipper](../bucket/skwire-zero-zipper.json) | 1.0.6 | 804.6 KiB | 2026-09-11 | Clone a file/folder structure as zero-byte files and create a ZIP archive. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/zero-zipper/) |
 | [softwareok-suite](../bucket/softwareok-suite.json) | 2026.10.27.6 | 64bit: 27.5 MiB | 2026-10-24 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |
+| [starcodec](../bucket/starcodec.json) | 20261016 | — | — | Windows codec pack that installs audio and video codecs, DirectShow filters, subtitle support, and related media utilities. | [Homepage](https://www.starcodec.com/en/) |
+| [taskslinger](../bucket/taskslinger.json) | 0.9.5 | 2.6 MiB | — | Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections. | [Homepage](https://taskslinger.net/) |
+| [tinywall-shirazadam](../bucket/tinywall-shirazadam.json) | 4.0.0 | 64bit: 100.0 MiB / 32bit: 76.7 MiB / arm64: 95.6 MiB | 2026-11-06 | Experimental modern WinUI 3 desktop client for the TinyWall Windows firewall. | [Homepage](https://github.com/ShirazAdam/TinyWall) |
+| [tinywall](../bucket/tinywall.json) | 3.6.1 | Default: 1.8 MiB / 32bit: 1.8 MiB / 64bit: 1.8 MiB / arm64: 1.8 MiB | 2026-10-21 | Secure-by-default firewall for Windows built on Windows Firewall. Developer: Károly Pados. | [Homepage](https://tinywall.pados.hu/) |
+| [udm-pro](../bucket/udm-pro.json) | 2.6.35 | 223.8 MiB | 2026-11-05 | Windows download manager for files, videos, torrents, and supported cloud uploads. | [Homepage](https://github.com/Shalaby2/UDM-Pro) |
+| [vcredist-aio](../bucket/vcredist-aio.json) | 0.106.0 | 31.1 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes (x86 and x64), including legacy runtimes and the current 2022/2026 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
+| [visual-cpp-redist-aio-arm64](../bucket/visual-cpp-redist-aio-arm64.json) | 0.106.0 | arm64: 19.3 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes for Windows ARM64, including legacy x86 and current ARM64 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
+| [visual-cpp-redist-aio](../bucket/visual-cpp-redist-aio.json) | 0.106.0 | 31.1 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes for x86 and x64, including legacy runtimes and current 2022/2026 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
+| [vt-uploader-denis-anisimov](../bucket/vt-uploader-denis-anisimov.json) | 1.26.4.12 | 64bit: 8.3 MiB / 32bit: 5.6 MiB | 2026-04-12 | Portable VirusTotal client by Denis Anisimov for uploading files and running processes, checking hashes, and viewing analysis reports. | [Homepage](https://www.vtuploader.com/) |
 
 ## Package Management
 
