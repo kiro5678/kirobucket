@@ -118,8 +118,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- | --- |
 | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 20.1.0 | — | 2026-10-18 | Mega variant of the K-Lite Codec Pack, a collection of DirectShow filters, VFW/ACM codecs and tools. | [Homepage](https://codecguide.com/about_kl.htm) |
 
-StarCodec 20261016 is staged for verification in [under review kirobucket](../under%20review%20kirobucket/starcodec.json). It is not in the active bucket and cannot be installed through KiroBucket until its installer, checksum, and uninstall behavior are verified.
-
 ## Cross-Device Integration
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
