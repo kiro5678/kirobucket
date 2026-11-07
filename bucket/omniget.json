@@ -1,5 +1,5 @@
 {
-    "version": "0.14.0",
+    "version": "0.15.0",
     "description": "All-in-one desktop download manager for courses, videos, music, and 1,800+ websites, with built-in media and study tools.",
     "homepage": "https://github.com/OpenSelena/omniget",
     "license": "GPL-3.0-only",
@@ -10,8 +10,8 @@
     ],
     "architecture": {
         "64bit": {
-            "url": "https://github.com/OpenSelena/omniget/releases/download/v0.14.0/omniget_0.14.0_x64-portable.exe",
-            "hash": "83a5137ab8700f9b45635b5512eec9c07c010bc114df85c224589ac4339e897a"
+            "url": "https://github.com/OpenSelena/omniget/releases/download/v0.15.0/omniget_0.15.0_x64-portable.exe",
+            "hash": "a83655b4c49915fe4a1d85e28130812c7e0efa9eb9e8eaea20d584c6371d22c1"
         }
     },
     "pre_install": [
