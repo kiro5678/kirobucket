@@ -11,7 +11,8 @@
                     "unQuar.exe",
                     "unQuar"
                 ]
-            ]
+            ],
+            "hash": "d32b699de6595581ab0a62d1b29a0a84c6676e3f6b31d5ac024cdec497e771c1"
         },
         "32bit": {
             "url": "https://www.unquar.com/bin/unQuar.32.exe",
@@ -20,7 +21,8 @@
                     "unQuar.32.exe",
                     "unQuar"
                 ]
-            ]
+            ],
+            "hash": "a7357113131e46939acbe21c592b845bef5bf132f566e0c5ba3fa555bd13dcf8"
         }
     },
     "checkver": {
