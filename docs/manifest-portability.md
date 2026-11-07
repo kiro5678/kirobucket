@@ -26,7 +26,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Nonportable | 60 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 35 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **896** | Multiple package types | All current JSON manifests in `bucket/` on `master. |
+| **Total** | **896** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
 The explicit portability classifications currently cover 861 of the 896 active bucket manifests (801 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
