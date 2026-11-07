@@ -10,7 +10,8 @@ Inno Setup's documented default for `PrivilegesRequired` is `admin`; this runs S
 
 - Runs the official Inno Setup file with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR="$dir"`.
 - Requires an elevated Scoop session before installation and uninstallation.
-- Keeps the original `bin` and Start Menu shortcut, targeting `AutorunOrganizer,1.exe` inside the application directory.
+- Exposes the verified application executable `AutorunOrganizer.exe` through `bin` and the Start Menu shortcut. The former `AutorunOrganizer,1.exe` target was incorrect and caused Scoop's post-install shim failure.
+- Adds a `post_install` guard that checks `AutorunOrganizer.exe` under `$dir` and lists any discovered EXE files if the target is absent.
 - Uses the Inno uninstaller under `$dir\unins000.exe`; safely skips it only for an older extraction-only installation that has no registered Inno uninstaller.
 - Does not add `/ALLUSERS`: Inno documents that it only has an effect when the installer script enables `PrivilegesRequiredOverridesAllowed=commandline`. The default `admin` mode already selects administrative installation.
 - Adds the Scoop-supported `##` comment marker `Installer Type: Inno Setup` so the generated inventory records the verified engine without setting `innosetup: true` (which would select extraction rather than normal setup execution).
@@ -25,3 +26,7 @@ Inno Setup's documented default for `PrivilegesRequired` is `admin`; this runs S
 - Scoop script path variables and `$dir` version-path behavior: https://github.com/ScoopInstaller/Scoop/wiki/Pre-Post-%28un%29install-scripts
 
 The installer was not executed in a Windows test environment during this documentation and manifest edit. The hash was retained from the previous manifest. CI and a Windows install/update/uninstall test are still required to confirm the actual output paths and registry behavior.
+
+## Follow-up fix — incorrect shim target
+
+The first live Scoop installation reached shim creation but failed because the manifest declared `AutorunOrganizer,1.exe`, which is not the application's executable name. Changed the shim and shortcut target to `AutorunOrganizer.exe` and added a post-install file check under `$dir`. The exact file name is supported by independent installed-file inventory; the user's local directory has not yet been inspected, so the next Windows installation is still the decisive runtime check.

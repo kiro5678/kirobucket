@@ -16,10 +16,10 @@
             "/DIR=\"$dir\""
         ]
     },
-    "bin": "AutorunOrganizer,1.exe",
+    "bin": "AutorunOrganizer.exe",
     "shortcuts": [
         [
-            "AutorunOrganizer,1.exe",
+            "AutorunOrganizer.exe",
             "Autorun Organizer"
         ]
     ],
@@ -49,5 +49,15 @@
     },
     "autoupdate": {
         "url": "https://files.chemtable.com/ao/autorun-organizer-setup.exe"
-    }
+    },
+    "post_install": [
+        "$exe = Join-Path $dir 'AutorunOrganizer.exe'",
+        "if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {",
+        "    $found = @(Get-ChildItem -LiteralPath $dir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })",
+        "    if ($found.Count -gt 0) {",
+        "        throw \"Expected AutorunOrganizer.exe was not installed at the Scoop app root. Executables found: $($found -join '; ')\"",
+        "    }",
+        "    throw \"AutorunOrganizer.exe was not installed under the Scoop app directory: $dir\"",
+        "}"
+    ]
 }
