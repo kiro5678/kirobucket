@@ -29,7 +29,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **895** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 860 of the 895 active bucket manifests (800 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-seven additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 860 of the 895 active bucket manifests (800 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-eight additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
@@ -173,7 +173,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following 20 manifests are kept in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
+The following 19 highlighted manifests are tracked in [`under review kirobucket/`](../under%20review%20kirobucket/), outside the active Scoop bucket. They must not be treated as installable until their payloads and launch behavior are verified.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
@@ -191,7 +191,7 @@ The following 20 manifests are kept in [`under review kirobucket/`](../under%20r
 | [starcodec](../under%20review%20kirobucket/starcodec.json) | Windows codec-pack setup (engine unverified) | The official page lists the 20261016 package, but the final binary URL, SHA-256, installer engine, codec registration, and uninstall behavior are unverified. |
 | [taskslinger](../under%20review%20kirobucket/taskslinger.json) | Per-user Windows setup EXE | The official installer targets `%LocalAppData%\Programs\TaskSlinger`; a Scoop-contained installation or verified portable extraction method is not established. |
 | [tinywall](../under%20review%20kirobucket/tinywall.json) | x86/x64 and ARM64 MSI payload extraction / ProgramData files / runtime service integration | Workflow [42399331556](https://github.com/kiro5678/kirobucket/actions/runs/42399331556) verified both official MSI hashes and signatures and extracted `ProgramFiles/TinyWall/TinyWall.exe` plus `CommonAppData/TinyWall/{profiles.json,hosts.custom}`. The app reads this data from `%ProgramData%\\TinyWall`, which plain Scoop extraction does not populate. First-run `/install` registers a LocalSystem automatic service and scheduled task; `/uninstall` prompts for confirmation and removes persistent WFP objects. Initial data placement and a Scoop-safe upgrade/uninstall lifecycle are unverified. |
-| [tinywall-shirazadam](../under%20review%20kirobucket/tinywall-shirazadam.json) | x86/x64/ARM64 ZIP / ModernTinyWall client / Windows service dependency | The fork is explicitly experimental; the latest release workflow publishes the ModernTinyWall client ZIPs but does not provide a verified standalone TinyWall service installation. Archive contents and launch behavior remain unverified. |
+| [tinywall-shirazadam](../under%20review%20kirobucket/tinywall-shirazadam.json) | x86/x64/ARM64 ZIP / ModernTinyWall client / missing service host | Workflow [42399489583](https://github.com/kiro5678/kirobucket/actions/runs/42399489583) verified all three SHA-256 hashes, extracted 604 x64, 564 x86, and 600 ARM64 files, and confirmed `ModernTinyWall.exe` is at each archive root with matching PE architecture. The declared shortcut path is valid. No TinyWall service-host executable is included, although the client communicates with the `TinyWallController` service; no launch or firewall-change test was run. Keep Review until the required service package and lifecycle are available. |
 | [udm-pro](../under%20review%20kirobucket/udm-pro.json) | Windows setup EXE (engine unverified) | The official v2.6.35 setup and digest are available, but installer engine, payload, silent/custom-directory switches, and uninstall behavior are unverified. |
 | [vcredist-aio](../under%20review%20kirobucket/vcredist-aio.json) | x86/x64 ZIP / system runtime installer | The archive contains an administrator-run Visual C++ runtime installer. Its payload and effects on existing system runtimes need inspection. |
 | [visual-cpp-redist-aio](../under%20review%20kirobucket/visual-cpp-redist-aio.json) | x86/x64 ZIP / system runtime installer | The manifest runs Installer.cmd quietly with elevation. Verify the archive root, installer behavior, and system-wide runtime changes before promotion. |
