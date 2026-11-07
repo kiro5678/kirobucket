@@ -1,20 +1,15 @@
 {
-    "version": "0.88.0",
+    "version": "0.89.0",
     "description": "Desktop productivity and time-tracking app that drafts billable timesheets from screen activity and records client calls.",
     "homepage": "https://keptinflow.com/",
     "license": "Proprietary",
-    "url": "https://github.com/jwwpua/keptinflow-releases/releases/download/v0.88.0/KeptInFlow-setup.exe",
-    "hash": "a5026ae868f8e15f66a3c617d85d32e6ed4f40f6acb2b0702e7c340f71af0e49",
+    "url": "https://github.com/jwwpua/keptinflow-releases/releases/download/v0.89.0/KeptInFlow-setup.exe",
+    "hash": "0ec5a05975275e360a55cb4cce40beed1452e780a1314723a29248ed8aac101e",
     "checkver": {
         "github": "https://github.com/jwwpua/keptinflow-releases",
         "regex": "v(?<version>[\\d.]+)"
     },
     "autoupdate": {
         "url": "https://github.com/jwwpua/keptinflow-releases/releases/download/v$version/KeptInFlow-setup.exe"
-    },
-    "notes": [
-        "Review status: the official GitHub Releases page publishes KeptInFlow 0.88.0 as a Windows setup EXE and provides the SHA-256 digest recorded here. The official website lists Windows 10/11 and describes the installer as code-signed.",
-        "The installer engine, embedded payload layout, supported silent-install switches, custom install-directory support, and portable mode have not been verified. This manifest only downloads the setup file; it does not run the installer or declare a shim or shortcut.",
-        "Keep this manifest in under review kirobucket until the installer is inspected and a safe Scoop installation or verified payload-extraction method is established."
-    ]
+    }
 }
