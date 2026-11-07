@@ -22,14 +22,14 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 799 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 59 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Portable | 798 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Nonportable | 60 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
 | Not reconciled | 33 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
 | **Total** | **891** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 858 of the 891 active bucket manifests (799 Portable and 59 Nonportable). The remaining 33 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Eighteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 858 of the 891 active bucket manifests (798 Portable and 60 Nonportable). The remaining 33 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Eighteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Detect It Easy 4.0.0 archive layout
 
@@ -66,12 +66,12 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 59 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 60 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
 | NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 22 |
-| Inno | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 5 |
+| Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 6 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json) | 4 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
@@ -95,7 +95,7 @@ This index groups the 59 Nonportable manifests by the exact installer/package la
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
 | NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
-| **Total** | **All Nonportable manifests** | **59** |
+| **Total** | **All Nonportable manifests** | **60** |
 
 ## Nonportable manifests
 
@@ -108,6 +108,7 @@ The installer type describes the package or setup technology used by the manifes
 | [agaric](../bucket/agaric.json) | NSIS | Runs the NSIS setup with silent install arguments and `/D=$dir`. NSIS-style switches; engine inferred. |
 | [air-server-np](../bucket/air-server-np.json) | MSI | Runs `msiexec /i` with elevation; installs through Windows Installer. |
 | [another](../bucket/another.json) | NSIS | Runs the vendor setup with `/S /NS /D=$dir`. NSIS-style switches; engine inferred. |
+| [autorun-organizer](../bucket/autorun-organizer.json) | Inno | Runs the publisher's Inno Setup silently after requiring administrator rights; the machine-wide uninstall entry is used to locate and run the uninstaller outside Scoop. |
 | [belarc-advisor](../bucket/belarc-advisor.json) | Vendor EXE setup (engine unverified) | Runs the vendor installer; `/D=$dir` is intended to redirect its installation, but the manifest notes that this behavior has not been independently confirmed. |
 | [biscuit](../bucket/biscuit.json) | NSIS | Runs the NSIS setup silently from `pre_install`; it is not extracted as an archive. |
 | [clustercut](../bucket/clustercut.json) | NSIS | Runs the vendor setup with `/S /NS /D=$dir`. NSIS-style switches; engine inferred. |

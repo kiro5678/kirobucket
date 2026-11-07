@@ -5,14 +5,31 @@
     "license": "Proprietary",
     "url": "https://files.chemtable.com/ao/autorun-organizer-setup.exe",
     "hash": "85BE6F0FC4AFF9BB874E946186301E5509FBF1E1996A9F8DDD75D7FFD9FC165F",
-    "innosetup": true,
-    "bin": "AutorunOrganizer,1.exe",
-    "shortcuts": [
-        [
-            "AutorunOrganizer,1.exe",
-            "Autorun Organizer"
+    "pre_install": "if (!(is_admin)) { error \"$app requires administrator rights to $cmd\"; break }",
+    "installer": {
+        "args": [
+            "/VERYSILENT",
+            "/SUPPRESSMSGBOXES",
+            "/NORESTART"
         ]
-    ],
+    },
+    "uninstaller": {
+        "script": [
+            "$uninstallKeys = @(",
+            "    'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',",
+            "    'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*'",
+            ")",
+            "$entry = Get-ItemProperty -Path $uninstallKeys -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like 'Autorun Organizer*' -and $_.UninstallString } | Select-Object -First 1",
+            "if (-not $entry) { Write-Host 'No machine-wide Autorun Organizer uninstall entry was found; skipping external uninstall.'; return }",
+            "$match = [regex]::Match($entry.UninstallString, '\"(?<path>[^\"]+\\.exe)\"|(?<path>.+?\\.exe)(?:\\s|$)', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)",
+            "if (-not $match.Success) { throw 'Could not determine the Autorun Organizer uninstaller path from its registry entry.' }",
+            "$uninstaller = $match.Groups['path'].Value.Trim()",
+            "if (-not (Test-Path -LiteralPath $uninstaller)) { throw \"The Autorun Organizer uninstaller does not exist: $uninstaller\" }",
+            "$process = Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Verb RunAs -Wait -PassThru",
+            "if ($process.ExitCode -ne 0) { throw \"Autorun Organizer uninstaller exited with code $($process.ExitCode).\" }"
+        ]
+    },
+    "notes": "Requires an elevated PowerShell session. The publisher's setup performs a normal Windows installation outside the Scoop app directory.",
     "checkver": {
         "script": [
             "$html = (Invoke-WebRequest -Uri 'https://www.chemtable.com/autorun-organizer.htm' -UseBasicParsing).Content",
@@ -26,6 +43,5 @@
     },
     "autoupdate": {
         "url": "https://files.chemtable.com/ao/autorun-organizer-setup.exe"
-    },
-    "notes": "Scoop extracts the official Inno Setup payload into the app directory instead of executing the installer; installer-registered shell integration or machine-wide components are not installed."
+    }
 }
