@@ -157,11 +157,77 @@ jobs:
           $report | Set-Content -LiteralPath (Join-Path $root "keptinflow-extraction-report.txt") -Encoding utf8
           $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+      - name: Verify extracted app launch and default system footprint
+        shell: pwsh
+        env:
+          WORK_ROOT: ${{ runner.temp }}/keptinflow-nsis-test
+        run: |
+          $ErrorActionPreference = "Stop"
+          $root = $env:WORK_ROOT
+          $appDir = Join-Path $root "nsis-extracted"
+          $app = Join-Path $appDir "keptinflow.exe"
+          $helper = Join-Path $appDir "keptinflow-lockhelper.exe"
+          $installer = Join-Path $root "KeptInFlow-setup.exe"
+          $reportPath = Join-Path $root "runtime-smoke-test.txt"
+          $lines = [System.Collections.Generic.List[string]]::new()
+
+          foreach ($path in @($installer, $app, $helper)) {
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Required extracted file is missing: $path" }
+            $sig = Get-AuthenticodeSignature -LiteralPath $path
+            $lines.Add("$([System.IO.Path]::GetFileName($path)): Authenticode=$($sig.Status); Signer=$($sig.SignerCertificate.Subject)")
+            $lines.Add("$([System.IO.Path]::GetFileName($path)): SHA256=$((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash)")
+          }
+
+          $serviceBefore = @(Get-CimInstance Win32_Service | Where-Object { $_.Name -match "KeptInFlow" -or $_.DisplayName -match "KeptInFlow" } | ForEach-Object { $_.Name })
+          $runKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+          $runBefore = @()
+          if (Test-Path $runKey) {
+            $runBefore = @((Get-ItemProperty -LiteralPath $runKey).PSObject.Properties |
+              Where-Object { $_.Name -notmatch "^PS" } | ForEach-Object { $_.Name })
+          }
+
+          $lines.Add("")
+          $lines.Add("Launching the extracted main executable directly from the NSIS payload; no setup routine is run.")
+          $lines | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $process = Start-Process -FilePath $app -WorkingDirectory $appDir -PassThru
+          $lines.Add("Process started: PID=$($process.Id)")
+          $exited = $process.WaitForExit(15000)
+          $process.Refresh()
+          if ($exited -or $process.HasExited) {
+            $lines.Add("Main executable exited within 15 seconds. ExitCode=$($process.ExitCode)")
+          } else {
+            $lines.Add("Main executable remained running for 15 seconds.")
+            & taskkill.exe /PID $process.Id /T /F | Out-String | ForEach-Object { $lines.Add($_.Trim()) }
+          }
+
+          Start-Sleep -Seconds 2
+          $serviceAfter = @(Get-CimInstance Win32_Service | Where-Object { $_.Name -match "KeptInFlow" -or $_.DisplayName -match "KeptInFlow" } | ForEach-Object { $_.Name })
+          $newServices = @($serviceAfter | Where-Object { $serviceBefore -notcontains $_ })
+          $lines.Add("New KeptInFlow services after direct launch: $(@($newServices).Count)")
+          foreach ($service in $newServices) { $lines.Add("  $service") }
+
+          $runAfter = @()
+          if (Test-Path $runKey) {
+            $runAfter = @((Get-ItemProperty -LiteralPath $runKey).PSObject.Properties |
+              Where-Object { $_.Name -notmatch "^PS" } | ForEach-Object { $_.Name })
+          }
+          $newRunValues = @($runAfter | Where-Object { $runBefore -notcontains $_ })
+          $lines.Add("New HKCU Run values after direct launch: $(@($newRunValues).Count)")
+          foreach ($value in $newRunValues) { $lines.Add("  $value") }
+
+          $lines | Add-Content -LiteralPath $reportPath -Encoding utf8
+          $lines | ForEach-Object { Write-Host $_ }
+          $lines | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
       - name: Upload extraction evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: keptinflow-nsis-extraction-report
-          path: ${{ runner.temp }}/keptinflow-nsis-test/*
+          path: |
+            ${{ runner.temp }}/keptinflow-nsis-test/7zip-listing.txt
+            ${{ runner.temp }}/keptinflow-nsis-test/7zip-extraction.log
+            ${{ runner.temp }}/keptinflow-nsis-test/keptinflow-extraction-report.txt
+            ${{ runner.temp }}/keptinflow-nsis-test/runtime-smoke-test.txt
           if-no-files-found: warn
           retention-days: 30
