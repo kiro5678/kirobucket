@@ -1,0 +1,20 @@
+{
+    "version": "3.6.1",
+    "description": "Secure-by-default application firewall for Windows with per-application rules and network controls.",
+    "homepage": "https://tinywall.pados.hu/",
+    "license": "GPL-3.0-only",
+    "url": "https://tinywall.pados.hu/ccount/click.php?id=5",
+    "checkver": {
+        "url": "https://tinywall.pados.hu/download.php",
+        "regex": "Latest version:\\s*([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://tinywall.pados.hu/ccount/click.php?id=5"
+    },
+    "notes": [
+        "Review only: the official x86/x64 download is an MSI. Scoop's current default MSI handling extracts MSI payloads; it does not execute the installer's custom actions. TinyWall's WiX package invokes TinyWall.exe /install and /uninstall as custom actions and starts the controller. The application also requires a privileged Windows service to manage Windows Filtering Platform rules.",
+        "The WiX source declares Product Id="*", so the MSI ProductCode is generated for each build. The legacy Scoop msi manifest property is deprecated and requires a product code; do not replace it with installer, which is intended for non-MSI installers.",
+        "A supported elevated install, update, and uninstall lifecycle has not been established, and the SHA-256 of the current 3.6.1 MSI has not been verified. Keep this manifest outside bucket/ until both are resolved.",
+        "After installation, TinyWall blocks most network communication by default. Do not install over a remote connection; users must configure application whitelisting from the tray menu."
+    ]
+}
