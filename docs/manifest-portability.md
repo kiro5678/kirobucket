@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 895 active manifests. Ninety-eight Review manifests are staged outside `bucket/` in `under review kirobucket/`; 35 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 896 active manifests. Ninety-eight Review manifests are staged outside `bucket/` in `under review kirobucket/`; 35 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,14 +22,14 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 800 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 801 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 60 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
-| Not reconciled | 34 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **895** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
+| Not reconciled | 35 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
+| **Total** | **896** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 860 of the 895 active bucket manifests (800 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-eight additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 861 of the 896 active bucket manifests (801 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-eight additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
