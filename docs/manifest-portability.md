@@ -176,6 +176,10 @@ The installer type describes the package or setup technology used by the manifes
 
 The following table explicitly lists the manifests transferred into `bucket/`: the 98 JSON manifests moved out of `under review kirobucket/`, plus `tinywall-shirazadam.json`, which was restored directly in `bucket/` after it had previously been removed. All 99 entries are linked to their current files in `bucket/`. Their presence here records pending review only; it does not mean every item has passed archive, installation, launch, update, or uninstall testing. Do not create or store JSON manifests in `under review kirobucket/`. Record outstanding review status here.
 
+Related review records:
+- [under review kirobucket/README.md](../under%20review%20kirobucket/README.md) — explains the purpose and contents of the retained review directory.
+- [Pending Dynamic Island manifests](pending-notch-manifests.md) — tracks notch projects that still lack a verified, installable Scoop manifest.
+
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official endpoint redirects to a setup EXE, but no publisher SHA-256 is available and installer/uninstaller behavior is unknown. |
