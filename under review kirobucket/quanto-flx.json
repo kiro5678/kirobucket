@@ -25,7 +25,7 @@
         ],
         "regex": "^(?<version>\\S+)\\s(?<tag>\\S+)\\s(?<name>.+\\.rmskin)$"
     },
-    "notes": "quanto-flx can be installed by SkinInstaller.exe",
+    "notes": "This is a Rainmeter RMSKIN skin package, not a standalone application. Open the downloaded .rmskin file with Rainmeter's SkinInstaller to apply it; this manifest only downloads the package.",
     "autoupdate": {
         "url": "https://github.com/stevehsudrawing/quantoflx/releases/download/$matchTag/$matchName#/quantoflx.rmskin"
     }
