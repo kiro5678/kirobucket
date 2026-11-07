@@ -36,6 +36,6 @@
         }
     },
     "notes": [
-        "This manifest only downloads the x64/x86 ZIP packages. It does not create or start the IPBan Windows service or change Windows audit policy. Extracting the ZIP alone does not enable IPBan protection."
+        "This manifest extracts the x64/x86 ZIP packages only. It does not create or start the IPBan Windows service or change Windows audit policy. The upstream service setup performs those actions; extracting the ZIP alone does not enable IPBan protection."
     ]
 }
