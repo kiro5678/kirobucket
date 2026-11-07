@@ -22,12 +22,13 @@ on:
       - master
     paths:
       - 'bucket/majorprivacy.json'
+      - 'bucket/keptinflow.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
       - master
     paths:
-      - 'under review kirobucket/autooff.json'
+      - 'bucket/autooff.json'
 
 permissions:
   contents: read
@@ -65,10 +66,10 @@ jobs:
           } elseif ($env:EVENT_NAME -eq 'push') {
             $pushEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
             $changedPaths = @($pushEvent.head_commit.added) + @($pushEvent.head_commit.modified) + @($pushEvent.head_commit.removed)
-            $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'under review kirobucket/keptinflow.json')
+            $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'bucket/keptinflow.json')
 
             if ($runForKeptInFlow) {
-              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/keptinflow.json'
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/keptinflow.json'
               $officialReleasePrefix = 'https://github.com/jwwpua/keptinflow-releases/releases/download/'
               $targetProduct = 'KeptInFlow'
             } else {
@@ -86,7 +87,7 @@ jobs:
             if (-not $url.StartsWith($officialReleasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) { throw "Manifest URL is not an official $targetProduct release asset." }
             if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw "Manifest SHA-256 for $targetProduct must be a 64-character hexadecimal digest." }
           } elseif ($env:EVENT_NAME -eq 'pull_request') {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/autooff.json'
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/autooff.json'
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
             $url = [string]$manifest.url
