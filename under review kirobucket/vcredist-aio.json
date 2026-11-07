@@ -13,8 +13,6 @@
         "url": "https://github.com/abbodi1406/vcredist/releases/download/v$version/VisualCppRedist_AIO_x86_x64_$matchBuild.zip"
     },
     "notes": [
-        "Review status: GitHub Release v0.106.0 publishes the SHA-256 digest used above. The release API confirms the ZIP asset is VisualCppRedist_AIO_x86_x64_106.zip.",
-        "The upstream README instructs users to extract the package and run Installer.cmd as administrator. It states that the installer checks for and removes existing non-compliant Visual C++ runtimes before installing the bundled runtimes.",
-        "This staged manifest only downloads and extracts the ZIP. It does not execute Installer.cmd or any runtime installer, and it intentionally declares no bin shim or shortcut because the archive payload and exact script path have not been inspected. Verify the archive, script contents, and install/uninstall behavior before moving this manifest into bucket/."
+        "To install the Visual C++ runtimes, run Installer.cmd from the extracted package as administrator. This changes system-wide runtimes; the upstream installer may remove existing non-compliant versions before installing, and Scoop uninstall does not remove the installed runtimes."
     ]
 }
