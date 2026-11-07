@@ -21,9 +21,7 @@ on:
     branches:
       - master
     paths:
-      - '.github/workflows/multi-engine-installer-type-inspector.yml'
       - 'bucket/majorprivacy.json'
-      - 'under review kirobucket/keptinflow.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
