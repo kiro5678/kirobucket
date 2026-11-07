@@ -6,7 +6,7 @@ on:
       - master
     paths:
       - ".github/workflows/tinywall-msi-extraction-test.yml"
-      - "under review kirobucket/tinywall.json"
+      - "bucket/tinywall.json"
   workflow_dispatch:
 
 permissions:
@@ -37,7 +37,7 @@ jobs:
           $report = [System.Collections.Generic.List[string]]::new()
           $results = [System.Collections.Generic.List[object]]::new()
 
-          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/tinywall.json'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/tinywall.json'
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
           if ($manifest.version -ne '3.6.1') { throw "Unexpected TinyWall manifest version: $($manifest.version)" }
           if ($manifest.hash -ne $manifest.architecture.'64bit'.hash) { throw 'The root hash and 64-bit architecture hash differ.' }
