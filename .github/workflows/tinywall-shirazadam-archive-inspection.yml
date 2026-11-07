@@ -115,7 +115,7 @@ jobs:
             Write-Host "Extracted files: $($files.Count)"
 
             foreach ($file in $files) {
-              $relative = [System.IO.Path]::GetRelativePath($extractPath, $file.FullName).Replace('', '/')
+              $relative = $file.FullName.Substring($extractPath.Length).TrimStart([char]92)
               $peMachine = ''
               $fileDescription = ''
               $productName = ''
@@ -155,7 +155,7 @@ jobs:
             $serviceCandidates = @($files | Where-Object {
               $_.Name -match '^(TinyWall|TinyWallService|ModernTinyWall\.Service)\.exe$'
             } | ForEach-Object {
-              [System.IO.Path]::GetRelativePath($extractPath, $_.FullName).Replace('', '/')
+              $_.FullName.Substring($extractPath.Length).TrimStart([char]92)
             })
 
             $result = [pscustomobject]@{
@@ -198,6 +198,18 @@ jobs:
           $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'inspection-report.json') -Encoding utf8
           $summary | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
           Write-Host 'All archive downloads, hashes, main executable paths, and PE architectures passed.'
+
+      - name: Remove downloaded archives and extracted binaries
+        if: always()
+        shell: pwsh
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP 'tinywall-shirazadam-inspection'
+          if (Test-Path -LiteralPath $root -PathType Container) {
+            Get-ChildItem -LiteralPath $root -Directory -Force |
+              Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+            Get-ChildItem -LiteralPath $root -Filter '*.zip' -File -Force |
+              Remove-Item -Force -ErrorAction SilentlyContinue
+          }
 
       - name: Upload archive inspection report and inventories
         if: always()
