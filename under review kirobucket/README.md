@@ -18,7 +18,7 @@ A manifest belongs here when it is newly added but still needs verification, whe
 
 ## Current review queue
 
-The folder currently contains **19 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
+The folder currently contains **97 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
 
 | Manifest | Reason |
 | --- | --- |
@@ -40,4 +40,4 @@ The folder currently contains **19 staged manifests**. The placeholder file is n
 | [vcredist-aio](vcredist-aio.json) | The ZIP contains a system-wide Visual C++ runtime installer that must be run manually as administrator. The archive and its broad runtime replacement/removal behavior still need inspection. |
 | [visual-cpp-redist-aio](visual-cpp-redist-aio.json) | The x86/x64 manifest runs the upstream Installer.cmd quietly with elevation. Verify the archive root, script behavior, effects on existing runtimes, and update/uninstall implications. |
 | [visual-cpp-redist-aio-arm64](visual-cpp-redist-aio-arm64.json) | The ARM64 SFX is run quietly with elevation. Confirm the vendor switches and system-wide installation behavior; Scoop uninstall intentionally does not remove the installed runtimes. |
-
+| [Skwire Empire review batch](skwire-review.md) (**79 manifests**) | ZIP download URLs are recorded, but archive contents, SHA-256 values, executable paths, and shortcut targets have not yet been verified. See the batch index for dependencies, compatibility notes, and three entries not staged. |

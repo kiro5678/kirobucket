@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 894 active manifests. Eighteen Review manifests are staged outside `bucket/` in `under review kirobucket/`; 34 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 894 active manifests. Ninety-seven Review manifests are staged outside `bucket/` in `under review kirobucket/`; 34 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -29,7 +29,7 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | **Total** | **894** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 860 of the 894 active bucket manifests (800 Portable and 60 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Eighteen additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 860 of the 894 active bucket manifests (800 Portable and 60 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-seven additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Detect It Easy 4.0.0 archive layout
 
