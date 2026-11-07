@@ -11,5 +11,8 @@
     },
     "autoupdate": {
         "url": "https://github.com/jwwpua/keptinflow-releases/releases/download/v$version/KeptInFlow-setup.exe"
-    }
+    },
+    "notes": [
+        "Review status: the official Windows setup is being identified with KiroBucket's Multi-Engine Installer Type Inspector. The workflow verifies the published SHA-256 and runs static installer detection only; it does not execute the setup or prove that the application is portable."
+    ]
 }
