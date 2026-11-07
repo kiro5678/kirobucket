@@ -65,7 +65,7 @@ jobs:
                   continue
               }
 
-              if ($line -match '^\|\s*\[[^\]]+\]\(\.\./bucket/(?<file>[^)]+\.json)\)\s*\|') {
+              if ($line -match '(?i)^\|\s*\[[^\]]+\]\(\.\./bucket/(?<file>[^)]+\.json)\)\s*\|') {
                   $manifestName = [System.IO.Path]::GetFileNameWithoutExtension($Matches.file)
                   if ($categoryMap.ContainsKey($manifestName)) {
                       throw "Manifest '$manifestName' appears in more than one functional category in docs/categories.md."
