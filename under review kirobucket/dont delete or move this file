@@ -1,5 +1,0 @@
-DO NOT DELETE OR MOVE THIS FILE.
-
-This file marks the `under review kirobucket` folder as a permanent part of the KiroBucket repository workflow.
-
-Keep this folder in its current location. It stores manifests awaiting review, repair, or verification. Files placed here are outside `bucket/` and must not be treated as active Scoop manifests until approved.
