@@ -174,9 +174,12 @@ The installer type describes the package or setup technology used by the manifes
 
 
 
+## Review before classifying
+
 The following table explicitly lists the manifests transferred into `bucket/`: the 98 JSON manifests moved out of `under review kirobucket/`, plus `tinywall-shirazadam.json`, which was restored directly in `bucket/` after it had previously been removed. All 99 entries are linked to their current files in `bucket/`. Their presence here records pending review only; it does not mean every item has passed archive, installation, launch, update, or uninstall testing.
 
 The `under review kirobucket/` directory is retained only for documentation and the protected placeholder file. The 98 legacy JSON manifests formerly staged there were moved into `bucket/` without changing their contents. No JSON manifest files are stored in that directory. Do not create new JSON manifest files there; record all review status and supporting evidence in this section.
+
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official endpoint redirects to a setup EXE, but no publisher SHA-256 is available and installer/uninstaller behavior is unknown. |
