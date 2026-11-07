@@ -36,9 +36,6 @@
         }
     },
     "notes": [
-        "Review status: the official Windows ZIP distributions are available for x64 and x86. The 4.1.0 SHA-256 digests in this manifest are taken from the official GitHub release API.",
-        "The upstream Windows installer extracts IPBan into C:\\Program Files\\IPBan, changes Windows audit policy settings, creates the IPBan Windows service, and starts it by default. IPBan Free runs as a background service and does not include a standalone GUI.",
-        "This staged manifest only downloads the release ZIP. It intentionally defines no service installation, start, stop, or removal hooks and no executable shim or shortcut because the archive layout and a Scoop-safe service lifecycle have not been tested.",
-        "Keep this manifest in under review kirobucket until the archive contents, runtime requirements, elevated service registration, configuration/database persistence, upgrade behavior, audit-policy handling, and complete service cleanup on uninstall have been verified."
+        "This manifest only downloads the x64/x86 ZIP packages. It does not create or start the IPBan Windows service or change Windows audit policy. Extracting the ZIP alone does not enable IPBan protection."
     ]
 }
