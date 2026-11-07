@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 896 active manifests. Ninety-seven legacy Review JSON files remain in `under review kirobucket/` and are not installable; new review items must be documented here without creating JSON files; 35 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 896 active manifests. The review section below records 99 manifests with outstanding verification checks; 35 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -24,12 +24,12 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | --- | --- | --- | --- |
 | Portable | 801 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 60 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
+| Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 35 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **896** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
+| **Total** | **896** | Multiple package types | All current JSON manifests in `bucket/` on `master. |
 
 
-The explicit portability classifications currently cover 861 of the 896 active bucket manifests (801 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-seven legacy Review JSON files remain in `under review kirobucket/` and are not included in the active bucket inventory. New Review items are documentation-only and must not create additional JSON files.
+The explicit portability classifications currently cover 861 of the 896 active bucket manifests (801 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
@@ -176,9 +176,9 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-The following table explicitly lists the manifests transferred into `bucket/`: the 98 JSON manifests moved out of `under review kirobucket/`, plus `tinywall-shirazadam.json`, which was restored directly in `bucket/` after it had previously been removed. All 99 entries are linked to their current files in `bucket/`. Their presence here records pending review only; it does not mean every item has passed archive, installation, launch, update, or uninstall testing.
+The following table lists 99 active manifests with outstanding verification checks: the 98 legacy review manifests migrated into `bucket/`, plus `tinywall-shirazadam.json`, which was restored directly in `bucket/` after it had previously been removed. All 99 entries link to their current files in `bucket/`. Their presence here records pending review only; it does not mean every item has passed archive, installation, launch, update, or uninstall testing.
 
-The `under review kirobucket/` directory is retained only for documentation and the protected placeholder file. The 98 legacy JSON manifests formerly staged there were moved into `bucket/` without changing their contents. No JSON manifest files are stored in that directory. Do not create new JSON manifest files there; record all review status and supporting evidence in this section.
+All active manifest files are kept in `bucket/`. Record outstanding review status and supporting evidence in this section; no separate manifest-staging directory is used.
 
 | Manifest | Installer/package type | Why it needs review |
 | --- | --- | --- |
