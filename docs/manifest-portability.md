@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 894 active manifests. Ninety-seven Review manifests are staged outside `bucket/` in `under review kirobucket/`; 34 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 895 active manifests. Ninety-seven Review manifests are staged outside `bucket/` in `under review kirobucket/`; 35 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -26,10 +26,10 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Nonportable | 60 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | Review items are staged outside `bucket/` and are excluded from the active bucket inventory. |
 | Not reconciled | 34 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **894** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
+| **Total** | **895** | Multiple package types | Current JSON files in `bucket/` on `master`; Review files are stored outside the active bucket. |
 
 
-The explicit portability classifications currently cover 860 of the 894 active bucket manifests (800 Portable and 60 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-seven additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
+The explicit portability classifications currently cover 860 of the 895 active bucket manifests (800 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. Ninety-seven additional manifests are held in `under review kirobucket/` and are not included in the active bucket inventory.
 
 ### Detect It Easy 4.0.0 archive layout
 
@@ -61,7 +61,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | PowerShell script | [winutil](../bucket/winutil.json) | 1 |
 | SCR package | [ghost-saver](../bucket/ghost-saver.json) | 1 |
 | TAR.GZ archive | [0install-win](../bucket/0install-win.json) | 1 |
-| **Total** | **All bucket manifests** | **894** |
+| **Total** | **All bucket manifests** | **895** |
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
 ## Nonportable manifests by installer type
