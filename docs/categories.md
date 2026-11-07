@@ -32,13 +32,13 @@
 | System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
-| Time Tracking & Focus | 13 | [View](#time-tracking-focus) |
+| Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 891**
+**Total unique manifests: 892**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -949,6 +949,7 @@ StarCodec 20261016 is staged for verification in [under review kirobucket](../un
 | [desktop-calendar-tray-ok](../bucket/desktop-calendar-tray-ok.json) | 4.51 | 64bit: 96.1 KiB | 2026-05-08 | Calendar utility for the Windows system tray. | [Homepage](https://www.softwareok.com/?Download=Desktop.Calendar.Tray.OK) |
 | [desktop-digital-clock](../bucket/desktop-digital-clock.json) | 6.41 | 64bit: 455.4 KiB | 2026-10-15 | Display a digital clock on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopDigitalClock) |
 | [kalarm](../bucket/kalarm.json) | 3573 | 64bit: 151.4 MiB | 2026-10-30 | Personal alarm message, command and email scheduler application | [Homepage](https://apps.kde.org/kalarm/) |
+| [keptinflow](../bucket/keptinflow.json) | 0.89.0 | 64bit: 21.9 MiB | 2026-11-03 | Desktop productivity app for screen capture, dictation, smart paste, time tracking, client work, and meetings. | [Homepage](https://keptinflow.com/) |
 | [monitor-turn-off-timer-ok](../bucket/monitor-turn-off-timer-ok.json) | 2018.07.30 | 64bit: 12.0 KiB | 2018-07-30 | Turn off the monitor using a timer. | [Homepage](https://www.softwareok.com/?Download=Monitor.Turn.Off.Timer.OK) |
 | [only-stopwatch](../bucket/only-stopwatch.json) | 6.63 | 64bit: 135.5 KiB | 2026-04-20 | Portable stopwatch. | [Homepage](https://www.softwareok.com/?Download=OnlyStopWatch) |
 | [timescribe](../bucket/timescribe.json) | 1.17.1 | 64bit: 165.0 MiB | 2026-09-21 | Smart and private time tracking for Windows. | [Homepage](https://github.com/WINBIGFOX/TimeScribe) |
