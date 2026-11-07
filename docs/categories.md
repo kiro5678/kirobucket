@@ -35,10 +35,10 @@
 | Time Tracking & Focus | 13 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 94 | [View](#windows-customization) |
+| Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 890**
+**Total unique manifests: 891**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -58,7 +58,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Neuber Suite | 2 | [View](#neuber-suite) |
 | Rizonesoft Suite | 14 | [View](#rizonesoft-suite) |
 | SoftwareOK Suite | 81 | [View](#softwareok-suite) |
-| Sordum Suite | 63 | [View](#sordum-suite) |
+| Sordum Suite | 59 | [View](#sordum-suite) |
 | Türkaysoft Suite | 8 | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | [View](#vovsoft-suite) |
 
