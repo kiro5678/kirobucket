@@ -10,10 +10,5 @@
     },
     "autoupdate": {
         "url": "https://api.antonvideo.app/v1/releases/download/windows"
-    },
-    "notes": [
-        "Review status: the official Windows endpoint currently redirects to an Anton setup executable, but no publisher checksum was available for verification.",
-        "This manifest downloads the setup file only. It does not run an unverified installer or claim to manage Anton's installation or removal.",
-        "Manual inspection and verification of the setup type, installation path, silent-install behavior, and uninstaller are still required."
-    ]
+    }
 }
