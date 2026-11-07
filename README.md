@@ -40,4 +40,4 @@ The complete, automatically generated manifest inventory is maintained in [`docs
 
 Use the links in the inventory to view active manifests sorted by name, category, or date. The page is regenerated from the JSON files in `bucket/` by the [manifest documentation workflow](.github/workflows/manifest-table.yml).
 
-Manifests awaiting verification, needing repairs, or having unresolved installer behavior are staged in [`under review kirobucket/`](under%20review%20kirobucket/). Files in that folder are outside `bucket/` and are not installable until they pass review.
+Programs awaiting verification, needing repairs, or having unresolved installer behavior are listed only in the **Review before classifying** section of [`docs/manifest-portability.md`](docs/manifest-portability.md). Do not create or store JSON manifest files in `under review kirobucket/`; create a manifest under `bucket/` only after it is verified and ready for use.
