@@ -59,6 +59,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | Multiple package types: ZIP archive / CER package | [fancywm](../bucket/fancywm.json) | 1 |
 | PHP package | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1 |
 | PowerShell script | [winutil](../bucket/winutil.json) | 1 |
+| PY package | [joas-drivertrust-auditor](../bucket/joas-drivertrust-auditor.json) | 1 |
 | SCR package | [ghost-saver](../bucket/ghost-saver.json) | 1 |
 | TAR.GZ archive | [0install-win](../bucket/0install-win.json) | 1 |
 | **Total** | **All bucket manifests** | **895** |
