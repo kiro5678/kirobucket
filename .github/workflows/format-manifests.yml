@@ -5,11 +5,11 @@ on:
     branches:
       - master
     paths:
-      - 'under review kirobucket/*.json'
+      - 'bucket/*.json'
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Optional path under bucket/ or under review kirobucket/. Leave empty to normalize both folders."
+        description: "Optional manifest path under bucket/. Leave empty to normalize all bucket manifests."
         required: false
         type: string
 
@@ -50,8 +50,8 @@ jobs:
             if ($manifestInput -match '(?i)^[^/]+\.json$') {
               $manifestInput = "bucket/$manifestInput"
             }
-            if ($manifestInput -notmatch '(?i)^(?:bucket|under review kirobucket)/[^/]+\.json$') {
-              throw "Provide bucket/filename.json or under review kirobucket/filename.json. Received: $manifestInput"
+            if ($manifestInput -notmatch '(?i)^bucket/[^/]+\.json$') {
+              throw "Provide bucket/filename.json. Received: $manifestInput"
             }
             $manifestPath = Join-Path $repoRoot $manifestInput
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
@@ -62,27 +62,27 @@ jobs:
             $before = [string]$env:PUSH_BEFORE
             $after = [string]$env:PUSH_SHA
             if ([string]::IsNullOrWhiteSpace($before) -or $before -match '^0+$') {
-              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after -- "under review kirobucket")
+              $changedFiles = @(git diff-tree --no-commit-id --name-only -r $after -- "bucket")
             } else {
-              $changedFiles = @(git diff --name-only $before $after -- "under review kirobucket")
+              $changedFiles = @(git diff --name-only $before $after -- "bucket")
             }
             if ($LASTEXITCODE -ne 0) {
-              throw "Could not determine changed review manifests for push $before..$after."
+              throw "Could not determine changed bucket manifests for push $before..$after."
             }
 
             $manifestFiles = @(
               foreach ($file in $changedFiles) {
                 $normalized = ([string]$file).Replace('\', '/')
-                if ($normalized -match '(?i)^under review kirobucket/[^/]+\.json$' -and
+                if ($normalized -match '(?i)^bucket/[^/]+\.json$' -and
                     (Test-Path -LiteralPath $normalized -PathType Leaf)) {
                   Get-Item -LiteralPath $normalized
                 }
               }
             )
-            Write-Host "Found $($manifestFiles.Count) changed review manifest(s) to normalize."
+            Write-Host "Found $($manifestFiles.Count) changed bucket manifest(s) to normalize."
           } else {
             $manifestFiles = @(
-              foreach ($relativeRoot in @('bucket', 'under review kirobucket')) {
+              foreach ($relativeRoot in @('bucket')) {
                 $rootPath = Join-Path $repoRoot $relativeRoot
                 if (Test-Path -LiteralPath $rootPath -PathType Container) {
                   Get-ChildItem -LiteralPath $rootPath -Filter '*.json' -File -Recurse
@@ -124,9 +124,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ($env:EVENT_NAME -eq 'push') {
-            git add -- "under review kirobucket"
+            git add -- bucket
           } else {
-            git add -- bucket "under review kirobucket"
+            git add -- bucket
           }
           git diff --cached --quiet
           $diffExitCode = $LASTEXITCODE
