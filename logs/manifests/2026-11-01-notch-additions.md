@@ -13,7 +13,7 @@ Bloom, Dlives, Halo, Nectar, PILLAR, QNotch, Quick Pill, V-Notch, WNotch, Window
 
 ## Deferred
 
-Smart Notch and WinIslandProject/WinIsland currently return HTTP 404 at the supplied repository URLs. Advanced Dynamic Island, Jaswanth1902/Notch, and vyshnav-suresh/windows-notch have no verified Windows release assets in the checked source snapshot. The Prasun Debnath WinNotch ZIP digest is published, but its archive paths were not inspected. eIsland publishes a large Setup EXE whose payload has not been inspected. The two Windhawk projects are mods, not independent desktop applications. Reasons and source URLs are tracked in `docs/pending-notch-manifests.md`.
+Smart Notch and WinIslandProject/WinIsland currently return HTTP 404 at the supplied repository URLs. Advanced Dynamic Island, Jaswanth1902/Notch, and vyshnav-suresh/windows-notch have no verified Windows release assets in the checked source snapshot. The Prasun Debnath WinNotch ZIP digest is published, but its archive paths were not inspected. eIsland publishes a large Setup EXE whose payload has not been inspected. The two Windhawk projects are mods, not independent desktop applications. Reasons and source URLs are tracked in `docs/manifest-portability.md#review-before-classifying`.
 
 ## Validation results
 
