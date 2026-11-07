@@ -40,4 +40,4 @@ The complete, automatically generated manifest inventory is maintained in [`docs
 
 Use the links in the inventory to view active manifests sorted by name, category, or date. The page is regenerated from the JSON files in `bucket/` by the [manifest documentation workflow](.github/workflows/manifest-table.yml).
 
-Review status and outstanding verification evidence are listed in the **Review before classifying** section of [`docs/manifest-portability.md`](docs/manifest-portability.md). The legacy review JSON files were moved into `bucket/` as requested; their presence there does not mean they have passed all review checks. Do not create or store JSON manifest files in `under review kirobucket/`.
+Review status and outstanding verification evidence are listed in the **Review before classifying** section of [`docs/manifest-portability.md`](docs/manifest-portability.md). All active manifest files are stored in `bucket/`; an entry in the review section records outstanding checks and does not mean the manifest has passed them.
