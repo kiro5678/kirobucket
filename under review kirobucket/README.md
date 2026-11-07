@@ -18,24 +18,25 @@ A manifest belongs here when it is newly added but still needs verification, whe
 
 ## Current review queue
 
+The folder currently contains **18 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
+
 | Manifest | Reason |
 | --- | --- |
-| [go-away-edge-installer](go-away-edge-installer.json) | Installer type and extraction behavior are unknown; the manifest declares a shortcut but no verified setup or payload handling. |
-| [quanto-flx](quanto-flx.json) | Rainmeter RMSKIN add-on, not a standalone application; it requires Rainmeter's SkinInstaller workflow. |
-| [zenbreak-msix](zenbreak-msix.json) | MSIX file is being unpacked as a 7-Zip archive; the unpackaged executable still needs a runtime/launch test. |
-| [anton](anton.json) | Official endpoint redirects to a setup EXE, but the publisher checksum and installer/uninstaller behavior are not verified. |
-| [autooff](autooff.json) | Official 4.25 setup EXE has no upstream SHA-256; installer engine, payload, silent switches, custom install path, and portable extraction are unverified. |
-| [starcodec](starcodec.json) | Official 20261016 download page lists the standard 45.5 MB package, but the final binary URL, SHA-256, installer engine, silent arguments, codec registration, and uninstall behavior are unverified. |
-| [pulse-launcher](pulse-launcher.json) | Only a pre-release setup EXE is published; installer engine, payload layout, and uninstall behavior are unverified. |
-| [taskslinger](taskslinger.json) | Official setup has no verified Scoop-contained install path or portable extraction method. |
-| [layer](layer.json) | Tauri/NSIS setup has no separate portable build; its custom install directory and included EULA terms remain unresolved. |
-| [keptinflow](keptinflow.json) | Official setup EXE; installer engine, payload layout, silent switches, and Scoop-contained install or portable extraction behavior are unverified. |
-| [udm-pro](udm-pro.json) | 236 MB Windows setup EXE; no upstream license file or installer instructions. Installer engine, payload, silent/custom-directory switches, and uninstall behavior are unverified. |
-| [jan](jan.json) | Tauri Windows setup only (x64 and ARM64); no Windows portable archive is published. Installer payload, silent install path, and uninstall behavior remain unverified. |
-| [deeptutor](deeptutor.json) | Official Windows Portable ZIP is published, but its archive layout and actual application executable path have not yet been verified. |
-| [twindesk](twindesk.json) | Per-machine NSIS setup uses Firewall rules, an HKLM WebClient setting, TrustedPeople certificate registration, and optional AppX/virtual-camera integration; Scoop-safe install and uninstall are unverified. |
-| [mystify](mystify.json) | Official Windows ZIP has no published SHA-256; archive layout, executable path, and .NET runtime availability are unverified. It is an animation app rather than a native `.scr` screen saver. |
-| [vcredist-aio](vcredist-aio.json) | The release ZIP checksum is published, but its payload has not been inspected. The upstream installer must be run manually as administrator and changes system-wide Visual C++ runtimes; Scoop must not execute it automatically. |
-| [visual-cpp-redist-aio](visual-cpp-redist-aio.json) | x86/x64 ZIP manifest; the official Installer.cmd is invoked in quiet mode with administrator approval. Confirm the archive root layout and installation behavior before promotion. |
-| [visual-cpp-redist-aio-arm64](visual-cpp-redist-aio-arm64.json) | ARM64 SFX EXE manifest; the vendor's quiet installer is invoked with administrator approval. Verify installation behavior before promotion. |
-
+| [anton](anton.json) | The official endpoint redirects to a setup EXE, but no publisher SHA-256 is available; installer behavior, installation path, and cleanup are unverified. |
+| [autooff](autooff.json) | The official 4.25 setup EXE has no published SHA-256. Installer engine, payload, silent switches, custom install path, and cleanup behavior remain unverified. |
+| [crowdsec-windows-firewall-bouncer](crowdsec-windows-firewall-bouncer.json) | The MSI installs a Windows service and runs a bouncer-registration custom action; it requires .NET 10. A Scoop-safe service lifecycle and runtime dependency strategy are not established. |
+| [deeptutor](deeptutor.json) | The official v1.7.2 Windows Portable ZIP and SHA-256 are available, but the archive layout, main executable path, and launch behavior still need verification. |
+| [go-away-edge-installer](go-away-edge-installer.json) | The EXE is the utility's setup/configuration entry point and can change Windows behavior. Its full runtime effects, state location, and rollback behavior have not been tested from Scoop. |
+| [ipban](ipban.json) | The x64/x86 ZIPs are published, but IPBan's normal setup creates a Windows service and changes audit policy. Archive layout, configuration persistence, service lifecycle, and cleanup need verification. |
+| [jan](jan.json) | The official release provides x64 and ARM64 setup EXEs but no Windows portable archive. Payload extraction, silent/custom installation, and uninstall behavior are unverified. |
+| [keptinflow](keptinflow.json) | The official v0.89.0 setup EXE and digest are available, but the installer engine, payload, silent switches, custom install path, and uninstall behavior are unknown. |
+| [layer](layer.json) | The official x64/ARM64 assets are Tauri/NSIS setup EXEs. Custom install-directory behavior and the EULA included in the installer still need resolution. |
+| [mystify](mystify.json) | The official ZIP has no published SHA-256. Archive layout, executable path, and required .NET runtime availability have not been verified. |
+| [pulse-launcher](pulse-launcher.json) | Only the v0.1 pre-release setup EXE is published. Installer engine, embedded payload layout, and install/uninstall behavior are unverified. |
+| [quanto-flx](quanto-flx.json) | This is a Rainmeter RMSKIN add-on, not a standalone application. The manifest downloads the skin package but does not apply it through Rainmeter's SkinInstaller. |
+| [starcodec](starcodec.json) | The official page lists the 20261016 package, but the final download target, SHA-256, installer engine, codec registration, and uninstall behavior remain unverified. |
+| [taskslinger](taskslinger.json) | The official setup is a per-user installer targeting %LocalAppData%\\Programs\\TaskSlinger. No verified Scoop-contained installation or portable extraction method is available. |
+| [udm-pro](udm-pro.json) | The official v2.6.35 setup EXE and digest are available, but the installer engine, payload, silent/custom-directory switches, license terms, and uninstall behavior are unverified. |
+| [vcredist-aio](vcredist-aio.json) | The ZIP contains a system-wide Visual C++ runtime installer that must be run manually as administrator. The archive and its broad runtime replacement/removal behavior still need inspection. |
+| [visual-cpp-redist-aio](visual-cpp-redist-aio.json) | The x86/x64 manifest runs the upstream Installer.cmd quietly with elevation. Verify the archive root, script behavior, effects on existing runtimes, and update/uninstall implications. |
+| [visual-cpp-redist-aio-arm64](visual-cpp-redist-aio-arm64.json) | The ARM64 SFX is run quietly with elevation. Confirm the vendor switches and system-wide installation behavior; Scoop uninstall intentionally does not remove the installed runtimes. |
