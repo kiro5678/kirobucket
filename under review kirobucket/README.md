@@ -18,7 +18,7 @@ A manifest belongs here when it is newly added but still needs verification, whe
 
 ## Current review queue
 
-The folder currently contains **98 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
+The folder currently contains **97 staged manifests**. The placeholder file is not a manifest and is intentionally excluded.
 
 | Manifest | Reason |
 | --- | --- |
@@ -29,7 +29,6 @@ The folder currently contains **98 staged manifests**. The placeholder file is n
 | [go-away-edge-installer](go-away-edge-installer.json) | The EXE is the utility's setup/configuration entry point and can change Windows behavior. Its full runtime effects, state location, and rollback behavior have not been tested from Scoop. |
 | [ipban](ipban.json) | The x64/x86 ZIPs are published, but IPBan's normal setup creates a Windows service and changes audit policy. Archive layout, configuration persistence, service lifecycle, and cleanup need verification. |
 | [jan](jan.json) | The official release provides x64 and ARM64 setup EXEs but no Windows portable archive. Payload extraction, silent/custom installation, and uninstall behavior are unverified. |
-| [keptinflow](keptinflow.json) | The official v0.89.0 setup EXE and digest are available, but the installer engine, payload, silent switches, custom install path, and uninstall behavior are unknown. |
 | [layer](layer.json) | The official x64/ARM64 assets are Tauri/NSIS setup EXEs. Custom install-directory behavior, payload layout, and a Scoop-contained install/uninstall path remain unverified. |
 | [mystify](mystify.json) | The official ZIP has no published SHA-256. Archive layout, executable path, and required .NET runtime availability have not been verified. |
 | [pulse-launcher](pulse-launcher.json) | Only the v0.1 pre-release setup EXE is published. Installer engine, embedded payload layout, and install/uninstall behavior are unverified. |
