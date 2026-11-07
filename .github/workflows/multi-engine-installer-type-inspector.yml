@@ -23,6 +23,7 @@ on:
     paths:
       - '.github/workflows/multi-engine-installer-type-inspector.yml'
       - 'bucket/majorprivacy.json'
+      - 'under review kirobucket/keptinflow.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -64,15 +65,28 @@ jobs:
             $expectedHash = $env:INPUT_EXPECTED_SHA256.Trim()
             if ([string]::IsNullOrWhiteSpace($url)) { throw 'workflow_dispatch requires installer_url.' }
           } elseif ($env:EVENT_NAME -eq 'push') {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/majorprivacy.json'
+            $pushEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
+            $changedPaths = @($pushEvent.head_commit.added) + @($pushEvent.head_commit.modified) + @($pushEvent.head_commit.removed)
+            $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'under review kirobucket/keptinflow.json')
+
+            if ($runForKeptInFlow) {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/keptinflow.json'
+              $officialReleasePrefix = 'https://github.com/jwwpua/keptinflow-releases/releases/download/'
+              $targetProduct = 'KeptInFlow'
+            } else {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/majorprivacy.json'
+              $officialReleasePrefix = 'https://github.com/xanasoft/MajorPrivacy/releases/download/'
+              $targetProduct = 'MajorPrivacy'
+            }
+
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
             $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
             $url = [string]$source.url
             $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
             $expectedHash = [string]$source.hash
-            if ($url -notlike 'https://github.com/xanasoft/MajorPrivacy/releases/download/*') { throw 'Manifest URL is not an official MajorPrivacy release asset.' }
-            if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw 'Manifest architecture hash must be a 64-character SHA-256 digest.' }
+            if (-not $url.StartsWith($officialReleasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) { throw "Manifest URL is not an official $targetProduct release asset." }
+            if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw "Manifest SHA-256 for $targetProduct must be a 64-character hexadecimal digest." }
           } elseif ($env:EVENT_NAME -eq 'pull_request') {
             $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/autooff.json'
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
