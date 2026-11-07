@@ -27,10 +27,5 @@
                 "url": "https://github.com/janhq/jan/releases/download/v$version/Jan_$version_arm64-setup.exe"
             }
         }
-    },
-    "notes": [
-        "Review status: the official v0.8.8 x64 and ARM64 Windows setup assets and their SHA-256 digests are verified. The upstream Windows bundle configuration targets NSIS and MSI, but the release assets used here are the architecture-specific setup EXEs.",
-        "No separate Windows portable archive is published with this release. The installer payload, silent/custom-directory behavior, and safe Scoop install/uninstall sequence have not been verified.",
-        "This manifest downloads the setup only and intentionally declares no shim or shortcut. Keep it under review until the Windows installer behavior is inspected and tested."
-    ]
+    }
 }
