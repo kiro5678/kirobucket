@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - ".github/workflows/tinywall-msi-extraction-test.yml"
+      - "under review kirobucket/tinywall.json"
   workflow_dispatch:
 
 permissions:
@@ -35,6 +36,18 @@ jobs:
 
           $report = [System.Collections.Generic.List[string]]::new()
           $results = [System.Collections.Generic.List[object]]::new()
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review kirobucket/tinywall.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          if ($manifest.version -ne '3.6.1') { throw "Unexpected TinyWall manifest version: $($manifest.version)" }
+          if ($manifest.hash -ne $manifest.architecture.'64bit'.hash) { throw 'The root hash and 64-bit architecture hash differ.' }
+          if ($manifest.bin -ne 'ProgramFiles\\TinyWall\\TinyWall.exe') { throw "Unexpected TinyWall bin path: $($manifest.bin)" }
+          $downloadPage = Invoke-WebRequest -Uri ([string]$manifest.checkver.url) -TimeoutSec 120
+          $versionMatch = [regex]::Match($downloadPage.Content, [string]$manifest.checkver.regex)
+          if (-not $versionMatch.Success -or $versionMatch.Groups[1].Value -ne $manifest.version) {
+            throw "The official download page does not match manifest version $($manifest.version)."
+          }
+          Add-Report "Manifest version and checkver source verified: $($manifest.version)"
 
           function Add-Report {
             param([string]$Text)
@@ -123,11 +136,13 @@ jobs:
               Name = 'TinyWall x86-x64'
               Url = 'https://tinywall.pados.hu/ccount/click.php?id=5'
               Architecture = 'x86/x64 download page asset'
+              ExpectedSha256 = [string]$manifest.architecture.'64bit'.hash
             },
             @{
               Name = 'TinyWall ARM64'
               Url = 'https://tinywall.pados.hu/ccount/click.php?id=6'
               Architecture = 'ARM64 download page asset'
+              ExpectedSha256 = [string]$manifest.architecture.arm64.hash
             }
           )
 
@@ -152,6 +167,7 @@ jobs:
               SHA256 = ''
               Size = 0
               SignatureStatus = ''
+              HashMatchesManifest = $false
               AdministrativeExtraction = 'not-tested'
               AdministrativeMainExe = ''
               LessMsiExtraction = 'not-tested'
@@ -171,6 +187,12 @@ jobs:
               $itemResult.SHA256 = $actualHash
               $itemResult.Size = $size
               $itemResult.SignatureStatus = [string]$signature.Status
+              if ($actualHash -ne $target.ExpectedSha256) {
+                throw "MSI SHA-256 does not match the manifest. Expected $($target.ExpectedSha256), got $actualHash."
+              }
+              $itemResult.HashMatchesManifest = $true
+              if ($signature.Status -ne 'Valid') { throw "MSI Authenticode status is not Valid: $($signature.Status)" }
+              Add-Report "Manifest SHA-256 matches: $actualHash"
               Add-Report "Downloaded MSI: $($target.Name)"
               Add-Report "Bytes: $size"
               Add-Report "SHA-256: $actualHash"
@@ -206,9 +228,16 @@ jobs:
               Add-Report "msiexec /a exit code: $($process.ExitCode)"
               $adminInventory = @(Get-Inventory -Directory $adminOut -Label "$slug-admin")
               $adminMain = @($adminInventory | Where-Object { $_.Path -match '(^|/)TinyWall\.exe$' })
-              if ($process.ExitCode -eq 0 -and $adminMain.Count -gt 0) {
+              $requiredPayloadFiles = @(
+                (Join-Path $adminOut 'ProgramFiles\\TinyWall\\TinyWall.exe'),
+                (Join-Path $adminOut 'CommonAppData\\TinyWall\\profiles.json'),
+                (Join-Path $adminOut 'CommonAppData\\TinyWall\\hosts.custom')
+              )
+              $missingPayloadFiles = @($requiredPayloadFiles | Where-Object { -not (Test-Path -LiteralPath $_ -PathType Leaf) })
+              if ($process.ExitCode -eq 0 -and $adminMain.Count -gt 0 -and $missingPayloadFiles.Count -eq 0) {
                 $itemResult.AdministrativeExtraction = 'success'
                 $itemResult.AdministrativeMainExe = ($adminMain | ForEach-Object { $_.Path }) -join '; '
+                Add-Report 'Verified TinyWall.exe, profiles.json, and hosts.custom in the administrative image.'
               } else {
                 $itemResult.AdministrativeExtraction = "failed or no TinyWall.exe found (exit $($process.ExitCode))"
               }
@@ -269,10 +298,10 @@ jobs:
           @(
             '## TinyWall MSI inspection'
             ''
-            '| Package | Download | SHA-256 | msiexec /a | LessMSI |'
+            '| Package | Download | SHA-256 matches manifest | msiexec /a | LessMSI |'
             '|---|---|---|---|---|'
             foreach ($item in $results) {
-              "| $($item.Name) | $($item.Download) | $($item.SHA256) | $($item.AdministrativeExtraction) | $($item.LessMsiExtraction) |"
+              "| $($item.Name) | $($item.Download) | $($item.HashMatchesManifest) | $($item.AdministrativeExtraction) | $($item.LessMsiExtraction) |"
             }
             ''
             'The artifact retains the official MSI files, extracted payloads, extraction logs, PE architecture/file hashes, and the upstream installer source files.'
