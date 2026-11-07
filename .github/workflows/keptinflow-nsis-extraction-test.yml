@@ -1,0 +1,167 @@
+name: KeptInFlow NSIS Payload Extraction Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/keptinflow-nsis-extraction-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    name: Extract KeptInFlow setup without executing it
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download official setup and verify SHA-256
+        id: target
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $version = "0.89.0"
+          $url = "https://github.com/jwwpua/keptinflow-releases/releases/download/v$version/KeptInFlow-setup.exe"
+          $expected = "0ec5a05975275e360a55cb4cce40beed1452e780a1314723a29248ed8aac101e"
+          $root = Join-Path $env:RUNNER_TEMP "keptinflow-nsis-test"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $installer = Join-Path $root "KeptInFlow-setup.exe"
+
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 900
+          $item = Get-Item -LiteralPath $installer
+          if ($item.Length -ne 22979216) {
+            Write-Warning "Downloaded size $($item.Length) differs from the release metadata size 22979216."
+          }
+
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) {
+            throw "SHA-256 mismatch. Expected $expected, received $actual."
+          }
+
+          "installer_path=$installer" >> $env:GITHUB_OUTPUT
+          "work_root=$root" >> $env:GITHUB_OUTPUT
+          Write-Host "Version: $version"
+          Write-Host "Size: $($item.Length) bytes"
+          Write-Host "SHA-256: $actual"
+
+      - name: Locate 7-Zip
+        id: sevenzip
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $candidates = @(
+            (Join-Path $env:ProgramFiles "7-Zip\7z.exe"),
+            (Join-Path ${env:ProgramFiles(x86)} "7-Zip\7z.exe")
+          )
+          $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          if (-not $sevenZip) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not $sevenZip) {
+            choco install 7zip.install --yes --no-progress
+            if ($LASTEXITCODE -ne 0) { throw "Could not install 7-Zip on the runner." }
+            $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          }
+          if (-not $sevenZip) { throw "7z.exe was not found." }
+          "sevenzip_path=$sevenZip" >> $env:GITHUB_OUTPUT
+          Write-Host "Using: $sevenZip"
+
+      - name: List and extract NSIS payload without running setup
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          WORK_ROOT: ${{ steps.target.outputs.work_root }}
+          SEVENZIP_PATH: ${{ steps.sevenzip.outputs.sevenzip_path }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $sevenZip = $env:SEVENZIP_PATH
+          $installer = $env:INSTALLER_PATH
+          $root = $env:WORK_ROOT
+          $report = [System.Collections.Generic.List[string]]::new()
+
+          function Add-Line([string]$Text) {
+            $report.Add($Text)
+            Write-Host $Text
+          }
+
+          Add-Line "KeptInFlow 0.89.0 — NSIS extraction test"
+          Add-Line "======================================="
+          Add-Line "Installer: $installer"
+          Add-Line "SHA-256: $((Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash)"
+          Add-Line "Safety: the installer was not executed."
+
+          $listing = & $sevenZip l -slt $installer 2>&1
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $root "7zip-listing.txt") -Encoding utf8
+          Add-Line "7-Zip list exit code: $listExit"
+          if ($listExit -ne 0) {
+            throw "7-Zip could not list the NSIS setup. See 7zip-listing.txt."
+          }
+
+          $extractDir = Join-Path $root "nsis-extracted"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          $extractOutput = & $sevenZip x $installer "-o$extractDir" -y -bd 2>&1
+          $extractExit = $LASTEXITCODE
+          $extractOutput | Set-Content -LiteralPath (Join-Path $root "7zip-extraction.log") -Encoding utf8
+          Add-Line "7-Zip extraction exit code: $extractExit"
+          if ($extractExit -gt 1) {
+            throw "7-Zip extraction failed. Read 7zip-extraction.log before further changes."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+          Add-Line "Extracted file count: $($files.Count)"
+          Add-Line ""
+          Add-Line "Extracted files:"
+          foreach ($file in $files | Sort-Object FullName) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $file.FullName).Replace('\','/')
+            Add-Line "$relative [$($file.Length) bytes]"
+          }
+
+          $executables = @($files | Where-Object { $_.Extension -ieq ".exe" })
+          Add-Line ""
+          Add-Line "Executable candidates:"
+          foreach ($file in $executables) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $file.FullName).Replace('\','/')
+            $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($file.FullName)
+            Add-Line "$relative | Product=$($vi.ProductName) | Description=$($vi.FileDescription) | Version=$($vi.FileVersion) | Size=$($file.Length)"
+          }
+
+          $archives = @($files | Where-Object { $_.Extension.ToLowerInvariant() -in @(".7z", ".zip", ".cab") })
+          Add-Line ""
+          Add-Line "Nested archives: $($archives.Count)"
+          foreach ($archive in $archives) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $archive.FullName).Replace('\','/')
+            Add-Line "Nested archive: $relative [$($archive.Length) bytes]"
+            $nestedName = [System.IO.Path]::GetFileNameWithoutExtension($archive.Name)
+            $nestedDir = Join-Path $root ("nested-" + ($nestedName -replace '[^A-Za-z0-9_-]', '-'))
+            New-Item -ItemType Directory -Path $nestedDir -Force | Out-Null
+            $nestedOutput = & $sevenZip x $archive.FullName "-o$nestedDir" -y -bd 2>&1
+            $nestedExit = $LASTEXITCODE
+            $nestedOutput | Set-Content -LiteralPath (Join-Path $root ("nested-" + ($nestedName -replace '[^A-Za-z0-9_-]', '-') + ".log")) -Encoding utf8
+            Add-Line "Nested extraction exit code ($relative): $nestedExit"
+            if ($nestedExit -le 1) {
+              $nestedFiles = @(Get-ChildItem -LiteralPath $nestedDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+              foreach ($nestedFile in $nestedFiles | Sort-Object FullName) {
+                $nestedRelative = [System.IO.Path]::GetRelativePath($nestedDir, $nestedFile.FullName).Replace('\','/')
+                $vi = if ($nestedFile.Extension -ieq ".exe") { [System.Diagnostics.FileVersionInfo]::GetVersionInfo($nestedFile.FullName) } else { $null }
+                Add-Line "  $nestedRelative [$($nestedFile.Length) bytes]$(if ($vi) { ' | Product=' + $vi.ProductName + ' | Description=' + $vi.FileDescription + ' | Version=' + $vi.FileVersion } else { '' })"
+              }
+            }
+          }
+
+          $report | Set-Content -LiteralPath (Join-Path $root "keptinflow-extraction-report.txt") -Encoding utf8
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload extraction evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: keptinflow-nsis-extraction-report
+          path: ${{ runner.temp }}/keptinflow-nsis-test/*
+          if-no-files-found: warn
+          retention-days: 30
