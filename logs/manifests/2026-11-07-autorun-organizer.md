@@ -8,13 +8,13 @@ Inno Setup's documented default for `PrivilegesRequired` is `admin`; this runs S
 
 ## Manifest change
 
-- Runs the official Inno Setup file with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR=$dir`.
+- Runs the official Inno Setup file with `/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR="$dir"`.
 - Requires an elevated Scoop session before installation and uninstallation.
 - Keeps the original `bin` and Start Menu shortcut, targeting `AutorunOrganizer,1.exe` inside the application directory.
 - Uses the Inno uninstaller under `$dir\unins000.exe`; safely skips it only for an older extraction-only installation that has no registered Inno uninstaller.
 - Does not add `/ALLUSERS`: Inno documents that it only has an effect when the installer script enables `PrivilegesRequiredOverridesAllowed=commandline`. The default `admin` mode already selects administrative installation.
 - Adds the Scoop-supported `##` comment marker `Installer Type: Inno Setup` so the generated inventory records the verified engine without setting `innosetup: true` (which would select extraction rather than normal setup execution).
-- Keeps the manifest classified as **Nonportable**. The installed application files are under the Scoop version directory, but normal setup registration is still performed in Windows.
+- Keeps the manifest classified as **Nonportable**. The quoted `/DIR="$dir"` keeps the installed application files under the Scoop version directory, including when the Scoop root contains spaces, but normal setup registration is still performed in Windows.
 
 ## Documentation and references
 

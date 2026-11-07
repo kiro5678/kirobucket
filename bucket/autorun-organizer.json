@@ -13,7 +13,7 @@
             "/SUPPRESSMSGBOXES",
             "/NORESTART",
             "/SP-",
-            "/DIR=$dir"
+            "/DIR=\"$dir\""
         ]
     },
     "bin": "AutorunOrganizer,1.exe",

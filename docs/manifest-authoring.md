@@ -98,7 +98,7 @@
         "/SUPPRESSMSGBOXES",
         "/NORESTART",
         "/SP-",
-        "/DIR=$dir"
+        "/DIR=\"$dir\""
     ]
 }
 ```

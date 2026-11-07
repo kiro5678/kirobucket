@@ -108,7 +108,7 @@ The installer type describes the package or setup technology used by the manifes
 | [agaric](../bucket/agaric.json) | NSIS | Runs the NSIS setup with silent install arguments and `/D=$dir`. NSIS-style switches; engine inferred. |
 | [air-server-np](../bucket/air-server-np.json) | MSI | Runs `msiexec /i` with elevation; installs through Windows Installer. |
 | [another](../bucket/another.json) | NSIS | Runs the vendor setup with `/S /NS /D=$dir`. NSIS-style switches; engine inferred. |
-| [autorun-organizer](../bucket/autorun-organizer.json) | Inno | Runs the normal Inno Setup installation in administrative mode with `/DIR=$dir`; application files and the default Inno uninstaller remain inside the Scoop version directory while Windows installation registration is created. |
+| [autorun-organizer](../bucket/autorun-organizer.json) | Inno | Runs the normal Inno Setup installation in administrative mode with `/DIR="$dir"`; application files and the default Inno uninstaller remain inside the Scoop version directory while Windows installation registration is created. |
 | [belarc-advisor](../bucket/belarc-advisor.json) | Vendor EXE setup (engine unverified) | Runs the vendor installer; `/D=$dir` is intended to redirect its installation, but the manifest notes that this behavior has not been independently confirmed. |
 | [biscuit](../bucket/biscuit.json) | NSIS | Runs the NSIS setup silently from `pre_install`; it is not extracted as an archive. |
 | [clustercut](../bucket/clustercut.json) | NSIS | Runs the vendor setup with `/S /NS /D=$dir`. NSIS-style switches; engine inferred. |
