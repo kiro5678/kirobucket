@@ -190,7 +190,7 @@ The following 19 manifests are kept in [`under review kirobucket/`](../under%20r
 | [vcredist-aio](../under%20review%20kirobucket/vcredist-aio.json) | x86/x64 ZIP / system runtime installer | The archive contains an administrator-run Visual C++ runtime installer. Its payload and effects on existing system runtimes need inspection. |
 | [visual-cpp-redist-aio](../under%20review%20kirobucket/visual-cpp-redist-aio.json) | x86/x64 ZIP / system runtime installer | The manifest runs Installer.cmd quietly with elevation. Verify the archive root, installer behavior, and system-wide runtime changes before promotion. |
 | [visual-cpp-redist-aio-arm64](../under%20review%20kirobucket/visual-cpp-redist-aio-arm64.json) | ARM64 SFX / system runtime installer | The manifest runs the vendor SFX quietly with elevation. Verify the switches and installation behavior; system runtimes are not removed by Scoop uninstall. |
-| [vtuploader](../under%20review%20kirobucket/vtuploader.json) | Standalone x86/x64 EXE (publisher hash unavailable) | The official site identifies v1.26.4.12 as portable and links both architecture-specific binaries, but does not publish SHA-256. The files could not be downloaded for independent hashing and inspection; a third-party AI-heuristic warning for a same-named x64 file remains unverified. |
+| [vtuploader-com](../under%20review%20kirobucket/vtuploader-com.json) | Standalone x86/x64 EXE (publisher hash unavailable) | The vtuploader.com client is distinct from Scoop Extras' `vt-uploader` manifest for Samuel Tulach's VirusTotalUploader project. The site identifies v1.26.4.12 and links both architecture-specific binaries; binary hashes and security status still need independent verification. |
 
 
 ## Portable examples and important exceptions
