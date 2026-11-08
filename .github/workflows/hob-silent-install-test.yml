@@ -32,7 +32,7 @@ jobs:
             throw 'Hob must use NSIS silent install args /S /D=$dir.'
           }
           if ($manifest.uninstaller.file -cne 'Uninstall Hob.exe') { throw 'Unexpected Hob uninstaller filename.' }
-          $expectedUninstallArgs = @('/S', '--updated', '_?=$dir')
+          $expectedUninstallArgs = @('--updated', '/S', '_?=$dir')
           if (($manifest.uninstaller.args -join '|') -cne ($expectedUninstallArgs -join '|')) {
             throw 'Hob uninstaller args must be /S --updated _?=$dir to preserve app data.'
           }
