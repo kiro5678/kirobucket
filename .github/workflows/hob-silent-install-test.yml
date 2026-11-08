@@ -123,7 +123,14 @@ jobs:
             Copy-Item -LiteralPath $uninstaller -Destination $tempUninstaller -Force
             Add-Report "Copied official uninstaller to a temporary path: $tempUninstaller"
             Add-Report "Running configured uninstaller: $($manifest.uninstaller.file) $($uninstallArgs -join ' ')"
-            $remove = Start-Process -FilePath $tempUninstaller -ArgumentList $uninstallArgs -PassThru -Wait
+            $uninstallStartInfo = [System.Diagnostics.ProcessStartInfo]::new()
+            $uninstallStartInfo.FileName = $tempUninstaller
+            $uninstallStartInfo.UseShellExecute = $false
+            foreach ($argument in $uninstallArgs) {
+              $uninstallStartInfo.ArgumentList.Add([string]$argument)
+            }
+            $remove = [System.Diagnostics.Process]::Start($uninstallStartInfo)
+            $remove.WaitForExit()
             Add-Report "Uninstaller exit code: $($remove.ExitCode)"
             Remove-Item -LiteralPath $tempUninstaller -Force -ErrorAction SilentlyContinue
             if ($remove.ExitCode -ne 0) { throw "Hob NSIS uninstaller exited with code $($remove.ExitCode)." }
