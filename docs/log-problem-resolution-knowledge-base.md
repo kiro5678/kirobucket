@@ -918,7 +918,7 @@ The repository CI remains responsible for validating manifest syntax and schema 
 
 ### 2026-11-08 — Fix SystemTrayMenu 1 manifest PR formatting lint
 
-- **Affected files:** `bucket/systemtraymenu1.json` and `docs/manifest-authoring.md`.
+- **Affected files:** `bucket/v1systemtraymenu.json` and `docs/manifest-authoring.md`.
 - **Problem:** The Pull Request Handler reported `Lint: False` even though JSON/Schema, Description, License, Hashes, Checkver, and Autoupdate checks passed.
 - **Root cause:** Two formatter normalizations were missing from the submitted JSON. Scoop's `formatjson.ps1` collapses a one-element array of strings (such as a single `notes` entry) into a scalar string. After correcting that field, the formatter comparison still failed because the manifest had no final line ending; `formatjson.ps1` writes the file with one final CRLF.
 - **Resolution:** Changed the single `notes` entry to a scalar string and added the required final newline. Updated `docs/manifest-authoring.md` to explain single-value arrays and the final CRLF requirement.
