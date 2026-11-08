@@ -21,7 +21,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 103 | [View](#other-utilities) |
+| Other Utilities | 104 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 996**
+**Total unique manifests: 997**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -734,6 +734,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [visual-cpp-redist-aio-arm64](../bucket/visual-cpp-redist-aio-arm64.json) | 0.106.0 | arm64: 19.3 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes for Windows ARM64, including legacy x86 and current ARM64 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
 | [visual-cpp-redist-aio](../bucket/visual-cpp-redist-aio.json) | 0.106.0 | 31.1 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes for x86 and x64, including legacy runtimes and current 2022/2026 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
 | [vt-uploader-denis-anisimov](../bucket/vt-uploader-denis-anisimov.json) | 1.26.4.12 | 64bit: 8.3 MiB / 32bit: 5.6 MiB | 2026-04-12 | Portable VirusTotal client by Denis Anisimov for uploading files and running processes, checking hashes, and viewing analysis reports. | [Homepage](https://www.vtuploader.com/) |
+| [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) | 1.2.4 | 233.7 KiB | 2026-11-08 | Creates shortcuts to Windows shell folders, Settings pages, task links, deep links, and URL protocols. | [Homepage](https://github.com/ThioJoe/Windows-Super-God-Mode) |
 
 ## Package Management
 
