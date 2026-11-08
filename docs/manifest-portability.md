@@ -39,6 +39,10 @@ The explicit portability classifications currently cover 861 of the 896 active b
 
 - [`detect-it-easy`](../bucket/detect-it-easy.json) — **Portable**: the official x64 and x86 4.0.0 ZIP assets place application files at the archive root, so the manifest intentionally omits `extract_dir`. [Archive validation run 42007599251](https://github.com/kiro5678/kirobucket/actions/runs/42007599251) verified both SHA-256 hashes and confirmed `die.exe`, `diec.exe`, and `diel.exe` plus the declared shortcut target exist for both architectures. The test verified archive contents and paths only; it did not launch the application.
 
+### SystemTrayMenu 1.3.5.0 portable archive
+
+- [`systemtraymenu1`](../bucket/systemtraymenu1.json) — **Portable**: the official GitHub release ZIP was downloaded and extracted in [archive verification run 42503835630](https://github.com/kiro5678/kirobucket/actions/runs/42503835630). The archive is 74,074,919 bytes with SHA-256 `3a2590df848b8e691dbd4bf2df5e893ff5b68b5a75226e88eeddd0e08be21bd3`. `SystemTrayMenu.exe` is at the archive root and reports file/product version 1.3.5.0, so the manifest correctly omits `extract_dir`. The workflow verified the download, hash, extraction, and executable path/version; it did not perform a GUI launch or uninstall test.
+
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
 
