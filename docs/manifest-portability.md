@@ -65,18 +65,18 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | EXE setup (engine unverified) | [belarc-advisor](../bucket/belarc-advisor.json), [cue](../bucket/cue.json), [downloadorganizer](../bucket/downloadorganizer.json), [fxsound](../bucket/fxsound.json), [imazing-np](../bucket/imazing-np.json), [imgconv](../bucket/imgconv.json), [nectarlink](../bucket/nectarlink.json), [onedrive-np](../bucket/onedrive-np.json), [open-shell](../bucket/open-shell.json), [open-shell-nightly](../bucket/open-shell-nightly.json), [openglass](../bucket/openglass.json), [openzfs-np](../bucket/openzfs-np.json), [poweriso](../bucket/poweriso.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [sysmanager](../bucket/sysmanager.json), [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json), [veracrypt](../bucket/veracrypt.json), [wnotch](../bucket/wnotch.json) | 18 |
 | MSIX/AppX package registration | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json), [screenbox](../bucket/screenbox.json) | 3 |
 | PHP package | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json), [starcodec](../bucket/starcodec.json) | 2 |
+| PowerShell script | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json), [winutil](../bucket/winutil.json) | 2 |
 | BIN package | [dlives](../bucket/dlives.json) | 1 |
 | CER package | [fancywm-msix-cert](../bucket/fancywm-msix-cert.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / AHK package | [npcap-np](../bucket/npcap-np.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / INI package | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / XML package | [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | 1 |
 | Multiple package types: ZIP archive / CER package | [fancywm](../bucket/fancywm.json) | 1 |
-| PowerShell script | [winutil](../bucket/winutil.json) | 1 |
 | PY package | [joas-drivertrust-auditor](../bucket/joas-drivertrust-auditor.json) | 1 |
 | RMSKIN package | [quanto-flx](../bucket/quanto-flx.json) | 1 |
 | SCR package | [ghost-saver](../bucket/ghost-saver.json) | 1 |
 | TAR.GZ archive | [0install-win](../bucket/0install-win.json) | 1 |
-| **Total** | **All bucket manifests** | **997** |
+| **Total** | **All bucket manifests** | **998** |
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
 ## Nonportable manifests by installer type
