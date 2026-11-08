@@ -79,5 +79,5 @@ jobs:
             "- Signer: $($signature.SignerCertificate.Subject)"
             ''
             '## ZIP entries'
-            ($entries | ForEach-Object { "- `$_`" })
+            ($entries | ForEach-Object { "- $_" })
           ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
