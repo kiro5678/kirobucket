@@ -6,38 +6,38 @@
     "license": "Proprietary",
     "url": "https://www.easyuefi.com/wintousb/downloads/WinToUSB_Free.exe",
     "hash": "504fd3af5f5d886f838b76bedfc34ddad5135508698344b29a4d65d58b2cdc1d",
-    "innosetup": true,
-    "architecture": {
-        "64bit": {
-            "bin": [
-                [
-                    "bin\\WinToUSB,2.exe",
-                    "WinToUSB"
-                ]
-            ],
-            "shortcuts": [
-                [
-                    "bin\\WinToUSB,2.exe",
-                    "WinToUSB"
-                ]
-            ]
-        },
-        "32bit": {
-            "bin": [
-                [
-                    "bin\\WinToUSB,1.exe",
-                    "WinToUSB"
-                ]
-            ],
-            "shortcuts": [
-                [
-                    "bin\\WinToUSB,1.exe",
-                    "WinToUSB"
-                ]
-            ]
-        }
+    "pre_install": "if (!(is_admin)) { error \"$app requires administrator rights to $cmd\"; break }",
+    "installer": {
+        "args": [
+            "/VERYSILENT",
+            "/SUPPRESSMSGBOXES",
+            "/NORESTART",
+            "/SP-",
+            "/NOICONS",
+            "/DIR=\"$dir\""
+        ]
     },
-    "notes": "The Free Edition is restricted to personal, non-commercial home use. Scoop extracts the Inno Setup {app} payload without running the vendor setup or registering the normal Windows installation. The installer contains separate x86 and x64 WinToUSB executables; the manifest selects the matching file for the current Windows architecture. Creating or cloning bootable media can modify disk partitions and boot components and may request administrator privileges.",
+    "bin": "bin\\WinToUSB.exe",
+    "shortcuts": [
+        [
+            "bin\\WinToUSB.exe",
+            "WinToUSB"
+        ]
+    ],
+    "pre_uninstall": "if (!(is_admin)) { error \"$app requires administrator rights to $cmd\"; break }",
+    "uninstaller": {
+        "script": [
+            "$uninstaller = Join-Path $dir 'unins000.exe'",
+            "if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw \"WinToUSB Inno Setup uninstaller was not found: $uninstaller\" }",
+            "$process = Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru -ErrorAction Stop",
+            "if ($process.ExitCode -ne 0) { throw \"WinToUSB uninstaller exited with code $($process.ExitCode).\" }"
+        ]
+    },
+    "post_install": [
+        "$exe = Join-Path $dir 'bin\\WinToUSB.exe'",
+        "if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw \"WinToUSB executable was not installed at the expected path: $exe\" }"
+    ],
+    "notes": "The Free Edition is restricted to personal, non-commercial home use. The installer suppresses its own Start Menu icons so the shortcut is managed by Scoop. Run WinToUSB as administrator when creating or cloning bootable media because these operations modify disk partitions and boot components.",
     "checkver": {
         "url": "https://www.easyuefi.com/wintousb/change-logs.html",
         "regex": "(?i)Version\\s+(?<version>\\d+(?:\\.\\d+)?)\\s*\\("
