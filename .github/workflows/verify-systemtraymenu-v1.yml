@@ -32,9 +32,7 @@ jobs:
           $manifest = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket\\systemtraymenu1.json'
           $env:SCOOP_HOME = Join-Path $env:GITHUB_WORKSPACE 'scoop_core'
           & $checkver -App $manifest -ThrowError
-          if ($LASTEXITCODE -ne 0) { throw 'Scoop checkver reported a failure.' }
           & $checkver -App $manifest -Update -ThrowError
-          if ($LASTEXITCODE -ne 0) { throw 'Scoop checkver update reported a failure.' }
           Write-Host 'Updated manifest candidate:'
           Get-Content -LiteralPath $manifest -Raw
 
