@@ -12,6 +12,32 @@ jobs:
   verify:
     runs-on: windows-latest
     steps:
+      - name: Checkout KiroBucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: my_bucket
+
+      - name: Checkout Scoop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          ref: master
+          path: scoop_core
+          token: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
+
+      - name: Validate the manifest with Scoop Checkver
+        shell: pwsh
+        run: |
+          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
+          $manifest = Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bucket\\systemtraymenu1.json'
+          $env:SCOOP_HOME = Join-Path $env:GITHUB_WORKSPACE 'scoop_core'
+          & $checkver -App $manifest -ThrowError
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop checkver reported a failure.' }
+          & $checkver -App $manifest -Update -ThrowError
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop checkver update reported a failure.' }
+          Write-Host 'Updated manifest candidate:'
+          Get-Content -LiteralPath $manifest -Raw
+
       - name: Download and inspect official portable archive
         shell: pwsh
         run: |
@@ -25,10 +51,6 @@ jobs:
           $hash = (Get-FileHash -Path $zip -Algorithm SHA256).Hash.ToLowerInvariant()
           Write-Host "SHA256: $hash"
           Expand-Archive -LiteralPath $zip -DestinationPath $extract -Force
-          Write-Host "Archive entries:"
-          Get-ChildItem -LiteralPath $extract -Recurse -File | ForEach-Object {
-            Write-Host "$($_.FullName.Substring($extract.Length + 1)) [$($_.Length) bytes]"
-          }
           $exe = Get-ChildItem -LiteralPath $extract -Filter "SystemTrayMenu.exe" -File -Recurse
           if (-not $exe) { throw "SystemTrayMenu.exe was not found in the archive." }
           foreach ($item in $exe) {
@@ -37,3 +59,10 @@ jobs:
             Write-Host "FileVersion: $($v.FileVersion)"
             Write-Host "ProductVersion: $($v.ProductVersion)"
           }
+          if ($hash -ne "3a2590df848b8e691dbd4bf2df5e893ff5b68b5a75226e88eeddd0e08be21bd3") {
+            throw "SHA-256 mismatch: $hash"
+          }
+          if ($file.Length -ne 74074919) { throw "Unexpected archive size: $($file.Length)" }
+          if ($exe.Count -ne 1) { throw "Expected one SystemTrayMenu.exe, found $($exe.Count)." }
+          if ((Split-Path $exe[0].FullName -Parent) -ne $extract) { throw "Expected SystemTrayMenu.exe at archive root." }
+          if ($v.FileVersion -ne $version -or $v.ProductVersion -ne $version) { throw "Executable version mismatch." }
