@@ -5,7 +5,6 @@
     "license": "MIT",
     "url": "https://github.com/FrigadeHQ/hob/releases/download/v0.2.6/Hob-windows-x64.exe",
     "hash": "73516b365c59f6f659471ef90ffecae933070b476aa6c8dcf5e547ca017a1f89",
-    "post_install": "Get-ChildItem -LiteralPath $dir -Force | Where-Object { $_.Name.StartsWith('$') -or $_.Name -like 'Uninstall*' } | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue",
     "bin": "Hob.exe",
     "checkver": {
         "github": "https://github.com/FrigadeHQ/hob"
