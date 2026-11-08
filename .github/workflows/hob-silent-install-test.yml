@@ -1,0 +1,135 @@
+name: Hob Silent NSIS Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/hob.json'
+      - '.github/workflows/hob-silent-install-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test Hob silent install and data-safe uninstall
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install and uninstall Hob using manifest arguments
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $manifest = Get-Content -LiteralPath 'bucket/hob.json' -Raw | ConvertFrom-Json -ErrorAction Stop
+          if ($manifest.installer.args.Count -ne 2 -or $manifest.installer.args[0] -cne '/S' -or $manifest.installer.args[1] -cne '/D=$dir') {
+            throw 'Hob must use NSIS silent install args /S /D=$dir.'
+          }
+          if ($manifest.uninstaller.file -cne 'Uninstall Hob.exe') { throw 'Unexpected Hob uninstaller filename.' }
+          $expectedUninstallArgs = @('/S', '--updated', '_?=$dir')
+          if (($manifest.uninstaller.args -join '|') -cne ($expectedUninstallArgs -join '|')) {
+            throw 'Hob uninstaller args must be /S --updated _?=$dir to preserve app data.'
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP 'hob-nsis-install-test'
+          $installDir = Join-Path $root 'Scoop Root With Spaces\apps\hob\0.2.6'
+          $setup = Join-Path $root 'Hob-windows-x64.exe'
+          $reportPath = Join-Path $root 'hob-install-report.txt'
+          New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+          $report = [System.Collections.Generic.List[string]]::new()
+          function Add-Report([string]$Text) { $report.Add($Text); Write-Host $Text }
+
+          try {
+            Add-Report 'Hob 0.2.6 official NSIS installation validation'
+            Add-Report "Install directory: $installDir"
+            Invoke-WebRequest -Uri $manifest.url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
+            $actualHash = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+            Add-Report "Downloaded size: $((Get-Item -LiteralPath $setup).Length) bytes"
+            Add-Report "SHA-256: $actualHash"
+            if ($actualHash -ne $manifest.hash.ToLowerInvariant()) { throw "SHA-256 mismatch. Expected $($manifest.hash); received $actualHash." }
+
+            $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+            if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command '7z.exe' -ErrorAction Stop).Source }
+            $listing = & $sevenZip l -slt $setup 2>&1
+            if ($LASTEXITCODE -ne 0 -or (($listing -join "`n") -notmatch '(?im)^Type = Nsis\s*$')) {
+              throw 'The downloaded Hob setup was not identified as an NSIS package.'
+            }
+            Add-Report 'NSIS package identification: PASS'
+
+            $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+            $desktop = [Environment]::GetFolderPath('Desktop')
+            $startBefore = @(Get-ChildItem -LiteralPath $startMenu -File -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object FullName)
+            $desktopBefore = @(Get-ChildItem -LiteralPath $desktop -File -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object FullName)
+
+            Add-Report 'Running Hob installer with /S /D=<path containing spaces>.'
+            $install = Start-Process -FilePath $setup -ArgumentList @('/S', "/D=$installDir") -PassThru -Wait
+            Add-Report "Installer exit code: $($install.ExitCode)"
+            if ($install.ExitCode -ne 0) { throw "Hob NSIS installer exited with code $($install.ExitCode)." }
+
+            $appExe = Join-Path $installDir 'Hob.exe'
+            $uninstaller = Join-Path $installDir 'Uninstall Hob.exe'
+            if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) { throw 'Hob.exe was not installed in the requested Scoop directory.' }
+            if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw 'Uninstall Hob.exe was not created in the requested Scoop directory.' }
+            Add-Report 'Hob.exe and Uninstall Hob.exe are both present in the Scoop version directory: PASS'
+
+            $dataDir = Join-Path $env:APPDATA 'Hob'
+            New-Item -ItemType Directory -Path $dataDir -Force | Out-Null
+            $marker = Join-Path $dataDir 'kirobucket-preserve-data-test.txt'
+            Set-Content -LiteralPath $marker -Value 'This marker must survive Scoop-managed uninstall.' -Encoding utf8
+
+            $uninstallArgs = @($manifest.uninstaller.args | ForEach-Object { ([string]$_).Replace('$dir', $installDir) })
+            Add-Report "Running configured uninstaller: $($manifest.uninstaller.file) $($uninstallArgs -join ' ')"
+            $remove = Start-Process -FilePath $uninstaller -ArgumentList $uninstallArgs -PassThru -Wait
+            Add-Report "Uninstaller exit code: $($remove.ExitCode)"
+            if ($remove.ExitCode -ne 0) { throw "Hob NSIS uninstaller exited with code $($remove.ExitCode)." }
+
+            if (Test-Path -LiteralPath $appExe) { throw 'The NSIS uninstaller left Hob.exe behind.' }
+            if (Test-Path -LiteralPath $installDir) { throw 'The NSIS uninstaller left the Scoop version directory behind.' }
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) { throw 'Hob user data was deleted; --updated did not preserve %APPDATA%\Hob.' }
+            Add-Report 'Uninstall removed the app files and preserved %APPDATA%\Hob: PASS'
+
+            $startAfter = @(Get-ChildItem -LiteralPath $startMenu -File -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object FullName)
+            $desktopAfter = @(Get-ChildItem -LiteralPath $desktop -File -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object FullName)
+            $newStart = @($startAfter | Where-Object { $_ -notin $startBefore })
+            $newDesktop = @($desktopAfter | Where-Object { $_ -notin $desktopBefore })
+            if ($newStart.Count -gt 0 -or $newDesktop.Count -gt 0) {
+              throw "NSIS uninstall left shortcuts behind. Start Menu: $($newStart -join ', '); Desktop: $($newDesktop -join ', ')"
+            }
+            Add-Report 'NSIS Start Menu/Desktop shortcut cleanup: PASS'
+
+            @(
+              '## Hob NSIS silent installation test'
+              ''
+              '- **Result:** PASS'
+              '- **Official SHA-256:** PASS'
+              '- **NSIS detection:** PASS'
+              '- **Silent install to a Scoop path containing spaces:** PASS'
+              '- **Expected application and uninstaller files:** PASS'
+              '- **Silent uninstall with --updated:** PASS'
+              '- **User data preservation:** PASS'
+              '- **Shortcut cleanup:** PASS'
+              '- **Application launch:** Not tested'
+            ) | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          } catch {
+            Add-Report "FAIL: $($_.Exception.Message)"
+            @('## Hob NSIS silent installation test', '', '- **Result:** FAILED', "- **Reason:** $($_.Exception.Message)") | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+            throw
+          } finally {
+            New-Item -ItemType Directory -Path $root -Force | Out-Null
+            $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          }
+
+      - name: Upload installation report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hob-silent-install-report
+          path: ${{ runner.temp }}/hob-nsis-install-test/hob-install-report.txt
+          if-no-files-found: warn
+          retention-days: 14
