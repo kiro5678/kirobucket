@@ -83,6 +83,18 @@ jobs:
             $marker = Join-Path $dataDir 'kirobucket-preserve-data-test.txt'
             Set-Content -LiteralPath $marker -Value 'This marker must survive Scoop-managed uninstall.' -Encoding utf8
 
+            $runningHob = @(Get-Process -Name 'Hob' -ErrorAction SilentlyContinue)
+            if ($runningHob.Count -gt 0) {
+              Add-Report "Stopping $($runningHob.Count) Hob process(es) before uninstall."
+              $runningHob | Stop-Process -Force -ErrorAction Stop
+              Start-Sleep -Seconds 2
+            } else {
+              Add-Report 'No Hob process was running before uninstall.'
+            }
+            if (Get-Process -Name 'Hob' -ErrorAction SilentlyContinue) {
+              throw 'Hob is still running; refusing to test the NSIS uninstaller.'
+            }
+
             $uninstallArgs = @($manifest.uninstaller.args | ForEach-Object { ([string]$_).Replace('$dir', $installDir) })
             Add-Report "Running configured uninstaller: $($manifest.uninstaller.file) $($uninstallArgs -join ' ')"
             $remove = Start-Process -FilePath $uninstaller -ArgumentList $uninstallArgs -PassThru -Wait
