@@ -20,7 +20,7 @@
     "notes": [
         "Nonportable: runs the official NSIS one-click per-user installer silently with /S and directs its application files to the Scoop version directory with /D=$dir. This is a real installation, not archive extraction.",
         "The official NSIS installer creates its own Start Menu and desktop shortcuts. Scoop uses Hob.exe for the hob command shim.",
-        "Scoop invokes Uninstall Hob.exe with /S --updated so the NSIS uninstaller removes the application and registration without deleting chats, settings, and models under %APPDATA%\\Hob. Hob's own Remove Hob action can deliberately delete app data.",
+        "Scoop invokes Uninstall Hob.exe with /S /KEEP_APP_DATA /currentuser --updated so the NSIS uninstaller removes the application and registration without deleting chats, settings, and models under %APPDATA%\\Hob. Hob's own Remove Hob action can deliberately delete app data.",
         "Hob includes its own updater and may update application files independently of Scoop.",
         "Hob requires at least 8 GB RAM; 16 GB is recommended for everyday tasks and 32 GB or more for its most capable models. Keep 10–25 GB of free disk space for Hob and its models, or about 75 GB for the largest model."
     ],
@@ -34,8 +34,10 @@
     "uninstaller": {
         "file": "Uninstall Hob.exe",
         "args": [
-            "--updated",
             "/S",
+            "/KEEP_APP_DATA",
+            "/currentuser",
+            "--updated",
             "_?=$dir"
         ]
     }
