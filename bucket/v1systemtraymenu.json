@@ -21,7 +21,7 @@
             "SystemTrayMenu 1"
         ]
     ],
-    "notes": "This manifest tracks the free, open-source SystemTrayMenu 1.x line. SystemTrayMenu 3 is a separate rewrite and is managed by the systemtraymenu manifest (SystemTrayMenu 3).",
+    "notes": "This manifest tracks the free, open-source SystemTrayMenu 1.x line. SystemTrayMenu 3 is a separate rewrite and is managed by the v3systemtraymenu manifest.",
     "checkver": {
         "github": "https://github.com/Hofknecht/SystemTrayMenu",
         "regex": "v(1\\.[\\d.]+)"
