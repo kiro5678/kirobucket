@@ -64,7 +64,10 @@ jobs:
             [string]$manifest.autoupdate.architecture.'64bit'.url,
             [string]$manifest.autoupdate.architecture.arm64.url
           )
-          if (@($expectedFragments | Where-Object { $_ -notmatch '#/setup\.msi_          $downloadPage = Invoke-WebRequest -Uri ([string]$manifest.checkver.url) -TimeoutSec 120
+          if (@($expectedFragments | Where-Object { $_ -notmatch '#/setup\.msi_$' }).Count -gt 0) {
+            throw 'All TinyWall MSI download and autoupdate URLs must preserve the MSI file as setup.msi_.'
+          }
+          $downloadPage = Invoke-WebRequest -Uri ([string]$manifest.checkver.url) -TimeoutSec 120
           $versionMatch = [regex]::Match($downloadPage.Content, [string]$manifest.checkver.regex)
           if (-not $versionMatch.Success -or $versionMatch.Groups[1].Value -ne $manifest.version) {
             throw "The official download page does not match manifest version $($manifest.version)."
