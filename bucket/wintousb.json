@@ -6,17 +6,7 @@
     "license": "Proprietary",
     "url": "https://www.easyuefi.com/wintousb/downloads/WinToUSB_Free.exe",
     "hash": "504fd3af5f5d886f838b76bedfc34ddad5135508698344b29a4d65d58b2cdc1d",
-    "pre_install": "if (!(is_admin)) { error \"$app requires administrator rights to $cmd\"; break }",
-    "installer": {
-        "args": [
-            "/VERYSILENT",
-            "/SUPPRESSMSGBOXES",
-            "/NORESTART",
-            "/SP-",
-            "/NOICONS",
-            "/DIR=\"$dir\""
-        ]
-    },
+    "innosetup": true,
     "bin": "bin\\WinToUSB.exe",
     "shortcuts": [
         [
@@ -24,20 +14,11 @@
             "WinToUSB"
         ]
     ],
-    "pre_uninstall": "if (!(is_admin)) { error \"$app requires administrator rights to $cmd\"; break }",
-    "uninstaller": {
-        "script": [
-            "$uninstaller = Join-Path $dir 'unins000.exe'",
-            "if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw \"WinToUSB Inno Setup uninstaller was not found: $uninstaller\" }",
-            "$process = Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -Wait -PassThru -ErrorAction Stop",
-            "if ($process.ExitCode -ne 0) { throw \"WinToUSB uninstaller exited with code $($process.ExitCode).\" }"
-        ]
-    },
     "post_install": [
         "$exe = Join-Path $dir 'bin\\WinToUSB.exe'",
-        "if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw \"WinToUSB executable was not installed at the expected path: $exe\" }"
+        "if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw \"WinToUSB executable was not found after Inno Setup extraction: $exe\" }"
     ],
-    "notes": "The Free Edition is restricted to personal, non-commercial home use. The installer suppresses its own Start Menu icons so the shortcut is managed by Scoop. Run WinToUSB as administrator when creating or cloning bootable media because these operations modify disk partitions and boot components.",
+    "notes": "The Free Edition is restricted to personal, non-commercial home use. Scoop extracts the Inno Setup application payload without running the vendor installer or registering the normal Windows installation. WinToUSB may require administrator rights when creating or cloning bootable media because those operations modify disk partitions and boot components.",
     "checkver": {
         "url": "https://www.easyuefi.com/wintousb/change-logs.html",
         "regex": "(?i)Version\\s+(?<version>\\d+(?:\\.\\d+)?)\\s*\\("
