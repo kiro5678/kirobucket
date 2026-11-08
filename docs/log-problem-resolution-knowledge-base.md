@@ -50,6 +50,17 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-09 — Fix Scoop schema validation for hop, HatchZip, and Prime Files
+
+- **Status:** Resolved and verified.
+- **Affected area:** `bucket/hop.json`, `bucket/hatchzip.json`, `bucket/prime-files.json`; PRs [#70](https://github.com/kiro5678/kirobucket/pull/70) and [#71](https://github.com/kiro5678/kirobucket/pull/71).
+- **Problem:** The first PR validation for these three manifests reported `Invalid JSON` for every file even though each file parsed as JSON. The failure was in Scoop's manifest-schema validation, not JSON syntax parsing.
+- **Root cause:** Scoop's schema rejects unresolved variables such as `$version` in the base `url` field; that variable belongs in `autoupdate.url` templates only. The schema also does not accept the compound license expression `MIT OR Apache-2.0` as a single license identifier.
+- **Resolution:** Replaced each base download URL with the verified, fixed URL for its current upstream release while retaining `$version` in the corresponding `autoupdate.url`. Changed HatchZip's `license` field to the supported `MIT` identifier and recorded its dual MIT/Apache-2.0 licensing and bundled license files in `notes`.
+- **Verification:** The initial failure is recorded in [Pull Requests run 42534886128](https://github.com/kiro5678/kirobucket/actions/runs/42534886128). After the fixes, [Pull Requests run 42535098948](https://github.com/kiro5678/kirobucket/actions/runs/42535098948) completed successfully. Its log reports `Lint: True`, `Hashes: True`, `Checkver: True`, `Autoupdate: True`, and `Autoupdate Hash Extraction: True` for all three manifests. Separate manual validation on the same upstream releases also passed checkver ([42534954986](https://github.com/kiro5678/kirobucket/actions/runs/42534954986)), archive download/hash/path checks ([42535003763](https://github.com/kiro5678/kirobucket/actions/runs/42535003763)), and autoupdate ([42535037096](https://github.com/kiro5678/kirobucket/actions/runs/42535037096)). These checks do not constitute a live GUI launch or a full install/uninstall test. The post-merge Manifest Pipeline for commit `277ab93643bf2d15b9982cee94177dda34c99075` was queued behind an older unrelated pipeline at the time of this entry.
+- **Prevention:** Keep the current-release `url` literal and version-specific; use `$version` only in `autoupdate.url`. Use one license identifier accepted by Scoop's schema and document additional license options in a note. Treat the PR's JSON Schema result as distinct from a basic JSON parse.
+
+
 ### 2026-11-05 — Keep missing category mappings non-blocking
 
 - **Status:** Implemented; workflow verification pending.
