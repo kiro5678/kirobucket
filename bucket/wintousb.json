@@ -9,7 +9,12 @@
     "innosetup": true,
     "architecture": {
         "64bit": {
-            "bin": "bin\\WinToUSB,2.exe",
+            "bin": [
+                [
+                    "bin\\WinToUSB,2.exe",
+                    "WinToUSB"
+                ]
+            ],
             "shortcuts": [
                 [
                     "bin\\WinToUSB,2.exe",
@@ -18,7 +23,12 @@
             ]
         },
         "32bit": {
-            "bin": "bin\\WinToUSB,1.exe",
+            "bin": [
+                [
+                    "bin\\WinToUSB,1.exe",
+                    "WinToUSB"
+                ]
+            ],
             "shortcuts": [
                 [
                     "bin\\WinToUSB,1.exe",
