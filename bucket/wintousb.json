@@ -1,7 +1,7 @@
 {
     "##": "Installer Type: EXE setup (engine unverified)",
     "version": "10.9",
-    "description": "Create Windows To Go, Windows installation, and WinPE USB media",
+    "description": "Create Windows To Go and bootable Windows installation/WinPE USB media",
     "homepage": "https://www.easyuefi.com/wintousb/",
     "license": "Proprietary",
     "url": "https://www.easyuefi.com/wintousb/downloads/WinToUSB_Free.exe",
