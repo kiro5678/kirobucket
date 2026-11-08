@@ -1,12 +1,12 @@
 {
-    "version": "1.3.5.0",
-    "description": "Open-source desktop toolbar and Start Menu alternative for browsing and opening files, folders, and links. Developer: Markus Hofknecht.",
-    "homepage": "https://github.com/Hofknecht/SystemTrayMenu",
-    "license": "GPL-3.0-only",
+    "version": "3.1.235",
+    "description": "Portable folder-based launcher and menu for files, programs and links. Developer: Markus Hofknecht.",
+    "homepage": "https://hofknecht.eu/systemtraymenu/en.html",
+    "license": "Proprietary",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Hofknecht/SystemTrayMenu/releases/download/v1.3.5.0/SystemTrayMenu-1.3.5.0.zip",
-            "hash": "3a2590df848b8e691dbd4bf2df5e893ff5b68b5a75226e88eeddd0e08be21bd3"
+            "url": "https://hofknecht.eu/systemtraymenu/download/3.1.235/SystemTrayMenu-3.1.235-windows-x64.zip",
+            "hash": "9190e166fef2b02d4bc65d36832a96bb8eeca94ca191f6e8c56f9179f6a44418"
         }
     },
     "bin": [
@@ -18,18 +18,21 @@
     "shortcuts": [
         [
             "SystemTrayMenu.exe",
-            "SystemTrayMenu 1"
+            "SystemTrayMenu 3"
         ]
     ],
-    "notes": "This manifest tracks the free, open-source SystemTrayMenu 1.x line. SystemTrayMenu 3 is a separate rewrite and is managed by the systemtraymenu3 manifest.",
+    "notes": [
+        "The full feature set is available for a 14-day trial. Afterwards, a one-time EUR 2.99 license is required to unlock submenus.",
+        "The application can update itself independently of Scoop. Disable 'Update automatically' in Settings to let Scoop manage updates."
+    ],
     "checkver": {
-        "github": "https://github.com/Hofknecht/SystemTrayMenu",
-        "regex": "v(1\\.[\\d.]+)"
+        "url": "https://hofknecht.eu/systemtraymenu/neu/en.html",
+        "regex": "([\\d]+\\.[\\d]+\\.[\\d]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/Hofknecht/SystemTrayMenu/releases/download/v$version/SystemTrayMenu-$version.zip"
+                "url": "https://hofknecht.eu/systemtraymenu/download/$version/SystemTrayMenu-$version-windows-x64.zip"
             }
         }
     }
