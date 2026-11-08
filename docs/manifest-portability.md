@@ -117,7 +117,7 @@ This index groups the 63 Nonportable manifests by the exact installer/package la
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
 | NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
-| **Total** | **All Nonportable manifests** | **61** |
+| **Total** | **All Nonportable manifests** | **63** |
 
 ## Nonportable manifests
 
