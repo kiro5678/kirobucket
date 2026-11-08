@@ -31,16 +31,26 @@ jobs:
           if ($manifest.installer.args.Count -ne 2 -or $manifest.installer.args[0] -cne '/S' -or $manifest.installer.args[1] -cne '/D=$dir') {
             throw 'Hob must use NSIS silent install args /S /D=$dir.'
           }
-          if ($manifest.uninstaller.file -cne 'Uninstall Hob.exe') { throw 'Unexpected Hob uninstaller filename.' }
-          $actualUninstallArgs = [string[]]@($manifest.uninstaller.args | ForEach-Object { [string]$_ })
-          $expectedUninstallArgs = [string[]]@('/S', '/KEEP_APP_DATA', '/currentuser', '--updated', '_?=$dir')
-          $actualArgsJson = ConvertTo-Json -InputObject $actualUninstallArgs -Compress
-          $expectedArgsJson = ConvertTo-Json -InputObject $expectedUninstallArgs -Compress
-          Write-Host "Manifest uninstaller args: $($actualUninstallArgs -join ' | ')"
-          Write-Host "Expected uninstaller args: $($expectedUninstallArgs -join ' | ')"
-          if ($actualArgsJson -cne $expectedArgsJson) {
-            throw "Hob uninstaller args differ. Actual: $actualArgsJson; expected: $expectedArgsJson"
+          if (-not $manifest.uninstaller.script -or $manifest.uninstaller.file -or $manifest.uninstaller.args) {
+            throw 'Hob must use a Scoop uninstaller.script that runs the official NSIS uninstaller from a temporary copy.'
           }
+          $uninstallerScriptText = [string]::Join("`r`n", [string[]]$manifest.uninstaller.script)
+          foreach ($requiredText in @(
+            'Uninstall Hob.exe',
+            'Join-Path $env:TEMP',
+            'Copy-Item -LiteralPath $uninstaller',
+            '/S',
+            '/KEEP_APP_DATA',
+            '/currentuser',
+            '--updated',
+            '_?=$dir',
+            'Start-Process -FilePath $tempUninstaller'
+          )) {
+            if (-not $uninstallerScriptText.Contains($requiredText)) {
+              throw "Hob uninstaller script is missing required behavior: $requiredText"
+            }
+          }
+          Write-Host 'Hob uninstaller script verified: copies the official NSIS uninstaller to TEMP and preserves app data.'
 
           $root = Join-Path $env:RUNNER_TEMP 'hob-nsis-install-test'
           $installDir = Join-Path $root 'Scoop Root With Spaces\apps\hob\0.2.6'
@@ -118,20 +128,10 @@ jobs:
             }
             Add-Report 'No Hob.exe or Hob install-directory process remains before uninstall.';
 
-            $uninstallArgs = @($manifest.uninstaller.args | ForEach-Object { ([string]$_).Replace('$dir', $installDir) })
-            $tempUninstaller = Join-Path $root 'Hob-Uninstall-Temporary.exe'
-            Copy-Item -LiteralPath $uninstaller -Destination $tempUninstaller -Force
-            Add-Report "Copied official uninstaller to a temporary path: $tempUninstaller"
-            Add-Report "Running configured uninstaller: $($manifest.uninstaller.file) $($uninstallArgs -join ' ')"
-            $uninstallStartInfo = [System.Diagnostics.ProcessStartInfo]::new()
-            $uninstallStartInfo.FileName = $tempUninstaller
-            $uninstallStartInfo.UseShellExecute = $false
-            foreach ($argument in $uninstallArgs) {
-              $uninstallStartInfo.ArgumentList.Add([string]$argument)
-            }
-            $remove = [System.Diagnostics.Process]::Start($uninstallStartInfo)
-            $remove.WaitForExit()
-            Add-Report "Uninstaller exit code: $($remove.ExitCode)"
+            $dir = $installDir
+            Add-Report 'Running the manifest uninstaller.script (official NSIS uninstaller copied to TEMP).'
+            Invoke-Command ([scriptblock]::Create($uninstallerScriptText))
+            Add-Report 'Manifest uninstaller.script completed without an NSIS error.'
             Remove-Item -LiteralPath $tempUninstaller -Force -ErrorAction SilentlyContinue
             if ($remove.ExitCode -ne 0) { throw "Hob NSIS uninstaller exited with code $($remove.ExitCode)." }
 
