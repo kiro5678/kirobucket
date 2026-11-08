@@ -23,5 +23,6 @@
             "jp": "$.assets[?(@.name == 'hop.exe')].digest"
         }
     },
-    "notes": "Requires administrator rights. It can resize or create disk partitions and modify EFI boot entries. Its full-disk replacement option can erase the Windows disk; verify the selected target disk and every destructive confirmation before proceeding."
+    "notes": "Requires administrator rights. It can resize or create disk partitions and modify EFI boot entries. Its full-disk replacement option can erase the Windows disk; verify the selected target disk and every destructive confirmation before proceeding. The maintainer reports limited testing on physical PCs and recommends backing up anything you cannot lose.",
+    "##": "Installer Type: Standalone EXE"
 }
