@@ -64,3 +64,16 @@ jobs:
           if ($exe.Count -ne 1) { throw "Expected one SystemTrayMenu.exe, found $($exe.Count)." }
           if ((Split-Path $exe[0].FullName -Parent) -ne $extract) { throw "Expected SystemTrayMenu.exe at archive root." }
           if ($v.FileVersion -ne $version -or $v.ProductVersion -ne $version) { throw "Executable version mismatch." }
+
+      - name: Install repository test modules
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name BuildHelpers -MinimumVersion 2.0.1 -Scope CurrentUser -Force -AllowClobber
+          Install-Module -Name Pester -MinimumVersion 5.2.0 -Scope CurrentUser -Force -AllowClobber
+
+      - name: Run KiroBucket Pester tests
+        shell: pwsh
+        run: |
+          $env:SCOOP_HOME = Join-Path $env:GITHUB_WORKSPACE 'scoop_core'
+          & (Join-Path $env:GITHUB_WORKSPACE 'my_bucket\\bin\\test.ps1')
