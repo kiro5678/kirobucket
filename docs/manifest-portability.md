@@ -171,7 +171,6 @@ The installer type describes the package or setup technology used by the manifes
 | [openglass](../bucket/openglass.json) | Inno | Runs the signed setup with Inno Setup silent-install arguments. |
 | [openzfs-np](../bucket/openzfs-np.json) | Inno Setup-style EXE (based on switches) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
 | [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
-| [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
 | [prime-files](../bucket/prime-files.json) | Inno | Runs the official Inno Setup installation, which creates its normal Windows installation state and Start Menu entry. The optional indexer service is only enabled from inside the application; setup can also install the Visual C++ runtime or enable Media Feature Pack on Windows N. |
 | [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
 | [recordly](../bucket/recordly.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
