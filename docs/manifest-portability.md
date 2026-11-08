@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 900 active manifests. The review section below records 99 manifests with outstanding verification checks; 34 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1003 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -25,11 +25,11 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Portable | 804 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 63 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
-| Not reconciled | 33 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **900** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| Not reconciled | 136 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
+| **Total** | **1003** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 867 of the 900 active bucket manifests (804 Portable and 63 Nonportable). The remaining 33 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 867 of the 1003 active bucket manifests (804 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
