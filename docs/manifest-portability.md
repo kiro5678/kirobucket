@@ -41,7 +41,7 @@ The explicit portability classifications currently cover 861 of the 896 active b
 
 ### SystemTrayMenu 1.3.5.0 portable archive
 
-- [`systemtraymenu`](../bucket/systemtraymenu.json) — **Portable**: the official GitHub release ZIP was downloaded and extracted in [validation run 42505308303](https://github.com/kiro5678/kirobucket/actions/runs/42505308303). The archive is 74,074,919 bytes with SHA-256 `3a2590df848b8e691dbd4bf2df5e893ff5b68b5a75226e88eeddd0e08be21bd3`. `SystemTrayMenu.exe` is at the archive root and reports file/product version 1.3.5.0, so the manifest correctly omits `extract_dir`. The workflow also passed Scoop checkver and autoupdate validation, and the repository Pester suite passed (6 passed, 0 failed). It verified the download, hash, extraction, and executable path/version; it did not perform a GUI launch or uninstall test.
+- [`v1systemtraymenu`](../bucket/v1systemtraymenu.json) — **Portable**: the official GitHub release ZIP was downloaded and extracted in [validation run 42505308303](https://github.com/kiro5678/kirobucket/actions/runs/42505308303). The archive is 74,074,919 bytes with SHA-256 `3a2590df848b8e691dbd4bf2df5e893ff5b68b5a75226e88eeddd0e08be21bd3`. `SystemTrayMenu.exe` is at the archive root and reports file/product version 1.3.5.0, so the manifest correctly omits `extract_dir`. The workflow also passed Scoop checkver and autoupdate validation, and the repository Pester suite passed (6 passed, 0 failed). It verified the download, hash, extraction, and executable path/version; it did not perform a GUI launch or uninstall test.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
