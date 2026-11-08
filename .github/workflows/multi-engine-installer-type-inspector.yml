@@ -68,7 +68,7 @@ jobs:
             $pushEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
             $changedPaths = @($pushEvent.head_commit.added) + @($pushEvent.head_commit.modified) + @($pushEvent.head_commit.removed)
             $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'bucket/keptinflow.json')
-            $runForWinToUSB = $changedPaths -contains 'bucket/wintousb.json'
+            $runForWinToUSB = ($changedPaths -contains 'bucket/wintousb.json') -or ($pushEvent.head_commit.message -match '(?i)WinToUSB')
 
             if ($runForKeptInFlow) {
               $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/keptinflow.json'
@@ -362,7 +362,8 @@ jobs:
             InstallAnywhere = "InstallAnywhere / Zero G"
             Wise = "Wise installer"
             InstallForge = "InstallForge"
-            SetupFactory = "Setup Factory"            BitRock = "BitRock / InstallBuilder"
+            SetupFactory = "Setup Factory"
+            BitRock = "BitRock / InstallBuilder"
             QtInstallerFramework = "Qt Installer Framework"
             Squirrel = "Squirrel installer/update framework"
             SevenZipSFX = "7-Zip SFX"
