@@ -132,8 +132,6 @@ jobs:
             Add-Report 'Running the manifest uninstaller.script (official NSIS uninstaller copied to TEMP).'
             Invoke-Command ([scriptblock]::Create($uninstallerScriptText))
             Add-Report 'Manifest uninstaller.script completed without an NSIS error.'
-            Remove-Item -LiteralPath $tempUninstaller -Force -ErrorAction SilentlyContinue
-            if ($remove.ExitCode -ne 0) { throw "Hob NSIS uninstaller exited with code $($remove.ExitCode)." }
 
             if (Test-Path -LiteralPath $appExe) { throw 'The NSIS uninstaller left Hob.exe behind.' }
             if (Test-Path -LiteralPath $installDir) { throw 'The NSIS uninstaller left the Scoop version directory behind.' }
