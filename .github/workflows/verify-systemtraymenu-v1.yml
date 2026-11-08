@@ -1,0 +1,39 @@
+name: Verify SystemTrayMenu 1 archive
+
+on:
+  push:
+    paths:
+      - ".github/workflows/verify-systemtraymenu-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - name: Download and inspect official portable archive
+        shell: pwsh
+        run: |
+          $version = "1.3.5.0"
+          $url = "https://github.com/Hofknecht/SystemTrayMenu/releases/download/v$version/SystemTrayMenu-$version.zip"
+          $zip = Join-Path $env:RUNNER_TEMP "SystemTrayMenu-$version.zip"
+          $extract = Join-Path $env:RUNNER_TEMP "SystemTrayMenu-$version"
+          Invoke-WebRequest -Uri $url -OutFile $zip
+          $file = Get-Item $zip
+          Write-Host "Archive size: $($file.Length) bytes"
+          $hash = (Get-FileHash -Path $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "SHA256: $hash"
+          Expand-Archive -LiteralPath $zip -DestinationPath $extract -Force
+          Write-Host "Archive entries:"
+          Get-ChildItem -LiteralPath $extract -Recurse -File | ForEach-Object {
+            Write-Host "$($_.FullName.Substring($extract.Length + 1)) [$($_.Length) bytes]"
+          }
+          $exe = Get-ChildItem -LiteralPath $extract -Filter "SystemTrayMenu.exe" -File -Recurse
+          if (-not $exe) { throw "SystemTrayMenu.exe was not found in the archive." }
+          foreach ($item in $exe) {
+            $v = (Get-Item $item.FullName).VersionInfo
+            Write-Host "Executable: $($item.FullName.Substring($extract.Length + 1))"
+            Write-Host "FileVersion: $($v.FileVersion)"
+            Write-Host "ProductVersion: $($v.ProductVersion)"
+          }
