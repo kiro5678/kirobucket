@@ -32,9 +32,14 @@ jobs:
             throw 'Hob must use NSIS silent install args /S /D=$dir.'
           }
           if ($manifest.uninstaller.file -cne 'Uninstall Hob.exe') { throw 'Unexpected Hob uninstaller filename.' }
-          $expectedUninstallArgs = @('/S', '/KEEP_APP_DATA', '/currentuser', '--updated', '_?=$dir')
-          if (($manifest.uninstaller.args -join '|') -cne ($expectedUninstallArgs -join '|')) {
-            throw 'Hob uninstaller args must match electron-builder's silent per-user update uninstall sequence.'
+          $actualUninstallArgs = [string[]]@($manifest.uninstaller.args | ForEach-Object { [string]$_ })
+          $expectedUninstallArgs = [string[]]@('/S', '/KEEP_APP_DATA', '/currentuser', '--updated', '_?=$dir')
+          $actualArgsJson = ConvertTo-Json -InputObject $actualUninstallArgs -Compress
+          $expectedArgsJson = ConvertTo-Json -InputObject $expectedUninstallArgs -Compress
+          Write-Host "Manifest uninstaller args: $($actualUninstallArgs -join ' | ')"
+          Write-Host "Expected uninstaller args: $($expectedUninstallArgs -join ' | ')"
+          if ($actualArgsJson -cne $expectedArgsJson) {
+            throw "Hob uninstaller args differ. Actual: $actualArgsJson; expected: $expectedArgsJson"
           }
 
           $root = Join-Path $env:RUNNER_TEMP 'hob-nsis-install-test'
