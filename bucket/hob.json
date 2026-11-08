@@ -34,8 +34,8 @@
     "uninstaller": {
         "file": "Uninstall Hob.exe",
         "args": [
-            "/S",
             "--updated",
+            "/S",
             "_?=$dir"
         ]
     }
