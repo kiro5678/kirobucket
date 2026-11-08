@@ -867,6 +867,7 @@ jobs:
           # This is regenerated with the same $manifests data used by all generated manifest views.
           $portabilityPath = Join-Path $docsPath "manifest-portability.md"
           $portabilityContent = [System.IO.File]::ReadAllText($portabilityPath)
+          $portabilityContent = [regex]::Replace($portabilityContent, "\r\n|\r|\n", "`n")
           $installerTypeStart = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->"
           $installerTypeEnd = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->"
           $installerTypeStartIndex = $portabilityContent.IndexOf($installerTypeStart, [System.StringComparison]::Ordinal)
@@ -894,12 +895,13 @@ jobs:
           }
           $installerTypeLines.Add("| **Total** | **All bucket manifests** | **$($manifests.Count)** |")
 
-          $installerTypeBlock = $installerTypeStart + [Environment]::NewLine +
-              ($installerTypeLines -join [Environment]::NewLine) + [Environment]::NewLine +
+          $installerTypeBlock = $installerTypeStart + "`n" +
+              ($installerTypeLines -join "`n") + "`n" +
               $installerTypeEnd
           $beforeInstallerTypeTable = $portabilityContent.Substring(0, $installerTypeStartIndex)
           $afterInstallerTypeTable = $portabilityContent.Substring($installerTypeEndIndex + $installerTypeEnd.Length)
           $portabilityContent = $beforeInstallerTypeTable + $installerTypeBlock + $afterInstallerTypeTable
+          $portabilityContent = $portabilityContent.Replace("`n", "`r`n")
           [System.IO.File]::WriteAllText(
               $portabilityPath,
               $portabilityContent,
