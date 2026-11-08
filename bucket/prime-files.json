@@ -35,5 +35,5 @@
             "jp": "$.assets[?(@.name == '$basename')].digest"
         }
     },
-    "notes": "The official per-user installer may install the Microsoft Visual C++ runtime and, on Windows N editions, enable Media Feature Pack (a restart may be required). Optional instant indexing installs the PrimeFilesIndexer service only when enabled in the app. Prime Files has its own automatic updater, which can update files outside Scoop."
+    "notes": "The official per-user installer may install the Microsoft Visual C++ runtime and, on Windows N editions, enable Media Feature Pack (a restart may be required). Optional instant indexing installs the PrimeFilesIndexer service only when enabled in the app. Prime Files has its own automatic updater and can update its installed files independently of Scoop's version tracking."
 }
