@@ -3,7 +3,7 @@
     "description": "Installs Linux alongside Windows from an internal disk without requiring a USB drive.",
     "homepage": "https://github.com/Arjun-Ingole/hop",
     "license": "MIT",
-    "url": "https://github.com/Arjun-Ingole/hop/releases/download/v$version/hop.exe",
+    "url": "https://github.com/Arjun-Ingole/hop/releases/download/v0.3.2/hop.exe",
     "hash": "c366917d8ebcda41fa099fd3726eaaf4ab32a3b3433f95709c5ee89b850e3e75",
     "bin": "hop.exe",
     "shortcuts": [
