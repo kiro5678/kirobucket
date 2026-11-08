@@ -23,19 +23,20 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 804 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 62 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Nonportable | 63 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 34 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **900** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| **Total** | **901** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 866 of the 900 active bucket manifests (804 Portable and 62 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 867 of the 901 active bucket manifests (804 Portable and 63 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
 - [`hop`](../bucket/hop.json) — **Portable**: Scoop downloads the standalone Windows executable without running an installer or registering Windows components. The application itself requires elevation and can modify disk partitions and EFI boot entries; those runtime operations are documented in the manifest.
 - [`hatchzip`](../bucket/hatchzip.json) — **Portable**: uses the project's official portable ZIP, with the GUI and command-line executable at the archive root. No Windows installation routine is run.
 - [`prime-files`](../bucket/prime-files.json) — **Nonportable**: the manifest runs the official Inno Setup installer, which creates the vendor installation state and Start Menu entry, and can install the Visual C++ runtime or enable Media Feature Pack on Windows N. The optional indexer service is installed only when enabled inside the application.
+- [`wintousb`](../bucket/wintousb.json) — **Nonportable**: the official WinToUSB 10.9 installer is Inno Setup. Scoop runs the normal setup silently, keeps the program files under its version directory, and retains the official uninstaller for update/removal.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
@@ -87,12 +88,12 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 61 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 63 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
 | NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 22 |
-| Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 6 |
+| Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [prime-files](../bucket/prime-files.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [wintousb](../bucket/wintousb.json) | 8 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json), [tinywall](../bucket/tinywall.json) | 5 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
@@ -171,6 +172,8 @@ The installer type describes the package or setup technology used by the manifes
 | [openzfs-np](../bucket/openzfs-np.json) | Inno Setup-style EXE (based on switches) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
 | [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
 | [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
+| [prime-files](../bucket/prime-files.json) | Inno | Runs the official Inno Setup installation, which creates its normal Windows installation state and Start Menu entry. The optional indexer service is only enabled from inside the application; setup can also install the Visual C++ runtime or enable Media Feature Pack on Windows N. |
+| [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
 | [recordly](../bucket/recordly.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [sandboxie-plus](../bucket/sandboxie-plus.json) | Inno | Runs the Sandboxie setup silently; installs system integration including its driver/service components. |
 | [scanner](../bucket/scanner.json) | MSIX | Registers the MSIX package with `Add-AppxPackage` for the current user. |
@@ -185,6 +188,7 @@ The installer type describes the package or setup technology used by the manifes
 | [ttf-stix2](../bucket/ttf-stix2.json) | ZIP font files + Windows font-registration script | Copies fonts into the Windows Fonts directory and registers them in the Fonts registry key. Scope is per-user or all-users depending on the Scoop install mode. |
 | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | Vendor EXE setup (NSIS-style switches; engine unverified) | Runs the WiFiman vendor setup with `/S /D=$dir`. |
 | [wincux](../bucket/wincux.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
+| [wintousb](../bucket/wintousb.json) | Inno | Runs the official Inno Setup installer silently with elevation and `/DIR="$dir"`; the main executable is `bin\WinToUSB.exe`, while the default Inno uninstaller remains inside the Scoop version directory. WinToUSB requires administrator rights when creating bootable media because those operations modify disk partitions and boot components. |
 | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | MSI payload extraction + URL protocol registration | Extracts the MSI payload, then registers the `ytdlp-gui://` URL protocol under `HKCU\Software\Classes`; the registry entry points to the Scoop app path. |
 | [znote](../bucket/znote.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 
