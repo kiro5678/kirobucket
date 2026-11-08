@@ -498,6 +498,9 @@ jobs:
                   if ([string]$manifestComment -match '(?im)^\s*Installer Type:\s*Inno Setup') {
                       return "Inno"
                   }
+                  if ([string]$manifestComment -match '(?im)^\s*Installer Type:\s*NSIS\b') {
+                      return "NSIS"
+                  }
               }
               if ($installerText -match 'add-appxpackage' -or $urls -match '(?i)\.msixbundle(?:[?#]|$)') {
                   if ($urls -match '(?i)\.msixbundle(?:[?#]|$)') { return "MSIXBundle" }
