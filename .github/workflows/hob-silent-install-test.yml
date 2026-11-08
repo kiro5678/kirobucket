@@ -119,9 +119,13 @@ jobs:
             Add-Report 'No Hob.exe or Hob install-directory process remains before uninstall.';
 
             $uninstallArgs = @($manifest.uninstaller.args | ForEach-Object { ([string]$_).Replace('$dir', $installDir) })
+            $tempUninstaller = Join-Path $root 'Hob-Uninstall-Temporary.exe'
+            Copy-Item -LiteralPath $uninstaller -Destination $tempUninstaller -Force
+            Add-Report "Copied official uninstaller to a temporary path: $tempUninstaller"
             Add-Report "Running configured uninstaller: $($manifest.uninstaller.file) $($uninstallArgs -join ' ')"
-            $remove = Start-Process -FilePath $uninstaller -ArgumentList $uninstallArgs -PassThru -Wait
+            $remove = Start-Process -FilePath $tempUninstaller -ArgumentList $uninstallArgs -PassThru -Wait
             Add-Report "Uninstaller exit code: $($remove.ExitCode)"
+            Remove-Item -LiteralPath $tempUninstaller -Force -ErrorAction SilentlyContinue
             if ($remove.ExitCode -ne 0) { throw "Hob NSIS uninstaller exited with code $($remove.ExitCode)." }
 
             if (Test-Path -LiteralPath $appExe) { throw 'The NSIS uninstaller left Hob.exe behind.' }
