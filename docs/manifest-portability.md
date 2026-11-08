@@ -36,7 +36,7 @@ The explicit portability classifications currently cover 867 of the 1003 active 
 - [`hop`](../bucket/hop.json) — **Portable**: Scoop downloads the standalone Windows executable without running an installer or registering Windows components. The application itself requires elevation and can modify disk partitions and EFI boot entries; those runtime operations are documented in the manifest.
 - [`hatchzip`](../bucket/hatchzip.json) — **Portable**: uses the project's official portable ZIP, with the GUI and command-line executable at the archive root. No Windows installation routine is run.
 - [`prime-files`](../bucket/prime-files.json) — **Nonportable**: the manifest runs the official Inno Setup installer, which creates the vendor installation state and Start Menu entry, and can install the Visual C++ runtime or enable Media Feature Pack on Windows N. The optional indexer service is installed only when enabled inside the application.
-- [`wintousb`](../bucket/wintousb.json) — **Portable**: `innosetup: true` makes Scoop extract the Inno Setup `{app}` payload without running the vendor setup. The manifest exposes `bin\WinToUSB.exe` and leaves elevation to disk/boot operations at runtime.
+- [`wintousb`](../bucket/wintousb.json) — **Portable**: `innosetup: true` makes Scoop extract the Inno Setup `{app}` payload without running the vendor setup. The manifest selects `bin\WinToUSB,1.exe` on x86 and `bin\WinToUSB,2.exe` on x64; disk/boot operations may request elevation at runtime.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
