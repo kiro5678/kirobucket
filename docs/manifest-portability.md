@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 896 active manifests. The review section below records 99 manifests with outstanding verification checks; 35 active manifests remain Not reconciled.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 897 active manifests. The review section below records 99 manifests with outstanding verification checks; 34 active manifests remain Not reconciled.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -10,7 +10,7 @@
 
 | Class | Typical installer/package types | Meaning in this repository |
 | --- | --- | --- |
-| **Portable** | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS payload extraction, explicit portable-mode installer | Scoop downloads a standalone executable, extracts an archive/installer payload, or invokes a vendor-documented portable mode that places the application in the Scoop app directory without persistent Windows registration. The manifest must not install a driver/service, register a Windows package, or create normal install integrations as part of installation. The application files can generally be moved with the Scoop app directory. |
+| **Portable** | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS payload extraction, explicit portable-mode installer | Scoop downloads a standalone executable, extracts an archive/installer payload, or invokes a vendor-documented portable mode that places the application in the Scoop app directory without persistent Windows registration. The manifest must not install a driver/service, register a Windows package, or create normal install integrations as part of installation. The application files can generally be moved with the Scoop app directory. |
 | **Nonportable** | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, Windows font or registry registration | The manifest runs the vendor's setup routine, registers an MSIX/AppX package, installs a driver/service/runtime, installs fonts into Windows, or writes persistent Windows integration such as a protocol registration. This remains Nonportable even when the setup routine places the main files inside `$dir` or the Scoop app directory. |
 | **Review** | Unverified EXE setup, RMSKIN add-on, or MSIX/EXE with unverified unpackaged behavior | The manifest downloads a setup/package asset but its current instructions do not establish a safe, complete extraction or installation method. Do not assume it is Portable until the payload and launch path are verified. |
 
@@ -22,14 +22,14 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 801 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 802 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 61 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 34 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **896** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| **Total** | **897** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 861 of the 896 active bucket manifests (801 Portable and 61 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 863 of the 897 active bucket manifests (802 Portable and 61 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
@@ -321,6 +321,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [handy](../bucket/handy.json), [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | The manifest passes a vendor-supported portable-mode option. Handy's NSIS template and upstream CI validate `/S /PORTABLE /D=$dir`; its `Data` directory is persisted by Scoop. |
 | Setup executable used only as an extractor | Portable self-extracting EXE or Inno Setup portable bundle | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
 | File-only or direct portable payload | ZIP, 7Z, or standalone EXE | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [dlives](../bucket/dlives.json), [qnotch](../bucket/qnotch.json), [winisland](../bucket/winisland.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json), [biniware-translation-tool](../bucket/biniware-translation-tool.json), [biniware-run](../bucket/biniware-run.json), [launchyqt](../bucket/launchyqt.json), [unquar](../bucket/unquar.json), [vt-uploader-denis-anisimov](../bucket/vt-uploader-denis-anisimov.json), [systemtraymenu](../bucket/systemtraymenu.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
+| PowerShell script download | Standalone `.ps1` | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) | Scoop downloads the script and creates a Windows PowerShell launcher; it does not run the script or register Windows components during installation. |
 
 ### Portable does not mean system-neutral at runtime
 
