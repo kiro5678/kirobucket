@@ -24,7 +24,7 @@
 | Other Utilities | 103 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
-| Productivity & Launchers | 34 | [View](#productivity-launchers) |
+| Productivity & Launchers | 36 | [View](#productivity-launchers) |
 | Security | 40 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 28 | [View](#storage-disk-tools) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 995**
+**Total unique manifests: 997**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -810,6 +810,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [shortercut](../bucket/shortercut.json) | 1.0.0.7 | 5.0 MiB | 2024-03-07 | Free and lightweight app launcher and desktop organizer. | [Homepage](https://www.getshortercut.com/) |
 | [sofast](../bucket/sofast.json) | 0.12.0 | 64bit: 12.8 MiB | 2026-06-16 | Quick launcher and productivity tool for Windows. | [Homepage](https://www.sofast.fun/) |
 | [super-productivity](../bucket/super-productivity.json) | 19.3.1 | 64bit: 248.6 MiB / arm64: 248.6 MiB | 2026-10-25 | A task management and time tracking application for personal productivity. | [Homepage](https://github.com/super-productivity/super-productivity) |
+| [systemtraymenu](../bucket/systemtraymenu.json) | 3.1.235 | 64bit: 7.4 MiB | 2026-11-08 | Folder-based launcher and menu for files, programs, and links. | [Homepage](https://hofknecht.eu/systemtraymenu/en.html) |
+| [systemtraymenu1](../bucket/systemtraymenu1.json) | 1.3.5.0 | 64bit: 70.6 MiB | 2023-09-09 | Open-source desktop toolbar and Start Menu alternative for browsing and opening files, folders, and links. | [Homepage](https://github.com/Hofknecht/SystemTrayMenu) |
 | [tabame](../bucket/tabame.json) | 2.2.0 | 27.4 MiB | 2026-10-21 | Windows taskbar replacement with a launcher, QuickMenu, and plugins. | [Homepage](https://github.com/Far-Se/tabame) |
 | [vovsoft-contact-manager](../bucket/vovsoft-contact-manager.json) | 2.3 | 4.8 MiB | 2026-09-05 | Portable edition of Vovsoft Contact Manager. | [Homepage](https://vovsoft.com/software/contact-manager/) |
 | [vovsoft-container-loading-calculator](../bucket/vovsoft-container-loading-calculator.json) | 1.5 | 2.6 MiB | 2026-08-13 | Portable edition of Vovsoft Container Loading Calculator. | [Homepage](https://vovsoft.com/software/container-loading-calculator/) |
