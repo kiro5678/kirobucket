@@ -916,3 +916,12 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Manifest outcome:** Confirmed that the shortcut target `ModernTinyWall.exe` is correct for all three architectures. Updated the staged manifest's user-facing note and the portability inventory with the verified archive layout and the missing service-host dependency. Keep `tinywall-shirazadam.json` in **Review**; no app launch, service installation, or Windows Firewall modification was performed.
 - **Prevention:** In PowerShell workflow source embedded through JavaScript/template generation, avoid backslash-sensitive string construction where possible. Keep large downloaded and extracted binaries outside artifact-upload directories or remove them before upload; retain only reports and inventories.
 
+### 2026-11-08 — Fix SystemTrayMenu 1 manifest PR formatting lint
+
+- **Affected files:** `bucket/systemtraymenu1.json` and `docs/manifest-authoring.md`.
+- **Problem:** The Pull Request Handler reported `Lint: False` even though JSON/Schema, Description, License, Hashes, Checkver, and Autoupdate checks passed.
+- **Root cause:** Two formatter normalizations were missing from the submitted JSON. Scoop's `formatjson.ps1` collapses a one-element array of strings (such as a single `notes` entry) into a scalar string. After correcting that field, the formatter comparison still failed because the manifest had no final line ending; `formatjson.ps1` writes the file with one final CRLF.
+- **Resolution:** Changed the single `notes` entry to a scalar string and added the required final newline. Updated `docs/manifest-authoring.md` to explain single-value arrays and the final CRLF requirement.
+- **Verification:** [Formatter comparison run 42506648947](https://github.com/kiro5678/kirobucket/actions/runs/42506648947) showed that the remaining difference after the `notes` correction was exactly the final line ending (2 bytes). [PR verification run 42506832827](https://github.com/kiro5678/kirobucket/actions/runs/42506832827) passed with `Lint`, `Description`, `License`, `Hashes`, `Checkver`, and `Autoupdate` all `True`. [Archive and repository test run 42505308303](https://github.com/kiro5678/kirobucket/actions/runs/42505308303) also passed archive/hash/path/version checks and Pester (6 passed, 0 failed).
+- **Prevention:** Use a string for a single textual value and an array only when multiple values are needed. Ensure every bucket manifest ends with exactly one CRLF, then run the official formatter or the PR `/verify` check before merging.
+
