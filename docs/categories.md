@@ -10,7 +10,7 @@
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
 | Download Managers | 21 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 72 | [View](#file-management) |
+| File Management | 74 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
@@ -27,7 +27,7 @@
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
 | Security | 40 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
-| Storage & Disk Tools | 28 | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 29 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
@@ -258,6 +258,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [findly](../bucket/findly.json) | 1.0.2 | 4.3 MiB | 2026-08-11 | Windows utility for finding installed programs and their executable paths | [Homepage](https://findly.devslim.com/) |
 | [foldersizeexplorer](../bucket/foldersizeexplorer.json) | 1.0.4 | 64bit: 90.9 MiB | 2026-09-01 | Portable file manager with recursive folder-size analysis for Windows. | [Homepage](https://github.com/ribeirogustav/FolderSizeExplorer-Releases) |
 | [foldra](../bucket/foldra.json) | 1.0 | 64bit: 2.1 MiB | 2025-12-25 | Lightweight desktop folder widgets and file organization utility for Windows. | [Homepage](https://github.com/YusufEren97/FoldRa) |
+| [hatchzip](../bucket/hatchzip.json) | 0.1.9 | 64bit: 10.3 MiB | 2026-11-05 | Extracts large archives in place, reusing archive space as files are extracted. | [Homepage](https://hatchzip.dev/) |
 | [funk-smf](../bucket/funk-smf.json) | 18 | 15.6 MiB | 2025-06-25 | Multi-purpose file search and duplicate finder with filters, hash calculation, reporting, copy/move, and deletion tools. | [Homepage](https://funk.eu/smf/) |
 | [meinplatz](../bucket/meinplatz.json) | 8.66 | 64bit: 846.7 KiB / 32bit: 707.8 KiB | 2026-05-22 | Scan disk usage and visualize space occupied by files and folders. | [Homepage](https://www.softwareok.com/?Download=MeinPlatz) |
 | [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | 12.2 MiB | 2026-04-15 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
@@ -269,6 +270,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [nirlauncher.schinese](../bucket/nirlauncher.schinese.json) | 1.30.26 | — | — | Most of NirSoft utilities are translated to other languages by volunteers from around the world. In the following section, you can download all translations of the desired language in one zip file, and extract them into NirSoft folder with all other utilities. After you do that, you'll be able to use the utilities of NirSoft in your preferred language, as long as there is a translation file for the utility that you use. | [Homepage](https://launcher.nirsoft.net/) |
 | [nomina](../bucket/nomina.json) | 1.1 | 15.5 MiB | 2026-05-23 | Advanced batch file and folder renamer for Windows. | [Homepage](https://github.com/esmail-mkh/Nomina) |
 | [office-files-images](../bucket/office-files-images.json) | 2.88 | 64bit: 181.5 KiB | 2026-05-03 | List and extract images contained in Office documents, with export support. | [Homepage](https://www.softwareok.com/?Download=Office.Files.Images) |
+| [prime-files](../bucket/prime-files.json) | 0.3.9 | 64bit: 11.8 MiB | 2026-11-08 | Windows file manager with tabs, previews, full-computer search, and optional Explorer integration. | [Homepage](https://github.com/CakeDev4k/prime-files) |
 | [omni-search](../bucket/omni-search.json) | 0.1.16 | 64bit: 5.9 MiB | 2026-07-28 | Fast Windows desktop file search and duplicate finder with Android LAN sync. | [Homepage](https://github.com/Eul45/omni-search) |
 | [omni-search-exe](../bucket/omni-search-exe.json) | 0.1.16 | 64bit: 5.1 MiB / arm64: 4.9 MiB | 2026-07-28 | Fast Windows desktop file search and duplicate finder with Android LAN sync. Portable payload extracted from the official setup executable. | [Homepage](https://github.com/Eul45/omni-search) |
 | [q-dir](../bucket/q-dir.json) | 12.82 | 64bit: 1.2 MiB / 32bit: 842.6 KiB | 2026-10-24 | Quad-pane file manager for Windows. | [Homepage](https://www.softwareok.com/?Download=Q-Dir) |
@@ -901,6 +903,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [grc-bootable](../bucket/grc-bootable.json) | 2024.04.21 | 309.5 KiB | 2024-04-21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
 | [grc-initdisk](../bucket/grc-initdisk.json) | 2020.12.19 | 163.4 KiB | 2020-12-20 | GRC InitDisk: Command-line USB formatter that can create a FAT-formatted and optionally FreeDOS-bootable drive. | [Homepage](https://www.grc.com/initdisk.htm) |
 | [grc-validrive](../bucket/grc-validrive.json) | 2023.10.06 | 96.4 KiB | 2023-10-06 | GRC ValiDrive: Spot-checks USB mass-storage drives to detect fraudulent capacity and failed read/write storage. | [Homepage](https://www.grc.com/validrive.htm) |
+| [hop](../bucket/hop.json) | 0.3.2 | 64bit: 687.5 KiB | 2026-11-02 | Creates an internal Linux installer to set up Linux alongside Windows without a USB drive. | [Homepage](https://github.com/Arjun-Ingole/hop) |
 | [hxd.chs](../bucket/hxd.chs.json) | 2.5.0.0 | 3.2 MiB | 2021-02-10 | Hex and Disk Editor (Simplified Chinese) | [Homepage](https://mh-nexus.de/en/hxd/) |
 | [is-my-hd-ok](../bucket/is-my-hd-ok.json) | 4.55 | 64bit: 165.3 KiB | 2026-05-02 | Benchmark hard-drive performance. | [Homepage](https://www.softwareok.com/?Download=IsMyHdOK) |
 | [mangodisk](../bucket/mangodisk.json) | 1.2.1 | 64bit: 47.0 MiB | 2026-10-27 | Disk cleanup, storage analysis, and system optimization for Windows. | [Homepage](https://github.com/harry0703/MangoDisk) |

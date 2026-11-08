@@ -1,0 +1,27 @@
+{
+    "version": "0.3.2",
+    "description": "Installs Linux alongside Windows from an internal disk without requiring a USB drive.",
+    "homepage": "https://github.com/Arjun-Ingole/hop",
+    "license": "MIT",
+    "url": "https://github.com/Arjun-Ingole/hop/releases/download/v$version/hop.exe",
+    "hash": "c366917d8ebcda41fa099fd3726eaaf4ab32a3b3433f95709c5ee89b850e3e75",
+    "bin": "hop.exe",
+    "shortcuts": [
+        [
+            "hop.exe",
+            "hop"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Arjun-Ingole/hop"
+    },
+    "autoupdate": {
+        "url": "https://github.com/Arjun-Ingole/hop/releases/download/v$version/hop.exe",
+        "hash": {
+            "mode": "json",
+            "url": "https://api.github.com/repos/Arjun-Ingole/hop/releases/tags/v$version",
+            "jp": "$.assets[?(@.name == 'hop.exe')].digest"
+        }
+    },
+    "notes": "Requires administrator rights. It can resize or create disk partitions and modify EFI boot entries. Its full-disk replacement option can erase the Windows disk; verify the selected target disk and every destructive confirmation before proceeding."
+}
