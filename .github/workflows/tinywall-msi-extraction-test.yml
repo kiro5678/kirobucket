@@ -41,8 +41,32 @@ jobs:
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
           if ($manifest.version -ne '3.6.1') { throw "Unexpected TinyWall manifest version: $($manifest.version)" }
           if ($manifest.hash -ne $manifest.architecture.'64bit'.hash) { throw 'The root hash and 64-bit architecture hash differ.' }
-          $normalizedBin = ([string]$manifest.bin).Replace([char]92, '/').Replace('//', '/')
-          if ($normalizedBin -ne 'ProgramFiles/TinyWall/TinyWall.exe') { throw "Unexpected TinyWall bin path: $($manifest.bin)" }
+          if ($manifest.bin) { throw "The official MSI installs outside the Scoop directory; do not declare a Scoop bin shim: $($manifest.bin)" }
+          if ($manifest.shortcuts) { throw 'The official MSI owns its Start Menu shortcuts; do not add Scoop-managed shortcuts.' }
+          if ($manifest.pre_uninstall) { throw 'The official MSI uninstaller must own TinyWall service/WFP cleanup; remove the extraction-era pre_uninstall hook.' }
+
+          $installerScript = @($manifest.installer.script) -join "`n"
+          $uninstallerScript = @($manifest.uninstaller.script) -join "`n"
+          if ($installerScript -notmatch 'msiexec\.exe' -or $installerScript -notmatch '/i') {
+            throw 'TinyWall installer must execute the official MSI with msiexec /i.'
+          }
+          if ($uninstallerScript -notmatch 'msiexec\.exe' -or $uninstallerScript -notmatch '/x') {
+            throw 'TinyWall uninstaller must execute the official MSI with msiexec /x.'
+          }
+
+          $expectedFragments = @(
+            [string]$manifest.url,
+            [string]$manifest.architecture.'32bit'.url,
+            [string]$manifest.architecture.'64bit'.url,
+            [string]$manifest.architecture.arm64.url,
+            [string]$manifest.autoupdate.url,
+            [string]$manifest.autoupdate.architecture.'32bit'.url,
+            [string]$manifest.autoupdate.architecture.'64bit'.url,
+            [string]$manifest.autoupdate.architecture.arm64.url
+          )
+          if (@($expectedFragments | Where-Object { $_ -notmatch '#/setup\.msi_$' }).Count -gt 0) {
+            throw 'All TinyWall MSI download and autoupdate URLs must preserve the MSI file as setup.msi_.'
+          }
           $downloadPage = Invoke-WebRequest -Uri ([string]$manifest.checkver.url) -TimeoutSec 120
           $versionMatch = [regex]::Match($downloadPage.Content, [string]$manifest.checkver.regex)
           if (-not $versionMatch.Success -or $versionMatch.Groups[1].Value -ne $manifest.version) {
