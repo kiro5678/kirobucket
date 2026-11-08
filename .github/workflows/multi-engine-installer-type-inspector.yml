@@ -23,6 +23,7 @@ on:
     paths:
       - 'bucket/majorprivacy.json'
       - 'bucket/keptinflow.json'
+      - 'bucket/wintousb.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -67,11 +68,16 @@ jobs:
             $pushEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
             $changedPaths = @($pushEvent.head_commit.added) + @($pushEvent.head_commit.modified) + @($pushEvent.head_commit.removed)
             $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'bucket/keptinflow.json')
+            $runForWinToUSB = $changedPaths -contains 'bucket/wintousb.json'
 
             if ($runForKeptInFlow) {
               $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/keptinflow.json'
               $officialReleasePrefix = 'https://github.com/jwwpua/keptinflow-releases/releases/download/'
               $targetProduct = 'KeptInFlow'
+            } elseif ($runForWinToUSB) {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/wintousb.json'
+              $officialReleasePrefix = 'https://www.easyuefi.com/wintousb/downloads/'
+              $targetProduct = 'WinToUSB'
             } else {
               $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/majorprivacy.json'
               $officialReleasePrefix = 'https://github.com/xanasoft/MajorPrivacy/releases/download/'
@@ -177,7 +183,6 @@ jobs:
           $item = Get-Item -LiteralPath $installer
           if ($item.Length -le 0) { throw "The downloaded file is empty." }
           if ($item.Length -gt 1610612736) { throw "The downloaded file exceeds the 1.5 GiB safety limit." }
-
           $actualHash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($expectedHash -and $actualHash -ine $expectedHash.ToLowerInvariant()) {
             throw "SHA-256 mismatch. Expected $expectedHash, received $actualHash."
@@ -357,8 +362,7 @@ jobs:
             InstallAnywhere = "InstallAnywhere / Zero G"
             Wise = "Wise installer"
             InstallForge = "InstallForge"
-            SetupFactory = "Setup Factory"
-            BitRock = "BitRock / InstallBuilder"
+            SetupFactory = "Setup Factory"            BitRock = "BitRock / InstallBuilder"
             QtInstallerFramework = "Qt Installer Framework"
             Squirrel = "Squirrel installer/update framework"
             SevenZipSFX = "7-Zip SFX"
@@ -538,42 +542,3 @@ jobs:
             throw "Detect It Easy returned no output."
           }
           if ($scanExitCode -ne 0) {
-            throw "Detect It Easy exited with code $scanExitCode; treat the scan as failed."
-          }
-
-          $report = @(
-            "Multi-Engine Installer Type Inspector"
-            "============================"
-            "Detect It Easy release: $env:DIE_RELEASE"
-            "Source host: $env:SOURCE_HOST"
-            "Target filename: $env:INSTALLER_NAME"
-            "Target SHA-256: $env:INSTALLER_SHA256"
-            "Scan exit code: $scanExitCode"
-            ""
-            "Detect It Easy output (deep scan + heuristics + verbose mode):"
-            $scanOutput
-            ""
-            "Safety note: the target file was not executed."
-          )
-          $report | Set-Content -LiteralPath $scanLog -Encoding utf8
-          $report | ForEach-Object { Write-Output $_ }
-
-          @(
-            ""
-            "## Detect It Easy identification result"
-            ""
-            "- **Target file:** $env:INSTALLER_NAME"
-            "- **SHA-256:** $env:INSTALLER_SHA256"
-            "- **Detect It Easy release:** $env:DIE_RELEASE"
-            "- **Scan exit code:** $scanExitCode"
-            ""
-            $scanOutput
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-
-      - name: Upload report
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: installer-type-inspection-report
-          path: ${{ runner.temp }}/detect-it-easy-api/*.txt
-          if-no-files-found: ignore
