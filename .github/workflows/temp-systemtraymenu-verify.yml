@@ -1,0 +1,83 @@
+name: Temporary SystemTrayMenu 3.1.235 verification
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/temp-systemtraymenu-verify.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download, hash, and inspect the official Windows x64 ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $version = '3.1.235'
+          $url = "https://hofknecht.eu/systemtraymenu/download/$version/SystemTrayMenu-$version-windows-x64.zip"
+          $archive = Join-Path $env:RUNNER_TEMP "SystemTrayMenu-$version-windows-x64.zip"
+          $extract = Join-Path $env:RUNNER_TEMP 'stm-extracted'
+
+          Invoke-WebRequest -Uri $url -OutFile $archive -TimeoutSec 300
+          $file = Get-Item -LiteralPath $archive
+          $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $zip = [System.IO.Compression.ZipFile]::OpenRead($archive)
+          try {
+            $entries = @($zip.Entries | ForEach-Object FullName)
+          } finally {
+            $zip.Dispose()
+          }
+
+          if ($entries.Count -eq 0) { throw 'The downloaded ZIP is empty.' }
+          $exeEntries = @($entries | Where-Object { ($_ -split '/')[-1] -ceq 'SystemTrayMenu.exe' })
+          if ($exeEntries.Count -ne 1) {
+            throw "Expected exactly one SystemTrayMenu.exe entry; found $($exeEntries.Count). Entries: $($entries -join '; ')"
+          }
+
+          Expand-Archive -LiteralPath $archive -DestinationPath $extract -Force
+          $exePath = Join-Path $extract ($exeEntries[0].Replace('/', [IO.Path]::DirectorySeparatorChar))
+          if (!(Test-Path -LiteralPath $exePath -PathType Leaf)) { throw "Executable missing after extraction: $exePath" }
+
+          $signature = Get-AuthenticodeSignature -FilePath $exePath
+          $versionInfo = (Get-Item -LiteralPath $exePath).VersionInfo
+
+          Write-Host "VERSION=$version"
+          Write-Host "URL=$url"
+          Write-Host "FILE=$($file.Name)"
+          Write-Host "SIZE_BYTES=$($file.Length)"
+          Write-Host "SHA256=$hash"
+          Write-Host "EXE_ENTRY=$($exeEntries[0])"
+          Write-Host "EXE_FILE_VERSION=$($versionInfo.FileVersion)"
+          Write-Host "EXE_PRODUCT_VERSION=$($versionInfo.ProductVersion)"
+          Write-Host "SIGNATURE_STATUS=$($signature.Status)"
+          Write-Host "SIGNER=$($signature.SignerCertificate.Subject)"
+          Write-Host 'ZIP_ENTRIES_BEGIN'
+          $entries | ForEach-Object { Write-Host $_ }
+          Write-Host 'ZIP_ENTRIES_END'
+
+          @(
+            '# SystemTrayMenu 3 official archive verification'
+            ''
+            "- Version: $version"
+            "- URL: $url"
+            "- File: $($file.Name)"
+            "- Size: $($file.Length) bytes"
+            "- SHA-256: $hash"
+            "- Executable path in ZIP: $($exeEntries[0])"
+            "- File version: $($versionInfo.FileVersion)"
+            "- Product version: $($versionInfo.ProductVersion)"
+            "- Authenticode status: $($signature.Status)"
+            "- Signer: $($signature.SignerCertificate.Subject)"
+            ''
+            '## ZIP entries'
+            ($entries | ForEach-Object { "- `$_`" })
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
