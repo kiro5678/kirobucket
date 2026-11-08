@@ -1,7 +1,7 @@
 {
     "##": "Installer Type: Inno Setup",
     "version": "0.3.9",
-    "description": "Fast Windows file manager with tabs, previews, full-computer search, and optional Explorer integration.",
+    "description": "Fast Rust-based Windows file manager with tabs, previews, full-computer search, and optional Explorer integration.",
     "homepage": "https://github.com/CakeDev4k/prime-files",
     "license": "MIT",
     "url": "https://github.com/CakeDev4k/prime-files/releases/download/v$version/PrimeFiles-Setup-$version.exe",
