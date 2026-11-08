@@ -32,5 +32,6 @@
             "jp": "$.assets[?(@.name == 'HatchZip-x64-portable.zip')].digest"
         }
     },
-    "notes": "The portable package includes the GUI, command-line tool, and separate LICENSE-UNRAR.txt for the bundled UnRAR component."
+    "notes": "The portable package includes the GUI, command-line tool, and separate LICENSE-UNRAR.txt for the bundled UnRAR component.",
+    "##": "Installer Type: ZIP archive"
 }
