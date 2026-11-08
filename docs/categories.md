@@ -18,10 +18,10 @@
 | Keyboard & Language | 14 | [View](#keyboard-language) |
 | Media & Audio/Video | 45 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
-| Network Security | 10 | [View](#network-security) |
+| Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 104 | [View](#other-utilities) |
+| Other Utilities | 103 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 34 | [View](#productivity-launchers) |
@@ -565,6 +565,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sordum-dns-angel](../bucket/sordum-dns-angel.json) | 1.8 | 1.2 MiB | 2025-07-09 | Sordum's DNS Angel. Filter and block vast and uncensored content on the internet. | [Homepage](https://www.sordum.org/8127/dns-angel-v1-8/) |
 | [sordum-firewall-app-blocker](../bucket/sordum-firewall-app-blocker.json) | 1.9 | 1.2 MiB | 2026-06-15 | Use Windows Firewall to block or unblock certain applications. | [Homepage](https://www.sordum.org/firewall-app-blocker) |
 | [sordum-url-disabler](../bucket/sordum-url-disabler.json) | 1.4 | 1.1 MiB | 2026-05-19 | Portable utility for blocking URLs in supported browsers, including Chrome, Firefox, Edge, Brave, and Yandex. | [Homepage](https://www.sordum.org/13075/url-disabler-v1-4/) |
+| [tinywall](../bucket/tinywall.json) | 3.6.1 | Default: 1.8 MiB / 32bit: 1.8 MiB / 64bit: 1.8 MiB / arm64: 1.8 MiB | 2026-10-21 | Secure-by-default firewall for Windows built on Windows Firewall. Developer: Károly Pados. | [Homepage](https://tinywall.pados.hu/) |
 | [ublockdnsclient](../bucket/ublockdnsclient.json) | 0.3.4 | 64bit: 7.7 MiB / arm64: 7.0 MiB | 2026-10-22 | Cross-platform system DNS client for uBlockDNS with device-wide ad and tracker blocking. | [Homepage](https://github.com/ugzv/ublockdnsclient) |
 | [zen-desktop](../bucket/zen-desktop.json) | 0.29.0 | 64bit: 10.9 MiB / arm64: 10.3 MiB | 2026-11-02 | System-wide ad blocker and privacy guard for Windows, macOS, and Linux. | [Homepage](https://irbis.sh/zen) |
 
@@ -728,7 +729,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [starcodec](../bucket/starcodec.json) | 20261016 | — | — | Windows codec pack that installs audio and video codecs, DirectShow filters, subtitle support, and related media utilities. | [Homepage](https://www.starcodec.com/en/) |
 | [taskslinger](../bucket/taskslinger.json) | 0.9.5 | 2.6 MiB | — | Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections. | [Homepage](https://taskslinger.net/) |
 | [tinywall-shirazadam](../bucket/tinywall-shirazadam.json) | 4.0.0 | 64bit: 100.0 MiB / 32bit: 76.7 MiB / arm64: 95.6 MiB | 2026-11-06 | Experimental modern WinUI 3 desktop client for the TinyWall Windows firewall. | [Homepage](https://github.com/ShirazAdam/TinyWall) |
-| [tinywall](../bucket/tinywall.json) | 3.6.1 | Default: 1.8 MiB / 32bit: 1.8 MiB / 64bit: 1.8 MiB / arm64: 1.8 MiB | 2026-10-21 | Secure-by-default firewall for Windows built on Windows Firewall. Developer: Károly Pados. | [Homepage](https://tinywall.pados.hu/) |
 | [udm-pro](../bucket/udm-pro.json) | 2.6.35 | 223.8 MiB | 2026-11-05 | Windows download manager for files, videos, torrents, and supported cloud uploads. | [Homepage](https://github.com/Shalaby2/UDM-Pro) |
 | [vcredist-aio](../bucket/vcredist-aio.json) | 0.106.0 | 31.1 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes (x86 and x64), including legacy runtimes and the current 2022/2026 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
 | [visual-cpp-redist-aio-arm64](../bucket/visual-cpp-redist-aio-arm64.json) | 0.106.0 | arm64: 19.3 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes for Windows ARM64, including legacy x86 and current ARM64 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |

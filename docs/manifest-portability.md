@@ -23,13 +23,13 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 801 | ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 60 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Nonportable | 61 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
-| Not reconciled | 35 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
+| Not reconciled | 34 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
 | **Total** | **896** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 861 of the 896 active bucket manifests (801 Portable and 60 Nonportable). The remaining 35 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 861 of the 896 active bucket manifests (801 Portable and 61 Nonportable). The remaining 34 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
@@ -72,13 +72,13 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 60 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 61 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
 | NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 22 |
 | Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json) | 6 |
-| MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json) | 4 |
+| MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json), [tinywall](../bucket/tinywall.json) | 5 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
 | NVIDIA self-extracting EXE + setup.exe | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json), [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 2 |
@@ -101,7 +101,7 @@ This index groups the 60 Nonportable manifests by the exact installer/package la
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
 | NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
-| **Total** | **All Nonportable manifests** | **60** |
+| **Total** | **All Nonportable manifests** | **61** |
 
 ## Nonportable manifests
 
@@ -166,6 +166,7 @@ The installer type describes the package or setup technology used by the manifes
 | [sucrose](../bucket/sucrose.json) | .NET bundle EXE installer | Runs the official per-user bundle installer; installs under `%LOCALAPPDATA%\Sucrose` and creates shortcuts. |
 | [sucrose-nightly](../bucket/sucrose-nightly.json) | .NET bundle EXE installer | Runs the official per-user bundle installer; installs under `%LOCALAPPDATA%\Sucrose` and creates shortcuts. |
 | [tockler](../bucket/tockler.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
+| [tinywall](../bucket/tinywall.json) | MSI | Runs the official per-machine MSI through Windows Installer. The MSI installs the Program Files payload and ProgramData files, registers the LocalSystem automatic `TinyWall` service, creates the `TinyWall Controller` logon task, and runs TinyWall's native WFP/Hosts cleanup action during MSI removal. |
 | [ttf-stix2](../bucket/ttf-stix2.json) | ZIP font files + Windows font-registration script | Copies fonts into the Windows Fonts directory and registers them in the Fonts registry key. Scope is per-user or all-users depending on the Scoop install mode. |
 | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | Vendor EXE setup (NSIS-style switches; engine unverified) | Runs the WiFiman vendor setup with `/S /D=$dir`. |
 | [wincux](../bucket/wincux.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
@@ -176,7 +177,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-This is the single review register. It contains 103 active manifests in `bucket/` with outstanding technical checks: the 98 legacy review manifests migrated into `bucket/`, `tinywall-shirazadam.json`, and the four notch manifests listed in this table. Some assets and SHA-256 digests are verified, but that alone does not establish successful extraction, installation, launch, update, or uninstall behavior. The same table also records 10 notch project candidates that do not currently have a usable independent Scoop manifest; these are project-review entries, not active bucket manifests, and are not included in the count of 103.
+This is the single review register. It contains 102 active manifests in `bucket/` with outstanding technical checks: the 98 legacy review manifests migrated into `bucket/`, `tinywall-shirazadam.json`, and the four notch manifests listed in this table. Some assets and SHA-256 digests are verified, but that alone does not establish successful extraction, installation, launch, update, or uninstall behavior. The same table also records 10 notch project candidates that do not currently have a usable independent Scoop manifest; these are project-review entries, not active bucket manifests, and are not included in the count of 102.
 
 All existing manifest files remain in `bucket/`. Record outstanding review status and supporting evidence in this section; do not create a separate manifest-staging directory.
 
@@ -275,7 +276,6 @@ All existing manifest files remain in `bucket/`. Record outstanding review statu
 | [quanto-flx](../bucket/quanto-flx.json) | Rainmeter RMSKIN add-on | This is a Rainmeter skin package, not a standalone application; the manifest does not apply it through Rainmeter's SkinInstaller. |
 | [starcodec](../bucket/starcodec.json) | Windows codec-pack setup (engine unverified) | The official page lists the 20261016 package, but the final binary URL, SHA-256, installer engine, codec registration, and uninstall behavior are unverified. |
 | [taskslinger](../bucket/taskslinger.json) | Per-user Windows setup EXE | The official installer targets `%LocalAppData%\Programs\TaskSlinger`; a Scoop-contained installation or verified portable extraction method is not established. |
-| [tinywall](../bucket/tinywall.json) | x86/x64 and ARM64 MSI payload extraction / ProgramData files / runtime service integration | Workflow [42399331556](https://github.com/kiro5678/kirobucket/actions/runs/42399331556) verified both official MSI hashes and signatures and extracted `ProgramFiles/TinyWall/TinyWall.exe` plus `CommonAppData/TinyWall/{profiles.json,hosts.custom}`. The app reads this data from `%ProgramData%\\TinyWall`, which plain Scoop extraction does not populate. First-run `/install` registers a LocalSystem automatic service and scheduled task; `/uninstall` prompts for confirmation and removes persistent WFP objects. Initial data placement and a Scoop-safe upgrade/uninstall lifecycle are unverified. |
 | [tinywall-shirazadam](../bucket/tinywall-shirazadam.json) | x86/x64/ARM64 ZIP / ModernTinyWall client / missing service host | Workflow [42399489583](https://github.com/kiro5678/kirobucket/actions/runs/42399489583) verified all three SHA-256 hashes, extracted 604 x64, 564 x86, and 600 ARM64 files, and confirmed `ModernTinyWall.exe` is at each archive root with matching PE architecture. The declared shortcut path is valid. No TinyWall service-host executable is included, although the client communicates with the `TinyWallController` service; no launch or firewall-change test was run. Keep Review until the required service package and lifecycle are available. The corresponding manifest is tracked in `bucket/tinywall-shirazadam.json`.
 | [udm-pro](../bucket/udm-pro.json) | Windows setup EXE (engine unverified) | The official v2.6.35 setup and digest are available, but installer engine, payload, silent/custom-directory switches, and uninstall behavior are unverified. |
 | [vcredist-aio](../bucket/vcredist-aio.json) | x86/x64 ZIP / system runtime installer | The archive contains an administrator-run Visual C++ runtime installer. Its payload and effects on existing system runtimes need inspection. |
