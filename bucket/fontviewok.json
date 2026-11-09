@@ -1,5 +1,5 @@
 {
-    "version": "9.33",
+    "version": "9.39",
     "description": "Create a quick visual overview of installed fonts.",
     "homepage": "https://www.softwareok.com/?Download=FontViewOK",
     "license": {
@@ -9,7 +9,7 @@
     "architecture": {
         "64bit": {
             "url": "https://www.softwareok.com/Download/FontViewOK_Portable_x64.zip",
-            "hash": "7e2d13ea698a67caa72506f4f4da03d24930c2cb7f3158f14cef1ce48031a066"
+            "hash": "60364f6698a9cfca26b7a69cdaca9e20d011f2f34629a90afc6e1117d6579d63"
         }
     },
     "bin": [
