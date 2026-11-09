@@ -25,6 +25,7 @@ on:
       - 'bucket/keptinflow.json'
       - 'bucket/wintousb.json'
       - 'bucket/pake-desktop.json'
+      - '.github/workflows/multi-engine-installer-type-inspector.yml'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -32,6 +33,7 @@ on:
     paths:
       - 'bucket/autooff.json'
       - 'bucket/pake-desktop.json'
+      - '.github/workflows/multi-engine-installer-type-inspector.yml'
 
 permissions:
   contents: read
