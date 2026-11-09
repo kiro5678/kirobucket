@@ -1,0 +1,18 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-generated desktop client for XiaoHongShu.",
+    "homepage": "https://github.com/tw93/Pake",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V3.18.0/XiaoHongShu_x64.msi",
+    "hash": "9ae670d1c1af313e83350f121d5bcd6482ad9a0b6313ebe8e4f0041990c7bbc0",
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "regex": "\"tag_name\"\\s*:\\s*\"V([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/XiaoHongShu_x64.msi",
+        "hash": {
+            "mode": "download"
+        }
+    }
+}
