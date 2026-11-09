@@ -25,6 +25,7 @@ on:
       - 'bucket/keptinflow.json'
       - 'bucket/wintousb.json'
       - 'bucket/pake-desktop.json'
+      - '.github/workflows/multi-engine-installer-type-inspector.yml'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -32,6 +33,7 @@ on:
     paths:
       - 'bucket/autooff.json'
       - 'bucket/pake-desktop.json'
+      - '.github/workflows/multi-engine-installer-type-inspector.yml'
 
 permissions:
   contents: read
@@ -812,6 +814,31 @@ jobs:
             throw 'Setup.exe did not create a Start Menu or Desktop shortcut targeting the installation directory.'
           }
 
+          # Simulate Scoop downloading the setup EXE into the existing app directory,
+          # then executing the manifest's installer.script hook to update that directory.
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
+          $pakeManifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          $installerHook = @($pakeManifest.installer.script)
+          if ($installerHook.Count -eq 0) {
+            throw 'Pake manifest must define installer.script for the Scoop-safe Velopack update.'
+          }
+
+          $setupName = [System.IO.Path]::GetFileName($env:INSTALLER_PATH)
+          $scoopSetupPath = Join-Path $installDir $setupName
+          Copy-Item -LiteralPath $env:INSTALLER_PATH -Destination $scoopSetupPath -Force
+          $dir = $installDir
+          $fname = $setupName
+          Invoke-Command ([scriptblock]::Create($installerHook -join "`r`n"))
+
+          if (Test-Path -LiteralPath $scoopSetupPath) {
+            throw 'The Scoop installer hook left the setup EXE inside the directory Velopack must replace.'
+          }
+          foreach ($requiredFile in $requiredFiles) {
+            if (-not (Test-Path -LiteralPath $requiredFile -PathType Leaf)) {
+              throw "Expected installed file is missing after Scoop-style reinstallation: $requiredFile"
+            }
+          }
+
           $updateExe = Join-Path $installDir 'Update.exe'
           $uninstallProcess = Start-Process -FilePath $updateExe -ArgumentList @(
             'uninstall',
@@ -842,7 +869,8 @@ jobs:
             "- ARM64 SHA-256: $armHash"
             "- ARM64 signer verified: $($armSignature.SignerCertificate.Subject)"
             '- x64 Velopack Setup.exe completed successfully.'
-            '- Verified root Pake.exe, Update.exe and current\Pake.exe.'
+            '- Verified the manifest installer.script copied Setup.exe to TEMP, removed the in-directory copy, and completed a Scoop-style reinstall into an existing install directory.'
+            '- Verified root Pake.exe, Update.exe and current\Pake.exe after reinstallation.'
             "- Verified $($createdShortcuts.Count) created shortcuts were removed."
             '- Update.exe uninstall --silent --rootDir completed successfully.'
             '- Verified the installation directory was removed.'
