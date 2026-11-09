@@ -29,40 +29,40 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 
 | Category | Main | Extras | Total |
 | --- | ---: | ---: | ---: |
-| [Android & Device Tools](#android-device-tools) | 6 | 18 | 24 |
-| [Browsers & Communication](#browsers-communication) | 7 | 70 | 77 |
-| [Clipboard Tools](#clipboard-tools) | 1 | 6 | 7 |
-| [Cross-Device Integration](#cross-device-integration) | 0 | 3 | 3 |
-| [Developer & Technical Tools](#developer-technical-tools) | 1440 | 299 | 1739 |
-| [Download Managers](#download-managers) | 5 | 22 | 27 |
-| [Emulators & Compatibility](#emulators-compatibility) | 5 | 25 | 30 |
-| [File Management](#file-management) | 17 | 49 | 66 |
-| [Local File Sharing](#local-file-sharing) | 3 | 3 | 6 |
-| [Forensics & Diagnostics](#forensics-diagnostics) | 8 | 9 | 17 |
-| [Games & Game Utilities](#games-game-utilities) | 7 | 30 | 37 |
-| [Images & Photos](#images-photos) | 22 | 55 | 77 |
-| [Keyboard & Language](#keyboard-language) | 1 | 9 | 10 |
-| [Media & Audio/Video](#media-audiovideo) | 26 | 95 | 121 |
-| [Network & DNS](#network-dns) | 33 | 26 | 59 |
-| [Network Security](#network-security) | 6 | 11 | 17 |
+| [Android & Device Tools](#android-device-tools) | 6 | 20 | 26 |
+| [Browsers & Communication](#browsers-communication) | 7 | 79 | 86 |
+| [Clipboard Tools](#clipboard-tools) | 1 | 7 | 8 |
+| [Cross-Device Integration](#cross-device-integration) | 0 | 4 | 4 |
+| [Developer & Technical Tools](#developer-technical-tools) | 1440 | 337 | 1777 |
+| [Download Managers](#download-managers) | 5 | 27 | 32 |
+| [Emulators & Compatibility](#emulators-compatibility) | 5 | 31 | 36 |
+| [File Management](#file-management) | 17 | 69 | 86 |
+| [Local File Sharing](#local-file-sharing) | 3 | 9 | 12 |
+| [Forensics & Diagnostics](#forensics-diagnostics) | 8 | 13 | 21 |
+| [Games & Game Utilities](#games-game-utilities) | 7 | 31 | 38 |
+| [Images & Photos](#images-photos) | 22 | 58 | 80 |
+| [Keyboard & Language](#keyboard-language) | 1 | 16 | 17 |
+| [Media & Audio/Video](#media-audiovideo) | 26 | 129 | 155 |
+| [Network & DNS](#network-dns) | 33 | 35 | 68 |
+| [Network Security](#network-security) | 6 | 12 | 18 |
 | [Notch](#notch) | 1 | 0 | 1 |
-| [Notes & Knowledge](#notes-knowledge) | 3 | 21 | 24 |
-| [Other Utilities](#other-utilities) | 0 | 1375 | 1375 |
-| [Package Management](#package-management) | 35 | 14 | 49 |
-| [PDF & Documents](#pdf-documents) | 11 | 32 | 43 |
-| [Productivity & Launchers](#productivity-launchers) | 1 | 20 | 21 |
-| [Security](#security) | 17 | 37 | 54 |
+| [Notes & Knowledge](#notes-knowledge) | 3 | 23 | 26 |
+| [Other Utilities](#other-utilities) | 0 | 1163 | 1163 |
+| [Package Management](#package-management) | 35 | 17 | 52 |
+| [PDF & Documents](#pdf-documents) | 11 | 38 | 49 |
+| [Productivity & Launchers](#productivity-launchers) | 1 | 34 | 35 |
+| [Security](#security) | 17 | 46 | 63 |
 | [Speech-to-Text (STT)](#speech-to-text-stt) | 1 | 1 | 2 |
-| [Storage & Disk Tools](#storage-disk-tools) | 10 | 30 | 40 |
-| [Sync & Backup](#sync-backup) | 8 | 25 | 33 |
-| [System Monitoring & Hardware](#system-monitoring-hardware) | 4 | 28 | 32 |
+| [Storage & Disk Tools](#storage-disk-tools) | 10 | 32 | 42 |
+| [Sync & Backup](#sync-backup) | 8 | 27 | 35 |
+| [System Monitoring & Hardware](#system-monitoring-hardware) | 4 | 29 | 33 |
 | [Text-to-Speech (TTS)](#text-to-speech-tts) | 1 | 3 | 4 |
-| [Text Utilities](#text-utilities) | 20 | 44 | 64 |
-| [Time Tracking & Focus](#time-tracking-focus) | 2 | 13 | 15 |
-| [Translation & OCR](#translation-ocr) | 2 | 11 | 13 |
-| [Weather & Information](#weather-information) | 0 | 1 | 1 |
-| [Windows Customization](#windows-customization) | 7 | 55 | 62 |
-| [Windows Privacy & Tweaks](#windows-privacy-tweaks) | 1 | 18 | 19 |
+| [Text Utilities](#text-utilities) | 20 | 57 | 77 |
+| [Time Tracking & Focus](#time-tracking-focus) | 2 | 15 | 17 |
+| [Translation & OCR](#translation-ocr) | 2 | 12 | 14 |
+| [Weather & Information](#weather-information) | 0 | 2 | 2 |
+| [Windows Customization](#windows-customization) | 7 | 63 | 70 |
+| [Windows Privacy & Tweaks](#windows-privacy-tweaks) | 1 | 19 | 20 |
 | [Windows Update & Management](#windows-update-management) | 0 | 2 | 2 |
 
 ## Manifests by category
@@ -101,7 +101,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [ios-webkit-debug-proxy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ios-webkit-debug-proxy.json) |
 | [iphone-sms-backup-and-restore](https://github.com/ScoopInstaller/Extras/blob/master/bucket/iphone-sms-backup-and-restore.json) |
 | [qtscrcpy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qtscrcpy.json) |
+| [thorium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/thorium.json) |
 | [universal-android-debloater](https://github.com/ScoopInstaller/Extras/blob/master/bucket/universal-android-debloater.json) |
+| [wsa-pacman](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsa-pacman.json) |
 
 ### Browsers & Communication
 
@@ -137,8 +139,10 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [brows3](https://github.com/ScoopInstaller/Extras/blob/master/bucket/brows3.json) |
 | [browseros](https://github.com/ScoopInstaller/Extras/blob/master/bucket/browseros.json) |
 | [bt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bt.json) |
+| [cate](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cate.json) |
 | [cefflashbrowser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cefflashbrowser.json) |
 | [chromium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chromium.json) |
+| [datovka](https://github.com/ScoopInstaller/Extras/blob/master/bucket/datovka.json) |
 | [discord](https://github.com/ScoopInstaller/Extras/blob/master/bucket/discord.json) |
 | [discord-rpc-extension](https://github.com/ScoopInstaller/Extras/blob/master/bucket/discord-rpc-extension.json) |
 | [discordchatexporter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/discordchatexporter.json) |
@@ -149,12 +153,15 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [firefox-eme-free](https://github.com/ScoopInstaller/Extras/blob/master/bucket/firefox-eme-free.json) |
 | [firefox-esr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/firefox-esr.json) |
 | [firefoxpwa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/firefoxpwa.json) |
+| [forkgram](https://github.com/ScoopInstaller/Extras/blob/master/bucket/forkgram.json) |
 | [go-chromecast](https://github.com/ScoopInstaller/Extras/blob/master/bucket/go-chromecast.json) |
 | [googlechrome](https://github.com/ScoopInstaller/Extras/blob/master/bucket/googlechrome.json) |
 | [i2pdbrowser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/i2pdbrowser.json) |
 | [imo-messenger](https://github.com/ScoopInstaller/Extras/blob/master/bucket/imo-messenger.json) |
+| [lbry](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lbry.json) |
 | [litebrowser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/litebrowser.json) |
 | [local-browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/local-browser.json) |
+| [materialgram](https://github.com/ScoopInstaller/Extras/blob/master/bucket/materialgram.json) |
 | [matterircd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/matterircd.json) |
 | [min](https://github.com/ScoopInstaller/Extras/blob/master/bucket/min.json) |
 | [mullvad-browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mullvad-browser.json) |
@@ -166,11 +173,14 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [oss-browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/oss-browser.json) |
 | [outlook-google-calendar-sync](https://github.com/ScoopInstaller/Extras/blob/master/bucket/outlook-google-calendar-sync.json) |
 | [outlook-window-hook](https://github.com/ScoopInstaller/Extras/blob/master/bucket/outlook-window-hook.json) |
+| [qq](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qq.json) |
 | [qutebrowser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qutebrowser.json) |
+| [r3dfox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/r3dfox.json) |
 | [rambox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rambox.json) |
 | [rclone-browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rclone-browser.json) |
 | [restic-browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/restic-browser.json) |
 | [rio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rio.json) |
+| [ripcord](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ripcord.json) |
 | [s3browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/s3browser.json) |
 | [safebrowser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/safebrowser.json) |
 | [sidekick-browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sidekick-browser.json) |
@@ -185,6 +195,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [thunderbird-esr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/thunderbird-esr.json) |
 | [tor-browser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tor-browser.json) |
 | [ungoogled-chromium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ungoogled-chromium.json) |
+| [vesktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vesktop.json) |
 | [vivaldi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vivaldi.json) |
 | [waterfox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/waterfox.json) |
 | [waterfox-classic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/waterfox-classic.json) |
@@ -209,6 +220,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [freeclipboardviewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freeclipboardviewer.json) |
 | [pastebar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pastebar.json) |
 | [quickclipboard](https://github.com/ScoopInstaller/Extras/blob/master/bucket/quickclipboard.json) |
+| [ropy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ropy.json) |
 | [uniclipboard](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uniclipboard.json) |
 
 ### Cross-Device Integration
@@ -220,6 +232,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [barrier](https://github.com/ScoopInstaller/Extras/blob/master/bucket/barrier.json) |
 | [deskflow](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deskflow.json) |
 | [kdeconnect](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kdeconnect.json) |
+| [pdfgear](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdfgear.json) |
 
 ### Developer & Technical Tools
 
@@ -1673,6 +1686,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | Manifest |
 | --- |
 | [010editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/010editor.json) |
+| [acorn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/acorn.json) |
 | [activemq](https://github.com/ScoopInstaller/Extras/blob/master/bucket/activemq.json) |
 | [aider-desk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/aider-desk.json) |
 | [alacritty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/alacritty.json) |
@@ -1691,6 +1705,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [archi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/archi.json) |
 | [arduino](https://github.com/ScoopInstaller/Extras/blob/master/bucket/arduino.json) |
 | [assume-role](https://github.com/ScoopInstaller/Extras/blob/master/bucket/assume-role.json) |
+| [athas](https://github.com/ScoopInstaller/Extras/blob/master/bucket/athas.json) |
 | [atom](https://github.com/ScoopInstaller/Extras/blob/master/bucket/atom.json) |
 | [autoclicker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/autoclicker.json) |
 | [autoit-script-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/autoit-script-editor.json) |
@@ -1717,27 +1732,34 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [cacher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cacher.json) |
 | [cadcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cadcraft.json) |
 | [captfencoder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/captfencoder.json) |
+| [cfssl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cfssl.json) |
 | [civo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/civo.json) |
 | [claws-mail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/claws-mail.json) |
 | [clingo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clingo.json) |
 | [clion](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clion.json) |
 | [cloudflare-speed-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cloudflare-speed-cli.json) |
 | [cloudfoundry-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cloudfoundry-cli.json) |
+| [clustalw](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clustalw.json) |
 | [code-minimap](https://github.com/ScoopInstaller/Extras/blob/master/bucket/code-minimap.json) |
 | [codeblocks](https://github.com/ScoopInstaller/Extras/blob/master/bucket/codeblocks.json) |
 | [codeblocks-mingw](https://github.com/ScoopInstaller/Extras/blob/master/bucket/codeblocks-mingw.json) |
 | [codesnap](https://github.com/ScoopInstaller/Extras/blob/master/bucket/codesnap.json) |
 | [codetrack](https://github.com/ScoopInstaller/Extras/blob/master/bucket/codetrack.json) |
 | [codex-monitor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/codex-monitor.json) |
+| [conemu](https://github.com/ScoopInstaller/Extras/blob/master/bucket/conemu.json) |
 | [console2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/console2.json) |
 | [consolez](https://github.com/ScoopInstaller/Extras/blob/master/bucket/consolez.json) |
+| [crip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/crip.json) |
 | [crunchy-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/crunchy-cli.json) |
+| [cursor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cursor.json) |
 | [darteditor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/darteditor.json) |
 | [dartium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dartium.json) |
 | [dartium-content-shell](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dartium-content-shell.json) |
 | [dasel](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dasel.json) |
 | [database.net](https://github.com/ScoopInstaller/Extras/blob/master/bucket/database.net.json) |
 | [databricks-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/databricks-cli.json) |
+| [dbeaver](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dbeaver.json) |
+| [dbvis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dbvis.json) |
 | [dbx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dbx.json) |
 | [dbxcli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dbxcli.json) |
 | [debugtron](https://github.com/ScoopInstaller/Extras/blob/master/bucket/debugtron.json) |
@@ -1749,10 +1771,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [devrantron](https://github.com/ScoopInstaller/Extras/blob/master/bucket/devrantron.json) |
 | [digital](https://github.com/ScoopInstaller/Extras/blob/master/bucket/digital.json) |
 | [divoom-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/divoom-cli.json) |
+| [dn-tool-container](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dn-tool-container.json) |
 | [dnspy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dnspy.json) |
 | [dnspyex](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dnspyex.json) |
 | [dopamine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dopamine.json) |
 | [dotnet-generic-unpacker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dotnet-generic-unpacker.json) |
+| [dovi-tool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dovi-tool.json) |
 | [dz6](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dz6.json) |
 | [eask-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eask-cli.json) |
 | [easycliproxyapi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/easycliproxyapi.json) |
@@ -1779,9 +1803,11 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [eclipse-testing](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eclipse-testing.json) |
 | [emacs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/emacs.json) |
 | [etcher-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/etcher-cli.json) |
+| [expresso](https://github.com/ScoopInstaller/Extras/blob/master/bucket/expresso.json) |
 | [f3d](https://github.com/ScoopInstaller/Extras/blob/master/bucket/f3d.json) |
 | [falcon-sql-client](https://github.com/ScoopInstaller/Extras/blob/master/bucket/falcon-sql-client.json) |
 | [fat32format-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fat32format-gui.json) |
+| [fbflipper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fbflipper.json) |
 | [find-java](https://github.com/ScoopInstaller/Extras/blob/master/bucket/find-java.json) |
 | [flashplayer-sa-debug](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flashplayer-sa-debug.json) |
 | [flutter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flutter.json) |
@@ -1826,11 +1852,13 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [graphql-playground](https://github.com/ScoopInstaller/Extras/blob/master/bucket/graphql-playground.json) |
 | [harmonoid](https://github.com/ScoopInstaller/Extras/blob/master/bucket/harmonoid.json) |
 | [helm-ls](https://github.com/ScoopInstaller/Extras/blob/master/bucket/helm-ls.json) |
+| [herdr-app](https://github.com/ScoopInstaller/Extras/blob/master/bucket/herdr-app.json) |
 | [hex-editor-neo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hex-editor-neo.json) |
 | [hexchat](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hexchat.json) |
 | [hexo-blog-client](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hexo-blog-client.json) |
 | [hexo-client](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hexo-client.json) |
 | [hibit-system-information](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hibit-system-information.json) |
+| [hub-tool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hub-tool.json) |
 | [ibazel](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ibazel.json) |
 | [igv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/igv.json) |
 | [ilspy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ilspy.json) |
@@ -1843,14 +1871,20 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [joe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/joe.json) |
 | [jqp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jqp.json) |
 | [kdoc-formatter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kdoc-formatter.json) |
+| [kitematic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kitematic.json) |
 | [knime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/knime.json) |
 | [kotlin-interactive-shell](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kotlin-interactive-shell.json) |
+| [kubespy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kubespy.json) |
 | [kui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kui.json) |
 | [languagetool-java](https://github.com/ScoopInstaller/Extras/blob/master/bucket/languagetool-java.json) |
 | [lantern-client](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lantern-client.json) |
+| [lapce](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lapce.json) |
+| [lavape](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lavape.json) |
+| [lazarus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lazarus.json) |
 | [lazy-posh-git](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lazy-posh-git.json) |
 | [lazygit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lazygit.json) |
 | [leet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/leet.json) |
+| [leetsolv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/leetsolv.json) |
 | [librespeed-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/librespeed-cli.json) |
 | [linkerd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/linkerd.json) |
 | [lintalist](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lintalist.json) |
@@ -1867,9 +1901,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [mockoon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mockoon.json) |
 | [mongodb-compass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mongodb-compass.json) |
 | [monokle](https://github.com/ScoopInstaller/Extras/blob/master/bucket/monokle.json) |
+| [mozlz4](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mozlz4.json) |
 | [mqtt-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mqtt-cli.json) |
+| [mqtt-spy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mqtt-spy.json) |
 | [msbuild-structured-log-viewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msbuild-structured-log-viewer.json) |
 | [msxml4](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msxml4.json) |
+| [mtpcopy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mtpcopy.json) |
 | [multica-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multica-cli.json) |
 | [natscli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/natscli.json) |
 | [neovim-qt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/neovim-qt.json) |
@@ -1885,6 +1922,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [opensca-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/opensca-cli.json) |
 | [p4v](https://github.com/ScoopInstaller/Extras/blob/master/bucket/p4v.json) |
 | [paseo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/paseo.json) |
+| [pet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pet.json) |
 | [php-nts-xdebug](https://github.com/ScoopInstaller/Extras/blob/master/bucket/php-nts-xdebug.json) |
 | [php-xdebug](https://github.com/ScoopInstaller/Extras/blob/master/bucket/php-xdebug.json) |
 | [phpstorm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/phpstorm.json) |
@@ -1893,11 +1931,13 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [pritunl-client](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pritunl-client.json) |
 | [protobuf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/protobuf.json) |
 | [pskubectlcompletion](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pskubectlcompletion.json) |
+| [pspad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pspad.json) |
 | [qnapi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qnapi.json) |
 | [rapidcrc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rapidcrc.json) |
 | [rapidee](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rapidee.json) |
 | [raylib-mingw](https://github.com/ScoopInstaller/Extras/blob/master/bucket/raylib-mingw.json) |
 | [react-native-debugger](https://github.com/ScoopInstaller/Extras/blob/master/bucket/react-native-debugger.json) |
+| [recyclarr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/recyclarr.json) |
 | [redis-tui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/redis-tui.json) |
 | [regclient](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regclient.json) |
 | [rehex](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rehex.json) |
@@ -1906,33 +1946,44 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [rubymine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rubymine.json) |
 | [rustdesk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rustdesk.json) |
 | [rustrover](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rustrover.json) |
+| [rxrepl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rxrepl.json) |
+| [sandman](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sandman.json) |
 | [scene-builder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scene-builder.json) |
 | [sd-card-formatter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sd-card-formatter.json) |
+| [sfk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sfk.json) |
 | [shutter-encoder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shutter-encoder.json) |
+| [simplyserial](https://github.com/ScoopInstaller/Extras/blob/master/bucket/simplyserial.json) |
 | [single-file-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/single-file-cli.json) |
+| [skills-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/skills-manager.json) |
 | [smartgit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smartgit.json) |
 | [smartsvn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smartsvn.json) |
 | [snapmaker-orcaslicer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snapmaker-orcaslicer.json) |
+| [snoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snoop.json) |
+| [snoretoast](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snoretoast.json) |
 | [so](https://github.com/ScoopInstaller/Extras/blob/master/bucket/so.json) |
 | [sourcegit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sourcegit.json) |
 | [sqldeveloper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sqldeveloper.json) |
 | [sqlitespy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sqlitespy.json) |
+| [staxrip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/staxrip.json) |
 | [structurizr-cli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/structurizr-cli.json) |
 | [sts](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sts.json) |
 | [sublime-merge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sublime-merge.json) |
 | [sublime-text](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sublime-text.json) |
 | [symlinker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/symlinker.json) |
 | [t3code](https://github.com/ScoopInstaller/Extras/blob/master/bucket/t3code.json) |
+| [tailblazer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tailblazer.json) |
 | [terminal-icons](https://github.com/ScoopInstaller/Extras/blob/master/bucket/terminal-icons.json) |
 | [terminal-parrot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/terminal-parrot.json) |
 | [terminalpp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/terminalpp.json) |
 | [terminals](https://github.com/ScoopInstaller/Extras/blob/master/bucket/terminals.json) |
 | [texmaker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/texmaker.json) |
 | [tinode-mysql](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tinode-mysql.json) |
+| [torrenttools](https://github.com/ScoopInstaller/Extras/blob/master/bucket/torrenttools.json) |
 | [tortoisesvn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tortoisesvn.json) |
 | [ttdl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ttdl.json) |
 | [uivonim](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uivonim.json) |
 | [ungit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ungit.json) |
+| [universal-ctags](https://github.com/ScoopInstaller/Extras/blob/master/bucket/universal-ctags.json) |
 | [universal-gcode-sender](https://github.com/ScoopInstaller/Extras/blob/master/bucket/universal-gcode-sender.json) |
 | [usbtreeview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/usbtreeview.json) |
 | [vagrant-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vagrant-manager.json) |
@@ -1996,9 +2047,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [bandcamp-downloader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bandcamp-downloader.json) |
 | [bili23-downloader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bili23-downloader.json) |
 | [dra](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dra.json) |
+| [eagleget](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eagleget.json) |
+| [firedm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/firedm.json) |
 | [free-manga-downloader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/free-manga-downloader.json) |
 | [free-manga-downloader2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/free-manga-downloader2.json) |
 | [freedownloadmanager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freedownloadmanager.json) |
+| [gopeed](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gopeed.json) |
 | [http-downloader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/http-downloader.json) |
 | [motrix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/motrix.json) |
 | [motrix-next](https://github.com/ScoopInstaller/Extras/blob/master/bucket/motrix-next.json) |
@@ -2008,7 +2062,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [rayburst](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rayburst.json) |
 | [uget](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uget.json) |
 | [varia](https://github.com/ScoopInstaller/Extras/blob/master/bucket/varia.json) |
+| [vortexdm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vortexdm.json) |
 | [windows-iso-downloader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windows-iso-downloader.json) |
+| [wxdfast](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wxdfast.json) |
 | [youtubedownloader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/youtubedownloader.json) |
 
 ### Emulators & Compatibility
@@ -2037,6 +2093,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [ldplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ldplayer.json) |
 | [locale-emulator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/locale-emulator.json) |
 | [locale-remulator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/locale-remulator.json) |
+| [ntsc-rs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ntsc-rs.json) |
+| [otvdm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/otvdm.json) |
+| [pcem](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pcem.json) |
 | [portable-virtualbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/portable-virtualbox.json) |
 | [proton-drive](https://github.com/ScoopInstaller/Extras/blob/master/bucket/proton-drive.json) |
 | [proton-mail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/proton-mail.json) |
@@ -2046,12 +2105,15 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [ssh-agent-wsl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ssh-agent-wsl.json) |
 | [twine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/twine.json) |
 | [visual-arm-emulator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/visual-arm-emulator.json) |
+| [windows95](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windows95.json) |
 | [wsl-dashboard](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl-dashboard.json) |
 | [wsl-distrod](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl-distrod.json) |
 | [wsl-ssh-agent](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl-ssh-agent.json) |
 | [wsl-ssh-pageant](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl-ssh-pageant.json) |
 | [wsl-terminal](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl-terminal.json) |
 | [wsl-ui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl-ui.json) |
+| [wsl2-distro-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl2-distro-manager.json) |
+| [wsltty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsltty.json) |
 
 ### File Management
 
@@ -2096,39 +2158,59 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [ccextractor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ccextractor.json) |
 | [checksum-compare](https://github.com/ScoopInstaller/Extras/blob/master/bucket/checksum-compare.json) |
 | [chk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chk.json) |
+| [compactor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/compactor.json) |
 | [copy-dialog-lunar-lander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/copy-dialog-lunar-lander.json) |
+| [cyberduck](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cyberduck.json) |
+| [delapp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/delapp.json) |
+| [dolphin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dolphin.json) |
 | [doublecmd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/doublecmd.json) |
+| [dukto](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dukto.json) |
 | [everything](https://github.com/ScoopInstaller/Extras/blob/master/bucket/everything.json) |
 | [everything-lite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/everything-lite.json) |
 | [everythingtoolbar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/everythingtoolbar.json) |
 | [exe-explorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/exe-explorer.json) |
 | [explorer-suite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/explorer-suite.json) |
 | [explorerplusplus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/explorerplusplus.json) |
+| [fclones](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fclones.json) |
 | [filee](https://github.com/ScoopInstaller/Extras/blob/master/bucket/filee.json) |
 | [filezilla](https://github.com/ScoopInstaller/Extras/blob/master/bucket/filezilla.json) |
 | [filezilla-server](https://github.com/ScoopInstaller/Extras/blob/master/bucket/filezilla-server.json) |
 | [flut-renamer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flut-renamer.json) |
 | [folder-marker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/folder-marker.json) |
 | [freecommander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freecommander.json) |
+| [gpxsee](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gpxsee.json) |
 | [ifrextractor-rs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ifrextractor-rs.json) |
+| [infekt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/infekt.json) |
 | [keystore-explorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keystore-explorer.json) |
+| [manifold-viewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/manifold-viewer.json) |
 | [meinplatz](https://github.com/ScoopInstaller/Extras/blob/master/bucket/meinplatz.json) |
 | [mqtt-explorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mqtt-explorer.json) |
 | [mucommander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mucommander.json) |
+| [multicommander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multicommander.json) |
+| [onecommander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/onecommander.json) |
+| [patchcleaner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/patchcleaner.json) |
 | [peazip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/peazip.json) |
 | [q-dir](https://github.com/ScoopInstaller/Extras/blob/master/bucket/q-dir.json) |
 | [renamer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/renamer.json) |
 | [restart-explorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/restart-explorer.json) |
 | [servicebusexplorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/servicebusexplorer.json) |
+| [servy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/servy.json) |
 | [shadowexplorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shadowexplorer.json) |
 | [simple-assembly-explorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/simple-assembly-explorer.json) |
 | [tablacus-explorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tablacus-explorer.json) |
+| [teamviewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/teamviewer.json) |
 | [totalcommander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/totalcommander.json) |
 | [uniextract2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uniextract2.json) |
+| [vifm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vifm.json) |
 | [windowtextextractor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windowtextextractor.json) |
+| [winfile](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winfile.json) |
+| [winfile-original](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winfile-original.json) |
 | [winmerge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winmerge.json) |
 | [winmerge2011](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winmerge2011.json) |
 | [winrar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winrar.json) |
+| [wizfile](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wizfile.json) |
+| [xpipe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xpipe.json) |
+| [xplorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xplorer.json) |
 | [xyplorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xyplorer.json) |
 
 ### Local File Sharing
@@ -2145,8 +2227,14 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 
 | Manifest |
 | --- |
+| [dashbeam](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dashbeam.json) |
+| [eiskaltdcpp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eiskaltdcpp.json) |
+| [emule](https://github.com/ScoopInstaller/Extras/blob/master/bucket/emule.json) |
 | [localsend](https://github.com/ScoopInstaller/Extras/blob/master/bucket/localsend.json) |
+| [nicotine-plus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json) |
 | [qtox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qtox.json) |
+| [slskd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/slskd.json) |
+| [soulseekqt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/soulseekqt.json) |
 | [wire](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wire.json) |
 
 ### Forensics & Diagnostics
@@ -2171,8 +2259,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [baretail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/baretail.json) |
 | [cru](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cru.json) |
 | [emax64-pdumper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/emax64-pdumper.json) |
+| [open-log-viewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/open-log-viewer.json) |
 | [otadump](https://github.com/ScoopInstaller/Extras/blob/master/bucket/otadump.json) |
 | [pdftk-builder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdftk-builder.json) |
+| [regeditor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regeditor.json) |
+| [regedix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regedix.json) |
+| [regexp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regexp.json) |
 | [registry-explorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/registry-explorer.json) |
 | [registry-key-jumper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/registry-key-jumper.json) |
 | [sysinternals](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sysinternals.json) |
@@ -2196,6 +2288,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 
 | Manifest |
 | --- |
+| [3d-fix-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/3d-fix-manager.json) |
 | [4gb-patch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/4gb-patch.json) |
 | [adventuregamestudio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/adventuregamestudio.json) |
 | [antimicro](https://github.com/ScoopInstaller/Extras/blob/master/bucket/antimicro.json) |
@@ -2278,6 +2371,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [castle-view-image](https://github.com/ScoopInstaller/Extras/blob/master/bucket/castle-view-image.json) |
 | [darktable](https://github.com/ScoopInstaller/Extras/blob/master/bucket/darktable.json) |
 | [ente-photos](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ente-photos.json) |
+| [figma](https://github.com/ScoopInstaller/Extras/blob/master/bucket/figma.json) |
 | [flameshot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flameshot.json) |
 | [folder-painter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/folder-painter.json) |
 | [gimagex](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gimagex.json) |
@@ -2292,6 +2386,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [jpegview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jpegview.json) |
 | [jpegview-fork](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jpegview-fork.json) |
 | [krita](https://github.com/ScoopInstaller/Extras/blob/master/bucket/krita.json) |
+| [ksnip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ksnip.json) |
 | [lazpaint](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lazpaint.json) |
 | [mpf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpf.json) |
 | [mypaint](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mypaint.json) |
@@ -2309,6 +2404,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [rimage](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rimage.json) |
 | [sdl2-image](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sdl2-image.json) |
 | [sharex](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sharex.json) |
+| [snipaste](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snipaste.json) |
 | [usb-image-tool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/usb-image-tool.json) |
 | [usbimager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/usbimager.json) |
 | [webpicmd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/webpicmd.json) |
@@ -2328,14 +2424,21 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 
 | Manifest |
 | --- |
+| [awareness](https://github.com/ScoopInstaller/Extras/blob/master/bucket/awareness.json) |
 | [babelmap](https://github.com/ScoopInstaller/Extras/blob/master/bucket/babelmap.json) |
+| [filebot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/filebot.json) |
 | [fontbase](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fontbase.json) |
 | [fontcreator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fontcreator.json) |
 | [fontforge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fontforge.json) |
 | [hack-font](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hack-font.json) |
 | [iwck](https://github.com/ScoopInstaller/Extras/blob/master/bucket/iwck.json) |
 | [keyboard-chatter-blocker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keyboard-chatter-blocker.json) |
+| [kmonad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kmonad.json) |
+| [manictime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/manictime.json) |
+| [memreduct](https://github.com/ScoopInstaller/Extras/blob/master/bucket/memreduct.json) |
 | [nexusfont](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nexusfont.json) |
+| [rescuetime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rescuetime.json) |
+| [tracker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tracker.json) |
 | [via](https://github.com/ScoopInstaller/Extras/blob/master/bucket/via.json) |
 
 ### Media & Audio/Video
@@ -2392,31 +2495,44 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [butterflow-ui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/butterflow-ui.json) |
 | [camo-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/camo-studio.json) |
 | [camstudio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/camstudio.json) |
+| [clementine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clementine.json) |
 | [clever-ffmpeg](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clever-ffmpeg.json) |
 | [eac](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eac.json) |
+| [elisa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/elisa.json) |
+| [exaile](https://github.com/ScoopInstaller/Extras/blob/master/bucket/exaile.json) |
+| [feishin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/feishin.json) |
 | [ffmpeg-batch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ffmpeg-batch.json) |
 | [flamelens](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flamelens.json) |
+| [fluxdown](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fluxdown.json) |
 | [foobar2000](https://github.com/ScoopInstaller/Extras/blob/master/bucket/foobar2000.json) |
 | [foobar2000-encoders](https://github.com/ScoopInstaller/Extras/blob/master/bucket/foobar2000-encoders.json) |
+| [fooyin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fooyin.json) |
+| [frostwire](https://github.com/ScoopInstaller/Extras/blob/master/bucket/frostwire.json) |
 | [gmkvextractgui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gmkvextractgui.json) |
 | [gstreamer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gstreamer.json) |
 | [handbrake](https://github.com/ScoopInstaller/Extras/blob/master/bucket/handbrake.json) |
+| [harmony](https://github.com/ScoopInstaller/Extras/blob/master/bucket/harmony.json) |
 | [haruna](https://github.com/ScoopInstaller/Extras/blob/master/bucket/haruna.json) |
 | [jellyfin-media-player](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jellyfin-media-player.json) |
 | [jellyfin-mpv-shim](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jellyfin-mpv-shim.json) |
 | [jetaudio-basic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jetaudio-basic.json) |
 | [jmkvpropedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jmkvpropedit.json) |
+| [kasts](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kasts.json) |
+| [kawaii-player](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kawaii-player.json) |
 | [kdenlive](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kdenlive.json) |
 | [kodi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kodi.json) |
+| [kopuz](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kopuz.json) |
 | [lamexp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lamexp.json) |
 | [losslesscut](https://github.com/ScoopInstaller/Extras/blob/master/bucket/losslesscut.json) |
 | [m4a-to-mp3-converter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/m4a-to-mp3-converter.json) |
+| [madamiru](https://github.com/ScoopInstaller/Extras/blob/master/bucket/madamiru.json) |
 | [makemkv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/makemkv.json) |
 | [media-downloader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/media-downloader.json) |
 | [mediacreationtool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mediacreationtool.json) |
 | [mediaelch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mediaelch.json) |
 | [mediainfo-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mediainfo-gui.json) |
 | [mediainfo.net](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mediainfo.net.json) |
+| [mellowplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mellowplayer.json) |
 | [mkv-muxing-batch-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mkv-muxing-batch-gui.json) |
 | [mkvmergebatcher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mkvmergebatcher.json) |
 | [mkvtoolnix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mkvtoolnix.json) |
@@ -2428,21 +2544,36 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [mpc-hc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpc-hc.json) |
 | [mpc-hc-fork](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpc-hc-fork.json) |
 | [mpc-qt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpc-qt.json) |
+| [mplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mplayer.json) |
 | [mpv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpv.json) |
 | [mpv-easy-player](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpv-easy-player.json) |
 | [mpv-git](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpv-git.json) |
 | [mpv.net](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpv.net.json) |
+| [museeks](https://github.com/ScoopInstaller/Extras/blob/master/bucket/museeks.json) |
 | [musicbee](https://github.com/ScoopInstaller/Extras/blob/master/bucket/musicbee.json) |
 | [musicplayer2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/musicplayer2.json) |
+| [musikcube](https://github.com/ScoopInstaller/Extras/blob/master/bucket/musikcube.json) |
+| [musique](https://github.com/ScoopInstaller/Extras/blob/master/bucket/musique.json) |
+| [namida](https://github.com/ScoopInstaller/Extras/blob/master/bucket/namida.json) |
 | [ncmpc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ncmpc.json) |
+| [noctis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/noctis.json) |
+| [nuclear](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nuclear.json) |
 | [obs-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/obs-studio.json) |
 | [obs-studio-small](https://github.com/ScoopInstaller/Extras/blob/master/bucket/obs-studio-small.json) |
 | [ocenaudio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ocenaudio.json) |
+| [olive-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/olive-editor.json) |
 | [openshot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openshot.json) |
 | [plex-mpv-shim](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plex-mpv-shim.json) |
+| [plex-player](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plex-player.json) |
 | [potplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/potplayer.json) |
+| [psysonic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/psysonic.json) |
 | [qimgv-video](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qimgv-video.json) |
+| [qmplay2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qmplay2.json) |
+| [quodlibet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/quodlibet.json) |
+| [rune](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rune.json) |
 | [shotcut](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shotcut.json) |
+| [smplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smplayer.json) |
+| [sonixd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sonixd.json) |
 | [soundcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/soundcraft.json) |
 | [soundnode](https://github.com/ScoopInstaller/Extras/blob/master/bucket/soundnode.json) |
 | [spotify](https://github.com/ScoopInstaller/Extras/blob/master/bucket/spotify.json) |
@@ -2455,18 +2586,24 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [subtitleedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/subtitleedit.json) |
 | [swyh](https://github.com/ScoopInstaller/Extras/blob/master/bucket/swyh.json) |
 | [tak](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tak.json) |
+| [tauon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tauon.json) |
 | [tinymediamanager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tinymediamanager.json) |
 | [universal-mediacreationtool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/universal-mediacreationtool.json) |
 | [video-compare](https://github.com/ScoopInstaller/Extras/blob/master/bucket/video-compare.json) |
 | [video-thumbnails-maker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/video-thumbnails-maker.json) |
 | [videosubfinder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/videosubfinder.json) |
+| [vidiot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vidiot.json) |
 | [vlc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vlc.json) |
+| [vuplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vuplayer.json) |
 | [wave-terminal](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wave-terminal.json) |
 | [wavebox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wavebox.json) |
 | [wavebox-classic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wavebox-classic.json) |
 | [wavosaur](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wavosaur.json) |
 | [webcam-on-off](https://github.com/ScoopInstaller/Extras/blob/master/bucket/webcam-on-off.json) |
+| [winyl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winyl.json) |
 | [xmedia-recode](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xmedia-recode.json) |
+| [xmplay](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xmplay.json) |
+| [yaffplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yaffplayer.json) |
 | [yesplaymusic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yesplaymusic.json) |
 | [youtube-dl-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/youtube-dl-gui.json) |
 | [ytdlp-interface](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ytdlp-interface.json) |
@@ -2522,11 +2659,17 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [btest](https://github.com/ScoopInstaller/Extras/blob/master/bucket/btest.json) |
 | [cnping](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cnping.json) |
 | [coreftp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/coreftp.json) |
+| [ddns-go](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ddns-go.json) |
 | [dhcp-server](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dhcp-server.json) |
+| [dnsjumper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dnsjumper.json) |
+| [duckdns](https://github.com/ScoopInstaller/Extras/blob/master/bucket/duckdns.json) |
+| [goshs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/goshs.json) |
 | [grasshopper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/grasshopper.json) |
+| [hello-http](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hello-http.json) |
 | [hydrus-network](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hydrus-network.json) |
 | [mini-sftp-server](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mini-sftp-server.json) |
 | [mist](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mist.json) |
+| [mobaxterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mobaxterm.json) |
 | [ncftpclient](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ncftpclient.json) |
 | [netbird](https://github.com/ScoopInstaller/Extras/blob/master/bucket/netbird.json) |
 | [netcatty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/netcatty.json) |
@@ -2534,12 +2677,15 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [networkmanager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/networkmanager.json) |
 | [networkminer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/networkminer.json) |
 | [opennetmeter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/opennetmeter.json) |
+| [parsec](https://github.com/ScoopInstaller/Extras/blob/master/bucket/parsec.json) |
+| [sniffnet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sniffnet.json) |
 | [speedtest](https://github.com/ScoopInstaller/Extras/blob/master/bucket/speedtest.json) |
 | [sshfs-win-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sshfs-win-manager.json) |
 | [sshs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sshs.json) |
 | [tftpd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tftpd.json) |
 | [tftputil-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tftputil-gui.json) |
 | [tsshd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tsshd.json) |
+| [winscp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winscp.json) |
 | [winsshterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winsshterm.json) |
 
 ### Network Security
@@ -2564,6 +2710,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [firewallappblocker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/firewallappblocker.json) |
 | [kubevpn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kubevpn.json) |
 | [mitmproxy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mitmproxy.json) |
+| [nordpass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nordpass.json) |
 | [openvpn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openvpn.json) |
 | [openvpn-connect](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openvpn-connect.json) |
 | [peerblock](https://github.com/ScoopInstaller/Extras/blob/master/bucket/peerblock.json) |
@@ -2601,6 +2748,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [boostnote](https://github.com/ScoopInstaller/Extras/blob/master/bucket/boostnote.json) |
 | [boostnote-local](https://github.com/ScoopInstaller/Extras/blob/master/bucket/boostnote-local.json) |
 | [butterfly](https://github.com/ScoopInstaller/Extras/blob/master/bucket/butterfly.json) |
+| [cherrytree](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cherrytree.json) |
 | [joplin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/joplin.json) |
 | [logseq](https://github.com/ScoopInstaller/Extras/blob/master/bucket/logseq.json) |
 | [logseq-og](https://github.com/ScoopInstaller/Extras/blob/master/bucket/logseq-og.json) |
@@ -2612,6 +2760,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [openknowledge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openknowledge.json) |
 | [qownnotes](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qownnotes.json) |
 | [standardnotes](https://github.com/ScoopInstaller/Extras/blob/master/bucket/standardnotes.json) |
+| [tomboy-ng](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tomboy-ng.json) |
 | [trilium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/trilium.json) |
 | [zim](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zim.json) |
 
@@ -2621,8 +2770,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 
 | Manifest |
 | --- |
-| [3d-fix-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/3d-fix-manager.json) |
-| [acorn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/acorn.json) |
 | [activaid](https://github.com/ScoopInstaller/Extras/blob/master/bucket/activaid.json) |
 | [activate-linux](https://github.com/ScoopInstaller/Extras/blob/master/bucket/activate-linux.json) |
 | [activemq-artemis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/activemq-artemis.json) |
@@ -2631,7 +2778,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [altair](https://github.com/ScoopInstaller/Extras/blob/master/bucket/altair.json) |
 | [altbacktick](https://github.com/ScoopInstaller/Extras/blob/master/bucket/altbacktick.json) |
 | [altools](https://github.com/ScoopInstaller/Extras/blob/master/bucket/altools.json) |
-| [amazon-workspaces](https://github.com/ScoopInstaller/Extras/blob/master/bucket/amazon-workspaces.json) |
 | [amber](https://github.com/ScoopInstaller/Extras/blob/master/bucket/amber.json) |
 | [anypoint-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/anypoint-studio.json) |
 | [apache-tinkerpop-gremlin-server](https://github.com/ScoopInstaller/Extras/blob/master/bucket/apache-tinkerpop-gremlin-server.json) |
@@ -2639,9 +2785,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [arcwelder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/arcwelder.json) |
 | [astrogrep](https://github.com/ScoopInstaller/Extras/blob/master/bucket/astrogrep.json) |
 | [asuite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/asuite.json) |
-| [athas](https://github.com/ScoopInstaller/Extras/blob/master/bucket/athas.json) |
 | [audmes](https://github.com/ScoopInstaller/Extras/blob/master/bucket/audmes.json) |
-| [awareness](https://github.com/ScoopInstaller/Extras/blob/master/bucket/awareness.json) |
 | [axiom](https://github.com/ScoopInstaller/Extras/blob/master/bucket/axiom.json) |
 | [axis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/axis.json) |
 | [backrest](https://github.com/ScoopInstaller/Extras/blob/master/bucket/backrest.json) |
@@ -2652,31 +2796,24 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [bifrost](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bifrost.json) |
 | [binance](https://github.com/ScoopInstaller/Extras/blob/master/bucket/binance.json) |
 | [bioedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bioedit.json) |
-| [bita](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bita.json) |
 | [bitsmanager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bitsmanager.json) |
 | [bittorrent-tracker-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bittorrent-tracker-editor.json) |
 | [brackets](https://github.com/ScoopInstaller/Extras/blob/master/bucket/brackets.json) |
 | [buckets](https://github.com/ScoopInstaller/Extras/blob/master/bucket/buckets.json) |
-| [bugn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bugn.json) |
 | [bzip3](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bzip3.json) |
 | [camunda-modeler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/camunda-modeler.json) |
 | [capframex](https://github.com/ScoopInstaller/Extras/blob/master/bucket/capframex.json) |
-| [caprine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/caprine.json) |
 | [captura](https://github.com/ScoopInstaller/Extras/blob/master/bucket/captura.json) |
 | [carapace-bin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/carapace-bin.json) |
-| [caret](https://github.com/ScoopInstaller/Extras/blob/master/bucket/caret.json) |
 | [carnac](https://github.com/ScoopInstaller/Extras/blob/master/bucket/carnac.json) |
 | [carotdav](https://github.com/ScoopInstaller/Extras/blob/master/bucket/carotdav.json) |
 | [cartero](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cartero.json) |
 | [cascadeur](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cascadeur.json) |
 | [catalyst](https://github.com/ScoopInstaller/Extras/blob/master/bucket/catalyst.json) |
-| [cate](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cate.json) |
-| [catime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/catime.json) |
 | [ccg-gateway](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ccg-gateway.json) |
 | [cdburnerxp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cdburnerxp.json) |
 | [cdex](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cdex.json) |
 | [celestia](https://github.com/ScoopInstaller/Extras/blob/master/bucket/celestia.json) |
-| [cfssl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cfssl.json) |
 | [championify](https://github.com/ScoopInstaller/Extras/blob/master/bucket/championify.json) |
 | [chart-geany](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chart-geany.json) |
 | [chatall](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chatall.json) |
@@ -2688,7 +2825,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [chdig](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chdig.json) |
 | [chef-workstation](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chef-workstation.json) |
 | [cherry-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cherry-studio.json) |
-| [cherrytree](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cherrytree.json) |
 | [chipmunk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chipmunk.json) |
 | [chiri](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chiri.json) |
 | [choeazycopy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/choeazycopy.json) |
@@ -2704,23 +2840,18 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [classyshark](https://github.com/ScoopInstaller/Extras/blob/master/bucket/classyshark.json) |
 | [claude](https://github.com/ScoopInstaller/Extras/blob/master/bucket/claude.json) |
 | [clavier-plus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clavier-plus.json) |
-| [clementine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clementine.json) |
 | [cloudcompare](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cloudcompare.json) |
 | [clumsy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clumsy.json) |
 | [clustal-omega](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clustal-omega.json) |
-| [clustalw](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clustalw.json) |
 | [clustalx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/clustalx.json) |
 | [cmdow](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cmdow.json) |
 | [cockpit-tools](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cockpit-tools.json) |
-| [colon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/colon.json) |
 | [color-cop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/color-cop.json) |
 | [color-sustainer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/color-sustainer.json) |
 | [colorcontrol](https://github.com/ScoopInstaller/Extras/blob/master/bucket/colorcontrol.json) |
 | [commandbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/commandbox.json) |
-| [compactor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/compactor.json) |
 | [compatibility-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/compatibility-manager.json) |
 | [completionpredictor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/completionpredictor.json) |
-| [conemu](https://github.com/ScoopInstaller/Extras/blob/master/bucket/conemu.json) |
 | [conemu-color-themes](https://github.com/ScoopInstaller/Extras/blob/master/bucket/conemu-color-themes.json) |
 | [confuser-ex](https://github.com/ScoopInstaller/Extras/blob/master/bucket/confuser-ex.json) |
 | [contour](https://github.com/ScoopInstaller/Extras/blob/master/bucket/contour.json) |
@@ -2731,7 +2862,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [coppeliasim](https://github.com/ScoopInstaller/Extras/blob/master/bucket/coppeliasim.json) |
 | [cpkeeper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cpkeeper.json) |
 | [craft-anything](https://github.com/ScoopInstaller/Extras/blob/master/bucket/craft-anything.json) |
-| [crip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/crip.json) |
 | [cromite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cromite.json) |
 | [cruft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cruft.json) |
 | [ctypes](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ctypes.json) |
@@ -2740,41 +2870,31 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [cupscale](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cupscale.json) |
 | [cura](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cura.json) |
 | [curd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/curd.json) |
-| [cursor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cursor.json) |
 | [cutter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cutter.json) |
 | [cv4pve-pepper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cv4pve-pepper.json) |
 | [cyanrip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cyanrip.json) |
 | [cyberchef](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cyberchef.json) |
-| [cyberduck](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cyberduck.json) |
 | [dadroitjsonviewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dadroitjsonviewer.json) |
 | [dangerzone](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dangerzone.json) |
-| [dashbeam](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dashbeam.json) |
 | [datagrip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/datagrip.json) |
 | [dataspell](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dataspell.json) |
-| [datovka](https://github.com/ScoopInstaller/Extras/blob/master/bucket/datovka.json) |
-| [dbeaver](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dbeaver.json) |
 | [dbgl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dbgl.json) |
-| [dbvis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dbvis.json) |
 | [ddc-toolbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ddc-toolbox.json) |
-| [ddns-go](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ddns-go.json) |
 | [deadlock](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deadlock.json) |
 | [deckcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deckcraft.json) |
 | [deew](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deew.json) |
 | [defendnot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/defendnot.json) |
-| [delapp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/delapp.json) |
 | [deltachat](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deltachat.json) |
 | [deltapatcher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deltapatcher.json) |
 | [deluge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deluge.json) |
 | [dependencies](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dependencies.json) |
 | [depends](https://github.com/ScoopInstaller/Extras/blob/master/bucket/depends.json) |
 | [designcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/designcraft.json) |
-| [deskpins](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deskpins.json) |
 | [deskreen](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deskreen.json) |
 | [determined](https://github.com/ScoopInstaller/Extras/blob/master/bucket/determined.json) |
 | [dfu-programmer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dfu-programmer.json) |
 | [dgdemux](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dgdemux.json) |
 | [dia](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dia.json) |
-| [diagram-designer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/diagram-designer.json) |
 | [didder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/didder.json) |
 | [digikam](https://github.com/ScoopInstaller/Extras/blob/master/bucket/digikam.json) |
 | [discrakt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/discrakt.json) |
@@ -2783,16 +2903,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [divoom-gateway](https://github.com/ScoopInstaller/Extras/blob/master/bucket/divoom-gateway.json) |
 | [diy-layout-creator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/diy-layout-creator.json) |
 | [dn-famitracker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dn-famitracker.json) |
-| [dn-tool-container](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dn-tool-container.json) |
 | [dngrep](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dngrep.json) |
-| [dnsjumper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dnsjumper.json) |
 | [docear](https://github.com/ScoopInstaller/Extras/blob/master/bucket/docear.json) |
-| [dolphin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dolphin.json) |
 | [dotmemory](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dotmemory.json) |
 | [dotPeek](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dotPeek.json) |
 | [dottorrent-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dottorrent-gui.json) |
 | [dottrace](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dottrace.json) |
-| [dovi-tool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dovi-tool.json) |
 | [draw.io](https://github.com/ScoopInstaller/Extras/blob/master/bucket/draw.io.json) |
 | [drawpen](https://github.com/ScoopInstaller/Extras/blob/master/bucket/drawpen.json) |
 | [drawpile](https://github.com/ScoopInstaller/Extras/blob/master/bucket/drawpile.json) |
@@ -2801,11 +2917,8 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [dropit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dropit.json) |
 | [dual-monitor-tools](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dual-monitor-tools.json) |
 | [duality](https://github.com/ScoopInstaller/Extras/blob/master/bucket/duality.json) |
-| [duckdns](https://github.com/ScoopInstaller/Extras/blob/master/bucket/duckdns.json) |
-| [dukto](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dukto.json) |
 | [dxwnd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dxwnd.json) |
 | [dyad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dyad.json) |
-| [eagleget](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eagleget.json) |
 | [eartrumpet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eartrumpet.json) |
 | [easyrsa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/easyrsa.json) |
 | [easytier](https://github.com/ScoopInstaller/Extras/blob/master/bucket/easytier.json) |
@@ -2814,7 +2927,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [effectcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/effectcraft.json) |
 | [effekseer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/effekseer.json) |
 | [eget](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eget.json) |
-| [eiskaltdcpp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/eiskaltdcpp.json) |
 | [elasticsearch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/elasticsearch.json) |
 | [electerm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/electerm.json) |
 | [electron-cash](https://github.com/ScoopInstaller/Extras/blob/master/bucket/electron-cash.json) |
@@ -2822,8 +2934,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [electronics-assistant](https://github.com/ScoopInstaller/Extras/blob/master/bucket/electronics-assistant.json) |
 | [electronmail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/electronmail.json) |
 | [electrum](https://github.com/ScoopInstaller/Extras/blob/master/bucket/electrum.json) |
-| [elisa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/elisa.json) |
-| [emule](https://github.com/ScoopInstaller/Extras/blob/master/bucket/emule.json) |
 | [emule-community](https://github.com/ScoopInstaller/Extras/blob/master/bucket/emule-community.json) |
 | [enpass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/enpass.json) |
 | [enso](https://github.com/ScoopInstaller/Extras/blob/master/bucket/enso.json) |
@@ -2834,43 +2944,32 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [esearch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/esearch.json) |
 | [etcher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/etcher.json) |
 | [ethereum-wallet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ethereum-wallet.json) |
-| [etlas](https://github.com/ScoopInstaller/Extras/blob/master/bucket/etlas.json) |
 | [euler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/euler.json) |
 | [everywhere](https://github.com/ScoopInstaller/Extras/blob/master/bucket/everywhere.json) |
-| [exaile](https://github.com/ScoopInstaller/Extras/blob/master/bucket/exaile.json) |
 | [executor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/executor.json) |
 | [exeinfo-pe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/exeinfo-pe.json) |
 | [exifcleaner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/exifcleaner.json) |
-| [expresso](https://github.com/ScoopInstaller/Extras/blob/master/bucket/expresso.json) |
 | [extraterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/extraterm.json) |
 | [ezunlock](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ezunlock.json) |
 | [fadetop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fadetop.json) |
-| [falconx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/falconx.json) |
 | [falkon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/falkon.json) |
 | [famistudio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/famistudio.json) |
 | [fastcopy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fastcopy.json) |
 | [fastflix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fastflix.json) |
 | [fastglacier](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fastglacier.json) |
 | [fatty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fatty.json) |
-| [fbflipper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fbflipper.json) |
 | [fbide](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fbide.json) |
-| [fclones](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fclones.json) |
 | [featherwallet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/featherwallet.json) |
 | [feem](https://github.com/ScoopInstaller/Extras/blob/master/bucket/feem.json) |
-| [feishin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/feishin.json) |
-| [ferrite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ferrite.json) |
 | [ffdec](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ffdec.json) |
 | [ffqueue](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ffqueue.json) |
 | [ffstudio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ffstudio.json) |
 | [fiddler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fiddler.json) |
 | [figcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/figcraft.json) |
-| [figma](https://github.com/ScoopInstaller/Extras/blob/master/bucket/figma.json) |
 | [fiji](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fiji.json) |
-| [filebot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/filebot.json) |
 | [filelight](https://github.com/ScoopInstaller/Extras/blob/master/bucket/filelight.json) |
 | [filmcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/filmcraft.json) |
 | [final2x](https://github.com/ScoopInstaller/Extras/blob/master/bucket/final2x.json) |
-| [firedm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/firedm.json) |
 | [fix-print-spooler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fix-print-spooler.json) |
 | [fladder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fladder.json) |
 | [flashboot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flashboot.json) |
@@ -2883,12 +2982,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [fluent-search](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fluent-search.json) |
 | [fluidsynth](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fluidsynth.json) |
 | [flux](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flux.json) |
-| [fluxdown](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fluxdown.json) |
 | [folding-at-home](https://github.com/ScoopInstaller/Extras/blob/master/bucket/folding-at-home.json) |
 | [folge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/folge.json) |
 | [folo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/folo.json) |
-| [fooyin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fooyin.json) |
-| [forkgram](https://github.com/ScoopInstaller/Extras/blob/master/bucket/forkgram.json) |
 | [foto-mosaik-edda](https://github.com/ScoopInstaller/Extras/blob/master/bucket/foto-mosaik-edda.json) |
 | [foxe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/foxe.json) |
 | [foxmail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/foxmail.json) |
@@ -2899,13 +2995,10 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [free42](https://github.com/ScoopInstaller/Extras/blob/master/bucket/free42.json) |
 | [freecad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freecad.json) |
 | [freelens](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freelens.json) |
-| [freemind](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freemind.json) |
 | [freemove](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freemove.json) |
-| [freeplane](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freeplane.json) |
 | [freetube](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freetube.json) |
 | [fricas](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fricas.json) |
 | [fritzing](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fritzing.json) |
-| [frostwire](https://github.com/ScoopInstaller/Extras/blob/master/bucket/frostwire.json) |
 | [fscapture](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fscapture.json) |
 | [fspy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fspy.json) |
 | [fsresizer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fsresizer.json) |
@@ -2925,7 +3018,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [gcfscape](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gcfscape.json) |
 | [geany](https://github.com/ScoopInstaller/Extras/blob/master/bucket/geany.json) |
 | [geany-plugins](https://github.com/ScoopInstaller/Extras/blob/master/bucket/geany-plugins.json) |
-| [gedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gedit.json) |
 | [geekbench](https://github.com/ScoopInstaller/Extras/blob/master/bucket/geekbench.json) |
 | [geekuninstaller](https://github.com/ScoopInstaller/Extras/blob/master/bucket/geekuninstaller.json) |
 | [geogebra](https://github.com/ScoopInstaller/Extras/blob/master/bucket/geogebra.json) |
@@ -2935,7 +3027,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [gink](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gink.json) |
 | [gisto](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gisto.json) |
 | [glary-utilities](https://github.com/ScoopInstaller/Extras/blob/master/bucket/glary-utilities.json) |
-| [glazewm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/glazewm.json) |
 | [glogg](https://github.com/ScoopInstaller/Extras/blob/master/bucket/glogg.json) |
 | [gmic-qt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gmic-qt.json) |
 | [gnucash](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gnucash.json) |
@@ -2949,14 +3040,10 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [gonavi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gonavi.json) |
 | [goofcord](https://github.com/ScoopInstaller/Extras/blob/master/bucket/goofcord.json) |
 | [goose](https://github.com/ScoopInstaller/Extras/blob/master/bucket/goose.json) |
-| [gopeed](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gopeed.json) |
 | [gopher360](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gopher360.json) |
-| [goshs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/goshs.json) |
 | [gossip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gossip.json) |
-| [gpg4win](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gpg4win.json) |
 | [gpodder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gpodder.json) |
 | [gptscript](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gptscript.json) |
-| [gpxsee](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gpxsee.json) |
 | [grafana](https://github.com/ScoopInstaller/Extras/blob/master/bucket/grafana.json) |
 | [grain](https://github.com/ScoopInstaller/Extras/blob/master/bucket/grain.json) |
 | [gramps](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gramps.json) |
@@ -2976,21 +3063,16 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [gui-for-clash](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gui-for-clash.json) |
 | [gui-for-singbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gui-for-singbox.json) |
 | [gyroflow](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gyroflow.json) |
-| [hain](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hain.json) |
 | [hakchi2-ce](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hakchi2-ce.json) |
 | [hakuneko](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hakuneko.json) |
 | [halloy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/halloy.json) |
 | [hammultiplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hammultiplayer.json) |
-| [harmony](https://github.com/ScoopInstaller/Extras/blob/master/bucket/harmony.json) |
 | [hashcheck](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hashcheck.json) |
 | [hasher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hasher.json) |
-| [hatoba](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hatoba.json) |
 | [headlamp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/headlamp.json) |
 | [heidisql](https://github.com/ScoopInstaller/Extras/blob/master/bucket/heidisql.json) |
 | [helium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/helium.json) |
-| [hello-http](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hello-http.json) |
 | [hemmelig](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hemmelig.json) |
-| [herdr-app](https://github.com/ScoopInstaller/Extras/blob/master/bucket/herdr-app.json) |
 | [heynote](https://github.com/ScoopInstaller/Extras/blob/master/bucket/heynote.json) |
 | [hfs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hfs.json) |
 | [hibit-startup-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hibit-startup-manager.json) |
@@ -3002,8 +3084,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [honeyview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/honeyview.json) |
 | [hongdown](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hongdown.json) |
 | [hoppscotch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hoppscotch.json) |
-| [hoptodesk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hoptodesk.json) |
-| [horcrux](https://github.com/ScoopInstaller/Extras/blob/master/bucket/horcrux.json) |
 | [horizon-eda](https://github.com/ScoopInstaller/Extras/blob/master/bucket/horizon-eda.json) |
 | [host-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/host-editor.json) |
 | [hosts-file-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hosts-file-editor.json) |
@@ -3012,7 +3092,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [hterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hterm.json) |
 | [httptoolkit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/httptoolkit.json) |
 | [httrack](https://github.com/ScoopInstaller/Extras/blob/master/bucket/httrack.json) |
-| [hub-tool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hub-tool.json) |
 | [hunt-and-peck](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hunt-and-peck.json) |
 | [hwp-converter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hwp-converter.json) |
 | [hydrogen](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hydrogen.json) |
@@ -3038,10 +3117,8 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [inbac](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inbac.json) |
 | [inboxer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inboxer.json) |
 | [inbucket](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inbucket.json) |
-| [infekt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/infekt.json) |
 | [infoqube](https://github.com/ScoopInstaller/Extras/blob/master/bucket/infoqube.json) |
 | [injector](https://github.com/ScoopInstaller/Extras/blob/master/bucket/injector.json) |
-| [inkwell](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inkwell.json) |
 | [inky](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inky.json) |
 | [inlyne](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inlyne.json) |
 | [inno-script-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inno-script-studio.json) |
@@ -3055,7 +3132,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [ipfilter-updater](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ipfilter-updater.json) |
 | [ipscan](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ipscan.json) |
 | [iptvnator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/iptvnator.json) |
-| [iris](https://github.com/ScoopInstaller/Extras/blob/master/bucket/iris.json) |
 | [islc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/islc.json) |
 | [isocreator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/isocreator.json) |
 | [jabref](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jabref.json) |
@@ -3083,7 +3159,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [jmeter-pm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jmeter-pm.json) |
 | [jmstoolbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jmstoolbox.json) |
 | [josm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/josm.json) |
-| [jpass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jpass.json) |
 | [jstock](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jstock.json) |
 | [juce](https://github.com/ScoopInstaller/Extras/blob/master/bucket/juce.json) |
 | [kafkio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kafkio.json) |
@@ -3093,12 +3168,8 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [kando](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kando.json) |
 | [kanri](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kanri.json) |
 | [karing](https://github.com/ScoopInstaller/Extras/blob/master/bucket/karing.json) |
-| [kasts](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kasts.json) |
-| [kate](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kate.json) |
 | [kavita](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kavita.json) |
-| [kawaii-player](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kawaii-player.json) |
 | [kcc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kcc.json) |
-| [keeweb](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keeweb.json) |
 | [kelivo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kelivo.json) |
 | [keyferret](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keyferret.json) |
 | [keyguard](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keyguard.json) |
@@ -3108,13 +3179,11 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [kicad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kicad.json) |
 | [kid3](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kid3.json) |
 | [kirocrew](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kirocrew.json) |
-| [kitematic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kitematic.json) |
 | [kitty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kitty.json) |
 | [kiwi-for-gmail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kiwi-for-gmail.json) |
 | [kiwix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kiwix.json) |
 | [klogg](https://github.com/ScoopInstaller/Extras/blob/master/bucket/klogg.json) |
 | [kmeans-colors](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kmeans-colors.json) |
-| [kmonad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kmonad.json) |
 | [koboldcpp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/koboldcpp.json) |
 | [koffee](https://github.com/ScoopInstaller/Extras/blob/master/bucket/koffee.json) |
 | [koharu](https://github.com/ScoopInstaller/Extras/blob/master/bucket/koharu.json) |
@@ -3122,30 +3191,21 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [komf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/komf.json) |
 | [komga](https://github.com/ScoopInstaller/Extras/blob/master/bucket/komga.json) |
 | [komokana](https://github.com/ScoopInstaller/Extras/blob/master/bucket/komokana.json) |
-| [kopuz](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kopuz.json) |
 | [kotatogram](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kotatogram.json) |
-| [kova](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kova.json) |
 | [krokiet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/krokiet.json) |
 | [kryptor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kryptor.json) |
 | [kscript](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kscript.json) |
-| [ksnip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ksnip.json) |
 | [kubebox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kubebox.json) |
 | [kubelogin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kubelogin.json) |
-| [kubespy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kubespy.json) |
 | [labplot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/labplot.json) |
 | [lagrange](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lagrange.json) |
 | [laigter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/laigter.json) |
 | [landrop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/landrop.json) |
 | [languagetool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/languagetool.json) |
-| [lapce](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lapce.json) |
 | [laragon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/laragon.json) |
 | [lark](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lark.json) |
-| [lavape](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lavape.json) |
-| [lazarus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lazarus.json) |
 | [lazysql](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lazysql.json) |
-| [lbry](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lbry.json) |
 | [ldap-admin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ldap-admin.json) |
-| [leetsolv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/leetsolv.json) |
 | [legcord](https://github.com/ScoopInstaller/Extras/blob/master/bucket/legcord.json) |
 | [lenovolegiontoolkit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lenovolegiontoolkit.json) |
 | [lens](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lens.json) |
@@ -3169,8 +3229,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [linqpad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/linqpad.json) |
 | [linqpadless](https://github.com/ScoopInstaller/Extras/blob/master/bucket/linqpadless.json) |
 | [liquidsoap](https://github.com/ScoopInstaller/Extras/blob/master/bucket/liquidsoap.json) |
-| [lite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lite.json) |
-| [lite-xl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lite-xl.json) |
 | [litedb-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/litedb-studio.json) |
 | [liteide](https://github.com/ScoopInstaller/Extras/blob/master/bucket/liteide.json) |
 | [live777](https://github.com/ScoopInstaller/Extras/blob/master/bucket/live777.json) |
@@ -3184,7 +3242,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [logstalgia](https://github.com/ScoopInstaller/Extras/blob/master/bucket/logstalgia.json) |
 | [logstash](https://github.com/ScoopInstaller/Extras/blob/master/bucket/logstash.json) |
 | [lokalise2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lokalise2.json) |
-| [look](https://github.com/ScoopInstaller/Extras/blob/master/bucket/look.json) |
 | [lorien](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lorien.json) |
 | [lrcget](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lrcget.json) |
 | [ludusavi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ludusavi.json) |
@@ -3194,7 +3251,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [macast](https://github.com/ScoopInstaller/Extras/blob/master/bucket/macast.json) |
 | [macintosh.js](https://github.com/ScoopInstaller/Extras/blob/master/bucket/macintosh.js.json) |
 | [macrocreator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/macrocreator.json) |
-| [madamiru](https://github.com/ScoopInstaller/Extras/blob/master/bucket/madamiru.json) |
 | [madvr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/madvr.json) |
 | [magicavoxel](https://github.com/ScoopInstaller/Extras/blob/master/bucket/magicavoxel.json) |
 | [magpie](https://github.com/ScoopInstaller/Extras/blob/master/bucket/magpie.json) |
@@ -3202,22 +3258,18 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [mailspring](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mailspring.json) |
 | [mancy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mancy.json) |
 | [mangal](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mangal.json) |
-| [manictime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/manictime.json) |
 | [manifold](https://github.com/ScoopInstaller/Extras/blob/master/bucket/manifold.json) |
-| [manifold-viewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/manifold-viewer.json) |
 | [maple](https://github.com/ScoopInstaller/Extras/blob/master/bucket/maple.json) |
 | [marble](https://github.com/ScoopInstaller/Extras/blob/master/bucket/marble.json) |
 | [markeron](https://github.com/ScoopInstaller/Extras/blob/master/bucket/markeron.json) |
 | [markn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/markn.json) |
 | [masvis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/masvis.json) |
 | [materialcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/materialcraft.json) |
-| [materialgram](https://github.com/ScoopInstaller/Extras/blob/master/bucket/materialgram.json) |
 | [materialize](https://github.com/ScoopInstaller/Extras/blob/master/bucket/materialize.json) |
 | [mathpix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mathpix.json) |
 | [matterbridge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/matterbridge.json) |
 | [mattermost](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mattermost.json) |
 | [maxima](https://github.com/ScoopInstaller/Extras/blob/master/bucket/maxima.json) |
-| [maxto](https://github.com/ScoopInstaller/Extras/blob/master/bucket/maxto.json) |
 | [mayo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mayo.json) |
 | [mc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mc.json) |
 | [mcomix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mcomix.json) |
@@ -3227,8 +3279,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [megui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/megui.json) |
 | [meld](https://github.com/ScoopInstaller/Extras/blob/master/bucket/meld.json) |
 | [mellow](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mellow.json) |
-| [mellowplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mellowplayer.json) |
-| [memreduct](https://github.com/ScoopInstaller/Extras/blob/master/bucket/memreduct.json) |
 | [mendeley](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mendeley.json) |
 | [meow](https://github.com/ScoopInstaller/Extras/blob/master/bucket/meow.json) |
 | [meshlab](https://github.com/ScoopInstaller/Extras/blob/master/bucket/meshlab.json) |
@@ -3246,7 +3296,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [minilpa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/minilpa.json) |
 | [mkcert](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mkcert.json) |
 | [mobalivecd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mobalivecd.json) |
-| [mobaxterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mobaxterm.json) |
 | [models](https://github.com/ScoopInstaller/Extras/blob/master/bucket/models.json) |
 | [moderndeck](https://github.com/ScoopInstaller/Extras/blob/master/bucket/moderndeck.json) |
 | [modernflyouts](https://github.com/ScoopInstaller/Extras/blob/master/bucket/modernflyouts.json) |
@@ -3258,42 +3307,30 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [moor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/moor.json) |
 | [motty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/motty.json) |
 | [mousejiggler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mousejiggler.json) |
-| [mozlz4](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mozlz4.json) |
 | [mozregression-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mozregression-gui.json) |
-| [mplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mplayer.json) |
 | [mpls](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpls.json) |
 | [mpress](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mpress.json) |
 | [mps](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mps.json) |
-| [mqtt-spy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mqtt-spy.json) |
 | [mqttx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mqttx.json) |
 | [mremoteng](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mremoteng.json) |
-| [mrrss](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mrrss.json) |
 | [msiafterburner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msiafterburner.json) |
 | [msikombustor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msikombustor.json) |
 | [msklc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msklc.json) |
-| [msrt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msrt.json) |
-| [mtpcopy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mtpcopy.json) |
 | [mtuner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mtuner.json) |
 | [mu-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mu-editor.json) |
 | [mujoco](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mujoco.json) |
 | [multibootusb](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multibootusb.json) |
 | [multica](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multica.json) |
-| [multicommander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multicommander.json) |
 | [multipar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multipar.json) |
 | [multrin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multrin.json) |
 | [mumble](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mumble.json) |
 | [mumble-server](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mumble-server.json) |
-| [museeks](https://github.com/ScoopInstaller/Extras/blob/master/bucket/museeks.json) |
 | [musescore](https://github.com/ScoopInstaller/Extras/blob/master/bucket/musescore.json) |
-| [musikcube](https://github.com/ScoopInstaller/Extras/blob/master/bucket/musikcube.json) |
-| [musique](https://github.com/ScoopInstaller/Extras/blob/master/bucket/musique.json) |
-| [namida](https://github.com/ScoopInstaller/Extras/blob/master/bucket/namida.json) |
 | [naps2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/naps2.json) |
 | [natron](https://github.com/ScoopInstaller/Extras/blob/master/bucket/natron.json) |
 | [natural-docs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/natural-docs.json) |
 | [navop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/navop.json) |
 | [neeview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/neeview.json) |
-| [nefcon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nefcon.json) |
 | [nekobox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nekobox.json) |
 | [nekokolpa2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nekokolpa2.json) |
 | [neoaxis-engine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/neoaxis-engine.json) |
@@ -3310,14 +3347,11 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [nexus-repository-oss](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nexus-repository-oss.json) |
 | [ngspice](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ngspice.json) |
 | [nheko](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nheko.json) |
-| [nicotine-plus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nicotine-plus.json) |
 | [nightingale](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nightingale.json) |
 | [nip4](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nip4.json) |
 | [nmkoder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nmkoder.json) |
-| [noctis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/noctis.json) |
 | [nohboard](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nohboard.json) |
 | [nomacs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nomacs.json) |
-| [nordpass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nordpass.json) |
 | [nosleep](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nosleep.json) |
 | [notable](https://github.com/ScoopInstaller/Extras/blob/master/bucket/notable.json) |
 | [notejoy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/notejoy.json) |
@@ -3328,8 +3362,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [nswagstudio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nswagstudio.json) |
 | [nteract](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nteract.json) |
 | [ntlite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ntlite.json) |
-| [ntsc-rs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ntsc-rs.json) |
-| [nuclear](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nuclear.json) |
 | [nunustudio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nunustudio.json) |
 | [nvcleanstall](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nvcleanstall.json) |
 | [nvda](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nvda.json) |
@@ -3344,17 +3376,14 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [odict](https://github.com/ScoopInstaller/Extras/blob/master/bucket/odict.json) |
 | [oh-my-openagent](https://github.com/ScoopInstaller/Extras/blob/master/bucket/oh-my-openagent.json) |
 | [okular](https://github.com/ScoopInstaller/Extras/blob/master/bucket/okular.json) |
-| [olive-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/olive-editor.json) |
 | [ollama-full](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ollama-full.json) |
 | [ollydbg](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ollydbg.json) |
 | [omegat](https://github.com/ScoopInstaller/Extras/blob/master/bucket/omegat.json) |
 | [omenmon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/omenmon.json) |
-| [onecommander](https://github.com/ScoopInstaller/Extras/blob/master/bucket/onecommander.json) |
 | [onefetch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/onefetch.json) |
 | [onionshare](https://github.com/ScoopInstaller/Extras/blob/master/bucket/onionshare.json) |
 | [onthespot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/onthespot.json) |
 | [ontopreplica](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ontopreplica.json) |
-| [open-log-viewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/open-log-viewer.json) |
 | [openark](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openark.json) |
 | [openboard](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openboard.json) |
 | [openchamber](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openchamber.json) |
@@ -3384,28 +3413,20 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [oripa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/oripa.json) |
 | [ortie](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ortie.json) |
 | [oryxis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/oryxis.json) |
-| [otvdm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/otvdm.json) |
 | [oxideterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/oxideterm.json) |
 | [pacaptr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pacaptr.json) |
-| [pageedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pageedit.json) |
 | [palemoon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/palemoon.json) |
-| [panwriter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/panwriter.json) |
 | [papercut](https://github.com/ScoopInstaller/Extras/blob/master/bucket/papercut.json) |
 | [parabolic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/parabolic.json) |
 | [paraview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/paraview.json) |
 | [pari-gp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pari-gp.json) |
-| [parsec](https://github.com/ScoopInstaller/Extras/blob/master/bucket/parsec.json) |
 | [pass-winmenu-nogpg](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pass-winmenu-nogpg.json) |
 | [pasteboard](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pasteboard.json) |
-| [patchcleaner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/patchcleaner.json) |
 | [patheditor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/patheditor.json) |
 | [pathod](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pathod.json) |
-| [pcem](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pcem.json) |
 | [pci-z](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pci-z.json) |
 | [pcmeter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pcmeter.json) |
-| [pdfarranger](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdfarranger.json) |
 | [pdfcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdfcraft.json) |
-| [pdfgear](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdfgear.json) |
 | [pdfsam-visual](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdfsam-visual.json) |
 | [pdraw32](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdraw32.json) |
 | [pe-bear](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pe-bear.json) |
@@ -3415,7 +3436,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [pencil2d](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pencil2d.json) |
 | [pentaho-data-integration](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pentaho-data-integration.json) |
 | [perfview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/perfview.json) |
-| [pet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pet.json) |
 | [petools](https://github.com/ScoopInstaller/Extras/blob/master/bucket/petools.json) |
 | [phoenix-protector](https://github.com/ScoopInstaller/Extras/blob/master/bucket/phoenix-protector.json) |
 | [phraseexpress](https://github.com/ScoopInstaller/Extras/blob/master/bucket/phraseexpress.json) |
@@ -3442,12 +3462,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [pixitracker-1bit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pixitracker-1bit.json) |
 | [pkg-config-lite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pkg-config-lite.json) |
 | [plakar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plakar.json) |
-| [plantuml](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plantuml.json) |
-| [plex-player](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plex-player.json) |
 | [plezy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plezy.json) |
 | [plugdata](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plugdata.json) |
 | [pocketsphinx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pocketsphinx.json) |
-| [poedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/poedit.json) |
 | [portfolio-performance](https://github.com/ScoopInstaller/Extras/blob/master/bucket/portfolio-performance.json) |
 | [positron](https://github.com/ScoopInstaller/Extras/blob/master/bucket/positron.json) |
 | [pov-ray](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pov-ray.json) |
@@ -3472,9 +3489,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [pseps](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pseps.json) |
 | [psfzf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/psfzf.json) |
 | [psiphon3](https://github.com/ScoopInstaller/Extras/blob/master/bucket/psiphon3.json) |
-| [pspad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pspad.json) |
 | [psreadline](https://github.com/ScoopInstaller/Extras/blob/master/bucket/psreadline.json) |
-| [psysonic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/psysonic.json) |
 | [pterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pterm.json) |
 | [publii](https://github.com/ScoopInstaller/Extras/blob/master/bucket/publii.json) |
 | [pulsar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pulsar.json) |
@@ -3484,7 +3499,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [putty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/putty.json) |
 | [puttytel](https://github.com/ScoopInstaller/Extras/blob/master/bucket/puttytel.json) |
 | [pwsafe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pwsafe.json) |
-| [pwtech](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pwtech.json) |
 | [pycharm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pycharm.json) |
 | [pycharm-community](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pycharm-community.json) |
 | [pympress](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pympress.json) |
@@ -3496,8 +3510,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [qgroundcontrol](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qgroundcontrol.json) |
 | [qimgv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qimgv.json) |
 | [qmk-toolbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qmk-toolbox.json) |
-| [qmplay2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qmplay2.json) |
-| [qq](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qq.json) |
 | [qq-nt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qq-nt.json) |
 | [qrscan](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qrscan.json) |
 | [qt-creator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qt-creator.json) |
@@ -3512,10 +3524,8 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [quicksfv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/quicksfv.json) |
 | [quickviewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/quickviewer.json) |
 | [quiterss](https://github.com/ScoopInstaller/Extras/blob/master/bucket/quiterss.json) |
-| [quodlibet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/quodlibet.json) |
 | [qv2ray](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qv2ray.json) |
 | [qview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qview.json) |
-| [r3dfox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/r3dfox.json) |
 | [rabbitmq](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rabbitmq.json) |
 | [rabbitmqadmin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rabbitmqadmin.json) |
 | [rabbitmqadmin-ng](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rabbitmqadmin-ng.json) |
@@ -3532,20 +3542,15 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [reaper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/reaper.json) |
 | [recaps](https://github.com/ScoopInstaller/Extras/blob/master/bucket/recaps.json) |
 | [rectanglewin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rectanglewin.json) |
-| [recyclarr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/recyclarr.json) |
 | [redasm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/redasm.json) |
 | [redshift-tray](https://github.com/ScoopInstaller/Extras/blob/master/bucket/redshift-tray.json) |
 | [reduce-memory](https://github.com/ScoopInstaller/Extras/blob/master/bucket/reduce-memory.json) |
-| [regeditor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regeditor.json) |
-| [regedix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regedix.json) |
-| [regexp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regexp.json) |
 | [regiontoshare](https://github.com/ScoopInstaller/Extras/blob/master/bucket/regiontoshare.json) |
 | [reicon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/reicon.json) |
 | [remove-empty-directories](https://github.com/ScoopInstaller/Extras/blob/master/bucket/remove-empty-directories.json) |
 | [renderdoc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/renderdoc.json) |
 | [renpy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/renpy.json) |
 | [reqable](https://github.com/ScoopInstaller/Extras/blob/master/bucket/reqable.json) |
-| [rescuetime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rescuetime.json) |
 | [reshade](https://github.com/ScoopInstaller/Extras/blob/master/bucket/reshade.json) |
 | [reshiki](https://github.com/ScoopInstaller/Extras/blob/master/bucket/reshiki.json) |
 | [resizer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/resizer.json) |
@@ -3555,7 +3560,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [responsively](https://github.com/ScoopInstaller/Extras/blob/master/bucket/responsively.json) |
 | [restfox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/restfox.json) |
 | [restish](https://github.com/ScoopInstaller/Extras/blob/master/bucket/restish.json) |
-| [retrobar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/retrobar.json) |
 | [retroshare](https://github.com/ScoopInstaller/Extras/blob/master/bucket/retroshare.json) |
 | [revouninstaller](https://github.com/ScoopInstaller/Extras/blob/master/bucket/revouninstaller.json) |
 | [richcopy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/richcopy.json) |
@@ -3564,12 +3568,10 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [ridnacs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ridnacs.json) |
 | [rife-ncnn-vulkan](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rife-ncnn-vulkan.json) |
 | [riff](https://github.com/ScoopInstaller/Extras/blob/master/bucket/riff.json) |
-| [ripcord](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ripcord.json) |
 | [ripme](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ripme.json) |
 | [rnote](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rnote.json) |
 | [roamresearch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/roamresearch.json) |
 | [robo3t](https://github.com/ScoopInstaller/Extras/blob/master/bucket/robo3t.json) |
-| [ropy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ropy.json) |
 | [roslynpad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/roslynpad.json) |
 | [roughgrep](https://github.com/ScoopInstaller/Extras/blob/master/bucket/roughgrep.json) |
 | [rsgain](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rsgain.json) |
@@ -3579,12 +3581,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [rufus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rufus.json) |
 | [runastool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/runastool.json) |
 | [runcat](https://github.com/ScoopInstaller/Extras/blob/master/bucket/runcat.json) |
-| [rune](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rune.json) |
-| [rxrepl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rxrepl.json) |
 | [ryzen-controller](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ryzen-controller.json) |
 | [saber](https://github.com/ScoopInstaller/Extras/blob/master/bucket/saber.json) |
 | [sabnzbd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sabnzbd.json) |
-| [sandman](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sandman.json) |
 | [sasm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sasm.json) |
 | [saturn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/saturn.json) |
 | [sbom-tool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sbom-tool.json) |
@@ -3592,7 +3591,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [scantailor-advanced](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scantailor-advanced.json) |
 | [schismtracker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/schismtracker.json) |
 | [scidavis](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scidavis.json) |
-| [scite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scite.json) |
 | [scopy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scopy.json) |
 | [scratch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scratch.json) |
 | [scrawler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scrawler.json) |
@@ -3612,9 +3610,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [sendto-menu-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sendto-menu-editor.json) |
 | [serial-cloner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/serial-cloner.json) |
 | [serverbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/serverbox.json) |
-| [servy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/servy.json) |
 | [session](https://github.com/ScoopInstaller/Extras/blob/master/bucket/session.json) |
-| [sfk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sfk.json) |
 | [sfsu](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sfsu.json) |
 | [shadered](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shadered.json) |
 | [shadowsocks](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shadowsocks.json) |
@@ -3624,55 +3620,40 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [shadowsocksr-hmbsbige](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shadowsocksr-hmbsbige.json) |
 | [shareaza](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shareaza.json) |
 | [sharik](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sharik.json) |
-| [sharpapp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sharpapp.json) |
 | [sharpkeys](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sharpkeys.json) |
 | [shawl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shawl.json) |
 | [shiba](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shiba.json) |
 | [shutter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shutter.json) |
 | [sidebar-diagnostics](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sidebar-diagnostics.json) |
 | [sifty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sifty.json) |
-| [sigil](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sigil.json) |
 | [sikulix](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sikulix.json) |
 | [silentcmd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/silentcmd.json) |
 | [simplenote](https://github.com/ScoopInstaller/Extras/blob/master/bucket/simplenote.json) |
 | [simpletransfer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/simpletransfer.json) |
 | [simplewall](https://github.com/ScoopInstaller/Extras/blob/master/bucket/simplewall.json) |
-| [simplyserial](https://github.com/ScoopInstaller/Extras/blob/master/bucket/simplyserial.json) |
 | [sioyek](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sioyek.json) |
 | [sirikali](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sirikali.json) |
 | [siril](https://github.com/ScoopInstaller/Extras/blob/master/bucket/siril.json) |
 | [siyuan-note](https://github.com/ScoopInstaller/Extras/blob/master/bucket/siyuan-note.json) |
 | [skaffold](https://github.com/ScoopInstaller/Extras/blob/master/bucket/skaffold.json) |
-| [skills-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/skills-manager.json) |
 | [skylark](https://github.com/ScoopInstaller/Extras/blob/master/bucket/skylark.json) |
 | [skysend](https://github.com/ScoopInstaller/Extras/blob/master/bucket/skysend.json) |
-| [sleek](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sleek.json) |
 | [slic3r](https://github.com/ScoopInstaller/Extras/blob/master/bucket/slic3r.json) |
-| [slskd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/slskd.json) |
 | [smartsystemmenu](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smartsystemmenu.json) |
 | [smartty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smartty.json) |
 | [smoothcsv](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smoothcsv.json) |
-| [smplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smplayer.json) |
 | [smuxi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smuxi.json) |
 | [snaketail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snaketail.json) |
-| [sniffnet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sniffnet.json) |
-| [snipaste](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snipaste.json) |
-| [snoop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snoop.json) |
-| [snoretoast](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snoretoast.json) |
 | [snowshot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snowshot.json) |
 | [soapui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/soapui.json) |
-| [solomd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/solomd.json) |
 | [solvespace](https://github.com/ScoopInstaller/Extras/blob/master/bucket/solvespace.json) |
 | [sonic-pi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sonic-pi.json) |
 | [sonic-visualiser](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sonic-visualiser.json) |
-| [sonixd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sonixd.json) |
 | [sophia-script](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sophia-script.json) |
 | [sophiapp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sophiapp.json) |
 | [sorayomi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sorayomi.json) |
-| [soulseekqt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/soulseekqt.json) |
 | [sourcetrail](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sourcetrail.json) |
 | [sourcetree](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sourcetree.json) |
-| [sozi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sozi.json) |
 | [space](https://github.com/ScoopInstaller/Extras/blob/master/bucket/space.json) |
 | [space-radar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/space-radar.json) |
 | [spacescape](https://github.com/ScoopInstaller/Extras/blob/master/bucket/spacescape.json) |
@@ -3700,7 +3681,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [stash](https://github.com/ScoopInstaller/Extras/blob/master/bucket/stash.json) |
 | [station](https://github.com/ScoopInstaller/Extras/blob/master/bucket/station.json) |
 | [status](https://github.com/ScoopInstaller/Extras/blob/master/bucket/status.json) |
-| [staxrip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/staxrip.json) |
 | [stellarium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/stellarium.json) |
 | [stone-soup](https://github.com/ScoopInstaller/Extras/blob/master/bucket/stone-soup.json) |
 | [stone-soup-tiles](https://github.com/ScoopInstaller/Extras/blob/master/bucket/stone-soup-tiles.json) |
@@ -3715,7 +3695,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [superf4](https://github.com/ScoopInstaller/Extras/blob/master/bucket/superf4.json) |
 | [supermium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/supermium.json) |
 | [superpowers-app](https://github.com/ScoopInstaller/Extras/blob/master/bucket/superpowers-app.json) |
-| [superputty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/superputty.json) |
 | [superslicer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/superslicer.json) |
 | [supersonic](https://github.com/ScoopInstaller/Extras/blob/master/bucket/supersonic.json) |
 | [suwayomi-jui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/suwayomi-jui.json) |
@@ -3730,22 +3709,18 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [sysgauge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sysgauge.json) |
 | [tabby](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tabby.json) |
 | [tableplus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tableplus.json) |
-| [tabula](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tabula.json) |
 | [tacky-borders](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tacky-borders.json) |
 | [tageditor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tageditor.json) |
 | [tagscanner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tagscanner.json) |
 | [tagspaces](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tagspaces.json) |
 | [tahoma2d](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tahoma2d.json) |
 | [taiga](https://github.com/ScoopInstaller/Extras/blob/master/bucket/taiga.json) |
-| [tailblazer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tailblazer.json) |
 | [tartube](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tartube.json) |
 | [task-coach](https://github.com/ScoopInstaller/Extras/blob/master/bucket/task-coach.json) |
 | [taskt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/taskt.json) |
-| [tauon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tauon.json) |
 | [tb-vol-scroll](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tb-vol-scroll.json) |
 | [tcpipmanager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tcpipmanager.json) |
 | [teamcity](https://github.com/ScoopInstaller/Extras/blob/master/bucket/teamcity.json) |
-| [teamviewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/teamviewer.json) |
 | [teamviewer-qs](https://github.com/ScoopInstaller/Extras/blob/master/bucket/teamviewer-qs.json) |
 | [television](https://github.com/ScoopInstaller/Extras/blob/master/bucket/television.json) |
 | [teraterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/teraterm.json) |
@@ -3759,13 +3734,11 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [theia-ide](https://github.com/ScoopInstaller/Extras/blob/master/bucket/theia-ide.json) |
 | [thisiswin11](https://github.com/ScoopInstaller/Extras/blob/master/bucket/thisiswin11.json) |
 | [thonny](https://github.com/ScoopInstaller/Extras/blob/master/bucket/thonny.json) |
-| [thorium](https://github.com/ScoopInstaller/Extras/blob/master/bucket/thorium.json) |
 | [threema](https://github.com/ScoopInstaller/Extras/blob/master/bucket/threema.json) |
 | [throne](https://github.com/ScoopInstaller/Extras/blob/master/bucket/throne.json) |
 | [throttlestop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/throttlestop.json) |
 | [tidal](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tidal.json) |
 | [tightvnc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tightvnc.json) |
-| [tikzit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tikzit.json) |
 | [tiled](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tiled.json) |
 | [tileiconifier](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tileiconifier.json) |
 | [timeseriesadmin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/timeseriesadmin.json) |
@@ -3777,15 +3750,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [tixati](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tixati.json) |
 | [tixl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tixl.json) |
 | [tlaplus-toolbox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tlaplus-toolbox.json) |
-| [tomboy-ng](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tomboy-ng.json) |
 | [tomcat](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tomcat.json) |
 | [topnotify](https://github.com/ScoopInstaller/Extras/blob/master/bucket/topnotify.json) |
 | [torrent-file-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/torrent-file-editor.json) |
-| [torrenttools](https://github.com/ScoopInstaller/Extras/blob/master/bucket/torrenttools.json) |
 | [tortoisehg](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tortoisehg.json) |
 | [tortoisemerge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tortoisemerge.json) |
 | [touchcursor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/touchcursor.json) |
-| [tracker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tracker.json) |
 | [tracy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tracy.json) |
 | [trae](https://github.com/ScoopInstaller/Extras/blob/master/bucket/trae.json) |
 | [trafficmonitor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/trafficmonitor.json) |
@@ -3802,7 +3772,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [tsip](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tsip.json) |
 | [tsmuxer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tsmuxer.json) |
 | [tsukimi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tsukimi.json) |
-| [tumblthree](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tumblthree.json) |
 | [tura](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tura.json) |
 | [turtl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/turtl.json) |
 | [tusk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tusk.json) |
@@ -3818,13 +3787,11 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [ultraiso](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ultraiso.json) |
 | [ultravnc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ultravnc.json) |
 | [umbrello](https://github.com/ScoopInstaller/Extras/blob/master/bucket/umbrello.json) |
-| [umlet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/umlet.json) |
 | [unetbootin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/unetbootin.json) |
 | [unicodia](https://github.com/ScoopInstaller/Extras/blob/master/bucket/unicodia.json) |
 | [unigetui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/unigetui.json) |
 | [uninstall-tool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uninstall-tool.json) |
 | [uninstalr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uninstalr.json) |
-| [universal-ctags](https://github.com/ScoopInstaller/Extras/blob/master/bucket/universal-ctags.json) |
 | [universalpausebutton](https://github.com/ScoopInstaller/Extras/blob/master/bucket/universalpausebutton.json) |
 | [unlocker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/unlocker.json) |
 | [unsubscan](https://github.com/ScoopInstaller/Extras/blob/master/bucket/unsubscan.json) |
@@ -3833,7 +3800,6 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [upsource](https://github.com/ScoopInstaller/Extras/blob/master/bucket/upsource.json) |
 | [ussf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ussf.json) |
 | [util-linux-ng](https://github.com/ScoopInstaller/Extras/blob/master/bucket/util-linux-ng.json) |
-| [utpm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/utpm.json) |
 | [uwamp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uwamp.json) |
 | [v2rayn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/v2rayn.json) |
 | [vacuumtube](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vacuumtube.json) |
@@ -3845,20 +3811,16 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [vectorcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vectorcraft.json) |
 | [vencord-installer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vencord-installer.json) |
 | [ventoy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ventoy.json) |
-| [vesktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vesktop.json) |
 | [vesta](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vesta.json) |
 | [veusz](https://github.com/ScoopInstaller/Extras/blob/master/bucket/veusz.json) |
 | [vial](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vial.json) |
 | [vibing](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vibing.json) |
 | [vibrance-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vibrance-gui.json) |
-| [vicinae](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vicinae.json) |
 | [vidcutter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vidcutter.json) |
 | [viddy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/viddy.json) |
 | [vidi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vidi.json) |
-| [vidiot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vidiot.json) |
 | [vieas](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vieas.json) |
 | [vieb](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vieb.json) |
-| [vifm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vifm.json) |
 | [vipsdisp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vipsdisp.json) |
 | [virgo](https://github.com/ScoopInstaller/Extras/blob/master/bucket/virgo.json) |
 | [virt-viewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/virt-viewer.json) |
@@ -3871,14 +3833,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [vnote](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vnote.json) |
 | [voicebox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/voicebox.json) |
 | [volume2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/volume2.json) |
-| [vortexdm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vortexdm.json) |
 | [vosviewer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vosviewer.json) |
 | [vott](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vott.json) |
 | [vrcx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vrcx.json) |
 | [vroid-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vroid-studio.json) |
 | [vt-uploader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vt-uploader.json) |
 | [vtfedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vtfedit.json) |
-| [vuplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vuplayer.json) |
 | [vysor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vysor.json) |
 | [wabt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wabt.json) |
 | [waifu2x-caffe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/waifu2x-caffe.json) |
@@ -3914,39 +3874,24 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [winchecksec](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winchecksec.json) |
 | [wincompose](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wincompose.json) |
 | [windjview](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windjview.json) |
-| [windows95](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windows95.json) |
 | [windowsspyblocker](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windowsspyblocker.json) |
 | [windsurf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windsurf.json) |
 | [windterm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windterm.json) |
-| [winfile](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winfile.json) |
-| [winfile-original](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winfile-original.json) |
 | [wing-101](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wing-101.json) |
 | [winmemorycleaner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winmemorycleaner.json) |
 | [winmtr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winmtr.json) |
 | [winmtr-live](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winmtr-live.json) |
 | [winmute](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winmute.json) |
-| [winpty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winpty.json) |
-| [winscp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winscp.json) |
 | [winsetupfromusb](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winsetupfromusb.json) |
 | [winspy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winspy.json) |
-| [winyl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winyl.json) |
-| [wizfile](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wizfile.json) |
 | [wizmouse](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wizmouse.json) |
 | [wonderpen](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wonderpen.json) |
 | [workbuddy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/workbuddy.json) |
-| [workspacer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/workspacer.json) |
-| [workspaceutilities](https://github.com/ScoopInstaller/Extras/blob/master/bucket/workspaceutilities.json) |
-| [write](https://github.com/ScoopInstaller/Extras/blob/master/bucket/write.json) |
-| [wsa-pacman](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsa-pacman.json) |
-| [wsl2-distro-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsl2-distro-manager.json) |
-| [wsltty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wsltty.json) |
 | [wtq](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wtq.json) |
 | [wumgr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wumgr.json) |
-| [wxdfast](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wxdfast.json) |
 | [x-anylabeling](https://github.com/ScoopInstaller/Extras/blob/master/bucket/x-anylabeling.json) |
 | [x64dbg](https://github.com/ScoopInstaller/Extras/blob/master/bucket/x64dbg.json) |
 | [xampp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xampp.json) |
-| [xb1cbi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xb1cbi.json) |
 | [xcas](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xcas.json) |
 | [xdelta3-cross-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xdelta3-cross-gui.json) |
 | [xdman](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xdman.json) |
@@ -3956,17 +3901,12 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [xl-converter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xl-converter.json) |
 | [xmind](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xmind.json) |
 | [xmousebuttoncontrol](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xmousebuttoncontrol.json) |
-| [xmplay](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xmplay.json) |
 | [xmrig](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xmrig.json) |
 | [xnconvert](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xnconvert.json) |
 | [xnresize](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xnresize.json) |
-| [xpipe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xpipe.json) |
-| [xplorer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xplorer.json) |
 | [xx-net](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xx-net.json) |
 | [yaak](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yaak.json) |
-| [yaffplayer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yaffplayer.json) |
 | [yakyak](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yakyak.json) |
-| [yapa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yapa.json) |
 | [yapa2](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yapa2.json) |
 | [yarr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yarr.json) |
 | [yasb](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yasb.json) |
@@ -3975,21 +3915,18 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [yoke](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yoke.json) |
 | [youtrack](https://github.com/ScoopInstaller/Extras/blob/master/bucket/youtrack.json) |
 | [ytsubconverter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ytsubconverter.json) |
-| [yubioath](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yubioath.json) |
 | [yuescript](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yuescript.json) |
 | [yumi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yumi.json) |
 | [yumi-exfat](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yumi-exfat.json) |
 | [yumi-uefi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yumi-uefi.json) |
 | [zaproxy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zaproxy.json) |
 | [zeal](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zeal.json) |
-| [zebar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zebar.json) |
 | [zeebe-modeler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zeebe-modeler.json) |
 | [zephyr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zephyr.json) |
 | [zeplin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zeplin.json) |
 | [zeppelin](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zeppelin.json) |
 | [zerobrane-studio](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zerobrane-studio.json) |
 | [zeronet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zeronet.json) |
-| [zettlr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zettlr.json) |
 | [zlib](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zlib.json) |
 | [zlocation](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zlocation.json) |
 | [zonvie](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zonvie.json) |
@@ -4050,6 +3987,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [boot-clj](https://github.com/ScoopInstaller/Extras/blob/master/bucket/boot-clj.json) |
 | [cabal](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cabal.json) |
 | [cabal-mini](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cabal-mini.json) |
+| [etlas](https://github.com/ScoopInstaller/Extras/blob/master/bucket/etlas.json) |
 | [fpm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fpm.json) |
 | [fvm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fvm.json) |
 | [miniconda3](https://github.com/ScoopInstaller/Extras/blob/master/bucket/miniconda3.json) |
@@ -4057,6 +3995,8 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [scoop-completion](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scoop-completion.json) |
 | [scoop-sd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scoop-sd.json) |
 | [scooper](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scooper.json) |
+| [utpm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/utpm.json) |
+| [winpty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winpty.json) |
 
 ### PDF & Documents
 
@@ -4083,12 +4023,14 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [anx-reader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/anx-reader.json) |
 | [calibre](https://github.com/ScoopInstaller/Extras/blob/master/bucket/calibre.json) |
 | [calibre-normal](https://github.com/ScoopInstaller/Extras/blob/master/bucket/calibre-normal.json) |
+| [caprine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/caprine.json) |
 | [diff-pdf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/diff-pdf.json) |
 | [euro-office](https://github.com/ScoopInstaller/Extras/blob/master/bucket/euro-office.json) |
 | [fluent-reader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fluent-reader.json) |
 | [foxit-pdf-reader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/foxit-pdf-reader.json) |
 | [foxit-reader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/foxit-reader.json) |
 | [ipe](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ipe.json) |
+| [kate](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kate.json) |
 | [klatexformula](https://github.com/ScoopInstaller/Extras/blob/master/bucket/klatexformula.json) |
 | [koodo-reader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/koodo-reader.json) |
 | [libreoffice](https://github.com/ScoopInstaller/Extras/blob/master/bucket/libreoffice.json) |
@@ -4098,13 +4040,17 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [office-tool-plus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/office-tool-plus.json) |
 | [onlyoffice-desktopeditors](https://github.com/ScoopInstaller/Extras/blob/master/bucket/onlyoffice-desktopeditors.json) |
 | [openoffice](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openoffice.json) |
+| [pageedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pageedit.json) |
 | [pdf-xchange-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdf-xchange-editor.json) |
+| [pdfarranger](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdfarranger.json) |
 | [pdfsam](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pdfsam.json) |
 | [raven-reader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/raven-reader.json) |
 | [rednotebook](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rednotebook.json) |
 | [sejda-pdf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sejda-pdf.json) |
+| [sigil](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sigil.json) |
 | [stirling-pdf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/stirling-pdf.json) |
 | [sumatrapdf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sumatrapdf.json) |
+| [tabula](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tabula.json) |
 | [thorium-reader](https://github.com/ScoopInstaller/Extras/blob/master/bucket/thorium-reader.json) |
 | [winscan2pdf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/winscan2pdf.json) |
 | [wordcraft](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wordcraft.json) |
@@ -4125,6 +4071,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 
 | Manifest |
 | --- |
+| [amazon-workspaces](https://github.com/ScoopInstaller/Extras/blob/master/bucket/amazon-workspaces.json) |
 | [anki](https://github.com/ScoopInstaller/Extras/blob/master/bucket/anki.json) |
 | [anythingllm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/anythingllm.json) |
 | [ao](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ao.json) |
@@ -4132,18 +4079,31 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [autohotkey](https://github.com/ScoopInstaller/Extras/blob/master/bucket/autohotkey.json) |
 | [basecamp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/basecamp.json) |
 | [chrlauncher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/chrlauncher.json) |
+| [deskpins](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deskpins.json) |
+| [diagram-designer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/diagram-designer.json) |
 | [flow-launcher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/flow-launcher.json) |
 | [fluenttaskscheduler](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fluenttaskscheduler.json) |
+| [freemind](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freemind.json) |
+| [freeplane](https://github.com/ScoopInstaller/Extras/blob/master/bucket/freeplane.json) |
+| [hain](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hain.json) |
 | [hotkey-detective](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hotkey-detective.json) |
 | [keypirinha](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keypirinha.json) |
 | [launchy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/launchy.json) |
 | [listary](https://github.com/ScoopInstaller/Extras/blob/master/bucket/listary.json) |
+| [look](https://github.com/ScoopInstaller/Extras/blob/master/bucket/look.json) |
 | [mission-planner](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mission-planner.json) |
 | [nirlauncher](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nirlauncher.json) |
+| [plantuml](https://github.com/ScoopInstaller/Extras/blob/master/bucket/plantuml.json) |
+| [sleek](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sleek.json) |
+| [sozi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sozi.json) |
 | [super-productivity](https://github.com/ScoopInstaller/Extras/blob/master/bucket/super-productivity.json) |
+| [tikzit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tikzit.json) |
 | [todolist](https://github.com/ScoopInstaller/Extras/blob/master/bucket/todolist.json) |
 | [todotxt-net](https://github.com/ScoopInstaller/Extras/blob/master/bucket/todotxt-net.json) |
 | [ueli](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ueli.json) |
+| [umlet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/umlet.json) |
+| [vicinae](https://github.com/ScoopInstaller/Extras/blob/master/bucket/vicinae.json) |
+| [workspaceutilities](https://github.com/ScoopInstaller/Extras/blob/master/bucket/workspaceutilities.json) |
 | [wox](https://github.com/ScoopInstaller/Extras/blob/master/bucket/wox.json) |
 
 ### Security
@@ -4184,6 +4144,11 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [cake-wallet](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cake-wallet.json) |
 | [cryptomator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cryptomator.json) |
 | [encryptpad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/encryptpad.json) |
+| [gpg4win](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gpg4win.json) |
+| [hatoba](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hatoba.json) |
+| [hoptodesk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hoptodesk.json) |
+| [horcrux](https://github.com/ScoopInstaller/Extras/blob/master/bucket/horcrux.json) |
+| [jpass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jpass.json) |
 | [keepass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keepass.json) |
 | [keepass-plugin-keeagent](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keepass-plugin-keeagent.json) |
 | [keepass-plugin-keeanywhere](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keepass-plugin-keeanywhere.json) |
@@ -4199,10 +4164,13 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [keepass-plugin-webautotype](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keepass-plugin-webautotype.json) |
 | [keepass-plugin-yafd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keepass-plugin-yafd.json) |
 | [keepassxc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keepassxc.json) |
+| [keeweb](https://github.com/ScoopInstaller/Extras/blob/master/bucket/keeweb.json) |
+| [msrt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msrt.json) |
 | [peid](https://github.com/ScoopInstaller/Extras/blob/master/bucket/peid.json) |
 | [picocrypt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/picocrypt.json) |
 | [picocrypt-ng](https://github.com/ScoopInstaller/Extras/blob/master/bucket/picocrypt-ng.json) |
 | [proton-authenticator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/proton-authenticator.json) |
+| [pwtech](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pwtech.json) |
 | [snitch](https://github.com/ScoopInstaller/Extras/blob/master/bucket/snitch.json) |
 | [steam-desktop-authenticator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/steam-desktop-authenticator.json) |
 | [win-gpg-agent](https://github.com/ScoopInstaller/Extras/blob/master/bucket/win-gpg-agent.json) |
@@ -4211,6 +4179,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [yubikey-manager-qt](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yubikey-manager-qt.json) |
 | [yubikey-personalization-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yubikey-personalization-gui.json) |
 | [yubikey-piv-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yubikey-piv-manager.json) |
+| [yubioath](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yubioath.json) |
 
 ### Speech-to-Text (STT)
 
@@ -4262,8 +4231,10 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [drive-letter-changer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/drive-letter-changer.json) |
 | [dupeguru](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dupeguru.json) |
 | [hxd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hxd.json) |
+| [iris](https://github.com/ScoopInstaller/Extras/blob/master/bucket/iris.json) |
 | [kiro](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kiro.json) |
 | [multidrive](https://github.com/ScoopInstaller/Extras/blob/master/bucket/multidrive.json) |
+| [nefcon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nefcon.json) |
 | [openclosedriveeject](https://github.com/ScoopInstaller/Extras/blob/master/bucket/openclosedriveeject.json) |
 | [opentabletdriver](https://github.com/ScoopInstaller/Extras/blob/master/bucket/opentabletdriver.json) |
 | [recuva](https://github.com/ScoopInstaller/Extras/blob/master/bucket/recuva.json) |
@@ -4298,6 +4269,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | Manifest |
 | --- |
 | [backup-start-menu-layout](https://github.com/ScoopInstaller/Extras/blob/master/bucket/backup-start-menu-layout.json) |
+| [bita](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bita.json) |
 | [desync](https://github.com/ScoopInstaller/Extras/blob/master/bucket/desync.json) |
 | [duplicati](https://github.com/ScoopInstaller/Extras/blob/master/bucket/duplicati.json) |
 | [hekasoft-backup-restore](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hekasoft-backup-restore.json) |
@@ -4322,6 +4294,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [syncthingtray](https://github.com/ScoopInstaller/Extras/blob/master/bucket/syncthingtray.json) |
 | [synctoy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/synctoy.json) |
 | [synctrayzor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/synctrayzor.json) |
+| [tumblthree](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tumblthree.json) |
 
 ### System Monitoring & Hardware
 
@@ -4366,6 +4339,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [tty7](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tty7.json) |
 | [uefitool](https://github.com/ScoopInstaller/Extras/blob/master/bucket/uefitool.json) |
 | [userbenchmark](https://github.com/ScoopInstaller/Extras/blob/master/bucket/userbenchmark.json) |
+| [xb1cbi](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xb1cbi.json) |
 
 ### Text-to-Speech (TTS)
 
@@ -4420,7 +4394,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [babelpad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/babelpad.json) |
 | [beeftext](https://github.com/ScoopInstaller/Extras/blob/master/bucket/beeftext.json) |
 | [bizhawk](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bizhawk.json) |
+| [caret](https://github.com/ScoopInstaller/Extras/blob/master/bucket/caret.json) |
 | [codiff](https://github.com/ScoopInstaller/Extras/blob/master/bucket/codiff.json) |
+| [colon](https://github.com/ScoopInstaller/Extras/blob/master/bucket/colon.json) |
 | [context-menu-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/context-menu-manager.json) |
 | [cudatext](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cudatext.json) |
 | [czkawka-gui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/czkawka-gui.json) |
@@ -4428,10 +4404,16 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [diffmerge](https://github.com/ScoopInstaller/Extras/blob/master/bucket/diffmerge.json) |
 | [diffpdf](https://github.com/ScoopInstaller/Extras/blob/master/bucket/diffpdf.json) |
 | [emeditor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/emeditor.json) |
+| [ferrite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ferrite.json) |
 | [fnr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/fnr.json) |
+| [gedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/gedit.json) |
 | [ghostwriter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ghostwriter.json) |
+| [inkwell](https://github.com/ScoopInstaller/Extras/blob/master/bucket/inkwell.json) |
 | [jd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/jd.json) |
 | [kdiff3](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kdiff3.json) |
+| [kova](https://github.com/ScoopInstaller/Extras/blob/master/bucket/kova.json) |
+| [lite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lite.json) |
+| [lite-xl](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lite-xl.json) |
 | [markdown-monster](https://github.com/ScoopInstaller/Extras/blob/master/bucket/markdown-monster.json) |
 | [marktext](https://github.com/ScoopInstaller/Extras/blob/master/bucket/marktext.json) |
 | [msedgeredirect](https://github.com/ScoopInstaller/Extras/blob/master/bucket/msedgeredirect.json) |
@@ -4442,11 +4424,14 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [notepad4](https://github.com/ScoopInstaller/Extras/blob/master/bucket/notepad4.json) |
 | [notepadnext](https://github.com/ScoopInstaller/Extras/blob/master/bucket/notepadnext.json) |
 | [notepadplusplus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/notepadplusplus.json) |
+| [panwriter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/panwriter.json) |
 | [polsedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/polsedit.json) |
 | [quicktextpaste](https://github.com/ScoopInstaller/Extras/blob/master/bucket/quicktextpaste.json) |
 | [rebased](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rebased.json) |
 | [sc1](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sc1.json) |
+| [scite](https://github.com/ScoopInstaller/Extras/blob/master/bucket/scite.json) |
 | [smartcontextmenu](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smartcontextmenu.json) |
+| [solomd](https://github.com/ScoopInstaller/Extras/blob/master/bucket/solomd.json) |
 | [text-grab](https://github.com/ScoopInstaller/Extras/blob/master/bucket/text-grab.json) |
 | [textadept](https://github.com/ScoopInstaller/Extras/blob/master/bucket/textadept.json) |
 | [texteditoranywhere](https://github.com/ScoopInstaller/Extras/blob/master/bucket/texteditoranywhere.json) |
@@ -4457,7 +4442,9 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [windiff](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windiff.json) |
 | [windows11-classic-context-menu](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windows11-classic-context-menu.json) |
 | [windows11-context-menu-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windows11-context-menu-manager.json) |
+| [write](https://github.com/ScoopInstaller/Extras/blob/master/bucket/write.json) |
 | [xc](https://github.com/ScoopInstaller/Extras/blob/master/bucket/xc.json) |
+| [zettlr](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zettlr.json) |
 
 ### Time Tracking & Focus
 
@@ -4476,6 +4463,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [amp-winoff](https://github.com/ScoopInstaller/Extras/blob/master/bucket/amp-winoff.json) |
 | [awake](https://github.com/ScoopInstaller/Extras/blob/master/bucket/awake.json) |
 | [caffeine](https://github.com/ScoopInstaller/Extras/blob/master/bucket/caffeine.json) |
+| [catime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/catime.json) |
 | [f.lux](https://github.com/ScoopInstaller/Extras/blob/master/bucket/f.lux.json) |
 | [focus](https://github.com/ScoopInstaller/Extras/blob/master/bucket/focus.json) |
 | [focus-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/focus-editor.json) |
@@ -4485,6 +4473,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [stretchly](https://github.com/ScoopInstaller/Extras/blob/master/bucket/stretchly.json) |
 | [t-clock](https://github.com/ScoopInstaller/Extras/blob/master/bucket/t-clock.json) |
 | [workrave](https://github.com/ScoopInstaller/Extras/blob/master/bucket/workrave.json) |
+| [yapa](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yapa.json) |
 
 ### Translation & OCR
 
@@ -4505,6 +4494,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [deeplx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/deeplx.json) |
 | [lunatranslator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lunatranslator.json) |
 | [nextai-translator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nextai-translator.json) |
+| [poedit](https://github.com/ScoopInstaller/Extras/blob/master/bucket/poedit.json) |
 | [pot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/pot.json) |
 | [stranslate](https://github.com/ScoopInstaller/Extras/blob/master/bucket/stranslate.json) |
 | [tern-subtitle-file-translator](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tern-subtitle-file-translator.json) |
@@ -4517,6 +4507,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 
 | Manifest |
 | --- |
+| [mrrss](https://github.com/ScoopInstaller/Extras/blob/master/bucket/mrrss.json) |
 | [trayweather](https://github.com/ScoopInstaller/Extras/blob/master/bucket/trayweather.json) |
 
 ### Windows Customization
@@ -4543,6 +4534,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [altsnap](https://github.com/ScoopInstaller/Extras/blob/master/bucket/altsnap.json) |
 | [another-redis-desktop-manager](https://github.com/ScoopInstaller/Extras/blob/master/bucket/another-redis-desktop-manager.json) |
 | [auto-dark-mode](https://github.com/ScoopInstaller/Extras/blob/master/bucket/auto-dark-mode.json) |
+| [bugn](https://github.com/ScoopInstaller/Extras/blob/master/bucket/bugn.json) |
 | [cairo-desktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/cairo-desktop.json) |
 | [centertaskbar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/centertaskbar.json) |
 | [desktop-ini-editor](https://github.com/ScoopInstaller/Extras/blob/master/bucket/desktop-ini-editor.json) |
@@ -4552,6 +4544,8 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [dualmonitortaskbar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/dualmonitortaskbar.json) |
 | [everything-powertoys](https://github.com/ScoopInstaller/Extras/blob/master/bucket/everything-powertoys.json) |
 | [exifglass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/exifglass.json) |
+| [falconx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/falconx.json) |
+| [glazewm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/glazewm.json) |
 | [hourglass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hourglass.json) |
 | [hourglass-godot](https://github.com/ScoopInstaller/Extras/blob/master/bucket/hourglass-godot.json) |
 | [iap-desktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/iap-desktop.json) |
@@ -4561,6 +4555,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [listen1desktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/listen1desktop.json) |
 | [lively](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lively.json) |
 | [lwp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/lwp.json) |
+| [maxto](https://github.com/ScoopInstaller/Extras/blob/master/bucket/maxto.json) |
 | [ndm](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ndm.json) |
 | [nomeiryoui](https://github.com/ScoopInstaller/Extras/blob/master/bucket/nomeiryoui.json) |
 | [opencode-desktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/opencode-desktop.json) |
@@ -4574,11 +4569,13 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [rainmeter](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rainmeter.json) |
 | [rancher-desktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/rancher-desktop.json) |
 | [reasonix-desktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/reasonix-desktop.json) |
+| [retrobar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/retrobar.json) |
 | [roundedtb](https://github.com/ScoopInstaller/Extras/blob/master/bucket/roundedtb.json) |
 | [shaderglass](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shaderglass.json) |
 | [silex-desktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/silex-desktop.json) |
 | [smarttaskbar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/smarttaskbar.json) |
 | [sucrose](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sucrose.json) |
+| [superputty](https://github.com/ScoopInstaller/Extras/blob/master/bucket/superputty.json) |
 | [tad](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tad.json) |
 | [taskbarx](https://github.com/ScoopInstaller/Extras/blob/master/bucket/taskbarx.json) |
 | [tiddlydesktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tiddlydesktop.json) |
@@ -4590,8 +4587,10 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [windowsdesktop-runtime](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windowsdesktop-runtime.json) |
 | [windowsdesktop-runtime-lts](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windowsdesktop-runtime-lts.json) |
 | [windynamicdesktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/windynamicdesktop.json) |
+| [workspacer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/workspacer.json) |
 | [yed](https://github.com/ScoopInstaller/Extras/blob/master/bucket/yed.json) |
 | [ytmdesktop](https://github.com/ScoopInstaller/Extras/blob/master/bucket/ytmdesktop.json) |
+| [zebar](https://github.com/ScoopInstaller/Extras/blob/master/bucket/zebar.json) |
 
 ### Windows Privacy & Tweaks
 
@@ -4617,6 +4616,7 @@ The manifest name `flux` occurs in both buckets. It is listed twice because the 
 | [optimizer](https://github.com/ScoopInstaller/Extras/blob/master/bucket/optimizer.json) |
 | [privacy.sexy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/privacy.sexy.json) |
 | [registry-finder](https://github.com/ScoopInstaller/Extras/blob/master/bucket/registry-finder.json) |
+| [sharpapp](https://github.com/ScoopInstaller/Extras/blob/master/bucket/sharpapp.json) |
 | [shutup10](https://github.com/ScoopInstaller/Extras/blob/master/bucket/shutup10.json) |
 | [tweakstyle](https://github.com/ScoopInstaller/Extras/blob/master/bucket/tweakstyle.json) |
 | [w10privacy](https://github.com/ScoopInstaller/Extras/blob/master/bucket/w10privacy.json) |
