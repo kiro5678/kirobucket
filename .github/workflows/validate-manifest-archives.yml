@@ -11,22 +11,22 @@ on:
       - 'bucket/0install-win.json'
       - 'bucket/detect-it-easy.json'
       - 'bucket/die-engine.json'
-      - 'bucket/chatgpt-pake.json'
-      - 'bucket/deepseek.json'
-      - 'bucket/excalidraw.json'
-      - 'bucket/flomo.json'
-      - 'bucket/gemini.json'
-      - 'bucket/grok.json'
-      - 'bucket/lizhi.json'
-      - 'bucket/notion.json'
-      - 'bucket/programmusic.json'
-      - 'bucket/qwerty.json'
-      - 'bucket/twitter.json'
-      - 'bucket/wechat.json'
-      - 'bucket/weread.json'
-      - 'bucket/xiaohongshu.json'
-      - 'bucket/youtubemusic.json'
-      - 'bucket/youtube.json'
+      - 'bucket/pake-chatgpt.json'
+      - 'bucket/pake-deepseek.json'
+      - 'bucket/pake-excalidraw.json'
+      - 'bucket/pake-flomo.json'
+      - 'bucket/pake-gemini.json'
+      - 'bucket/pake-grok.json'
+      - 'bucket/pake-lizhi.json'
+      - 'bucket/pake-notion.json'
+      - 'bucket/pake-programmusic.json'
+      - 'bucket/pake-qwerty.json'
+      - 'bucket/pake-twitter.json'
+      - 'bucket/pake-wechat.json'
+      - 'bucket/pake-weread.json'
+      - 'bucket/pake-xiaohongshu.json'
+      - 'bucket/pake-youtubemusic.json'
+      - 'bucket/pake-youtube.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -34,22 +34,22 @@ on:
       - master
     paths:
       - '.github/workflows/validate-manifest-archives.yml'
-      - 'bucket/chatgpt-pake.json'
-      - 'bucket/deepseek.json'
-      - 'bucket/excalidraw.json'
-      - 'bucket/flomo.json'
-      - 'bucket/gemini.json'
-      - 'bucket/grok.json'
-      - 'bucket/lizhi.json'
-      - 'bucket/notion.json'
-      - 'bucket/programmusic.json'
-      - 'bucket/qwerty.json'
-      - 'bucket/twitter.json'
-      - 'bucket/wechat.json'
-      - 'bucket/weread.json'
-      - 'bucket/xiaohongshu.json'
-      - 'bucket/youtubemusic.json'
-      - 'bucket/youtube.json'
+      - 'bucket/pake-chatgpt.json'
+      - 'bucket/pake-deepseek.json'
+      - 'bucket/pake-excalidraw.json'
+      - 'bucket/pake-flomo.json'
+      - 'bucket/pake-gemini.json'
+      - 'bucket/pake-grok.json'
+      - 'bucket/pake-lizhi.json'
+      - 'bucket/pake-notion.json'
+      - 'bucket/pake-programmusic.json'
+      - 'bucket/pake-qwerty.json'
+      - 'bucket/pake-twitter.json'
+      - 'bucket/pake-wechat.json'
+      - 'bucket/pake-weread.json'
+      - 'bucket/pake-xiaohongshu.json'
+      - 'bucket/pake-youtubemusic.json'
+      - 'bucket/pake-youtube.json'
   workflow_dispatch:
     inputs:
       manifest:
@@ -100,7 +100,7 @@ jobs:
 
           $repoRoot = $env:GITHUB_WORKSPACE
           $manifestPaths = @()
-          $pakeRegressionManifests = @('bucket/chatgpt-pake.json', 'bucket/deepseek.json', 'bucket/excalidraw.json', 'bucket/flomo.json', 'bucket/gemini.json', 'bucket/grok.json', 'bucket/lizhi.json', 'bucket/notion.json', 'bucket/programmusic.json', 'bucket/qwerty.json', 'bucket/twitter.json', 'bucket/wechat.json', 'bucket/weread.json', 'bucket/xiaohongshu.json', 'bucket/youtubemusic.json', 'bucket/youtube.json')
+          $pakeRegressionManifests = @('bucket/pake-chatgpt.json', 'bucket/pake-deepseek.json', 'bucket/pake-excalidraw.json', 'bucket/pake-flomo.json', 'bucket/pake-gemini.json', 'bucket/pake-grok.json', 'bucket/pake-lizhi.json', 'bucket/pake-notion.json', 'bucket/pake-programmusic.json', 'bucket/pake-qwerty.json', 'bucket/pake-twitter.json', 'bucket/pake-wechat.json', 'bucket/pake-weread.json', 'bucket/pake-xiaohongshu.json', 'bucket/pake-youtubemusic.json', 'bucket/pake-youtube.json')
           if ($env:EVENT_NAME -eq 'pull_request') {
             # A PR touching this validator or one of the Pake MSI manifests runs the full regression set.
             $manifestPaths = $pakeRegressionManifests
