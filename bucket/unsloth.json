@@ -6,11 +6,11 @@
     "license": "AGPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.916-beta/Unsloth-Desktop-Windows.exe#/dl.7z",
+            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.916-beta/Unsloth-Desktop-Windows.exe",
             "hash": "2e79bfc196da9c52ed9fd470c31bad9652814c9ad3f04487b0fc926ea7e69a3a"
         },
         "arm64": {
-            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.916-beta/Unsloth-Desktop-Windows-ARM64.exe#/dl.7z",
+            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.916-beta/Unsloth-Desktop-Windows-ARM64.exe",
             "hash": "e554da5d71458f9c38b2fcca69a5ac43947264361aa504d199da3ec507946ade"
         }
     },
