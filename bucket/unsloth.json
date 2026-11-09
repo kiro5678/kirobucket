@@ -52,5 +52,5 @@
         "Nonportable: runs the official Tauri NSIS current-user installer silently, registers the unsloth:// protocol and Windows shortcuts, and silently bootstraps Microsoft Edge WebView2 Runtime when it is missing.",
         "The official uninstaller preserves shared models, environments, outputs, and settings under %USERPROFILE%\\.unsloth."
     ],
-    "##": "Installer Type: Tauri NSIS"
+    "##": "Installer Type: NSIS"
 }
