@@ -85,10 +85,10 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | 26.10 | 64bit: 2.5 MiB | 2026-08-24 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | 1.9 MiB | 2025-07-25 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
 | [rust-meow](../bucket/rust-meow.json) | 0.2.0 | 7.2 MiB | 2026-08-09 | Unofficial WhatsApp desktop linked-device client built with Tauri, SolidJS, and a Go whatsmeow sidecar. | [Homepage](https://github.com/thinkter/rust-meow) |
-| [twitter](../bucket/twitter.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Twitter (X). | [Homepage](https://x.com/) |
+| [pake-twitter](../bucket/pake-twitter.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Twitter (X). | [Homepage](https://x.com/) |
 | [viola](../bucket/viola.json) | 0.2.10 | 117.5 MiB | 2026-08-31 | Native desktop web browser. | [Homepage](https://github.com/nmcmil/Viola-Downloads) |
-| [wechat](../bucket/wechat.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for WeChat. | [Homepage](https://wx.qq.com/) |
-| [xiaohongshu](../bucket/xiaohongshu.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for XiaoHongShu. | [Homepage](https://www.xiaohongshu.com/explore) |
+| [pake-wechat](../bucket/pake-wechat.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for WeChat. | [Homepage](https://wx.qq.com/) |
+| [pake-xiaohongshu](../bucket/pake-xiaohongshu.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for XiaoHongShu. | [Homepage](https://www.xiaohongshu.com/explore) |
 | [zapfast](../bucket/zapfast.json) | 0.20.1 | 64bit: 29.4 MiB / arm64: 27.9 MiB | 2026-10-24 | Unofficial native WhatsApp desktop client built with Rust, with linked devices, chat history, media, calls, and notifications. | [Homepage](https://zapfast.rocks/) |
 | [zapzap](../bucket/zapzap.json) | 7.5.1 | 64bit: 195.5 MiB / arm64: 166.1 MiB | 2026-10-15 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafatosta/zapzap) |
 
@@ -457,7 +457,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mechvibes](../bucket/mechvibes.json) | 2.3.4 | 44.7 MiB | 2026-10-31 | Play mechanical keyboard sounds as you type, with customizable sound packs. | [Homepage](https://mechvibes.com) |
 | [monkeysounds](../bucket/monkeysounds.json) | 1.0.0.0 | 64bit: 2.2 MiB | 2026-08-23 | Portable Windows app that plays mechanical keyboard and mouse click sounds system-wide, with built-in and custom sound profiles. | [Homepage](https://github.com/NSTechBytes/MonkeySounds) |
 | [poltertype](../bucket/poltertype.json) | 0.38.2 | 64bit: 55.7 MiB | 2026-10-19 | Automatic keyboard layout switcher that detects wrong-layout typing and fixes it. | [Homepage](https://github.com/Just-Code-NET/PolterType) |
-| [qwerty](../bucket/qwerty.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for Qwerty. | [Homepage](https://qwerty.kaiyi.cool/) |
+| [pake-qwerty](../bucket/pake-qwerty.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for Qwerty. | [Homepage](https://qwerty.kaiyi.cool/) |
 | [sordum-send-windows-key](../bucket/sordum-send-windows-key.json) | 1.1 | 727.4 KiB | 2021-11-11 | SendKeys methode allows you to send keystrokes just as if you had manually typed them on the keyboard . | [Homepage](https://www.sordum.org/12894/send-windows-key-v1-1/) |
 | [vovsoft-keyboard-lights](../bucket/vovsoft-keyboard-lights.json) | 5.4 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Keyboard Lights. | [Homepage](https://vovsoft.com/software/keyboard-lights/) |
 | [vovsoft-keyboard-soundboard](../bucket/vovsoft-keyboard-soundboard.json) | 2.1 | 5.4 MiB | 2026-10-25 | Portable edition of Vovsoft Keyboard Soundboard. | [Homepage](https://vovsoft.com/software/keyboard-soundboard/) |
@@ -480,14 +480,14 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [haruna](../bucket/haruna.json) | 1944 | 64bit: 108.1 MiB | 2026-05-19 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
 
 | [lauschangriff](../bucket/lauschangriff.json) | 2.51 | 64bit: 141.0 KiB | 2021-05-15 | Portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) |
-| [lizhi](../bucket/lizhi.json) | 3.18.0 | 64bit: 3.9 MiB | 2026-11-04 | Pake-generated desktop wrapper for LiZhi. | [Homepage](https://lizhi.dengdengju.com/?from=pake) |
+| [pake-lizhi](../bucket/pake-lizhi.json) | 3.18.0 | 64bit: 3.9 MiB | 2026-11-04 | Pake-generated desktop wrapper for LiZhi. | [Homepage](https://lizhi.dengdengju.com/?from=pake) |
 | [mediaplayerok](../bucket/mediaplayerok.json) | 1.01 | 64bit: 229.0 KiB | 2026-06-11 | Portable media player with playlists and automatic resume playback. | [Homepage](https://www.softwareok.com/?Download=MediaPlayerOK) |
 | [moviebox-tui](../bucket/moviebox-tui.json) | 0.1.27 | 4.9 MiB | 2026-10-29 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. | [Homepage](https://github.com/mesamirh/MovieBox-Tui) |
 | [ncspot](../bucket/ncspot.json) | 1.5.0 | 64bit: 5.8 MiB | 2026-10-01 | ncurses Spotify client written in Rust | [Homepage](https://github.com/hrkfdn/ncspot) |
 | [opennow](../bucket/opennow.json) | 1.0.3 | 95.3 MiB | 2026-10-16 | An open-source GeForce NOW desktop client. | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) |
 | [openscreen](../bucket/openscreen.json) | 2.1.2 | 64bit: 170.6 MiB | 2026-10-19 | Open-source screen recording and video editing tool for creating polished demos. | [Homepage](https://getopenscreen.com/) |
 | [orfeo](../bucket/orfeo.json) | 1.6.0 | 137.1 MiB | 2026-10-31 | Piano-learning and MIDI visualization desktop app with interactive chord tools, note editing, and audio export. | [Homepage](https://orfeo.cc) |
-| [programmusic](../bucket/programmusic.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for ProgramMusic. | [Homepage](https://musicforprogramming.net/) |
+| [pake-programmusic](../bucket/pake-programmusic.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for ProgramMusic. | [Homepage](https://musicforprogramming.net/) |
 | [quick-audio-recorder](../bucket/quick-audio-recorder.json) | 1.3.0 | 50.8 MiB | 2026-10-17 | A minimalist Windows audio recorder for microphone, system audio, or both. | [Homepage](https://github.com/lukmay/QuickAudioRecorder) |
 | [recordly](../bucket/recordly.json) | 1.4.0 | 64bit: 176.7 MiB | 2026-09-08 | Open-source screen recorder and editor for polished demo videos. | [Homepage](https://github.com/webadderallorg/Recordly) |
 | [screenbox](../bucket/screenbox.json) | 0.24.0 | 64bit: 167.0 MiB | 2026-10-24 | LibVLC-based media player for the Universal Windows Platform. | [Homepage](https://github.com/huynhsontung/Screenbox) |
@@ -515,8 +515,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-webcam-capture](../bucket/vovsoft-webcam-capture.json) | 3.4 | 20.6 MiB | 2026-08-13 | Portable edition of Vovsoft Webcam Capture. | [Homepage](https://vovsoft.com/software/webcam-capture/) |
 | [vovsoft-webcam-motion-detector](../bucket/vovsoft-webcam-motion-detector.json) | 1.0 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Webcam Motion Detector. | [Homepage](https://vovsoft.com/software/webcam-motion-detector/) |
 | [vynody](../bucket/vynody.json) | 2.23.5 | 28.0 MiB | 2026-10-27 | A visually appealing and feature-rich Flutter music player | [Homepage](https://axel10.github.io/vynody_site/) |
-| [youtube](../bucket/youtube.json) | 3.18.0 | 64bit: 3.4 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube. | [Homepage](https://www.youtube.com/) |
-| [youtubemusic](../bucket/youtubemusic.json) | 3.18.0 | 64bit: 3.8 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube Music. | [Homepage](https://music.youtube.com/) |
+| [pake-youtube](../bucket/pake-youtube.json) | 3.18.0 | 64bit: 3.4 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube. | [Homepage](https://www.youtube.com/) |
+| [pake-youtubemusic](../bucket/pake-youtubemusic.json) | 3.18.0 | 64bit: 3.8 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube Music. | [Homepage](https://music.youtube.com/) |
 
 ## Network & DNS
 
@@ -630,7 +630,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [butterfly](../bucket/butterfly.json) | 2.6.1 | 64bit: 27.3 MiB | 2026-10-28 | A powerful, minimalistic, cross-platform note-taking app | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [butterfly-nightly](../bucket/butterfly-nightly.json) | 2026.10.24.1034 | 64bit: 27.4 MiB / arm64: 26.4 MiB | 2026-10-24 | A powerful, minimalistic, cross-platform note-taking app (nightly build) | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [desktop-note-ok](../bucket/desktop-note-ok.json) | 4.66 | 64bit: 292.3 KiB | 2026-06-13 | Create and manage notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopNoteOK) |
-| [flomo](../bucket/flomo.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Flomo. | [Homepage](https://v.flomoapp.com/mine) |
+| [pake-flomo](../bucket/pake-flomo.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Flomo. | [Homepage](https://v.flomoapp.com/mine) |
 | [flyout-notepad](../bucket/flyout-notepad.json) | 1.05 | 64bit: 234.8 KiB | 2026-08-17 | Dockable text and image workspace that opens from screen edges. | [Homepage](https://www.softwareok.com/?seite=Microsoft/FlyOutNotePad) |
 | [goldendict-ng](../bucket/goldendict-ng.json) | v26.11.0 | 64bit: 129.6 MiB | 2026-10-23 | A feature-rich dictionary lookup program, supporting multiple dictionary formats (StarDict/Babylon/Lingvo/Dictd/AARD/MDict/SDict) and online dictionaries, featuring perfect article rendering with the complete markup, illustrations and other content retained, and allowing you to type in words without any accents or correct case. | [Homepage](https://github.com/xiaoyifang/goldendict) |
 | [helixnotes](../bucket/helixnotes.json) | 1.3.6 | 9.0 MiB | 2026-09-30 | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. | [Homepage](https://helixnotes.com/) |
@@ -638,7 +638,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [markra](../bucket/markra.json) | 2.14.1 | 13.5 MiB | 2026-10-30 | Cross-platform Markdown editor and workspace for local-first notes. | [Homepage](https://github.com/markrahq/markra) |
 | [mdnote](../bucket/mdnote.json) | 2.0.1 | — | — | Lightweight Markdown and plain-text editor with formatted editing, live preview, tables, tabs, and multi-encoding support. | [Homepage](https://github.com/Lahai-Roi/MDNote) |
 | [meshnotes](../bucket/meshnotes.json) | 0.4.1 | 14.2 MiB | 2025-12-20 | Open-source local-first note-taking application with LAN synchronization. | [Homepage](https://github.com/meshnotes/meshnotes) |
-| [notion](../bucket/notion.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Notion. | [Homepage](https://app.notion.com) |
+| [pake-notion](../bucket/pake-notion.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Notion. | [Homepage](https://app.notion.com) |
 | [paperweight](../bucket/paperweight.json) | 0.6.0 | 88.2 MiB | 2026-08-27 | A local-first desktop app for collecting, organizing, and working with notes and documents | [Homepage](https://github.com/wslyvh/paperweight) |
 | [short-door-note](../bucket/short-door-note.json) | 4.18 | 64bit: 338.4 KiB | 2026-03-08 | Create short notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=ShortDoorNote) |
 | [siyuan](../bucket/siyuan.json) | 3.8.8 | 64bit: 227.3 MiB / arm64: 192.6 MiB | 2026-10-29 | Personal knowledge management and note-taking software. | [Homepage](https://github.com/siyuan-note/siyuan) |
@@ -653,13 +653,13 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- | --- |
 | [anton](../bucket/anton.json) | 0.2.48 | 95.4 MiB | 2026-10-29 | AI-assisted desktop video editor with a manual timeline and local rendering | [Homepage](https://antonvideo.app/) |
 | [autooff](../bucket/autooff.json) | 4.25 | 696.7 KiB | 2023-08-09 | Schedule Windows shutdown, restart, sleep, hibernate, display power, lock, alarms, and program tasks. | [Homepage](https://www.starcodec.com/en/autooff/) |
-| [chatgpt-pake](../bucket/chatgpt-pake.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for ChatGPT. | [Homepage](https://chatgpt.com/) |
+| [pake-chatgpt](../bucket/pake-chatgpt.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for ChatGPT. | [Homepage](https://chatgpt.com/) |
 | [crowdsec-windows-firewall-bouncer](../bucket/crowdsec-windows-firewall-bouncer.json) | 0.0.6 | 2.1 MiB | 2026-06-01 | CrowdSec Windows Firewall remediation component that applies CrowdSec ban decisions to Windows Firewall. | [Homepage](https://github.com/crowdsecurity/cs-windows-firewall-bouncer) |
-| [deepseek](../bucket/deepseek.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for DeepSeek. | [Homepage](https://chat.deepseek.com/) |
+| [pake-deepseek](../bucket/pake-deepseek.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for DeepSeek. | [Homepage](https://chat.deepseek.com/) |
 | [deeptutor](../bucket/deeptutor.json) | 1.7.2 | 499.9 MiB | 2026-11-06 | Personalized AI tutoring desktop app with a bundled local runtime and learning workspace. | [Homepage](https://github.com/HKUDS/DeepTutor) |
-| [gemini](../bucket/gemini.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Gemini. | [Homepage](https://gemini.google.com/) |
+| [pake-gemini](../bucket/pake-gemini.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Gemini. | [Homepage](https://gemini.google.com/) |
 | [go-away-edge-installer](../bucket/go-away-edge-installer.json) | 2.0.3 | 46.1 MiB | 2026-04-04 | GoAwayEdge is designed for those who, like me, aren’t fans of Microsoft Edge or Windows Copilot. | [Homepage](https://github.com/valnoxy/GoAwayEdge) |
-| [grok](../bucket/grok.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for Grok. | [Homepage](https://grok.com/) |
+| [pake-grok](../bucket/pake-grok.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for Grok. | [Homepage](https://grok.com/) |
 | [ipban](../bucket/ipban.json) | 4.1.0 | 64bit: 13.8 MiB / 32bit: 13.2 MiB | 2026-09-28 | Windows intrusion-prevention service that detects failed logins and blocks abusive IP addresses using Windows Firewall. | [Homepage](https://github.com/DigitalRuby/IPBan) |
 | [jan](../bucket/jan.json) | 0.8.8 | 64bit: 545.2 MiB / arm64: 320.0 MiB | 2026-10-27 | Desktop AI assistant for running local language models and managing private, model-powered chats. | [Homepage](https://github.com/janhq/jan) |
 | [k-toolz](../bucket/k-toolz.json) | 4.0.2 | 64bit: 9.9 MiB | 2026-10-31 | Gaming suite with an FPS overlay, game streaming, stutter analysis, and virtual gamepad tools. | [Homepage](https://k-toolz.de/en/) |
@@ -815,7 +815,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-vcf-to-txt-converter](../bucket/vovsoft-vcf-to-txt-converter.json) | 3.2 | 2.9 MiB | 2026-08-13 | Portable edition of Vovsoft VCF to TXT Converter. | [Homepage](https://vovsoft.com/software/vcf-to-txt-converter/) |
 | [vovsoft-vcf-to-xls-converter](../bucket/vovsoft-vcf-to-xls-converter.json) | 3.2 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft VCF to XLS Converter. | [Homepage](https://vovsoft.com/software/vcf-to-xls-converter/) |
 | [vovsoft-xls-to-csv-converter](../bucket/vovsoft-xls-to-csv-converter.json) | 2.3 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft XLS to CSV Converter. | [Homepage](https://vovsoft.com/software/xls-to-csv-converter/) |
-| [weread](../bucket/weread.json) | 3.18.0 | 64bit: 3.4 MiB | 2026-11-04 | Pake-generated desktop wrapper for WeRead. | [Homepage](https://weread.qq.com/) |
+| [pake-weread](../bucket/pake-weread.json) | 3.18.0 | 64bit: 3.4 MiB | 2026-11-04 | Pake-generated desktop wrapper for WeRead. | [Homepage](https://weread.qq.com/) |
 | [winscan2pdf](../bucket/winscan2pdf.json) | 9.79 | 195.8 KiB | 2026-10-13 | Save scanned documents as PDF files. | [Homepage](https://www.softwareok.com/?Download=WinScan2PDF) |
 
 ## Productivity & Launchers
@@ -827,7 +827,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [biniware-run](../bucket/biniware-run.json) | 7.9.0.0 | 398.9 KiB | 2026-10-20 | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. | [Homepage](https://biniware.com/brun) |
 | [deskboard](../bucket/deskboard.json) | 0.13.0 | 7.9 MiB | 2026-10-30 | Turns local folders into customizable visual workspaces with widgets, annotations, and notes. | [Homepage](https://deskboard.geeke.app) |
 | [desktoptools](../bucket/desktoptools.json) | 1.2.9 | 64bit: 251.1 MiB | 2026-10-23 | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. | [Homepage](https://github.com/vg2222/DesktopTools) |
-| [excalidraw](../bucket/excalidraw.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Excalidraw. | [Homepage](https://excalidraw.com/) |
+| [pake-excalidraw](../bucket/pake-excalidraw.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Excalidraw. | [Homepage](https://excalidraw.com/) |
 | [favoritenfreund](../bucket/favoritenfreund.json) | 1.34 | 64bit: 54.3 KiB | 2007-11-12 | Manage favorites in a small Windows utility. | [Homepage](https://www.softwareok.com/?Download=FavoritenFreund) |
 | [flashlaunch](../bucket/flashlaunch.json) | 1.0.9 | 1.9 MiB | 2026-10-08 | Lightweight keyboard-first application launcher for Windows. | [Homepage](https://github.com/SingCJ/FlashLaunch) |
 | [flow](../bucket/flow.json) | 0.7.0 | 64bit: 38.6 MiB | 2026-10-30 | Open-source event, calendar, and time management app for Windows. | [Homepage](https://github.com/LinwoodDev/Flow) |
