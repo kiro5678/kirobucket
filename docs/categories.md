@@ -21,7 +21,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 106 | [View](#other-utilities) |
+| Other Utilities | 105 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1001**
+**Total unique manifests: 1000**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -732,7 +732,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [softwareok-suite](../bucket/softwareok-suite.json) | 2026.10.27.6 | 64bit: 27.5 MiB | 2026-10-24 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |
 | [starcodec](../bucket/starcodec.json) | 20261016 | — | — | Windows codec pack that installs audio and video codecs, DirectShow filters, subtitle support, and related media utilities. | [Homepage](https://www.starcodec.com/en/) |
 | [taskslinger](../bucket/taskslinger.json) | 0.9.5 | 2.6 MiB | — | Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections. | [Homepage](https://taskslinger.net/) |
-| [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | 1.4.1 | 273.8 KiB | 2026-07-28 | Notify about newly auto-starting Windows services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
 | [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) | 0.5.2 | 80.0 MiB | 2026-05-31 | AI desktop agent that guides or automates GUI interactions across Windows applications. | [Homepage](https://github.com/ThioJoe/Thio-Universal-Agent) |
 | [tinywall-shirazadam](../bucket/tinywall-shirazadam.json) | 4.0.0 | 64bit: 100.0 MiB / 32bit: 76.7 MiB / arm64: 95.6 MiB | 2026-11-06 | Experimental modern WinUI 3 desktop client for the TinyWall Windows firewall. | [Homepage](https://github.com/ShirazAdam/TinyWall) |
 | [udm-pro](../bucket/udm-pro.json) | 2.6.35 | 223.8 MiB | 2026-11-05 | Windows download manager for files, videos, torrents, and supported cloud uploads. | [Homepage](https://github.com/Shalaby2/UDM-Pro) |
