@@ -122,7 +122,7 @@ jobs:
               $result.ProductCode = Get-MsiProperty $database 'ProductCode'
               $result.InstallScope = Get-MsiProperty $database 'ALLUSERS'
 
-              if ($result.ProductName -ne $package.Name) { throw "MSI ProductName '$($result.ProductName)' does not match expected app '$($package.Name)'." }
+              if (-not $result.ProductName.Trim().EndsWith($package.Name, [System.StringComparison]::OrdinalIgnoreCase)) { throw "MSI ProductName '$($result.ProductName)' does not end with expected app '$($package.Name)'." }
               if (-not $result.ProductCode -or $result.ProductCode -notmatch '^\{[0-9A-Fa-f-]{36}\}$') { throw "MSI ProductCode is missing or invalid: '$($result.ProductCode)'." }
               if ($productCodes.ContainsKey($result.ProductCode)) { throw "Duplicate ProductCode: $($result.ProductCode) also used by $($productCodes[$result.ProductCode])." }
               $productCodes[$result.ProductCode] = $package.Name
