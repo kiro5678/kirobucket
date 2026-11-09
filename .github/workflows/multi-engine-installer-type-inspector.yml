@@ -67,6 +67,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $arm64Url = ''
           $expectedArm64Hash = ''
+          $pakeExtractionMode = $false
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $url = $env:INPUT_INSTALLER_URL.Trim()
@@ -101,11 +102,17 @@ jobs:
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
             if ($targetProduct -eq 'Pake Desktop') {
-              $arm64Source = $manifest.architecture.arm64
-              $arm64Url = [string]$arm64Source.url
-              $expectedArm64Hash = [string]$arm64Source.hash
-              if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
-              if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+              $pakeExtractionMode = ([string]$manifest.extract_dir -eq 'lib\app') -and ([string]$manifest.url -like '*#/dl.7z')
+              if ($pakeExtractionMode) {
+                if ([string]$manifest.url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-x64-Setup.exe#/dl.7z') { throw 'Pake Desktop extraction manifest URL is not the official x64 setup asset with the 7-Zip marker.' }
+                if ([string]$manifest.bin -ne 'Pake.exe') { throw 'Pake Desktop extraction manifest must shim Pake.exe.' }
+              } else {
+                $arm64Source = $manifest.architecture.arm64
+                $arm64Url = [string]$arm64Source.url
+                $expectedArm64Hash = [string]$arm64Source.hash
+                if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
+                if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+              }
             }
             $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
             $url = [string]$source.url
@@ -131,14 +138,22 @@ jobs:
               $targetProduct = 'Pake Desktop'
               if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
               $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
-              $arm64Source = $manifest.architecture.arm64
-              $arm64Url = [string]$arm64Source.url
-              $expectedArm64Hash = [string]$arm64Source.hash
-              if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
-              if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+              $pakeExtractionMode = ([string]$manifest.extract_dir -eq 'lib\app') -and ([string]$manifest.url -like '*#/dl.7z')
+              if (-not $pakeExtractionMode) {
+                $arm64Source = $manifest.architecture.arm64
+                $arm64Url = [string]$arm64Source.url
+                $expectedArm64Hash = [string]$arm64Source.hash
+                if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
+                if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+              }
               $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
               $url = [string]$source.url
-              if ($url -notlike 'https://pake.run/updates/windows/Tw93.Pake-win-*-Setup.exe') { throw 'Manifest URL is not an official Pake Desktop Windows installer.' }
+              if ($pakeExtractionMode) {
+                if ($url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-x64-Setup.exe#/dl.7z') { throw 'Pake Desktop extraction manifest URL is not the official x64 setup asset with the 7-Zip marker.' }
+                if ([string]$manifest.bin -ne 'Pake.exe') { throw 'Pake Desktop extraction manifest must shim Pake.exe.' }
+              } elseif ($url -notlike 'https://pake.run/updates/windows/Tw93.Pake-win-*-Setup.exe') {
+                throw 'Manifest URL is not an official Pake Desktop Windows installer.'
+              }
               $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
               $expectedHash = [string]$source.hash
               if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Pake Desktop hash, when supplied, must be a 64-character SHA-256 digest.' }
@@ -163,6 +178,8 @@ jobs:
           "installer_name=$name" >> $env:GITHUB_OUTPUT
           "expected_sha256=$expectedHash" >> $env:GITHUB_OUTPUT
           "arm64_installer_url=$arm64Url" >> $env:GITHUB_OUTPUT
+          $pakeExtractionModeOutput = if ($pakeExtractionMode) { 'true' } else { 'false' }
+          "pake_extraction_mode=$pakeExtractionModeOutput" >> $env:GITHUB_OUTPUT
           "expected_arm64_sha256=$expectedArm64Hash" >> $env:GITHUB_OUTPUT
           "target_product=$targetProduct" >> $env:GITHUB_OUTPUT
           Write-Output "Inspection target resolved for event $($env:EVENT_NAME): $name"
@@ -718,8 +735,39 @@ jobs:
           $report | ForEach-Object { Write-Output $_ }
           $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+      - name: Verify Pake extracted-payload manifest layout
+        if: steps.source.outputs.target_product == 'Pake Desktop' && steps.source.outputs.pake_extraction_mode == 'true'
+        shell: pwsh
+        env:
+          EXPECTED_SHA256: ${{ steps.source.outputs.expected_sha256 }}
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          if ($manifest.url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-x64-Setup.exe#/dl.7z') { throw 'Unexpected Pake extraction URL.' }
+          if ($manifest.extract_dir -ne 'lib\app') { throw "Unexpected extract_dir: $($manifest.extract_dir)" }
+          if ($manifest.bin -ne 'Pake.exe') { throw "Unexpected bin target: $($manifest.bin)" }
+          if ($manifest.shortcuts[0][0] -ne 'Pake.exe') { throw 'The Start Menu shortcut does not target Pake.exe.' }
+          $actualHash = (Get-FileHash -LiteralPath $env:INSTALLER_PATH -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $env:EXPECTED_SHA256.ToLowerInvariant()) { throw "Downloaded setup SHA-256 mismatch: $actualHash" }
+          $payloadRoot = Join-Path (Join-Path $env:RUNNER_TEMP 'detect-it-easy-api') 'pake-setup-payload'
+          $pakeExe = Join-Path $payloadRoot 'lib\app\Pake.exe'
+          if (-not (Test-Path -LiteralPath $pakeExe -PathType Leaf)) { throw "The declared launch target was not found in the extracted setup payload: $pakeExe" }
+          $payloadFile = Get-Item -LiteralPath $pakeExe
+          if ($payloadFile.Length -le 0) { throw 'Extracted Pake.exe is empty.' }
+          @(
+            '## Pake Desktop extraction manifest check'
+            ''
+            "- Download SHA-256 verified: $actualHash"
+            "- Extracted executable: $pakeExe"
+            "- Extracted executable size: $($payloadFile.Length) bytes"
+            '- Verified extract_dir, bin, and Start Menu shortcut targets.'
+            '- Only the archive was extracted; no setup executable or application was run on the runner.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
       - name: Test Pake x64 install/uninstall and verify ARM64 installer
-        if: steps.source.outputs.target_product == 'Pake Desktop'
+        if: steps.source.outputs.target_product == 'Pake Desktop' && steps.source.outputs.pake_extraction_mode != 'true'
         shell: pwsh
         env:
           INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
