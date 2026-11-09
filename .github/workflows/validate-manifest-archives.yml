@@ -6,6 +6,8 @@ on:
       - master
     paths:
       - 'bucket/edge-drop.json'
+      - 'bucket/pinokio.json'
+      - 'bucket/unsloth.json'
       - 'bucket/0install-win.json'
       - 'bucket/detect-it-easy.json'
       - 'bucket/die-engine.json'
@@ -137,6 +139,9 @@ jobs:
             Write-Host "Validating $($manifestPaths.Count) manifest(s):"
             $manifestPaths | ForEach-Object { Write-Host " - $_" }
           }
+
+          $sevenZipLog = Join-Path $env:RUNNER_TEMP '7zip.log'
+          "7-Zip diagnostics for run $env:GITHUB_RUN_ID" | Set-Content -LiteralPath $sevenZipLog
 
           $sevenZipPath = 'C:\Program Files\7-Zip\7z.exe'
           if (-not (Test-Path -LiteralPath $sevenZipPath -PathType Leaf)) {
@@ -417,7 +422,8 @@ jobs:
                       Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 120
                       Test-StaticHash -ArchivePath $innounpZip -HashValue '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd' -Context 'innounp helper'
                       New-Item -ItemType Directory -Path $innounpRoot -Force | Out-Null
-                      & $sevenZipPath x $innounpZip "-o$innounpRoot" '-y' | Out-Null
+                      Add-Content -LiteralPath $sevenZipLog -Value "`n[innounp helper extraction] $innounpZip"
+                      & $sevenZipPath x $innounpZip "-o$innounpRoot" '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
                       if ($LASTEXITCODE -ne 0) {
                         throw 'Could not extract the innounp helper archive.'
                       }
@@ -485,7 +491,8 @@ jobs:
                   if ($isCompressedTar) {
                     $tarExtractRoot = Join-Path $env:RUNNER_TEMP "manifest-tar-$downloadCounter"
                     New-Item -ItemType Directory -Path $tarExtractRoot -Force | Out-Null
-                    & $sevenZipPath x $archivePath "-o$tarExtractRoot" '-y' | Out-Null
+                    Add-Content -LiteralPath $sevenZipLog -Value "`n[compressed tar extraction] $archivePath"
+                    & $sevenZipPath x $archivePath "-o$tarExtractRoot" '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
                     if ($LASTEXITCODE -ne 0) {
                       throw "$relativePath ($($archConfig.Name)): 7-Zip could not decompress the outer tar compression layer."
                     }
@@ -496,7 +503,9 @@ jobs:
                     $listingArchivePath = $innerTar.FullName
                   }
 
+                  Add-Content -LiteralPath $sevenZipLog -Value "`n[archive listing] $listingArchivePath"
                   $listing = & $sevenZipPath l -slt $listingArchivePath 2>&1
+                  $listing | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
                   if ($LASTEXITCODE -ne 0) {
                     throw "$relativePath ($($archConfig.Name)): the asset could not be listed as an archive. URL: $downloadUrl"
                   }
@@ -534,7 +543,8 @@ jobs:
                   if ($isForced7zip -and $assetPath.EndsWith('.exe')) {
                     $outerRoot = Join-Path $env:RUNNER_TEMP "manifest-nsis-$downloadCounter"
                     New-Item -ItemType Directory -Path $outerRoot -Force | Out-Null
-                    & $sevenZipPath x $archivePath "-o$outerRoot" '-xr!*.nsis' '-y' | Out-Null
+                    Add-Content -LiteralPath $sevenZipLog -Value "`n[forced dl.7z outer NSIS extraction] $archivePath"
+                    & $sevenZipPath x $archivePath "-o$outerRoot" '-xr!*.nsis' '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
                     if ($LASTEXITCODE -ne 0) {
                       throw "$relativePath ($($archConfig.Name)): 7-Zip could not extract the outer NSIS container."
                     }
@@ -543,7 +553,8 @@ jobs:
                     if ($null -ne $innerArchive) {
                       $payloadRoot = Join-Path $env:RUNNER_TEMP "manifest-payload-$downloadCounter"
                       New-Item -ItemType Directory -Path $payloadRoot -Force | Out-Null
-                      & $sevenZipPath x $innerArchive.FullName "-o$payloadRoot" '-y' | Out-Null
+                      Add-Content -LiteralPath $sevenZipLog -Value "`n[nested app-64.7z payload extraction] $($innerArchive.FullName)"
+                      & $sevenZipPath x $innerArchive.FullName "-o$payloadRoot" '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
                       if ($LASTEXITCODE -ne 0) {
                         throw "$relativePath ($($archConfig.Name)): 7-Zip could not extract the inner Electron app-64.7z payload."
                       }
@@ -668,6 +679,11 @@ jobs:
           Write-Host "Failures: $($failures.Count)"
           Write-Host '============================================================'
           if ($failures.Count -gt 0) {
+            if (Test-Path -LiteralPath $sevenZipLog -PathType Leaf) {
+              Write-Host '--- 7zip.log (last 120 lines) ---' -ForegroundColor Yellow
+              Get-Content -LiteralPath $sevenZipLog -Tail 120 | ForEach-Object { Write-Host $_ }
+              Write-Host '--- end 7zip.log ---' -ForegroundColor Yellow
+            }
             $failures | ForEach-Object { Write-Host $_ -ForegroundColor Red }
             exit 1
           }
@@ -676,3 +692,12 @@ jobs:
           "validated_manifests=$validatedManifestsJson" >> $env:GITHUB_OUTPUT
           "validated_head_sha=$validatedHeadSha" >> $env:GITHUB_OUTPUT
 
+
+      - name: Upload 7-Zip diagnostic log
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: 7zip-log-${{ github.run_id }}
+          path: ${{ runner.temp }}/7zip.log
+          if-no-files-found: ignore
+          retention-days: 7
