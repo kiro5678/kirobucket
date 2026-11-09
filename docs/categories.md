@@ -10,18 +10,18 @@
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
 | Download Managers | 21 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 74 | [View](#file-management) |
+| File Management | 75 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
-| Keyboard & Language | 14 | [View](#keyboard-language) |
+| Keyboard & Language | 15 | [View](#keyboard-language) |
 | Media & Audio/Video | 45 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 104 | [View](#other-utilities) |
+| Other Utilities | 106 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 997**
+**Total unique manifests: 1001**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -252,6 +252,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [ef-find](../bucket/ef-find.json) | 26.10 | 64bit: 3.5 MiB | 2026-08-24 | Searches for files, text, hexadecimal sequences, and regular expressions, including inside supported archives. | [Homepage](https://efsoftware.com/fn/e.htm) |
 | [ef-multi-file-renamer](../bucket/ef-multi-file-renamer.json) | 26.10 | 64bit: 2.1 MiB | 2026-08-24 | Batch-renames files and directories using reusable rules, filters, and a real-time preview. | [Homepage](https://efsoftware.com/mr/e.htm) |
 | [everything-cmdpal](../bucket/everything-cmdpal.json) | 0.9.26030.0 | 64bit: 13.4 MiB | 2026-07-10 | Everything search extension for PowerToys Command Palette | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) |
+| [explorer-dialog-path-selector-thiojoe](../bucket/explorer-dialog-path-selector-thiojoe.json) | 1.8.1 | 1.3 MiB | 2026-04-03 | Jump to paths in open Explorer or Directory Opus windows from Open/Save dialogs. | [Homepage](https://github.com/ThioJoe/ThioJoe-AHK-Scripts) |
 | [filee](../bucket/filee.json) | 2.1.0 | 150.7 MiB | 2026-10-28 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
 | [filepilot](../bucket/filepilot.json) | 1.0.7 | 64bit: 64.7 MiB | 2026-10-11 | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. | [Homepage](https://github.com/qup1010/FilePilot) |
 | [files-inspector](../bucket/files-inspector.json) | 4.55 | 18.3 MiB | 2026-06-16 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
@@ -437,6 +438,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [cwitcher](../bucket/cwitcher.json) | 0.6.2 | 119.8 KiB | 2026-04-28 | Lightweight Windows tray utility for keyboard layout switching and text transformation. | [Homepage](https://github.com/Astrent-bear/Cwitcher) |
+| [double-keypress-monitor-thiojoe](../bucket/double-keypress-monitor-thiojoe.json) | 1.0.1 | 548.3 KiB | 2026-05-02 | Detect and log unintended rapid repeated keystrokes to measure keyboard chatter. | [Homepage](https://github.com/ThioJoe/Double-KeyPress-Monitor) |
 | [fliper](../bucket/fliper.json) | 1.2.1 | 1.2 MiB | 2026-09-30 | Universal keyboard layout and case converter for Windows. | [Homepage](https://github.com/beatlejute/Fliper) |
 | [imewlconverter](../bucket/imewlconverter.json) | 3.6.0 | 32bit: 4.6 MiB / 64bit: 4.6 MiB | 2026-10-08 | 一款输入法词库转换软件，支持以下超过 20 种的输入法工具和词库 | [Homepage](https://github.com/studyzy/imewlconverter) |
 | [keyboard-language-fix](../bucket/keyboard-language-fix.json) | 1.1.0 | 48.1 MiB | 2026-09-03 | Fix text typed with the wrong keyboard language on Windows. | [Homepage](https://github.com/mahmoudiav/Keyboard-Language-Fix) |
@@ -730,6 +732,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [softwareok-suite](../bucket/softwareok-suite.json) | 2026.10.27.6 | 64bit: 27.5 MiB | 2026-10-24 | Portable collection of all currently downloadable SoftwareOK utilities on the official Downloads index, plus Monitor.Turn.Off.Timer.OK. | [Homepage](https://www.softwareok.com/?seite=Faq) |
 | [starcodec](../bucket/starcodec.json) | 20261016 | — | — | Windows codec pack that installs audio and video codecs, DirectShow filters, subtitle support, and related media utilities. | [Homepage](https://www.starcodec.com/en/) |
 | [taskslinger](../bucket/taskslinger.json) | 0.9.5 | 2.6 MiB | — | Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections. | [Homepage](https://taskslinger.net/) |
+| [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | 1.4.1 | 273.8 KiB | 2026-07-28 | Notify about newly auto-starting Windows services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
+| [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) | 0.5.2 | 80.0 MiB | 2026-05-31 | AI desktop agent that guides or automates GUI interactions across Windows applications. | [Homepage](https://github.com/ThioJoe/Thio-Universal-Agent) |
 | [tinywall-shirazadam](../bucket/tinywall-shirazadam.json) | 4.0.0 | 64bit: 100.0 MiB / 32bit: 76.7 MiB / arm64: 95.6 MiB | 2026-11-06 | Experimental modern WinUI 3 desktop client for the TinyWall Windows firewall. | [Homepage](https://github.com/ShirazAdam/TinyWall) |
 | [udm-pro](../bucket/udm-pro.json) | 2.6.35 | 223.8 MiB | 2026-11-05 | Windows download manager for files, videos, torrents, and supported cloud uploads. | [Homepage](https://github.com/Shalaby2/UDM-Pro) |
 | [vcredist-aio](../bucket/vcredist-aio.json) | 0.106.0 | 31.1 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes (x86 and x64), including legacy runtimes and the current 2022/2026 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
