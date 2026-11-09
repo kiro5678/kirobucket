@@ -22,7 +22,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 60
     steps:
-      - name: Download, inspect, install and uninstall every MSI
+      - name: Audit official Windows MSI packages
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -54,7 +54,7 @@ jobs:
           )
 
           $installer = New-Object -ComObject WindowsInstaller.Installer
-          function Get-MsiScalar {
+          function Get-MsiProperty {
             param([object]$Database,[string]$PropertyName)
             $view = $Database.OpenView("SELECT Value FROM Property WHERE Property='$PropertyName'")
             $view.Execute()
@@ -93,19 +93,16 @@ jobs:
               ProductVersion = ''
               Manufacturer = ''
               ProductCode = ''
-              UpgradeCodes = @()
               InstallScope = ''
-              InstallDirDefault = ''
               MainExecutables = @()
-              ShortcutRows = @()
-              RegistryRows = @()
-              CustomActions = @()
+              ShortcutsCreated = @()
               InstallTest = 'not-run'
               UninstallTest = 'not-run'
               InstallDirRemoved = $false
               ShortcutsRemoved = $false
               Error = ''
             }
+            $installed = $false
 
             try {
               Invoke-WebRequest -Uri "$baseUrl/$($package.Asset)" -OutFile $msiPath -MaximumRedirection 10 -TimeoutSec 300
@@ -119,99 +116,14 @@ jobs:
               if ($file.Length -lt 1000000) { throw "MSI is unexpectedly small: $($file.Length) bytes." }
 
               $database = $installer.OpenDatabase($msiPath, 0)
-              $result.ProductName = Get-MsiScalar $database 'ProductName'
-              $result.ProductVersion = Get-MsiScalar $database 'ProductVersion'
-              $result.Manufacturer = Get-MsiScalar $database 'Manufacturer'
-              $result.ProductCode = Get-MsiScalar $database 'ProductCode'
-              $result.InstallScope = Get-MsiScalar $database 'ALLUSERS'
+              $result.ProductName = Get-MsiProperty $database 'ProductName'
+              $result.ProductVersion = Get-MsiProperty $database 'ProductVersion'
+              $result.Manufacturer = Get-MsiProperty $database 'Manufacturer'
+              $result.ProductCode = Get-MsiProperty $database 'ProductCode'
+              $result.InstallScope = Get-MsiProperty $database 'ALLUSERS'
 
               if ($result.ProductName -ne $package.Name) { throw "MSI ProductName '$($result.ProductName)' does not match expected app '$($package.Name)'." }
-              if (-not $result.ProductCode -or $result.ProductCode -notmatch '^\{[0-9A-Fa-f-]{36}\}              if (Test-Path -LiteralPath $installDir) { Remove-Item -LiteralPath $installDir -Recurse -Force }
-              New-Item -ItemType Directory -Path (Split-Path -Parent $installDir) -Force | Out-Null
-              $installArgs = @(
-                '/i', ('"{0}"' -f $msiPath),
-                '/qn', '/norestart',
-                ('INSTALLDIR="{0}"' -f $installDir),
-                'WIXUI_EXITDIALOGOPTIONALCHECKBOX=0',
-                'AUTOLAUNCHAPP=0',
-                '/L*V', ('"{0}"' -f $installLog)
-              )
-              $installProcess = Start-Process -FilePath 'msiexec.exe' -ArgumentList $installArgs -Wait -PassThru -ErrorAction Stop
-              if ($installProcess.ExitCode -notin @(0,3010)) { throw "MSI install exit code $($installProcess.ExitCode). Log: $installLog" }
-
-              $installedFiles = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -Force -ErrorAction SilentlyContinue)
-              $installedExe = @($installedFiles | Where-Object { $_.Extension -ieq '.exe' })
-              if ($installedExe.Count -eq 0) { throw "MSI reported success but no EXE files were installed under $installDir." }
-              $result.InstallTest = "success (exit $($installProcess.ExitCode); $($installedExe.Count) EXE files)"
-              $result.MainExecutables = @($installedExe | ForEach-Object { $_.Name })
-              $createdShortcuts = [System.Collections.Generic.List[string]]::new()
-              $shortcutRoots = @(
-                (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'),
-                (Join-Path $env:USERPROFILE 'Desktop'),
-                (Join-Path $env:PUBLIC 'Desktop')
-              )
-              foreach ($shortcutRoot in $shortcutRoots) {
-                if (-not (Test-Path -LiteralPath $shortcutRoot -PathType Container)) { continue }
-                foreach ($shortcut in Get-ChildItem -LiteralPath $shortcutRoot -Filter '*.lnk' -File -Recurse -ErrorAction SilentlyContinue) {
-                  $target = $shell.CreateShortcut($shortcut.FullName).TargetPath
-                  if ($target -and $target.StartsWith($installDir,[System.StringComparison]::OrdinalIgnoreCase)) { $createdShortcuts.Add($shortcut.FullName) }
-                }
-              }
-              if ($createdShortcuts.Count -eq 0) { throw "MSI installed files but created no Start Menu/Desktop shortcut. See $installLog." }
-              $result.ShortcutRows = @($createdShortcuts.ToArray())
-
-              $uninstallArgs = @('/x', ('"{0}"' -f $msiPath), '/qn', '/norestart', '/L*V', ('"{0}"' -f $uninstallLog))
-              $uninstallProcess = Start-Process -FilePath 'msiexec.exe' -ArgumentList $uninstallArgs -Wait -PassThru -ErrorAction Stop
-              if ($uninstallProcess.ExitCode -notin @(0,3010)) { throw "MSI uninstall exit code $($uninstallProcess.ExitCode). Log: $uninstallLog" }
-              $deadline = [DateTimeOffset]::UtcNow.AddSeconds(20)
-              while ((Test-Path -LiteralPath $installDir) -and [DateTimeOffset]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 500 }
-              $result.InstallDirRemoved = -not (Test-Path -LiteralPath $installDir)
-              $result.ShortcutsRemoved = @($createdShortcuts | Where-Object { Test-Path -LiteralPath $_ }).Count -eq 0
-              if (-not $result.InstallDirRemoved) { throw "MSI uninstall left application files under $installDir." }
-              if (-not $result.ShortcutsRemoved) { throw "MSI uninstall left shortcuts behind." }
-              $result.UninstallTest = "success (exit $($uninstallProcess.ExitCode))"
-              Write-Host "$($package.Name): lifecycle passed; ProductCode=$($result.ProductCode); ProductVersion=$($result.ProductVersion); signature=$($result.SignatureStatus)"
-            } catch {
-              $result.Error = $_.Exception.Message
-              $failures.Add("$($package.Name): $($result.Error)")
-              Write-Error "$($package.Name): $($result.Error)" -ErrorAction Continue
-              if ($result.ProductCode -and (Test-Path -LiteralPath $installDir)) {
-                try { Start-Process msiexec.exe -ArgumentList @('/x',$result.ProductCode,'/qn','/norestart') -Wait -PassThru | Out-Null }
-                catch { Write-Warning "Best-effort cleanup failed for $($package.Name): $($_.Exception.Message)" }
-              }
-            } finally {
-              $results.Add([PSCustomObject]$result)
-            }
-          }
-
-          $results | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $reports 'msi-audit.json') -Encoding utf8
-          $results | Export-Csv -LiteralPath (Join-Path $reports 'msi-audit.csv') -NoTypeInformation -Encoding utf8
-          @(
-            '## Pake V3.18.0 MSI audit'
-            ''
-            '| App | SHA-256 | ProductVersion | ProductCode | Install | Uninstall | Signature |'
-            '|---|---|---|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.ActualSha256) | $($item.ProductVersion) | $($item.ProductCode) | $($item.InstallTest) | $($item.UninstallTest) | $($item.SignatureStatus) |"
-            }
-            ''
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-
-          if ($results.Count -ne $packages.Count) { throw "Only $($results.Count) of $($packages.Count) MSI packages were audited." }
-          if ($failures.Count -gt 0) { throw "MSI audit failures: $($failures -join [Environment]::NewLine)" }
-          if (($results | Select-Object -ExpandProperty ProductCode -Unique).Count -ne $packages.Count) {
-            throw 'Pake MSI packages do not have unique ProductCodes.'
-          }
-
-      - name: Upload MSI audit evidence
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: pake-v3-18-0-windows-msi-audit
-          path: ${{ runner.temp }}/pake-app-msi-audit/
-          if-no-files-found: warn
-          retention-days: 14
-) { throw "MSI ProductCode is missing or invalid: '$($result.ProductCode)'." }
+              if (-not $result.ProductCode -or $result.ProductCode -notmatch '^\{[0-9A-Fa-f-]{36}\}$') { throw "MSI ProductCode is missing or invalid: '$($result.ProductCode)'." }
               if ($productCodes.ContainsKey($result.ProductCode)) { throw "Duplicate ProductCode: $($result.ProductCode) also used by $($productCodes[$result.ProductCode])." }
               $productCodes[$result.ProductCode] = $package.Name
 
@@ -227,11 +139,14 @@ jobs:
               )
               $installProcess = Start-Process -FilePath 'msiexec.exe' -ArgumentList $installArgs -Wait -PassThru -ErrorAction Stop
               if ($installProcess.ExitCode -notin @(0,3010)) { throw "MSI install exit code $($installProcess.ExitCode). Log: $installLog" }
+              $installed = $true
 
               $installedFiles = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -Force -ErrorAction SilentlyContinue)
               $installedExe = @($installedFiles | Where-Object { $_.Extension -ieq '.exe' })
               if ($installedExe.Count -eq 0) { throw "MSI reported success but no EXE files were installed under $installDir." }
+              $result.MainExecutables = @($installedExe | ForEach-Object { $_.Name })
               $result.InstallTest = "success (exit $($installProcess.ExitCode); $($installedExe.Count) EXE files)"
+
               $createdShortcuts = [System.Collections.Generic.List[string]]::new()
               $shortcutRoots = @(
                 (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'),
@@ -246,10 +161,12 @@ jobs:
                 }
               }
               if ($createdShortcuts.Count -eq 0) { throw "MSI installed files but created no Start Menu/Desktop shortcut. See $installLog." }
+              $result.ShortcutsCreated = @($createdShortcuts.ToArray())
 
               $uninstallArgs = @('/x', ('"{0}"' -f $msiPath), '/qn', '/norestart', '/L*V', ('"{0}"' -f $uninstallLog))
               $uninstallProcess = Start-Process -FilePath 'msiexec.exe' -ArgumentList $uninstallArgs -Wait -PassThru -ErrorAction Stop
               if ($uninstallProcess.ExitCode -notin @(0,3010)) { throw "MSI uninstall exit code $($uninstallProcess.ExitCode). Log: $uninstallLog" }
+              $installed = $false
               $deadline = [DateTimeOffset]::UtcNow.AddSeconds(20)
               while ((Test-Path -LiteralPath $installDir) -and [DateTimeOffset]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 500 }
               $result.InstallDirRemoved = -not (Test-Path -LiteralPath $installDir)
@@ -262,7 +179,7 @@ jobs:
               $result.Error = $_.Exception.Message
               $failures.Add("$($package.Name): $($result.Error)")
               Write-Error "$($package.Name): $($result.Error)" -ErrorAction Continue
-              if ($result.ProductCode -and (Test-Path -LiteralPath $installDir)) {
+              if ($installed -and $result.ProductCode) {
                 try { Start-Process msiexec.exe -ArgumentList @('/x',$result.ProductCode,'/qn','/norestart') -Wait -PassThru | Out-Null }
                 catch { Write-Warning "Best-effort cleanup failed for $($package.Name): $($_.Exception.Message)" }
               }
