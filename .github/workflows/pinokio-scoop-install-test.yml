@@ -1,0 +1,72 @@
+name: Pinokio Scoop Installer Smoke Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/pinokio.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Verify NSIS install path and Scoop cleanup
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Pinokio into a Scoop-style version directory
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pinokio.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          $downloadUrl = ([string]$manifest.url -split '#', 2)[0]
+          $installDir = Join-Path $env:RUNNER_TEMP 'Scoop\apps\pinokio\8.3.7'
+          $setupPath = Join-Path $installDir 'Pinokio-Setup.exe'
+
+          New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+          Invoke-WebRequest -Uri $downloadUrl -OutFile $setupPath -MaximumRedirection 10 -TimeoutSec 300
+
+          $actualHash = (Get-FileHash -LiteralPath $setupPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expectedHash = ([string]$manifest.hash).ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) {
+            throw "Pinokio installer SHA-256 mismatch. Expected $expectedHash; received $actualHash."
+          }
+          Write-Host "Pinokio installer SHA-256 verified: $actualHash"
+
+          # Match the NSIS arguments declared in the Scoop manifest.
+          # Keep /D last and unquoted, as required by NSIS.
+          $arguments = "/S /D=$installDir"
+          $process = Start-Process -FilePath $setupPath -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "Pinokio NSIS installer exited with code $($process.ExitCode)."
+          }
+
+          $application = Join-Path $installDir 'Pinokio.exe'
+          $uninstaller = Join-Path $installDir 'Uninstall Pinokio.exe'
+          if (-not (Test-Path -LiteralPath $application -PathType Leaf)) {
+            $entries = @(Get-ChildItem -LiteralPath $installDir -Force | Select-Object -ExpandProperty Name)
+            throw "NSIS did not install Pinokio.exe into the Scoop version directory. Found: $($entries -join ', ')"
+          }
+          if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
+            throw 'NSIS did not create Uninstall Pinokio.exe in the Scoop version directory.'
+          }
+
+          # Scoop removes the downloaded installer after running it. Verify that
+          # the app executable survives because the downloaded filename differs.
+          Remove-Item -LiteralPath $setupPath -Force
+          if (-not (Test-Path -LiteralPath $application -PathType Leaf)) {
+            throw 'Scoop-style installer cleanup removed Pinokio.exe; the shim target would be missing.'
+          }
+
+          $appInfo = Get-Item -LiteralPath $application
+          Write-Host "PASS: Pinokio.exe survived Scoop-style setup cleanup ($($appInfo.Length) bytes)."
+          Write-Host "PASS: NSIS uninstaller exists: $uninstaller"
+          Write-Host "Verified install directory: $installDir"
