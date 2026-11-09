@@ -117,6 +117,7 @@ jobs:
 
             if ($changedPaths -contains 'bucket/pake-desktop.json') {
               $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
+              $targetProduct = 'Pake Desktop'
               if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
               $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
               $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
@@ -127,6 +128,7 @@ jobs:
               if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Pake Desktop hash, when supplied, must be a 64-character SHA-256 digest.' }
             } elseif ($changedPaths -contains 'bucket/autooff.json') {
               $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/autooff.json'
+              $targetProduct = 'AutoOff'
               if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
               $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
               $url = [string]$manifest.url
