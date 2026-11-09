@@ -10,7 +10,7 @@
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
 | Download Managers | 21 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 75 | [View](#file-management) |
+| File Management | 81 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1001**
+**Total unique manifests: 1007**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -228,6 +228,12 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [archive-rclick](../bucket/archive-rclick.json) | 1.3.2 | 15.7 MiB | 2026-10-24 | Portable Windows archive manager with GUI/CLI, split archives, and hardened extraction. | [Homepage](https://github.com/kirinonakar/ArchiveRclick) |
+| [archivemount](../bucket/archivemount.json) | 1.2.0 | 64bit: 1.5 MiB / arm64: 3.7 MiB / 32bit: 1.5 MiB | 2026-09-17 | Mounts supported archive files as virtual file systems on Windows. | [Homepage](https://github.com/FirTech/ArchiveMount) |
+| [axiom-compress](../bucket/axiom-compress.json) | 0.14.0.0 | 5.2 MiB | 2026-10-05 | Windows archive manager with a custom format, archive updates, parallel compression, and a CLI. | [Homepage](https://github.com/Wimukthi/AxiomCompress) |
+| [cram-cli](../bucket/cram-cli.json) | 1.3.2 | 9.6 MiB | 2026-10-12 | Rust command-line archive tool with deduplication, integrity checks, recovery sidecars, and mounting. | [Homepage](https://nexalit.fr/) |
+| [pakko-cli](../bucket/pakko-cli.json) | 1.9.0 | 64bit: 3.2 MiB / arm64: 3.1 MiB | 2026-10-30 | Standalone Windows archive CLI using .NET compression and Windows tar.exe. | [Homepage](https://github.com/pakkoapp-oss/pakko) |
+| [zmanager-desktop](../bucket/zmanager-desktop.json) | 1.2.7 | 64bit: 37.2 MiB / arm64: 31.9 MiB | 2026-10-31 | Archive manager for archive, disk-image, and filesystem-image formats. | [Homepage](https://github.com/tzap-org/zmanager-desktop) |
 | [aifilesorter](../bucket/aifilesorter.json) | 1.9.2 | — | — | Local AI file organization with categorization and rename suggestions. | [Homepage](https://github.com/hyperfield/ai-file-sorter) |
 | [Auslogics-duplicate-file-finder](../bucket/Auslogics-duplicate-file-finder.json) | 11.2.0.6 | 21.6 MiB | 2026-04-29 | Duplicate file detection utility | [Homepage](https://www.auslogics.com/en/software/duplicate-file-finder/) |
 | [Auslogics-file-recovery](../bucket/Auslogics-file-recovery.json) | 12.2.0.6 | 20.7 MiB | 2026-04-29 | File recovery utility | [Homepage](https://www.auslogics.com/en/software/file-recovery/) |

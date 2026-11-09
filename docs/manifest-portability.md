@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1007 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1013 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -46,6 +46,15 @@ The explicit portability classifications currently cover 871 of the 1007 active 
 ### Pake Desktop 1.4.0
 
 - [`pake-desktop`](../bucket/pake-desktop.json) — **Nonportable**: the official x64 and ARM64 Setup.exe assets are signed by Faberon Technology Limited and identified as Velopack 1.2.158. Both SHA-256 hashes are verified in the installer workflow. The manifest runs the real setup silently with `--installto $dir`; this creates Start Menu/Desktop shortcuts and Velopack registration, so it is Nonportable even though the app files are placed in the Scoop version directory. Removal uses the generated `Update.exe uninstall --silent --rootDir $dir`. Apps created by Pake and the license/gallery cache remain outside Scoop under `%LOCALAPPDATA%`.
+
+### Modern archive tools added on 2026-11-09
+
+- [`zmanager-desktop`](../bucket/zmanager-desktop.json) — **Portable**: uses the official standalone x64/ARM64 Windows portable executable, not the separate NSIS installer or MSIX package. Scoop renames the architecture-specific release asset to `zmanager-desktop.exe` and creates a Start Menu shortcut.
+- [`axiom-compress`](../bucket/axiom-compress.json) — **Portable**: uses the official Windows x64 ZIP. The release packaging documentation identifies `Axiom.exe`, `axiomc.exe`, `AxiomSfx.bin`, `AxiomSfxMini.bin`, and the `backends` directory in the archive; no setup routine is executed. All sidecar files remain together under the Scoop version directory.
+- [`archive-rclick`](../bucket/archive-rclick.json) — **Portable**: uses the official release ZIP. The upstream packaging script copies the GUI executable, CLI, runtime DLLs, shell DLL, and license notices into one release directory, then runs `archive-rclick.exe --check-runtime`. Scoop does not register the optional Explorer shell integration.
+- [`pakko-cli`](../bucket/pakko-cli.json) — **Portable (CLI only)**: uses the upstream Native AOT ZIP for x64/ARM64. The release packaging script creates each ZIP with `pakko.exe` and `Archiver.ArchiveHelper.exe` at the archive root. It does not install the separate WinUI GUI/MSIX package.
+- [`cram-cli`](../bucket/cram-cli.json) — **Portable (CLI only)**: uses the official Windows GNU-target ZIP containing `cram.exe`, `cram-extract.exe`, `cram_shell.dll`, and `libwinpthread-1.dll`. Scoop does not run `cram shell install` or install the separate proprietary Cram Studio application.
+- [`archivemount`](../bucket/archivemount.json) — **Portable (standalone EXE)**: uses the official standalone x86/x64/ARM64 executables. The application requires WinFsp to be installed separately; this manifest does not install its driver or service.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
@@ -206,12 +215,18 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-This is the single review register. It contains 102 active manifests in `bucket/` with outstanding technical checks: the 98 legacy review manifests migrated into `bucket/`, `tinywall-shirazadam.json`, and the four notch manifests listed in this table. Some assets and SHA-256 digests are verified, but that alone does not establish successful extraction, installation, launch, update, or uninstall behavior. The same table also records 10 notch project candidates that do not currently have a usable independent Scoop manifest; these are project-review entries, not active bucket manifests, and are not included in the count of 102.
+This is the single review register. It contains 102 active manifests in `bucket/` with outstanding technical checks: the 98 legacy review manifests migrated into `bucket/`, `tinywall-shirazadam.json`, and the four notch manifests listed in this table. Some assets and SHA-256 digests are verified, but that alone does not establish successful extraction, installation, launch, update, or uninstall behavior. The same table also records 16 project candidates that do not currently have a usable independent Scoop manifest: 10 notch projects plus six archive-related projects or GUI distributions recorded below. These are project-review entries, not active bucket manifests, and are not included in the count of 102.
 
 All existing manifest files remain in `bucket/`. Record outstanding review status and supporting evidence in this section; do not create a separate manifest-staging directory.
 
 | Manifest / project | Installer/package or source status | Outstanding verification / blocker |
 | --- | --- | --- |
+| [7-Zip ZS](https://github.com/mcmilk/7-Zip-zstd) | Full Windows setup EXE; separate codec-only 7z archive | The full package installs a GUI and modifies Explorer integration; inspect its installer engine, silent/custom-directory switches, and uninstall lifecycle before making a manifest. The codec archive only extends an existing 7-Zip installation and is not a standalone application. |
+| [Cram Studio](https://github.com/lukr54/cram) | Separate proprietary Windows GUI setup EXE | Only the command-line Cram package is included in this change. Studio's setup engine, silent parameters, installation path, and uninstaller behavior remain unverified. |
+| [fastZIP](https://github.com/cccccyccccc/fastZIP) | Source build; v0.2.0 release has no Windows binary assets | The README documents `cargo build --release`, but no downloadable Windows package is published. A pinned Windows build and verified executable/package layout are needed. |
+| [FYZ Archiver](https://fycodz.com/fyz) | Microsoft Store distribution | The official product page directs users to Microsoft Store; no independent portable/standalone Windows package or public source repository was verified for Scoop. |
+| [OtterZip](https://github.com/LumiBearStudio/OtterZip) | ZIP wrapper for certificate registration plus MSIX installation | The official installation process runs `Install.ps1`, registers the publisher certificate, then installs the MSIX. A Scoop-safe certificate and package removal lifecycle was not established, so do not classify it as Portable. |
+| [Pakko GUI](https://github.com/pakkoapp-oss/pakko) | MSIX / Microsoft Store; separate CLI ZIP available | This change provides only `pakko-cli`; the GUI MSIX is signed with the project's development certificate and/or distributed through the Store. A Scoop-managed GUI install and certificate cleanup are not established. |
 | [anton](../bucket/anton.json) | Windows setup EXE (engine unverified) | The official endpoint redirects to a setup EXE, but no publisher SHA-256 is available and installer/uninstaller behavior is unknown. |
 | [autooff](../bucket/autooff.json) | Windows setup EXE (engine unverified) | The official 4.25 release has no published SHA-256. Installer engine, payload extraction, silent switches, custom installation path, and cleanup remain unverified. |
 | [crowdsec-windows-firewall-bouncer](../bucket/crowdsec-windows-firewall-bouncer.json) | MSI / Windows service | The MSI registers a Windows service and performs bouncer-registration custom actions; it requires .NET 10. A Scoop-safe dependency and service lifecycle have not been established. |
