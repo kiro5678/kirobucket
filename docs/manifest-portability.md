@@ -127,7 +127,7 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | RMSKIN package | [quanto-flx](../bucket/quanto-flx.json) | 1 |
 | SCR package | [ghost-saver](../bucket/ghost-saver.json) | 1 |
 | TAR.GZ archive | [0install-win](../bucket/0install-win.json) | 1 |
-| **Total** | **All bucket manifests** | **1032** |
+| **Total** | **All bucket manifests** | **1031** |
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
 ## Nonportable manifests by installer type
