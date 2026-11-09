@@ -1,30 +1,32 @@
 {
     "version": "0.8.8",
-    "description": "Desktop AI assistant for running local language models and managing private, model-powered chats.",
-    "homepage": "https://github.com/janhq/jan",
-    "license": "Apache-2.0",
+    "description": "An open source alternative to ChatGPT that runs 100% offline on your computer",
+    "homepage": "https://jan.ai",
+    "license": "AGPL-3.0-only",
+    "suggest": {
+        "vcredist": "extras/vcredist2022",
+        "Microsoft Edge WebView2": "extras/webview2"
+    },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/janhq/jan/releases/download/v0.8.8/Jan_0.8.8_x64-setup.exe",
+            "url": "https://github.com/janhq/jan/releases/download/v0.8.8/Jan_0.8.8_x64-setup.exe#/dl.7z",
             "hash": "08aca371733b76200e44e95d677cdd15e96609f86f919de57b97a5358ca21e9b"
-        },
-        "arm64": {
-            "url": "https://github.com/janhq/jan/releases/download/v0.8.8/Jan_0.8.8_arm64-setup.exe",
-            "hash": "4df9072f7bc93907c2ae04448120a897a54c0e349cf482adbaecd2f98694c392"
         }
     },
+    "post_install": "Remove-Item \"$dir\\`$*\", \"$dir\\Uninst*\" -Recurse -ErrorAction Ignore",
+    "shortcuts": [
+        [
+            "Jan-Desktop.exe",
+            "Jan"
+        ]
+    ],
     "checkver": {
-        "url": "https://api.github.com/repos/janhq/jan/releases/latest",
-        "jsonpath": "$.tag_name",
-        "regex": "^v(?<version>[\\d.]+)$"
+        "github": "https://github.com/janhq/jan"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/janhq/jan/releases/download/v$version/Jan_$version_x64-setup.exe"
-            },
-            "arm64": {
-                "url": "https://github.com/janhq/jan/releases/download/v$version/Jan_$version_arm64-setup.exe"
+                "url": "https://github.com/janhq/jan/releases/download/v$version/Jan_$version_x64-setup.exe#/dl.7z"
             }
         }
     }
