@@ -1,0 +1,91 @@
+name: Pake Generated MSI Inspection
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [master]
+    paths:
+      - 'bucket/chatgpt.json'
+      - 'bucket/deepseek.json'
+      - 'bucket/excalidraw.json'
+      - 'bucket/flomo.json'
+      - 'bucket/gemini.json'
+      - 'bucket/grok.json'
+      - 'bucket/lizhi.json'
+      - 'bucket/notion.json'
+      - 'bucket/programmusic.json'
+      - 'bucket/qwerty.json'
+      - 'bucket/twitter.json'
+      - 'bucket/wechat.json'
+      - 'bucket/weread.json'
+      - 'bucket/xiaohongshu.json'
+      - 'bucket/youtubemusic.json'
+      - 'bucket/youtube.json'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-msi:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download, hash, and administratively extract every Pake MSI
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $names = @('chatgpt', 'deepseek', 'excalidraw', 'flomo', 'gemini', 'grok', 'lizhi', 'notion', 'programmusic', 'qwerty', 'twitter', 'wechat', 'weread', 'xiaohongshu', 'youtubemusic', 'youtube')
+          $root = Join-Path $env:RUNNER_TEMP 'pake-msi-inspection'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $report = [System.Collections.Generic.List[string]]::new()
+
+          foreach ($name in $names) {
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE "bucket/$name.json"
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+            $installer = Join-Path $root "$name.msi"
+            $target = Join-Path $root $name
+            New-Item -ItemType Directory -Path $target -Force | Out-Null
+
+            Invoke-WebRequest -Uri $manifest.url -OutFile $installer
+            $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $manifest.hash.ToLowerInvariant()) {
+              throw "SHA-256 mismatch for $name. Expected $($manifest.hash), got $actual"
+            }
+
+            $arguments = @('/a', "`"$installer`"", '/qn', "TARGETDIR=`"$target`"")
+            $process = Start-Process -FilePath "$env:WINDIR\System32\msiexec.exe" -ArgumentList $arguments -Wait -PassThru
+            if ($process.ExitCode -notin @(0, 3010)) {
+              throw "Administrative MSI extraction failed for $name with exit code $($process.ExitCode)"
+            }
+
+            $executables = @(Get-ChildItem -LiteralPath $target -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue)
+            if ($executables.Count -eq 0) {
+              throw "No EXE files found after administrative extraction for $name"
+            }
+
+            $report.Add("[$name] SHA256=$actual")
+            foreach ($exe in $executables) {
+              $relative = $exe.FullName.Substring($target.Length).TrimStart('\')
+              $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+              $report.Add("  EXE: $relative | Product=$($info.ProductName) | Description=$($info.FileDescription)")
+            }
+            Write-Output "Extracted $name: $($executables.Count) EXE file(s)"
+          }
+
+          $reportPath = Join-Path $root 'inspection-report.txt'
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+
+      - name: Upload inspection report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pake-generated-msi-inspection
+          path: ${{ runner.temp }}/pake-msi-inspection/inspection-report.txt
+          if-no-files-found: error
