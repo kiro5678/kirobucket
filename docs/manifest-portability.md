@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1006 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1007 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -23,13 +23,13 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 807 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 63 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Nonportable | 64 | Velopack setup, EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 136 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **1006** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| **Total** | **1007** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 870 of the 1006 active bucket manifests (807 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 871 of the 1007 active bucket manifests (807 Portable and 64 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
@@ -43,6 +43,10 @@ The explicit portability classifications currently cover 870 of the 1006 active 
 - [`explorer-dialog-path-selector-thiojoe`](../bucket/explorer-dialog-path-selector-thiojoe.json) — **Portable**: uses the official standalone signed EXE; Scoop does not run the MSI or create its Startup-folder shortcut. Because the app uses UIAccess, its interaction with elevated Open/Save dialogs may be limited when launched from the Scoop app directory instead of Program Files.
 - [`double-keypress-monitor-thiojoe`](../bucket/double-keypress-monitor-thiojoe.json) — **Portable**: downloads the official standalone EXE without running an installer. Its `double_press_log.log` file is persisted by Scoop across updates.
 - [`thio-universal-agent-thiojoe`](../bucket/thio-universal-agent-thiojoe.json) — **Portable**: downloads the official single-file x64 executable; no installer or Windows registration is run. The upstream license permits personal use only. Human Control Only Mode is enabled by default; disabling it allows the agent to send mouse and keyboard input.
+### Pake Desktop 1.4.0
+
+- [`pake-desktop`](../bucket/pake-desktop.json) — **Nonportable**: the official x64 Setup.exe is signed by Faberon Technology Limited and identified as Velopack 1.2.158. The manifest runs the real setup silently with `--installto $dir`; this creates Start Menu/Desktop shortcuts and Velopack registration, so it is Nonportable even though the app files are placed in the Scoop version directory. Removal uses the generated `Update.exe uninstall --silent --rootDir $dir`. Apps created by Pake and the license/gallery cache remain outside Scoop under `%LOCALAPPDATA%`.
+
 ### KeptInFlow 0.89.0 NSIS extraction
 
 - [`keptinflow`](../bucket/keptinflow.json) — **Portable**: Detect It Easy 4.0.0 identified the official setup as NSIS 3.11. 7-Zip 26.05 listed and extracted the payload successfully; `keptinflow.exe`, `keptinflow-lockhelper.exe`, and `uninstall.exe` are at the payload root, with no nested archives. The extracted main executable stayed running during a 15-second direct-launch test. The manifest does not run the NSIS setup, install the Lock Helper service, or add startup registration. The optional phone-at-sign-in feature requires a service and firewall rule, and the helper requires a Program Files location.
@@ -88,12 +92,13 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | RMSKIN package | [quanto-flx](../bucket/quanto-flx.json) | 1 |
 | SCR package | [ghost-saver](../bucket/ghost-saver.json) | 1 |
 | TAR.GZ archive | [0install-win](../bucket/0install-win.json) | 1 |
-| **Total** | **All bucket manifests** | **1006** |
+| Velopack setup | [pake-desktop](../bucket/pake-desktop.json) | 1 |
+| **Total** | **All bucket manifests** | **1007** |
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
 ## Nonportable manifests by installer type
 
-This index groups the 63 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 64 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
@@ -122,7 +127,8 @@ This index groups the 63 Nonportable manifests by the exact installer/package la
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
 | NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
-| **Total** | **All Nonportable manifests** | **63** |
+| Velopack Setup | [pake-desktop](../bucket/pake-desktop.json) | 1 |
+| **Total** | **All Nonportable manifests** | **64** |
 
 ## Nonportable manifests
 
@@ -175,6 +181,7 @@ The installer type describes the package or setup technology used by the manifes
 | [openedr](../bucket/openedr.json) | MSI | Runs `msiexec /i`; installs the OpenEDR endpoint agent through Windows Installer. |
 | [openglass](../bucket/openglass.json) | Inno | Runs the signed setup with Inno Setup silent-install arguments. |
 | [openzfs-np](../bucket/openzfs-np.json) | Inno Setup-style EXE (based on switches) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
+| [pake-desktop](../bucket/pake-desktop.json) | Velopack Setup | Runs the official per-user Velopack installer silently into the Scoop version directory. It creates Start Menu/Desktop shortcuts and Velopack registration; the manifest calls `Update.exe uninstall --silent --rootDir $dir` during removal. Pake-generated apps and the license/gallery cache remain separately under the user's LocalAppData. |
 | [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
 | [prime-files](../bucket/prime-files.json) | Inno | Runs the official Inno Setup installation, which creates its normal Windows installation state and Start Menu entry. The optional indexer service is only enabled from inside the application; setup can also install the Visual C++ runtime or enable Media Feature Pack on Windows N. |
 | [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
