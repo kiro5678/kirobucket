@@ -76,7 +76,7 @@ jobs:
               $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
               $report.Add("  EXE: $relative | Product=$($info.ProductName) | Description=$($info.FileDescription)")
             }
-            Write-Output "Extracted $name: $($executables.Count) EXE file(s)"
+            Write-Output "Extracted ${name}: $($executables.Count) EXE file(s)"
           }
 
           $reportPath = Join-Path $root 'inspection-report.txt'
