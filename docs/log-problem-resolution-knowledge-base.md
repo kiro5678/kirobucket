@@ -50,6 +50,17 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-10 — Promote the successful Pake Desktop extraction manifest
+
+- **Status:** Resolved, repository validation pending.
+- **Affected area:** `bucket/pake-desktop.json`, removed `bucket/pake-desktop-extracted-test.json`, `docs/categories.md`, and `docs/manifest-portability.md`.
+- **Problem:** The canonical Pake Desktop manifest ran the official Velopack setup, which could fail during Scoop reinstall because the running setup process held the version directory that Velopack needed to replace. A separate extraction-only manifest had succeeded in the user's installation test but remained named as an experimental package.
+- **Root cause:** The setup program performs an in-place Velopack installation/update operation. The embedded `lib\\app` application payload can instead be extracted without running that setup process.
+- **Resolution:** Replaced the canonical manifest with the tested 7-Zip payload-extraction definition, retained the verified x64 download hash and real `Pake.exe` launch path, renamed the Start Menu shortcut to `Pake Desktop`, and removed the duplicate experimental manifest. ARM64 was intentionally omitted because only x64 extraction/install was tested. The manifest notes that Velopack self-updating is unavailable and Scoop must manage updates.
+- **Verification:** The user explicitly confirmed that installation with the extraction-only manifest succeeded. Repository PR checks and post-merge workflow results remain pending; no broader claim about a separate ARM64 test or GUI regression suite is made here.
+- **Prevention:** When a setup process must replace its own Scoop version directory, do not launch it from within that directory. Verify any embedded archive independently, confirm the extracted `extract_dir` and executable path, and promote an extraction-based manifest only for the architectures actually tested.
+
+
 ### 2026-11-09 — Fix Scoop schema validation for hop, HatchZip, and Prime Files
 
 - **Status:** Resolved and verified.
