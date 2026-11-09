@@ -3,7 +3,7 @@
     "description": "Simple Network Time Protocol (SNTP) client for Windows that synchronizes the system clock.",
     "homepage": "https://www.timesynctool.com/",
     "license": "GPL-3.0-only",
-    "url": "https://www.timesynctool.com/NetTimeSetup-320a3.exe",
+    "url": "https://www.timesynctool.com/Unsigned/NetTimeSetup-320a3.exe",
     "hash": "27a27e8b1b84d484544ab7f28a30fbc997c2c9b9409879f1f9c9571fc847aef3",
     "innosetup": true,
     "bin": "NetTime.exe",
@@ -19,7 +19,7 @@
         "replace": "${version}a${alpha}"
     },
     "autoupdate": {
-        "url": "https://www.timesynctool.com/NetTimeSetup-$matchFile.exe"
+        "url": "https://www.timesynctool.com/Unsigned/NetTimeSetup-$matchFile.exe"
     },
     "notes": "Scoop extracts the Inno Setup application payload without running the vendor installer. The NetTime Windows service is therefore not registered by this manifest; launch NetTime.exe for tray-client mode. Use the vendor installer if you require the Windows service."
 }
