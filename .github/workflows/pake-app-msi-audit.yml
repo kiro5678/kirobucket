@@ -65,7 +65,7 @@ jobs:
             }
             $value = [string]$record.StringData(1)
             $view.Close()
-            return $value
+            return $value.Trim()
           }
 
           $results = [System.Collections.Generic.List[object]]::new()
