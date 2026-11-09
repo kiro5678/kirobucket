@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1007 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1023 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,14 +22,14 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 808 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 824 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 63 | Velopack setup, EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 136 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **1007** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| **Total** | **1023** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 871 of the 1007 active bucket manifests (808 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 887 of the 1023 active bucket manifests (824 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
@@ -47,6 +47,28 @@ The explicit portability classifications currently cover 871 of the 1007 active 
 
 - [`pake-desktop`](../bucket/pake-desktop.json) — **Nonportable**: the official x64 and ARM64 Setup.exe assets are signed by Faberon Technology Limited and identified as Velopack 1.2.158. Both SHA-256 hashes are verified in the installer workflow. The manifest runs the real setup silently with `--installto $dir`; this creates Start Menu/Desktop shortcuts and Velopack registration, so it is Nonportable even though the app files are placed in the Scoop version directory. Removal uses the generated `Update.exe uninstall --silent --rootDir $dir`. Apps created by Pake and the license/gallery cache remain outside Scoop under `%LOCALAPPDATA%`.
 
+### Pake-generated MSI web apps V3.18.0
+
+The 16 Windows x64 app packages from Pake V3.18.0 use Scoop's native MSI administrative extraction (`msiexec /a`) instead of running the MSI's normal per-machine installation sequence. GitHub Actions run [42640117453](https://github.com/kiro5678/kirobucket/actions/runs/42640117453) verified every published MSI SHA-256, extracted all 16 packages successfully, and confirmed each main executable path listed below. The manifests use those verified paths for Scoop shims and Start Menu shortcuts; they do not apply the MSI's Windows Installer registry or shortcut registrations.
+
+This is a **Portable MSI payload extraction** classification based on the Scoop deployment method. The extracted applications require Microsoft Edge WebView2 Runtime, which is not bundled in these MSIs. The workflow verifies package hashes, extracted files, and launch paths; it does not perform an interactive GUI launch test. The WeChat build enables incognito mode in Pake's upstream app configuration.
+
+- [`chatgpt-pake`](../bucket/chatgpt-pake.json) — `PFiles\ChatGPT\pake-chatgpt.exe`.
+- [`deepseek`](../bucket/deepseek.json) — `PFiles\DeepSeek\pake-deepseek.exe`.
+- [`excalidraw`](../bucket/excalidraw.json) — `PFiles\Excalidraw\pake-excalidraw.exe`.
+- [`flomo`](../bucket/flomo.json) — `PFiles\Flomo\pake-flomo.exe`.
+- [`gemini`](../bucket/gemini.json) — `PFiles\Gemini\pake-gemini.exe`.
+- [`grok`](../bucket/grok.json) — `PFiles\Grok\pake-grok.exe`.
+- [`lizhi`](../bucket/lizhi.json) — `PFiles\LiZhi\pake-lizhi.exe`.
+- [`notion`](../bucket/notion.json) — `PFiles\Notion\pake-notion.exe`.
+- [`programmusic`](../bucket/programmusic.json) — `PFiles\ProgramMusic\pake-programmusic.exe`.
+- [`qwerty`](../bucket/qwerty.json) — `PFiles\Qwerty\pake-qwerty.exe`.
+- [`twitter`](../bucket/twitter.json) — `PFiles\Twitter\pake-twitter.exe`.
+- [`wechat`](../bucket/wechat.json) — `PFiles\WeChat\pake-wechat.exe`.
+- [`weread`](../bucket/weread.json) — `PFiles\WeRead\pake-weread.exe`.
+- [`xiaohongshu`](../bucket/xiaohongshu.json) — `PFiles\XiaoHongShu\pake-xiaohongshu.exe`.
+- [`youtubemusic`](../bucket/youtubemusic.json) — `PFiles\YouTubeMusic\pake-youtubemusic.exe`.
+- [`youtube`](../bucket/youtube.json) — `PFiles\YouTube\pake-youtube.exe`.
 ### KeptInFlow 0.89.0 NSIS extraction
 
 - [`keptinflow`](../bucket/keptinflow.json) — **Portable**: Detect It Easy 4.0.0 identified the official setup as NSIS 3.11. 7-Zip 26.05 listed and extracted the payload successfully; `keptinflow.exe`, `keptinflow-lockhelper.exe`, and `uninstall.exe` are at the payload root, with no nested archives. The extracted main executable stayed running during a 15-second direct-launch test. The manifest does not run the NSIS setup, install the Lock Helper service, or add startup registration. The optional phone-at-sign-in feature requires a service and firewall rule, and the helper requires a Program Files location.
