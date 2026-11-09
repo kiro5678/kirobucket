@@ -1,0 +1,18 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-generated desktop client for Qwerty.",
+    "homepage": "https://github.com/tw93/Pake",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V3.18.0/Qwerty_x64.msi",
+    "hash": "83062862ac17780e4bed079b6ad0c1bf3b37b0fd027d05f0fdf6586e2fdddbcb",
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "regex": "\"tag_name\"\\s*:\\s*\"V([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/Qwerty_x64.msi",
+        "hash": {
+            "mode": "download"
+        }
+    }
+}
