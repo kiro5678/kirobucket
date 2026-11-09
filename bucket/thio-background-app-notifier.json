@@ -8,7 +8,7 @@
     "bin": "Thio-Background-App-Notifier_1.4.1.exe",
     "shortcuts": [
         [
-            "Thio-Background-App-Notifier_$version.exe",
+            "Thio-Background-App-Notifier_1.4.1.exe",
             "Thio Background App Notifier - ThioJoe"
         ]
     ],
@@ -21,7 +21,7 @@
         "shortcuts": [
             [
                 "Thio-Background-App-Notifier_$version.exe",
-                "Thio Background App Notifier"
+                "Thio Background App Notifier - ThioJoe"
             ]
         ],
         "hash": {
