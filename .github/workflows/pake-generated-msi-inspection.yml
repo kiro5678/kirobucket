@@ -6,22 +6,22 @@ on:
     types: [opened, synchronize, reopened]
     branches: [master]
     paths:
-      - 'bucket/chatgpt-pake.json'
-      - 'bucket/deepseek.json'
-      - 'bucket/excalidraw.json'
-      - 'bucket/flomo.json'
-      - 'bucket/gemini.json'
-      - 'bucket/grok.json'
-      - 'bucket/lizhi.json'
-      - 'bucket/notion.json'
-      - 'bucket/programmusic.json'
-      - 'bucket/qwerty.json'
-      - 'bucket/twitter.json'
-      - 'bucket/wechat.json'
-      - 'bucket/weread.json'
-      - 'bucket/xiaohongshu.json'
-      - 'bucket/youtubemusic.json'
-      - 'bucket/youtube.json'
+      - 'bucket/pake-chatgpt.json'
+      - 'bucket/pake-deepseek.json'
+      - 'bucket/pake-excalidraw.json'
+      - 'bucket/pake-flomo.json'
+      - 'bucket/pake-gemini.json'
+      - 'bucket/pake-grok.json'
+      - 'bucket/pake-lizhi.json'
+      - 'bucket/pake-notion.json'
+      - 'bucket/pake-programmusic.json'
+      - 'bucket/pake-qwerty.json'
+      - 'bucket/pake-twitter.json'
+      - 'bucket/pake-wechat.json'
+      - 'bucket/pake-weread.json'
+      - 'bucket/pake-xiaohongshu.json'
+      - 'bucket/pake-youtubemusic.json'
+      - 'bucket/pake-youtube.json'
 
 permissions:
   contents: read
@@ -41,7 +41,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $names = @('chatgpt-pake', 'deepseek', 'excalidraw', 'flomo', 'gemini', 'grok', 'lizhi', 'notion', 'programmusic', 'qwerty', 'twitter', 'wechat', 'weread', 'xiaohongshu', 'youtubemusic', 'youtube')
+          $names = @('pake-chatgpt', 'pake-deepseek', 'pake-excalidraw', 'pake-flomo', 'pake-gemini', 'pake-grok', 'pake-lizhi', 'pake-notion', 'pake-programmusic', 'pake-qwerty', 'pake-twitter', 'pake-wechat', 'pake-weread', 'pake-xiaohongshu', 'pake-youtubemusic', 'pake-youtube')
           $root = Join-Path $env:RUNNER_TEMP 'pake-msi-inspection'
           New-Item -ItemType Directory -Path $root -Force | Out-Null
           $report = [System.Collections.Generic.List[string]]::new()
