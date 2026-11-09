@@ -21,7 +21,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 22 | [View](#notes-knowledge) |
-| Other Utilities | 110 | [View](#other-utilities) |
+| Other Utilities | 112 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
 | Productivity & Launchers | 37 | [View](#productivity-launchers) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1017**
+**Total unique manifests: 1019**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -662,6 +662,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mystify](../bucket/mystify.json) | 1.1 | 8.4 MiB | 2022-04-07 | Modern Windows Forms recreation of the classic Mystify Your Mind animation. | [Homepage](https://github.com/swharden/Mystify) |
 | [peerblock-paf](../bucket/peerblock-paf.json) | 1.2.0.1 | 3.5 MiB | 2023-12-04 | PeerBlock Plus Portable with a combined blocklist that is automatically updated daily. | [Homepage](https://portableapps.com/apps/security/peerblock-portable) |
 | [pake-desktop](../bucket/pake-desktop.json) | 1.4.0 | 64bit: 109.1 MiB / arm64: 104.6 MiB | 2026-11-07 | Turn websites into standalone desktop apps with a graphical interface. | [Homepage](https://pake.run/) |
+| [pinokio](../bucket/pinokio.json) | 8.3.7 | 64bit: 148.5 MiB | 2026-11-05 | Local AI launcher for installing and managing AI applications, models, runtimes, and dependencies from scripts. | [Homepage](https://desktop.pinokio.co/) |
 | [pulse-launcher](../bucket/pulse-launcher.json) | 0.1 | 24.3 MiB | 2026-08-08 | Lightweight Qt/QML application launcher for Windows with a global Alt+Space hotkey and Start Menu application discovery. | [Homepage](https://github.com/thefxng/Pulse) |
 | [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | 14.7 MiB | 2025-07-18 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | 82.4 MiB | 2025-04-02 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
@@ -749,6 +750,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [taskslinger](../bucket/taskslinger.json) | 0.9.5 | 2.6 MiB | — | Native Windows Task Manager replacement with process monitoring, performance graphs, services, startup apps, and network connections. | [Homepage](https://taskslinger.net/) |
 | [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) | 0.5.2 | 80.0 MiB | 2026-05-31 | AI desktop agent that guides or automates GUI interactions across Windows applications. | [Homepage](https://github.com/ThioJoe/Thio-Universal-Agent) |
 | [tinywall-shirazadam](../bucket/tinywall-shirazadam.json) | 4.0.0 | 64bit: 100.0 MiB / 32bit: 76.7 MiB / arm64: 95.6 MiB | 2026-11-06 | Experimental modern WinUI 3 desktop client for the TinyWall Windows firewall. | [Homepage](https://github.com/ShirazAdam/TinyWall) |
+| [unsloth](../bucket/unsloth.json) | 0.1.916-beta | 64bit: 20.7 MiB / arm64: 20.1 MiB | 2026-11-06 | Desktop app for running, fine-tuning, and serving local LLMs and diffusion models, including GGUF and MLX. | [Homepage](https://unsloth.ai/) |
 | [udm-pro](../bucket/udm-pro.json) | 2.6.35 | 223.8 MiB | 2026-11-05 | Windows download manager for files, videos, torrents, and supported cloud uploads. | [Homepage](https://github.com/Shalaby2/UDM-Pro) |
 | [vcredist-aio](../bucket/vcredist-aio.json) | 0.106.0 | 31.1 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes (x86 and x64), including legacy runtimes and the current 2022/2026 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
 | [visual-cpp-redist-aio-arm64](../bucket/visual-cpp-redist-aio-arm64.json) | 0.106.0 | arm64: 19.3 MiB | 2026-10-14 | All-in-one installer for Microsoft Visual C++ Redistributable runtimes for Windows ARM64, including legacy x86 and current ARM64 packages. | [Homepage](https://github.com/abbodi1406/vcredist) |
