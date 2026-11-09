@@ -68,7 +68,7 @@ jobs:
                 $rows.Add(@($values.ToArray()))
               }
               $view.Close()
-              return @($rows.ToArray())
+              return ,$rows.ToArray()
             } catch { return @() }
           }
           function Get-MsiProperty {
