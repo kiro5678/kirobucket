@@ -1,0 +1,18 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-generated desktop client for LiZhi.",
+    "homepage": "https://github.com/tw93/Pake",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V3.18.0/LiZhi_x64.msi",
+    "hash": "592627035e8e8579513c106ea93c7981ec28e2f2d52faccb0131977e887cc77e",
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "regex": "\"tag_name\"\\s*:\\s*\"V([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/LiZhi_x64.msi",
+        "hash": {
+            "mode": "download"
+        }
+    }
+}
