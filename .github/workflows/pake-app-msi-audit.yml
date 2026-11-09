@@ -116,11 +116,11 @@ jobs:
               if ($file.Length -lt 1000000) { throw "MSI is unexpectedly small: $($file.Length) bytes." }
 
               $database = $installer.OpenDatabase($msiPath, 0)
-              $result.ProductName = Get-MsiProperty $database 'ProductName'
-              $result.ProductVersion = Get-MsiProperty $database 'ProductVersion'
-              $result.Manufacturer = Get-MsiProperty $database 'Manufacturer'
-              $result.ProductCode = Get-MsiProperty $database 'ProductCode'
-              $result.InstallScope = Get-MsiProperty $database 'ALLUSERS'
+              $result.ProductName = ([string](Get-MsiProperty $database 'ProductName')).Trim()
+              $result.ProductVersion = ([string](Get-MsiProperty $database 'ProductVersion')).Trim()
+              $result.Manufacturer = ([string](Get-MsiProperty $database 'Manufacturer')).Trim()
+              $result.ProductCode = ([string](Get-MsiProperty $database 'ProductCode')).Trim()
+              $result.InstallScope = ([string](Get-MsiProperty $database 'ALLUSERS')).Trim()
 
                             $normalizedProductName = ([string]$result.ProductName).Trim()
               if ($normalizedProductName -ne $package.Name) { throw "MSI ProductName '$normalizedProductName' does not match expected app '$($package.Name)' (raw='$($result.ProductName)')." }
