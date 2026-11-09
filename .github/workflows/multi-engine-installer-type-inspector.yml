@@ -24,15 +24,18 @@ on:
       - 'bucket/majorprivacy.json'
       - 'bucket/keptinflow.json'
       - 'bucket/wintousb.json'
+      - 'bucket/pake-desktop.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
       - master
     paths:
       - 'bucket/autooff.json'
+      - 'bucket/pake-desktop.json'
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   inspect:
@@ -47,6 +50,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Resolve installer URL and checksum
         id: source
@@ -56,8 +60,11 @@ jobs:
           INPUT_INSTALLER_URL: ${{ inputs.installer_url }}
           INPUT_INSTALLER_NAME: ${{ inputs.installer_name }}
           INPUT_EXPECTED_SHA256: ${{ inputs.expected_sha256 }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
+          $arm64Url = ''
+          $expectedArm64Hash = ''
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $url = $env:INPUT_INSTALLER_URL.Trim()
@@ -67,10 +74,15 @@ jobs:
           } elseif ($env:EVENT_NAME -eq 'push') {
             $pushEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
             $changedPaths = @($pushEvent.head_commit.added) + @($pushEvent.head_commit.modified) + @($pushEvent.head_commit.removed)
+            $runForPake = $changedPaths -contains 'bucket/pake-desktop.json'
             $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'bucket/keptinflow.json')
             $runForWinToUSB = ($pushEvent.head_commit.message -match '(?i)WinToUSB') -or ($changedPaths -contains 'bucket/wintousb.json')
 
-            if ($runForKeptInFlow) {
+            if ($runForPake) {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
+              $officialReleasePrefix = 'https://pake.run/updates/windows/'
+              $targetProduct = 'Pake Desktop'
+            } elseif ($runForKeptInFlow) {
               $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/keptinflow.json'
               $officialReleasePrefix = 'https://github.com/jwwpua/keptinflow-releases/releases/download/'
               $targetProduct = 'KeptInFlow'
@@ -86,6 +98,13 @@ jobs:
 
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            if ($targetProduct -eq 'Pake Desktop') {
+              $arm64Source = $manifest.architecture.arm64
+              $arm64Url = [string]$arm64Source.url
+              $expectedArm64Hash = [string]$arm64Source.hash
+              if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
+              if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+            }
             $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
             $url = [string]$source.url
             $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
@@ -93,14 +112,47 @@ jobs:
             if (-not $url.StartsWith($officialReleasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) { throw "Manifest URL is not an official $targetProduct release asset." }
             if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw "Manifest SHA-256 for $targetProduct must be a 64-character hexadecimal digest." }
           } elseif ($env:EVENT_NAME -eq 'pull_request') {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/autooff.json'
-            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
-            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
-            $url = [string]$manifest.url
-            if ($url -notlike 'https://github.com/pintosoft/AutoOff/releases/download/*') { throw 'Manifest URL is not an official AutoOff release asset.' }
-            $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
-            $expectedHash = [string]$manifest.hash
-            if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Manifest hash, when supplied, must be a 64-character SHA-256 digest.' }
+            $pullRequestEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
+            $baseSha = [string]$pullRequestEvent.pull_request.base.sha
+            $headSha = [string]$pullRequestEvent.pull_request.head.sha
+            if ([string]::IsNullOrWhiteSpace($baseSha) -or [string]::IsNullOrWhiteSpace($headSha)) {
+              throw 'Pull request event is missing the base or head commit SHA.'
+            }
+            $changedPaths = @(& git -C $env:GITHUB_WORKSPACE diff --name-only "$baseSha...$headSha")
+            if ($LASTEXITCODE -ne 0) {
+              throw 'Could not calculate changed paths from the pull request base and head commits.'
+            }
+            Write-Output "Pull request changed paths: $($changedPaths -join ', ')"
+
+            if ($changedPaths -contains 'bucket/pake-desktop.json') {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
+              $targetProduct = 'Pake Desktop'
+              if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+              $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+              $arm64Source = $manifest.architecture.arm64
+              $arm64Url = [string]$arm64Source.url
+              $expectedArm64Hash = [string]$arm64Source.hash
+              if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
+              if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+              $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
+              $url = [string]$source.url
+              if ($url -notlike 'https://pake.run/updates/windows/Tw93.Pake-win-*-Setup.exe') { throw 'Manifest URL is not an official Pake Desktop Windows installer.' }
+              $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
+              $expectedHash = [string]$source.hash
+              if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Pake Desktop hash, when supplied, must be a 64-character SHA-256 digest.' }
+            } elseif ($changedPaths -contains 'bucket/autooff.json') {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/autooff.json'
+              $targetProduct = 'AutoOff'
+              if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+              $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+              $url = [string]$manifest.url
+              if ($url -notlike 'https://github.com/pintosoft/AutoOff/releases/download/*') { throw 'Manifest URL is not an official AutoOff release asset.' }
+              $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
+              $expectedHash = [string]$manifest.hash
+              if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Manifest hash, when supplied, must be a 64-character SHA-256 digest.' }
+            } else {
+              throw 'Pull request does not modify a supported installer-inspection manifest.'
+            }
           } else {
             throw "Unsupported event '$($env:EVENT_NAME)'."
           }
@@ -108,6 +160,9 @@ jobs:
           "installer_url=$url" >> $env:GITHUB_OUTPUT
           "installer_name=$name" >> $env:GITHUB_OUTPUT
           "expected_sha256=$expectedHash" >> $env:GITHUB_OUTPUT
+          "arm64_installer_url=$arm64Url" >> $env:GITHUB_OUTPUT
+          "expected_arm64_sha256=$expectedArm64Hash" >> $env:GITHUB_OUTPUT
+          "target_product=$targetProduct" >> $env:GITHUB_OUTPUT
           Write-Output "Inspection target resolved for event $($env:EVENT_NAME): $name"
 
       - name: Validate and download target file
@@ -576,10 +631,229 @@ jobs:
             $scanOutput
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+      - name: Inspect and extract embedded setup payload without executing
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $workDir = Join-Path $env:RUNNER_TEMP "detect-it-easy-api"
+          $reportPath = Join-Path $workDir "embedded-archive-inventory.txt"
+          $extractDir = Join-Path $workDir "pake-setup-payload"
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+
+          $sevenZipCandidates = @(
+            (Join-Path $env:ProgramFiles "7-Zip\7z.exe"),
+            (Join-Path $env:ProgramFiles "7-Zip\7za.exe"),
+            (Join-Path $env:ProgramFiles "7-Zip\7zr.exe")
+          )
+          $sevenZip = $sevenZipCandidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          if (-not $sevenZip) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not $sevenZip) { throw "7-Zip command-line utility was not found on the Windows runner." }
+
+          $archiveName = [System.IO.Path]::GetFileName($env:INSTALLER_PATH)
+          Push-Location $workDir
+          try {
+            Write-Output "7-Zip executable: $sevenZip"
+            Write-Output "Archive filename: $archiveName"
+            $listing = @(& $sevenZip l -slt ".\$archiveName" 2>&1 | ForEach-Object { "$_" })
+            $listExitCode = $LASTEXITCODE
+            $listing | Set-Content -LiteralPath (Join-Path $workDir "embedded-archive-listing.txt") -Encoding utf8
+            $entryCount = @($listing | Where-Object { $_ -match '^Path = ' }).Count - 1
+            $totalUnpackedBytes = 0L
+            foreach ($line in $listing) {
+              if ($line -match '^Size = (\d+)$') { $totalUnpackedBytes += [int64]$Matches[1] }
+            }
+
+            if ($entryCount -le 0) { throw "7-Zip did not find any embedded archive entries (exit code $listExitCode)." }
+            if ($entryCount -gt 3000) { throw "Embedded archive has too many entries ($entryCount); refusing extraction." }
+            if ($totalUnpackedBytes -gt 3221225472) { throw "Embedded archive expands beyond the 3 GiB safety limit." }
+            if ($listExitCode -gt 1) { Write-Warning "7-Zip reported exit code $listExitCode while listing; proceeding only because it returned archive entries." }
+
+            $extractOutput = @(& $sevenZip x -y "-o$extractDir" ".\$archiveName" 2>&1 | ForEach-Object { "$_" })
+            $extractExitCode = $LASTEXITCODE
+            $extractOutput | Set-Content -LiteralPath (Join-Path $workDir "embedded-archive-extraction.txt") -Encoding utf8
+            if ($extractExitCode -gt 1) {
+              throw "7-Zip could not extract the embedded archive (exit code $extractExitCode)."
+            }
+          } finally {
+            Pop-Location
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $extractDir -Recurse -File -Force)
+          $directories = @(Get-ChildItem -LiteralPath $extractDir -Recurse -Directory -Force)
+          if ($files.Count -eq 0) { throw "7-Zip completed without extracting any files." }
+          $interesting = $files | Where-Object {
+            $_.Extension -in @(".exe", ".dll", ".msi", ".msix", ".json", ".toml", ".config") -or
+            $_.Name -match '(?i)uninstall|setup|install|pake|tauri|manifest|bundle'
+          } | Sort-Object FullName | ForEach-Object {
+            $relative = $_.FullName.Substring($extractDir.Length).TrimStart('\')
+            "$relative" + [char]9 + "$($_.Length) bytes"
+          }
+
+          $report = @(
+            "Embedded setup archive inventory"
+            "================================"
+            "Source installer: $archiveName"
+            "7-Zip: $sevenZip"
+            "Archive entries: $entryCount"
+            "Reported uncompressed size: $totalUnpackedBytes bytes"
+            "Extracted files: $($files.Count)"
+            "Extracted directories: $($directories.Count)"
+            ""
+            "Executable, library, setup and metadata files:"
+            $interesting
+            ""
+            "Top-level entries:"
+            (Get-ChildItem -LiteralPath $extractDir -Force | Sort-Object Name | ForEach-Object { $_.Name })
+            ""
+            "Safety note: files were listed and extracted for static inspection only; no extracted file was executed."
+          )
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Test Pake x64 install/uninstall and verify ARM64 installer
+        if: steps.source.outputs.target_product == 'Pake Desktop'
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          EXPECTED_SHA256: ${{ steps.source.outputs.expected_sha256 }}
+          ARM64_INSTALLER_URL: ${{ steps.source.outputs.arm64_installer_url }}
+          EXPECTED_ARM64_SHA256: ${{ steps.source.outputs.expected_arm64_sha256 }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $workDir = Join-Path $env:RUNNER_TEMP 'pake-desktop-verification'
+          New-Item -ItemType Directory -Path $workDir -Force | Out-Null
+
+          $armUrl = $env:ARM64_INSTALLER_URL
+          if ($armUrl -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw "Unexpected Pake Desktop ARM64 URL: $armUrl" }
+          if ($env:EXPECTED_ARM64_SHA256.Length -ne 64) { throw 'Missing or invalid Pake Desktop ARM64 SHA-256 in manifest.' }
+          $armPath = Join-Path $workDir 'Tw93.Pake-win-arm64-Setup.exe'
+          Invoke-WebRequest -Uri $armUrl -OutFile $armPath -MaximumRedirection 10 -TimeoutSec 300
+
+          $armFile = Get-Item -LiteralPath $armPath
+          if ($armFile.Length -lt 1000000) { throw "ARM64 installer is unexpectedly small ($($armFile.Length) bytes)." }
+          $armHash = (Get-FileHash -LiteralPath $armPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($armHash -ne $env:EXPECTED_ARM64_SHA256.ToLowerInvariant()) {
+            throw "ARM64 SHA-256 mismatch. Expected $env:EXPECTED_ARM64_SHA256, got $armHash."
+          }
+          $armSignature = Get-AuthenticodeSignature -FilePath $armPath
+          if ($armSignature.Status -ne 'Valid') { throw "ARM64 Authenticode signature is not valid: $($armSignature.Status)." }
+          if ($armSignature.SignerCertificate.Subject -notmatch 'Faberon Technology Limited') {
+            throw "ARM64 installer signer is unexpected: $($armSignature.SignerCertificate.Subject)."
+          }
+          $armVersionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($armPath)
+          if ($armVersionInfo.ProductName -ne 'Pake') { throw "ARM64 ProductName is '$($armVersionInfo.ProductName)', expected 'Pake'." }
+
+          $x64Hash = (Get-FileHash -LiteralPath $env:INSTALLER_PATH -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($x64Hash -ne $env:EXPECTED_SHA256.ToLowerInvariant()) {
+            throw "x64 SHA-256 mismatch. Expected $env:EXPECTED_SHA256, got $x64Hash."
+          }
+
+          @(
+            'Pake Desktop installer verification'
+            '==================================='
+            "x64 SHA-256: $x64Hash"
+            "ARM64 SHA-256: $armHash"
+            "ARM64 size: $($armFile.Length) bytes"
+            "ARM64 Authenticode: $($armSignature.Status)"
+            "ARM64 signer: $($armSignature.SignerCertificate.Subject)"
+            "ARM64 product version: $($armVersionInfo.FileVersion)"
+            ''
+          ) | Set-Content -LiteralPath (Join-Path $workDir 'installer-hashes-and-signatures.txt') -Encoding utf8
+
+          $installDir = Join-Path $env:RUNNER_TEMP 'PakeScoopSmokeTest'
+          $setupLog = Join-Path $workDir 'setup-install.log'
+          $shell = New-Object -ComObject WScript.Shell
+          if (Test-Path -LiteralPath $installDir) {
+            Remove-Item -LiteralPath $installDir -Recurse -Force
+          }
+
+          $installProcess = Start-Process -FilePath $env:INSTALLER_PATH -ArgumentList @(
+            '--silent',
+            '--installto', $installDir,
+            '--log', $setupLog
+          ) -Wait -PassThru -NoNewWindow
+          if ($installProcess.ExitCode -ne 0) {
+            throw "Velopack Setup.exe returned exit code $($installProcess.ExitCode). See $setupLog."
+          }
+
+          $requiredFiles = @(
+            (Join-Path $installDir 'Pake.exe'),
+            (Join-Path $installDir 'Update.exe'),
+            (Join-Path $installDir 'current\Pake.exe')
+          )
+          foreach ($requiredFile in $requiredFiles) {
+            if (-not (Test-Path -LiteralPath $requiredFile -PathType Leaf)) {
+              throw "Expected installed file was not created: $requiredFile"
+            }
+          }
+
+          $shortcutRoots = @(
+            (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'),
+            (Join-Path $env:USERPROFILE 'Desktop')
+          )
+          $createdShortcuts = [System.Collections.Generic.List[string]]::new()
+          foreach ($root in $shortcutRoots) {
+            if (-not (Test-Path -LiteralPath $root -PathType Container)) { continue }
+            foreach ($shortcut in Get-ChildItem -LiteralPath $root -Filter '*.lnk' -File -Recurse -ErrorAction SilentlyContinue) {
+              $target = $shell.CreateShortcut($shortcut.FullName).TargetPath
+              if ($target -and $target.StartsWith($installDir, [System.StringComparison]::OrdinalIgnoreCase)) {
+                $createdShortcuts.Add($shortcut.FullName)
+              }
+            }
+          }
+          if ($createdShortcuts.Count -eq 0) {
+            throw 'Setup.exe did not create a Start Menu or Desktop shortcut targeting the installation directory.'
+          }
+
+          $updateExe = Join-Path $installDir 'Update.exe'
+          $uninstallProcess = Start-Process -FilePath $updateExe -ArgumentList @(
+            'uninstall',
+            '--silent',
+            '--rootDir', $installDir
+          ) -Wait -PassThru -NoNewWindow
+          if ($uninstallProcess.ExitCode -ne 0) {
+            throw "Update.exe uninstall returned exit code $($uninstallProcess.ExitCode)."
+          }
+
+          $deadline = [DateTimeOffset]::UtcNow.AddSeconds(15)
+          while ((Test-Path -LiteralPath $installDir) -and [DateTimeOffset]::UtcNow -lt $deadline) {
+            Start-Sleep -Milliseconds 500
+          }
+          if (Test-Path -LiteralPath $installDir) {
+            throw "Velopack uninstaller left the application directory behind: $installDir"
+          }
+
+          $remainingShortcuts = @($createdShortcuts | Where-Object { Test-Path -LiteralPath $_ })
+          if ($remainingShortcuts.Count -gt 0) {
+            throw "Velopack uninstaller left shortcuts behind: $($remainingShortcuts -join ', ')"
+          }
+
+          @(
+            '## Pake Desktop install/uninstall test'
+            ''
+            "- x64 SHA-256 verified: $x64Hash"
+            "- ARM64 SHA-256: $armHash"
+            "- ARM64 signer verified: $($armSignature.SignerCertificate.Subject)"
+            '- x64 Velopack Setup.exe completed successfully.'
+            '- Verified root Pake.exe, Update.exe and current\Pake.exe.'
+            "- Verified $($createdShortcuts.Count) created shortcuts were removed."
+            '- Update.exe uninstall --silent --rootDir completed successfully.'
+            '- Verified the installation directory was removed.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: installer-type-inspection-report
-          path: ${{ runner.temp }}/detect-it-easy-api/*.txt
+          path: |
+            ${{ runner.temp }}/detect-it-easy-api/*.txt
+            ${{ runner.temp }}/pake-desktop-verification/*
           if-no-files-found: ignore
