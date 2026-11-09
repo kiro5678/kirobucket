@@ -1,0 +1,18 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-generated desktop client for Notion.",
+    "homepage": "https://github.com/tw93/Pake",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V3.18.0/Notion_x64.msi",
+    "hash": "ca4b40e807213616b6bc14964e5fdc3bc3193647cf743873fa9d6868ea47986a",
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "regex": "\"tag_name\"\\s*:\\s*\"V([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/Notion_x64.msi",
+        "hash": {
+            "mode": "download"
+        }
+    }
+}
