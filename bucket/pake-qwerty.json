@@ -1,0 +1,38 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-built Qwerty web app packaged as a lightweight Windows desktop wrapper.",
+    "homepage": "https://qwerty.kaiyi.cool/",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V$version/Qwerty_x64.msi#/setup.msi_",
+    "hash": "83062862ac17780e4bed079b6ad0c1bf3b37b0fd027d05f0fdf6586e2fdddbcb",
+    "installer": {
+        "script": [
+            "$msi = Join-Path $dir 'setup.msi_'",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw \"Pake Qwerty MSI not found: $msi\" }",
+            "$log = Join-Path $dir 'pake-qwerty-msi-install.log'",
+            "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/i', \"`\"$msi`\"\", '/qn', '/norestart', \"INSTALLDIR=`\"$dir`\"\", '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
+            "if ($process.ExitCode -notin @(0, 3010)) { throw \"Pake Qwerty MSI installation failed with exit code $($process.ExitCode). Log: $log\" }"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "$msi = Join-Path $dir 'setup.msi_'",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw \"Pake Qwerty MSI not found: $msi. Refusing to remove Scoop files while Windows Installer registration may remain.\" }",
+            "$log = Join-Path $dir 'pake-qwerty-msi-uninstall.log'",
+            "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/x', \"`\"$msi`\"\", '/qn', '/norestart', '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
+            "if ($process.ExitCode -notin @(0, 3010)) { throw \"Pake Qwerty MSI uninstallation failed with exit code $($process.ExitCode). Log: $log\" }"
+        ]
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^V(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/Qwerty_x64.msi#/setup.msi_",
+        "hash": {
+            "mode": "download"
+        }
+    },
+    "notes": "This is the Pake-built Qwerty web wrapper, not the service provider's native Windows client. Its official MSI is per-machine and requires administrator approval. Scoop sets INSTALLDIR so the application files stay in this Scoop version directory; Windows Installer owns the application registration and Start Menu/Desktop shortcuts. Requires Microsoft Edge WebView2 Runtime. Windows Installer exit code 3010 means a reboot is required; Scoop does not restart Windows automatically."
+}
