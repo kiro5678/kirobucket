@@ -1,0 +1,38 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-built Twitter web app packaged as a lightweight Windows desktop wrapper.",
+    "homepage": "https://x.com/",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V$version/Twitter_x64.msi#/setup.msi_",
+    "hash": "9a91fa942c9ab625463fb6fe5e5547f6fa85869e7199fa8100e8fb27b66cde25",
+    "installer": {
+        "script": [
+            "$msi = Join-Path $dir 'setup.msi_'",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw \"Pake Twitter MSI not found: $msi\" }",
+            "$log = Join-Path $dir 'pake-twitter-msi-install.log'",
+            "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/i', \"`\"$msi`\"\", '/qn', '/norestart', \"INSTALLDIR=`\"$dir`\"\", '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
+            "if ($process.ExitCode -notin @(0, 3010)) { throw \"Pake Twitter MSI installation failed with exit code $($process.ExitCode). Log: $log\" }"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "$msi = Join-Path $dir 'setup.msi_'",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw \"Pake Twitter MSI not found: $msi. Refusing to remove Scoop files while Windows Installer registration may remain.\" }",
+            "$log = Join-Path $dir 'pake-twitter-msi-uninstall.log'",
+            "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/x', \"`\"$msi`\"\", '/qn', '/norestart', '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
+            "if ($process.ExitCode -notin @(0, 3010)) { throw \"Pake Twitter MSI uninstallation failed with exit code $($process.ExitCode). Log: $log\" }"
+        ]
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^V(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/Twitter_x64.msi#/setup.msi_",
+        "hash": {
+            "mode": "download"
+        }
+    },
+    "notes": "This is the Pake-built Twitter web wrapper, not the service provider's native Windows client. Its official MSI is per-machine and requires administrator approval. Scoop sets INSTALLDIR so the application files stay in this Scoop version directory; Windows Installer owns the application registration and Start Menu/Desktop shortcuts. Requires Microsoft Edge WebView2 Runtime. Windows Installer exit code 3010 means a reboot is required; Scoop does not restart Windows automatically."
+}
