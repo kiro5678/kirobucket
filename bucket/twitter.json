@@ -1,0 +1,18 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-generated desktop client for Twitter (X).",
+    "homepage": "https://github.com/tw93/Pake",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V3.18.0/Twitter_x64.msi",
+    "hash": "9a91fa942c9ab625463fb6fe5e5547f6fa85869e7199fa8100e8fb27b66cde25",
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "regex": "\"tag_name\"\\s*:\\s*\"V([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/Twitter_x64.msi",
+        "hash": {
+            "mode": "download"
+        }
+    }
+}
