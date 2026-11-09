@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1003 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1006 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,14 +22,14 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 804 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 807 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 63 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 136 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **1003** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| **Total** | **1006** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 867 of the 1003 active bucket manifests (804 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 870 of the 1006 active bucket manifests (807 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
@@ -38,6 +38,11 @@ The explicit portability classifications currently cover 867 of the 1003 active 
 - [`prime-files`](../bucket/prime-files.json) — **Nonportable**: the manifest runs the official Inno Setup installer, which creates the vendor installation state and Start Menu entry, and can install the Visual C++ runtime or enable Media Feature Pack on Windows N. The optional indexer service is installed only when enabled inside the application.
 - [`wintousb`](../bucket/wintousb.json) — **Nonportable**: the official WinToUSB 10.9 installer is Inno Setup. Scoop runs the normal setup silently, keeps the program files under its version directory, and retains the official uninstaller for update/removal.
 
+### ThioJoe manifests added on 2026-11-09
+
+- [`explorer-dialog-path-selector-thiojoe`](../bucket/explorer-dialog-path-selector-thiojoe.json) — **Portable**: uses the official standalone signed EXE; Scoop does not run the MSI or create its Startup-folder shortcut. Because the app uses UIAccess, its interaction with elevated Open/Save dialogs may be limited when launched from the Scoop app directory instead of Program Files.
+- [`double-keypress-monitor-thiojoe`](../bucket/double-keypress-monitor-thiojoe.json) — **Portable**: downloads the official standalone EXE without running an installer. Its `double_press_log.log` file is persisted by Scoop across updates.
+- [`thio-universal-agent-thiojoe`](../bucket/thio-universal-agent-thiojoe.json) — **Portable**: downloads the official single-file x64 executable; no installer or Windows registration is run. The upstream license permits personal use only. Human Control Only Mode is enabled by default; disabling it allows the agent to send mouse and keyboard input.
 ### KeptInFlow 0.89.0 NSIS extraction
 
 - [`keptinflow`](../bucket/keptinflow.json) — **Portable**: Detect It Easy 4.0.0 identified the official setup as NSIS 3.11. 7-Zip 26.05 listed and extracted the payload successfully; `keptinflow.exe`, `keptinflow-lockhelper.exe`, and `uninstall.exe` are at the payload root, with no nested archives. The extracted main executable stayed running during a 15-second direct-launch test. The manifest does not run the NSIS setup, install the Lock Helper service, or add startup registration. The optional phone-at-sign-in feature requires a service and firewall rule, and the helper requires a Program Files location.
@@ -329,7 +334,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | Direct NSIS payload extraction | NSIS EXE whose files are directly readable by 7-Zip | [rust-meow](../bucket/rust-meow.json) | `#/dl.7z` extracts the NSIS container directly; 7-Zip 26.05 verified extraction of `rust-meow.exe` and `rust-meow-backend.exe` without executing the setup routine. |
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [handy](../bucket/handy.json), [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | The manifest passes a vendor-supported portable-mode option. Handy's NSIS template and upstream CI validate `/S /PORTABLE /D=$dir`; its `Data` directory is persisted by Scoop. |
 | Setup executable used only as an extractor | Portable self-extracting EXE or Inno Setup portable bundle | [veracrypt](../bucket/veracrypt.json), [hxd.chs](../bucket/hxd.chs.json) | The manifest uses the setup program only to extract application files; it does not perform the normal installation. |
-| File-only or direct portable payload | ZIP, 7Z, or standalone EXE | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [dlives](../bucket/dlives.json), [qnotch](../bucket/qnotch.json), [winisland](../bucket/winisland.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json), [biniware-translation-tool](../bucket/biniware-translation-tool.json), [biniware-run](../bucket/biniware-run.json), [launchyqt](../bucket/launchyqt.json), [unquar](../bucket/unquar.json), [vt-uploader-denis-anisimov](../bucket/vt-uploader-denis-anisimov.json), [systemtraymenu](../bucket/systemtraymenu.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
+| File-only or direct portable payload | ZIP, 7Z, or standalone EXE | [filee](../bucket/filee.json), [drift](../bucket/drift.json), [dlives](../bucket/dlives.json), [qnotch](../bucket/qnotch.json), [winisland](../bucket/winisland.json), [bulk-crap-uninstaller](../bucket/bulk-crap-uninstaller.json), [MPOGPUFIX](../bucket/MPOGPUFIX.json), [winzenith](../bucket/winzenith.json), [spotlight-downloader](../bucket/spotlight-downloader.json), [biniware-translation-tool](../bucket/biniware-translation-tool.json), [biniware-run](../bucket/biniware-run.json), [launchyqt](../bucket/launchyqt.json), [unquar](../bucket/unquar.json), [vt-uploader-denis-anisimov](../bucket/vt-uploader-denis-anisimov.json), [systemtraymenu](../bucket/systemtraymenu.json), [explorer-dialog-path-selector-thiojoe](../bucket/explorer-dialog-path-selector-thiojoe.json), [double-keypress-monitor-thiojoe](../bucket/double-keypress-monitor-thiojoe.json), [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) | The manifest downloads an archive or standalone executable without running a Windows installer. |
 | PowerShell script download | Standalone `.ps1` | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) | Scoop downloads the script and creates a Windows PowerShell launcher; it does not run the script or register Windows components during installation. |
 
 ### Portable does not mean system-neutral at runtime
@@ -344,6 +349,9 @@ The classification above concerns what the Scoop manifest does during installati
 | [patchlight](../bucket/patchlight.json) | ZIP archive | The ZIP is extracted; the SYSTEM scheduled task from the vendor setup is not created by the manifest. |
 | [veracrypt](../bucket/veracrypt.json) | Portable self-extracting EXE | The portable files are extracted; mounting volumes loads a driver at runtime and requires administrator privileges. |
 | [winutil](../bucket/winutil.json) | PowerShell script (.ps1) | The manifest downloads a PowerShell script only; the user may run it elevated to change Windows settings, services, registry, apps, and updates. |
+| [explorer-dialog-path-selector-thiojoe](../bucket/explorer-dialog-path-selector-thiojoe.json) | Standalone signed EXE | The executable requests UIAccess. Because Scoop stores it under the Scoop app directory, its UIAccess interaction with elevated Open/Save dialogs may be limited; the upstream MSI installs it under Program Files and creates a Startup shortcut, neither of which this manifest does. |
+| [double-keypress-monitor-thiojoe](../bucket/double-keypress-monitor-thiojoe.json) | Standalone EXE | The monitor reads keyboard Raw Input and writes `double_press_log.log` beside its executable; Scoop persists that log across updates. |
+| [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) | Single-file .NET 10 x64 EXE | Human Control Only Mode is the default. Turning it off allows the AI agent to send mouse and keyboard input; cloud AI providers require the user's own API credentials. |
 | [MPOGPUFIX](../bucket/MPOGPUFIX.json) | ZIP archive | The ZIP is extracted; the utility can change Windows graphics settings when the user runs its repair actions. |
 | [deskstats](../bucket/deskstats.json) | Inno Setup payload extraction | The executable requests administrator rights. The bundled PawnIO sensor driver is not installed by Scoop; the user can explicitly install it from DeskStats when needed. Settings and logs are stored under `%LOCALAPPDATA%\DeskStats`. |
 | [game-overlay](../bucket/game-overlay.json) | ZIP archive | The application self-elevates at runtime for FPS capture, ping detection, and sensor access. Settings remain under `%APPDATA%\GameOverlay`; if CPU temperatures are blocked by Windows' vulnerable-driver blocklist, the upstream-supported fallback is Core Temp. Scoop does not install a driver or change the blocklist. |
