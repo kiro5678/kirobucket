@@ -89,9 +89,13 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             throw 'Could not fetch master.'
           }
-          git reset --hard origin/master
-          if ($LASTEXITCODE -ne 0) {
-            throw 'Could not reset to the latest master.'
+          if ($env:EVENT_NAME -eq 'pull_request') {
+            Write-Host 'Validating the pull request checkout, including its new and renamed manifests.'
+          } else {
+            git reset --hard origin/master
+            if ($LASTEXITCODE -ne 0) {
+              throw 'Could not reset to the latest master.'
+            }
           }
           $validatedHeadSha = (git rev-parse HEAD).Trim()
           if ($LASTEXITCODE -ne 0 -or $validatedHeadSha -notmatch '^[0-9a-fA-F]{40}$') {
