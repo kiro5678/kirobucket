@@ -63,6 +63,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
+          $arm64Url = ''
+          $expectedArm64Hash = ''
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
             $url = $env:INPUT_INSTALLER_URL.Trim()
@@ -96,6 +98,13 @@ jobs:
 
             if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            if ($targetProduct -eq 'Pake Desktop') {
+              $arm64Source = $manifest.architecture.arm64
+              $arm64Url = [string]$arm64Source.url
+              $expectedArm64Hash = [string]$arm64Source.hash
+              if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
+              if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+            }
             $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
             $url = [string]$source.url
             $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
@@ -120,6 +129,11 @@ jobs:
               $targetProduct = 'Pake Desktop'
               if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
               $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+              $arm64Source = $manifest.architecture.arm64
+              $arm64Url = [string]$arm64Source.url
+              $expectedArm64Hash = [string]$arm64Source.hash
+              if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
+              if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
               $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
               $url = [string]$source.url
               if ($url -notlike 'https://pake.run/updates/windows/Tw93.Pake-win-*-Setup.exe') { throw 'Manifest URL is not an official Pake Desktop Windows installer.' }
@@ -146,6 +160,8 @@ jobs:
           "installer_url=$url" >> $env:GITHUB_OUTPUT
           "installer_name=$name" >> $env:GITHUB_OUTPUT
           "expected_sha256=$expectedHash" >> $env:GITHUB_OUTPUT
+          "arm64_installer_url=$arm64Url" >> $env:GITHUB_OUTPUT
+          "expected_arm64_sha256=$expectedArm64Hash" >> $env:GITHUB_OUTPUT
           "target_product=$targetProduct" >> $env:GITHUB_OUTPUT
           Write-Output "Inspection target resolved for event $($env:EVENT_NAME): $name"
 
@@ -706,19 +722,26 @@ jobs:
         env:
           INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
           EXPECTED_SHA256: ${{ steps.source.outputs.expected_sha256 }}
+          ARM64_INSTALLER_URL: ${{ steps.source.outputs.arm64_installer_url }}
+          EXPECTED_ARM64_SHA256: ${{ steps.source.outputs.expected_arm64_sha256 }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
           $workDir = Join-Path $env:RUNNER_TEMP 'pake-desktop-verification'
           New-Item -ItemType Directory -Path $workDir -Force | Out-Null
 
-          $armUrl = 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe'
+          $armUrl = $env:ARM64_INSTALLER_URL
+          if ($armUrl -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw "Unexpected Pake Desktop ARM64 URL: $armUrl" }
+          if ($env:EXPECTED_ARM64_SHA256.Length -ne 64) { throw 'Missing or invalid Pake Desktop ARM64 SHA-256 in manifest.' }
           $armPath = Join-Path $workDir 'Tw93.Pake-win-arm64-Setup.exe'
           Invoke-WebRequest -Uri $armUrl -OutFile $armPath -MaximumRedirection 10 -TimeoutSec 300
 
           $armFile = Get-Item -LiteralPath $armPath
           if ($armFile.Length -lt 1000000) { throw "ARM64 installer is unexpectedly small ($($armFile.Length) bytes)." }
           $armHash = (Get-FileHash -LiteralPath $armPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($armHash -ne $env:EXPECTED_ARM64_SHA256.ToLowerInvariant()) {
+            throw "ARM64 SHA-256 mismatch. Expected $env:EXPECTED_ARM64_SHA256, got $armHash."
+          }
           $armSignature = Get-AuthenticodeSignature -FilePath $armPath
           if ($armSignature.Status -ne 'Valid') { throw "ARM64 Authenticode signature is not valid: $($armSignature.Status)." }
           if ($armSignature.SignerCertificate.Subject -notmatch 'Faberon Technology Limited') {
