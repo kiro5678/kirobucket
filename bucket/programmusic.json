@@ -1,0 +1,18 @@
+{
+    "version": "3.18.0",
+    "description": "Pake-generated desktop client for ProgramMusic.",
+    "homepage": "https://github.com/tw93/Pake",
+    "license": "Unknown",
+    "url": "https://github.com/tw93/Pake/releases/download/V3.18.0/ProgramMusic_x64.msi",
+    "hash": "dd44d747df9ac52d1ed8b618e4dcf7467d97548f0d6102c535061ed6d16345d7",
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Pake/releases/latest",
+        "regex": "\"tag_name\"\\s*:\\s*\"V([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://github.com/tw93/Pake/releases/download/V$version/ProgramMusic_x64.msi",
+        "hash": {
+            "mode": "download"
+        }
+    }
+}
