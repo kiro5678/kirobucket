@@ -16,5 +16,9 @@
     "checkver": {
         "url": "https://www.timesynctool.com/",
         "regex": "Version ([0-9.]+) - Current Stable Version"
-    }
+    },
+    "autoupdate": {
+        "url": "https://www.timesynctool.com/NetTimeSetup-$cleanVersion.exe"
+    },
+    "notes": "Scoop extracts the Inno Setup application payload without running the vendor installer. The NetTime Windows service is therefore not registered by this manifest; launch NetTime.exe for tray-client mode. Use the vendor installer if you require the Windows service."
 }
