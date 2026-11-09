@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1007 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1023 active manifests. The review section below records 99 manifests with outstanding verification checks; 136 active manifests are not reconciled in the explicit classification totals below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -23,13 +23,13 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
 | Portable | 808 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 63 | Velopack setup, EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Nonportable | 79 | Velopack setup, EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 136 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **1007** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| **Total** | **1023** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 871 of the 1007 active bucket manifests (808 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 887 of the 1023 active bucket manifests (808 Portable and 79 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
@@ -46,6 +46,14 @@ The explicit portability classifications currently cover 871 of the 1007 active 
 ### Pake Desktop 1.4.0
 
 - [`pake-desktop`](../bucket/pake-desktop.json) — **Nonportable**: the official x64 and ARM64 Setup.exe assets are signed by Faberon Technology Limited and identified as Velopack 1.2.158. Both SHA-256 hashes are verified in the installer workflow. The manifest runs the real setup silently with `--installto $dir`; this creates Start Menu/Desktop shortcuts and Velopack registration, so it is Nonportable even though the app files are placed in the Scoop version directory. Removal uses the generated `Update.exe uninstall --silent --rootDir $dir`. Apps created by Pake and the license/gallery cache remain outside Scoop under `%LOCALAPPDATA%`.
+
+### Pake V3.18.0 prebuilt Windows web apps
+
+- Added 16 independent `pake-*` manifests for the official Pake-built ChatGPT, DeepSeek, Excalidraw, Flomo, Gemini, Grok, LiZhi, Notion, ProgramMusic, Qwerty, Twitter, WeChat, WeRead, XiaoHongShu, YouTube, and YouTubeMusic MSI packages.
+- All use the official x64 MSI assets and GitHub Release SHA-256 digests. Pake publishes no ARM64 MSI assets for this release.
+- The MSI template declares `InstallScope="perMachine"`, creates Start Menu and Desktop shortcuts, and stores Windows Installer registration. The manifests run the real MSI with elevation and set `INSTALLDIR=$dir`; this keeps application files in the Scoop version directory but remains **Nonportable**. The same retained MSI is used for `msiexec /x` during updates and removal.
+- The Pake Output Exception permits Pake-built outputs to use their own terms but does not itself state a separate license for each prebuilt web wrapper; the manifests therefore use `license: "Unknown"` rather than incorrectly labelling them GPL.
+- Each package requires Microsoft Edge WebView2 Runtime. The Pake wrappers are not the service providers' native Windows clients.
 
 ### KeptInFlow 0.89.0 NSIS extraction
 
@@ -98,13 +106,13 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 63 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 79 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
 | NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 22 |
 | Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [wintousb](../bucket/wintousb.json) | 7 |
-| MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json), [tinywall](../bucket/tinywall.json) | 5 |
+| MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json), [pake-chatgpt](../bucket/pake-chatgpt.json), [pake-deepseek](../bucket/pake-deepseek.json), [pake-excalidraw](../bucket/pake-excalidraw.json), [pake-flomo](../bucket/pake-flomo.json), [pake-gemini](../bucket/pake-gemini.json), [pake-grok](../bucket/pake-grok.json), [pake-lizhi](../bucket/pake-lizhi.json), [pake-notion](../bucket/pake-notion.json), [pake-programmusic](../bucket/pake-programmusic.json), [pake-qwerty](../bucket/pake-qwerty.json), [pake-twitter](../bucket/pake-twitter.json), [pake-wechat](../bucket/pake-wechat.json), [pake-weread](../bucket/pake-weread.json), [pake-xiaohongshu](../bucket/pake-xiaohongshu.json), [pake-youtube](../bucket/pake-youtube.json), [pake-youtubemusic](../bucket/pake-youtubemusic.json), [tinywall](../bucket/tinywall.json) | 21 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
 | NVIDIA self-extracting EXE + setup.exe | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json), [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 2 |
@@ -128,7 +136,7 @@ This index groups the 63 Nonportable manifests by the exact installer/package la
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
 | NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
 | Velopack Setup | [pake-desktop](../bucket/pake-desktop.json) | 1 |
-| **Total** | **All Nonportable manifests** | **63** |
+| **Total** | **All Nonportable manifests** | **79** |
 
 ## Nonportable manifests
 
@@ -181,7 +189,23 @@ The installer type describes the package or setup technology used by the manifes
 | [openedr](../bucket/openedr.json) | MSI | Runs `msiexec /i`; installs the OpenEDR endpoint agent through Windows Installer. |
 | [openglass](../bucket/openglass.json) | Inno | Runs the signed setup with Inno Setup silent-install arguments. |
 | [openzfs-np](../bucket/openzfs-np.json) | Inno Setup-style EXE (based on switches) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
+| [pake-chatgpt](../bucket/pake-chatgpt.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-deepseek](../bucket/pake-deepseek.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
 | [pake-desktop](../bucket/pake-desktop.json) | Velopack Setup | Runs the official per-user Velopack installer for x64 or ARM64 silently into the Scoop version directory. It creates Start Menu/Desktop shortcuts and Velopack registration; the manifest calls `Update.exe uninstall --silent --rootDir $dir` during removal. Pake-generated apps and the license/gallery cache remain separately under the user's LocalAppData. |
+| [pake-excalidraw](../bucket/pake-excalidraw.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-flomo](../bucket/pake-flomo.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-gemini](../bucket/pake-gemini.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-grok](../bucket/pake-grok.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-lizhi](../bucket/pake-lizhi.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-notion](../bucket/pake-notion.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-programmusic](../bucket/pake-programmusic.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-qwerty](../bucket/pake-qwerty.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-twitter](../bucket/pake-twitter.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-wechat](../bucket/pake-wechat.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-weread](../bucket/pake-weread.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-xiaohongshu](../bucket/pake-xiaohongshu.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-youtube](../bucket/pake-youtube.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
+| [pake-youtubemusic](../bucket/pake-youtubemusic.json) | MSI | Runs the official Pake per-machine MSI with elevation and sets INSTALLDIR to the Scoop version directory. Windows Installer creates and removes its Start Menu/Desktop shortcuts and maintains the installation registration. |
 | [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
 | [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
 | [recordly](../bucket/recordly.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
