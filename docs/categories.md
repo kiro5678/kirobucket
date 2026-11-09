@@ -21,7 +21,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 20 | [View](#notes-knowledge) |
-| Other Utilities | 106 | [View](#other-utilities) |
+| Other Utilities | 122 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 30 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1001**
+**Total unique manifests: 1017**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -647,7 +647,23 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mcafee-software-removal](../bucket/mcafee-software-removal.json) | 10.5.374.0 | 12.1 MiB | 2024-11-14 | McAfee Consumer Product Removal tool for removing supported McAfee home security products. | [Homepage](https://www.mcafee.com/support/s/article/000001616?language=en_US) |
 | [mystify](../bucket/mystify.json) | 1.1 | 8.4 MiB | 2022-04-07 | Modern Windows Forms recreation of the classic Mystify Your Mind animation. | [Homepage](https://github.com/swharden/Mystify) |
 | [peerblock-paf](../bucket/peerblock-paf.json) | 1.2.0.1 | 3.5 MiB | 2023-12-04 | PeerBlock Plus Portable with a combined blocklist that is automatically updated daily. | [Homepage](https://portableapps.com/apps/security/peerblock-portable) |
+| [pake-chatgpt](../bucket/pake-chatgpt.json) | 3.18.0 | 3.6 MiB | 2026-11-04 | Pake-built ChatGPT web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://chatgpt.com/) |
+| [pake-deepseek](../bucket/pake-deepseek.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built DeepSeek web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://chat.deepseek.com/) |
 | [pake-desktop](../bucket/pake-desktop.json) | 1.4.0 | 64bit: 109.1 MiB / arm64: 104.6 MiB | 2026-11-07 | Turn websites into standalone desktop apps with a graphical interface. | [Homepage](https://pake.run/) |
+| [pake-excalidraw](../bucket/pake-excalidraw.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built Excalidraw web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://excalidraw.com/) |
+| [pake-flomo](../bucket/pake-flomo.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built Flomo web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://v.flomoapp.com/mine) |
+| [pake-gemini](../bucket/pake-gemini.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built Gemini web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://gemini.google.com/) |
+| [pake-grok](../bucket/pake-grok.json) | 3.18.0 | 3.6 MiB | 2026-11-04 | Pake-built Grok web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://grok.com/) |
+| [pake-lizhi](../bucket/pake-lizhi.json) | 3.18.0 | 3.9 MiB | 2026-11-04 | Pake-built LiZhi web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://lizhi.dengdengju.com/?from=pake) |
+| [pake-notion](../bucket/pake-notion.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built Notion web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://app.notion.com) |
+| [pake-programmusic](../bucket/pake-programmusic.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built ProgramMusic web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://musicforprogramming.net/) |
+| [pake-qwerty](../bucket/pake-qwerty.json) | 3.18.0 | 3.6 MiB | 2026-11-04 | Pake-built Qwerty web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://qwerty.kaiyi.cool/) |
+| [pake-twitter](../bucket/pake-twitter.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built Twitter web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://x.com/) |
+| [pake-wechat](../bucket/pake-wechat.json) | 3.18.0 | 3.5 MiB | 2026-11-04 | Pake-built WeChat web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://wx.qq.com/) |
+| [pake-weread](../bucket/pake-weread.json) | 3.18.0 | 3.4 MiB | 2026-11-04 | Pake-built WeRead web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://weread.qq.com/) |
+| [pake-xiaohongshu](../bucket/pake-xiaohongshu.json) | 3.18.0 | 3.6 MiB | 2026-11-04 | Pake-built XiaoHongShu web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://www.xiaohongshu.com/explore) |
+| [pake-youtube](../bucket/pake-youtube.json) | 3.18.0 | 3.4 MiB | 2026-11-04 | Pake-built YouTube web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://www.youtube.com) |
+| [pake-youtubemusic](../bucket/pake-youtubemusic.json) | 3.18.0 | 3.8 MiB | 2026-11-04 | Pake-built YouTubeMusic web app packaged as a lightweight Windows desktop wrapper. | [Homepage](https://music.youtube.com/) |
 | [pulse-launcher](../bucket/pulse-launcher.json) | 0.1 | 24.3 MiB | 2026-08-08 | Lightweight Qt/QML application launcher for Windows with a global Alt+Space hotkey and Start Menu application discovery. | [Homepage](https://github.com/thefxng/Pulse) |
 | [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | 14.7 MiB | 2025-07-18 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | 82.4 MiB | 2025-04-02 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
