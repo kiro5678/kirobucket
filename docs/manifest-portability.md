@@ -58,7 +58,7 @@ The explicit portability classifications currently cover 894 of the 1030 active 
 
 ### Pake Desktop 1.4.0
 
-- [`pake-desktop`](../bucket/pake-desktop.json) — **Portable (7Z payload extraction)**: extracts the verified x64 `lib\\app` payload without executing Velopack setup or registering Windows installation integrations. The manifest creates a Scoop-managed Start Menu shortcut and `Pake.exe` shim. The extracted layout omits the root launcher, `Update.exe`, and `sq.version`, so the Velopack self-updater is unsupported; update through Scoop. WebView2 is required. Pake-created apps and user data remain under `%LOCALAPPDATA%.
+- [`pake-desktop`](../bucket/pake-desktop.json) — **Portable (7Z payload extraction)**: extracts the verified x64 `lib\\app` payload without executing Velopack setup or registering Windows installation integrations. The manifest creates a Scoop-managed Start Menu shortcut and `Pake.exe` shim. The extracted layout omits the root launcher, `Update.exe`, and `sq.version`, so the Velopack self-updater is unsupported; update through Scoop. WebView2 is required. Pake-created apps and user data remain under the `%LOCALAPPDATA%` directory.
 
 ### Pake-generated MSI web apps V3.18.0
 
