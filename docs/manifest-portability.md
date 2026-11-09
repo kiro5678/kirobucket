@@ -22,20 +22,20 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 807 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
-| Nonportable | 64 | Velopack setup, EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
+| Portable | 808 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Nonportable | 63 | Velopack setup, EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 136 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
 | **Total** | **1007** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 871 of the 1007 active bucket manifests (807 Portable and 64 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 871 of the 1007 active bucket manifests (808 Portable and 63 Nonportable). The remaining 136 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
 - [`hop`](../bucket/hop.json) — **Portable**: Scoop downloads the standalone Windows executable without running an installer or registering Windows components. The application itself requires elevation and can modify disk partitions and EFI boot entries; those runtime operations are documented in the manifest.
 - [`hatchzip`](../bucket/hatchzip.json) — **Portable**: uses the project's official portable ZIP, with the GUI and command-line executable at the archive root. No Windows installation routine is run.
-- [`prime-files`](../bucket/prime-files.json) — **Nonportable**: the manifest runs the official Inno Setup installer, which creates the vendor installation state and Start Menu entry, and can install the Visual C++ runtime or enable Media Feature Pack on Windows N. The optional indexer service is installed only when enabled inside the application.
+- [`prime-files`](../bucket/prime-files.json) — **Portable (Inno Setup payload extraction)**: `innosetup: true` extracts only the `{app}` files and does not run the official setup. The Visual C++ x64 runtime and Windows N Media Feature Pack are not installed; the optional 7-Zip task and Start Menu/desktop shortcuts are skipped. Prime Files' built-in updater expects `unins000.exe`, which extraction does not create, so use Scoop for updates. The optional indexer service is not installed by Scoop.
 - [`wintousb`](../bucket/wintousb.json) — **Nonportable**: the official WinToUSB 10.9 installer is Inno Setup. Scoop runs the normal setup silently, keeps the program files under its version directory, and retains the official uninstaller for update/removal.
 
 ### ThioJoe manifests added on 2026-11-09
@@ -97,12 +97,12 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 
 ## Nonportable manifests by installer type
 
-This index groups the 64 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups the 63 Nonportable manifests by the exact installer/package label used in the detailed inventory below. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
 | NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 22 |
-| Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [prime-files](../bucket/prime-files.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [wintousb](../bucket/wintousb.json) | 8 |
+| Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [wintousb](../bucket/wintousb.json) | 7 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json), [tinywall](../bucket/tinywall.json) | 5 |
 | .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
@@ -127,7 +127,7 @@ This index groups the 64 Nonportable manifests by the exact installer/package la
 | Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
 | NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
 | Velopack Setup | [pake-desktop](../bucket/pake-desktop.json) | 1 |
-| **Total** | **All Nonportable manifests** | **64** |
+| **Total** | **All Nonportable manifests** | **63** |
 
 ## Nonportable manifests
 
@@ -182,7 +182,6 @@ The installer type describes the package or setup technology used by the manifes
 | [openzfs-np](../bucket/openzfs-np.json) | Inno Setup-style EXE (based on switches) | Runs the OpenZFS setup silently; installs system-level filesystem components. |
 | [pake-desktop](../bucket/pake-desktop.json) | Velopack Setup | Runs the official per-user Velopack installer for x64 or ARM64 silently into the Scoop version directory. It creates Start Menu/Desktop shortcuts and Velopack registration; the manifest calls `Update.exe uninstall --silent --rootDir $dir` during removal. Pake-generated apps and the license/gallery cache remain separately under the user's LocalAppData. |
 | [poweriso](../bucket/poweriso.json) | Vendor EXE setup (engine unverified) | Runs the PowerISO setup silently with `/S`. |
-| [prime-files](../bucket/prime-files.json) | Inno | Runs the official Inno Setup installation, which creates its normal Windows installation state and Start Menu entry. The optional indexer service is only enabled from inside the application; setup can also install the Visual C++ runtime or enable Media Feature Pack on Windows N. |
 | [powershell-np](../bucket/powershell-np.json) | MSI | Runs the PowerShell MSI with `msiexec /i` and administrator rights. |
 | [recordly](../bucket/recordly.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 | [sandboxie-plus](../bucket/sandboxie-plus.json) | Inno | Runs the Sandboxie setup silently; installs system integration including its driver/service components. |
@@ -335,7 +334,7 @@ The following are examples of Portable manifest techniques in this bucket:
 | Manifest pattern | Installer/package type | Example manifests | Why they are Portable |
 | --- | --- | --- | --- |
 | MSI extraction, not Windows Installer execution | MSI database/payload extracted by Scoop | [rqbit](../bucket/rqbit.json), [sklad](../bucket/sklad.json), [timigs](../bucket/timigs.json), [clipper](../bucket/clipper.json), [cooldesk-msi](../bucket/cooldesk-msi.json), [cedro-modern-dock](../bucket/cedro-modern-dock.json), [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json), [poltertype](../bucket/poltertype.json), [dnschanger-msi](../bucket/dnschanger-msi.json) | Scoop extracts the MSI payload; the manifest does not run `msiexec /i`. |
-| Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [snowey-island](../bucket/snowey-island.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json), [deskstats](../bucket/deskstats.json), [jopdf](../bucket/jopdf.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
+| Inno Setup payload extraction | Inno | [fort](../bucket/fort.json), [lively](../bucket/lively.json), [snowey-island](../bucket/snowey-island.json), [taskexplorer](../bucket/taskexplorer.json), [reg-organizer](../bucket/reg-organizer.json), [soft-organizer](../bucket/soft-organizer.json), [Auslogics-disk-defrag](../bucket/Auslogics-disk-defrag.json), [deskstats](../bucket/deskstats.json), [jopdf](../bucket/jopdf.json), [prime-files](../bucket/prime-files.json) | `innosetup: true` tells Scoop to extract the installer payload instead of running the vendor setup. |
 | EXE/NSIS payload extraction | NSIS containing an embedded application archive (commonly app-64.7z) | [endstate](../bucket/endstate.json), [mechvibes](../bucket/mechvibes.json), [openscreen](../bucket/openscreen.json), [keyboardsounds](../bucket/keyboardsounds.json), [keyboardsounds-pro](../bucket/keyboardsounds-pro.json), [super-productivity](../bucket/super-productivity.json), [safepdf-installer](../bucket/safepdf-installer.json) | The downloaded setup file is treated as an archive or its embedded application archive is extracted; the vendor setup routine is not executed. |
 | Direct NSIS payload extraction | NSIS EXE whose files are directly readable by 7-Zip | [rust-meow](../bucket/rust-meow.json) | `#/dl.7z` extracts the NSIS container directly; 7-Zip 26.05 verified extraction of `rust-meow.exe` and `rust-meow-backend.exe` without executing the setup routine. |
 | Explicit portable mode | Vendor setup EXE invoked with a portable-mode switch/task | [handy](../bucket/handy.json), [windhawk](../bucket/windhawk.json), [winhance](../bucket/winhance.json) | The manifest passes a vendor-supported portable-mode option. Handy's NSIS template and upstream CI validate `/S /PORTABLE /D=$dir`; its `Data` directory is persisted by Scoop. |
