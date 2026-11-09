@@ -6,7 +6,7 @@ on:
     types: [opened, synchronize, reopened]
     branches: [master]
     paths:
-      - 'bucket/chatgpt.json'
+      - 'bucket/chatgpt-pake.json'
       - 'bucket/deepseek.json'
       - 'bucket/excalidraw.json'
       - 'bucket/flomo.json'
@@ -41,7 +41,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $names = @('chatgpt', 'deepseek', 'excalidraw', 'flomo', 'gemini', 'grok', 'lizhi', 'notion', 'programmusic', 'qwerty', 'twitter', 'wechat', 'weread', 'xiaohongshu', 'youtubemusic', 'youtube')
+          $names = @('chatgpt-pake', 'deepseek', 'excalidraw', 'flomo', 'gemini', 'grok', 'lizhi', 'notion', 'programmusic', 'qwerty', 'twitter', 'wechat', 'weread', 'xiaohongshu', 'youtubemusic', 'youtube')
           $root = Join-Path $env:RUNNER_TEMP 'pake-msi-inspection'
           New-Item -ItemType Directory -Path $root -Force | Out-Null
           $report = [System.Collections.Generic.List[string]]::new()
@@ -70,7 +70,35 @@ jobs:
               throw "No EXE files found after administrative extraction for $name"
             }
 
+
+            $expectedLaunchPaths = [System.Collections.Generic.List[string]]::new()
+            foreach ($entry in @($manifest.bin)) {
+              if ($entry -is [System.Array]) {
+                if ($entry.Count -gt 0) { $expectedLaunchPaths.Add([string]$entry[0]) }
+              } elseif ($entry -is [string]) {
+                $expectedLaunchPaths.Add($entry)
+              }
+            }
+            foreach ($entry in @($manifest.shortcuts)) {
+              if ($entry -is [System.Array]) {
+                if ($entry.Count -gt 0) { $expectedLaunchPaths.Add([string]$entry[0]) }
+              } elseif ($entry -is [string]) {
+                $expectedLaunchPaths.Add($entry)
+              }
+            }
+            $expectedLaunchPaths = @($expectedLaunchPaths | Sort-Object -Unique)
+            if ($expectedLaunchPaths.Count -eq 0) {
+              throw "Manifest $name does not declare a bin or shortcut path to verify."
+            }
+            foreach ($relativePath in $expectedLaunchPaths) {
+              $expectedFile = Join-Path $target $relativePath
+              if (-not (Test-Path -LiteralPath $expectedFile -PathType Leaf)) {
+                throw "Declared launch path '$relativePath' was not present after extracting $name."
+              }
+            }
+
             $report.Add("[$name] SHA256=$actual")
+            foreach ($relativePath in $expectedLaunchPaths) { $report.Add("  VERIFIED LAUNCH PATH: $relativePath") }
             foreach ($exe in $executables) {
               $relative = $exe.FullName.Substring($target.Length).TrimStart('\')
               $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
