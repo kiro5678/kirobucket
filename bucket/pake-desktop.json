@@ -13,7 +13,6 @@
             "Pake Desktop"
         ]
     ],
-    "notes": "Extracts the embedded application payload from the official Setup.exe instead of running the Velopack installer. The extracted layout does not include the root launcher, Update.exe, or sq.version, so the Velopack in-app updater is not supported; update this package through Scoop. Pake-created apps and user data remain outside the Scoop directory under %LOCALAPPDATA%. Microsoft Edge WebView2 Runtime is required. Only the x64 payload has been tested and is included.",
     "checkver": {
         "url": "https://pake.run/releases",
         "regex": "<h2[^>]*>(?:<[^>]+>)*v(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)",
