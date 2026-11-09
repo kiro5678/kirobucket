@@ -1,0 +1,247 @@
+name: Pake Windows Apps MSI Audit
+
+on:
+  push:
+    paths:
+      - '.github/workflows/pake-app-msi-audit.yml'
+      - 'bucket/pake-*.json'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/pake-app-msi-audit.yml'
+      - 'bucket/pake-*.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-and-test:
+    name: Inspect all Pake Windows MSI packages
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - name: Download, inspect, install and uninstall every MSI
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $tag = 'V3.18.0'
+          $baseUrl = "https://github.com/tw93/Pake/releases/download/$tag"
+          $root = Join-Path $env:RUNNER_TEMP 'pake-app-msi-audit'
+          $downloads = Join-Path $root 'downloads'
+          $reports = Join-Path $root 'reports'
+          New-Item -ItemType Directory -Path $downloads, $reports -Force | Out-Null
+
+          $packages = @(
+            @{ Name='XiaoHongShu'; Slug='xiaohongshu'; Asset='XiaoHongShu_x64.msi'; Sha256='9ae670d1c1af313e83350f121d5bcd6482ad9a0b6313ebe8e4f0041990c7bbc0' },
+            @{ Name='Notion'; Slug='notion'; Asset='Notion_x64.msi'; Sha256='ca4b40e807213616b6bc14964e5fdc3bc3193647cf743873fa9d6868ea47986a' },
+            @{ Name='Grok'; Slug='grok'; Asset='Grok_x64.msi'; Sha256='40b06f51ba86d70891f7c1237b188c02b34078c6a2ec6a53069fa4924d0e51bb' },
+            @{ Name='ProgramMusic'; Slug='programmusic'; Asset='ProgramMusic_x64.msi'; Sha256='dd44d747df9ac52d1ed8b618e4dcf7467d97548f0d6102c535061ed6d16345d7' },
+            @{ Name='DeepSeek'; Slug='deepseek'; Asset='DeepSeek_x64.msi'; Sha256='c4c0cba116225c5b8b38daa477f7bf361cb4fef2e21d4883819f1d52df6ecfae' },
+            @{ Name='Twitter'; Slug='twitter'; Asset='Twitter_x64.msi'; Sha256='9a91fa942c9ab625463fb6fe5e5547f6fa85869e7199fa8100e8fb27b66cde25' },
+            @{ Name='YouTube'; Slug='youtube'; Asset='YouTube_x64.msi'; Sha256='7950a41dbb3599ae9f83f654792d141552bae1267d38cfb55492803393d65fea' },
+            @{ Name='Flomo'; Slug='flomo'; Asset='Flomo_x64.msi'; Sha256='71db67efb2b7a5fe0955633ff6ed51a65e4f2c922aa8389f0e30a9aa4c11e0bc' },
+            @{ Name='WeChat'; Slug='wechat'; Asset='WeChat_x64.msi'; Sha256='be02079f8a34307fbbbe4e120f95bf1048a9348b7222464a12463c042c1c1bb6' },
+            @{ Name='LiZhi'; Slug='lizhi'; Asset='LiZhi_x64.msi'; Sha256='592627035e8e8579513c106ea93c7981ec28e2f2d52faccb0131977e887cc77e' },
+            @{ Name='YouTubeMusic'; Slug='youtubemusic'; Asset='YouTubeMusic_x64.msi'; Sha256='b4607b6a9517186dcd8dc49bbe228b0ee058e39332dac2d40daa260fc42bef73' },
+            @{ Name='WeRead'; Slug='weread'; Asset='WeRead_x64.msi'; Sha256='63746df8d70b516cc6dbaa54e9850015e6904d1e019c7f30e616a93ddc8e46a5' },
+            @{ Name='Excalidraw'; Slug='excalidraw'; Asset='Excalidraw_x64.msi'; Sha256='5c7f0029202df148c5152c247174f169369c38aba92688c3e401494027bcb0c4' },
+            @{ Name='Gemini'; Slug='gemini'; Asset='Gemini_x64.msi'; Sha256='c1059ecf1c87665ff766f0f60fe380869b13caa4f83bd531a54a35789ecf38c4' },
+            @{ Name='ChatGPT'; Slug='chatgpt'; Asset='ChatGPT_x64.msi'; Sha256='f109b5fbb2e2b0fd78bb8235848d3d2ab59739e5354600b4ca4e4693377684ea' },
+            @{ Name='Qwerty'; Slug='qwerty'; Asset='Qwerty_x64.msi'; Sha256='83062862ac17780e4bed079b6ad0c1bf3b37b0fd027d05f0fdf6586e2fdddbcb' }
+          )
+
+          $installer = New-Object -ComObject WindowsInstaller.Installer
+          function Get-MsiRows {
+            param([object]$Database,[string]$Table)
+            try {
+              $view = $Database.OpenView("SELECT * FROM $Table")
+              $view.Execute()
+              $rows = [System.Collections.Generic.List[object]]::new()
+              while ($record = $view.Fetch()) {
+                $values = [System.Collections.Generic.List[string]]::new()
+                for ($i = 1; $i -le $record.FieldCount; $i++) {
+                  try { $values.Add([string]$record.StringData($i)) } catch { $values.Add('') }
+                }
+                $rows.Add(@($values.ToArray()))
+              }
+              $view.Close()
+              return @($rows.ToArray())
+            } catch { return @() }
+          }
+          function Get-MsiProperty {
+            param([object[]]$Rows,[string]$Name)
+            foreach ($row in $Rows) {
+              if ($row.Count -ge 2 -and $row[0] -eq $Name) { return [string]$row[1] }
+            }
+            return ''
+          }
+
+          $results = [System.Collections.Generic.List[object]]::new()
+          $productCodes = @{}
+          $upgradeCodes = @{}
+          $failures = [System.Collections.Generic.List[string]]::new()
+          $shell = New-Object -ComObject WScript.Shell
+
+          foreach ($package in $packages) {
+            Write-Host "=== $($package.Name) ==="
+            $msiPath = Join-Path $downloads $package.Asset
+            $appRoot = Join-Path $reports $package.Slug
+            $installDir = Join-Path (Join-Path $env:RUNNER_TEMP 'Pake MSI Lifecycle Tests') $package.Slug
+            $installLog = Join-Path $appRoot 'install.log'
+            $uninstallLog = Join-Path $appRoot 'uninstall.log'
+            New-Item -ItemType Directory -Path $appRoot -Force | Out-Null
+
+            $result = [ordered]@{
+              Name = $package.Name
+              Asset = $package.Asset
+              ExpectedSha256 = $package.Sha256
+              ActualSha256 = ''
+              Size = 0
+              SignatureStatus = ''
+              ProductName = ''
+              ProductVersion = ''
+              Manufacturer = ''
+              ProductCode = ''
+              UpgradeCodes = @()
+              InstallScope = ''
+              InstallDirDefault = ''
+              MainExecutables = @()
+              ShortcutRows = @()
+              RegistryRows = @()
+              CustomActions = @()
+              InstallTest = 'not-run'
+              UninstallTest = 'not-run'
+              InstallDirRemoved = $false
+              ShortcutsRemoved = $false
+              Error = ''
+            }
+
+            try {
+              Invoke-WebRequest -Uri "$baseUrl/$($package.Asset)" -OutFile $msiPath -MaximumRedirection 10 -TimeoutSec 300
+              $actualHash = (Get-FileHash -LiteralPath $msiPath -Algorithm SHA256).Hash.ToLowerInvariant()
+              $file = Get-Item -LiteralPath $msiPath
+              $signature = Get-AuthenticodeSignature -FilePath $msiPath
+              $result.ActualSha256 = $actualHash
+              $result.Size = $file.Length
+              $result.SignatureStatus = [string]$signature.Status
+              if ($actualHash -ne $package.Sha256) { throw "SHA-256 mismatch. Expected $($package.Sha256), got $actualHash." }
+              if ($file.Length -lt 1000000) { throw "MSI is unexpectedly small: $($file.Length) bytes." }
+
+              $database = $installer.OpenDatabase($msiPath, 0)
+              $properties = @(Get-MsiRows $database 'Property')
+              $directories = @(Get-MsiRows $database 'Directory')
+              $files = @(Get-MsiRows $database 'File')
+              $shortcuts = @(Get-MsiRows $database 'Shortcut')
+              $registries = @(Get-MsiRows $database 'Registry')
+              $customActions = @(Get-MsiRows $database 'CustomAction')
+              $upgradeRows = @(Get-MsiRows $database 'Upgrade')
+
+              $result.ProductName = Get-MsiProperty $properties 'ProductName'
+              $result.ProductVersion = Get-MsiProperty $properties 'ProductVersion'
+              $result.Manufacturer = Get-MsiProperty $properties 'Manufacturer'
+              $result.ProductCode = Get-MsiProperty $properties 'ProductCode'
+              $result.InstallScope = Get-MsiProperty $properties 'ALLUSERS'
+              $result.InstallDirDefault = ($directories | Where-Object { $_[0] -eq 'INSTALLDIR' } | Select-Object -First 1 | ForEach-Object { $_[2] })
+              $result.UpgradeCodes = @($upgradeRows | ForEach-Object { $_[0] } | Where-Object { $_ } | Select-Object -Unique)
+              $result.MainExecutables = @($files | Where-Object { $_[2] -match '(?i)\.exe$' } | ForEach-Object { $_[2] })
+              $result.ShortcutRows = @($shortcuts | ForEach-Object { [PSCustomObject]@{Id=$_[0];Directory=$_[1];Name=$_[2];Target=$_[4]} })
+              $result.RegistryRows = @($registries | ForEach-Object { [PSCustomObject]@{Id=$_[0];Root=$_[1];Key=$_[2];Name=$_[3];Value=$_[4]} })
+              $result.CustomActions = @($customActions | ForEach-Object { [PSCustomObject]@{Action=$_[0];Type=$_[1];Source=$_[2];Target=$_[3]} })
+
+              if ($result.ProductName -ne $package.Name) { throw "MSI ProductName '$($result.ProductName)' does not match expected app '$($package.Name)'." }
+              if (-not $result.ProductCode -or $result.ProductCode -notmatch '^\{[0-9A-Fa-f-]{36}\}$') { throw "MSI ProductCode is missing or invalid: '$($result.ProductCode)'." }
+              if ($productCodes.ContainsKey($result.ProductCode)) { throw "Duplicate ProductCode: $($result.ProductCode) also used by $($productCodes[$result.ProductCode])." }
+              $productCodes[$result.ProductCode] = $package.Name
+              foreach ($upgradeCode in $result.UpgradeCodes) {
+                if ($upgradeCodes.ContainsKey($upgradeCode)) { throw "Duplicate UpgradeCode: $upgradeCode also used by $($upgradeCodes[$upgradeCode])." }
+                $upgradeCodes[$upgradeCode] = $package.Name
+              }
+              if ($result.MainExecutables.Count -eq 0) { throw 'No executable files were declared in the MSI File table.' }
+              if ($result.ShortcutRows.Count -eq 0) { throw 'No Start Menu/Desktop shortcut rows were declared in the MSI.' }
+
+              if (Test-Path -LiteralPath $installDir) { Remove-Item -LiteralPath $installDir -Recurse -Force }
+              New-Item -ItemType Directory -Path (Split-Path -Parent $installDir) -Force | Out-Null
+              $installArgs = @(
+                '/i', ('"{0}"' -f $msiPath),
+                '/qn', '/norestart',
+                ('INSTALLDIR="{0}"' -f $installDir),
+                'WIXUI_EXITDIALOGOPTIONALCHECKBOX=0',
+                'AUTOLAUNCHAPP=0',
+                '/L*V', ('"{0}"' -f $installLog)
+              )
+              $installProcess = Start-Process -FilePath 'msiexec.exe' -ArgumentList $installArgs -Wait -PassThru -ErrorAction Stop
+              if ($installProcess.ExitCode -notin @(0,3010)) { throw "MSI install exit code $($installProcess.ExitCode). Log: $installLog" }
+
+              $installedFiles = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+              $installedExe = @($installedFiles | Where-Object { $_.Extension -ieq '.exe' })
+              if ($installedExe.Count -eq 0) { throw "MSI reported success but no EXE files were installed under $installDir." }
+              $result.InstallTest = "success (exit $($installProcess.ExitCode); $($installedExe.Count) EXE files)"
+              $createdShortcuts = [System.Collections.Generic.List[string]]::new()
+              $shortcutRoots = @(
+                (Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'),
+                (Join-Path $env:USERPROFILE 'Desktop'),
+                (Join-Path $env:PUBLIC 'Desktop')
+              )
+              foreach ($shortcutRoot in $shortcutRoots) {
+                if (-not (Test-Path -LiteralPath $shortcutRoot -PathType Container)) { continue }
+                foreach ($shortcut in Get-ChildItem -LiteralPath $shortcutRoot -Filter '*.lnk' -File -Recurse -ErrorAction SilentlyContinue) {
+                  $target = $shell.CreateShortcut($shortcut.FullName).TargetPath
+                  if ($target -and $target.StartsWith($installDir,[System.StringComparison]::OrdinalIgnoreCase)) { $createdShortcuts.Add($shortcut.FullName) }
+                }
+              }
+              if ($createdShortcuts.Count -eq 0) { throw "MSI installed files but created no Start Menu/Desktop shortcut. See $installLog." }
+
+              $uninstallArgs = @('/x', ('"{0}"' -f $msiPath), '/qn', '/norestart', '/L*V', ('"{0}"' -f $uninstallLog))
+              $uninstallProcess = Start-Process -FilePath 'msiexec.exe' -ArgumentList $uninstallArgs -Wait -PassThru -ErrorAction Stop
+              if ($uninstallProcess.ExitCode -notin @(0,3010)) { throw "MSI uninstall exit code $($uninstallProcess.ExitCode). Log: $uninstallLog" }
+              $deadline = [DateTimeOffset]::UtcNow.AddSeconds(20)
+              while ((Test-Path -LiteralPath $installDir) -and [DateTimeOffset]::UtcNow -lt $deadline) { Start-Sleep -Milliseconds 500 }
+              $result.InstallDirRemoved = -not (Test-Path -LiteralPath $installDir)
+              $result.ShortcutsRemoved = @($createdShortcuts | Where-Object { Test-Path -LiteralPath $_ }).Count -eq 0
+              if (-not $result.InstallDirRemoved) { throw "MSI uninstall left application files under $installDir." }
+              if (-not $result.ShortcutsRemoved) { throw "MSI uninstall left shortcuts behind." }
+              $result.UninstallTest = "success (exit $($uninstallProcess.ExitCode))"
+              Write-Host "$($package.Name): lifecycle passed; ProductCode=$($result.ProductCode); ProductVersion=$($result.ProductVersion); signature=$($result.SignatureStatus)"
+            } catch {
+              $result.Error = $_.Exception.Message
+              $failures.Add("$($package.Name): $($result.Error)")
+              Write-Error "$($package.Name): $($result.Error)" -ErrorAction Continue
+              if ($result.ProductCode -and (Test-Path -LiteralPath $installDir)) {
+                try { Start-Process msiexec.exe -ArgumentList @('/x',$result.ProductCode,'/qn','/norestart') -Wait -PassThru | Out-Null }
+                catch { Write-Warning "Best-effort cleanup failed for $($package.Name): $($_.Exception.Message)" }
+              }
+            } finally {
+              $results.Add([PSCustomObject]$result)
+            }
+          }
+
+          $results | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $reports 'msi-audit.json') -Encoding utf8
+          $results | Export-Csv -LiteralPath (Join-Path $reports 'msi-audit.csv') -NoTypeInformation -Encoding utf8
+          @(
+            '## Pake V3.18.0 MSI audit'
+            ''
+            '| App | SHA-256 | ProductVersion | ProductCode | Install | Uninstall | Signature |'
+            '|---|---|---|---|---|---|---|'
+            foreach ($item in $results) {
+              "| $($item.Name) | $($item.ActualSha256) | $($item.ProductVersion) | $($item.ProductCode) | $($item.InstallTest) | $($item.UninstallTest) | $($item.SignatureStatus) |"
+            }
+            ''
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          if ($results.Count -ne $packages.Count) { throw "Only $($results.Count) of $($packages.Count) MSI packages were audited." }
+          if ($failures.Count -gt 0) { throw "MSI audit failures: $($failures -join [Environment]::NewLine)" }
+          if (($results | Select-Object -ExpandProperty ProductCode -Unique).Count -ne $packages.Count) {
+            throw 'Pake MSI packages do not have unique ProductCodes.'
+          }
+
+      - name: Upload MSI audit evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pake-v3-18-0-windows-msi-audit
+          path: ${{ runner.temp }}/pake-app-msi-audit/
+          if-no-files-found: warn
+          retention-days: 14
