@@ -668,7 +668,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mystify](../bucket/mystify.json) | 1.1 | 8.4 MiB | 2022-04-07 | Modern Windows Forms recreation of the classic Mystify Your Mind animation. | [Homepage](https://github.com/swharden/Mystify) |
 | [peerblock-paf](../bucket/peerblock-paf.json) | 1.2.0.1 | 3.5 MiB | 2023-12-04 | PeerBlock Plus Portable with a combined blocklist that is automatically updated daily. | [Homepage](https://portableapps.com/apps/security/peerblock-portable) |
 | [pake-desktop](../bucket/pake-desktop.json) | 1.4.0 | 64bit: 109.1 MiB / arm64: 104.6 MiB | 2026-11-07 | Turn websites into standalone desktop apps with a graphical interface. | [Homepage](https://pake.run/) |
-| [pake-desktop-extracted-test](../bucket/pake-desktop-extracted-test.json) | 1.4.0 | 64bit: 109.1 MiB | 2026-11-07 | Experimental extraction-only Pake Desktop package for testing the embedded application payload. | [Homepage](https://pake.run/) |
 | [pinokio](../bucket/pinokio.json) | 8.3.7 | 64bit: 148.5 MiB | 2026-11-05 | Local AI launcher for installing and managing AI applications, models, runtimes, and dependencies from scripts. | [Homepage](https://desktop.pinokio.co/) |
 | [pulse-launcher](../bucket/pulse-launcher.json) | 0.1 | 24.3 MiB | 2026-08-08 | Lightweight Qt/QML application launcher for Windows with a global Alt+Space hotkey and Start Menu application discovery. | [Homepage](https://github.com/thefxng/Pulse) |
 | [quanto-flx](../bucket/quanto-flx.json) | 2.00.1110 | 14.7 MiB | 2025-07-18 | A desktop customization tool based on Rainmeter | [Homepage](https://github.com/stevehsudrawing/quantoflx) |
@@ -1832,3 +1831,4 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 | [usb-repair](../bucket/usb-repair.json) | 11.2.3.2380 | 2.3 MiB | 2025-07-03 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [takeoff-launcher](../bucket/takeoff-launcher.json) | 1.0.4 | 299.9 KiB | 2026-09-17 | Focused, lightweight native Windows application launcher | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
+
