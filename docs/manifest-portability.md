@@ -66,22 +66,22 @@ The 16 Windows x64 app packages from Pake V3.18.0 use Scoop's native MSI adminis
 
 This is a **Portable MSI payload extraction** classification based on the Scoop deployment method. The extracted applications require Microsoft Edge WebView2 Runtime, which is not bundled in these MSIs. The workflow verifies package hashes, extracted files, and launch paths; it does not perform an interactive GUI launch test. The WeChat build enables incognito mode in Pake's upstream app configuration.
 
-- [`chatgpt-pake`](../bucket/chatgpt-pake.json) — `PFiles\ChatGPT\pake-chatgpt.exe`.
-- [`deepseek`](../bucket/deepseek.json) — `PFiles\DeepSeek\pake-deepseek.exe`.
-- [`excalidraw`](../bucket/excalidraw.json) — `PFiles\Excalidraw\pake-excalidraw.exe`.
-- [`flomo`](../bucket/flomo.json) — `PFiles\Flomo\pake-flomo.exe`.
-- [`gemini`](../bucket/gemini.json) — `PFiles\Gemini\pake-gemini.exe`.
-- [`grok`](../bucket/grok.json) — `PFiles\Grok\pake-grok.exe`.
-- [`lizhi`](../bucket/lizhi.json) — `PFiles\LiZhi\pake-lizhi.exe`.
-- [`notion`](../bucket/notion.json) — `PFiles\Notion\pake-notion.exe`.
-- [`programmusic`](../bucket/programmusic.json) — `PFiles\ProgramMusic\pake-programmusic.exe`.
-- [`qwerty`](../bucket/qwerty.json) — `PFiles\Qwerty\pake-qwerty.exe`.
-- [`twitter`](../bucket/twitter.json) — `PFiles\Twitter\pake-twitter.exe`.
-- [`wechat`](../bucket/wechat.json) — `PFiles\WeChat\pake-wechat.exe`.
-- [`weread`](../bucket/weread.json) — `PFiles\WeRead\pake-weread.exe`.
-- [`xiaohongshu`](../bucket/xiaohongshu.json) — `PFiles\XiaoHongShu\pake-xiaohongshu.exe`.
-- [`youtubemusic`](../bucket/youtubemusic.json) — `PFiles\YouTubeMusic\pake-youtubemusic.exe`.
-- [`youtube`](../bucket/youtube.json) — `PFiles\YouTube\pake-youtube.exe`.
+- [`pake-chatgpt`](../bucket/pake-chatgpt.json) — `PFiles\ChatGPT\pake-chatgpt.exe`.
+- [`pake-deepseek`](../bucket/pake-deepseek.json) — `PFiles\DeepSeek\pake-deepseek.exe`.
+- [`pake-excalidraw`](../bucket/pake-excalidraw.json) — `PFiles\Excalidraw\pake-excalidraw.exe`.
+- [`pake-flomo`](../bucket/pake-flomo.json) — `PFiles\Flomo\pake-flomo.exe`.
+- [`pake-gemini`](../bucket/pake-gemini.json) — `PFiles\Gemini\pake-gemini.exe`.
+- [`pake-grok`](../bucket/pake-grok.json) — `PFiles\Grok\pake-grok.exe`.
+- [`pake-lizhi`](../bucket/pake-lizhi.json) — `PFiles\LiZhi\pake-lizhi.exe`.
+- [`pake-notion`](../bucket/pake-notion.json) — `PFiles\Notion\pake-notion.exe`.
+- [`pake-programmusic`](../bucket/pake-programmusic.json) — `PFiles\ProgramMusic\pake-programmusic.exe`.
+- [`pake-qwerty`](../bucket/pake-qwerty.json) — `PFiles\Qwerty\pake-qwerty.exe`.
+- [`pake-twitter`](../bucket/pake-twitter.json) — `PFiles\Twitter\pake-twitter.exe`.
+- [`pake-wechat`](../bucket/pake-wechat.json) — `PFiles\WeChat\pake-wechat.exe`.
+- [`pake-weread`](../bucket/pake-weread.json) — `PFiles\WeRead\pake-weread.exe`.
+- [`pake-xiaohongshu`](../bucket/pake-xiaohongshu.json) — `PFiles\XiaoHongShu\pake-xiaohongshu.exe`.
+- [`pake-youtubemusic`](../bucket/pake-youtubemusic.json) — `PFiles\YouTubeMusic\pake-youtubemusic.exe`.
+- [`pake-youtube`](../bucket/pake-youtube.json) — `PFiles\YouTube\pake-youtube.exe`.
 ### KeptInFlow 0.89.0 NSIS extraction
 
 - [`keptinflow`](../bucket/keptinflow.json) — **Portable**: Detect It Easy 4.0.0 identified the official setup as NSIS 3.11. 7-Zip 26.05 listed and extracted the payload successfully; `keptinflow.exe`, `keptinflow-lockhelper.exe`, and `uninstall.exe` are at the payload root, with no nested archives. The extracted main executable stayed running during a 15-second direct-launch test. The manifest does not run the NSIS setup, install the Lock Helper service, or add startup registration. The optional phone-at-sign-in feature requires a service and firewall rule, and the helper requires a Program Files location.
