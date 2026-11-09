@@ -867,7 +867,8 @@ jobs:
             "- ARM64 SHA-256: $armHash"
             "- ARM64 signer verified: $($armSignature.SignerCertificate.Subject)"
             '- x64 Velopack Setup.exe completed successfully.'
-            '- Verified root Pake.exe, Update.exe and current\Pake.exe.'
+            '- Verified the manifest installer.script copied Setup.exe to TEMP, removed the in-directory copy, and completed a Scoop-style reinstall into an existing install directory.'
+            '- Verified root Pake.exe, Update.exe and current\Pake.exe after reinstallation.'
             "- Verified $($createdShortcuts.Count) created shortcuts were removed."
             '- Update.exe uninstall --silent --rootDir completed successfully.'
             '- Verified the installation directory was removed.'
