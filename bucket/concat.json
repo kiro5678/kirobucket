@@ -1,0 +1,33 @@
+{
+    "version": "0.2.9",
+    "description": "Open-source cross-platform video editor with a multi-track timeline, effects, captions, and local processing.",
+    "homepage": "https://github.com/jub0t/Concat",
+    "license": "AGPL-3.0-or-later",
+    "url": "https://github.com/jub0t/Concat/releases/download/v0.2.9/Concat-0.2.9-windows-x86_64.msi#/dl.msi",
+    "hash": "6c6db4110bc351662fb032c1a0ede9ab88e960e41fd025c0adb0ccd7a27443fc",
+    "extract_dir": "PFiles64\\Concat",
+    "bin": "concat.exe",
+    "shortcuts": [
+        [
+            "concat.exe",
+            "Concat"
+        ],
+        [
+            "concat.exe",
+            "Concat (safe graphics)",
+            "--software"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/jub0t/Concat/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/jub0t/Concat/releases/download/v$version/Concat-$version-windows-x86_64.msi#/dl.msi",
+        "hash": {
+            "url": "https://api.github.com/repos/jub0t/Concat/releases/tags/v$version",
+            "regex": "Concat-$version-windows-x86_64\\.msi[\\s\\S]{0,500}?sha256:([a-f0-9]{64})"
+        }
+    }
+}
