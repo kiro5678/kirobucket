@@ -1,0 +1,20 @@
+{
+    "version": "2026.9.26.18",
+    "description": "Windows setup and debloating utility from Raven Development Team.",
+    "homepage": "https://github.com/ravendevteam/talon",
+    "license": "BSD-3-Clause",
+    "url": "https://raventechnologiesgroup.com/download?product=talon",
+    "notes": [
+        "DRAFT: the repository release has no downloadable Windows asset; this uses the website's legacy EXE download route.",
+        "No SHA-256 was published with the GitHub release. Do not promote or install until the file URL, version, hash, and installer/portable behavior are confirmed.",
+        "The current README documents a PowerShell-based method as primary; this manifest deliberately does not execute that script."
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/ravendevteam/talon/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>.+)$"
+    },
+    "autoupdate": {
+        "url": "https://raventechnologiesgroup.com/download?product=talon"
+    }
+}

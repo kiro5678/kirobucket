@@ -1,0 +1,21 @@
+{
+    "version": "2.63.23",
+    "description": "Self-hosted web file manager for managing files in a specified directory.",
+    "homepage": "https://github.com/filebrowser/filebrowser",
+    "license": "Apache-2.0",
+    "url": "https://github.com/filebrowser/filebrowser/releases/download/v2.63.23/windows-amd64-filebrowser.zip",
+    "hash": "fdb1d86dfafff8b3861867c7797ce786570013088678e03de17cfd9476c72384",
+    "bin": "filebrowser.exe",
+    "notes": [
+        "Upstream archived this repository on 2026-09-01 and announced no further fixes or security updates.",
+        "The upstream README identifies known unpatched command-execution and session/JWT issues. Review only; do not expose directly to the internet or promote without a security decision."
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/filebrowser/filebrowser/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/filebrowser/filebrowser/releases/download/v$version/windows-amd64-filebrowser.zip"
+    }
+}
