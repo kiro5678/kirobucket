@@ -52,9 +52,9 @@ The explicit portability classifications currently cover 897 of the 1035 active 
 - [`cram-cli`](../bucket/cram-cli.json) — **Portable (CLI only)**: uses the official Windows GNU-target ZIP containing `cram.exe`, `cram-extract.exe`, `cram_shell.dll`, and `libwinpthread-1.dll`. Scoop does not run `cram shell install` or install the separate proprietary Cram Studio application.
 - [`archivemount`](../bucket/archivemount.json) — **Portable (standalone EXE)**: uses the official standalone x86/x64/ARM64 executables. The application requires WinFsp to be installed separately; this manifest does not install its driver or service.
 
-### EyeGuard 2.1.1 added on 2026-11-10
+### EyeGuard 3.0.0 added on 2026-11-10
 
-- [`eyeguard`](../bucket/eyeguard.json) — **Portable (standalone EXE)**: uses the upstream `EyeGuard_Portable.exe`, a separate single-file PyInstaller build; Scoop does not run `EyeGuard_Setup.exe` or Inno Setup. Settings are stored under `%APPDATA%\EyeGuard` and WebView data under `%LOCALAPPDATA%\EyeGuardWebview`. The optional Launch on Startup setting creates an HKCU Run entry.
+- [`eyeguard`](../bucket/eyeguard.json) — **Portable (Inno Setup payload extraction; one-directory build)**: uses the upstream `EyeGuard_Setup.exe` with Scoop's `innosetup: true` extraction path. The 2026-11-10 Windows workflow verified that the same `innounp` helper used by Scoop extracted 207 `{app}` files, including `EyeGuard.exe` and the `_internal` directory. The separate `EyeGuard_Portable.exe` failed Scoop's 7-Zip extraction test (`Cannot open the file as archive`) and is a PyInstaller one-file build that extracts its 206-file runtime into `%TEMP%` at launch. Scoop does not run the vendor setup tasks or create its Start Menu, Desktop, or Startup shortcuts. Settings are stored under `%APPDATA%\EyeGuard` and WebView data under `%LOCALAPPDATA%\EyeGuardWebview`; the optional Launch on Startup setting creates an HKCU Run entry.
 
 ### FsRover 0.6.0
 
