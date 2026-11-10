@@ -135,12 +135,13 @@ This inventory covers every JSON manifest in bucket/ at generation time. It uses
 | Multiple package types: EXE setup (engine unverified) / AHK package | [npcap-np](../bucket/npcap-np.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / INI package | [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | 1 |
 | Multiple package types: EXE setup (engine unverified) / XML package | [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | 1 |
+| Multiple package types: PSD1 package / PSM1 package | [fta-manager](../bucket/fta-manager.json) | 1 |
 | Multiple package types: ZIP archive / CER package | [fancywm](../bucket/fancywm.json) | 1 |
 | PY package | [joas-drivertrust-auditor](../bucket/joas-drivertrust-auditor.json) | 1 |
 | RMSKIN package | [quanto-flx](../bucket/quanto-flx.json) | 1 |
 | SCR package | [ghost-saver](../bucket/ghost-saver.json) | 1 |
 | TAR.GZ archive | [0install-win](../bucket/0install-win.json) | 1 |
-| **Total** | **All bucket manifests** | **1048** |
+| **Total** | **All bucket manifests** | **1049** |
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
 ## Nonportable manifests by installer type
