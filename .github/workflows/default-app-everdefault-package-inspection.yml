@@ -222,7 +222,7 @@ jobs:
             '- No registry entries or file associations were modified.'
             '- The installer/setup EXE was not executed.'
           ) | Set-Content -LiteralPath (Join-Path $root 'inspection-summary.md') -Encoding utf8
-          
+
           Get-Content -LiteralPath (Join-Path $root 'inspection-summary.md') | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
           Write-Host (Get-Content -LiteralPath (Join-Path $root 'inspection-summary.md') -Raw)
 
