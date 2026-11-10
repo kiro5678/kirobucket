@@ -1,6 +1,13 @@
 name: CI
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - "scripts/*.ps1"
+      - "scripts/**/*.ps1"
+      - ".github/workflows/ci.yml"
   workflow_dispatch:
 
 permissions:
