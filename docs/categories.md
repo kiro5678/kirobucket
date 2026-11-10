@@ -9,10 +9,10 @@
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 4 | [View](#cross-device-integration) |
-| Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
-| Download Managers | 21 | [View](#download-managers) |
+| Developer & Technical Tools | 46 | [View](#developer-technical-tools) |
+| Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 83 | [View](#file-management) |
+| File Management | 84 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
@@ -40,7 +40,7 @@
 | Windows Customization | 93 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1067**
+**Total unique manifests: 1072**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -167,6 +167,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- | --- |
 | [c2flux](../bucket/c2flux.json) | 1.4.1 | 3.8 MiB | 2026-10-29 | c2flux | [Homepage](https://github.com/UncleRiot/c2flux) |
 | [cmtrace](../bucket/cmtrace.json) | 1.6.3 | 64bit: 35.7 MiB / arm64: 29.6 MiB | 2026-10-21 | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. | [Homepage](https://cmtraceopen.com) |
+| [code-server](../bucket/code-server.json) | 4.145.2 | 207.4 MiB | 2026-11-07 | Run VS Code in a browser using the self-hosted code-server. | [Homepage](https://github.com/coder/code-server) |
 | [detect-it-easy](../bucket/detect-it-easy.json) | 3.10 | 64bit: 24.0 MiB / 32bit: 21.9 MiB | 2026-04-21 | Tool for identifying packers, protectors, compilers, and file formats | [Homepage](https://github.com/horsicq/Detect-It-Easy) |
 | [firelink](../bucket/firelink.json) | 1.5.0 | 176.2 MiB | 2026-10-20 | Firelink | [Homepage](https://github.com/nimbold/Firelink) |
 | [lopesoft-lopeedit](../bucket/lopesoft-lopeedit.json) | 5.8.1 | 4.7 MiB | 2020-04-09 | Tabbed programmer's editor and Notepad replacement with syntax highlighting. | [Homepage](https://www.lopesoft.com/index.php/en/products/lopeedit) |
@@ -223,6 +224,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [dlman](../bucket/dlman.json) | 1.11.1 | 64bit: 4.6 MiB | 2026-08-18 | Fast, reliable, open-source download manager with multi-segment downloads, queue management, browser extensions, and SQLite persistence. | [Homepage](https://github.com/novincode/dlman) |
 | [ezoo-download](../bucket/ezoo-download.json) | 1.0.8 | 36.3 MiB | 2026-10-31 | Rust download manager for Windows with browser integration, video downloads and torrent support. | [Homepage](https://github.com/AhmedEzo686/ezoo-download) |
 | [imfile](../bucket/imfile.json) | 2.3.4 | 64bit: 152.0 MiB / arm64: 141.8 MiB | 2026-08-13 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
+| [misterdownloadmanager](../bucket/misterdownloadmanager.json) | 0.5.2 | 19.0 MiB | 2026-11-09 | Open-source Rust download manager for Windows with multi-connection downloads, torrent support, and browser integration. | [Homepage](https://github.com/anefzaoui/misterdownloadmanager) |
 | [motrix](../bucket/motrix.json) | 2.0.1 | 64bit: 159.8 MiB / arm64: 157.3 MiB | 2026-10-29 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
 | [omniget](../bucket/omniget.json) | 0.14.0 | — | 2026-10-31 | All-in-one desktop download manager for courses, videos, music, and 1,800+ websites, with built-in media and study tools. | [Homepage](https://github.com/OpenSelena/omniget) |
 | [prism-download-manager](../bucket/prism-download-manager.json) | 1.2.4 | 16.5 MiB | 2026-11-01 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
@@ -285,6 +287,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [delete-on-reboot](../bucket/delete-on-reboot.json) | 3.47 | 64bit: 226.3 KiB | 2026-03-13 | Schedule files for deletion during the next reboot. | [Homepage](https://www.softwareok.com/?Download=Delete.On.Reboot) |
 | [dirprintok](../bucket/dirprintok.json) | 7.69 | 64bit: 852.5 KiB | 2026-10-20 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
 | [doublecmd](../bucket/doublecmd.json) | 1.2.9 | 64bit: — / 32bit: — | — | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
+| [easy-link-file-viewer](../bucket/easy-link-file-viewer.json) | 1.9.2 | 0.7 MiB | 2026-11-10 | Portable Windows utility to view, edit, and write shortcut files (.lnk), with a hex viewer and icon editor. | [Homepage](https://github.com/ElektroStudios/Easy-Link-File-Viewer) |
 | [downloadorganizer](../bucket/downloadorganizer.json) | 0.1.0 | 2.7 MiB | 2026-11-01 | Organize downloads by file type with change previews, undo history and optional automatic sorting. | [Homepage](https://github.com/thonyydev/DownloadOrganizer) |
 | [dude](../bucket/dude.json) | 2.0763.579 | 73.4 MiB | 2026-06-24 | Disk usage analyzer and file browser for Windows. | [Homepage](https://github.com/PJDude/dude) |
 | [ef-commander](../bucket/ef-commander.json) | 26.10 | 64bit: 7.5 MiB | 2026-08-24 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |

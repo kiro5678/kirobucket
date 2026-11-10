@@ -1,0 +1,25 @@
+{
+    "version": "0.5.2",
+    "description": "Open-source Rust download manager for Windows with multi-connection downloads, torrent support, and browser integration.",
+    "homepage": "https://github.com/anefzaoui/misterdownloadmanager",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/anefzaoui/misterdownloadmanager/releases/download/v0.5.2/MisterDownloadManager-0.5.2-portable.zip",
+    "hash": "0907a6c6aed5c4967e89549e883147d2b33b073e6f8b0d914dff84d32f3b7cf7",
+    "extract_dir": "MisterDownloadManager-$version-portable",
+    "bin": "misterdownloadmanager.exe",
+    "shortcuts": [
+        [
+            "misterdownloadmanager.exe",
+            "Mister Download Manager"
+        ]
+    ],
+    "persist": "data",
+    "notes": "Browser integration requires the upstream setup.exe; the portable ZIP does not register the native messaging host.",
+    "checkver": {
+        "url": "https://github.com/anefzaoui/misterdownloadmanager/releases/latest",
+        "regex": "/releases/tag/v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/anefzaoui/misterdownloadmanager/releases/download/v$version/MisterDownloadManager-$version-portable.zip"
+    }
+}
