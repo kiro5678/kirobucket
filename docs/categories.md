@@ -64,6 +64,19 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Türkaysoft Suite | 8 | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | [View](#vovsoft-suite) |
 
+## Android & Device Tools
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [air-server-np](../bucket/air-server-np.json) | 5.7.2 | 64bit: 19.8 MiB / 32bit: 20.4 MiB | 2025-07-28 | AirServer is the most advanced screen mirroring receiver for Mac and PC. | [Homepage](https://www.airserver.com) |
+| [android-dex](../bucket/android-dex.json) | 1.4 | 64bit: 220.4 MiB | 2026-10-31 | Android desktop experience for controlling and mirroring Android devices. | [Homepage](https://github.com/Shrey113/Android-Dex) |
+| [another](../bucket/another.json) | 0.4.4 | 64bit: 13.1 MiB | 2026-10-06 | A desktop app for mirroring and controlling Android devices over USB. | [Homepage](https://github.com/Zfinix/another) |
+| [imazing-np](../bucket/imazing-np.json) | 3.6.5 | 206.2 MiB | 2026-09-23 | Manage your iPhone. Your way. | [Homepage](https://imazing.com/) |
+| [scrcpy](../bucket/scrcpy.json) | 5.0.1 | 64bit: 10.7 MiB / 32bit: 9.7 MiB | 2026-10-08 | Display and control Android devices from Windows. | [Homepage](https://github.com/Genymobile/scrcpy) |
+| [scrcpy-gui-georgeenglezos](../bucket/scrcpy-gui-georgeenglezos.json) | 1.7.5 | 64bit: 16.7 MiB | 2026-08-28 | A modern GUI for scrcpy | [Homepage](https://github.com/GeorgeEnglezos/Scrcpy-GUI) |
+| [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json) | 4.1.0 | 6.1 MiB | 2026-08-24 | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) |
+| [scrcpy-gui-simonaking](../bucket/scrcpy-gui-simonaking.json) | 2.5.0 | 64bit: 153.1 MiB / 32bit: 133.5 MiB | 2026-10-27 | Modern desktop GUI for scrcpy with bundled scrcpy and ADB. | [Homepage](https://github.com/SimonAKing/scrcpy-gui) |
+
 ## Associations
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
@@ -81,19 +94,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [portable-registrator](../bucket/portable-registrator.json) | 1.5 | 351.2 KiB | 2023-04-12 | Registers portable applications as Windows default-program candidates for supported file types and URL protocols. | [Homepage](https://github.com/SiL3NC3/PortableRegistrator) |
 | [ps-sfta](../bucket/ps-sfta.json) | 1.2.0 | — | — | PowerShell functions to register applications and manage Windows file-type and protocol associations. | [Homepage](https://github.com/DanysysTeam/PS-SFTA) |
 | [win-link-router](../bucket/win-link-router.json) | 0.2.2 | 126.6 MiB | — | Configurable Windows protocol-link router for schemes such as tel, sms, and mailto. | [Homepage](https://github.com/karmaniverous/win-link-router) |
-
-## Android & Device Tools
-
-| Manifest | Version | Size | Program Update | Description | Homepage |
-| --- | --- | --- | --- | --- | --- |
-| [air-server-np](../bucket/air-server-np.json) | 5.7.2 | 64bit: 19.8 MiB / 32bit: 20.4 MiB | 2025-07-28 | AirServer is the most advanced screen mirroring receiver for Mac and PC. | [Homepage](https://www.airserver.com) |
-| [android-dex](../bucket/android-dex.json) | 1.4 | 64bit: 220.4 MiB | 2026-10-31 | Android desktop experience for controlling and mirroring Android devices. | [Homepage](https://github.com/Shrey113/Android-Dex) |
-| [another](../bucket/another.json) | 0.4.4 | 64bit: 13.1 MiB | 2026-10-06 | A desktop app for mirroring and controlling Android devices over USB. | [Homepage](https://github.com/Zfinix/another) |
-| [imazing-np](../bucket/imazing-np.json) | 3.6.5 | 206.2 MiB | 2026-09-23 | Manage your iPhone. Your way. | [Homepage](https://imazing.com/) |
-| [scrcpy](../bucket/scrcpy.json) | 5.0.1 | 64bit: 10.7 MiB / 32bit: 9.7 MiB | 2026-10-08 | Display and control Android devices from Windows. | [Homepage](https://github.com/Genymobile/scrcpy) |
-| [scrcpy-gui-georgeenglezos](../bucket/scrcpy-gui-georgeenglezos.json) | 1.7.5 | 64bit: 16.7 MiB | 2026-08-28 | A modern GUI for scrcpy | [Homepage](https://github.com/GeorgeEnglezos/Scrcpy-GUI) |
-| [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json) | 4.1.0 | 6.1 MiB | 2026-08-24 | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) |
-| [scrcpy-gui-simonaking](../bucket/scrcpy-gui-simonaking.json) | 2.5.0 | 64bit: 153.1 MiB / 32bit: 133.5 MiB | 2026-10-27 | Modern desktop GUI for scrcpy with bundled scrcpy and ADB. | [Homepage](https://github.com/SimonAKing/scrcpy-gui) |
 
 ## Browser Launchers
 
