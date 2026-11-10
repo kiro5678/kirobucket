@@ -15,6 +15,7 @@
         "name": "FTA-Manager"
     },
     "checkver": {
+        "regex": "^(?<version>[0-9]+(?:\\.[0-9]+){1,3}-[0-9a-f]{7})$",
         "script": [
             "$commit = Invoke-RestMethod -Uri 'https://api.github.com/repos/feiglein74/FTA-Manager/commits/master' -Headers @{ 'User-Agent' = 'Scoop' }",
             "$module = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/feiglein74/FTA-Manager/master/FTA-Manager.psd1'",
