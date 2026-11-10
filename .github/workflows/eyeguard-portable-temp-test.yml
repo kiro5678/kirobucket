@@ -1,0 +1,146 @@
+name: EyeGuard Portable Temp Extraction Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/eyeguard-portable-temp-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Run EyeGuard and inspect its isolated TEMP directory
+    runs-on: windows-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download, hash, launch, and inspect EyeGuard v3.0.0
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $releaseUrl = 'https://api.github.com/repos/hocinechero/EyeGuard/releases/tags/v3.0.0'
+          $release = Invoke-RestMethod -Uri $releaseUrl -Headers @{ 'User-Agent' = 'kirobucket-eyeguard-runtime-test' }
+          $asset = @($release.assets | Where-Object { $_.name -eq 'EyeGuard_Portable.exe' }) | Select-Object -First 1
+          if ($null -eq $asset) {
+            throw 'EyeGuard_Portable.exe was not found in the v3.0.0 release.'
+          }
+
+          $exePath = Join-Path $env:RUNNER_TEMP 'EyeGuard_Portable.exe'
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $exePath -MaximumRedirection 10 -TimeoutSec 300
+
+          $actualHash = (Get-FileHash -LiteralPath $exePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $assetDigest = ([string]$asset.digest).ToLowerInvariant()
+          if ($assetDigest -notmatch '^sha256:([a-f0-9]{64})$') {
+            throw "GitHub did not publish a valid SHA-256 asset digest: $assetDigest"
+          }
+          $expectedApiHash = $Matches[1]
+          Write-Host "Release asset size: $($asset.size) bytes"
+          Write-Host "GitHub asset digest: $expectedApiHash"
+          Write-Host "Downloaded file SHA-256: $actualHash"
+          if ($actualHash -ne $expectedApiHash) {
+            throw "Downloaded executable SHA-256 does not match the GitHub release asset digest."
+          }
+
+          $releaseNotesHash = $null
+          if ([string]$release.body -match '(?im)^\|\s*\*\*EyeGuard_Portable\.exe\*\*\s*\|\s*\x60(?<hash>[a-f0-9]{64})\x60') {
+            $releaseNotesHash = $Matches.hash.ToLowerInvariant()
+            Write-Host "Release notes SHA-256: $releaseNotesHash"
+            if ($releaseNotesHash -ne $actualHash) {
+              Write-Warning "The checksum in the release notes differs from both the downloaded file and/or GitHub's current asset digest."
+            }
+          } else {
+            Write-Warning 'Could not parse the portable EXE checksum from the release notes.'
+          }
+
+          # PyInstaller uses the process TEMP/TMP environment when choosing
+          # its runtime extraction directory. Isolate it to make the test conclusive.
+          $isolatedTemp = Join-Path $env:RUNNER_TEMP 'eyeguard-isolated-temp'
+          New-Item -ItemType Directory -Path $isolatedTemp -Force | Out-Null
+          $env:TEMP = $isolatedTemp
+          $env:TMP = $isolatedTemp
+
+          $observedDirectories = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+          $process = $null
+          $startedAt = Get-Date
+
+          try {
+            Write-Host "Launching: $exePath"
+            Write-Host "Isolated TEMP: $isolatedTemp"
+            $process = Start-Process -FilePath $exePath -WorkingDirectory $env:RUNNER_TEMP -PassThru
+            Write-Host "EyeGuard process ID: $($process.Id)"
+
+            # Poll frequently so short-lived temp directories are still observed.
+            $deadline = (Get-Date).AddSeconds(30)
+            while ((Get-Date) -lt $deadline) {
+              foreach ($directory in @(Get-ChildItem -LiteralPath $isolatedTemp -Directory -Force -ErrorAction SilentlyContinue)) {
+                [void]$observedDirectories.Add($directory.FullName)
+              }
+
+              $process.Refresh()
+              if ($process.HasExited -and (Get-Date) -gt $startedAt.AddSeconds(5)) {
+                # Continue polling briefly in case a child process owns the extracted files.
+                if ((Get-Date) -gt $startedAt.AddSeconds(10)) { break }
+              }
+              Start-Sleep -Milliseconds 200
+            }
+
+            foreach ($directory in @(Get-ChildItem -LiteralPath $isolatedTemp -Directory -Force -ErrorAction SilentlyContinue)) {
+              [void]$observedDirectories.Add($directory.FullName)
+            }
+
+            $meiDirectories = @($observedDirectories | Where-Object { [System.IO.Path]::GetFileName($_) -like '_MEI*' })
+            Write-Host "Observed temporary directories: $($observedDirectories.Count)"
+            foreach ($path in $observedDirectories) {
+              Write-Host "TEMP DIRECTORY: $path"
+              if (Test-Path -LiteralPath $path -PathType Container) {
+                $files = @(Get-ChildItem -LiteralPath $path -File -Recurse -Force -ErrorAction SilentlyContinue)
+                $subdirectories = @(Get-ChildItem -LiteralPath $path -Directory -Recurse -Force -ErrorAction SilentlyContinue)
+                Write-Host "Extracted files: $($files.Count)"
+                Write-Host "Extracted subdirectories: $($subdirectories.Count)"
+                $files | Select-Object -First 60 -ExpandProperty FullName | ForEach-Object { Write-Host "EXTRACTED FILE: $_" }
+              } else {
+                Write-Host 'The observed temporary directory was removed before the final scan.'
+              }
+            }
+
+            $process.Refresh()
+            if ($process.HasExited) {
+              Write-Host "EyeGuard exited with code: $($process.ExitCode)"
+            } else {
+              Write-Host 'EyeGuard remained running during the extraction observation window.'
+            }
+
+            if ($meiDirectories.Count -gt 0) {
+              Write-Host 'CONFIRMED: EyeGuard_Portable.exe created a PyInstaller _MEI directory under TEMP.'
+              Write-Host 'CLASSIFICATION: One-file executable that extracts its bundled runtime/resources to TEMP at launch.'
+            } else {
+              throw 'No PyInstaller _MEI directory was observed in the isolated TEMP folder. Runtime extraction was not confirmed.'
+            }
+          }
+          finally {
+            # Stop only processes launched from this test executable or its isolated extraction folder.
+            $relatedProcesses = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+              ($_.ExecutablePath -and $_.ExecutablePath -ieq $exePath) -or
+              ($_.ExecutablePath -and $_.ExecutablePath.StartsWith($isolatedTemp, [System.StringComparison]::OrdinalIgnoreCase))
+            })
+            foreach ($relatedProcess in $relatedProcesses) {
+              Stop-Process -Id ([int]$relatedProcess.ProcessId) -Force -ErrorAction SilentlyContinue
+            }
+            if ($null -ne $process) {
+              $process.Refresh()
+              if (-not $process.HasExited) {
+                Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+              }
+            }
+            Start-Sleep -Seconds 1
+            Remove-Item -LiteralPath $isolatedTemp -Recurse -Force -ErrorAction SilentlyContinue
+          }
