@@ -1,8 +1,0 @@
-{
-    "version": "1.5",
-    "description": "Portable application registration utility for Windows file associations and protocol handlers.",
-    "homepage": "https://github.com/SiL3NC3/PortableRegistrator",
-    "license": "Unknown",
-    "url": "https://github.com/SiL3NC3/PortableRegistrator/releases/download/1.5/PortableRegistrator_v1.5.zip",
-    "notes": "Review only. The 2023-04-12 release does not publish a SHA-256 digest, the release archive layout has not been inspected, and upstream documentation does not claim Windows 11 support. Do not promote to bucket until the archive, checksum, executable paths, and Windows 11 behavior are verified."
-}
