@@ -47,6 +47,80 @@ jobs:
           }
           scoop --version
 
+      - name: Validate new manifests against the installed Scoop schema
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $schemaPath = Join-Path $env:USERPROFILE 'scoop\apps\scoop\current\schema.json'
+          if (-not (Test-Path -LiteralPath $schemaPath -PathType Leaf)) {
+            throw "Scoop manifest schema not found: $schemaPath"
+          }
+
+          npm install --no-save --no-audit --no-fund ajv@8 ajv-formats
+          if ($LASTEXITCODE -ne 0) { throw 'Could not install the JSON Schema validator.' }
+
+          $scriptPath = Join-Path $env:RUNNER_TEMP 'validate-scoop-manifests.cjs'
+          @'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const Ajv = require('ajv');
+          const addFormats = require('ajv-formats');
+
+          const schemaPath = process.argv[2];
+          const root = process.argv[3];
+          const manifests = process.argv.slice(4);
+          const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+          const ajv = new Ajv({ allErrors: true, strict: false });
+          addFormats(ajv);
+          ajv.addFormat('regex', {
+            type: 'string',
+            validate(value) {
+              try { new RegExp(value); return true; }
+              catch { return false; }
+            }
+          });
+          const validate = ajv.compile(schema);
+          let failures = 0;
+          for (const relative of manifests) {
+            const file = path.join(root, relative);
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (validate(data)) {
+              console.log('PASS: ' + relative);
+              continue;
+            }
+            failures++;
+            console.error('FAIL: ' + relative);
+            for (const error of validate.errors || []) {
+              console.error('  ' + (error.instancePath || '/') + ' ' + error.message);
+              if (error.params && Object.keys(error.params).length) {
+                console.error('    ' + JSON.stringify(error.params));
+              }
+            }
+          }
+          if (failures) process.exit(1);
+          console.log('PASS: all new manifests conform to the installed Scoop schema.');
+          '@ | Set-Content -LiteralPath $scriptPath -Encoding utf8
+
+          $manifestPaths = @(
+            'bucket/browser-picker.json',
+            'bucket/default-programs-editor.json',
+            'bucket/firefox-portable-default-browser.json',
+            'bucket/nomad-launcher-chromium.json',
+            'bucket/nomad-launcher-floorp.json',
+            'bucket/nomad-launcher-helium.json',
+            'bucket/nomad-launcher-librewolf.json',
+            'bucket/nomad-launcher-mullvad.json',
+            'bucket/nomad-launcher-waterfox.json',
+            'bucket/pineapple-assoc-manager.json',
+            'bucket/portable-registrator.json',
+            'bucket/ps-sfta.json',
+            'bucket/win-link-router.json'
+          )
+          & node $scriptPath $schemaPath $env:GITHUB_WORKSPACE @manifestPaths
+          if ($LASTEXITCODE -ne 0) {
+            throw 'One or more new manifests do not conform to Scoop schema.json.'
+          }
+
       - name: Test Scoop installation and removal
         shell: pwsh
         run: |
