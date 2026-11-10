@@ -876,23 +876,44 @@ jobs:
           $lineBreak = [string][char]10
           $portabilityContent = [regex]::Replace($portabilityContent, "\r\n|\r", $lineBreak)
 
-          # Use the curated Nonportable table and Manifest Review document as the
-          # explicit classification sources. Remaining active bucket manifests are
-          # Portable; installer/package type alone never determines portability.
-          $nonportableHeading = "## Nonportable manifests by installer type"
-          $manifestReviewHeading = "## Manifest review"
-          $nonportableStart = $portabilityContent.IndexOf($nonportableHeading, [System.StringComparison]::Ordinal)
-          $manifestReviewStart = $portabilityContent.IndexOf($manifestReviewHeading, [System.StringComparison]::Ordinal)
-          if ($nonportableStart -lt 0 -or $manifestReviewStart -le $nonportableStart) {
-              throw "Nonportable classification section is missing or out of order in docs/manifest-portability.md."
+          # Read the Nonportable column from the current generated inventory.
+          # This preserves classifications when the old standalone Nonportable list is removed.
+          $inventoryStartMarker = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->"
+          $inventoryEndMarker = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->"
+          $inventoryStartIndex = $portabilityContent.IndexOf($inventoryStartMarker, [System.StringComparison]::Ordinal)
+          $inventoryEndIndex = $portabilityContent.IndexOf($inventoryEndMarker, [System.StringComparison]::Ordinal)
+          if ($inventoryStartIndex -lt 0 -or $inventoryEndIndex -le $inventoryStartIndex) {
+              throw "Portability inventory markers are missing or out of order."
           }
-          $nonportableSection = $portabilityContent.Substring(
-              $nonportableStart,
-              $manifestReviewStart - $nonportableStart
+          $existingInventory = $portabilityContent.Substring(
+              $inventoryStartIndex,
+              $inventoryEndIndex - $inventoryStartIndex
           )
+          $lineFeed = [string][char]10
+          $headerLine = @($existingInventory -split $lineFeed | Where-Object { $_ -match '^\|\s*Portable\b' } | Select-Object -First 1)
+          if ($headerLine.Count -eq 0) {
+              throw "Could not find the Portable/Nonportable inventory table header."
+          }
+          $headerCells = @($headerLine[0].Trim().Trim('|').Split('|') | ForEach-Object { $_.Trim() })
+          $nonportableColumn = -1
+          for ($column = 0; $column -lt $headerCells.Count; $column++) {
+              if ($headerCells[$column] -match '^Nonportable\b') {
+                  $nonportableColumn = $column
+                  break
+              }
+          }
+          if ($nonportableColumn -lt 0) {
+              throw "Could not locate the Nonportable column in the existing inventory."
+          }
+
           $nonportableSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-          foreach ($match in [regex]::Matches($nonportableSection, '\]\(\.\./bucket/(?<name>[^/)]+)\.json\)')) {
-              [void]$nonportableSet.Add($match.Groups["name"].Value)
+          foreach ($line in ($existingInventory -split $lineFeed)) {
+              if ($line -notmatch '^\|') { continue }
+              $cells = @($line.Trim().Trim('|').Split('|'))
+              if ($cells.Count -le $nonportableColumn) { continue }
+              foreach ($match in [regex]::Matches($cells[$nonportableColumn], '\]\(\.\./bucket/(?<name>[^/)]+)\.json\)')) {
+                  [void]$nonportableSet.Add($match.Groups["name"].Value)
+              }
           }
 
           $reviewPath = Join-Path $docsPath "manifest-review.md"
@@ -962,38 +983,53 @@ jobs:
           $summaryAfter = $portabilityContent.Substring($summaryEndIndex + $summaryEndMarker.Length)
           $portabilityContent = $summaryBefore + $summaryBlock + $summaryAfter
 
-          # Render portability lists with a separate Installer Type column beside each list.
-          # Each manifest remains unique and its installer type stays on the same row.
-          $portableItems = @($manifests | Where-Object { $_.Portability -eq "Portable" } | Sort-Object Name)
-          $nonportableItems = @($manifests | Where-Object { $_.Portability -eq "Nonportable" } | Sort-Object Name)
-          $pairCount = [Math]::Max($portableItems.Count, $nonportableItems.Count)
+          # Remove the obsolete standalone Nonportable list; the grouped main table now
+          # contains both classifications and is the source of truth.
+          $oldNonportableHeading = "## Nonportable manifests by installer type"
+          $manifestReviewHeading = "## Manifest review"
+          $oldNonportableStart = $portabilityContent.IndexOf($oldNonportableHeading, [System.StringComparison]::Ordinal)
+          $manifestReviewStart = $portabilityContent.IndexOf($manifestReviewHeading, [System.StringComparison]::Ordinal)
+          if ($oldNonportableStart -ge 0) {
+              if ($manifestReviewStart -le $oldNonportableStart) {
+                  throw "Manifest Review heading must follow the obsolete Nonportable section."
+              }
+              $portabilityContent = $portabilityContent.Substring(0, $oldNonportableStart) +
+                  $portabilityContent.Substring($manifestReviewStart)
+          }
 
+          # One row per installer/package type. Each type appears once in the
+          # rightmost column, with its Portable and Nonportable manifests grouped beside it.
+          $classifiedItems = @($manifests | Where-Object { $_.Portability -in @("Portable", "Nonportable") })
+          $installerTypeGroups = @($classifiedItems | Group-Object InstallerType | Sort-Object Name)
           $installerTypeLines = [System.Collections.Generic.List[string]]::new()
           $installerTypeLines.Add('<a id="all-bucket-manifests-by-installer-type"></a>')
-          $installerTypeLines.Add("## All bucket manifests: Portable and Nonportable")
+          $installerTypeLines.Add("## Portable and Nonportable manifests grouped by installer type")
           $installerTypeLines.Add("")
-          $installerTypeLines.Add("Each manifest appears once. Installer Type is shown in its own column immediately to the right of the corresponding manifest. Items awaiting verification are kept separately in [Manifest Review](manifest-review.md).")
+          $installerTypeLines.Add("Each installer type appears once. Manifests are grouped under Portable or Nonportable; items awaiting verification remain in [Manifest Review](manifest-review.md).")
           $installerTypeLines.Add("")
-          $installerTypeLines.Add("| Portable ($portableCount) | Installer Type | Nonportable ($nonportableCount) | Installer Type |")
-          $installerTypeLines.Add("| --- | --- | --- | --- |")
-          for ($index = 0; $index -lt $pairCount; $index++) {
-              $portableLink = ""
-              $portableType = ""
-              $nonportableLink = ""
-              $nonportableType = ""
-              if ($index -lt $portableItems.Count) {
-                  $item = $portableItems[$index]
-                  $name = ([string]$item.Name).Replace("|", "\|")
-                  $portableType = ([string]$item.InstallerType).Replace("|", "\|")
-                  $portableLink = "[$name](../bucket/$($item.Name).json)"
-              }
-              if ($index -lt $nonportableItems.Count) {
-                  $item = $nonportableItems[$index]
-                  $name = ([string]$item.Name).Replace("|", "\|")
-                  $nonportableType = ([string]$item.InstallerType).Replace("|", "\|")
-                  $nonportableLink = "[$name](../bucket/$($item.Name).json)"
-              }
-              $installerTypeLines.Add("| $portableLink | $portableType | $nonportableLink | $nonportableType |")
+          $installerTypeLines.Add("| Portable manifests ($portableCount) | Nonportable manifests ($nonportableCount) | Installer Type |")
+          $installerTypeLines.Add("| --- | --- | --- |")
+          foreach ($group in $installerTypeGroups) {
+              $portableLinks = @(
+                  $group.Group |
+                      Where-Object { $_.Portability -eq "Portable" } |
+                      Sort-Object Name |
+                      ForEach-Object {
+                          $name = ([string]$_.Name).Replace("|", "\|")
+                          "[$name](../bucket/$($_.Name).json)"
+                      }
+              ) -join ", "
+              $nonportableLinks = @(
+                  $group.Group |
+                      Where-Object { $_.Portability -eq "Nonportable" } |
+                      Sort-Object Name |
+                      ForEach-Object {
+                          $name = ([string]$_.Name).Replace("|", "\|")
+                          "[$name](../bucket/$($_.Name).json)"
+                      }
+              ) -join ", "
+              $typeLabel = ([string]$group.Name).Replace("|", "\|")
+              $installerTypeLines.Add("| $portableLinks | $nonportableLinks | $typeLabel |")
           }
           $installerTypeLines.Add("")
           $installerTypeLines.Add("**Counts:** Portable $portableCount; Nonportable $nonportableCount; Review $reviewCount; Total $totalCount.")
@@ -1019,7 +1055,7 @@ jobs:
               $portabilityContent,
               [System.Text.UTF8Encoding]::new($false)
           )
-          Write-Host "Generated four-column portability inventory. Portable: $portableCount; Nonportable: $nonportableCount; Review: $reviewCount; Total: $totalCount."
+          Write-Host "Generated portability inventory grouped by installer type. Portable: $portableCount; Nonportable: $nonportableCount; Review: $reviewCount; Total: $totalCount."
 
           Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
