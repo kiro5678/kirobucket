@@ -1,9 +1,0 @@
-{
-    "version": "1.1.0",
-    "description": "Portable Windows file-association manager driven by PACFG configuration files.",
-    "homepage": "https://github.com/BLumia/pineapple-assoc-manager",
-    "license": "MIT",
-    "url": "https://github.com/BLumia/pineapple-assoc-manager/releases/download/1.1.0/pineapple-assoc-manager-qt6.12.0-standalone.zip",
-    "hash": "b5f922ff866895d45f60a057bd617c8e597e82cbe9b814817dc52bbd602b7d43",
-    "notes": "Review only. The Qt 6.12 standalone ZIP and digest are known, but the archive layout and executable path have not been inspected. Verify the real executable location before adding bin and shortcuts or promoting this manifest to bucket. Pineapple is an alias of this same project; do not create a second manifest."
-}
