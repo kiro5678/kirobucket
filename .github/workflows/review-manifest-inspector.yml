@@ -189,7 +189,7 @@ jobs:
                 }
                 $archiveStatus = 'INNO LIST + EXTRACT PASS'
                 $payloadStatus = $exeFiles -join ', '
-                Write-Host "$appName: innounp extracted $($innoFiles.Count) app file(s). EXEs: $($exeFiles -join ', ')"
+                Write-Host "${appName}: innounp extracted $($innoFiles.Count) app file(s). EXEs: $($exeFiles -join ', ')"
                 if ($manifest.bin -is [string] -and -not [string]::IsNullOrWhiteSpace($manifest.bin)) {
                   $expectedBin = ([string]$manifest.bin).Replace('\','/')
                   if ($exeFiles -contains $expectedBin) {
