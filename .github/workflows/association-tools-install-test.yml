@@ -76,7 +76,7 @@ jobs:
             $currentDir = Join-Path $appRoot 'current'
 
             Write-Host ''
-            Write-Host "=== $Name: install ==="
+            Write-Host "=== ${Name}: install ==="
             try {
               if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
                 throw "Manifest missing: $manifestPath"
@@ -114,7 +114,7 @@ jobs:
                 Write-Host "PASS: extracted executable found: $expected"
               }
 
-              Write-Host "=== $Name: uninstall ==="
+              Write-Host "=== ${Name}: uninstall ==="
             }
             finally {
               if (Test-Path -LiteralPath $appRoot) {
