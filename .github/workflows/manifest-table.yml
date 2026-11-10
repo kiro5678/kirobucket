@@ -982,12 +982,14 @@ jobs:
               if ($index -lt $portableItems.Count) {
                   $item = $portableItems[$index]
                   $name = ([string]$item.Name).Replace("|", "\|")
-                  $portableLink = "[$name](../bucket/$($item.Name).json)"
+                  $typeLabel = ([string]$item.InstallerType).Replace("|", "\|")
+                  $portableLink = "[$name](../bucket/$($item.Name).json) — $typeLabel"
               }
               if ($index -lt $nonportableItems.Count) {
                   $item = $nonportableItems[$index]
                   $name = ([string]$item.Name).Replace("|", "\|")
-                  $nonportableLink = "[$name](../bucket/$($item.Name).json)"
+                  $typeLabel = ([string]$item.InstallerType).Replace("|", "\|")
+                  $nonportableLink = "[$name](../bucket/$($item.Name).json) — $typeLabel"
               }
               $installerTypeLines.Add("| $portableLink | $nonportableLink |")
           }
