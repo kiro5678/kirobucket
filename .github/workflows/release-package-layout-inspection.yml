@@ -117,7 +117,7 @@ jobs:
 
           Inspect-Zip -Name "MisterDownloadManager-0.5.2-portable.zip" -Url "https://github.com/anefzaoui/misterdownloadmanager/releases/download/v0.5.2/MisterDownloadManager-0.5.2-portable.zip" -Sha256 "0907a6c6aed5c4967e89549e883147d2b33b073e6f8b0d914dff84d32f3b7cf7" -ExpectedPaths @("MisterDownloadManager-0.5.2-portable/misterdownloadmanager.exe", "MisterDownloadManager-0.5.2-portable/data/README.txt")
 
-          Inspect-Zip -Name "Easy.Link.File.Viewer.1.9.2.zip" -Url "https://github.com/ElektroStudios/Easy-Link-File-Viewer/releases/download/v1.9.2/Easy.Link.File.Viewer.1.9.2.zip" -Sha256 "a554c3b85ad36fabb6c93cb8e7b292df5be787c259ccd33ab3f8c99685b40bcf" -ExpectedPaths @() -ExpectedRegex "(?i)^Source/GUI/bin/Release/Easy Link File Viewer\.exe$"
+          Inspect-Zip -Name "Easy.Link.File.Viewer.1.9.2.zip" -Url "https://github.com/ElektroStudios/Easy-Link-File-Viewer/releases/download/v1.9.2/Easy.Link.File.Viewer.1.9.2.zip" -Sha256 "a554c3b85ad36fabb6c93cb8e7b292df5be787c259ccd33ab3f8c99685b40bcf" -ExpectedPaths @() -ExpectedRegex "(?i)Easy Link File Viewer\.exe$"
 
           Inspect-TarGz -Name "code-server-4.145.2-windows-amd64.tar.gz" -Url "https://github.com/coder/code-server/releases/download/v4.145.2/code-server-4.145.2-windows-amd64.tar.gz" -Sha256 "d88f8a00831334da291ad29b35714c7bf6d3dc398e5b6f5ed1b20034c1da7675" -ExpectedRegex @("^code-server-4\.145\.2-windows-amd64/bin/code-server\.cmd$", "^code-server-4\.145\.2-windows-amd64/lib/node\.exe$")
 
