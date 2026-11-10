@@ -8,12 +8,6 @@ on:
     paths:
       - 'under review scoop bucket/*.json'
       - '.github/workflows/review-manifest-inspector.yml'
-  push:
-    branches:
-      - review-new-app-manifests-2026-11-10
-    paths:
-      - 'under review scoop bucket/*.json'
-      - '.github/workflows/review-manifest-inspector.yml'
 
 permissions:
   contents: read
