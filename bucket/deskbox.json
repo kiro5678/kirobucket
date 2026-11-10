@@ -20,7 +20,7 @@
             "DeskBox"
         ]
     ],
-    "notes": "Scoop extracts the Full Native AOT Inno Setup payload instead of running the vendor installer. The bundled Windows App Runtime is included in this payload. The vendor's installer registration, uninstaller, and installer-created shortcuts are not executed; Scoop creates the Start Menu shortcut. DeskBox stores user data under %LOCALAPPDATA%\\DeskBox and recovery data under %LOCALAPPDATA%\\DeskBox-Recovery, so this is not a portable data profile. Disable DeskBox's built-in updater and use Scoop for updates.",
+    "notes": "Scoop extracts the Full Native AOT Inno Setup payload instead of running the vendor installer. The bundled Windows App Runtime is included in this payload. The vendor's installer registration, uninstaller, and installer-created shortcuts are not executed; Scoop creates the Start Menu shortcut. DeskBox stores user data under %LOCALAPPDATA%\\DeskBox and recovery data under %LOCALAPPDATA%\\DeskBox-Recovery, so this is not a portable data profile. Disable DeskBox's built-in updater and use Scoop for updates. The upstream release identifies both 1.5.9 installers as unsigned; Scoop verifies the SHA-256 digests published with the release.",
     "checkver": {
         "url": "https://api.github.com/repos/Tianyu199509/DeskBox/releases/latest",
         "jsonpath": "$.tag_name",
