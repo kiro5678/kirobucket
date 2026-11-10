@@ -50,7 +50,7 @@ jobs:
             throw '7-Zip was not found on the Windows runner.'
           }
 
-          $changed = @(git diff --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'under review scoop bucket' |
+          $changed = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'under review scoop bucket' |
             Where-Object { $_ -match '^under review scoop bucket/.+\.json$' } |
             Sort-Object -Unique)
           if ($changed.Count -eq 0) {
