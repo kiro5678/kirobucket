@@ -1,0 +1,19 @@
+{
+    "version": "2.7.2676",
+    "description": "Standalone Windows utility for editing file associations, context-menu entries, icons, descriptions, AutoPlay handlers, and default-program settings.",
+    "homepage": "https://defaultprogramseditor.com/",
+    "url": "https://defaultprogramseditor.com/download#/dl.zip",
+    "hash": "d84e0588289a661e796c761cc40ba3cb53a7824d955a8c260e2ac9f74b77b827",
+    "extract_dir": "Default Programs Editor",
+    "bin": "Default Programs Editor.exe",
+    "shortcuts": [
+        [
+            "Default Programs Editor.exe",
+            "Default Programs Editor"
+        ]
+    ],
+    "notes": [
+        "The publisher describes this as a standalone application with no installation. Version 2.7.2676 dates from March 25, 2018; Windows 11 compatibility is not established.",
+        "This utility edits Windows file-association, context-menu, and AutoPlay settings. Review changes and keep a backup of relevant settings. It does not bypass Windows protected default-app controls."
+    ]
+}
