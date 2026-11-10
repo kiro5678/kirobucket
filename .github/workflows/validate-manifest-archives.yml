@@ -37,6 +37,19 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/browser-picker.json'
+      - 'bucket/default-programs-editor.json'
+      - 'bucket/firefox-portable-default-browser.json'
+      - 'bucket/nomad-launcher-chromium.json'
+      - 'bucket/nomad-launcher-floorp.json'
+      - 'bucket/nomad-launcher-helium.json'
+      - 'bucket/nomad-launcher-librewolf.json'
+      - 'bucket/nomad-launcher-mullvad.json'
+      - 'bucket/nomad-launcher-waterfox.json'
+      - 'bucket/pineapple-assoc-manager.json'
+      - 'bucket/portable-registrator.json'
+      - 'bucket/ps-sfta.json'
+      - 'bucket/win-link-router.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/voicestudio.json'
