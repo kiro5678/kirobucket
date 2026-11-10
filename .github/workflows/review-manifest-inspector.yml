@@ -8,6 +8,12 @@ on:
     paths:
       - 'under review scoop bucket/*.json'
       - '.github/workflows/review-manifest-inspector.yml'
+  push:
+    branches:
+      - review-new-app-manifests-2026-11-10
+    paths:
+      - 'under review scoop bucket/*.json'
+      - '.github/workflows/review-manifest-inspector.yml'
 
 permissions:
   contents: read
@@ -26,14 +32,14 @@ jobs:
       - name: Checkout pull request
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Inspect staged manifests and package files
         shell: pwsh
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
