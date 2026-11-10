@@ -1,0 +1,165 @@
+name: ArboraFM Portable ZIP Inspection
+
+on:
+  push:
+    branches:
+      - inspect-arborafm-portable-0.9.0
+    paths:
+      - ".github/workflows/arbora-portable-inspection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download and inspect ArboraFM portable archive
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download, verify, and inspect ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+          $url = 'https://arborafm.dev/releases/0.9.0/windows/Arbora_0.9.0_x64-portable.zip'
+          $root = Join-Path $env:RUNNER_TEMP 'arborafm-inspection'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $zip = Join-Path $root 'Arbora_0.9.0_x64-portable.zip'
+          $extract = Join-Path $root 'extracted'
+
+          Write-Host "Downloading: $url"
+          Invoke-WebRequest -Uri $url -OutFile $zip -MaximumRedirection 10 -TimeoutSec 900
+          if (-not (Test-Path -LiteralPath $zip -PathType Leaf)) {
+            throw 'The download did not produce a file.'
+          }
+          $size = (Get-Item -LiteralPath $zip).Length
+          if ($size -lt 1000) {
+            throw "Downloaded file is unexpectedly small: $size bytes."
+          }
+          $hash = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "ARBORA_SHA256=$hash"
+          Write-Host "ARBORA_SIZE_BYTES=$size"
+
+          $sevenZip = (Get-Command '7z.exe' -ErrorAction SilentlyContinue).Source
+          if (-not $sevenZip) {
+            $candidates = @('C:\Program Files\7-Zip\7z.exe','C:\Program Files (x86)\7-Zip\7z.exe')
+            $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          }
+          if (-not $sevenZip) { throw '7-Zip executable was not found on the Windows runner.' }
+
+          $sevenZipLog = Join-Path $root '7zip.log'
+          & $sevenZip t -bb1 $zip 2>&1 | Tee-Object -FilePath $sevenZipLog
+          $testExit = $LASTEXITCODE
+          if ($testExit -ne 0) {
+            Write-Host '7zip.log after archive test failure:'
+            Get-Content -LiteralPath $sevenZipLog
+            throw "7-Zip archive integrity test failed with exit code $testExit."
+          }
+
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
+          try {
+            $entries = @($archive.Entries | ForEach-Object {
+              [pscustomobject]@{
+                Path = $_.FullName.Replace('\','/')
+                Length = $_.Length
+              }
+            })
+          } finally {
+            $archive.Dispose()
+          }
+          if ($entries.Count -eq 0) { throw 'The ZIP archive is empty.' }
+
+          Write-Host "ZIP_ENTRY_COUNT=$($entries.Count)"
+          Write-Host '=== Archive entries ==='
+          $entries | Sort-Object Path | ForEach-Object {
+            Write-Host ($_.Length.ToString() + ' ' + $_.Path)
+          }
+
+          New-Item -ItemType Directory -Path $extract -Force | Out-Null
+          $extractLog = Join-Path $root '7zip-extract.log'
+          & $sevenZip x -y "-o$extract" -bb1 $zip 2>&1 | Tee-Object -FilePath $extractLog
+          $extractExit = $LASTEXITCODE
+          if ($extractExit -ne 0) {
+            Write-Host '7zip.log after extraction failure:'
+            Get-Content -LiteralPath $extractLog
+            throw "7-Zip extraction failed with exit code $extractExit."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse)
+          $exeFiles = @($files | Where-Object { $_.Extension -ieq '.exe' })
+          if ($exeFiles.Count -eq 0) { throw 'No EXE launcher was found in the portable ZIP.' }
+
+          Write-Host '=== Executable metadata ==='
+          foreach ($exe in $exeFiles) {
+            $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+            $signature = Get-AuthenticodeSignature -LiteralPath $exe.FullName
+            $bytes = [System.IO.File]::ReadAllBytes($exe.FullName)
+            $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+            $unicode = [System.Text.Encoding]::Unicode.GetString($bytes)
+            $text = $ascii + [Environment]::NewLine + $unicode
+            $machine = 'Unknown'
+            if ($bytes.Length -ge 0x40 -and $bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) {
+              $peOffset = [BitConverter]::ToInt32($bytes,0x3C)
+              if ($peOffset -gt 0 -and $peOffset + 6 -le $bytes.Length) {
+                $machineCode = [BitConverter]::ToUInt16($bytes,$peOffset + 4)
+                $machine = switch ($machineCode) {
+                  0x8664 { 'x64 (AMD64)' }
+                  0xAA64 { 'ARM64' }
+                  0x014c { 'x86 (I386)' }
+                  default { 'Unknown (0x{0:X4})' -f $machineCode }
+                }
+              }
+            }
+            Write-Host "EXE_PATH=$($exe.FullName.Substring($extract.Length).TrimStart('\'))"
+            Write-Host "  Machine=$machine"
+            Write-Host "  ProductName=$($info.ProductName)"
+            Write-Host "  ProductVersion=$($info.ProductVersion)"
+            Write-Host "  FileDescription=$($info.FileDescription)"
+            Write-Host "  SignatureStatus=$($signature.Status)"
+            Write-Host "  Signer=$($signature.SignerCertificate.Subject)"
+            foreach ($marker in @('portable','electron','tauri','squirrel','nsis','inno setup','webview2','updater','appdata','localappdata')) {
+              if ($text -match [regex]::Escape($marker)) { Write-Host "  PE_MARKER=$marker" }
+            }
+          }
+
+          Write-Host '=== Relevant data/config/readme paths ==='
+          $relevant = @($files | Where-Object {
+            $_.Name -match '(?i)(readme|license|portable|config|settings|data|manifest|package\.json|\.ini$|\.toml$|\.yaml$|\.yml$|\.json$)'
+          })
+          foreach ($file in $relevant | Select-Object -First 120) {
+            $rel = $file.FullName.Substring($extract.Length).TrimStart('\')
+            Write-Host "PACKAGE_FILE=$rel"
+          }
+
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('## ArboraFM portable ZIP inspection')
+          $summary.Add('')
+          $summary.Add("- Download: $url")
+          $summary.Add("- File size: $size bytes")
+          $summary.Add("- SHA-256: $hash")
+          $summary.Add("- 7-Zip integrity test: PASS")
+          $summary.Add("- Extracted files: $($files.Count)")
+          $summary.Add("- EXE files: $($exeFiles.Count)")
+          $summary.Add('')
+          $summary.Add('### Executables')
+          foreach ($exe in $exeFiles) {
+            $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+            $signature = Get-AuthenticodeSignature -LiteralPath $exe.FullName
+            $rel = $exe.FullName.Substring($extract.Length).TrimStart('\').Replace('\','/')
+            $summary.Add("- $rel — $($info.ProductVersion); signature: $($signature.Status)")
+          }
+          $summary.Add('')
+          $summary.Add('### Data/config/readme candidates')
+          foreach ($file in $relevant | Select-Object -First 120) {
+            $summary.Add("- $($file.FullName.Substring($extract.Length).TrimStart('\').Replace('\','/'))")
+          }
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+          Write-Host "INSPECTION_SUMMARY=$env:GITHUB_STEP_SUMMARY"
