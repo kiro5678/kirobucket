@@ -129,6 +129,12 @@ jobs:
             }
           }
 
+          $readmeFile = @($files | Where-Object { $_.Name -ieq 'README.txt' } | Select-Object -First 1)
+          if ($readmeFile.Count -gt 0) {
+            Write-Host '=== README CONTENT ==='
+            Get-Content -LiteralPath $readmeFile[0].FullName -Raw
+          }
+
           Write-Host '=== Relevant data/config/readme paths ==='
           $relevant = @($files | Where-Object {
             $_.Name -match '(?i)(readme|license|portable|config|settings|data|manifest|package\.json|\.ini$|\.toml$|\.yaml$|\.yml$|\.json$)'
