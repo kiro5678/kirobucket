@@ -8,6 +8,7 @@ on:
       - 'bucket/edge-drop.json'
       - 'bucket/pinokio.json'
       - 'bucket/unsloth.json'
+      - 'bucket/purge.json'
       - 'bucket/0install-win.json'
       - 'bucket/detect-it-easy.json'
       - 'bucket/die-engine.json'
@@ -27,6 +28,7 @@ on:
       - 'bucket/pake-xiaohongshu.json'
       - 'bucket/pake-youtubemusic.json'
       - 'bucket/pake-youtube.json'
+      - 'bucket/purge.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
