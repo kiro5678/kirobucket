@@ -110,7 +110,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || github.event.client_payload.base_sha || '' }}
           EVENT_NAME: ${{ github.event_name }}
-          GITHUB_REF: ${{ github.ref }}
+          BRANCH_REF: ${{ github.ref }}
           MANIFEST_INPUT: ${{ inputs.manifest || '' }}
         run: |
           $ErrorActionPreference = 'Stop'
@@ -119,7 +119,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) {
             throw 'Could not fetch master.'
           }
-          $isFeatureBranchPush = $env:EVENT_NAME -eq 'push' -and $env:GITHUB_REF -ne 'refs/heads/master'
+          $isFeatureBranchPush = $env:EVENT_NAME -eq 'push' -and $env:BRANCH_REF -ne 'refs/heads/master'
           if ($env:EVENT_NAME -eq 'pull_request') {
             Write-Host 'Validating the pull request checkout, including its new and renamed manifests.'
           } elseif ($isFeatureBranchPush) {
