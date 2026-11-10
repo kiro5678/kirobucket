@@ -1,0 +1,122 @@
+name: FoxDesktop Inno Setup Payload Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'under review scoop bucket/foxdesktop.json'
+      - '.github/workflows/foxdesktop-inno-test.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    name: Extract FoxDesktop Inno Setup app payload
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Download and verify the official FoxDesktop installer
+        id: target
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $url = 'https://foxdesktop-app.com/download'
+          $expected = '70cdad4a678d453364ab8cdfd3514708a5c1e79952781052106b47de27c796aa'
+          $root = Join-Path $env:RUNNER_TEMP 'foxdesktop-inno-test'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $installer = Join-Path $root 'FoxDesktop.exe'
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 900
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) {
+            throw "FoxDesktop SHA-256 mismatch. Expected $expected, received $actual."
+          }
+          $version = (Get-Item -LiteralPath $installer).VersionInfo
+          $signature = Get-AuthenticodeSignature -FilePath $installer
+          Write-Host "Downloaded bytes: $((Get-Item $installer).Length)"
+          Write-Host "SHA-256: $actual"
+          Write-Host "Product version: $($version.ProductVersion)"
+          Write-Host "Authenticode: $($signature.Status)"
+          "INSTALLER_PATH=$installer" >> $env:GITHUB_ENV
+          "ROOT=$root" >> $env:GITHUB_ENV
+
+      - name: Obtain and verify innounp
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $url = 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip'
+          $expected = '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd'
+          $zip = Join-Path $env:ROOT 'innounp-2.zip'
+          Invoke-WebRequest -Uri $url -OutFile $zip -MaximumRedirection 10 -TimeoutSec 180
+          $actual = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) {
+            throw "innounp helper SHA-256 mismatch. Expected $expected, received $actual."
+          }
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            throw '7-Zip was not found.'
+          }
+          $helper = Join-Path $env:ROOT 'innounp-helper'
+          New-Item -ItemType Directory -Path $helper -Force | Out-Null
+          & $sevenZip x $zip "-o$helper" '-y' 2>&1 | Tee-Object -FilePath (Join-Path $env:ROOT '7zip.log')
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content -LiteralPath (Join-Path $env:ROOT '7zip.log') -Tail 80
+            throw 'Could not extract the verified innounp helper.'
+          }
+          $exe = Get-ChildItem -LiteralPath $helper -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+          if (-not $exe) { throw 'innounp.exe was not found in the helper archive.' }
+          "INNOUNP_PATH=$($exe.FullName)" >> $env:GITHUB_ENV
+          Write-Host "innounp: $($exe.FullName)"
+
+      - name: Extract the Inno Setup application payload without running Setup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $destination = Join-Path $env:ROOT 'app-payload'
+          New-Item -ItemType Directory -Path $destination -Force | Out-Null
+          $output = & $env:INNOUNP_PATH '-x' "-d$destination" $env:INSTALLER_PATH '-y' '-c{app}' 2>&1
+          $exitCode = $LASTEXITCODE
+          $output | Tee-Object -FilePath (Join-Path $env:ROOT 'innounp.log')
+          if ($exitCode -ne 0) {
+            throw "innounp extraction failed with exit code $exitCode. See the workflow log."
+          }
+          $files = @(Get-ChildItem -LiteralPath $destination -File -Recurse)
+          if ($files.Count -eq 0) { throw 'innounp exited successfully but extracted no app files.' }
+          $executables = @($files | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+            $relative = [IO.Path]::GetRelativePath($destination, $_.FullName).Replace('\\','/')
+            $fileVersion = $_.VersionInfo.FileVersion
+            "$relative (FileVersion: $fileVersion; Size: $($_.Length))"
+          })
+          $main = $files | Where-Object { $_.Name -ieq 'FoxDesktop.exe' } | Select-Object -First 1
+          if (-not $main) {
+            Write-Host 'FoxDesktop.exe was not found by exact name. Extracted EXEs:'
+            $executables | ForEach-Object { Write-Host " - $_" }
+            throw 'Could not identify FoxDesktop.exe in the extracted application payload.'
+          }
+          $mainRelative = [IO.Path]::GetRelativePath($destination, $main.FullName).Replace('\\','/')
+          @(
+            '## FoxDesktop Inno Setup extraction',
+            '',
+            "- Installer SHA-256: `70cdad4a678d453364ab8cdfd3514708a5c1e79952781052106b47de27c796aa`",
+            "- innounp extracted app files: **$($files.Count)**",
+            "- Main executable: `$mainRelative`",
+            '',
+            '### Executables in the application payload',
+            '',
+            ($executables | ForEach-Object { "- $_" })
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          Write-Host "Main executable path: $mainRelative"
+          Write-Host "Extracted application files: $($files.Count)"
+          $executables | ForEach-Object { Write-Host "EXE: $_" }
+          Write-Host 'No installer or extracted application was executed.'
