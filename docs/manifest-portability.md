@@ -1,13 +1,5 @@
 # Manifest Portability Inventory
 
-## Definitions
-
-| Class | Typical installer/package types | Meaning in this repository |
-| --- | --- | --- |
-| **Portable** | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS payload extraction, explicit portable-mode installer | Scoop downloads a standalone executable, extracts an archive/installer payload, or invokes a vendor-documented portable mode that places the application in the Scoop app directory without persistent Windows registration. The manifest must not install a driver/service, register a Windows package, or create normal install integrations as part of installation. The application files can generally be moved with the Scoop app directory. |
-| **Nonportable** | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, Windows font or registry registration | The manifest runs the vendor's setup routine, registers an MSIX/AppX package, installs a driver/service/runtime, installs fonts into Windows, or writes persistent Windows integration such as a protocol registration. This remains Nonportable even when the setup routine places the main files inside `$dir` or the Scoop app directory. |
-| **Review** | Unverified EXE setup, RMSKIN add-on, or MSIX/EXE with unverified unpackaged behavior | The manifest downloads a setup/package asset but its current instructions do not establish a safe, complete extraction or installation method. Do not assume it is Portable until the payload and launch path are verified. |
-
 ## Summary
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
