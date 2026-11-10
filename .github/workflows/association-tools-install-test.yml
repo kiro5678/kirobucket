@@ -1,6 +1,14 @@
 name: Association tools Scoop install test
 
 on:
+  push:
+    branches:
+      - add-portable-association-tools-complete-2026-11-10
+    paths:
+      - 'bucket/portable-registrator.json'
+      - 'bucket/default-programs-editor.json'
+      - 'bucket/win-link-router.json'
+      - '.github/workflows/association-tools-install-test.yml'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
