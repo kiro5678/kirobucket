@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: review-manifest-inspector-\${{ github.event.pull_request.number }}
+  group: review-manifest-inspector-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -26,14 +26,14 @@ jobs:
       - name: Checkout pull request
         uses: actions/checkout@v5
         with:
-          ref: \${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Inspect staged manifests and package files
         shell: pwsh
         env:
-          BASE_SHA: \${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: \${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
@@ -192,5 +192,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: review-manifest-7zip-logs
-          path: \${{ runner.temp }}/review-manifest-inspector/7zip.log
+          path: ${{ runner.temp }}/review-manifest-inspector/7zip.log
           if-no-files-found: warn
