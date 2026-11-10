@@ -74,7 +74,7 @@ This index lists the Nonportable manifests, grouped by the exact installer/packa
 | **Total** | **All Nonportable manifests** | **62** |
 
 
-## Review before classifying
+## under review/unavailble
 
 | Manifest / project | Installer/package or source status | Outstanding verification / blocker |
 | --- | --- | --- |
