@@ -962,8 +962,38 @@ jobs:
           $summaryAfter = $portabilityContent.Substring($summaryEndIndex + $summaryEndMarker.Length)
           $portabilityContent = $summaryBefore + $summaryBlock + $summaryAfter
 
-          # Each manifest gets its own row so that portability is a property of
-          # that manifest, not incorrectly inferred from its installer family.
+          # Render two independent lists side by side. A manifest name appears in one
+          # portability column only. Review candidates remain in manifest-review.md.
+          $portableItems = @($manifests | Where-Object { $_.Portability -eq "Portable" } | Sort-Object Name)
+          $nonportableItems = @($manifests | Where-Object { $_.Portability -eq "Nonportable" } | Sort-Object Name)
+          $pairCount = [Math]::Max($portableItems.Count, $nonportableItems.Count)
+
+          $installerTypeLines = [System.Collections.Generic.List[string]]::new()
+          $installerTypeLines.Add('<a id="all-bucket-manifests-by-installer-type"></a>')
+          $installerTypeLines.Add("## All bucket manifests: Portable and Nonportable")
+          $installerTypeLines.Add("")
+          $installerTypeLines.Add("Every listed manifest appears exactly once, under its own portability classification. Items still awaiting verification are kept separately in [Manifest Review](manifest-review.md).")
+          $installerTypeLines.Add("")
+          $installerTypeLines.Add("| Portable ($portableCount) | Nonportable ($nonportableCount) |")
+          $installerTypeLines.Add("| --- | --- |")
+          for ($index = 0; $index -lt $pairCount; $index++) {
+              $portableLink = ""
+              $nonportableLink = ""
+              if ($index -lt $portableItems.Count) {
+                  $item = $portableItems[$index]
+                  $name = ([string]$item.Name).Replace("|", "\|")
+                  $portableLink = "[$name](../bucket/$($item.Name).json)"
+              }
+              if ($index -lt $nonportableItems.Count) {
+                  $item = $nonportableItems[$index]
+                  $name = ([string]$item.Name).Replace("|", "\|")
+                  $nonportableLink = "[$name](../bucket/$($item.Name).json)"
+              }
+              $installerTypeLines.Add("| $portableLink | $nonportableLink |")
+          }
+          $installerTypeLines.Add("")
+          $installerTypeLines.Add("**Counts:** Portable $portableCount; Nonportable $nonportableCount; Review $reviewCount; Total $totalCount.")
+
           $installerTypeStart = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->"
           $installerTypeEnd = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->"
           $installerTypeStartIndex = $portabilityContent.IndexOf($installerTypeStart, [System.StringComparison]::Ordinal)
@@ -971,21 +1001,6 @@ jobs:
           if ($installerTypeStartIndex -lt 0 -or $installerTypeEndIndex -le $installerTypeStartIndex) {
               throw "Installer-type table markers are missing or out of order in docs/manifest-portability.md."
           }
-
-          $installerTypeLines = [System.Collections.Generic.List[string]]::new()
-          $installerTypeLines.Add("## All bucket manifests by installer type")
-          $installerTypeLines.Add("")
-          $installerTypeLines.Add('Each manifest appears once. Portability is classified per manifest; the installer/package type alone does not determine whether an application is Portable.')
-          $installerTypeLines.Add("")
-          $installerTypeLines.Add("| Manifest | Installer Type | Portability |")
-          $installerTypeLines.Add("| --- | --- | --- |")
-          foreach ($manifest in ($manifests | Sort-Object InstallerType, Name)) {
-              $nameEscaped = ([string]$manifest.Name).Replace("|", "\|")
-              $typeLabel = ([string]$manifest.InstallerType).Replace("|", "\|")
-              $installerTypeLines.Add("| [$nameEscaped](../bucket/$($manifest.Name).json) | $typeLabel | $($manifest.Portability) |")
-          }
-          $installerTypeLines.Add("")
-          $installerTypeLines.Add("**Total:** $totalCount manifests — Portable: $portableCount; Nonportable: $nonportableCount; Review: $reviewCount.")
 
           $installerTypeBlock = $installerTypeStart + $lineBreak +
               ([string]::Join($lineBreak, $installerTypeLines)) + $lineBreak +
@@ -1000,7 +1015,7 @@ jobs:
               $portabilityContent,
               [System.Text.UTF8Encoding]::new($false)
           )
-          Write-Host "Generated per-manifest installer and portability inventory for $totalCount manifests. Portable: $portableCount; Nonportable: $nonportableCount; Review: $reviewCount."
+          Write-Host "Generated two-column portability lists. Portable: $portableCount; Nonportable: $nonportableCount; Review: $reviewCount; Total: $totalCount."
 
           Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
