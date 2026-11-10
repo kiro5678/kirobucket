@@ -1,0 +1,96 @@
+name: EyeGuard Scoop Extraction Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/eyeguard-scoop-extraction-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extraction:
+    name: Test Portable EXE and Inno Setup extraction
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download assets and test Scoop-compatible extraction
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/hocinechero/EyeGuard/releases/tags/v3.0.0' -Headers @{ 'User-Agent' = 'kirobucket-eyeguard-extraction-test' }
+          $root = Join-Path $env:RUNNER_TEMP 'eyeguard-scoop-extraction'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+          foreach ($name in @('EyeGuard_Portable.exe', 'EyeGuard_Setup.exe')) {
+            $asset = @($release.assets | Where-Object { $_.name -eq $name }) | Select-Object -First 1
+            if ($null -eq $asset) { throw "Missing release asset: $name" }
+            $file = Join-Path $root $name
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $file -MaximumRedirection 10 -TimeoutSec 300
+            $actual = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            $expected = ([string]$asset.digest -replace '^sha256:', '').ToLowerInvariant()
+            if ($actual -ne $expected) { throw "SHA-256 mismatch for $name. Actual=$actual Expected=$expected" }
+            Write-Host "VERIFIED $name SHA-256: $actual"
+          }
+
+          $portable = Join-Path $root 'EyeGuard_Portable.exe'
+          $setup = Join-Path $root 'EyeGuard_Setup.exe'
+          $sevenZip = Get-Command '7z.exe' -CommandType Application -ErrorAction Stop | Select-Object -First 1
+          $portableOut = Join-Path $root 'portable-out'
+          New-Item -ItemType Directory -Path $portableOut -Force | Out-Null
+
+          Write-Host '=== Scoop 7-Zip extraction attempt: EyeGuard_Portable.exe ==='
+          $sevenZipLog = @(& $sevenZip.Source x $portable "-o$portableOut" -y 2>&1)
+          $sevenZipExit = $LASTEXITCODE
+          $portableFiles = @(Get-ChildItem -LiteralPath $portableOut -File -Recurse -Force -ErrorAction SilentlyContinue)
+          Write-Host "7ZIP_EXIT_CODE=$sevenZipExit"
+          $sevenZipLog | ForEach-Object { Write-Host $_ }
+          Write-Host "PORTABLE_EXTRACTED_FILES=$($portableFiles.Count)"
+          if ($sevenZipExit -eq 0 -and $portableFiles.Count -gt 0) {
+            Write-Host 'PORTABLE_EXTRACTION=PASS'
+            $portableFiles | Select-Object -First 30 -ExpandProperty FullName | ForEach-Object { Write-Host "PORTABLE_FILE: $_" }
+          } else {
+            Write-Host 'PORTABLE_EXTRACTION=FAIL'
+          }
+
+          Write-Host '=== Download and verify the same innounp helper used by Scoop ==='
+          $helperZip = Join-Path $root 'innounp-2.zip'
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/refs/heads/master/innounp-2/bin/innounp-2.zip' -OutFile $helperZip -TimeoutSec 180
+          $helperHash = (Get-FileHash -LiteralPath $helperZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($helperHash -ne 'f8e45c9676bebc7d7570108ab572673b541fcf7a7d3d24a04319ac6b5315b4e8') {
+            throw "innounp helper hash mismatch: $helperHash"
+          }
+
+          $helperDir = Join-Path $root 'innounp'
+          Expand-Archive -LiteralPath $helperZip -DestinationPath $helperDir -Force
+          $innounp = Get-ChildItem -LiteralPath $helperDir -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+          if ($null -eq $innounp) { throw 'Verified innounp archive does not contain innounp.exe.' }
+
+          $setupOut = Join-Path $root 'setup-out'
+          New-Item -ItemType Directory -Path $setupOut -Force | Out-Null
+          Write-Host '=== Scoop Expand-InnoArchive equivalent: EyeGuard_Setup.exe ==='
+          $innoLog = @(& $innounp.FullName -x "-d$setupOut" $setup -y '-c{app}' 2>&1)
+          $innoExit = $LASTEXITCODE
+          Write-Host "INNOUNP_EXIT_CODE=$innoExit"
+          $innoLog | ForEach-Object { Write-Host $_ }
+          if ($innoExit -ne 0) { throw 'Inno Setup extraction failed.' }
+
+          $launchTargets = @(Get-ChildItem -LiteralPath $setupOut -Filter 'EyeGuard.exe' -File -Recurse -Force)
+          if ($launchTargets.Count -eq 0) { throw 'Inno extraction succeeded but EyeGuard.exe was not found under the {app} payload.' }
+          $setupFiles = @(Get-ChildItem -LiteralPath $setupOut -File -Recurse -Force)
+          Write-Host 'SETUP_EXTRACTION=PASS'
+          Write-Host "SETUP_EXTRACTED_FILES=$($setupFiles.Count)"
+          Write-Host "SETUP_LAUNCH_TARGET=$($launchTargets[0].FullName)"
+          $setupFiles | Select-Object -First 40 -ExpandProperty FullName | ForEach-Object { Write-Host "SETUP_FILE: $_" }
+
+          if ($sevenZipExit -ne 0 -or $portableFiles.Count -eq 0) {
+            Write-Host 'MANIFEST_DECISION=Use EyeGuard_Setup.exe with innosetup true.'
+          } else {
+            Write-Host 'MANIFEST_DECISION=Portable EXE passed 7-Zip extraction; inspect extracted layout before selecting it.'
+          }
+          Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
