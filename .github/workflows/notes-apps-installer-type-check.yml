@@ -1,0 +1,269 @@
+name: Notes Apps Installer Type Check
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/notes-apps-installer-type-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Inspect Windows installer assets
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Inspect latest releases and identify attached package types
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          Add-Type -AssemblyName System.IO.Compression
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+          $headers = @{
+            Accept = 'application/vnd.github+json'
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            'X-GitHub-Api-Version' = '2022-11-28'
+            'User-Agent' = 'kirobucket-notes-app-installer-check'
+          }
+
+          $targets = @(
+            [pscustomobject]@{
+              Name = 'Many Notes'
+              Repository = 'brufdev/many-notes'
+            },
+            [pscustomobject]@{
+              Name = 'Note Mark'
+              Repository = 'enchant97/note-mark'
+            }
+          )
+
+          $workDir = Join-Path $env:RUNNER_TEMP 'notes-apps-installer-check'
+          New-Item -ItemType Directory -Path $workDir -Force | Out-Null
+
+          $results = [System.Collections.Generic.List[object]]::new()
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('# Notes applications — installer inspection')
+          $summary.Add('')
+          $summary.Add('Static inspection only. No downloaded application file is executed.')
+          $summary.Add('')
+
+          function Get-AssetType {
+            param(
+              [Parameter(Mandatory)][string]$Path
+            )
+
+            $stream = [System.IO.File]::OpenRead($Path)
+            try {
+              $header = [byte[]]::new(8)
+              $read = $stream.Read($header, 0, $header.Length)
+            } finally {
+              $stream.Dispose()
+            }
+
+            if ($read -ge 2 -and $header[0] -eq 0x4D -and $header[1] -eq 0x5A) {
+              return 'PE/Windows executable (EXE); installer vs portable requires further static inspection'
+            }
+
+            if ($read -ge 8 -and
+                $header[0] -eq 0xD0 -and $header[1] -eq 0xCF -and
+                $header[2] -eq 0x11 -and $header[3] -eq 0xE0 -and
+                $header[4] -eq 0xA1 -and $header[5] -eq 0xB1 -and
+                $header[6] -eq 0x1A -and $header[7] -eq 0xE1) {
+              return 'OLE Compound File; likely MSI or another compound installer container'
+            }
+
+            if ($read -ge 4 -and $header[0] -eq 0x50 -and $header[1] -eq 0x4B) {
+              $archive = [System.IO.Compression.ZipFile]::OpenRead($Path)
+              try {
+                $entries = @($archive.Entries | ForEach-Object { $_.FullName })
+              } finally {
+                $archive.Dispose()
+              }
+
+              if ($entries -match '(^|/)AppxManifest\.xml$') {
+                return 'MSIX/AppX package (ZIP container with AppxManifest.xml)'
+              }
+              if ($entries | Where-Object { $_ -match '(?i)\.msi$' }) {
+                return 'ZIP archive containing MSI installer(s)'
+              }
+              if ($entries | Where-Object { $_ -match '(?i)\.exe$' }) {
+                return 'ZIP archive containing EXE file(s); inspect internal layout before calling it portable'
+              }
+              return 'ZIP archive; no EXE/MSI/MSIX payload detected'
+            }
+
+            if ($read -ge 6 -and
+                $header[0] -eq 0x37 -and $header[1] -eq 0x7A -and
+                $header[2] -eq 0xBC -and $header[3] -eq 0xAF -and
+                $header[4] -eq 0x27 -and $header[5] -eq 0x1C) {
+              return '7-Zip archive'
+            }
+
+            if ($read -ge 4 -and
+                $header[0] -eq 0x52 -and $header[1] -eq 0x61 -and
+                $header[2] -eq 0x72 -and $header[3] -eq 0x21) {
+              return 'RAR archive'
+            }
+
+            if ($read -ge 4 -and
+                $header[0] -eq 0x4D -and $header[1] -eq 0x53 -and
+                $header[2] -eq 0x43 -and $header[3] -eq 0x46) {
+              return 'Windows Cabinet (CAB) archive'
+            }
+
+            if ($read -ge 2 -and $header[0] -eq 0x1F -and $header[1] -eq 0x8B) {
+              return 'GZIP-compressed archive'
+            }
+
+            return 'Unknown file format; inspect manually'
+          }
+
+          foreach ($target in $targets) {
+            Write-Host ''
+            Write-Host "============================================================"
+            Write-Host "$($target.Name) — $($target.Repository)"
+            Write-Host "============================================================"
+
+            $releaseUri = "https://api.github.com/repos/$($target.Repository)/releases/latest"
+            $release = Invoke-RestMethod -Uri $releaseUri -Headers $headers -TimeoutSec 45 -ErrorAction Stop
+            $assets = @($release.assets)
+
+            $projectResult = [ordered]@{
+              name = $target.Name
+              repository = $target.Repository
+              latest_tag = $release.tag_name
+              published_at = $release.published_at
+              release_url = $release.html_url
+              release_asset_count = $assets.Count
+              assets = @()
+              conclusion = ''
+            }
+
+            $summary.Add("## $($target.Name)")
+            $summary.Add('')
+            $summary.Add("- Repository: https://github.com/$($target.Repository)")
+            $summary.Add("- Latest release: $($release.tag_name)")
+            $summary.Add("- Published: $($release.published_at)")
+            $summary.Add("- Release assets attached by publisher: $($assets.Count)")
+            $summary.Add("- Release page: $($release.html_url)")
+
+            if ($assets.Count -eq 0) {
+              $projectResult.conclusion = 'No release assets attached; no Windows installer can be identified from this release.'
+              $summary.Add('- **Result:** No release assets. GitHub-generated source ZIP/TAR archives are source code, not Windows installers.')
+              Write-Host 'RELEASE_ASSET_COUNT=0'
+              Write-Host 'RESULT=NO_RELEASE_ASSETS'
+              $results.Add([pscustomobject]$projectResult)
+              $summary.Add('')
+              continue
+            }
+
+            foreach ($asset in $assets) {
+              $assetResult = [ordered]@{
+                name = $asset.name
+                size = $asset.size
+                download_url = $asset.browser_download_url
+                github_digest = $asset.digest
+                sha256 = ''
+                detected_type = ''
+                authenticode_status = ''
+                signer = ''
+              }
+
+              Write-Host "ASSET: $($asset.name) ($($asset.size) bytes)"
+
+              if ([long]$asset.size -le 0 -or [long]$asset.size -gt 1610612736) {
+                $assetResult.detected_type = 'Skipped: empty file or exceeds 1.5 GiB inspection limit'
+                $projectResult.assets += [pscustomobject]$assetResult
+                continue
+              }
+
+              $assetUri = [System.Uri]$asset.browser_download_url
+              if ($assetUri.Scheme -ne 'https') {
+                $assetResult.detected_type = 'Skipped: non-HTTPS download URL'
+                $projectResult.assets += [pscustomobject]$assetResult
+                continue
+              }
+
+              $safeName = [System.IO.Path]::GetFileName($asset.name)
+              if ([string]::IsNullOrWhiteSpace($safeName)) {
+                $safeName = "asset-$($asset.id).bin"
+              }
+
+              $destination = Join-Path $workDir "$($target.Repository.Replace('/', '-'))-$safeName"
+              Invoke-WebRequest -Uri $assetUri.AbsoluteUri -OutFile $destination -Headers $headers -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
+
+              $downloaded = Get-Item -LiteralPath $destination
+              if ($downloaded.Length -ne [long]$asset.size) {
+                throw "Downloaded size mismatch for $($asset.name). Expected $($asset.size), received $($downloaded.Length)."
+              }
+
+              $actualHash = (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash.ToLowerInvariant()
+              $assetResult.sha256 = $actualHash
+
+              if ([string]$asset.digest -match '^sha256:(?<expected>[0-9a-fA-F]{64})$') {
+                if ($actualHash -ine $Matches.expected.ToLowerInvariant()) {
+                  throw "SHA-256 mismatch for $($asset.name). Expected $($Matches.expected), received $actualHash."
+                }
+                Write-Host "SHA256=VERIFIED $actualHash"
+              } else {
+                Write-Warning "GitHub did not publish a SHA-256 digest for $($asset.name)."
+              }
+
+              $detected = Get-AssetType -Path $destination
+              $assetResult.detected_type = $detected
+
+              if ([System.IO.Path]::GetExtension($destination) -match '(?i)^\.(exe|msi|msix|appx)$') {
+                $signature = Get-AuthenticodeSignature -LiteralPath $destination
+                $assetResult.authenticode_status = [string]$signature.Status
+                if ($signature.SignerCertificate) {
+                  $assetResult.signer = [string]$signature.SignerCertificate.Subject
+                }
+              }
+
+              Write-Host "DETECTED_TYPE=$detected"
+              $summary.Add('')
+              $summary.Add("### $($asset.name)")
+              $summary.Add("- Size: $($asset.size) bytes")
+              $summary.Add("- Detected type: $detected")
+              $summary.Add("- SHA-256: $actualHash")
+              if ($assetResult.authenticode_status) {
+                $summary.Add("- Authenticode: $($assetResult.authenticode_status)")
+                $summary.Add("- Signer: $($assetResult.signer)")
+              }
+
+              $projectResult.assets += [pscustomobject]$assetResult
+            }
+
+            if ($projectResult.assets.Count -gt 0) {
+              $projectResult.conclusion = 'Release assets were inspected; see detected types above.'
+            }
+            $results.Add([pscustomobject]$projectResult)
+            $summary.Add('')
+          }
+
+          $reportPath = Join-Path $workDir 'installer-inspection.json'
+          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $summary | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          $summary | ForEach-Object { Write-Host $_ }
+
+          Write-Host ''
+          Write-Host "REPORT_PATH=$reportPath"
+
+      - name: Upload inspection report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: notes-apps-installer-inspection
+          path: ${{ runner.temp }}/notes-apps-installer-check/installer-inspection.json
+          if-no-files-found: warn
+          retention-days: 14
