@@ -19,15 +19,6 @@
             "}"
         ]
     },
-    "post_install": [
-        "$launcher = @(",
-        "    '@echo off',",
-        "    'set \"UPDATER=%LOCALAPPDATA%\\win-link-router\\Update.exe\"',",
-        "    'if not exist \"%UPDATER%\" exit /b 1',",
-        "    '\"%UPDATER%\" --processStart \"win-link-router.exe\" %*'",
-        ")",
-        "[System.IO.File]::WriteAllLines((Join-Path $dir 'win-link-router.cmd'), [string[]]$launcher, [System.Text.Encoding]::ASCII)"
-    ],
     "bin": "win-link-router.cmd",
     "shortcuts": [
         [
@@ -39,5 +30,14 @@
         "Nonportable: Scoop runs the publisher's Squirrel Setup.exe. Squirrel installs the application under %LOCALAPPDATA%\\win-link-router; Scoop uninstall calls its Update.exe --uninstall -s command.",
         "The application stores its configuration and route logs under %APPDATA%\\win-link-router. That user data is outside Scoop and is retained when the application is uninstalled.",
         "The application's own updater is enabled by default and checks for releases independently of Scoop. Disable Auto Updates in the application settings to keep Scoop as the update source."
+    ],
+    "pre_install": [
+        "$launcher = @(",
+        "    '@echo off',",
+        "    'set \"UPDATER=%LOCALAPPDATA%\\win-link-router\\Update.exe\"',",
+        "    'if not exist \"%UPDATER%\" exit /b 1',",
+        "    '\"%UPDATER%\" --processStart \"win-link-router.exe\" %*'",
+        ")",
+        "[System.IO.File]::WriteAllLines((Join-Path $dir 'win-link-router.cmd'), [string[]]$launcher, [System.Text.Encoding]::ASCII)"
     ]
 }
