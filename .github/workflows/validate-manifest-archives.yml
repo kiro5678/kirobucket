@@ -83,29 +83,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Diagnose FoxDesktop manifest schema
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $schema = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json' -TimeoutSec 60).Content
-          foreach ($name in @('foxdesktop', 'whispra')) {
-            $path = "bucket/$name.json"
-            $content = Get-Content -LiteralPath $path -Raw
-            $valid = Test-Json -Json $content -Schema $schema
-            Write-Host "$name schema valid: $valid"
-            if (-not $valid) {
-              $object = $content | ConvertFrom-Json -ErrorAction Stop
-              foreach ($property in @($object.PSObject.Properties.Name)) {
-                $copy = $content | ConvertFrom-Json -ErrorAction Stop
-                $copy.PSObject.Properties.Remove($property)
-                $variant = $copy | ConvertTo-Json -Depth 100
-                if (Test-Json -Json $variant -Schema $schema) {
-                  Write-Host "Invalid top-level property: $property"
-                }
-              }
-            }
-          }
-
       - name: Validate changed manifests against archives
         id: archive_validation
         shell: pwsh
