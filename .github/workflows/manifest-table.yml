@@ -1034,6 +1034,67 @@ jobs:
               $portabilityContent = $beforeManifestReview + $nonportableBlock + $lineBreak + $lineBreak + $afterManifestReview
           }
 
+          # Generate a separate Portable-only table, grouped by installer type.
+          # This remains independent from the combined overview and Nonportable-only table.
+          $portableTypeGroups = @(
+              $manifests |
+                  Where-Object { $_.Portability -eq "Portable" } |
+                  Group-Object InstallerType |
+                  Sort-Object Name
+          )
+          $portableTypeLines = [System.Collections.Generic.List[string]]::new()
+          $portableTypeLines.Add("## Portable manifests by installer type")
+          $portableTypeLines.Add("")
+          $portableTypeLines.Add("This table lists only manifests classified as Portable, grouped by installer/package type.")
+          $portableTypeLines.Add("")
+          $portableTypeLines.Add("| Portable manifests ($portableCount) | Installer Type |")
+          $portableTypeLines.Add("| --- | --- |")
+          foreach ($group in $portableTypeGroups) {
+              $portableLinks = @(
+                  $group.Group |
+                      Sort-Object Name |
+                      ForEach-Object {
+                          $name = ([string]$_.Name).Replace("|", "\\|")
+                          "[$name](../bucket/$($_.Name).json)"
+                      }
+              ) -join ", "
+              $typeLabel = ([string]$group.Name).Replace("|", "\\|")
+              $portableTypeLines.Add("| $portableLinks | $typeLabel |")
+          }
+
+          $portableStart = "<!-- KIROBUCKET-PORTABLE-INSTALLER-TYPE-TABLE-START -->"
+          $portableEnd = "<!-- KIROBUCKET-PORTABLE-INSTALLER-TYPE-TABLE-END -->"
+          $portableBlock = $portableStart + $lineBreak +
+              ([string]::Join($lineBreak, $portableTypeLines)) + $lineBreak +
+              $portableEnd
+          $portableStartIndex = $portabilityContent.IndexOf($portableStart, [System.StringComparison]::Ordinal)
+          $portableEndIndex = $portabilityContent.IndexOf($portableEnd, [System.StringComparison]::Ordinal)
+          if ($portableStartIndex -ge 0 -or $portableEndIndex -ge 0) {
+              if ($portableStartIndex -lt 0 -or $portableEndIndex -le $portableStartIndex) {
+                  throw "Standalone Portable table markers are missing or out of order."
+              }
+              $beforePortableTable = $portabilityContent.Substring(0, $portableStartIndex)
+              $afterPortableTable = $portabilityContent.Substring($portableEndIndex + $portableEnd.Length)
+              $portabilityContent = $beforePortableTable + $portableBlock + $afterPortableTable
+          } else {
+              $nonportableStartMarker = "<!-- KIROBUCKET-NONPORTABLE-INSTALLER-TYPE-TABLE-START -->"
+              $nonportableStartIndex = $portabilityContent.IndexOf($nonportableStartMarker, [System.StringComparison]::Ordinal)
+              if ($nonportableStartIndex -ge 0) {
+                  $beforeNonportableTable = $portabilityContent.Substring(0, $nonportableStartIndex)
+                  $afterNonportableTable = $portabilityContent.Substring($nonportableStartIndex)
+                  $portabilityContent = $beforeNonportableTable + $portableBlock + $lineBreak + $lineBreak + $afterNonportableTable
+              } else {
+                  $manifestReviewHeading = "## Manifest review"
+                  $manifestReviewIndex = $portabilityContent.IndexOf($manifestReviewHeading, [System.StringComparison]::Ordinal)
+                  if ($manifestReviewIndex -lt 0) {
+                      throw "Could not find the Manifest review heading to insert the standalone Portable table."
+                  }
+                  $beforeManifestReview = $portabilityContent.Substring(0, $manifestReviewIndex)
+                  $afterManifestReview = $portabilityContent.Substring($manifestReviewIndex)
+                  $portabilityContent = $beforeManifestReview + $portableBlock + $lineBreak + $lineBreak + $afterManifestReview
+              }
+          }
+
           # One row per installer/package type. Each type appears once in the
           # rightmost column, with its Portable and Nonportable manifests grouped beside it.
           $classifiedItems = @($manifests | Where-Object { $_.Portability -in @("Portable", "Nonportable") })
