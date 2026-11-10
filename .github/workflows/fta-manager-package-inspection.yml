@@ -13,106 +13,78 @@ permissions:
 
 jobs:
   inspect:
-    name: Download, extract, and test PowerShell module
+    name: Download pinned module files and test Scoop module layout
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
-      - name: Download pinned upstream source archive
+      - name: Download required module files and calculate SHA-256
         id: package
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
 
-          $version = '1.2.0'
           $commit = '9ca777511edaba2f828d25023477cbe9e4b5a33b'
-          $url = "https://github.com/feiglein74/FTA-Manager/archive/$commit.zip"
+          $source = "https://raw.githubusercontent.com/feiglein74/FTA-Manager/$commit"
           $root = Join-Path $env:RUNNER_TEMP 'fta-manager-package-inspection'
-          $extract = Join-Path $root 'extracted'
-          New-Item -ItemType Directory -Path $root, $extract -Force | Out-Null
+          $moduleDir = Join-Path $root 'modules\FTA-Manager'
+          New-Item -ItemType Directory -Path $moduleDir -Force | Out-Null
 
-          $archive = Join-Path $root 'FTA-Manager-$commit.zip'
-          Write-Host "Downloading pinned FTA-Manager source: $url"
-          Invoke-WebRequest -Uri $url -OutFile $archive -TimeoutSec 600
+          $files = @('FTA-Manager.psd1', 'FTA-Manager.psm1', 'LICENSE')
+          $records = [System.Collections.Generic.List[object]]::new()
+          foreach ($file in $files) {
+            $url = "$source/$file"
+            $destination = Join-Path $moduleDir $file
+            Write-Host "Downloading $file from pinned upstream commit $commit"
+            Invoke-WebRequest -Uri $url -OutFile $destination -TimeoutSec 120
+            $item = Get-Item -LiteralPath $destination
+            $hash = (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash.ToLowerInvariant()
+            $records.Add([ordered]@{
+              file = $file
+              url = $url
+              sizeBytes = [long]$item.Length
+              sha256 = $hash
+            })
+            Write-Host "FILE: $file"
+            Write-Host "URL: $url"
+            Write-Host "SIZE_BYTES: $($item.Length)"
+            Write-Host "SHA256: $hash"
+          }
 
-          $item = Get-Item -LiteralPath $archive
-          $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
-          Write-Host "ARCHIVE_URL: $url"
-          Write-Host "ARCHIVE_SIZE_BYTES: $($item.Length)"
-          Write-Host "ARCHIVE_SHA256: $hash"
-          "archive_url=$url" >> $env:GITHUB_OUTPUT
-          "archive_size=$($item.Length)" >> $env:GITHUB_OUTPUT
-          "archive_sha256=$hash" >> $env:GITHUB_OUTPUT
-          "archive_path=$archive" >> $env:GITHUB_OUTPUT
-          "extract_path=$extract" >> $env:GITHUB_OUTPUT
-          "expected_version=$version" >> $env:GITHUB_OUTPUT
+          $records | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $root 'source-file-hashes.json') -Encoding utf8
+          "module_dir=$moduleDir" >> $env:GITHUB_OUTPUT
+          "root_dir=$root" >> $env:GITHUB_OUTPUT
+          "psd1_sha256=$($records[0].sha256)" >> $env:GITHUB_OUTPUT
+          "psm1_sha256=$($records[1].sha256)" >> $env:GITHUB_OUTPUT
+          "license_sha256=$($records[2].sha256)" >> $env:GITHUB_OUTPUT
+          "psd1_size=$($records[0].sizeBytes)" >> $env:GITHUB_OUTPUT
+          "psm1_size=$($records[1].sizeBytes)" >> $env:GITHUB_OUTPUT
+          "license_size=$($records[2].sizeBytes)" >> $env:GITHUB_OUTPUT
 
-      - name: Inspect archive layout and extract
-        id: extract
+      - name: Validate Scoop PowerShell module layout in Windows PowerShell 5.1
         shell: pwsh
         env:
-          ARCHIVE_PATH: ${{ steps.package.outputs.archive_path }}
-          EXTRACT_PATH: ${{ steps.package.outputs.extract_path }}
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
-          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
-            $cmd = Get-Command '7z.exe' -CommandType Application -ErrorAction SilentlyContinue
-            if ($cmd) { $sevenZip = $cmd.Source }
-          }
-          if (Test-Path -LiteralPath $sevenZip -PathType Leaf) {
-            $listing = @(& $sevenZip l -slt $env:ARCHIVE_PATH 2>&1 | ForEach-Object { "$_" })
-            $exitCode = $LASTEXITCODE
-            $listing | Set-Content -LiteralPath (Join-Path (Split-Path $env:ARCHIVE_PATH) '7zip-list.txt') -Encoding utf8
-            if ($exitCode -ne 0) { throw "7-Zip could not list the downloaded ZIP (exit $exitCode)." }
-          } else {
-            Write-Warning '7-Zip was not found; ZIP integrity will be tested by Expand-Archive.'
-          }
-
-          Expand-Archive -LiteralPath $env:ARCHIVE_PATH -DestinationPath $env:EXTRACT_PATH -Force
-          $manifests = @(Get-ChildItem -LiteralPath $env:EXTRACT_PATH -Filter 'FTA-Manager.psd1' -File -Recurse)
-          if ($manifests.Count -ne 1) {
-            throw "Expected one FTA-Manager.psd1 after extraction; found $($manifests.Count)."
-          }
-          $moduleRoot = $manifests[0].Directory.FullName
-          $topLevel = @(Get-ChildItem -LiteralPath $env:EXTRACT_PATH -Force)
-          if ($topLevel.Count -ne 1) {
-            throw "Expected one top-level archive directory; found $($topLevel.Count)."
-          }
-          $archiveRootName = $topLevel[0].Name
-          if ($moduleRoot -ne $topLevel[0].FullName) {
-            throw "Module files are nested below the archive root: $moduleRoot"
-          }
-
-          $files = @(Get-ChildItem -LiteralPath $moduleRoot -File -Recurse -Force)
-          Write-Host "ARCHIVE_ROOT: $archiveRootName"
-          Write-Host "MODULE_ROOT: $moduleRoot"
-          Write-Host "EXTRACTED_FILE_COUNT: $($files.Count)"
-          Write-Host "MODULE_MANIFEST: $($manifests[0].FullName)"
-          "module_root=$moduleRoot" >> $env:GITHUB_OUTPUT
-          "archive_root=$archiveRootName" >> $env:GITHUB_OUTPUT
-          "extracted_files=$($files.Count)" >> $env:GITHUB_OUTPUT
-          "module_manifest=$($manifests[0].FullName)" >> $env:GITHUB_OUTPUT
-
-      - name: Validate module manifest and import with Windows PowerShell 5.1
-        shell: pwsh
-        env:
-          MODULE_MANIFEST: ${{ steps.extract.outputs.module_manifest }}
-          EXPECTED_VERSION: ${{ steps.package.outputs.expected_version }}
+          MODULE_PARENT: ${{ steps.package.outputs.root_dir }}/modules
+          MODULE_DIR: ${{ steps.package.outputs.module_dir }}
         run: |
           $ErrorActionPreference = 'Stop'
           $testScript = Join-Path $env:RUNNER_TEMP 'test-fta-manager-module.ps1'
           @'
           $ErrorActionPreference = 'Stop'
-          $manifestPath = $env:MODULE_MANIFEST
-          $expectedVersion = $env:EXPECTED_VERSION
+          $moduleParent = $env:MODULE_PARENT
+          $moduleDir = $env:MODULE_DIR
+          $manifestPath = Join-Path $moduleDir 'FTA-Manager.psd1'
           $moduleInfo = Test-ModuleManifest -Path $manifestPath -ErrorAction Stop
-          if ([string]$moduleInfo.Version -ne $expectedVersion) {
-              throw "Module version mismatch. Expected $expectedVersion; found $($moduleInfo.Version)."
+          if ([string]$moduleInfo.Version -ne '1.2.0') {
+              throw "Expected module version 1.2.0; found $($moduleInfo.Version)."
           }
 
-          Import-Module -Name $manifestPath -Force -ErrorAction Stop
+          # Scoop's psmodule property exposes the module through a folder named
+          # after the module beneath the Scoop modules directory.
+          $env:PSModulePath = "$moduleParent;$env:PSModulePath"
+          Import-Module -Name 'FTA-Manager' -Force -ErrorAction Stop
+
           $requiredCommands = @('Get-FTA', 'Set-FTA', 'Get-PTA', 'Set-PTA', 'Get-AllFTA', 'Get-AllPTA')
           $availableCommands = @(Get-Command -Module FTA-Manager | Select-Object -ExpandProperty Name)
           $missing = @($requiredCommands | Where-Object { $_ -notin $availableCommands })
@@ -124,7 +96,7 @@ jobs:
           Write-Host "MODULE_GUID: $($moduleInfo.Guid)"
           Write-Host "EXPORTED_COMMAND_COUNT: $($availableCommands.Count)"
           Write-Host "REQUIRED_COMMANDS: $($requiredCommands -join ', ')"
-          Write-Host 'MODULE_IMPORT: PASS'
+          Write-Host 'PSMODULE_PATH_IMPORT: PASS'
           '@ | Set-Content -LiteralPath $testScript -Encoding utf8
 
           $windowsPowerShell = Join-Path $env:WINDIR 'System32\WindowsPowerShell\v1.0\powershell.exe'
@@ -136,34 +108,38 @@ jobs:
               throw "Windows PowerShell 5.1 module validation failed with exit code $LASTEXITCODE."
           }
 
-      - name: Write package inspection summary
+      - name: Write package summary
         if: always()
         shell: pwsh
         env:
-          ARCHIVE_URL: ${{ steps.package.outputs.archive_url }}
-          ARCHIVE_SIZE: ${{ steps.package.outputs.archive_size }}
-          ARCHIVE_SHA256: ${{ steps.package.outputs.archive_sha256 }}
-          ARCHIVE_ROOT: ${{ steps.extract.outputs.archive_root }}
-          MODULE_ROOT: ${{ steps.extract.outputs.module_root }}
-          EXTRACTED_FILES: ${{ steps.extract.outputs.extracted_files }}
+          ROOT_DIR: ${{ steps.package.outputs.root_dir }}
+          PSD1_HASH: ${{ steps.package.outputs.psd1_sha256 }}
+          PSM1_HASH: ${{ steps.package.outputs.psm1_sha256 }}
+          LICENSE_HASH: ${{ steps.package.outputs.license_sha256 }}
+          PSD1_SIZE: ${{ steps.package.outputs.psd1_size }}
+          PSM1_SIZE: ${{ steps.package.outputs.psm1_size }}
+          LICENSE_SIZE: ${{ steps.package.outputs.license_size }}
         run: |
           @(
-            '# FTA-Manager package inspection'
+            '# FTA-Manager Scoop module package inspection'
             ''
-            "- Upstream commit: 9ca777511edaba2f828d25023477cbe9e4b5a33b"
-            "- Module version: 1.2.0"
-            "- Source archive: $env:ARCHIVE_URL"
-            "- Archive size: $env:ARCHIVE_SIZE bytes"
-            "- SHA-256: $env:ARCHIVE_SHA256"
-            "- Extracted archive root: $env:ARCHIVE_ROOT"
-            "- Module directory: $env:MODULE_ROOT"
-            "- Extracted file count: $env:EXTRACTED_FILES"
+            '- Upstream repository: https://github.com/feiglein74/FTA-Manager'
+            '- Pinned commit: 9ca777511edaba2f828d25023477cbe9e4b5a33b'
+            '- Module version: 1.2.0'
+            '- Package type: PowerShell module (not a standalone EXE)'
+            '- Scoop integration: psmodule.name = FTA-Manager'
+            ''
+            '| File | Size (bytes) | SHA-256 |'
+            '|---|---:|---|'
+            "| FTA-Manager.psd1 | $env:PSD1_SIZE | $env:PSD1_HASH |"
+            "| FTA-Manager.psm1 | $env:PSM1_SIZE | $env:PSM1_HASH |"
+            "| LICENSE | $env:LICENSE_SIZE | $env:LICENSE_HASH |"
             ''
             '## Safety'
             ''
             '- No Set-FTA, Set-PTA, Disable-UCPD, Enable-UCPD, service installer, or scheduled-task installer was executed.'
             '- No registry values, default-app associations, services, scheduled tasks, or UCPD settings were changed.'
-            '- Validation only extracted the source, checked the module manifest, and imported the module in Windows PowerShell 5.1.'
+            '- Validation only downloaded the module files, checked the module manifest, and imported the module by name in Windows PowerShell 5.1.'
           ) | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'fta-manager-inspection-summary.md') -Encoding utf8
           Get-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'fta-manager-inspection-summary.md') |
             Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
