@@ -1,0 +1,24 @@
+{
+    "version": "1.2.0",
+    "description": "PowerShell module for managing Windows file-type and protocol associations.",
+    "homepage": "https://github.com/feiglein74/FTA-Manager",
+    "license": "MIT",
+    "url": [
+        "https://raw.githubusercontent.com/feiglein74/FTA-Manager/9ca777511edaba2f828d25023477cbe9e4b5a33b/FTA-Manager.psd1",
+        "https://raw.githubusercontent.com/feiglein74/FTA-Manager/9ca777511edaba2f828d25023477cbe9e4b5a33b/FTA-Manager.psm1",
+        "https://raw.githubusercontent.com/feiglein74/FTA-Manager/9ca777511edaba2f828d25023477cbe9e4b5a33b/LICENSE"
+    ],
+    "hash": [
+        "622eee36db72ed2b51d9cf781c5700eb360f6f88f02b9625bf9c22e34aeb6a12",
+        "a211e5477a9dd0a73821977f1ee6a6c4926b7ddd63a47ac6fecfc80719df1138",
+        "fe42bafd927b1f1b574bbe617754a44f219d07353a60cdbb59fcda4d10af1a48"
+    ],
+    "psmodule": {
+        "name": "FTA-Manager"
+    },
+    "notes": [
+        "Import the module with: Import-Module FTA-Manager.",
+        "Scoop installs the module files only; it does not install the optional service or alter file associations.",
+        "Commands that change file associations require care; disabling UCPD can weaken Windows protection for default-app associations."
+    ]
+}
