@@ -2,8 +2,6 @@
 
 ## Summary
 
-## Summary
-
 <!-- KIROBUCKET-PORTABILITY-SUMMARY-START -->
 | Classification | Manifests | Meaning |
 | --- | ---: | --- |
