@@ -1,0 +1,31 @@
+{
+    "version": "2.4.0",
+    "description": "Enhanced Windows desktop client for Codex and other AI agents.",
+    "homepage": "https://github.com/BigPizzaV3/CodexPlusPlus",
+    "license": "AGPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/BigPizzaV3/CodexPlusPlus/releases/download/v2.4.0/CodexPlusPlus-2.4.0-windows-x64.zip",
+            "hash": "f4792741fdf77cc960065fc98ae3a6daf79dff4f8c0c877c9983b94a929b2617"
+        }
+    },
+    "bin": "codex-plus-plus.exe",
+    "shortcuts": [
+        [
+            "codex-plus-plus.exe",
+            "Codex++"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/BigPizzaV3/CodexPlusPlus/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/BigPizzaV3/CodexPlusPlus/releases/download/v$version/CodexPlusPlus-$version-windows-x64.zip"
+            }
+        }
+    }
+}

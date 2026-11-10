@@ -1,0 +1,31 @@
+{
+    "version": "0.7.67",
+    "description": "Desktop application for monitoring Codex agent sessions.",
+    "homepage": "https://github.com/Dimillian/CodexMonitor",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Dimillian/CodexMonitor/releases/download/v0.7.67/Codex.Monitor_0.7.67_x64_en-US.msi",
+            "hash": "5478ae574ec1b239c0127e4ce93460b99d0b5f43434d95c877ad7be6eba3e4fa"
+        }
+    },
+    "bin": "codex-monitor.exe",
+    "shortcuts": [
+        [
+            "codex-monitor.exe",
+            "Codex Monitor"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/Dimillian/CodexMonitor/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Dimillian/CodexMonitor/releases/download/v$version/Codex.Monitor_$version_x64_en-US.msi"
+            }
+        }
+    }
+}
