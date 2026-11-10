@@ -54,104 +54,15 @@ jobs:
             }
 
             $asset = $matchingAssets[0]
-            if ([string]$asset.digest -notmatch '^sha256:(?<hash>[0-9a-fA-F]{64}) = Join-Path $work ([IO.Path]::GetFileName([string]$asset.name))
-            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $destination -Headers $headers -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
-            $actualHash = (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($actualHash -ne $expectedHash) {
-              throw "$Repository $($asset.name): SHA-256 mismatch. Expected $expectedHash; received $actualHash."
-            }
-
-            Write-Host "RELEASE=$($release.tag_name)"
-            Write-Host "ASSET=$($asset.name)"
-            Write-Host "SIZE=$($asset.size)"
-            Write-Host "SHA256=$actualHash"
-            return [pscustomobject]@{
-              Repository = $Repository
-              Version = ([string]$release.tag_name -replace '^v', '')
-              ReleaseUrl = [string]$release.html_url
-              Name = [string]$asset.name
-              Path = $destination
-              Sha256 = $actualHash
-              Size = [long]$asset.size
-            }
-          }
-
-          $concat = Get-VerifiedReleaseAsset -Repository 'jub0t/Concat' -AssetPattern '^Concat-[0-9.]+-windows-x86_64\.msi$'
-          $stream = [IO.File]::OpenRead($concat.Path)
-          try {
-            $signature = [byte[]]::new(8)
-            $read = $stream.Read($signature, 0, $signature.Length)
-          } finally {
-            $stream.Dispose()
-          }
-          $oleSignature = 'D0-CF-11-E0-A1-B1-1A-E1'
-          $actualSignature = [BitConverter]::ToString($signature)
-          if ($read -lt 8 -or $actualSignature -ne $oleSignature) {
-            throw "Concat Windows MSI does not have the expected OLE Compound File signature. Actual: $actualSignature"
-          }
-          Write-Host "CONCAT_PACKAGE_TYPE=Windows Installer MSI (OLE Compound File signature verified)"
-          $summary.Add("## Concat")
-          $summary.Add("- Release: [$($concat.Version)]($($concat.ReleaseUrl))")
-          $summary.Add("- Asset: $($concat.Name)")
-          $summary.Add("- Type: Windows Installer MSI (OLE signature verified)")
-          $summary.Add("- SHA-256: $($concat.Sha256)")
-          $summary.Add("- Source WiX definition installs the application under Program Files\\Concat; executable: concat.exe.")
-          $summary.Add('')
-
-          $bootEase = Get-VerifiedReleaseAsset -Repository 'voidksa/BootEase' -AssetPattern '^BootEasePortable-[0-9.]+-x64\.zip$'
-          $archive = [IO.Compression.ZipFile]::OpenRead($bootEase.Path)
-          try {
-            $entries = @($archive.Entries | ForEach-Object { $_.FullName.Replace('\', '/') })
-          } finally {
-            $archive.Dispose()
-          }
-
-          $exeEntries = @($entries | Where-Object { $_ -match '(?i)(^|/)BootEase\.exe$' })
-          if ($exeEntries.Count -ne 1) {
-            throw "BootEase portable ZIP must contain exactly one BootEase.exe; found $($exeEntries.Count). EXE entries: $(@($entries | Where-Object { $_ -match '(?i)\.exe$' }) -join ', ')"
-          }
-
-          $exeEntry = $exeEntries[0]
-          $relativeDirectory = [IO.Path]::GetDirectoryName($exeEntry.Replace('/', '\'))
-          $extractRoot = Join-Path $work 'BootEase-extracted'
-          [IO.Compression.ZipFile]::ExtractToDirectory($bootEase.Path, $extractRoot)
-          $exePath = if ([string]::IsNullOrWhiteSpace($relativeDirectory)) {
-            Join-Path $extractRoot 'BootEase.exe'
-          } else {
-            Join-Path $extractRoot (Join-Path $relativeDirectory 'BootEase.exe')
-          }
-          if (-not (Test-Path -LiteralPath $exePath -PathType Leaf)) {
-            throw "BootEase.exe was listed in the ZIP but was not present after extraction: $exeEntry"
-          }
-
-          Write-Host "BOOTEASE_PACKAGE_TYPE=ZIP portable package"
-          Write-Host "BOOTEASE_EXE_PATH=$exeEntry"
-          Write-Host "BOOTEASE_EXTRACT_DIR=$relativeDirectory"
-          Write-Host "BOOTEASE_ARCHIVE_ENTRIES=$($entries.Count)"
-          Write-Host "BOOTEASE_EXE_ENTRIES=$(@($entries | Where-Object { $_ -match '(?i)\.exe$' }) -join ', ')"
-
-          $summary.Add('## BootEase')
-          $summary.Add("- Release: [$($bootEase.Version)]($($bootEase.ReleaseUrl))")
-          $summary.Add("- Asset: $($bootEase.Name)")
-          $summary.Add("- Type: ZIP portable package; archive opened and extracted successfully")
-          $summary.Add("- SHA-256: $($bootEase.Sha256)")
-          $summary.Add("- BootEase.exe path inside ZIP: $exeEntry")
-          $summary.Add("- Suggested extract_dir: $relativeDirectory (omit when empty)")
-          $summary.Add("- Archive entries: $($entries.Count)")
-          $summary.Add('')
-          $summary.Add('No downloaded application or installer was executed.')
-
-          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-          Write-Host 'All package checks passed.'
-) {
+            $assetDigest = [string]$asset.digest
+            if ($assetDigest -notmatch '^sha256:([0-9a-fA-F]{64})$') {
               throw "$Repository $($asset.name): GitHub did not provide a valid SHA-256 digest."
             }
-            $expectedHash = $Matches.hash.ToLowerInvariant()
+            $expectedHash = $Matches[1].ToLowerInvariant()
 
             $destination = Join-Path $work ([IO.Path]::GetFileName([string]$asset.name))
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $destination -Headers $headers -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
             $actualHash = (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash.ToLowerInvariant()
-            $expectedHash = $Matches.hash.ToLowerInvariant()
             if ($actualHash -ne $expectedHash) {
               throw "$Repository $($asset.name): SHA-256 mismatch. Expected $expectedHash; received $actualHash."
             }
@@ -179,18 +90,18 @@ jobs:
           } finally {
             $stream.Dispose()
           }
-          $oleSignature = 'D0 CF 11 E0 A1 B1 1A E1'
+          $expectedOleSignature = 'D0-CF-11-E0-A1-B1-1A-E1'
           $actualSignature = [BitConverter]::ToString($signature)
-          if ($read -lt 8 -or $actualSignature -ne $oleSignature) {
+          if ($read -lt 8 -or $actualSignature -ne $expectedOleSignature) {
             throw "Concat Windows MSI does not have the expected OLE Compound File signature. Actual: $actualSignature"
           }
-          Write-Host "CONCAT_PACKAGE_TYPE=Windows Installer MSI (OLE Compound File signature verified)"
-          $summary.Add("## Concat")
+          Write-Host 'CONCAT_PACKAGE_TYPE=Windows Installer MSI (OLE Compound File signature verified)'
+          $summary.Add('## Concat')
           $summary.Add("- Release: [$($concat.Version)]($($concat.ReleaseUrl))")
           $summary.Add("- Asset: $($concat.Name)")
-          $summary.Add("- Type: Windows Installer MSI (OLE signature verified)")
+          $summary.Add('- Type: Windows Installer MSI (OLE signature verified)')
           $summary.Add("- SHA-256: $($concat.Sha256)")
-          $summary.Add("- Source WiX definition installs the application under Program Files\\Concat; executable: concat.exe.")
+          $summary.Add('- Source WiX definition installs the application under Program Files\\Concat; executable: concat.exe.')
           $summary.Add('')
 
           $bootEase = Get-VerifiedReleaseAsset -Repository 'voidksa/BootEase' -AssetPattern '^BootEasePortable-[0-9.]+-x64\.zip$'
@@ -203,7 +114,8 @@ jobs:
 
           $exeEntries = @($entries | Where-Object { $_ -match '(?i)(^|/)BootEase\.exe$' })
           if ($exeEntries.Count -ne 1) {
-            throw "BootEase portable ZIP must contain exactly one BootEase.exe; found $($exeEntries.Count). EXE entries: $(@($entries | Where-Object { $_ -match '(?i)\.exe$' }) -join ', ')"
+            $allExeEntries = @($entries | Where-Object { $_ -match '(?i)\.exe$' })
+            throw "BootEase portable ZIP must contain exactly one BootEase.exe; found $($exeEntries.Count). EXE entries: $($allExeEntries -join ', ')"
           }
 
           $exeEntry = $exeEntries[0]
@@ -219,19 +131,20 @@ jobs:
             throw "BootEase.exe was listed in the ZIP but was not present after extraction: $exeEntry"
           }
 
-          Write-Host "BOOTEASE_PACKAGE_TYPE=ZIP portable package"
+          $allExeEntries = @($entries | Where-Object { $_ -match '(?i)\.exe$' })
+          Write-Host 'BOOTEASE_PACKAGE_TYPE=ZIP portable package'
           Write-Host "BOOTEASE_EXE_PATH=$exeEntry"
           Write-Host "BOOTEASE_EXTRACT_DIR=$relativeDirectory"
           Write-Host "BOOTEASE_ARCHIVE_ENTRIES=$($entries.Count)"
-          Write-Host "BOOTEASE_EXE_ENTRIES=$(@($entries | Where-Object { $_ -match '(?i)\.exe$' }) -join ', ')"
+          Write-Host "BOOTEASE_EXE_ENTRIES=$($allExeEntries -join ', ')"
 
           $summary.Add('## BootEase')
           $summary.Add("- Release: [$($bootEase.Version)]($($bootEase.ReleaseUrl))")
           $summary.Add("- Asset: $($bootEase.Name)")
-          $summary.Add("- Type: ZIP portable package; archive opened and extracted successfully")
+          $summary.Add('- Type: ZIP portable package; archive opened and extracted successfully')
           $summary.Add("- SHA-256: $($bootEase.Sha256)")
-          $summary.Add("- BootEase.exe path inside ZIP: `$exeEntry`")
-          $summary.Add("- Suggested extract_dir: `$relativeDirectory` (omit when empty)")
+          $summary.Add("- BootEase.exe path inside ZIP: $exeEntry")
+          $summary.Add("- Suggested extract_dir: $relativeDirectory (omit when empty)")
           $summary.Add("- Archive entries: $($entries.Count)")
           $summary.Add('')
           $summary.Add('No downloaded application or installer was executed.')
