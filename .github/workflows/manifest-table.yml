@@ -983,18 +983,57 @@ jobs:
           $summaryAfter = $portabilityContent.Substring($summaryEndIndex + $summaryEndMarker.Length)
           $portabilityContent = $summaryBefore + $summaryBlock + $summaryAfter
 
-          # Remove the obsolete standalone Nonportable list; the grouped main table now
-          # contains both classifications and is the source of truth.
-          $oldNonportableHeading = "## Nonportable manifests by installer type"
-          $manifestReviewHeading = "## Manifest review"
-          $oldNonportableStart = $portabilityContent.IndexOf($oldNonportableHeading, [System.StringComparison]::Ordinal)
-          $manifestReviewStart = $portabilityContent.IndexOf($manifestReviewHeading, [System.StringComparison]::Ordinal)
-          if ($oldNonportableStart -ge 0) {
-              if ($manifestReviewStart -le $oldNonportableStart) {
-                  throw "Manifest Review heading must follow the obsolete Nonportable section."
+          # Generate a separate Nonportable-only table, grouped by installer type.
+          # This remains independent from the combined Portable/Nonportable overview above.
+          $nonportableTypeGroups = @(
+              $manifests |
+                  Where-Object { $_.Portability -eq "Nonportable" } |
+                  Group-Object InstallerType |
+                  Sort-Object Name
+          )
+          $nonportableTypeLines = [System.Collections.Generic.List[string]]::new()
+          $nonportableTypeLines.Add("## Nonportable manifests by installer type")
+          $nonportableTypeLines.Add("")
+          $nonportableTypeLines.Add("This table lists only manifests classified as Nonportable, grouped by installer/package type.")
+          $nonportableTypeLines.Add("")
+          $nonportableTypeLines.Add("| Nonportable manifests ($nonportableCount) | Installer Type |")
+          $nonportableTypeLines.Add("| --- | --- |")
+          foreach ($group in $nonportableTypeGroups) {
+              $nonportableLinks = @(
+                  $group.Group |
+                      Sort-Object Name |
+                      ForEach-Object {
+                          $name = ([string]$_.Name).Replace("|", "\\|")
+                          "[$name](../bucket/$($_.Name).json)"
+                      }
+              ) -join ", "
+              $typeLabel = ([string]$group.Name).Replace("|", "\\|")
+              $nonportableTypeLines.Add("| $nonportableLinks | $typeLabel |")
+          }
+
+          $nonportableStart = "<!-- KIROBUCKET-NONPORTABLE-INSTALLER-TYPE-TABLE-START -->"
+          $nonportableEnd = "<!-- KIROBUCKET-NONPORTABLE-INSTALLER-TYPE-TABLE-END -->"
+          $nonportableBlock = $nonportableStart + $lineBreak +
+              ([string]::Join($lineBreak, $nonportableTypeLines)) + $lineBreak +
+              $nonportableEnd
+          $nonportableStartIndex = $portabilityContent.IndexOf($nonportableStart, [System.StringComparison]::Ordinal)
+          $nonportableEndIndex = $portabilityContent.IndexOf($nonportableEnd, [System.StringComparison]::Ordinal)
+          if ($nonportableStartIndex -ge 0 -or $nonportableEndIndex -ge 0) {
+              if ($nonportableStartIndex -lt 0 -or $nonportableEndIndex -le $nonportableStartIndex) {
+                  throw "Standalone Nonportable table markers are missing or out of order."
               }
-              $portabilityContent = $portabilityContent.Substring(0, $oldNonportableStart) +
-                  $portabilityContent.Substring($manifestReviewStart)
+              $beforeNonportableTable = $portabilityContent.Substring(0, $nonportableStartIndex)
+              $afterNonportableTable = $portabilityContent.Substring($nonportableEndIndex + $nonportableEnd.Length)
+              $portabilityContent = $beforeNonportableTable + $nonportableBlock + $afterNonportableTable
+          } else {
+              $manifestReviewHeading = "## Manifest review"
+              $manifestReviewIndex = $portabilityContent.IndexOf($manifestReviewHeading, [System.StringComparison]::Ordinal)
+              if ($manifestReviewIndex -lt 0) {
+                  throw "Could not find the Manifest review heading to insert the standalone Nonportable table."
+              }
+              $beforeManifestReview = $portabilityContent.Substring(0, $manifestReviewIndex)
+              $afterManifestReview = $portabilityContent.Substring($manifestReviewIndex)
+              $portabilityContent = $beforeManifestReview + $nonportableBlock + $lineBreak + $lineBreak + $afterManifestReview
           }
 
           # One row per installer/package type. Each type appears once in the
