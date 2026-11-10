@@ -21,7 +21,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 22 | [View](#notes-knowledge) |
-| Other Utilities | 112 | [View](#other-utilities) |
+| Other Utilities | 113 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
 | Productivity & Launchers | 37 | [View](#productivity-launchers) |
@@ -33,12 +33,12 @@
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
-| Translation & OCR | 9 | [View](#translation-ocr) |
+| Translation & OCR | 10 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1027**
+**Total unique manifests: 1029**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -662,6 +662,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [pake-gemini](../bucket/pake-gemini.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Gemini. | [Homepage](https://gemini.google.com/) |
 | [go-away-edge-installer](../bucket/go-away-edge-installer.json) | 2.0.3 | 46.1 MiB | 2026-04-04 | GoAwayEdge is designed for those who, like me, aren’t fans of Microsoft Edge or Windows Copilot. | [Homepage](https://github.com/valnoxy/GoAwayEdge) |
 | [pake-grok](../bucket/pake-grok.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for Grok. | [Homepage](https://grok.com/) |
+| [foxdesktop](../bucket/foxdesktop.json) | 2.0.1 | 54.2 MiB | 2026-11-10 | Windows desktop application. | [Homepage](https://foxdesktop-app.com/) |
 | [ipban](../bucket/ipban.json) | 4.1.0 | 64bit: 13.8 MiB / 32bit: 13.2 MiB | 2026-09-28 | Windows intrusion-prevention service that detects failed logins and blocks abusive IP addresses using Windows Firewall. | [Homepage](https://github.com/DigitalRuby/IPBan) |
 | [jan](../bucket/jan.json) | 0.8.8 | 64bit: 545.2 MiB / arm64: 320.0 MiB | 2026-10-27 | Desktop AI assistant for running local language models and managing private, model-powered chats. | [Homepage](https://github.com/janhq/jan) |
 | [k-toolz](../bucket/k-toolz.json) | 4.0.2 | 64bit: 9.9 MiB | 2026-10-31 | Gaming suite with an FPS overlay, game streaming, stutter analysis, and virtual gamepad tools. | [Homepage](https://k-toolz.de/en/) |
@@ -1109,6 +1110,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-batch-translator](../bucket/vovsoft-batch-translator.json) | 5.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Translator. | [Homepage](https://vovsoft.com/software/batch-translator/) |
 | [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | 4.3 | 44.3 MiB | 2026-09-09 | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
 | [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
+| [whispra](../bucket/whispra.json) | 2.5.0 | 64bit: 193.8 MiB | 2026-11-10 | Real-time voice, text, and screen translation for Windows. | [Homepage](https://whispra.xyz/) |
 
 ## Weather & Information
 
