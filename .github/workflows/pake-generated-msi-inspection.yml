@@ -132,6 +132,10 @@ jobs:
           foreach ($directory in @('shims', 'apps', 'buckets', 'persist')) {
             New-Item -ItemType Directory -Path (Join-Path $env:SCOOP $directory) -Force | Out-Null
           }
+          $shimSource = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\supporting\shims'
+          $shimDestination = Join-Path $env:SCOOP 'apps\scoop\current\supporting\shims'
+          New-Item -ItemType Directory -Path $shimDestination -Force | Out-Null
+          Copy-Item -Path (Join-Path $shimSource '*') -Destination $shimDestination -Recurse -Force
           & $scoopScript install --no-update-scoop $manifestPath
           $appRoot = Join-Path $env:SCOOP 'apps\pake-grok\3.18.0'
           $expectedExe = Join-Path $appRoot 'PFiles\Grok\pake-grok.exe'
