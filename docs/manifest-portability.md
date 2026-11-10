@@ -5,10 +5,10 @@
 <!-- KIROBUCKET-PORTABILITY-SUMMARY-START -->
 | Classification | Manifests | Meaning |
 | --- | ---: | --- |
-| Portable | 891 | No normal vendor installation routine or persistent Windows integration is run. |
+| Portable | 893 | No normal vendor installation routine or persistent Windows integration is run. |
 | Nonportable | 62 | The manifest runs installation or registers persistent Windows components. |
 | Review | 99 | Portability checks or supporting evidence are still outstanding. |
-| **Total** | **1052** | **All current JSON manifests in bucket/.** |
+| **Total** | **1054** | **All current JSON manifests in bucket/.** |
 <!-- KIROBUCKET-PORTABILITY-SUMMARY-END -->
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
@@ -256,6 +256,7 @@ Each manifest appears once. Portability is classified per manifest; the installe
 | [firemin](../bucket/firemin.json) | Inno | Portable |
 | [foldra](../bucket/foldra.json) | Inno | Portable |
 | [fort](../bucket/fort.json) | Inno | Portable |
+| [foxdesktop](../bucket/foxdesktop.json) | Inno | Portable |
 | [freefilesync](../bucket/freefilesync.json) | Inno | Portable |
 | [imagemagick](../bucket/imagemagick.json) | Inno | Portable |
 | [jopdf](../bucket/jopdf.json) | Inno | Portable |
@@ -360,6 +361,7 @@ Each manifest appears once. Portability is classified per manifest; the installe
 | [tockler](../bucket/tockler.json) | NSIS | Nonportable |
 | [unsloth](../bucket/unsloth.json) | NSIS | Portable |
 | [voicestudio](../bucket/voicestudio.json) | NSIS | Portable |
+| [whispra](../bucket/whispra.json) | NSIS (nested 7Z payload) | Portable |
 | [wincux](../bucket/wincux.json) | NSIS | Nonportable |
 | [znote](../bucket/znote.json) | NSIS | Nonportable |
 | [aifilesorter](../bucket/aifilesorter.json) | Package format not stated in manifest | Portable |
