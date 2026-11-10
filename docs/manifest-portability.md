@@ -2,7 +2,7 @@
 
 **Audit target:** `master`
 
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1034 active manifests. The review section below records 99 manifests with outstanding verification checks; 138 active manifests are not reconciled in the explicit classification totals below.
+**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1035 active manifests. The review section below records 99 manifests with outstanding verification checks; 138 active manifests are not reconciled in the explicit classification totals below.
 
 **Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
 
@@ -22,14 +22,14 @@ The word *Nonportable* here describes installation behavior. It does not mean th
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
 | --- | --- | --- | --- |
-| Portable | 833 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
+| Portable | 834 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 63 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
 | Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | Not reconciled | 138 | The current generated manifest-type inventory contains these additional entries, but they are not included in the explicit Portable/Nonportable/Review totals. No portability class is inferred. |
-| **Total** | **1034** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
+| **Total** | **1035** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 
-The explicit portability classifications currently cover 896 of the 1034 active bucket manifests (833 Portable and 63 Nonportable). The remaining 138 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
+The explicit portability classifications currently cover 897 of the 1035 active bucket manifests (834 Portable and 63 Nonportable). The remaining 138 are marked **Not reconciled** rather than being assumed Portable, Nonportable, or Review. The review section below records 99 active bucket manifests with outstanding technical checks; listing an item there does not itself assign it the Review classification.
 
 ### New manifests added on 2026-11-08
 
@@ -107,6 +107,10 @@ This is a **Portable MSI payload extraction** classification based on the Scoop 
 
 - [`wisp`](../bucket/wisp.json) — **Portable**: uses the official Windows x64 ZIP. Upstream's v0.6.1 release notes state that the application files are at the archive root and identify `wisp.exe` as the launch target. Settings remain under `%APPDATA%\wisp`; the default Alt+Space hotkey can conflict with PowerToys Run.
 - [`monitorsnap`](../bucket/monitorsnap.json) — **Portable**: uses the publisher's single-file portable Windows x64 executable rather than the NSIS installer or MSI. Scoop renames it to `MonitorSnap.exe` and persists the adjacent `MonitorSnapData` folder used by the portable build.
+
+### DeskBox 1.5.9 added on 2026-11-10
+
+- [`deskbox`](../bucket/deskbox.json) — **Portable Inno Setup payload extraction**: uses the official Full Native AOT x64 and ARM64 installers with `innosetup: true`. Scoop extracts the application payload without running the vendor's install routine; the bundled Windows App Runtime is part of the published payload. The official setup's uninstall registration and installer-created shortcuts are not applied. User data and recovery snapshots remain under `%LOCALAPPDATA%`; disable DeskBox's built-in updater and let Scoop manage versions.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
@@ -418,6 +422,7 @@ The classification above concerns what the Scoop manifest does during installati
 | [zen-desktop](../bucket/zen-desktop.json) | Official Windows portable ZIP | Scoop extracts `Zen.exe` without running the installer. At runtime, Zen prompts for local root-certificate installation and changes the current-user Windows proxy settings; it stores config and data under `%LOCALAPPDATA%\Zen`, and the built-in updater can replace the executable independently of Scoop. |
 | [systemtraymenu](../bucket/systemtraymenu.json) | Official Windows x64 portable ZIP | The app can replace its executable through its built-in updater; disable `Update automatically` in Settings when Scoop should manage updates. Creating `config.toml` beside the executable opts into the app's portable configuration mode. |
 | [fsrover](../bucket/fsrover.json) | ZIP archive | Optional drive-letter mounting requires an already-installed WinFsp or Dokany driver; Scoop does not install or register either driver. Browsing and extracting archives or disk images works without that mount backend. SMART reading depends on the optional matching `libcdi` DLL; raw physical-drive access requires administrator rights. |
+| [deskbox](../bucket/deskbox.json) | Full Native AOT Inno Setup payload extraction | Scoop extracts the vendor payload without creating its Inno uninstall registration or vendor shortcuts. DeskBox stores user data and recovery snapshots under `%LOCALAPPDATA%`; disable the built-in updater so Scoop remains the update owner. |
 | Atlas (project) | Microsoft Store alpha / source build | The latest GitHub release v0.1.5 has no attached release assets. The project documents Windows installation through the Microsoft Store or a locally built installer; no directly downloadable Windows package is published in the repository. |
 | FoxDesktop (project) | Official website / Windows package not verified | The supplied website could not be inspected, and no versioned Windows release asset, archive layout, or verified direct download was found. |
 | Purge (project) | Windows ZIP / full `.nupkg` assets | The v1.0.10 x64 ZIP has the same SHA-256 digest as the corresponding full `.nupkg`. The ZIP payload layout and executable path have not been inspected; verify the archive before defining `extract_dir`, `bin`, or a shortcut. |
