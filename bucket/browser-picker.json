@@ -3,7 +3,7 @@
     "description": "Portable Windows browser picker and URL router with rules for domains, paths, and manually added applications.",
     "homepage": "https://github.com/mortenn/BrowserPicker",
     "license": "MIT",
-    "url": "https://github.com/mortenn/BrowserPicker/releases/download/v$version/Portable.zip",
+    "url": "https://github.com/mortenn/BrowserPicker/releases/download/v3.2.5/Portable.zip",
     "hash": "7cdfe1d820fd3dc6c962fe6c79843cbaf182b0c67542b594a5936a0a471d95a9",
     "bin": "BrowserPicker.exe",
     "shortcuts": [
