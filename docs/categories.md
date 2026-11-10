@@ -4,7 +4,8 @@
 | --- | ---: | --- |
 | Android & Device Tools | 8 | [View](#android-device-tools) |
 | Browsers & Communication | 12 | [View](#browsers-communication) |
-| Browser Launchers & Associations | 10 | [View](#browser-launchers-associations) |
+| Associations | 4 | [View](#associations) |
+| Browser Launchers | 6 | [View](#browser-launchers) |
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 4 | [View](#cross-device-integration) |
@@ -91,22 +92,27 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [pake-wechat](../bucket/pake-wechat.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for WeChat. | [Homepage](https://wx.qq.com/) |
 | [pake-xiaohongshu](../bucket/pake-xiaohongshu.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for XiaoHongShu. | [Homepage](https://www.xiaohongshu.com/explore) |
 | [zapfast](../bucket/zapfast.json) | 0.20.1 | 64bit: 29.4 MiB / arm64: 27.9 MiB | 2026-10-24 | Unofficial native WhatsApp desktop client built with Rust, with linked devices, chat history, media, calls, and notifications. | [Homepage](https://zapfast.rocks/) |
-| [zapzap](../bucket/zapzap.json) | 7.5.1 | 64bit: 195.5 MiB / arm64: 166.1 MiB | 2026-10-15 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafatosta/zapzap) |
-
-## Browser Launchers & Associations
+| [zapzap](../bucket/zapzap.json) | 7.5.1 | 64bit: 195.5 MiB / arm64: 166.1 MiB | 2026-10-15 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafato## Associations
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [browser-picker](../bucket/browser-picker.json) | 3.2.5 | — | 2026-10-24 | Portable Windows browser picker and URL router with rules for domains, paths, and manually added applications. | [Homepage](https://github.com/mortenn/BrowserPicker) |
 | [firefox-portable-default-browser](../bucket/firefox-portable-default-browser.json) | 1.0.0 | — | — | Registry template for registering Firefox Portable as a current-user browser candidate in Windows Default Apps. | [Homepage](https://github.com/clemthi/firefox-portable-default-browser) |
+| [pineapple-assoc-manager](../bucket/pineapple-assoc-manager.json) | 1.1.0 | — | — | Portable Windows file-association manager for portable applications, configured with PACFG files. | [Homepage](https://github.com/BLumia/pineapple-assoc-manager) |
+| [ps-sfta](../bucket/ps-sfta.json) | 1.2.0 | — | — | PowerShell functions to register applications and manage Windows file-type and protocol associations. | [Homepage](https://github.com/DanysysTeam/PS-SFTA) |
+
+## Browser Launchers
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
 | [nomad-launcher-chromium](../bucket/nomad-launcher-chromium.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Chromium; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
 | [nomad-launcher-floorp](../bucket/nomad-launcher-floorp.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Floorp; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
 | [nomad-launcher-helium](../bucket/nomad-launcher-helium.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Helium; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
 | [nomad-launcher-librewolf](../bucket/nomad-launcher-librewolf.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for LibreWolf; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
 | [nomad-launcher-mullvad](../bucket/nomad-launcher-mullvad.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Mullvad Browser; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
 | [nomad-launcher-waterfox](../bucket/nomad-launcher-waterfox.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Waterfox; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
-| [pineapple-assoc-manager](../bucket/pineapple-assoc-manager.json) | 1.1.0 | — | — | Portable Windows file-association manager for portable applications, configured with PACFG files. | [Homepage](https://github.com/BLumia/pineapple-assoc-manager) |
-| [ps-sfta](../bucket/ps-sfta.json) | 1.2.0 | — | — | PowerShell functions to register applications and manage Windows file-type and protocol associations. | [Homepage](https://github.com/DanysysTeam/PS-SFTA) |
+
+am/PS-SFTA) |
 
 ## Clipboard Tools
 
