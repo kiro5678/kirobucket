@@ -250,6 +250,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [czkawka-krokiet-skia-opengl](../bucket/czkawka-krokiet-skia-opengl.json) | 12.0.2 | 63.1 MiB | 2026-09-09 | Czkawka Krokiet Windows build using the Skia OpenGL backend | [Homepage](https://github.com/qarmin/czkawka) |
 | [czkawka-krokiet-skia-vulkan](../bucket/czkawka-krokiet-skia-vulkan.json) | 12.0.2 | 65.0 MiB | 2026-09-09 | Czkawka Krokiet Windows build using the Skia Vulkan backend | [Homepage](https://github.com/qarmin/czkawka) |
 | [declutter](../bucket/declutter.json) | 1.13.7 | 37.4 MiB | 2026-02-12 | Desktop application for managing and organizing files with automated processing rules and tagging. | [Homepage](https://github.com/midnightdim/declutter) |
+| [deskbox](../bucket/deskbox.json) | 1.5.9 | 64bit: 32.2 MiB / arm64: 31.6 MiB | 2026-10-23 | Local-first Windows desktop organizer with file and folder widgets, groups, tasks, notes, and desktop search. | [Homepage](https://github.com/Tianyu199509/DeskBox) |
 | [delete-on-reboot](../bucket/delete-on-reboot.json) | 3.47 | 64bit: 226.3 KiB | 2026-03-13 | Schedule files for deletion during the next reboot. | [Homepage](https://www.softwareok.com/?Download=Delete.On.Reboot) |
 | [dirprintok](../bucket/dirprintok.json) | 7.69 | 64bit: 852.5 KiB | 2026-10-20 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
 | [doublecmd](../bucket/doublecmd.json) | 1.2.9 | 64bit: — / 32bit: — | — | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
@@ -1831,4 +1832,3 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 | [usb-repair](../bucket/usb-repair.json) | 11.2.3.2380 | 2.3 MiB | 2025-07-03 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [takeoff-launcher](../bucket/takeoff-launcher.json) | 1.0.4 | 299.9 KiB | 2026-09-17 | Focused, lightweight native Windows application launcher | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
-
