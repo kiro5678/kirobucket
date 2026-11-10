@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   test-all-pake:
-    name: Test all Pake MSI manifests with Scoop; classify other packages
+    name: Test all Pake MSI manifests with Scoop
     runs-on: windows-latest
     timeout-minutes: 60
     steps:
@@ -30,7 +30,7 @@ jobs:
           path: scoop_core
           persist-credentials: false
 
-      - name: Install every Pake manifest through Scoop and verify installed files
+      - name: Install every Pake MSI through Scoop and verify installed files
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -77,94 +77,24 @@ jobs:
               }
 
               $mainUrl = [string]$urls[0]
-              $isMsi = $mainUrl -match '(?i)\.msi(?:#|$)'
-              if ($isMsi) {
-                $msiCount++
-                if ($mainUrl -notmatch '#/dl\.msi$') {
-                  throw "MSI URL for $appName does not use the required #/dl.msi suffix: $mainUrl"
-                }
-                if ($manifest.autoupdate -and $manifest.autoupdate.url -is [string] -and $manifest.autoupdate.url -notmatch '#/dl\.msi$') {
-                  throw "Autoupdate MSI URL for $appName does not use #/dl.msi."
-                }
-              } else {
+              $isMsi = $mainUrl.EndsWith('.msi#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase) -or $mainUrl.EndsWith('.msi', [System.StringComparison]::OrdinalIgnoreCase)
+
+              if (-not $isMsi) {
                 $otherCount++
-                if ($mainUrl -match '#/dl\.msi
-              $appRoot = Join-Path $env:SCOOP "apps\$appName\current"
-              if (-not (Test-Path -LiteralPath $appRoot -PathType Container)) {
-                throw "Scoop did not create the current app directory for $appName."
-              }
-
-              $expectedPaths = [System.Collections.Generic.List[string]]::new()
-              foreach ($entry in @($manifest.bin)) {
-                if ($entry -is [System.Array]) {
-                  if ($entry.Count -gt 0) { $expectedPaths.Add([string]$entry[0]) }
-                } elseif ($entry -is [string]) {
-                  $expectedPaths.Add([string]$entry)
-                }
-              }
-              foreach ($entry in @($manifest.shortcuts)) {
-                if ($entry -is [System.Array]) {
-                  if ($entry.Count -gt 0) { $expectedPaths.Add([string]$entry[0]) }
-                } elseif ($entry -is [string]) {
-                  $expectedPaths.Add([string]$entry)
-                }
-              }
-              $expectedPaths = @($expectedPaths | Sort-Object -Unique)
-              if ($expectedPaths.Count -eq 0) {
-                throw "Manifest $appName has no bin or shortcut path to verify."
-              }
-
-              foreach ($relativePath in $expectedPaths) {
-                $installedFile = Join-Path $appRoot $relativePath
-                if (-not (Test-Path -LiteralPath $installedFile -PathType Leaf)) {
-                  throw "Scoop installed $appName but the declared launch file is missing: $relativePath"
-                }
-                $report.Add("  VERIFIED: $relativePath")
-              }
-
-              $type = if ($isMsi) { 'MSI with dl.msi' } else { 'non-MSI, original extraction method' }
-              $report.Add("[$appName] PASS | Version=$($manifest.version) | Type=$type")
-              Write-Host "PASS: $appName"
-            } catch {
-              $message = "$appName : $($_.Exception.Message)"
-              $failures.Add($message)
-              $report.Add("[$appName] FAIL | $($_.Exception.Message)")
-              Write-Host "FAILED: $message" -ForegroundColor Red
-              $logs = @(Get-ChildItem -LiteralPath $env:SCOOP -Filter '*.log' -File -Recurse -ErrorAction SilentlyContinue)
-              foreach ($log in $logs) {
-                Write-Host "--- $($log.FullName) ---"
-                Get-Content -LiteralPath $log.FullName -Tail 80 | ForEach-Object { Write-Host $_ }
-              }
-            }
-          }
-
-          $report.Insert(0, "Pake manifests tested: $($manifestFiles.Count); MSI manifests: $msiCount; other package types: $otherCount")
-          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
-          $report | ForEach-Object { Write-Output $_ }
-
-          Write-Host ''
-          Write-Host "Total manifests: $($manifestFiles.Count)"
-          Write-Host "MSI manifests: $msiCount"
-          Write-Host "Other package types: $otherCount"
-          Write-Host "Failures: $($failures.Count)"
-          if ($failures.Count -gt 0) {
-            $failures | ForEach-Object { Write-Host $_ -ForegroundColor Red }
-            exit 1
-          }
-
-      - name: Upload Pake validation report
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: pake-install-validation
-          path: ${{ runner.temp }}/pake-validation/pake-install-report.txt
-          if-no-files-found: ignore
-) {
+                if ($mainUrl.EndsWith('#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase)) {
                   throw "Non-MSI package $appName was incorrectly marked with #/dl.msi."
                 }
                 $report.Add("[$appName] SKIP | Non-MSI package; preserved original URL and extraction type: $mainUrl")
-                Write-Host "SKIP: $appName is not an MSI package; no dl.msi conversion or Scoop MSI install attempted."
+                Write-Host "SKIP: $appName is not an MSI package; no dl.msi conversion attempted."
                 continue
+              }
+
+              $msiCount++
+              if (-not $mainUrl.EndsWith('#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase)) {
+                throw "MSI URL for $appName does not use the required #/dl.msi suffix: $mainUrl"
+              }
+              if ($manifest.autoupdate -and $manifest.autoupdate.url -is [string] -and -not $manifest.autoupdate.url.EndsWith('#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase)) {
+                throw "Autoupdate MSI URL for $appName does not use #/dl.msi."
               }
 
               & $scoopScript install --no-update-scoop $manifestFile.FullName
@@ -202,8 +132,7 @@ jobs:
                 $report.Add("  VERIFIED: $relativePath")
               }
 
-              $type = if ($isMsi) { 'MSI with dl.msi' } else { 'non-MSI, original extraction method' }
-              $report.Add("[$appName] PASS | Version=$($manifest.version) | Type=$type")
+              $report.Add("[$appName] PASS | Version=$($manifest.version) | Type=MSI with dl.msi")
               Write-Host "PASS: $appName"
             } catch {
               $message = "$appName : $($_.Exception.Message)"
@@ -218,14 +147,14 @@ jobs:
             }
           }
 
-          $report.Insert(0, "Pake manifests tested: $($manifestFiles.Count); MSI manifests: $msiCount; other package types: $otherCount")
+          $report.Insert(0, "Pake manifests discovered: $($manifestFiles.Count); MSI manifests installed: $msiCount; non-MSI manifests skipped: $otherCount")
           $report | Set-Content -LiteralPath $reportPath -Encoding utf8
           $report | ForEach-Object { Write-Output $_ }
 
           Write-Host ''
           Write-Host "Total manifests: $($manifestFiles.Count)"
-          Write-Host "MSI manifests: $msiCount"
-          Write-Host "Other package types: $otherCount"
+          Write-Host "MSI manifests installed: $msiCount"
+          Write-Host "Non-MSI manifests skipped: $otherCount"
           Write-Host "Failures: $($failures.Count)"
           if ($failures.Count -gt 0) {
             $failures | ForEach-Object { Write-Host $_ -ForegroundColor Red }
