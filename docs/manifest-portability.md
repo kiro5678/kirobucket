@@ -37,37 +37,19 @@
 
 ## Nonportable manifests by installer type
 
-This index lists the Nonportable manifests, grouped by the exact installer/package label. Each manifest appears once. Similar-looking labels are kept separate when the setup technology or certainty differs.
+This index groups Nonportable manifests by installer family. EXE-based installers are grouped under `EXE`, except confirmed Inno and NSIS installers, which remain under their own rows. An unverified installer engine stays under `EXE`.
 
 | Installer/package type | Manifests | Count |
 |---|---|---:|
-| NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 22 |
-| Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [wintousb](../bucket/wintousb.json) | 7 |
+| EXE | [belarc-advisor](../bucket/belarc-advisor.json), [cue](../bucket/cue.json), [directx-np](../bucket/directx-np.json), [fluentstore](../bucket/fluentstore.json), [fxsound](../bucket/fxsound.json), [imazing-np](../bucket/imazing-np.json), [imgconv](../bucket/imgconv.json), [mumuplayer](../bucket/mumuplayer.json), [mumuplayer-android15](../bucket/mumuplayer-android15.json), [mumuplayer-online](../bucket/mumuplayer-online.json), [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json), [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json), [npcap-np](../bucket/npcap-np.json), [office-365-apps-home-np](../bucket/office-365-apps-home-np.json), [onedrive-np](../bucket/onedrive-np.json), [open-shell](../bucket/open-shell.json), [open-shell-nightly](../bucket/open-shell-nightly.json), [poweriso](../bucket/poweriso.json), [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json), [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | 21 |
+| Inno | [autorun-organizer](../bucket/autorun-organizer.json), [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json), [livewallpaper](../bucket/livewallpaper.json), [nook](../bucket/nook.json), [openzfs-np](../bucket/openzfs-np.json), [openglass](../bucket/openglass.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [wintousb](../bucket/wintousb.json) | 8 |
+| NSIS | [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [downloadorganizer](../bucket/downloadorganizer.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [k-toolz](../bucket/k-toolz.json), [lapis](../bucket/lapis.json), [nectarlink](../bucket/nectarlink.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | 23 |
 | MSI | [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json), [tinywall](../bucket/tinywall.json) | 5 |
-| .NET bundle EXE installer | [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | 2 |
 | MSIX | [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json) | 2 |
-| NVIDIA self-extracting EXE + setup.exe | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json), [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 2 |
-| Open-Shell EXE bootstrapper (MSI-based) | [open-shell](../bucket/open-shell.json), [open-shell-nightly](../bucket/open-shell-nightly.json) | 2 |
-| Vendor EXE setup (engine unverified) | [belarc-advisor](../bucket/belarc-advisor.json), [poweriso](../bucket/poweriso.json) | 2 |
-| EXE bootstrapper + embedded MSI | [fxsound](../bucket/fxsound.json) | 1 |
-| EXE bootstrapper + MSIX | [fluentstore](../bucket/fluentstore.json) | 1 |
-| EXE setup (Inno-style switches; engine not confirmed) | [imazing-np](../bucket/imazing-np.json) | 1 |
-| Inno Setup-style EXE (based on switches) | [openzfs-np](../bucket/openzfs-np.json) | 1 |
-| Microsoft OneDrive setup EXE | [onedrive-np](../bucket/onedrive-np.json) | 1 |
 | MSI payload extraction + URL protocol registration | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | 1 |
 | MSIXBundle + APPX dependencies | [screenbox](../bucket/screenbox.json) | 1 |
-| Npcap EXE driver installer (engine unspecified) | [npcap-np](../bucket/npcap-np.json) | 1 |
-| Office Deployment Tool (self-extracting EXE + setup.exe) | [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | 1 |
-| Self-extracting EXE + DXSETUP | [directx-np](../bucket/directx-np.json) | 1 |
-| Vendor EXE setup (NSIS-style switches; engine unverified) | [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | 1 |
-| Vendor EXE silent installer (engine unverified) | [mumuplayer-online](../bucket/mumuplayer-online.json) | 1 |
-| Vendor-specific EXE component installer | [mumuplayer-android15](../bucket/mumuplayer-android15.json) | 1 |
-| Vendor-specific EXE installer/orchestrator | [mumuplayer](../bucket/mumuplayer.json) | 1 |
 | ZIP font files + Windows font-registration script | [ttf-stix2](../bucket/ttf-stix2.json) | 1 |
-| Custom EXE installer (publisher-specific) | [cue](../bucket/cue.json), [imgconv](../bucket/imgconv.json) | 2 |
-| NSIS setup EXE extracted as 7Z + automatic URL protocol registration | [k-toolz](../bucket/k-toolz.json) | 1 |
 | **Total** | **All Nonportable manifests** | **62** |
-
 
 ## Manifest review
 
