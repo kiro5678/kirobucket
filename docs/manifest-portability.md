@@ -43,6 +43,26 @@ Each installer type appears once in the rightmost column. Its Portable and Nonpo
 **Counts:** Portable 890; Nonportable 62; Review 99; Total 1051.
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->
 
+<!-- KIROBUCKET-NONPORTABLE-INSTALLER-TYPE-TABLE-START -->
+## Nonportable manifests by installer type
+
+This table lists only manifests classified as Nonportable, grouped by installer/package type.
+
+| Nonportable manifests (62) | Installer Type |
+| --- | --- |
+| [directx-np](../bucket/directx-np.json), [k-toolz](../bucket/k-toolz.json), [livewallpaper](../bucket/livewallpaper.json), [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json), [nvidia-notebook-graphic-driver-np](../bucket/nvidia-notebook-graphic-driver-np.json) | 7Z archive |
+| [fluentstore](../bucket/fluentstore.json), [mumuplayer](../bucket/mumuplayer.json), [mumuplayer-android15](../bucket/mumuplayer-android15.json), [mumuplayer-online](../bucket/mumuplayer-online.json), [sucrose](../bucket/sucrose.json), [sucrose-nightly](../bucket/sucrose-nightly.json) | EXE payload (standalone/extractor not verified) |
+| [belarc-advisor](../bucket/belarc-advisor.json), [cue](../bucket/cue.json), [downloadorganizer](../bucket/downloadorganizer.json), [fxsound](../bucket/fxsound.json), [imazing-np](../bucket/imazing-np.json), [imgconv](../bucket/imgconv.json), [nectarlink](../bucket/nectarlink.json), [onedrive-np](../bucket/onedrive-np.json), [open-shell](../bucket/open-shell.json), [open-shell-nightly](../bucket/open-shell-nightly.json), [openglass](../bucket/openglass.json), [openzfs-np](../bucket/openzfs-np.json), [poweriso](../bucket/poweriso.json), [sandboxie-plus](../bucket/sandboxie-plus.json), [ubiquiti-wifiman-desktop-installer](../bucket/ubiquiti-wifiman-desktop-installer.json) | EXE setup (engine unverified) |
+| [autorun-organizer](../bucket/autorun-organizer.json), [nook](../bucket/nook.json), [wintousb](../bucket/wintousb.json) | Inno |
+| [air-server-np](../bucket/air-server-np.json), [crowdsec](../bucket/crowdsec.json), [openedr](../bucket/openedr.json), [powershell-np](../bucket/powershell-np.json), [tinywall](../bucket/tinywall.json), [yt-dlp-gui](../bucket/yt-dlp-gui.json) | MSI installer/package |
+| [everything-cmdpal](../bucket/everything-cmdpal.json), [scanner](../bucket/scanner.json), [screenbox](../bucket/screenbox.json) | MSIX/AppX package registration |
+| [npcap-np](../bucket/npcap-np.json) | Multiple package types: EXE setup (engine unverified) / AHK package |
+| [k-lite-codec-pack-mega-np](../bucket/k-lite-codec-pack-mega-np.json) | Multiple package types: EXE setup (engine unverified) / INI package |
+| [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | Multiple package types: EXE setup (engine unverified) / XML package |
+| [agaric](../bucket/agaric.json), [another](../bucket/another.json), [biscuit](../bucket/biscuit.json), [clustercut](../bucket/clustercut.json), [coodesker-github](../bucket/coodesker-github.json), [dlman](../bucket/dlman.json), [ecopaste](../bucket/ecopaste.json), [ecopaste-nightly](../bucket/ecopaste-nightly.json), [edge-drop](../bucket/edge-drop.json), [filepilot](../bucket/filepilot.json), [helixnotes](../bucket/helixnotes.json), [lapis](../bucket/lapis.json), [nightlight-launcher](../bucket/nightlight-launcher.json), [recordly](../bucket/recordly.json), [smol](../bucket/smol.json), [sofast](../bucket/sofast.json), [spacedrive](../bucket/spacedrive.json), [tockler](../bucket/tockler.json), [wincux](../bucket/wincux.json), [znote](../bucket/znote.json) | NSIS |
+| [ttf-stix2](../bucket/ttf-stix2.json) | ZIP archive |
+<!-- KIROBUCKET-NONPORTABLE-INSTALLER-TYPE-TABLE-END -->
+
 ## Manifest review
 
 Review and unavailable projects are tracked in the separate [Manifest Review and Unavailable Projects](manifest-review.md) document.
