@@ -5,9 +5,9 @@
     "license": "BSD-3-Clause",
     "url": "https://raventechnologiesgroup.com/download?product=talon",
     "notes": [
-        "DRAFT: the repository release has no downloadable Windows asset; this uses the website's legacy EXE download route.",
-        "No SHA-256 was published with the GitHub release. Do not promote or install until the file URL, version, hash, and installer/portable behavior are confirmed.",
-        "The current README documents a PowerShell-based method as primary; this manifest deliberately does not execute that script."
+        "BLOCKED: the current public Community download method is a PowerShell bootstrapper that downloads, cryptographically verifies, extracts, and runs Talon from the vendor's servers. A mutable remote script is not a pinned Scoop package and must not be executed from this manifest.",
+        "The latest GitHub release has no downloadable binary assets. The previous review workflow's legacy /download?product=talon URL returned a 15,341-byte non-archive response, not the ZIP described by the older README instructions.",
+        "The vendor currently advertises direct prebuilt downloads as a Commercial-plan feature. Do not substitute a paid binary or create a manifest until the vendor publishes a stable public direct package URL and matching SHA-256."
     ],
     "checkver": {
         "url": "https://api.github.com/repos/ravendevteam/talon/releases/latest",

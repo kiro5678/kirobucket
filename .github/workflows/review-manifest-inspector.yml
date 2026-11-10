@@ -186,6 +186,7 @@ jobs:
           $report | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
           Write-Host "Inspection completed. Blocking errors: $failures"
           if ($failures -gt 0) { exit 1 }
+          exit 0
 
       - name: Upload 7-Zip diagnostics
         if: always()

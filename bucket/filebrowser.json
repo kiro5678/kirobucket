@@ -7,8 +7,8 @@
     "hash": "fdb1d86dfafff8b3861867c7797ce786570013088678e03de17cfd9476c72384",
     "bin": "filebrowser.exe",
     "notes": [
-        "Upstream archived this repository on 2026-09-01 and announced no further fixes or security updates.",
-        "The upstream README identifies known unpatched command-execution and session/JWT issues. Review only; do not expose directly to the internet or promote without a security decision."
+        "SECURITY WARNING: Upstream archived this project on 2026-09-01 and announced that no further releases or security fixes are planned.",
+        "Upstream documents unresolved command-execution and session/JWT risks. Keep command runners/hooks disabled, do not expose the service directly to the public internet, use independent authentication in front of it, and run it with least privilege and access limited to the intended files."
     ],
     "checkver": {
         "url": "https://api.github.com/repos/filebrowser/filebrowser/releases/latest",
