@@ -27,7 +27,7 @@
 | Productivity & Launchers | 37 | [View](#productivity-launchers) |
 | Security | 40 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
-| Storage & Disk Tools | 30 | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
@@ -38,7 +38,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1026**
+**Total unique manifests: 1027**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -943,6 +943,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [noncompressible-files](../bucket/noncompressible-files.json) | 5.11 | 64bit: 121.1 KiB | 2026-03-19 | Create files that are difficult to compress. | [Homepage](https://www.softwareok.com/?Download=NonCompressibleFiles) |
 | [openclosedriveeject](../bucket/openclosedriveeject.json) | 3.55 | 64bit: 288.0 KiB / 32bit: 232.3 KiB | 2026-05-02 | Safely eject drives and open or close optical drives. | [Homepage](https://www.softwareok.com/?Download=OpenCloseDriveEject) |
 | [openzfs-np](../bucket/openzfs-np.json) | 2.4.1rc17b | 54.7 MiB | 2026-10-18 | The open source port of OpenZFS on Windows | [Homepage](https://github.com/openzfsonwindows/openzfs) |
+| [purge](../bucket/purge.json) | 1.0.11 | 64bit: 86.1 MiB / arm64: 82.6 MiB / 32bit: 63.5 MiB | 2026-11-10 | WinUI 3 disk analyzer and cache cleaner for Windows 10 and 11. | [Homepage](https://github.com/stvekoulo/purge) |
 | [simple-vhd-manager](../bucket/simple-vhd-manager.json) | 1.5 | 1.6 MiB | 2025-09-13 | This software is designed to simplify operations such as creating VHD and VHDX files, adding them to boot menu and Automatically mounting at system startup. Partial ISO support is also available. | [Homepage](https://www.sordum.org/simple-vhd-manager) |
 | [sordum-drive-letter-changer](../bucket/sordum-drive-letter-changer.json) | 1.4 | 916.4 KiB | 2025-06-01 | A simple app that allows you to change the letter of your hard drives. | [Homepage](https://www.sordum.org/drive-letter-changer) |
 | [sordum-show-disk-partition-style](../bucket/sordum-show-disk-partition-style.json) | 1.1 | 803.2 KiB | 2020-02-29 | A simple app for showing disk partion style. | [Homepage](https://www.sordum.org/show-disk-partition-style) |
