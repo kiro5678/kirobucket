@@ -1054,11 +1054,11 @@ jobs:
                   $group.Group |
                       Sort-Object Name |
                       ForEach-Object {
-                          $name = ([string]$_.Name).Replace("|", "\\|")
+                          $name = ([string]$_.Name).Replace("|", "\|")
                           "[$name](../bucket/$($_.Name).json)"
                       }
               ) -join ", "
-              $typeLabel = ([string]$group.Name).Replace("|", "\\|")
+              $typeLabel = ([string]$group.Name).Replace("|", "\|")
               $portableTypeLines.Add("| $portableLinks | $typeLabel |")
           }
 
