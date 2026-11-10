@@ -1,4 +1,5 @@
 name: Concat and BootEase Package Inspection
+# Reusable static checks for the official Windows release assets.
 
 on:
   push:
