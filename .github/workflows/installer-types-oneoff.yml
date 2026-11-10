@@ -22,6 +22,10 @@ jobs:
             kind: exe
             url: https://down.coodesker.com/coodesker-desktop/Coodesker-x64_2.2.2.2.exe
             expected: ''
+          - id: aula-0.1.3
+            kind: exe
+            url: https://github.com/luumlabs/aula/releases/download/v0.1.3/Aula-Setup-0.1.3.exe
+            expected: 0438bae640a226e44ca3279660e892e88d7ac9c92c4b2051a2515e545ae7658c
           - id: livewallpaper-4.0.1-alpha.4
             kind: exe
             url: https://github.com/GiantappMan/livewallpaper/releases/download/v4.0.1-alpha.4/GiantappWallpaper_4.0.1-alpha.4_x64-setup.exe
