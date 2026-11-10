@@ -23,7 +23,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 22 | [View](#notes-knowledge) |
-| Other Utilities | 132 | [View](#other-utilities) |
+| Other Utilities | 130 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
 | Productivity & Launchers | 37 | [View](#productivity-launchers) |
@@ -35,7 +35,7 @@
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
-| Translation & OCR | 10 | [View](#translation-ocr) |
+| Translation & OCR | 12 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
@@ -699,8 +699,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [systemtraymenu-v3](../bucket/systemtraymenu-v3.json) | 3.1.256 | — | — | Portable folder-based launcher and menu for files, programs and links. | [Homepage](https://hofknecht.eu/systemtraymenu/en.html) |
 | [takeoff-launcher](../bucket/takeoff-launcher.json) | 1.0.4 | — | — | Focused, lightweight native Windows application launcher. | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
 | [torrentplayer](../bucket/torrentplayer.json) | 0.3.3 | — | — | Open-source BitTorrent streaming media player with instant seeking and a background download queue. | [Homepage](https://torrentplayer.io) |
-| [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | 4.3 | — | — | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
-| [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | — | — | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
 | [wintousb](../bucket/wintousb.json) | 10.9 | — | — | Create Windows To Go and bootable Windows installation/WinPE USB media. | [Homepage](https://www.easyuefi.com/wintousb/) |
 | [wisp](../bucket/wisp.json) | 0.6.1 | — | — | Windows 11 dock and keyboard launcher that replaces the taskbar. | [Homepage](https://github.com/SumirSeth/wisp) |
 | [anton](../bucket/anton.json) | 0.2.48 | 95.4 MiB | 2026-10-29 | AI-assisted desktop video editor with a manual timeline and local rendering | [Homepage](https://antonvideo.app/) |
@@ -894,8 +892,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [shortercut](../bucket/shortercut.json) | 1.0.0.7 | 5.0 MiB | 2024-03-07 | Free and lightweight app launcher and desktop organizer. | [Homepage](https://www.getshortercut.com/) |
 | [sofast](../bucket/sofast.json) | 0.12.0 | 64bit: 12.8 MiB | 2026-06-16 | Quick launcher and productivity tool for Windows. | [Homepage](https://www.sofast.fun/) |
 | [super-productivity](../bucket/super-productivity.json) | 19.3.1 | 64bit: 248.6 MiB / arm64: 248.6 MiB | 2026-10-25 | A task management and time tracking application for personal productivity. | [Homepage](https://github.com/super-productivity/super-productivity) |
-| [systemtraymenu](../bucket/systemtraymenu.json) | 3.1.235 | 64bit: 7.4 MiB | 2026-11-08 | Folder-based launcher and menu for files, programs, and links. | [Homepage](https://hofknecht.eu/systemtraymenu/en.html) |
-| [systemtraymenu1](../bucket/systemtraymenu1.json) | 1.3.5.0 | 64bit: 70.6 MiB | 2023-09-09 | Open-source desktop toolbar and Start Menu alternative for browsing and opening files, folders, and links. | [Homepage](https://github.com/Hofknecht/SystemTrayMenu) |
 | [tabame](../bucket/tabame.json) | 2.2.0 | 27.4 MiB | 2026-10-21 | Windows taskbar replacement with a launcher, QuickMenu, and plugins. | [Homepage](https://github.com/Far-Se/tabame) |
 | [vovsoft-contact-manager](../bucket/vovsoft-contact-manager.json) | 2.3 | 4.8 MiB | 2026-09-05 | Portable edition of Vovsoft Contact Manager. | [Homepage](https://vovsoft.com/software/contact-manager/) |
 | [vovsoft-container-loading-calculator](../bucket/vovsoft-container-loading-calculator.json) | 1.5 | 2.6 MiB | 2026-08-13 | Portable edition of Vovsoft Container Loading Calculator. | [Homepage](https://vovsoft.com/software/container-loading-calculator/) |
@@ -1150,15 +1146,16 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 ## Translation & OCR
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
-| [biniware-translation-tool](../bucket/biniware-translation-tool.json) | 1.6.0.0 | 242.4 KiB | 2026-10-19 | Portable utility for translating software localization files. | [Homepage](https://biniware.com/bttool) |
 | --- | --- | --- | --- | --- | --- |
+| [biniware-translation-tool](../bucket/biniware-translation-tool.json) | 1.6.0.0 | 242.4 KiB | 2026-10-19 | Portable utility for translating software localization files. | [Homepage](https://biniware.com/bttool) |
 | [crow-translate](../bucket/crow-translate.json) | 4.1.0 | 64bit: 34.6 MiB | 2024-10-24 | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. | [Homepage](https://apps.kde.org/crowtranslate) |
 | [dpscreenocr](../bucket/dpscreenocr.json) | 1.5.1 | 10.8 MiB | 2026-10-29 | A free and open-source program to recognize text on the screen. | [Homepage](https://danpla.github.io/dpscreenocr/) |
 | [MORT](../bucket/MORT.json) | 1.320 | 64bit: 98.7 MiB | 2026-09-11 | Real-time game translator with OCR and machine translation. | [Homepage](https://github.com/kmonkeyhead/MORT) |
 | [rstgametranslation](../bucket/rstgametranslation.json) | 6.1 | 64bit: 309.9 MiB | 2026-10-22 | Real-time game screen OCR and translation tool. | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) |
 | [translumo](../bucket/translumo.json) | 1.1.0 | 410.1 MiB | 2026-09-22 | Advanced real-time screen translator. | [Homepage](https://github.com/ramjke/Translumo) |
 | [vovsoft-batch-translator](../bucket/vovsoft-batch-translator.json) | 5.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Translator. | [Homepage](https://vovsoft.com/software/batch-translator/) |
-| [vovsoft-ocr-reader](../bucket/vovs| [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
+| [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | 4.3 | 44.3 MiB | 2026-09-09 | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
+| [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
 | [whispra](../bucket/whispra.json) | 2.5.0 | 64bit: 193.8 MiB | 2026-11-10 | Real-time voice, text, and screen translation for Windows. | [Homepage](https://whispra.xyz/) |json) | 3.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
 
 ## Weather & Information
