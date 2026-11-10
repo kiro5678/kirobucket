@@ -1,0 +1,48 @@
+name: Temporary Coodesker 2.2.2.5 Package Check
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/coodesker-release-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    steps:
+      - name: Download and inspect official package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://down.coodesker.com/coodesker-desktop/Coodesker-x64_2.2.2.5.exe'
+          $file = Join-Path $env:RUNNER_TEMP 'Coodesker-x64_2.2.2.5.exe'
+          try {
+            Invoke-WebRequest -Uri $url -OutFile $file -MaximumRedirection 10 -TimeoutSec 300 -ErrorAction Stop
+          } catch {
+            Write-Warning "Invoke-WebRequest failed: $($_.Exception.Message)"
+            & curl.exe --fail --location --retry 4 --retry-all-errors --connect-timeout 30 --max-time 600 --user-agent 'Mozilla/5.0' --output $file $url
+            if ($LASTEXITCODE -ne 0) { throw "curl failed with exit code $LASTEXITCODE" }
+          }
+          if (!(Test-Path -LiteralPath $file -PathType Leaf)) { throw 'The official download was not created.' }
+          $item = Get-Item -LiteralPath $file
+          Write-Host "Downloaded URL: $url"
+          Write-Host "Size: $($item.Length)"
+          Write-Host "SHA-256: $((Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant())"
+          $sig = Get-AuthenticodeSignature -LiteralPath $file
+          Write-Host "Authenticode: $($sig.Status)"
+          Write-Host "Signer: $($sig.SignerCertificate.Subject)"
+          $exe = 'C:\Program Files\7-Zip\7z.exe'
+          if (!(Test-Path -LiteralPath $exe)) { throw '7-Zip was not found.' }
+          & $exe l -slt $file
+          if ($LASTEXITCODE -ne 0) { throw '7-Zip could not list the Coodesker EXE.' }
+          $dest = Join-Path $env:RUNNER_TEMP 'coodesker-extracted'
+          & $exe x -y "-o$dest" $file
+          if ($LASTEXITCODE -ne 0) { throw '7-Zip extraction failed.' }
+          Get-ChildItem -LiteralPath $dest -Recurse -File | ForEach-Object {
+            $rel = $_.FullName.Substring($dest.Length).TrimStart('\','/')
+            Write-Host "$rel - $($_.Length) bytes"
+          }
