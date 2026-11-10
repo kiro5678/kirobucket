@@ -12,7 +12,7 @@
 | Developer & Technical Tools | 45 | [View](#developer-technical-tools) |
 | Download Managers | 21 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 81 | [View](#file-management) |
+| File Management | 83 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
@@ -26,7 +26,7 @@
 | Other Utilities | 130 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
-| Productivity & Launchers | 37 | [View](#productivity-launchers) |
+| Productivity & Launchers | 35 | [View](#productivity-launchers) |
 | Security | 40 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
@@ -35,9 +35,9 @@
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
-| Translation & OCR | 12 | [View](#translation-ocr) |
+| Translation & OCR | 10 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 95 | [View](#windows-customization) |
+| Windows Customization | 93 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 **Total unique manifests: 1067**
