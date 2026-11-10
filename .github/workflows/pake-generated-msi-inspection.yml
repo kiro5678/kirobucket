@@ -129,6 +129,9 @@ jobs:
           $scoopScript = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\scoop.ps1'
           New-Item -ItemType Directory -Path $env:SCOOP -Force | Out-Null
           New-Item -ItemType Directory -Path $env:SCOOP_CACHE -Force | Out-Null
+          foreach ($directory in @('shims', 'apps', 'buckets', 'persist')) {
+            New-Item -ItemType Directory -Path (Join-Path $env:SCOOP $directory) -Force | Out-Null
+          }
           & $scoopScript install --no-update-scoop $manifestPath
           $appRoot = Join-Path $env:SCOOP 'apps\pake-grok\3.18.0'
           $expectedExe = Join-Path $appRoot 'PFiles\Grok\pake-grok.exe'
