@@ -104,6 +104,14 @@ jobs:
             $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
             $unicode = [System.Text.Encoding]::Unicode.GetString($bytes)
             $text = $ascii + [Environment]::NewLine + $unicode
+            foreach ($pattern in @('AppData','Roaming','LocalAppData','Arbora','portable','settings','bookmarks')) {
+              foreach ($match in [regex]::Matches($ascii, ".{0,90}$pattern.{0,120}", [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | Select-Object -First 8) {
+                Write-Host "STRING_CONTEXT=$($match.Value -replace '[^\x20-\x7E]','?')"
+              }
+              foreach ($match in [regex]::Matches($unicode, ".{0,90}$pattern.{0,120}", [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | Select-Object -First 8) {
+                Write-Host "UNICODE_CONTEXT=$($match.Value -replace '[^\x20-\x7E]','?')"
+              }
+            }
             $machine = 'Unknown'
             if ($bytes.Length -ge 0x40 -and $bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) {
               $peOffset = [BitConverter]::ToInt32($bytes,0x3C)
@@ -133,6 +141,21 @@ jobs:
           if ($readmeFile.Count -gt 0) {
             Write-Host '=== README CONTENT ==='
             Get-Content -LiteralPath $readmeFile[0].FullName -Raw
+          }
+
+          foreach ($pageUrl in @('https://arborafm.dev/','https://arborafm.dev/download')) {
+            try {
+              $page = Invoke-WebRequest -Uri $pageUrl -TimeoutSec 45
+              Write-Host "=== WEBSITE PAGE $pageUrl ==="
+              $html = [string]$page.Content
+              foreach ($pattern in @('license','copyright','terms','privacy','github','version','ArboraFM')) {
+                foreach ($match in [regex]::Matches($html, ".{0,100}$pattern.{0,180}", [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | Select-Object -First 5) {
+                  Write-Host "PAGE_CONTEXT=$($match.Value -replace '\\s+',' ' -replace '<[^>]+>',' ' )"
+                }
+              }
+            } catch {
+              Write-Warning "Could not fetch $pageUrl : $($_.Exception.Message)"
+            }
           }
 
           Write-Host '=== Relevant data/config/readme paths ==='
