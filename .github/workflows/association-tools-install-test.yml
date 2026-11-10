@@ -1,0 +1,218 @@
+name: Association tools Scoop install test
+
+on:
+  push:
+    branches:
+      - add-association-tools-and-nomad-2026-11-10
+    paths:
+      - 'bucket/portable-registrator.json'
+      - 'bucket/default-programs-editor.json'
+      - 'bucket/win-link-router.json'
+      - '.github/workflows/association-tools-install-test.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/portable-registrator.json'
+      - 'bucket/default-programs-editor.json'
+      - 'bucket/win-link-router.json'
+      - '.github/workflows/association-tools-install-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-and-uninstall:
+    name: Install and uninstall association tools with Scoop
+    runs-on: windows-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $scoopShims = Join-Path $env:USERPROFILE 'scoop\shims'
+          $env:PATH = "$scoopShims;$env:PATH"
+          $scoopShims | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            throw 'Scoop command was not added to PATH after installation.'
+          }
+          scoop --version
+
+      - name: Validate new manifests against the installed Scoop schema
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $schemaPath = Join-Path $env:USERPROFILE 'scoop\apps\scoop\current\schema.json'
+          if (-not (Test-Path -LiteralPath $schemaPath -PathType Leaf)) {
+            throw "Scoop manifest schema not found: $schemaPath"
+          }
+
+          npm install --no-save --no-audit --no-fund ajv@8 ajv-formats
+          if ($LASTEXITCODE -ne 0) { throw 'Could not install the JSON Schema validator.' }
+
+          $scriptPath = Join-Path $env:GITHUB_WORKSPACE 'validate-scoop-manifests.cjs'
+          @'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const Ajv = require('ajv');
+          const addFormats = require('ajv-formats');
+
+          const schemaPath = process.argv[2];
+          const root = process.argv[3];
+          const manifests = process.argv.slice(4);
+          const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+          const ajv = new Ajv({ allErrors: true, strict: false });
+          addFormats(ajv);
+          ajv.addFormat('regex', {
+            type: 'string',
+            validate(value) {
+              try { new RegExp(value); return true; }
+              catch { return false; }
+            }
+          });
+          const validate = ajv.compile(schema);
+          let failures = 0;
+          for (const relative of manifests) {
+            const file = path.join(root, relative);
+            const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (validate(data)) {
+              console.log('PASS: ' + relative);
+              continue;
+            }
+            failures++;
+            console.error('FAIL: ' + relative);
+            for (const error of validate.errors || []) {
+              console.error('  ' + (error.instancePath || '/') + ' ' + error.message);
+              if (error.params && Object.keys(error.params).length) {
+                console.error('    ' + JSON.stringify(error.params));
+              }
+            }
+          }
+          if (failures) process.exit(1);
+          console.log('PASS: all new manifests conform to the installed Scoop schema.');
+          '@ | Set-Content -LiteralPath $scriptPath -Encoding utf8
+
+          $manifestPaths = @(
+            'bucket/browser-picker.json',
+            'bucket/default-programs-editor.json',
+            'bucket/firefox-portable-default-browser.json',
+            'bucket/nomad-launcher-chromium.json',
+            'bucket/nomad-launcher-floorp.json',
+            'bucket/nomad-launcher-helium.json',
+            'bucket/nomad-launcher-librewolf.json',
+            'bucket/nomad-launcher-mullvad.json',
+            'bucket/nomad-launcher-waterfox.json',
+            'bucket/pineapple-assoc-manager.json',
+            'bucket/portable-registrator.json',
+            'bucket/ps-sfta.json',
+            'bucket/win-link-router.json'
+          )
+          & node $scriptPath $schemaPath $env:GITHUB_WORKSPACE @manifestPaths
+          if ($LASTEXITCODE -ne 0) {
+            throw 'One or more new manifests do not conform to Scoop schema.json.'
+          }
+
+      - name: Test Scoop installation and removal
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $scoopRoot = Join-Path $env:USERPROFILE 'scoop'
+          $scoopCommand = (Get-Command scoop -ErrorAction Stop).Source
+
+          function Invoke-Scoop {
+            param([string[]]$Arguments)
+            $global:LASTEXITCODE = 0
+            & $scoopCommand @Arguments
+            if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+              throw "Scoop command failed (exit $global:LASTEXITCODE): scoop $($Arguments -join ' ')"
+            }
+          }
+
+          function Test-ManifestInstall {
+            param(
+              [string]$Name,
+              [string]$ExpectedRelativePath,
+              [switch]$Squirrel
+            )
+
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE "bucket\$Name.json"
+            $appRoot = Join-Path $scoopRoot "apps\$Name"
+            $currentDir = Join-Path $appRoot 'current'
+
+            Write-Host ''
+            Write-Host "=== ${Name}: install ==="
+            try {
+              if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+                throw "Manifest missing: $manifestPath"
+              }
+
+              Invoke-Scoop -Arguments @('install', $manifestPath)
+
+              if (-not (Test-Path -LiteralPath $currentDir -PathType Container)) {
+                throw "Scoop did not create the expected app directory: $currentDir"
+              }
+
+              if ($Squirrel) {
+                $updateExe = Join-Path $env:LOCALAPPDATA 'win-link-router\Update.exe'
+                if (-not (Test-Path -LiteralPath $updateExe -PathType Leaf)) {
+                  throw "Squirrel Update.exe was not installed at $updateExe"
+                }
+
+                $appRootExternal = Join-Path $env:LOCALAPPDATA 'win-link-router'
+                $appExe = Get-ChildItem -LiteralPath $appRootExternal -Filter 'win-link-router.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+                if ($null -eq $appExe) {
+                  throw 'Squirrel installed Update.exe but no win-link-router.exe was found in its app-* payload.'
+                }
+
+                $launcher = Join-Path $currentDir 'win-link-router.cmd'
+                if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+                  throw "Scoop launcher was not generated: $launcher"
+                }
+                Write-Host "PASS: Squirrel payload found: $($appExe.FullName)"
+                Write-Host "PASS: Scoop launcher found: $launcher"
+              } else {
+                $expected = Join-Path $currentDir $ExpectedRelativePath
+                if (-not (Test-Path -LiteralPath $expected -PathType Leaf)) {
+                  throw "Expected extracted executable is missing: $expected"
+                }
+                Write-Host "PASS: extracted executable found: $expected"
+              }
+
+              Write-Host "=== ${Name}: uninstall ==="
+            }
+            finally {
+              if (Test-Path -LiteralPath $appRoot) {
+                Invoke-Scoop -Arguments @('uninstall', $Name)
+              }
+
+              if ($Squirrel) {
+                $updateExe = Join-Path $env:LOCALAPPDATA 'win-link-router\Update.exe'
+                if (Test-Path -LiteralPath $updateExe -PathType Leaf) {
+                  throw 'Scoop uninstall left Squirrel Update.exe behind.'
+                }
+                Write-Host 'PASS: Squirrel application was removed by Scoop uninstall.'
+              }
+
+              if (Test-Path -LiteralPath $appRoot) {
+                throw "Scoop uninstall left the app directory behind: $appRoot"
+              }
+              Write-Host "PASS: $Name removed cleanly."
+            }
+          }
+
+          Test-ManifestInstall -Name 'portable-registrator' -ExpectedRelativePath 'PortableRegistrator.exe'
+          Test-ManifestInstall -Name 'default-programs-editor' -ExpectedRelativePath 'Default Programs Editor.exe'
+          Test-ManifestInstall -Name 'win-link-router' -Squirrel
+
+          Write-Host ''
+          Write-Host 'All three Scoop install/uninstall smoke tests passed.'

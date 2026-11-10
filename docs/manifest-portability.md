@@ -83,6 +83,23 @@ This table lists only manifests classified as Nonportable, grouped by installer/
 ## Manifest review
 
 Review and unavailable projects are tracked in the separate [Manifest Review and Unavailable Projects](manifest-review.md) document.
+### Association and browser-launcher manifests (2026-11-10)
+
+These entries are proposed in the current PR. The generated portability summary and installer-type tables are maintained by the repository's manifest-table workflow when the PR reaches `master`.
+
+- [`browser-picker`](../bucket/browser-picker.json) — **Portable**: uses the official portable ZIP without running an installer. Its per-user browser-candidate registration is application behavior on use, not an installation hook in this manifest.
+- [`default-programs-editor`](../bucket/default-programs-editor.json) — **Portable**: uses the official ZIP and does not run setup. The Windows Scoop workflow verified the published download hash, extracted executable path, shortcut, and clean uninstall. Version 2.7.2676 dates from 2018; Windows 11 compatibility is not established.
+- [`firefox-portable-default-browser`](../bucket/firefox-portable-default-browser.json) — **Portable (registry template)**: downloads a pinned `.reg` template and creates a launcher that opens it for editing. It does not import the file or change associations automatically. The user must replace the example Firefox Portable path before manually importing the registry file.
+- [`pineapple-assoc-manager`](../bucket/pineapple-assoc-manager.json) — **Portable**: uses the upstream standalone ZIP. The release SHA-256 is verified; upstream build configuration identifies `passoc.exe` as the application executable. The archive's internal path is still subject to the archive-validation workflow.
+- [`portable-registrator`](../bucket/portable-registrator.json) — **Portable**: the Windows Scoop workflow verified the official v1.5 ZIP hash, executable paths, shims, shortcut, and clean uninstall. The initial test caught and removed an incorrect `extract_dir`; the actual archive has no `RELEASE` root directory. Upstream lists Windows 7, 8, and 10 and explicitly says Windows 11 is untested.
+- [`ps-sfta`](../bucket/ps-sfta.json) — **Portable (PowerShell script)**: downloads a script pinned to an upstream commit with a verified SHA-256. The manifest opens an interactive PowerShell session; association changes occur only when the user invokes its functions. Windows 11 protected default-app controls may block changes to protected types and protocols; the manifest does not disable UCPD or bypass those controls.
+- [`win-link-router`](../bucket/win-link-router.json) — **Nonportable (Squirrel installer)**: runs the official Squirrel Setup.exe silently and installs under `%LOCALAPPDATA%\\win-link-router`. The Windows Scoop workflow verified the installed executable, generated launcher, successful Squirrel uninstall, and removal of residual installation files. User configuration and route logs under `%APPDATA%\\win-link-router` are retained. Its own updater is enabled by default; disable it in the app settings when Scoop should manage updates.
+- [`nomad-launcher-chromium`](../bucket/nomad-launcher-chromium.json), [`nomad-launcher-floorp`](../bucket/nomad-launcher-floorp.json), [`nomad-launcher-helium`](../bucket/nomad-launcher-helium.json), [`nomad-launcher-librewolf`](../bucket/nomad-launcher-librewolf.json), [`nomad-launcher-mullvad`](../bucket/nomad-launcher-mullvad.json), and [`nomad-launcher-waterfox`](../bucket/nomad-launcher-waterfox.json) — **Portable**: each manifest downloads a standalone Nomad Launcher executable with SHA-256 values verified against the v1.0.9 upstream release. The launcher downloads and manages its browser inside its own application directory; the manifests persist the `Browser`, `Data`, and `Nomad` directories across updates. Floorp requires the Microsoft Visual C++ x64 runtime separately. These manifests do not run an installer or perform a GUI launch test.
+- [`fta-manager`](../bucket/fta-manager.json) remains the existing Portable PowerShell-module manifest in `master`; it is listed in the Associations category rather than duplicated.
+
+The dedicated Windows Scoop install/uninstall run passed all three installer-oriented association manifests: PortableRegistrator, Default Programs Editor, and win-link-router. The archive-validation workflow is configured to inspect all changed manifests in this PR.
+
+
 ## Classification rules for future manifest changes
 
 1. Inspect the actual downloaded asset and its archive contents. The `.exe`, `.msi`, or `.msix` extension alone does not determine the class.
