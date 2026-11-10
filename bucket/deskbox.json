@@ -22,24 +22,23 @@
     ],
     "notes": "Scoop extracts the Full Native AOT Inno Setup payload instead of running the vendor installer. The bundled Windows App Runtime is included in this payload. The vendor's installer registration, uninstaller, and installer-created shortcuts are not executed; Scoop creates the Start Menu shortcut. DeskBox stores user data under %LOCALAPPDATA%\\DeskBox and recovery data under %LOCALAPPDATA%\\DeskBox-Recovery, so this is not a portable data profile. Disable DeskBox's built-in updater and use Scoop for updates. The upstream release identifies both 1.5.9 installers as unsigned; Scoop verifies the SHA-256 digests published with the release.",
     "checkver": {
-        "url": "https://api.github.com/repos/Tianyu199509/DeskBox/releases/latest",
-        "jsonpath": "$.tag_name",
-        "regex": "^v(?<version>[\\d.]+)$"
+        "url": "https://github.com/Tianyu199509/DeskBox/releases/latest",
+        "regex": "/releases/tag/v(?<version>[\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
                 "url": "https://github.com/Tianyu199509/DeskBox/releases/download/v$version/DeskBox_Setup_$version_x64.exe",
                 "hash": {
-                    "url": "https://api.github.com/repos/Tianyu199509/DeskBox/releases/tags/v$version",
-                    "regex": "\"name\"\\s*:\\s*\"DeskBox_Setup_$version_x64\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+                    "url": "https://github.com/Tianyu199509/DeskBox/releases/download/v$version/DeskBox_Setup_$version_x64.exe.sha256",
+                    "regex": "^([a-f0-9]{64})$"
                 }
             },
             "arm64": {
                 "url": "https://github.com/Tianyu199509/DeskBox/releases/download/v$version/DeskBox_Setup_$version_arm64.exe",
                 "hash": {
-                    "url": "https://api.github.com/repos/Tianyu199509/DeskBox/releases/tags/v$version",
-                    "regex": "\"name\"\\s*:\\s*\"DeskBox_Setup_$version_arm64\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+                    "url": "https://github.com/Tianyu199509/DeskBox/releases/download/v$version/DeskBox_Setup_$version_arm64.exe.sha256",
+                    "regex": "^([a-f0-9]{64})$"
                 }
             }
         }
