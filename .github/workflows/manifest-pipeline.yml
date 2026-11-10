@@ -248,6 +248,65 @@ jobs:
             Write-Host ""
             Write-Host "Processing manifest: $manifestPath"
 
+            # Statically inspect EXE payloads before Scoop archive validation.
+            # The inspector downloads files for analysis only; it does not execute them.
+            $manifestData = Get-Content -LiteralPath $env:MANIFEST_PATH -Raw -Encoding utf8 | ConvertFrom-Json -ErrorAction Stop
+            $sourceData = $manifestData
+            if ($manifestData.architecture -and $manifestData.architecture.'64bit') {
+              $sourceData = $manifestData.architecture.'64bit'
+            }
+            $sourceUrls = @($sourceData.url)
+            $sourceHashes = @($sourceData.hash)
+            for ($assetIndex = 0; $assetIndex -lt $sourceUrls.Count; $assetIndex++) {
+              $candidateUrl = [string]$sourceUrls[$assetIndex]
+              $downloadUrl = ($candidateUrl -split '#', 2)[0]
+              if ($downloadUrl -notmatch '(?i)\.exe            Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
+            Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
+
+            if ($env:MANIFEST_PATH -ieq 'bucket/fxsound.json') {
+              if ($env:EVENT_NAME -eq 'push') {
+                Wait-ForExistingWorkflow -WorkflowFile 'fxsound.yml' -HeadSha $env:PIPELINE_SHA
+              } else {
+                Start-And-WaitWorkflow -WorkflowFile 'fxsound.yml'
+              }
+            }
+
+            Start-And-WaitWorkflow -WorkflowFile 'scoop-autoupdate-validation.yml' -Inputs @{
+              manifest = $env:MANIFEST_PATH
+              force_update = $forceUpdate
+            }
+          }
+
+          if ($manifestPaths.Count -gt 0) {
+            Start-And-WaitWorkflow -WorkflowFile 'ci.yml'
+          }
+
+          if ($needsTable) {
+            Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
+          }
+
+          $summary.Add("")
+          $summary.Add("All manifest pipeline stages passed.")
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          Write-Host "All manifest pipeline stages passed."
+) { continue }
+
+              $installerName = [System.IO.Path]::GetFileName(([System.Uri]$downloadUrl).AbsolutePath)
+              if ([string]::IsNullOrWhiteSpace($installerName)) {
+                throw "Could not determine the EXE filename for $env:MANIFEST_PATH."
+              }
+              $installerHash = ''
+              if ($assetIndex -lt $sourceHashes.Count) {
+                $installerHash = [string]$sourceHashes[$assetIndex]
+              }
+
+              Start-And-WaitWorkflow -WorkflowFile 'multi-engine-installer-type-inspector.yml' -Inputs @{
+                installer_url = $downloadUrl
+                installer_name = $installerName
+                expected_sha256 = $installerHash
+              }
+            }
+
             Start-And-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
             Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
             Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
