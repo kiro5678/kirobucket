@@ -81,7 +81,7 @@ jobs:
         id: archive_validation
         shell: pwsh
         env:
-          BASE_SHA: ${{ github.event.before || github.event.pull_request.base.sha || github.event.client_payload.base_sha || '' }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || github.event.client_payload.base_sha || '' }}
           EVENT_NAME: ${{ github.event_name }}
           MANIFEST_INPUT: ${{ inputs.manifest || '' }}
         run: |
@@ -709,7 +709,7 @@ jobs:
 ) {
               throw 'The pull request base SHA is unavailable; cannot identify changed manifests.'
             }
-            git cat-file -e "$baseSha^{commit}" 2>$null
+            git cat-file -e ($baseSha + '^{commit}') 2>$null
             if ($LASTEXITCODE -ne 0) {
               throw "The pull request base commit $baseSha is unavailable."
             }
