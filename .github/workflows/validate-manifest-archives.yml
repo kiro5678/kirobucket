@@ -83,6 +83,29 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Diagnose FoxDesktop Scoop formatting
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $helperUrl = 'https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/lib/json.ps1'
+          $helper = (Invoke-WebRequest -Uri $helperUrl -TimeoutSec 60).Content
+          . ([scriptblock]::Create($helper))
+          $path = 'bucket/foxdesktop.json'
+          $original = Get-Content -LiteralPath $path -Raw
+          $manifest = $original | ConvertFrom-Json -ErrorAction Stop
+          $canonical = ($manifest | ConvertToPrettyJson) -replace "`t", '    '
+          $canonical = $canonical.TrimEnd("`r", "`n") + "`r`n"
+          Write-Host "Original length: $($original.Length); Scoop-formatted length: $($canonical.Length)"
+          if ($original -cne $canonical) {
+            Write-Host 'FoxDesktop differs from Scoop formatjson.ps1 output:'
+            $originalLines = $original -split "`r?`n"
+            $canonicalLines = $canonical -split "`r?`n"
+            Compare-Object -ReferenceObject $originalLines -DifferenceObject $canonicalLines |
+              Select-Object -First 50 | Format-Table -AutoSize | Out-String | Write-Host
+          } else {
+            Write-Host 'FoxDesktop matches Scoop formatjson.ps1 output.'
+          }
+
       - name: Validate changed manifests against archives
         id: archive_validation
         shell: pwsh
