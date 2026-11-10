@@ -4,7 +4,6 @@
     "homepage": "https://github.com/SiL3NC3/PortableRegistrator",
     "url": "https://github.com/SiL3NC3/PortableRegistrator/releases/download/1.5/PortableRegistrator_v1.5.zip",
     "hash": "sha256:21b3f639d9fab24ed8ec3cf5d85433baffb0f7c499cec675fa41bfe946084eb9",
-    "extract_dir": "RELEASE",
     "persist": "PortableRegistrator.conf",
     "bin": [
         "PortableRegistrator.exe",
