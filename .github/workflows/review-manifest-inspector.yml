@@ -140,6 +140,12 @@ jobs:
               } finally { $stream.Dispose() }
               $signature = Get-AuthenticodeSignature -LiteralPath $downloadPath
               Write-Host "FoxDesktop Authenticode: $($signature.Status); signer: $($signature.SignerCertificate.Subject)"
+              $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($downloadPath)
+              Write-Host "FoxDesktop ProductName: $($versionInfo.ProductName)"
+              Write-Host "FoxDesktop FileDescription: $($versionInfo.FileDescription)"
+              Write-Host "FoxDesktop ProductVersion: $($versionInfo.ProductVersion)"
+              Write-Host "FoxDesktop FileVersion: $($versionInfo.FileVersion)"
+              Write-Host "FoxDesktop OriginalFilename: $($versionInfo.OriginalFilename)"
               $positions = [System.Collections.Generic.List[int]]::new()
               $readStream = [System.IO.File]::OpenRead($downloadPath)
               try {
@@ -228,7 +234,7 @@ jobs:
                       $nestedExtract | Add-Content -LiteralPath $sevenZipLog
                       if ($nestedExtractExit -eq 0) {
                         $nestedExeFiles = @(Get-ChildItem -LiteralPath $nestedDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
-                          ForEach-Object { $_.FullName.Substring($nestedDir.Length).TrimStart('\\','/') })
+                          ForEach-Object { $_.FullName.Substring($nestedDir.Length).TrimStart([char[]](92, 47)) })
                         Write-Host "Nested application EXE paths: $($nestedExeFiles -join ', ')"
                         if ($nestedExeFiles.Count -gt 0) {
                           $payloadStatus += "; nested app: $($nestedExeFiles -join ', ')"
