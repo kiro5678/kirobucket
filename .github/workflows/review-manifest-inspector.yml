@@ -109,12 +109,54 @@ jobs:
             $downloadPath = Join-Path $appDir $fileName
 
             try {
-              Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 900 -ErrorAction Stop
+              $downloadResponse = Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 900 -PassThru -ErrorAction Stop
             } catch {
               $safeError = $_.Exception.Message -replace '\|','/'
               $report.Add("| $appName | FAILED | — | — | $safeError |")
               $failures++
               continue
+            }
+
+            $downloadItem = Get-Item -LiteralPath $downloadPath
+            $downloadHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
+            Write-Host "Downloaded size: $($downloadItem.Length) bytes; SHA-256: $downloadHash"
+            if ($downloadResponse) {
+              $finalUri = $null
+              try { $finalUri = $downloadResponse.BaseResponse.RequestMessage.RequestUri.AbsoluteUri } catch {}
+              if ([string]::IsNullOrWhiteSpace($finalUri)) {
+                try { $finalUri = $downloadResponse.BaseResponse.ResponseUri.AbsoluteUri } catch {}
+              }
+              Write-Host "Final response URL: $finalUri"
+              Write-Host "Content-Type: $($downloadResponse.Headers['Content-Type'])"
+              Write-Host "Content-Encoding: $($downloadResponse.Headers['Content-Encoding'])"
+            }
+            if ($appName -eq 'foxdesktop-probe') {
+              $stream = [System.IO.File]::OpenRead($downloadPath)
+              try {
+                $prefix = [byte[]]::new(32)
+                $read = $stream.Read($prefix, 0, $prefix.Length)
+                $hex = [System.BitConverter]::ToString($prefix, 0, $read)
+                Write-Host "FoxDesktop first bytes: $hex"
+              } finally { $stream.Dispose() }
+              $signature = Get-AuthenticodeSignature -LiteralPath $downloadPath
+              Write-Host "FoxDesktop Authenticode: $($signature.Status); signer: $($signature.SignerCertificate.Subject)"
+              $positions = [System.Collections.Generic.List[int]]::new()
+              $readStream = [System.IO.File]::OpenRead($downloadPath)
+              try {
+                $window = [byte[]]::new(65536)
+                $offset = 0L
+                while (($count = $readStream.Read($window, 0, $window.Length)) -gt 0) {
+                  for ($i = 0; $i -lt $count - 1; $i++) {
+                    if ($window[$i] -eq 0x4D -and $window[$i + 1] -eq 0x5A) {
+                      $positions.Add([int]($offset + $i))
+                      if ($positions.Count -ge 20) { break }
+                    }
+                  }
+                  if ($positions.Count -ge 20) { break }
+                  $offset += $count
+                }
+              } finally { $readStream.Dispose() }
+              Write-Host "FoxDesktop MZ signatures (first 20 offsets): $($positions -join ', ')"
             }
 
             $hashStatus = 'NOT SET'
@@ -168,6 +210,35 @@ jobs:
                     $payloadStatus = $exeFiles -join ', '
                   } else {
                     $payloadStatus = 'No EXE found in extracted payload'
+                  }
+
+                  $nestedArchives = @(Get-ChildItem -LiteralPath $extractDir -Filter 'app-64.7z' -File -Recurse -ErrorAction SilentlyContinue)
+                  foreach ($nestedArchive in $nestedArchives) {
+                    Write-Host "Found nested app archive: $($nestedArchive.FullName) ($($nestedArchive.Length) bytes)"
+                    $nestedList = & $sevenZip l -slt $nestedArchive.FullName 2>&1
+                    $nestedListExit = $LASTEXITCODE
+                    Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : nested 7z l =====")
+                    $nestedList | Add-Content -LiteralPath $sevenZipLog
+                    if ($nestedListExit -eq 0) {
+                      $nestedDir = Join-Path $appDir 'nested-app'
+                      New-Item -ItemType Directory -Path $nestedDir -Force | Out-Null
+                      $nestedExtract = & $sevenZip x -y "-o$nestedDir" $nestedArchive.FullName 2>&1
+                      $nestedExtractExit = $LASTEXITCODE
+                      Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : nested 7z x =====")
+                      $nestedExtract | Add-Content -LiteralPath $sevenZipLog
+                      if ($nestedExtractExit -eq 0) {
+                        $nestedExeFiles = @(Get-ChildItem -LiteralPath $nestedDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
+                          ForEach-Object { $_.FullName.Substring($nestedDir.Length).TrimStart('\\','/') })
+                        Write-Host "Nested application EXE paths: $($nestedExeFiles -join ', ')"
+                        if ($nestedExeFiles.Count -gt 0) {
+                          $payloadStatus += "; nested app: $($nestedExeFiles -join ', ')"
+                        }
+                      } else {
+                        Write-Warning "Nested app archive extraction failed with exit $nestedExtractExit."
+                      }
+                    } else {
+                      Write-Warning "Nested app archive listing failed with exit $nestedListExit."
+                    }
                   }
 
                   if ($manifest.bin -is [string] -and -not [string]::IsNullOrWhiteSpace($manifest.bin)) {
