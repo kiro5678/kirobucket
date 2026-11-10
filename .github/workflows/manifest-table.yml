@@ -533,7 +533,7 @@ jobs:
               }
 
               if ($hasMsi) {
-                  if ($extensions.Contains("exe")) { return "EXE bootstrapper + MSI" }
+                  if ($extensions.Contains("exe")) { return "EXE" }
                   return "MSI installer/package"
               }
 
@@ -566,10 +566,7 @@ jobs:
                   }
                   if ($extension -eq "msi") { return "MSI installer/package" }
                   if ($extension -eq "exe") {
-                      if ($null -ne $Manifest.installer) {
-                          return "EXE setup (engine unverified)"
-                      }
-                      return "EXE payload (standalone/extractor not verified)"
+                      return "EXE"
                   }
                   if ($extension) {
                       return "$($extension.ToUpperInvariant()) package"
@@ -577,10 +574,11 @@ jobs:
               }
 
               if ($extensions.Count -gt 1) {
+                  if ($extensions.Contains("exe")) {
+                      return "EXE"
+                  }
                   $labels = foreach ($extension in $extensions) {
                       if ($knownTypes.ContainsKey($extension)) { $knownTypes[$extension] }
-                      elseif ($extension -eq "exe" -and $null -ne $Manifest.installer) { "EXE setup (engine unverified)" }
-                      elseif ($extension -eq "exe") { "EXE payload" }
                       else { "$($extension.ToUpperInvariant()) package" }
                   }
                   return "Multiple package types: $($labels -join ' / ')"
