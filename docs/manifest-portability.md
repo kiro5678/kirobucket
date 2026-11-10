@@ -1,11 +1,5 @@
 # Manifest Portability Inventory
 
-**Audit target:** `master`
-
-**Portability audit coverage:** 852 manifests (last full audit baseline). The current `bucket/` contains 1035 active manifests. The review section below records 99 manifests with outstanding verification checks; 138 active manifests are not reconciled in the explicit classification totals below.
-
-**Classification:** based on the actions declared by each manifest, not on the file extension or the folder where the application files are placed.
-
 ## Definitions
 
 | Class | Typical installer/package types | Meaning in this repository |
@@ -26,8 +20,6 @@
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
 ## All bucket manifests by installer type
-
-This inventory covers every JSON manifest in bucket/ at generation time. It uses the same Installer Type inference as the generated manifest views; installer engines that cannot be verified remain explicitly unverified.
 
 | Installer Type | Manifests | Count |
 | --- | --- | ---: |
