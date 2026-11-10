@@ -1,9 +1,0 @@
-{
-    "version": "0.2.2",
-    "description": "Windows protocol-link router for directing tel:, sms:, mailto:, and other URI schemes to configurable applications or URLs.",
-    "homepage": "https://github.com/karmaniverous/win-link-router",
-    "license": "BSD-3-Clause",
-    "url": "https://github.com/karmaniverous/win-link-router/releases/download/v0.2.2/win-link-router-0.2.2.Setup.exe",
-    "hash": "36d11a4be0d6eab82bb9c4bd6c36449ccc996b260a38cd0a74781c466e69f16a",
-    "notes": "Review only. The published Windows asset is an Electron Forge Squirrel Setup EXE, not a portable archive. Verify the silent install, per-user registration, upgrade, and uninstall lifecycle before creating Scoop installer and uninstaller hooks. Do not treat the .nupkg as a standalone portable app."
-}
