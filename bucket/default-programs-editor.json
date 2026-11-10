@@ -1,0 +1,16 @@
+{
+    "version": "2.7.2676",
+    "description": "Legacy standalone utility for editing Windows file associations, Open With entries, file-type icons and descriptions, context-menu items, and AutoPlay handlers.",
+    "homepage": "https://defaultprogramseditor.com/",
+    "license": "Freeware",
+    "url": "https://defaultprogramseditor.com/download",
+    "hash": "d84e0588289a661e796c761cc40ba3cb53a7824d955a8c260e2ac9f74b77b827",
+    "bin": "Default Programs Editor.exe",
+    "shortcuts": [
+        [
+            "Default Programs Editor.exe",
+            "Default Programs Editor"
+        ]
+    ],
+    "notes": "Legacy release last updated in 2018. Windows 11 compatibility and behavior with protected default-app associations have not been verified. Use this for legacy file-type/context-menu settings, not as a guaranteed way to override Windows 11 default-app protections."
+}
