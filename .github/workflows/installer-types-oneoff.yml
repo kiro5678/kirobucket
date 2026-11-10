@@ -56,7 +56,13 @@ jobs:
           $uri = [uri]$env:TARGET_URL
           $name = [IO.Path]::GetFileName($uri.AbsolutePath)
           $file = Join-Path $work $name
-          Invoke-WebRequest -Uri $uri.AbsoluteUri -OutFile $file -MaximumRedirection 10 -TimeoutSec 600
+          try {
+            Invoke-WebRequest -Uri $uri.AbsoluteUri -OutFile $file -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
+          } catch {
+            Write-Warning "Invoke-WebRequest failed; retrying with curl.exe: $($_.Exception.Message)"
+            & curl.exe --fail --location --retry 4 --retry-all-errors --connect-timeout 30 --max-time 600 --user-agent 'Mozilla/5.0' --output $file $uri.AbsoluteUri
+            if ($LASTEXITCODE -ne 0) { throw "curl.exe failed with exit code $LASTEXITCODE" }
+          }
           if (!(Test-Path -LiteralPath $file -PathType Leaf)) { throw 'Download did not create a file.' }
           $hash = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
           if ($env:EXPECTED_SHA256 -and $hash -ne $env:EXPECTED_SHA256.ToLowerInvariant()) {
@@ -94,7 +100,7 @@ jobs:
             $report.Add("File version: $($info.FileVersion)")
             $dieZip = Join-Path $work 'die.zip'
             $dieDir = Join-Path $work 'die'
-            $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/horsicq/DIE-engine/releases/latest' -Headers @{ 'User-Agent'='kirobucket-installer-inspector'; Accept='application/vnd.github+json' }
+            $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/horsicq/DIE-engine/releases/tags/3.21' -Headers @{ 'User-Agent'='kirobucket-installer-inspector'; Accept='application/vnd.github+json' }
             $asset = $release.assets | Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } | Select-Object -First 1
             if (!$asset) { throw "Detect It Easy portable release not found: $($release.tag_name)" }
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $dieZip -MaximumRedirection 10 -TimeoutSec 300
