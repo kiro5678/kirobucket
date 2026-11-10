@@ -17,6 +17,8 @@
     ],
     "notes": [
         "The upstream README lists Windows 7, 8, and 10 and explicitly says Windows 11 is untested. Windows 11 compatibility is not guaranteed.",
-        "The application writes Windows file-type and protocol registration when the user configures associations. Review each change carefully; this manifest does not bypass Windows protected default-app controls."
-    ]
+        "The application writes Windows file-type and protocol registration when the user configures associations. Review each change carefully; this manifest does not bypass Windows protected default-app controls.",
+        "The upstream repository does not publish a LICENSE file or an explicit reuse licence."
+    ],
+    "license": "Proprietary"
 }
