@@ -1,0 +1,142 @@
+name: Release Package Layout Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/release-package-layout-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Inspect official Windows release archives
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Download, verify hashes, and inspect package layouts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+          $root = Join-Path $env:RUNNER_TEMP "release-package-inspection"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add("## Official Windows release package inspection")
+          $summary.Add("Downloads are inspected statically; no installer or application is executed.")
+          $summary.Add("")
+
+          function Get-VerifiedDownload {
+            param(
+              [Parameter(Mandatory)][string]$Name,
+              [Parameter(Mandatory)][string]$Url,
+              [Parameter(Mandatory)][string]$Sha256
+            )
+            $path = Join-Path $root $Name
+            Write-Host "Downloading $Name"
+            Invoke-WebRequest -Uri $Url -OutFile $path -MaximumRedirection 10 -TimeoutSec 900
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Download did not create $Name."
+            }
+            $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $Sha256.ToLowerInvariant()) {
+              throw "SHA-256 mismatch for $Name. Expected $Sha256; got $actual."
+            }
+            Write-Host "SHA-256 PASS: $Name ($actual)"
+            return $path
+          }
+
+          function Inspect-Zip {
+            param(
+              [Parameter(Mandatory)][string]$Name,
+              [Parameter(Mandatory)][string]$Url,
+              [Parameter(Mandatory)][string]$Sha256,
+              [Parameter(Mandatory)][string[]]$ExpectedPaths,
+              [string]$ExpectedRegex = ""
+            )
+            $path = Get-VerifiedDownload -Name $Name -Url $Url -Sha256 $Sha256
+            $archive = [System.IO.Compression.ZipFile]::OpenRead($path)
+            try {
+              $entries = @($archive.Entries | ForEach-Object { $_.FullName.Replace("\", "/") })
+            } finally {
+              $archive.Dispose()
+            }
+            foreach ($expected in $ExpectedPaths) {
+              if ($entries -notcontains $expected) {
+                throw "$Name is missing expected archive path: $expected"
+              }
+            }
+            if ($ExpectedRegex -and -not ($entries | Where-Object { $_ -match $ExpectedRegex })) {
+              throw "$Name has no archive entry matching: $ExpectedRegex"
+            }
+            $exeEntries = @($entries | Where-Object { $_ -match "(?i)\.exe$" })
+            Write-Host ""
+            Write-Host "=== $Name ==="
+            Write-Host "Archive entries: $($entries.Count)"
+            Write-Host "EXE entries:"
+            foreach ($entry in $exeEntries | Select-Object -First 80) {
+              Write-Host "  $entry"
+            }
+            $summary.Add("- PASS: $Name — SHA-256 valid; $($entries.Count) entries; expected app path(s) found.")
+            foreach ($expected in $ExpectedPaths) { $summary.Add("  - $expected") }
+            if ($ExpectedRegex) { $summary.Add("  - regex: $ExpectedRegex") }
+          }
+
+          function Inspect-TarGz {
+            param(
+              [Parameter(Mandatory)][string]$Name,
+              [Parameter(Mandatory)][string]$Url,
+              [Parameter(Mandatory)][string]$Sha256,
+              [Parameter(Mandatory)][string[]]$ExpectedRegex
+            )
+            $path = Get-VerifiedDownload -Name $Name -Url $Url -Sha256 $Sha256
+            $entries = @(& tar.exe -tzf $path)
+            if ($LASTEXITCODE -ne 0) {
+              throw "tar.exe could not list $Name (exit code $LASTEXITCODE)."
+            }
+            foreach ($pattern in $ExpectedRegex) {
+              if (-not ($entries | Where-Object { $_ -match $pattern })) {
+                throw "$Name has no path matching: $pattern"
+              }
+            }
+            Write-Host ""
+            Write-Host "=== $Name ==="
+            Write-Host "Archive entries: $($entries.Count)"
+            Write-Host "Relevant paths:"
+            foreach ($entry in $entries | Where-Object { $_ -match "(?i)(code-server\.cmd|node\.exe|package\.json)$" } | Select-Object -First 80) {
+              Write-Host "  $entry"
+            }
+            $summary.Add("- PASS: $Name — SHA-256 valid; $($entries.Count) entries; Windows launcher and bundled Node paths found.")
+            foreach ($pattern in $ExpectedRegex) { $summary.Add("  - regex: $pattern") }
+          }
+
+          Inspect-Zip -Name "MisterDownloadManager-0.5.2-portable.zip" -Url "https://github.com/anefzaoui/misterdownloadmanager/releases/download/v0.5.2/MisterDownloadManager-0.5.2-portable.zip" -Sha256 "0907a6c6aed5c4967e89549e883147d2b33b073e6f8b0d914dff84d32f3b7cf7" -ExpectedPaths @("MisterDownloadManager-0.5.2-portable/misterdownloadmanager.exe", "MisterDownloadManager-0.5.2-portable/data/README.txt")
+
+          Inspect-Zip -Name "Easy.Link.File.Viewer.1.9.2.zip" -Url "https://github.com/ElektroStudios/Easy-Link-File-Viewer/releases/download/v1.9.2/Easy.Link.File.Viewer.1.9.2.zip" -Sha256 "a554c3b85ad36fabb6c93cb8e7b292df5be787c259ccd33ab3f8c99685b40bcf" -ExpectedPaths @() -ExpectedRegex "(?i)^Source/GUI/bin/Release/Easy Link File Viewer\.exe$"
+
+          Inspect-TarGz -Name "code-server-4.145.2-windows-amd64.tar.gz" -Url "https://github.com/coder/code-server/releases/download/v4.145.2/code-server-4.145.2-windows-amd64.tar.gz" -Sha256 "d88f8a00831334da291ad29b35714c7bf6d3dc398e5b6f5ed1b20034c1da7675" -ExpectedRegex @("^code-server-4\.145\.2-windows-amd64/bin/code-server\.cmd$", "^code-server-4\.145\.2-windows-amd64/lib/node\.exe$")
+
+          # Inspect the optional Easy Link setup executable without running it.
+          $setup = Get-VerifiedDownload -Name "Easy.Link.File.Viewer.1.9.2-SETUP.exe" -Url "https://github.com/ElektroStudios/Easy-Link-File-Viewer/releases/download/v1.9.2/Easy.Link.File.Viewer.1.9.2-SETUP.exe" -Sha256 "8d09c2452ca4d615a0b408decac3c4ea9cd176b5ea9da418f70270b21cf2d7f7"
+          $sevenZip = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+          if ($sevenZip) {
+            $listingText = (& $sevenZip.Source l -slt $setup 2>&1 | Out-String)
+            $engine = if ($listingText -match "(?i)Inno Setup") { "Inno Setup (identified by 7-Zip)" }
+                      elseif ($listingText -match "(?i)NSIS") { "NSIS (identified by 7-Zip)" }
+                      else { "7-Zip output did not identify a known installer engine; inspect log." }
+            Write-Host ""
+            Write-Host "Easy Link setup inspection: $engine"
+            Write-Host (($listingText -split [Environment]::NewLine | Select-Object -First 45) -join [Environment]::NewLine)
+            $summary.Add("- Easy Link setup EXE: SHA-256 valid; $engine")
+          } else {
+            $summary.Add("- Easy Link setup EXE: SHA-256 valid; 7-Zip unavailable, engine not identified.")
+          }
+
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          Write-Host ""
+          Write-Host "All archive layout checks passed."
