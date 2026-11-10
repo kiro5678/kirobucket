@@ -36,6 +36,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Checkout Scoop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+          persist-credentials: false
+
       - name: Download, hash, and administratively extract every Pake MSI
         shell: pwsh
         run: |
@@ -110,6 +117,27 @@ jobs:
           $reportPath = Join-Path $root 'inspection-report.txt'
           $report | Set-Content -LiteralPath $reportPath -Encoding utf8
           $report | ForEach-Object { Write-Output $_ }
+
+      - name: Install Grok with Scoop using the dl.msi manifest URL
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-root'
+          $env:SCOOP_CACHE = Join-Path $env:RUNNER_TEMP 'scoop-cache'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\pake-grok.json'
+          $scoopScript = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\scoop.ps1'
+          New-Item -ItemType Directory -Path $env:SCOOP -Force | Out-Null
+          New-Item -ItemType Directory -Path $env:SCOOP_CACHE -Force | Out-Null
+          & $scoopScript install --no-update-scoop $manifestPath
+          $appRoot = Join-Path $env:SCOOP 'apps\pake-grok\3.18.0'
+          $expectedExe = Join-Path $appRoot 'PFiles\Grok\pake-grok.exe'
+          if (-not (Test-Path -LiteralPath $expectedExe -PathType Leaf)) {
+            throw "Scoop installation did not produce the declared executable at $expectedExe"
+          }
+          Write-Host "SCOOP INSTALL VERIFIED: $expectedExe"
+          Get-ChildItem -LiteralPath $appRoot -File -Recurse |
+            ForEach-Object { Write-Host ("INSTALLED FILE: " + [System.IO.Path]::GetRelativePath($appRoot, $_.FullName)) }
 
       - name: Upload inspection report
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
