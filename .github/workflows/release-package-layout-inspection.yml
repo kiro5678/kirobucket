@@ -113,6 +113,28 @@ jobs:
             }
             $summary.Add("- PASS: $Name — SHA-256 valid; $($entries.Count) entries; Windows launcher and bundled Node paths found.")
             foreach ($pattern in $ExpectedRegex) { $summary.Add("  - regex: $pattern") }
+
+            $extractRoot = Join-Path $root "code-server-runtime-test"
+            New-Item -ItemType Directory -Path $extractRoot -Force | Out-Null
+            & tar.exe -xzf $path -C $extractRoot
+            if ($LASTEXITCODE -ne 0) {
+              throw "tar.exe could not extract $Name for its Windows launcher smoke test."
+            }
+            $launcher = Join-Path $extractRoot "code-server-4.145.2-windows-amd64\bin\code-server.cmd"
+            if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+              throw "code-server Windows launcher is missing after extraction: $launcher"
+            }
+            $versionOutput = @(& $launcher --version 2>&1)
+            $versionExit = $LASTEXITCODE
+            if ($versionExit -ne 0) {
+              throw "code-server.cmd --version failed with exit code $versionExit. Output: $($versionOutput -join ' ')"
+            }
+            $versionText = $versionOutput -join " "
+            if ($versionText -notmatch "4\.145\.2") {
+              throw "code-server launcher returned an unexpected version: $versionText"
+            }
+            Write-Host "Windows launcher smoke test passed: $versionText"
+            $summary.Add("- PASS: Windows launcher executed --version and returned $versionText")
           }
 
           Inspect-Zip -Name "MisterDownloadManager-0.5.2-portable.zip" -Url "https://github.com/anefzaoui/misterdownloadmanager/releases/download/v0.5.2/MisterDownloadManager-0.5.2-portable.zip" -Sha256 "0907a6c6aed5c4967e89549e883147d2b33b073e6f8b0d914dff84d32f3b7cf7" -ExpectedPaths @("MisterDownloadManager-0.5.2-portable/misterdownloadmanager.exe", "MisterDownloadManager-0.5.2-portable/data/README.txt")
