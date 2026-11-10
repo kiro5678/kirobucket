@@ -5,7 +5,7 @@
     "license": "AGPL-3.0",
     "url": "https://raw.githubusercontent.com/kiro5678/kirobucket/master/scripts/note-mark.ps1",
     "hash": "5f46f422497a3e045630e1829641fcc3183de3408a144c106e2708b0135a0254",
-    "pre_install": "Set-Content -LiteralPath (Join-Path '$dir' 'image-tag.txt') -Value '$version' -NoNewline -Encoding ascii",
+    "pre_install": "Set-Content -LiteralPath (Join-Path \"$dir\" 'image-tag.txt') -Value \"$version\" -NoNewline -Encoding ascii",
     "bin": "note-mark.ps1",
     "persist": "data",
     "checkver": {
@@ -23,7 +23,7 @@
     ],
     "uninstaller": {
         "script": [
-            "try { & (Join-Path '$dir' 'note-mark.ps1') remove } catch { warn 'Note Mark container removal could not be completed; remove it manually if Docker is unavailable.' }"
+            "try { & \"$dir\\note-mark.ps1\" remove } catch { warn \"Note Mark container removal could not be completed; remove it manually if Docker is unavailable.\" }"
         ]
     }
 }
