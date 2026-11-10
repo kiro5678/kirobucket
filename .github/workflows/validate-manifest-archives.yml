@@ -5,6 +5,9 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/portable-registrator.json'
+      - 'bucket/default-programs-editor.json'
+      - 'bucket/win-link-router.json'
       - 'bucket/edge-drop.json'
       - 'bucket/pinokio.json'
       - 'bucket/unsloth.json'
@@ -33,6 +36,9 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/portable-registrator.json'
+      - 'bucket/default-programs-editor.json'
+      - 'bucket/win-link-router.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/voicestudio.json'
