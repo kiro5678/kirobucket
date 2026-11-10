@@ -4,7 +4,7 @@
 | --- | ---: | --- |
 | Android & Device Tools | 8 | [View](#android-device-tools) |
 | Browsers & Communication | 12 | [View](#browsers-communication) |
-| Associations | 4 | [View](#associations) |
+| Associations | 7 | [View](#associations) |
 | Browser Launchers | 6 | [View](#browser-launchers) |
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
@@ -40,7 +40,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1037**
+**Total unique manifests: 1040**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -97,9 +97,13 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [browser-picker](../bucket/browser-picker.json) | 3.2.5 | — | 2026-10-24 | Portable Windows browser picker and URL router with rules for domains, paths, and manually added applications. | [Homepage](https://github.com/mortenn/BrowserPicker) |
+| [default-programs-editor](../bucket/default-programs-editor.json) | 2.7.2676 | — | 2018-03-25 | Standalone utility for editing Windows file associations, context menus, icons, descriptions, AutoPlay handlers, and default-program settings. | [Homepage](https://defaultprogramseditor.com/) |
+| [firefox-portable-default-browser](../bucket/firefox-portable-default-browser.json) | 1.0.0 | — | — | Registry template for registering Firefox Portable as a current-user browser candidate in Windows Default Apps. | [Homepage](https://github.com/clemthi/firefox-portable-default-browser) |
 | [firefox-portable-default-browser](../bucket/firefox-portable-default-browser.json) | 1.0.0 | — | — | Registry template for registering Firefox Portable as a current-user browser candidate in Windows Default Apps. | [Homepage](https://github.com/clemthi/firefox-portable-default-browser) |
 | [pineapple-assoc-manager](../bucket/pineapple-assoc-manager.json) | 1.1.0 | — | — | Portable Windows file-association manager for portable applications, configured with PACFG files. | [Homepage](https://github.com/BLumia/pineapple-assoc-manager) |
+| [portable-registrator](../bucket/portable-registrator.json) | 1.5 | 351.2 KiB | 2023-04-12 | Registers portable applications as Windows default-program candidates for supported file types and URL protocols. | [Homepage](https://github.com/SiL3NC3/PortableRegistrator) |
 | [ps-sfta](../bucket/ps-sfta.json) | 1.2.0 | — | — | PowerShell functions to register applications and manage Windows file-type and protocol associations. | [Homepage](https://github.com/DanysysTeam/PS-SFTA) |
+| [win-link-router](../bucket/win-link-router.json) | 0.2.2 | 126.6 MiB | 2026-01-17 | Configurable Windows protocol-link router for schemes such as tel, sms, and mailto. | [Homepage](https://github.com/karmaniverous/win-link-router) |
 
 ## Browser Launchers
 
