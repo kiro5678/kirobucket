@@ -1,0 +1,237 @@
+name: Default App and EverDefault Package Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/default-app-everdefault-package-inspection.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download, hash, and inspect both packages
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download, hash, and inspect official release assets
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $root = Join-Path $env:RUNNER_TEMP 'default-app-everdefault-inspection'
+          $defaultOut = Join-Path $root 'default-app-7zip-extraction'
+          $everOut = Join-Path $root 'everdefault-portable-extraction'
+          New-Item -ItemType Directory -Path $root, $defaultOut, $everOut -Force | Out-Null
+
+          $targets = @(
+            [ordered]@{
+              name = 'File Default Master'
+              file = 'fix_default_app.exe'
+              url = 'https://github.com/qianli-wang/default-app/releases/download/v2.0.2/fix_default_app.exe'
+              output = Join-Path $root 'fix_default_app.exe'
+            },
+            [ordered]@{
+              name = 'EverDefault Portable'
+              file = 'EverDefault-v2.0.4-portable.zip'
+              url = 'https://github.com/BUGJI/EverDefault/releases/download/v2.0.4/EverDefault-v2.0.4-portable.zip'
+              output = Join-Path $root 'EverDefault-v2.0.4-portable.zip'
+            }
+          )
+
+          $results = [System.Collections.Generic.List[object]]::new()
+
+          foreach ($target in $targets) {
+            Write-Host "Downloading $($target.name): $($target.url)"
+            Invoke-WebRequest -Uri $target.url -OutFile $target.output -TimeoutSec 300
+
+            $item = Get-Item -LiteralPath $target.output
+            $hash = (Get-FileHash -LiteralPath $target.output -Algorithm SHA256).Hash.ToLowerInvariant()
+            $record = [ordered]@{
+              product = $target.name
+              file = $target.file
+              url = $target.url
+              sizeBytes = [long]$item.Length
+              sha256 = $hash
+            }
+
+            Write-Host "FILE: $($target.file)"
+            Write-Host "SIZE_BYTES: $($item.Length)"
+            Write-Host "SHA256: $hash"
+            $results.Add($record)
+          }
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $sevenZipCommand = Get-Command '7z.exe' -CommandType Application -ErrorAction SilentlyContinue
+            if ($sevenZipCommand) {
+              $sevenZip = $sevenZipCommand.Source
+            } else {
+              choco install 7zip.install --yes --no-progress
+              if ($LASTEXITCODE -ne 0) { throw 'Could not install 7-Zip on the inspection runner.' }
+              $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+            }
+          }
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            throw '7-Zip executable was not found after setup.'
+          }
+
+          # File Default Master: test whether the single EXE is a 7-Zip-readable
+          # archive. It is built from a PyInstaller one-file spec, so failure here
+          # must be recorded rather than treated as a failed download.
+          $defaultExe = Join-Path $root 'fix_default_app.exe'
+          $defaultList = @(& $sevenZip l -slt $defaultExe 2>&1 | ForEach-Object { "$_" })
+          $defaultListExit = $LASTEXITCODE
+          $defaultList | Set-Content -LiteralPath (Join-Path $root 'default-app-7zip-list.txt') -Encoding utf8
+
+          $defaultExtractLog = @(& $sevenZip x -y "-o$defaultOut" $defaultExe 2>&1 | ForEach-Object { "$_" })
+          $defaultExtractExit = $LASTEXITCODE
+          $defaultExtractLog | Set-Content -LiteralPath (Join-Path $root 'default-app-7zip-extract.log') -Encoding utf8
+          $defaultExtracted = @(Get-ChildItem -LiteralPath $defaultOut -File -Recurse -Force -ErrorAction SilentlyContinue)
+
+          $defaultVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($defaultExe)
+          $defaultSignature = Get-AuthenticodeSignature -LiteralPath $defaultExe
+          $defaultBytes = [System.IO.File]::ReadAllBytes($defaultExe)
+          $defaultAscii = [System.Text.Encoding]::ASCII.GetString($defaultBytes)
+          $pyInstallerMarkers = @()
+          foreach ($marker in @('PyInstaller', 'PYZ-00.pyz', '_MEIPASS', 'pyi-archive')) {
+            if ($defaultAscii.IndexOf($marker, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+              $pyInstallerMarkers += $marker
+            }
+          }
+
+          $defaultRecord = [ordered]@{
+            product = 'File Default Master'
+            versionInfo = [ordered]@{
+              productName = $defaultVersion.ProductName
+              productVersion = $defaultVersion.ProductVersion
+              fileVersion = $defaultVersion.FileVersion
+              companyName = $defaultVersion.CompanyName
+              originalFilename = $defaultVersion.OriginalFilename
+            }
+            authenticodeStatus = [string]$defaultSignature.Status
+            signer = if ($defaultSignature.SignerCertificate) { $defaultSignature.SignerCertificate.Subject } else { $null }
+            pyInstallerSpecConfirmed = $true
+            embeddedPyInstallerMarkers = $pyInstallerMarkers
+            sevenZipListExitCode = $defaultListExit
+            sevenZipExtractExitCode = $defaultExtractExit
+            sevenZipExtractedFileCount = $defaultExtracted.Count
+            sevenZipExtractedFiles = @($defaultExtracted | Select-Object -First 40 | ForEach-Object {
+              $_.FullName.Substring($defaultOut.Length).TrimStart('\')
+            })
+            manifestGuidance = 'Use the downloaded EXE directly if the 7-Zip test does not expose a standalone application payload. Do not add #/dl.7z unless extraction is verified.'
+          }
+          $results.Add($defaultRecord)
+
+          # EverDefault: expand the explicitly named Portable ZIP and verify the
+          # real application/service/launcher paths without running any EXE or CMD.
+          $everZip = Join-Path $root 'EverDefault-v2.0.4-portable.zip'
+          $zipList = @(& $sevenZip l -slt $everZip 2>&1 | ForEach-Object { "$_" })
+          $zipListExit = $LASTEXITCODE
+          $zipList | Set-Content -LiteralPath (Join-Path $root 'everdefault-7zip-list.txt') -Encoding utf8
+
+          Expand-Archive -LiteralPath $everZip -DestinationPath $everOut -Force
+          $everFiles = @(Get-ChildItem -LiteralPath $everOut -File -Recurse -Force)
+          if ($everFiles.Count -eq 0) { throw 'EverDefault Portable ZIP extracted no files.' }
+
+          $appExe = @($everFiles | Where-Object { $_.Name -ieq 'EverDefault.App.exe' })
+          $serviceExe = @($everFiles | Where-Object { $_.Name -ieq 'EverDefault.Service.exe' })
+          $installCmd = @($everFiles | Where-Object { $_.Name -ieq 'install-service.cmd' })
+          $uninstallCmd = @($everFiles | Where-Object { $_.Name -ieq 'uninstall-service.cmd' })
+
+          if ($appExe.Count -ne 1) {
+            $candidates = @($everFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+              $_.FullName.Substring($everOut.Length).TrimStart('\')
+            })
+            throw "Expected exactly one EverDefault.App.exe; found $($appExe.Count). EXE candidates: $($candidates -join ', ')"
+          }
+
+          $appRelative = $appExe[0].FullName.Substring($everOut.Length).TrimStart('\')
+          $appVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($appExe[0].FullName)
+          $appSignature = Get-AuthenticodeSignature -LiteralPath $appExe[0].FullName
+
+          $everRecord = [ordered]@{
+            product = 'EverDefault Portable'
+            sevenZipListExitCode = $zipListExit
+            extractedFileCount = $everFiles.Count
+            extractedExePaths = @($everFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+              $_.FullName.Substring($everOut.Length).TrimStart('\')
+            })
+            appExecutable = $appRelative
+            appExecutableSizeBytes = [long]$appExe[0].Length
+            appProductVersion = $appVersion.ProductVersion
+            appFileVersion = $appVersion.FileVersion
+            appAuthenticodeStatus = [string]$appSignature.Status
+            appSigner = if ($appSignature.SignerCertificate) { $appSignature.SignerCertificate.Subject } else { $null }
+            serviceExecutablePaths = @($serviceExe | ForEach-Object { $_.FullName.Substring($everOut.Length).TrimStart('\') })
+            installServiceScriptPaths = @($installCmd | ForEach-Object { $_.FullName.Substring($everOut.Length).TrimStart('\') })
+            uninstallServiceScriptPaths = @($uninstallCmd | ForEach-Object { $_.FullName.Substring($everOut.Length).TrimStart('\') })
+            topLevelEntries = @(Get-ChildItem -LiteralPath $everOut -Force | ForEach-Object { $_.Name })
+            manifestGuidance = 'Target the verified EverDefault.App.exe path for bin and the Start Menu shortcut. Do not run service scripts from Scoop install hooks.'
+          }
+          $results.Add($everRecord)
+
+          $jsonPath = Join-Path $root 'package-inspection.json'
+          $results | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $jsonPath -Encoding utf8
+
+          @(
+            '# Default App and EverDefault package inspection'
+            ''
+            '## Download and SHA-256'
+            ''
+            '| Package | File size (bytes) | SHA-256 |'
+            '|---|---:|---|'
+            "| File Default Master | $($targets[0].file) — $((Get-Item -LiteralPath $targets[0].output).Length) | $((Get-FileHash -LiteralPath $targets[0].output -Algorithm SHA256).Hash.ToLowerInvariant()) |"
+            "| EverDefault Portable | $($targets[1].file) — $((Get-Item -LiteralPath $targets[1].output).Length) | $((Get-FileHash -LiteralPath $targets[1].output -Algorithm SHA256).Hash.ToLowerInvariant()) |"
+            ''
+            '## File Default Master'
+            ''
+            "- Published version: v2.0.2"
+            "- PE product version: $($defaultVersion.ProductVersion)"
+            "- Authenticode: $($defaultSignature.Status)"
+            "- PyInstaller markers: $($pyInstallerMarkers -join ', ')"
+            "- 7-Zip list exit code: $defaultListExit"
+            "- 7-Zip extraction exit code: $defaultExtractExit"
+            "- Files extracted by 7-Zip: $($defaultExtracted.Count)"
+            ''
+            '## EverDefault Portable'
+            ''
+            "- Published version: v2.0.4"
+            "- Extracted files: $($everFiles.Count)"
+            "- Main application: $appRelative"
+            "- Main application size: $($appExe[0].Length) bytes"
+            "- Product version: $($appVersion.ProductVersion)"
+            "- Service executable found: $($serviceExe.Count -eq 1)"
+            "- Service install script found: $($installCmd.Count -gt 0)"
+            "- Service uninstall script found: $($uninstallCmd.Count -gt 0)"
+            ''
+            '## Safety'
+            ''
+            '- No application executable was launched.'
+            '- No service was installed, stopped, or removed.'
+            '- No registry entries or file associations were modified.'
+            '- The installer/setup EXE was not executed.'
+          ) | Set-Content -LiteralPath (Join-Path $root 'inspection-summary.md') -Encoding utf8
+          
+          Get-Content -LiteralPath (Join-Path $root 'inspection-summary.md') | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          Write-Host (Get-Content -LiteralPath (Join-Path $root 'inspection-summary.md') -Raw)
+
+      - name: Upload inspection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: default-app-everdefault-package-inspection
+          path: |
+            ${{ runner.temp }}/default-app-everdefault-inspection/
+          if-no-files-found: warn
+          retention-days: 14
