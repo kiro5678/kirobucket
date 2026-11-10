@@ -52,6 +52,14 @@ jobs:
           New-Item -ItemType Directory -Path $reportRoot -Force | Out-Null
           Copy-Item -Path (Join-Path $shimSource '*') -Destination $shimDestination -Recurse -Force
 
+          $sevenZipDir = 'C:\Program Files\7-Zip'
+          $sevenZipExe = Join-Path $sevenZipDir '7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZipExe -PathType Leaf)) {
+            throw 'The Windows runner does not contain C:\Program Files\7-Zip\7z.exe.'
+          }
+          $env:PATH = "$sevenZipDir;$env:PATH"
+          & $scoopScript config use_external_7zip true
+
           $manifestFiles = @(Get-ChildItem -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket') -Filter 'pake-*.json' -File | Sort-Object Name)
           if ($manifestFiles.Count -eq 0) {
             throw 'No bucket/pake-*.json manifests were found.'
