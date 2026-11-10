@@ -142,7 +142,7 @@ jobs:
             $extension = [IO.Path]::GetExtension($downloadPath)
             $isArchive = $extension -match '(?i)^\.(zip|7z|rar|tar|gz|tgz)$'
             $isDirectExecutable = ($extension -ieq '.exe') -and ($fileName -ieq [string]$manifest.bin)
-            $isInnoSetup = ($manifest.innosetup -eq $true) -and ($extension -ieq '.exe')
+            $isInnoSetup = ($manifest.innosetup -eq $true)
 
             if ($isInnoSetup) {
               try {
