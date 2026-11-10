@@ -14,9 +14,6 @@
 | **Nonportable** | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, Windows font or registry registration | The manifest runs the vendor's setup routine, registers an MSIX/AppX package, installs a driver/service/runtime, installs fonts into Windows, or writes persistent Windows integration such as a protocol registration. This remains Nonportable even when the setup routine places the main files inside `$dir` or the Scoop app directory. |
 | **Review** | Unverified EXE setup, RMSKIN add-on, or MSIX/EXE with unverified unpackaged behavior | The manifest downloads a setup/package asset but its current instructions do not establish a safe, complete extraction or installation method. Do not assume it is Portable until the payload and launch path are verified. |
 
-**Application data is not part of this classification.** A Portable application may still store settings, profiles, databases, caches, or other user data under `%APPDATA%`, `%LOCALAPPDATA%`, Documents, or another location outside Scoop. Portable means the application payload is not installed into Windows by the manifest; it does not mean that every part of the application's data is relocatable.
-
-The word *Nonportable* here describes installation behavior. It does not mean that every listed program installs to `C:\Program Files` or affects every Windows account. Some installers are per-user, some are machine-wide, and some install their files under Scoop but still run the real vendor setup.
 
 ## Summary
 
@@ -165,7 +162,6 @@ The installer type describes the package or setup technology used by the manifes
 | [znote](../bucket/znote.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 
 
-
 ## Review before classifying
 
 This is the single review register. It contains 103 active manifests in `bucket/` with outstanding technical checks: the 98 legacy review manifests migrated into `bucket/`, `tinywall-shirazadam.json`, and the four notch manifests listed in this table. Some assets and SHA-256 digests are verified, but that alone does not establish successful extraction, installation, launch, update, or uninstall behavior. The register also records 30 project candidates that do not currently have a usable independent Scoop manifest: 10 notch projects, six archive-related projects or GUI distributions, four archive-mounting candidates, and ten Windows utilities or components reviewed on 2026-11-10. These are project-review entries, not active bucket manifests, and are not included in the count of 103.
@@ -273,7 +269,6 @@ All existing manifest files remain in `bucket/`. Record outstanding review statu
 | [vcredist-aio](../bucket/vcredist-aio.json) | x86/x64 ZIP / system runtime installer | The archive contains an administrator-run Visual C++ runtime installer. Its payload and effects on existing system runtimes need inspection. |
 | [visual-cpp-redist-aio](../bucket/visual-cpp-redist-aio.json) | x86/x64 ZIP / system runtime installer | The manifest runs Installer.cmd quietly with elevation. Verify the archive root, installer behavior, and system-wide runtime changes before promotion. |
 | [visual-cpp-redist-aio-arm64](../bucket/visual-cpp-redist-aio-arm64.json) | ARM64 SFX / system runtime installer | The manifest runs the vendor SFX quietly with elevation. Verify the switches and installation behavior; system runtimes are not removed by Scoop uninstall. |
-
 
 
 ### File-association and migration projects reviewed on 2026-11-10
