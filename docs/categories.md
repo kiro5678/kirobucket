@@ -2,8 +2,8 @@
 
 | Category | Manifests | Link |
 | --- | ---: | --- |
-| Associations | 7 | [View](#associations) |
 | Android & Device Tools | 8 | [View](#android-device-tools) |
+| Associations | 13 | [View](#associations) |
 | Browser Launchers | 6 | [View](#browser-launchers) |
 | Browsers & Communication | 12 | [View](#browsers-communication) |
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
@@ -23,7 +23,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 22 | [View](#notes-knowledge) |
-| Other Utilities | 113 | [View](#other-utilities) |
+| Other Utilities | 132 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
 | Productivity & Launchers | 37 | [View](#productivity-launchers) |
@@ -40,7 +40,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1042**
+**Total unique manifests: 1067**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -70,6 +70,12 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- | --- |
 | [browser-picker](../bucket/browser-picker.json) | 3.2.5 | — | 2026-10-24 | Portable Windows browser picker and URL router with rules for domains, paths, and manually added applications. | [Homepage](https://github.com/mortenn/BrowserPicker) |
 | [default-programs-editor](../bucket/default-programs-editor.json) | 2.7.2676 | — | — | Standalone utility for editing Windows file associations, context menus, icons, descriptions, AutoPlay handlers, and default-program settings. | [Homepage](https://defaultprogramseditor.com/) |
+| [default-programs-remake](../bucket/default-programs-remake.json) | 1.2.1 | — | — | Recreates the classic Set Default Programs Control Panel page on Windows 10 and 11. | [Homepage](https://github.com/MehranAkbarii/DefaultProgramsRemake) |
+| [everdefault](../bucket/everdefault.json) | 2.0.4 | — | — | Windows utility that monitors and restores selected default-app and system registry settings. | [Homepage](https://github.com/BUGJI/EverDefault) |
+| [file-default-master](../bucket/file-default-master.json) | 2.0.2 | — | — | Windows utility for managing default programs and file associations. | [Homepage](https://github.com/qianli-wang/default-app) |
+| [fta-manager](../bucket/fta-manager.json) | 1.2.0-9ca7775 | — | — | PowerShell module for managing Windows file-type and protocol associations. | [Homepage](https://github.com/feiglein74/FTA-Manager) |
+| [linkrouter](../bucket/linkrouter.json) | 4.0.0 | — | — | Regex-based router for web links and custom URL protocols. | [Homepage](https://github.com/kolbasky/LinkRouter) |
+| [urlprotocol](../bucket/urlprotocol.json) | 0.7 | — | — | Small Windows utility for registering custom URL protocols. | [Homepage](https://github.com/xifangczy/URLProtocol) |
 | [firefox-portable-default-browser](../bucket/firefox-portable-default-browser.json) | 1.0.0 | — | — | Registry template for registering Firefox Portable as a current-user browser candidate in Windows Default Apps. | [Homepage](https://github.com/clemthi/firefox-portable-default-browser) |
 | [pineapple-assoc-manager](../bucket/pineapple-assoc-manager.json) | 1.1.0 | — | — | Portable Windows file-association manager for portable applications, configured with PACFG files. | [Homepage](https://github.com/BLumia/pineapple-assoc-manager) |
 | [portable-registrator](../bucket/portable-registrator.json) | 1.5 | 351.2 KiB | 2023-04-12 | Registers portable applications as Windows default-program candidates for supported file types and URL protocols. | [Homepage](https://github.com/SiL3NC3/PortableRegistrator) |
@@ -678,6 +684,25 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [ahk-tts](../bucket/ahk-tts.json) | 1.8 | — | — | AutoHotkey-based text-to-speech utility for Windows. | [Homepage](https://github.com/altbdoor/ahk-tts) |
+| [aula](../bucket/aula.json) | 0.1.3 | — | — | Study companion that turns notes, slides, and past exams into interactive courses. | [Homepage](https://github.com/luumlabs/aula) |
+| [boilr](../bucket/boilr.json) | 1.11.0 | — | — | Imports games from other launchers into the Steam library. | [Homepage](https://github.com/PhilipK/BoilR) |
+| [codex-monitor](../bucket/codex-monitor.json) | 0.7.67 | — | — | Desktop application for monitoring Codex agent sessions. | [Homepage](https://github.com/Dimillian/CodexMonitor) |
+| [codex-plus-plus](../bucket/codex-plus-plus.json) | 2.6.0 | — | — | Enhanced Windows desktop client for Codex and other AI agents. | [Homepage](https://github.com/BigPizzaV3/CodexPlusPlus) |
+| [duckduckmove](../bucket/duckduckmove.json) | 0.1.3 | — | — | Windows 11 animated user-avatar utility with a built-in duck GIF, custom GIF support, backup, and reset. | [Homepage](https://github.com/wooi/DuckDuckMove) |
+| [eyeguard](../bucket/eyeguard.json) | 3.0.0 | — | — | Windows eye-care suite with screen color and brightness controls, reading aids, and break reminders. | [Homepage](https://github.com/hocinechero/EyeGuard) |
+| [hob](../bucket/hob.json) | 0.2.6 | — | — | Local AI desktop assistant for working with documents, files, and everyday tasks using models that run on your computer. | [Homepage](https://www.hob.chat/) |
+| [monitorsnap](../bucket/monitorsnap.json) | 2.6.2 | — | — | Save and restore Windows display layouts, resolutions, refresh rates, and hotkey presets. | [Homepage](https://github.com/GTRows/MonitorSnap) |
+| [msstore-downloader](../bucket/msstore-downloader.json) | 1.0.2 | — | — | Windows desktop utility for retrieving and downloading Microsoft Store app packages. | [Homepage](https://github.com/inteliboy/MSStoreDownloader) |
+| [skim](../bucket/skim.json) | 1.0.34 | — | — | A fast, minimalist, AI-native email client for Windows. | [Homepage](https://skim-tech.com) |
+| [systemtraymenu-v1](../bucket/systemtraymenu-v1.json) | 1.3.5.0 | — | — | Open-source desktop toolbar and Start Menu alternative for browsing and opening files, folders, and links. | [Homepage](https://github.com/Hofknecht/SystemTrayMenu) |
+| [systemtraymenu-v3](../bucket/systemtraymenu-v3.json) | 3.1.256 | — | — | Portable folder-based launcher and menu for files, programs and links. | [Homepage](https://hofknecht.eu/systemtraymenu/en.html) |
+| [takeoff-launcher](../bucket/takeoff-launcher.json) | 1.0.4 | — | — | Focused, lightweight native Windows application launcher. | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
+| [torrentplayer](../bucket/torrentplayer.json) | 0.3.3 | — | — | Open-source BitTorrent streaming media player with instant seeking and a background download queue. | [Homepage](https://torrentplayer.io) |
+| [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | 4.3 | — | — | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
+| [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | — | — | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
+| [wintousb](../bucket/wintousb.json) | 10.9 | — | — | Create Windows To Go and bootable Windows installation/WinPE USB media. | [Homepage](https://www.easyuefi.com/wintousb/) |
+| [wisp](../bucket/wisp.json) | 0.6.1 | — | — | Windows 11 dock and keyboard launcher that replaces the taskbar. | [Homepage](https://github.com/SumirSeth/wisp) |
 | [anton](../bucket/anton.json) | 0.2.48 | 95.4 MiB | 2026-10-29 | AI-assisted desktop video editor with a manual timeline and local rendering | [Homepage](https://antonvideo.app/) |
 | [autooff](../bucket/autooff.json) | 4.25 | 696.7 KiB | 2023-08-09 | Schedule Windows shutdown, restart, sleep, hibernate, display power, lock, alarms, and program tasks. | [Homepage](https://www.starcodec.com/en/autooff/) |
 | [pake-chatgpt](../bucket/pake-chatgpt.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for ChatGPT. | [Homepage](https://chatgpt.com/) |
