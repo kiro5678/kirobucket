@@ -134,152 +134,151 @@ jobs:
               }
             } else {
               $hashStatus = 'UNSUPPORTED FORMAT'
-                      $archiveStatus = 'NOT A 7-Zip ARCHIVE'
-          $payloadStatus = 'Installer family / payload requires separate inspection'
-          $extension = [IO.Path]::GetExtension($downloadPath)
-          $isArchive = $extension -match '(?i)^\.(zip|7z|rar|tar|gz|tgz)$'
-          $isDirectExecutable = ($extension -ieq '.exe') -and ($fileName -ieq [string]$manifest.bin)
-          $isInnoSetup = ($manifest.innosetup -eq $true) -and ($extension -ieq '.exe')
-
-          if ($isInnoSetup) {
-            try {
-              if ([string]::IsNullOrWhiteSpace($innounpPath)) {
-                $innounpZip = Join-Path $root 'innounp-2.zip'
-                $innounpRoot = Join-Path $root 'innounp-helper'
-                Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 180 -ErrorAction Stop
-                $helperHash = (Get-FileHash -LiteralPath $innounpZip -Algorithm SHA256).Hash.ToLowerInvariant()
-                if ($helperHash -ne '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd') {
-                  throw "innounp helper SHA-256 mismatch: $helperHash"
-                }
-                New-Item -ItemType Directory -Path $innounpRoot -Force | Out-Null
-                Add-Content -LiteralPath $sevenZipLog -Value "`n[innounp helper extraction] $innounpZip"
-                & $sevenZip x $innounpZip "-o$innounpRoot" '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
-                if ($LASTEXITCODE -ne 0) {
-                  throw 'Could not extract the verified innounp helper archive.'
-                }
-                $innounpExe = Get-ChildItem -LiteralPath $innounpRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
-                if ($null -eq $innounpExe) {
-                  throw 'The verified innounp helper archive did not contain innounp.exe.'
-                }
-                $innounpPath = $innounpExe.FullName
-              }
-
-              $innoExtractRoot = Join-Path $appDir 'inno-app'
-              New-Item -ItemType Directory -Path $innoExtractRoot -Force | Out-Null
-              $innounpOutput = & $innounpPath '-x' "-d$innoExtractRoot" $downloadPath '-y' '-c{app}' 2>&1
-              $innounpExitCode = $LASTEXITCODE
-              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : innounp -x -c{app} =====")
-              $innounpOutput | Add-Content -LiteralPath $sevenZipLog
-              if ($innounpExitCode -ne 0) {
-                $details = ($innounpOutput | Select-Object -Last 10) -join ' '
-                throw "innounp extraction failed with exit code $innounpExitCode. $details"
-              }
-
-              $innoFiles = @(Get-ChildItem -LiteralPath $innoExtractRoot -File -Recurse)
-              if ($innoFiles.Count -eq 0) {
-                throw 'innounp reported success but extracted no files from {app}.'
-              }
-              $exeFiles = @($innoFiles | Where-Object { $_.Extension -ieq '.exe' } |
-                ForEach-Object { [IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\','/') })
-              if ($exeFiles.Count -eq 0) {
-                throw 'The extracted Inno Setup app directory contains no EXE files.'
-              }
-              $archiveStatus = 'INNO LIST + EXTRACT PASS'
-              $payloadStatus = $exeFiles -join ', '
-              Write-Host "$appName: innounp extracted $($innoFiles.Count) app file(s). EXEs: $($exeFiles -join ', ')"
-              if ($manifest.bin -is [string] -and -not [string]::IsNullOrWhiteSpace($manifest.bin)) {
-                $expectedBin = ([string]$manifest.bin).Replace('\','/')
-                if ($exeFiles -contains $expectedBin) {
-                  Write-Host "$appName declared bin path exists in extracted Inno payload: $expectedBin"
-                } else {
-                  throw "$appName declared bin path was not found in the Inno payload: $expectedBin"
-                }
-              }
-            } catch {
-              $archiveStatus = 'INNO EXTRACT FAILED'
-              $payloadStatus = $_.Exception.Message
               $failures++
-              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : innounp error =====")
-              Add-Content -LiteralPath $sevenZipLog -Value $_.Exception.ToString()
             }
-          } elseif ($isDirectExecutable) {
-            $archiveStatus = 'STANDALONE EXECUTABLE'
-            $payloadStatus = 'Downloaded filename matches manifest bin'
-          } else {
-            $listOutput = & $sevenZip l -slt $downloadPath 2>&1
-            $listExit = $LASTEXITCODE
-            Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z l =====")
-            $listOutput | Add-Content -LiteralPath $sevenZipLog
 
-            if ($listExit -eq 0) {
-              $extractDir = Join-Path $appDir 'extracted'
-              New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
-              $extractOutput = & $sevenZip x -y "-o$extractDir" $downloadPath 2>&1
-              $extractExit = $LASTEXITCODE
-              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z x =====")
-              $extractOutput | Add-Content -LiteralPath $sevenZipLog
+            $archiveStatus = 'NOT A 7-Zip ARCHIVE'
+            $payloadStatus = 'Installer family / payload requires separate inspection'
+            $extension = [IO.Path]::GetExtension($downloadPath)
+            $isArchive = $extension -match '(?i)^\.(zip|7z|rar|tar|gz|tgz)$'
+            $isDirectExecutable = ($extension -ieq '.exe') -and ($fileName -ieq [string]$manifest.bin)
+            $isInnoSetup = ($manifest.innosetup -eq $true) -and ($extension -ieq '.exe')
 
-              if ($extractExit -eq 0) {
-                $archiveStatus = 'LIST + EXTRACT PASS'
-                $exeFiles = @(Get-ChildItem -LiteralPath $extractDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
-                  ForEach-Object { $_.FullName.Substring($extractDir.Length).TrimStart('\','/') })
-
-                if ($exeFiles.Count -gt 0) {
-                  $payloadStatus = $exeFiles -join ', '
-                } else {
-                  $payloadStatus = 'No EXE found in extracted payload'
-                }
-
-                $nestedArchives = @(Get-ChildItem -LiteralPath $extractDir -Filter 'app-64.7z' -File -Recurse -ErrorAction SilentlyContinue)
-                foreach ($nestedArchive in $nestedArchives) {
-                  Write-Host "Found nested app archive: $($nestedArchive.FullName) ($($nestedArchive.Length) bytes)"
-                  $nestedList = & $sevenZip l -slt $nestedArchive.FullName 2>&1
-                  $nestedListExit = $LASTEXITCODE
-                  Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : nested 7z l =====")
-                  $nestedList | Add-Content -LiteralPath $sevenZipLog
-                  if ($nestedListExit -eq 0) {
-                    $nestedDir = Join-Path $appDir 'nested-app'
-                    New-Item -ItemType Directory -Path $nestedDir -Force | Out-Null
-                    $nestedExtract = & $sevenZip x -y "-o$nestedDir" $nestedArchive.FullName 2>&1
-                    $nestedExtractExit = $LASTEXITCODE
-                    Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : nested 7z x =====")
-                    $nestedExtract | Add-Content -LiteralPath $sevenZipLog
-                    if ($nestedExtractExit -eq 0) {
-                      $nestedExeFiles = @(Get-ChildItem -LiteralPath $nestedDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
-                        ForEach-Object { $_.FullName.Substring($nestedDir.Length).TrimStart([char[]](92, 47)) })
-                      Write-Host "Nested application EXE paths: $($nestedExeFiles -join ', ')"
-                      if ($nestedExeFiles.Count -gt 0) {
-                        $payloadStatus += "; nested app: $($nestedExeFiles -join ', ')"
-                      }
-                    } else {
-                      Write-Warning "Nested app archive extraction failed with exit $nestedExtractExit."
-                    }
-                  } else {
-                    Write-Warning "Nested app archive listing failed with exit $nestedListExit."
+            if ($isInnoSetup) {
+              try {
+                if ([string]::IsNullOrWhiteSpace($innounpPath)) {
+                  $innounpZip = Join-Path $root 'innounp-2.zip'
+                  $innounpRoot = Join-Path $root 'innounp-helper'
+                  Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 180 -ErrorAction Stop
+                  $helperHash = (Get-FileHash -LiteralPath $innounpZip -Algorithm SHA256).Hash.ToLowerInvariant()
+                  if ($helperHash -ne '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd') {
+                    throw "innounp helper SHA-256 mismatch: $helperHash"
                   }
+                  New-Item -ItemType Directory -Path $innounpRoot -Force | Out-Null
+                  Add-Content -LiteralPath $sevenZipLog -Value "`n[innounp helper extraction] $innounpZip"
+                  & $sevenZip x $innounpZip "-o$innounpRoot" '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
+                  if ($LASTEXITCODE -ne 0) {
+                    throw 'Could not extract the verified innounp helper archive.'
+                  }
+                  $innounpExe = Get-ChildItem -LiteralPath $innounpRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+                  if ($null -eq $innounpExe) {
+                    throw 'The verified innounp helper archive did not contain innounp.exe.'
+                  }
+                  $innounpPath = $innounpExe.FullName
                 }
 
+                $innoExtractRoot = Join-Path $appDir 'inno-app'
+                New-Item -ItemType Directory -Path $innoExtractRoot -Force | Out-Null
+                $innounpOutput = & $innounpPath '-x' "-d$innoExtractRoot" $downloadPath '-y' '-c{app}' 2>&1
+                $innounpExitCode = $LASTEXITCODE
+                Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : innounp -x -c{app} =====")
+                $innounpOutput | Add-Content -LiteralPath $sevenZipLog
+                if ($innounpExitCode -ne 0) {
+                  $details = ($innounpOutput | Select-Object -Last 10) -join ' '
+                  throw "innounp extraction failed with exit code $innounpExitCode. $details"
+                }
+
+                $innoFiles = @(Get-ChildItem -LiteralPath $innoExtractRoot -File -Recurse)
+                if ($innoFiles.Count -eq 0) {
+                  throw 'innounp reported success but extracted no files from {app}.'
+                }
+                $exeFiles = @($innoFiles | Where-Object { $_.Extension -ieq '.exe' } |
+                  ForEach-Object { [IO.Path]::GetRelativePath($innoExtractRoot, $_.FullName).Replace('\','/') })
+                if ($exeFiles.Count -eq 0) {
+                  throw 'The extracted Inno Setup app directory contains no EXE files.'
+                }
+                $archiveStatus = 'INNO LIST + EXTRACT PASS'
+                $payloadStatus = $exeFiles -join ', '
+                Write-Host "$appName: innounp extracted $($innoFiles.Count) app file(s). EXEs: $($exeFiles -join ', ')"
                 if ($manifest.bin -is [string] -and -not [string]::IsNullOrWhiteSpace($manifest.bin)) {
                   $expectedBin = ([string]$manifest.bin).Replace('\','/')
                   if ($exeFiles -contains $expectedBin) {
-                    Write-Host "$appName declared bin path exists in extracted payload: $expectedBin"
+                    Write-Host "$appName declared bin path exists in extracted Inno payload: $expectedBin"
                   } else {
-                    Write-Warning "$appName declared bin path not found in extracted payload: $expectedBin"
+                    throw "$appName declared bin path was not found in the Inno payload: $expectedBin"
                   }
                 }
-              } else {
-                $archiveStatus = "EXTRACT FAILED (exit $extractExit)"
-                $payloadStatus = 'See 7zip.log'
-                if ($isArchive) { $failures++ }
+              } catch {
+                $archiveStatus = 'INNO EXTRACT FAILED'
+                $payloadStatus = $_.Exception.Message
+                $failures++
+                Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : innounp error =====")
+                Add-Content -LiteralPath $sevenZipLog -Value $_.Exception.ToString()
               }
-            } elseif ($isArchive) {
-              $archiveStatus = "ARCHIVE LIST FAILED (exit $listExit)"
-              $payloadStatus = 'See 7zip.log'
-              $failures++
-            }
-          }
+            } elseif ($isDirectExecutable) {
+              $archiveStatus = 'STANDALONE EXECUTABLE'
+              $payloadStatus = 'Downloaded filename matches manifest bin'
+            } else {
+              $listOutput = & $sevenZip l -slt $downloadPath 2>&1
+              $listExit = $LASTEXITCODE
+              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z l =====")
+              $listOutput | Add-Content -LiteralPath $sevenZipLog
 
-            }
+              if ($listExit -eq 0) {
+                $extractDir = Join-Path $appDir 'extracted'
+                New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+                $extractOutput = & $sevenZip x -y "-o$extractDir" $downloadPath 2>&1
+                $extractExit = $LASTEXITCODE
+                Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z x =====")
+                $extractOutput | Add-Content -LiteralPath $sevenZipLog
+
+                if ($extractExit -eq 0) {
+                  $archiveStatus = 'LIST + EXTRACT PASS'
+                  $exeFiles = @(Get-ChildItem -LiteralPath $extractDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
+                    ForEach-Object { $_.FullName.Substring($extractDir.Length).TrimStart('\','/') })
+                  if ($exeFiles.Count -gt 0) {
+                    $payloadStatus = $exeFiles -join ', '
+                  } else {
+                    $payloadStatus = 'No EXE found in extracted payload'
+                  }
+
+                  $nestedArchives = @(Get-ChildItem -LiteralPath $extractDir -Filter 'app-64.7z' -File -Recurse -ErrorAction SilentlyContinue)
+                  foreach ($nestedArchive in $nestedArchives) {
+                    Write-Host "Found nested app archive: $($nestedArchive.FullName) ($($nestedArchive.Length) bytes)"
+                    $nestedList = & $sevenZip l -slt $nestedArchive.FullName 2>&1
+                    $nestedListExit = $LASTEXITCODE
+                    Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : nested 7z l =====")
+                    $nestedList | Add-Content -LiteralPath $sevenZipLog
+                    if ($nestedListExit -eq 0) {
+                      $nestedDir = Join-Path $appDir 'nested-app'
+                      New-Item -ItemType Directory -Path $nestedDir -Force | Out-Null
+                      $nestedExtract = & $sevenZip x -y "-o$nestedDir" $nestedArchive.FullName 2>&1
+                      $nestedExtractExit = $LASTEXITCODE
+                      Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : nested 7z x =====")
+                      $nestedExtract | Add-Content -LiteralPath $sevenZipLog
+                      if ($nestedExtractExit -eq 0) {
+                        $nestedExeFiles = @(Get-ChildItem -LiteralPath $nestedDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
+                          ForEach-Object { $_.FullName.Substring($nestedDir.Length).TrimStart([char[]](92, 47)) })
+                        Write-Host "Nested application EXE paths: $($nestedExeFiles -join ', ')"
+                        if ($nestedExeFiles.Count -gt 0) {
+                          $payloadStatus += "; nested app: $($nestedExeFiles -join ', ')"
+                        }
+                      } else {
+                        Write-Warning "Nested app archive extraction failed with exit $nestedExtractExit."
+                      }
+                    } else {
+                      Write-Warning "Nested app archive listing failed with exit $nestedListExit."
+                    }
+                  }
+
+                  if ($manifest.bin -is [string] -and -not [string]::IsNullOrWhiteSpace($manifest.bin)) {
+                    $expectedBin = ([string]$manifest.bin).Replace('\','/')
+                    if ($exeFiles -contains $expectedBin) {
+                      Write-Host "$appName declared bin path exists in extracted payload: $expectedBin"
+                    } else {
+                      Write-Warning "$appName declared bin path not found in extracted payload: $expectedBin"
+                    }
+                  }
+                } else {
+                  $archiveStatus = "EXTRACT FAILED (exit $extractExit)"
+                  $payloadStatus = 'See 7zip.log'
+                  if ($isArchive) { $failures++ }
+                }
+              } elseif ($isArchive) {
+                $archiveStatus = "ARCHIVE LIST FAILED (exit $listExit)"
+                $payloadStatus = 'See 7zip.log'
+                $failures++
+              }
             }
 
             if ($payloadStatus.Length -gt 240) {
