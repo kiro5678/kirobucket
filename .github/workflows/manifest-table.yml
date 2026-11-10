@@ -962,8 +962,8 @@ jobs:
           $summaryAfter = $portabilityContent.Substring($summaryEndIndex + $summaryEndMarker.Length)
           $portabilityContent = $summaryBefore + $summaryBlock + $summaryAfter
 
-          # Render two independent lists side by side. A manifest name appears in one
-          # portability column only. Review candidates remain in manifest-review.md.
+          # Render portability lists with a separate Installer Type column beside each list.
+          # Each manifest remains unique and its installer type stays on the same row.
           $portableItems = @($manifests | Where-Object { $_.Portability -eq "Portable" } | Sort-Object Name)
           $nonportableItems = @($manifests | Where-Object { $_.Portability -eq "Nonportable" } | Sort-Object Name)
           $pairCount = [Math]::Max($portableItems.Count, $nonportableItems.Count)
@@ -972,26 +972,28 @@ jobs:
           $installerTypeLines.Add('<a id="all-bucket-manifests-by-installer-type"></a>')
           $installerTypeLines.Add("## All bucket manifests: Portable and Nonportable")
           $installerTypeLines.Add("")
-          $installerTypeLines.Add("Every listed manifest appears exactly once, under its own portability classification. Items still awaiting verification are kept separately in [Manifest Review](manifest-review.md).")
+          $installerTypeLines.Add("Each manifest appears once. Installer Type is shown in its own column immediately to the right of the corresponding manifest. Items awaiting verification are kept separately in [Manifest Review](manifest-review.md).")
           $installerTypeLines.Add("")
-          $installerTypeLines.Add("| Portable ($portableCount) | Nonportable ($nonportableCount) |")
-          $installerTypeLines.Add("| --- | --- |")
+          $installerTypeLines.Add("| Portable ($portableCount) | Installer Type | Nonportable ($nonportableCount) | Installer Type |")
+          $installerTypeLines.Add("| --- | --- | --- | --- |")
           for ($index = 0; $index -lt $pairCount; $index++) {
               $portableLink = ""
+              $portableType = ""
               $nonportableLink = ""
+              $nonportableType = ""
               if ($index -lt $portableItems.Count) {
                   $item = $portableItems[$index]
                   $name = ([string]$item.Name).Replace("|", "\|")
-                  $typeLabel = ([string]$item.InstallerType).Replace("|", "\|")
-                  $portableLink = "[$name](../bucket/$($item.Name).json) — $typeLabel"
+                  $portableType = ([string]$item.InstallerType).Replace("|", "\|")
+                  $portableLink = "[$name](../bucket/$($item.Name).json)"
               }
               if ($index -lt $nonportableItems.Count) {
                   $item = $nonportableItems[$index]
                   $name = ([string]$item.Name).Replace("|", "\|")
-                  $typeLabel = ([string]$item.InstallerType).Replace("|", "\|")
-                  $nonportableLink = "[$name](../bucket/$($item.Name).json) — $typeLabel"
+                  $nonportableType = ([string]$item.InstallerType).Replace("|", "\|")
+                  $nonportableLink = "[$name](../bucket/$($item.Name).json)"
               }
-              $installerTypeLines.Add("| $portableLink | $nonportableLink |")
+              $installerTypeLines.Add("| $portableLink | $portableType | $nonportableLink | $nonportableType |")
           }
           $installerTypeLines.Add("")
           $installerTypeLines.Add("**Counts:** Portable $portableCount; Nonportable $nonportableCount; Review $reviewCount; Total $totalCount.")
@@ -1017,7 +1019,7 @@ jobs:
               $portabilityContent,
               [System.Text.UTF8Encoding]::new($false)
           )
-          Write-Host "Generated two-column portability lists. Portable: $portableCount; Nonportable: $nonportableCount; Review: $reviewCount; Total: $totalCount."
+          Write-Host "Generated four-column portability inventory. Portable: $portableCount; Nonportable: $nonportableCount; Review: $reviewCount; Total: $totalCount."
 
           Set-Content -Path (Join-Path $docsPath "manifests-newest.md") -Value (New-View "Newest first" $newest) -Encoding utf8NoBOM
           Set-Content -Path (Join-Path $docsPath "manifests-oldest.md") -Value (New-View "Oldest first" $oldest) -Encoding utf8NoBOM
