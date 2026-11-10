@@ -505,6 +505,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- | --- |
 | [allplayer](../bucket/allplayer.json) | 9.6 | 88.4 MiB | 2026-02-24 | Free multimedia player with built-in codecs and automatic subtitles. | [Homepage](https://allplayer.com/) |
 | [blur](../bucket/blur.json) | 2.45 | 64bit: 7.3 MiB | 2026-05-12 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. | [Homepage](https://github.com/f0e/blur) |
+| [concat](../bucket/concat.json) | 0.2.9 | 64bit: 95.5 MiB | 2026-11-05 | Open-source cross-platform video editor with a multi-track timeline, effects, captions, and local processing. | [Homepage](https://github.com/jub0t/Concat) |
 | [cue](../bucket/cue.json) | 1.1 | 16.7 MiB | 2026-10-31 | Free Windows video and audio player with subtitles and playback-position saving. | [Homepage](https://github.com/tinypeep/cue) |
 | [drift](../bucket/drift.json) | 0.8.0 | 145.1 MiB | 2026-10-13 | Open-source video editor for importing, cutting, color grading, and exporting projects (Windows x64 portable build). | [Homepage](https://github.com/CutWire-Studios/Drift) |
 | [ef-duplicate-mp3-finder](../bucket/ef-duplicate-mp3-finder.json) | 26.10 | 64bit: 1.6 MiB | 2026-08-24 | Finds duplicate music files in formats including MP3, iTunes, Ogg/Vorbis, FLAC, and WMA. | [Homepage](https://efsoftware.com/d3/e.htm) |
@@ -692,6 +693,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [ahk-tts](../bucket/ahk-tts.json) | 1.8 | — | — | AutoHotkey-based text-to-speech utility for Windows. | [Homepage](https://github.com/altbdoor/ahk-tts) |
 | [aula](../bucket/aula.json) | 0.1.3 | — | — | Study companion that turns notes, slides, and past exams into interactive courses. | [Homepage](https://github.com/luumlabs/aula) |
 | [boilr](../bucket/boilr.json) | 1.11.0 | — | — | Imports games from other launchers into the Steam library. | [Homepage](https://github.com/PhilipK/BoilR) |
+| [bootease](../bucket/bootease.json) | 3.0.0 | 64bit: 5.0 MiB | 2026-10-31 | Windows utility for BIOS/UEFI, recovery, restart options, and system information. | [Homepage](https://github.com/voidksa/BootEase) |
 | [codex-monitor](../bucket/codex-monitor.json) | 0.7.67 | — | — | Desktop application for monitoring Codex agent sessions. | [Homepage](https://github.com/Dimillian/CodexMonitor) |
 | [codex-plus-plus](../bucket/codex-plus-plus.json) | 2.6.0 | — | — | Enhanced Windows desktop client for Codex and other AI agents. | [Homepage](https://github.com/BigPizzaV3/CodexPlusPlus) |
 | [duckduckmove](../bucket/duckduckmove.json) | 0.1.3 | — | — | Windows 11 animated user-avatar utility with a built-in duck GIF, custom GIF support, backup, and reset. | [Homepage](https://github.com/wooi/DuckDuckMove) |
