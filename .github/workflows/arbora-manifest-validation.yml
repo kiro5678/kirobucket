@@ -40,8 +40,8 @@ jobs:
             throw 'Manifest SHA-256 does not match the value verified by the inspection workflow.'
           }
           if ($manifest.bin -ne 'Arbora.exe') { throw 'Manifest must shim the root-level Arbora.exe.' }
-          if ($manifest.Contains('extract_dir')) { throw 'The archive has no enclosing folder; extract_dir must be omitted.' }
-          if ($manifest.Contains('persist')) { throw 'The README states that app data is stored in the Windows user profile; do not invent a persist path.' }
+          if (($manifest.PSObject.Properties.Name -contains 'extract_dir')) { throw 'The archive has no enclosing folder; extract_dir must be omitted.' }
+          if (($manifest.PSObject.Properties.Name -contains 'persist')) { throw 'The README states that app data is stored in the Windows user profile; do not invent a persist path.' }
 
           $zip = Join-Path $env:RUNNER_TEMP 'Arbora_0.9.0_x64-portable.zip'
           Invoke-WebRequest -Uri $manifest.url -OutFile $zip -TimeoutSec 900
@@ -60,10 +60,12 @@ jobs:
 
           $extract = Join-Path $env:RUNNER_TEMP 'arbora-manual-extract'
           New-Item -ItemType Directory -Path $extract -Force | Out-Null
-          & $sevenZip x -y "-o$extract" -bb1 $zip
+          $extractLog = Join-Path $env:RUNNER_TEMP '7zip-extract.log'
+          & $sevenZip x -y "-o$extract" -bb1 $zip 2>&1 | Tee-Object -FilePath $extractLog
           if ($LASTEXITCODE -ne 0) {
-            $extractLog = Join-Path $env:RUNNER_TEMP '7zip-extract.log'
-            throw "7-Zip extraction failed. Check $extractLog and the extraction log."
+            Write-Host '7zip-extract.log:'
+            Get-Content -LiteralPath $extractLog
+            throw '7-Zip extraction failed.'
           }
           $exe = Join-Path $extract 'Arbora.exe'
           if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw 'Arbora.exe is not at the archive root.' }
