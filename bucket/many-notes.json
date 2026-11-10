@@ -20,7 +20,7 @@
     ],
     "uninstaller": {
         "script": [
-            "try { & (Join-Path '$dir' 'many-notes.ps1') remove } catch { warn 'Many Notes container removal could not be completed; remove it manually if Docker is unavailable.' }"
+            "try { & \"$dir\\many-notes.ps1\" remove } catch { warn \"Many Notes container removal could not be completed; remove it manually if Docker is unavailable.\" }"
         ]
     }
 }
