@@ -27,7 +27,7 @@
         "url": "https://github.com/jub0t/Concat/releases/download/v$version/Concat-$version-windows-x86_64.msi#/dl.msi",
         "hash": {
             "url": "https://api.github.com/repos/jub0t/Concat/releases/tags/v$version",
-            "regex": "Concat-$version-windows-x86_64\\.msi[\\s\\S]{0,500}?sha256:([a-f0-9]{64})"
+            "regex": "Concat-$version-windows-x86_64\\.msi.*?sha256:([a-f0-9]{64})"
         }
     }
 }
