@@ -29,7 +29,15 @@
         "$shortcut.IconLocation = \"$persistExe,0\"",
         "$shortcut.Save()"
     ],
-    "pre_uninstall": [
+    "checkver": {
+        "url": "https://api.github.com/repos/xifangczy/URLProtocol/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/xifangczy/URLProtocol/releases/download/$version/URLProtocol.zip"
+    },
+    "post_uninstall": [
         "$persistExe = [System.IO.Path]::GetFullPath((Join-Path $persist_dir 'URLProtocol.exe'))",
         "$expectedCommand = '\"{0}\" \"%1\"' -f $persistExe",
         "$classesPath = 'HKCU:\\Software\\Classes'",
@@ -53,13 +61,5 @@
         "$shortcutPath = Join-Path (Join-Path $programsFolder 'Scoop Apps') 'URLProtocol.lnk'",
         "Remove-Item -LiteralPath $shortcutPath -Force -ErrorAction SilentlyContinue",
         "Remove-Item -LiteralPath $persistExe -Force -ErrorAction SilentlyContinue"
-    ],
-    "checkver": {
-        "url": "https://api.github.com/repos/xifangczy/URLProtocol/releases/latest",
-        "jsonpath": "$.tag_name",
-        "regex": "^(?<version>[\\d.]+)$"
-    },
-    "autoupdate": {
-        "url": "https://github.com/xifangczy/URLProtocol/releases/download/$version/URLProtocol.zip"
-    }
+    ]
 }
