@@ -3,5 +3,6 @@
     "homepage": "https://foxdesktop-app.com/",
     "url": "https://foxdesktop-app.com/download",
     "version": "2.0.1",
-    "innosetup": true
+    "innosetup": true,
+    "hash": "70cdad4a678d453364ab8cdfd3514708a5c1e79952781052106b47de27c796aa"
 }
