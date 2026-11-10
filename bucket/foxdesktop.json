@@ -30,5 +30,6 @@
     },
     "autoupdate": {
         "url": "https://foxdesktop-app.com/download#/FoxDesktopSetup.exe"
-    }
+    },
+    "license": "Proprietary"
 }
