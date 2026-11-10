@@ -6,7 +6,6 @@
 | --- | --- | --- | --- |
 | Portable | 834 | PowerShell script download, ZIP, 7Z, standalone EXE, MSI/Inno/NSIS extraction, self-extracting payload | Current manifest instructions use standalone files or extraction without a Windows installation routine. |
 | Nonportable | 63 | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, font/registry registration | The manifest performs an actual installation or persistent Windows registration. |
-| Review | 0 | — | No active manifest is assigned the Review classification in this summary. |
 | **Total** | **1035** | Multiple package types | All current JSON manifests in `bucket/` on `master`. |
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
