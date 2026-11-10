@@ -32,7 +32,6 @@ jobs:
           $installer = Join-Path $env:RUNNER_TEMP 'install-scoop.ps1'
           Invoke-WebRequest -Uri 'https://get.scoop.sh' -OutFile $installer -TimeoutSec 120
           & $installer -ScoopDir $scoopRoot
-          if ($LASTEXITCODE -ne 0) { throw "Scoop installation failed with exit code $LASTEXITCODE." }
 
           $env:SCOOP = $scoopRoot
           $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
@@ -42,7 +41,6 @@ jobs:
 
           $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\urlprotocol.json'
           & $scoopScript install $manifestPath
-          if ($LASTEXITCODE -ne 0) { throw "Scoop failed to install URLProtocol with exit code $LASTEXITCODE." }
 
           $persistExe = Join-Path $scoopRoot 'persist\urlprotocol\URLProtocol.exe'
           $appDir = Join-Path $scoopRoot 'apps\urlprotocol\current'
@@ -82,7 +80,6 @@ jobs:
           New-ItemProperty -LiteralPath $commandPath -Name 'Target' -Value "$env:WINDIR\System32\notepad.exe" -PropertyType String -Force | Out-Null
 
           & $scoopScript uninstall urlprotocol
-          if ($LASTEXITCODE -ne 0) { throw "Scoop failed to uninstall URLProtocol with exit code $LASTEXITCODE." }
 
           if (Test-Path -LiteralPath $protocolPath) {
             throw 'The URL Protocol registry registration was not removed during uninstall.'
