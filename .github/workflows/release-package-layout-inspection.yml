@@ -56,7 +56,7 @@ jobs:
               [Parameter(Mandatory)][string]$Name,
               [Parameter(Mandatory)][string]$Url,
               [Parameter(Mandatory)][string]$Sha256,
-              [Parameter(Mandatory)][string[]]$ExpectedPaths,
+              [string[]]$ExpectedPaths = @(),
               [string]$ExpectedRegex = ""
             )
             $path = Get-VerifiedDownload -Name $Name -Url $Url -Sha256 $Sha256
