@@ -696,7 +696,6 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [codex-plus-plus](../bucket/codex-plus-plus.json) | 2.6.0 | — | — | Enhanced Windows desktop client for Codex and other AI agents. | [Homepage](https://github.com/BigPizzaV3/CodexPlusPlus) |
 | [duckduckmove](../bucket/duckduckmove.json) | 0.1.3 | — | — | Windows 11 animated user-avatar utility with a built-in duck GIF, custom GIF support, backup, and reset. | [Homepage](https://github.com/wooi/DuckDuckMove) |
 | [eyeguard](../bucket/eyeguard.json) | 3.0.0 | — | — | Windows eye-care suite with screen color and brightness controls, reading aids, and break reminders. | [Homepage](https://github.com/hocinechero/EyeGuard) |
-| [FoliCon](../bucket/FoliCon.JSON) | 5.3.1 | — | — | Folder icon customizer for movies, TV shows, music, games, anime, and books. | [Homepage](https://github.com/DineshSolanki/FoliCon) |
 | [hob](../bucket/hob.json) | 0.2.6 | — | — | Local AI desktop assistant for working with documents, files, and everyday tasks using models that run on your computer. | [Homepage](https://www.hob.chat/) |
 | [monitorsnap](../bucket/monitorsnap.json) | 2.6.2 | — | — | Save and restore Windows display layouts, resolutions, refresh rates, and hotkey presets. | [Homepage](https://github.com/GTRows/MonitorSnap) |
 | [msstore-downloader](../bucket/msstore-downloader.json) | 1.0.2 | — | — | Windows desktop utility for retrieving and downloading Microsoft Store app packages. | [Homepage](https://github.com/inteliboy/MSStoreDownloader) |
