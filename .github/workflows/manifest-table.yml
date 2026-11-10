@@ -948,8 +948,6 @@ jobs:
               throw "Portability summary markers are missing or out of order in docs/manifest-portability.md."
           }
           $summaryLines = @(
-              "## Summary"
-              ""
               $summaryStartMarker
               "| Classification | Manifests | Meaning |"
               "| --- | ---: | --- |"
