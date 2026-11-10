@@ -112,6 +112,30 @@ jobs:
             $exit = $LASTEXITCODE
             $scan | ForEach-Object { $report.Add($_) }
             if ($exit -ne 0) { throw "Detect It Easy exited with code $exit." }
+
+            # Independently test whether 7-Zip can enumerate/extract this EXE.
+            $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+            $sevenZipLog = Join-Path $work '7zip.log'
+            $archiveListing = @(& $sevenZip l -slt $file 2>&1 | ForEach-Object { "$_" })
+            $sevenZipExit = $LASTEXITCODE
+            $archiveListing | Set-Content -LiteralPath $sevenZipLog -Encoding utf8
+            $report.Add("7-Zip listing exit code: $sevenZipExit")
+            $archiveListing | ForEach-Object { $report.Add($_) }
+            if ($sevenZipExit -eq 0) {
+              $destination = Join-Path $work 'exe-extracted'
+              New-Item -ItemType Directory -Path $destination -Force | Out-Null
+              $extractOutput = @(& $sevenZip x -y "-o$destination" $file 2>&1 | ForEach-Object { "$_" })
+              $extractExit = $LASTEXITCODE
+              $extractOutput | ForEach-Object { $report.Add($_) }
+              if ($extractExit -ne 0) { throw "7-Zip extraction failed with exit code $extractExit. See 7zip.log." }
+              $report.Add('7-Zip extracted files:')
+              Get-ChildItem -LiteralPath $destination -Recurse -File | ForEach-Object {
+                $relative = $_.FullName.Substring($destination.Length).TrimStart('\','/')
+                $report.Add("$relative - $($_.Length) bytes")
+              }
+            } else {
+              $report.Add('7-Zip did not recognize this EXE as an extractable archive.')
+            }
           }
           $reportPath = Join-Path $work 'inspection.txt'
           $report | Set-Content -LiteralPath $reportPath -Encoding utf8
