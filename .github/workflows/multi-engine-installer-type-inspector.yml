@@ -32,6 +32,7 @@ on:
       - master
     paths:
       - 'bucket/autooff.json'
+      - 'under review scoop bucket/foxdesktop-probe.json'
       - 'bucket/pake-desktop.json'
       - '.github/workflows/multi-engine-installer-type-inspector.yml'
 
@@ -167,6 +168,21 @@ jobs:
               $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
               $expectedHash = [string]$manifest.hash
               if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Manifest hash, when supplied, must be a 64-character SHA-256 digest.' }
+            } elseif ($changedPaths -contains 'under review scoop bucket/foxdesktop-probe.json') {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'under review scoop bucket/foxdesktop-probe.json'
+              $targetProduct = 'FoxDesktop'
+              if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+              $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+              $url = [string]$manifest.url
+              $uri = [System.Uri]::new($url)
+              if ($uri.Scheme -ne 'https' -or $uri.DnsSafeHost -ne 'foxdesktop-app.com' -or $uri.AbsolutePath -ne '/download') {
+                throw 'FoxDesktop test URL must be the supplied official HTTPS download endpoint.'
+              }
+              $name = 'FoxDesktop.exe'
+              $expectedHash = [string]$manifest.hash
+              if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) {
+                throw 'FoxDesktop expected hash, when supplied, must be a 64-character SHA-256 digest.'
+              }
             } else {
               throw 'Pull request does not modify a supported installer-inspection manifest.'
             }
