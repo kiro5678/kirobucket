@@ -10,5 +10,12 @@
             "Coodesker"
         ]
     ],
-    "hash": "34d194d67315a47b980c4815b47753bbad97676b941d542fc43c3fd194219b5e"
+    "hash": "34d194d67315a47b980c4815b47753bbad97676b941d542fc43c3fd194219b5e",
+    "checkver": {
+        "url": "https://discussion.coodesker.com/t/update",
+        "regex": "v(?<version>2\\.2\\.2\\.\\d+)"
+    },
+    "autoupdate": {
+        "url": "https://down.coodesker.com/coodesker-desktop/Coodesker-x64_$version.exe#/dl.7z"
+    }
 }
