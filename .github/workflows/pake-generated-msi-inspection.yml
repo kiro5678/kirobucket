@@ -1,4 +1,4 @@
-name: Pake Generated MSI Inspection
+name: Pake Scoop Install Validation
 
 on:
   workflow_dispatch:
@@ -6,114 +6,165 @@ on:
     types: [opened, synchronize, reopened]
     branches: [master]
     paths:
-      - 'bucket/pake-chatgpt.json'
-      - 'bucket/pake-deepseek.json'
-      - 'bucket/pake-excalidraw.json'
-      - 'bucket/pake-flomo.json'
-      - 'bucket/pake-gemini.json'
-      - 'bucket/pake-grok.json'
-      - 'bucket/pake-lizhi.json'
-      - 'bucket/pake-notion.json'
-      - 'bucket/pake-programmusic.json'
-      - 'bucket/pake-qwerty.json'
-      - 'bucket/pake-twitter.json'
-      - 'bucket/pake-wechat.json'
-      - 'bucket/pake-weread.json'
-      - 'bucket/pake-xiaohongshu.json'
-      - 'bucket/pake-youtubemusic.json'
-      - 'bucket/pake-youtube.json'
+      - 'bucket/pake-*.json'
+      - '.github/workflows/pake-generated-msi-inspection.yml'
 
 permissions:
   contents: read
 
 jobs:
-  inspect-msi:
+  test-all-pake:
+    name: Test all Pake MSI manifests with Scoop
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
-      - name: Checkout
+      - name: Checkout bucket
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Download, hash, and administratively extract every Pake MSI
+      - name: Checkout official Scoop
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+          persist-credentials: false
+
+      - name: Install every Pake MSI through Scoop and verify installed files
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $names = @('pake-chatgpt', 'pake-deepseek', 'pake-excalidraw', 'pake-flomo', 'pake-gemini', 'pake-grok', 'pake-lizhi', 'pake-notion', 'pake-programmusic', 'pake-qwerty', 'pake-twitter', 'pake-wechat', 'pake-weread', 'pake-xiaohongshu', 'pake-youtubemusic', 'pake-youtube')
-          $root = Join-Path $env:RUNNER_TEMP 'pake-msi-inspection'
-          New-Item -ItemType Directory -Path $root -Force | Out-Null
-          $report = [System.Collections.Generic.List[string]]::new()
 
-          foreach ($name in $names) {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE "bucket/$name.json"
-            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-            $installer = Join-Path $root "$name.msi"
-            $target = Join-Path $root $name
-            New-Item -ItemType Directory -Path $target -Force | Out-Null
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-root'
+          $env:SCOOP_CACHE = Join-Path $env:RUNNER_TEMP 'scoop-cache'
+          $scoopScript = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\bin\scoop.ps1'
+          $shimSource = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\supporting\shims'
+          $shimDestination = Join-Path $env:SCOOP 'apps\scoop\current\supporting\shims'
+          $reportRoot = Join-Path $env:RUNNER_TEMP 'pake-validation'
+          $reportPath = Join-Path $reportRoot 'pake-install-report.txt'
 
-            Invoke-WebRequest -Uri $manifest.url -OutFile $installer
-            $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($actual -ne $manifest.hash.ToLowerInvariant()) {
-              throw "SHA-256 mismatch for $name. Expected $($manifest.hash), got $actual"
-            }
+          foreach ($directory in @('shims', 'apps', 'buckets', 'persist')) {
+            New-Item -ItemType Directory -Path (Join-Path $env:SCOOP $directory) -Force | Out-Null
+          }
+          New-Item -ItemType Directory -Path $env:SCOOP_CACHE -Force | Out-Null
+          New-Item -ItemType Directory -Path $shimDestination -Force | Out-Null
+          New-Item -ItemType Directory -Path $reportRoot -Force | Out-Null
+          Copy-Item -Path (Join-Path $shimSource '*') -Destination $shimDestination -Recurse -Force
 
-            $arguments = @('/a', "`"$installer`"", '/qn', "TARGETDIR=`"$target`"")
-            $process = Start-Process -FilePath "$env:WINDIR\System32\msiexec.exe" -ArgumentList $arguments -Wait -PassThru
-            if ($process.ExitCode -notin @(0, 3010)) {
-              throw "Administrative MSI extraction failed for $name with exit code $($process.ExitCode)"
-            }
-
-            $executables = @(Get-ChildItem -LiteralPath $target -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue)
-            if ($executables.Count -eq 0) {
-              throw "No EXE files found after administrative extraction for $name"
-            }
-
-
-            $expectedLaunchPaths = [System.Collections.Generic.List[string]]::new()
-            foreach ($entry in @($manifest.bin)) {
-              if ($entry -is [System.Array]) {
-                if ($entry.Count -gt 0) { $expectedLaunchPaths.Add([string]$entry[0]) }
-              } elseif ($entry -is [string]) {
-                $expectedLaunchPaths.Add($entry)
-              }
-            }
-            foreach ($entry in @($manifest.shortcuts)) {
-              if ($entry -is [System.Array]) {
-                if ($entry.Count -gt 0) { $expectedLaunchPaths.Add([string]$entry[0]) }
-              } elseif ($entry -is [string]) {
-                $expectedLaunchPaths.Add($entry)
-              }
-            }
-            $expectedLaunchPaths = @($expectedLaunchPaths | Sort-Object -Unique)
-            if ($expectedLaunchPaths.Count -eq 0) {
-              throw "Manifest $name does not declare a bin or shortcut path to verify."
-            }
-            foreach ($relativePath in $expectedLaunchPaths) {
-              $expectedFile = Join-Path $target $relativePath
-              if (-not (Test-Path -LiteralPath $expectedFile -PathType Leaf)) {
-                throw "Declared launch path '$relativePath' was not present after extracting $name."
-              }
-            }
-
-            $report.Add("[$name] SHA256=$actual")
-            foreach ($relativePath in $expectedLaunchPaths) { $report.Add("  VERIFIED LAUNCH PATH: $relativePath") }
-            foreach ($exe in $executables) {
-              $relative = $exe.FullName.Substring($target.Length).TrimStart('\')
-              $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
-              $report.Add("  EXE: $relative | Product=$($info.ProductName) | Description=$($info.FileDescription)")
-            }
-            Write-Output "Extracted ${name}: $($executables.Count) EXE file(s)"
+          $manifestFiles = @(Get-ChildItem -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket') -Filter 'pake-*.json' -File | Sort-Object Name)
+          if ($manifestFiles.Count -eq 0) {
+            throw 'No bucket/pake-*.json manifests were found.'
           }
 
-          $reportPath = Join-Path $root 'inspection-report.txt'
+          $report = [System.Collections.Generic.List[string]]::new()
+          $failures = [System.Collections.Generic.List[string]]::new()
+          $msiCount = 0
+          $otherCount = 0
+
+          foreach ($manifestFile in $manifestFiles) {
+            $appName = [System.IO.Path]::GetFileNameWithoutExtension($manifestFile.Name)
+            Write-Host ''
+            Write-Host "============================================================"
+            Write-Host "Testing $appName"
+            Write-Host "============================================================"
+
+            try {
+              $manifest = Get-Content -LiteralPath $manifestFile.FullName -Raw | ConvertFrom-Json -ErrorAction Stop
+              $urls = @($manifest.url)
+              if ($urls.Count -eq 0 -or [string]::IsNullOrWhiteSpace([string]$urls[0])) {
+                throw "Manifest $appName has no download URL."
+              }
+
+              $mainUrl = [string]$urls[0]
+              $isMsi = $mainUrl.EndsWith('.msi#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase) -or $mainUrl.EndsWith('.msi', [System.StringComparison]::OrdinalIgnoreCase)
+
+              if (-not $isMsi) {
+                $otherCount++
+                if ($mainUrl.EndsWith('#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase)) {
+                  throw "Non-MSI package $appName was incorrectly marked with #/dl.msi."
+                }
+                $report.Add("[$appName] SKIP | Non-MSI package; preserved original URL and extraction type: $mainUrl")
+                Write-Host "SKIP: $appName is not an MSI package; no dl.msi conversion attempted."
+                continue
+              }
+
+              $msiCount++
+              if (-not $mainUrl.EndsWith('#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase)) {
+                throw "MSI URL for $appName does not use the required #/dl.msi suffix: $mainUrl"
+              }
+              if ($manifest.autoupdate -and $manifest.autoupdate.url -is [string] -and -not $manifest.autoupdate.url.EndsWith('#/dl.msi', [System.StringComparison]::OrdinalIgnoreCase)) {
+                throw "Autoupdate MSI URL for $appName does not use #/dl.msi."
+              }
+
+              & $scoopScript install --no-update-scoop $manifestFile.FullName
+
+              $appRoot = Join-Path $env:SCOOP "apps\$appName\current"
+              if (-not (Test-Path -LiteralPath $appRoot -PathType Container)) {
+                throw "Scoop did not create the current app directory for $appName."
+              }
+
+              $expectedPaths = [System.Collections.Generic.List[string]]::new()
+              foreach ($entry in @($manifest.bin)) {
+                if ($entry -is [System.Array]) {
+                  if ($entry.Count -gt 0) { $expectedPaths.Add([string]$entry[0]) }
+                } elseif ($entry -is [string]) {
+                  $expectedPaths.Add([string]$entry)
+                }
+              }
+              foreach ($entry in @($manifest.shortcuts)) {
+                if ($entry -is [System.Array]) {
+                  if ($entry.Count -gt 0) { $expectedPaths.Add([string]$entry[0]) }
+                } elseif ($entry -is [string]) {
+                  $expectedPaths.Add([string]$entry)
+                }
+              }
+              $expectedPaths = @($expectedPaths | Sort-Object -Unique)
+              if ($expectedPaths.Count -eq 0) {
+                throw "Manifest $appName has no bin or shortcut path to verify."
+              }
+
+              foreach ($relativePath in $expectedPaths) {
+                $installedFile = Join-Path $appRoot $relativePath
+                if (-not (Test-Path -LiteralPath $installedFile -PathType Leaf)) {
+                  throw "Scoop installed $appName but the declared launch file is missing: $relativePath"
+                }
+                $report.Add("  VERIFIED: $relativePath")
+              }
+
+              $report.Add("[$appName] PASS | Version=$($manifest.version) | Type=MSI with dl.msi")
+              Write-Host "PASS: $appName"
+            } catch {
+              $message = "$appName : $($_.Exception.Message)"
+              $failures.Add($message)
+              $report.Add("[$appName] FAIL | $($_.Exception.Message)")
+              Write-Host "FAILED: $message" -ForegroundColor Red
+              $logs = @(Get-ChildItem -LiteralPath $env:SCOOP -Filter '*.log' -File -Recurse -ErrorAction SilentlyContinue)
+              foreach ($log in $logs) {
+                Write-Host "--- $($log.FullName) ---"
+                Get-Content -LiteralPath $log.FullName -Tail 80 | ForEach-Object { Write-Host $_ }
+              }
+            }
+          }
+
+          $report.Insert(0, "Pake manifests discovered: $($manifestFiles.Count); MSI manifests installed: $msiCount; non-MSI manifests skipped: $otherCount")
           $report | Set-Content -LiteralPath $reportPath -Encoding utf8
           $report | ForEach-Object { Write-Output $_ }
 
-      - name: Upload inspection report
+          Write-Host ''
+          Write-Host "Total manifests: $($manifestFiles.Count)"
+          Write-Host "MSI manifests installed: $msiCount"
+          Write-Host "Non-MSI manifests skipped: $otherCount"
+          Write-Host "Failures: $($failures.Count)"
+          if ($failures.Count -gt 0) {
+            $failures | ForEach-Object { Write-Host $_ -ForegroundColor Red }
+            exit 1
+          }
+
+      - name: Upload Pake validation report
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: pake-generated-msi-inspection
-          path: ${{ runner.temp }}/pake-msi-inspection/inspection-report.txt
-          if-no-files-found: error
+          name: pake-install-validation
+          path: ${{ runner.temp }}/pake-validation/pake-install-report.txt
+          if-no-files-found: ignore
