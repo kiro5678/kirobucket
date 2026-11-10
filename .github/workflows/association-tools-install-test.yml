@@ -59,7 +59,7 @@ jobs:
           npm install --no-save --no-audit --no-fund ajv@8 ajv-formats
           if ($LASTEXITCODE -ne 0) { throw 'Could not install the JSON Schema validator.' }
 
-          $scriptPath = Join-Path $env:RUNNER_TEMP 'validate-scoop-manifests.cjs'
+          $scriptPath = Join-Path $env:GITHUB_WORKSPACE 'validate-scoop-manifests.cjs'
           @'
           const fs = require('node:fs');
           const path = require('node:path');
