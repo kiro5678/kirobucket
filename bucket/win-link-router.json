@@ -6,9 +6,7 @@
     "url": "https://github.com/karmaniverous/win-link-router/releases/download/v0.2.2/win-link-router-0.2.2.Setup.exe",
     "hash": "36d11a4be0d6eab82bb9c4bd6c36449ccc996b260a38cd0a74781c466e69f16a",
     "installer": {
-        "args": [
-            "--silent"
-        ]
+        "args": "--silent"
     },
     "uninstaller": {
         "script": [
