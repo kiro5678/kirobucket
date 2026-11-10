@@ -1,0 +1,97 @@
+name: URLProtocol Stable Path Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/urlprotocol.json'
+      - '.github/workflows/urlprotocol-stable-path-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Install, verify stable path, and uninstall
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop and test URLProtocol
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $scoopRoot = Join-Path $env:RUNNER_TEMP 'scoop-urlprotocol-test'
+          $installer = Join-Path $env:RUNNER_TEMP 'install-scoop.ps1'
+          Invoke-WebRequest -Uri 'https://get.scoop.sh' -OutFile $installer -TimeoutSec 120
+          & $installer -ScoopDir $scoopRoot
+          if ($LASTEXITCODE -ne 0) { throw "Scoop installation failed with exit code $LASTEXITCODE." }
+
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          if (-not (Test-Path -LiteralPath $scoopScript -PathType Leaf)) {
+            throw "Scoop command script was not found: $scoopScript"
+          }
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\urlprotocol.json'
+          & $scoopScript install $manifestPath
+          if ($LASTEXITCODE -ne 0) { throw "Scoop failed to install URLProtocol with exit code $LASTEXITCODE." }
+
+          $persistExe = Join-Path $scoopRoot 'persist\urlprotocol\URLProtocol.exe'
+          $appDir = Join-Path $scoopRoot 'apps\urlprotocol\current'
+          $launcher = Join-Path $appDir 'URLProtocol.cmd'
+          $shortcutPath = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Scoop Apps\URLProtocol.lnk'
+
+          if (-not (Test-Path -LiteralPath $persistExe -PathType Leaf)) {
+            throw "Persisted executable is missing: $persistExe"
+          }
+          if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+            throw "Stable-path launcher is missing: $launcher"
+          }
+          $launcherText = Get-Content -LiteralPath $launcher -Raw
+          if (-not $launcherText.Contains($persistExe)) {
+            throw 'The Scoop command launcher does not point to the persistent executable path.'
+          }
+
+          if (-not (Test-Path -LiteralPath $shortcutPath -PathType Leaf)) {
+            throw "Start Menu shortcut is missing: $shortcutPath"
+          }
+          $shell = New-Object -ComObject WScript.Shell
+          $shortcut = $shell.CreateShortcut($shortcutPath)
+          if ($shortcut.TargetPath -ine $persistExe) {
+            throw "The Start Menu shortcut points to '$($shortcut.TargetPath)' instead of '$persistExe'."
+          }
+
+          Write-Host "PASS: persistent executable: $persistExe"
+          Write-Host "PASS: command launcher targets the persistent executable."
+          Write-Host "PASS: Start Menu shortcut targets the persistent executable."
+
+          $testProtocol = 'kirobucketurlprotocoltest'
+          $protocolPath = "HKCU:\Software\Classes\$testProtocol"
+          $commandPath = Join-Path $protocolPath 'shell\open\command'
+          New-Item -Path $commandPath -Force | Out-Null
+          New-ItemProperty -LiteralPath $protocolPath -Name 'URL Protocol' -Value '' -PropertyType String -Force | Out-Null
+          Set-Item -LiteralPath $commandPath -Value ('"{0}" "%1"' -f $persistExe)
+          New-ItemProperty -LiteralPath $commandPath -Name 'Target' -Value "$env:WINDIR\System32\notepad.exe" -PropertyType String -Force | Out-Null
+
+          & $scoopScript uninstall urlprotocol
+          if ($LASTEXITCODE -ne 0) { throw "Scoop failed to uninstall URLProtocol with exit code $LASTEXITCODE." }
+
+          if (Test-Path -LiteralPath $protocolPath) {
+            throw 'The URL Protocol registry registration was not removed during uninstall.'
+          }
+          if (Test-Path -LiteralPath $shortcutPath) {
+            throw 'The Start Menu shortcut was not removed during uninstall.'
+          }
+          if (Test-Path -LiteralPath $persistExe) {
+            throw 'The persisted executable was not removed during uninstall.'
+          }
+
+          Write-Host 'PASS: uninstall removed app-owned protocol registrations, shortcut, and persisted executable.'
