@@ -4,6 +4,7 @@
 | --- | ---: | --- |
 | Android & Device Tools | 8 | [View](#android-device-tools) |
 | Browsers & Communication | 12 | [View](#browsers-communication) |
+| Browser Launchers & Associations | 10 | [View](#browser-launchers-associations) |
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 4 | [View](#cross-device-integration) |
@@ -27,7 +28,7 @@
 | Productivity & Launchers | 37 | [View](#productivity-launchers) |
 | Security | 40 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
-| Storage & Disk Tools | 30 | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
 | Sync & Backup | 11 | [View](#sync-backup) |
 | System Monitoring & Hardware | 74 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
@@ -38,7 +39,7 @@
 | Windows Customization | 95 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1026**
+**Total unique manifests: 1037**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -91,6 +92,21 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [pake-xiaohongshu](../bucket/pake-xiaohongshu.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for XiaoHongShu. | [Homepage](https://www.xiaohongshu.com/explore) |
 | [zapfast](../bucket/zapfast.json) | 0.20.1 | 64bit: 29.4 MiB / arm64: 27.9 MiB | 2026-10-24 | Unofficial native WhatsApp desktop client built with Rust, with linked devices, chat history, media, calls, and notifications. | [Homepage](https://zapfast.rocks/) |
 | [zapzap](../bucket/zapzap.json) | 7.5.1 | 64bit: 195.5 MiB / arm64: 166.1 MiB | 2026-10-15 | Unofficial WhatsApp Web desktop client built with Python and PyQt6. | [Homepage](https://github.com/rafatosta/zapzap) |
+
+## Browser Launchers & Associations
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [browser-picker](../bucket/browser-picker.json) | 3.2.5 | — | 2026-10-24 | Portable Windows browser picker and URL router with rules for domains, paths, and manually added applications. | [Homepage](https://github.com/mortenn/BrowserPicker) |
+| [firefox-portable-default-browser](../bucket/firefox-portable-default-browser.json) | 1.0.0 | — | — | Registry template for registering Firefox Portable as a current-user browser candidate in Windows Default Apps. | [Homepage](https://github.com/clemthi/firefox-portable-default-browser) |
+| [nomad-launcher-chromium](../bucket/nomad-launcher-chromium.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Chromium; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
+| [nomad-launcher-floorp](../bucket/nomad-launcher-floorp.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Floorp; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
+| [nomad-launcher-helium](../bucket/nomad-launcher-helium.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Helium; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
+| [nomad-launcher-librewolf](../bucket/nomad-launcher-librewolf.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for LibreWolf; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
+| [nomad-launcher-mullvad](../bucket/nomad-launcher-mullvad.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Mullvad Browser; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
+| [nomad-launcher-waterfox](../bucket/nomad-launcher-waterfox.json) | 1.0.9 | — | 2026-10-17 | Portable Nomad launcher for Waterfox; downloads, verifies, configures, and starts the browser inside its portable application folder. | [Homepage](https://github.com/cyph3rpuNk-dev/Nomad-Launcher) |
+| [pineapple-assoc-manager](../bucket/pineapple-assoc-manager.json) | 1.1.0 | — | — | Portable Windows file-association manager for portable applications, configured with PACFG files. | [Homepage](https://github.com/BLumia/pineapple-assoc-manager) |
+| [ps-sfta](../bucket/ps-sfta.json) | 1.2.0 | — | — | PowerShell functions to register applications and manage Windows file-type and protocol associations. | [Homepage](https://github.com/DanysysTeam/PS-SFTA) |
 
 ## Clipboard Tools
 
@@ -943,6 +959,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [noncompressible-files](../bucket/noncompressible-files.json) | 5.11 | 64bit: 121.1 KiB | 2026-03-19 | Create files that are difficult to compress. | [Homepage](https://www.softwareok.com/?Download=NonCompressibleFiles) |
 | [openclosedriveeject](../bucket/openclosedriveeject.json) | 3.55 | 64bit: 288.0 KiB / 32bit: 232.3 KiB | 2026-05-02 | Safely eject drives and open or close optical drives. | [Homepage](https://www.softwareok.com/?Download=OpenCloseDriveEject) |
 | [openzfs-np](../bucket/openzfs-np.json) | 2.4.1rc17b | 54.7 MiB | 2026-10-18 | The open source port of OpenZFS on Windows | [Homepage](https://github.com/openzfsonwindows/openzfs) |
+| [purge](../bucket/purge.json) | 1.0.11 | 64bit: 86.1 MiB / arm64: 82.6 MiB / 32bit: 63.5 MiB | 2026-11-10 | WinUI 3 disk analyzer and cache cleaner for Windows 10 and 11. | [Homepage](https://github.com/stvekoulo/purge) |
 | [simple-vhd-manager](../bucket/simple-vhd-manager.json) | 1.5 | 1.6 MiB | 2025-09-13 | This software is designed to simplify operations such as creating VHD and VHDX files, adding them to boot menu and Automatically mounting at system startup. Partial ISO support is also available. | [Homepage](https://www.sordum.org/simple-vhd-manager) |
 | [sordum-drive-letter-changer](../bucket/sordum-drive-letter-changer.json) | 1.4 | 916.4 KiB | 2025-06-01 | A simple app that allows you to change the letter of your hard drives. | [Homepage](https://www.sordum.org/drive-letter-changer) |
 | [sordum-show-disk-partition-style](../bucket/sordum-show-disk-partition-style.json) | 1.1 | 803.2 KiB | 2020-02-29 | A simple app for showing disk partion style. | [Homepage](https://www.sordum.org/show-disk-partition-style) |
