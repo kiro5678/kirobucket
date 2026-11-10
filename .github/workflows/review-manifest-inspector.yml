@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: review-manifest-inspector-${{ github.event.pull_request.number }}
+  group: review-manifest-inspector-\${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -26,28 +26,33 @@ jobs:
       - name: Checkout pull request
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: \${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - name: Inspect staged manifests and package files
         shell: pwsh
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BASE_SHA: \${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: \${{ github.event.pull_request.head.sha }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
+
           $root = Join-Path $env:RUNNER_TEMP 'review-manifest-inspector'
           New-Item -ItemType Directory -Path $root -Force | Out-Null
+
           $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
           if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
             $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
             if ($command) { $sevenZip = $command.Source }
           }
-          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { throw '7-Zip was not found.' }
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            throw '7-Zip was not found on the Windows runner.'
+          }
 
           $changed = @(git diff --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'under review scoop bucket' |
-            Where-Object { $_ -match '^under review scoop bucket/.+\.json$' } | Sort-Object -Unique)
+            Where-Object { $_ -match '^under review scoop bucket/.+\.json$' } |
+            Sort-Object -Unique)
           if ($changed.Count -eq 0) {
             $changed = @(Get-ChildItem -LiteralPath 'under review scoop bucket' -Filter '*.json' -File |
               ForEach-Object { $_.FullName.Substring((Get-Location).Path.Length + 1).Replace('\','/') })
@@ -60,12 +65,15 @@ jobs:
           $report.Add('|---|---|---|---|---|')
           $failures = 0
           $sevenZipLog = Join-Path $root '7zip.log'
-          "7-Zip diagnostics for this pull request" | Set-Content -LiteralPath $sevenZipLog -Encoding utf8
+          '7-Zip diagnostics for this pull request' | Set-Content -LiteralPath $sevenZipLog -Encoding utf8
 
           foreach ($manifestPath in $changed) {
             $manifest = Get-Content -LiteralPath $manifestPath -Raw -Encoding utf8 | ConvertFrom-Json -ErrorAction Stop
             $source = $manifest
-            if ($manifest.architecture -and $manifest.architecture.'64bit') { $source = $manifest.architecture.'64bit' }
+            if ($manifest.architecture -and $manifest.architecture.'64bit') {
+              $source = $manifest.architecture.'64bit'
+            }
+
             $url = [string]$source.url
             if ([string]::IsNullOrWhiteSpace($url)) {
               $report.Add("| $manifestPath | MISSING URL | — | — | — |")
@@ -75,7 +83,10 @@ jobs:
 
             $downloadUrl = ($url -split '#', 2)[0]
             $fileName = [IO.Path]::GetFileName(([Uri]$downloadUrl).AbsolutePath)
-            if ([string]::IsNullOrWhiteSpace($fileName)) { $fileName = [IO.Path]::GetFileNameWithoutExtension($manifestPath) + '.download' }
+            if ([string]::IsNullOrWhiteSpace($fileName)) {
+              $fileName = [IO.Path]::GetFileNameWithoutExtension($manifestPath) + '.download'
+            }
+
             $appName = [IO.Path]::GetFileNameWithoutExtension($manifestPath)
             $appDir = Join-Path $root $appName
             New-Item -ItemType Directory -Path $appDir -Force | Out-Null
@@ -84,7 +95,8 @@ jobs:
             try {
               Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 900 -ErrorAction Stop
             } catch {
-              $report.Add("| $appName | FAILED | — | — | $($_.Exception.Message -replace '\|','/') |")
+              $safeError = $_.Exception.Message -replace '\|','/'
+              $report.Add("| $appName | FAILED | — | — | $safeError |")
               $failures++
               continue
             }
@@ -96,127 +108,77 @@ jobs:
               Write-Warning "$appName has no expected SHA-256."
             } elseif ($expectedHash -match '^[0-9a-fA-F]{64}$') {
               $actualHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
-              if ($actualHash -eq $expectedHash.ToLowerInvariant()) { $hashStatus = 'PASS' }
-              else { $hashStatus = 'MISMATCH'; $failures++; Write-Warning "$appName SHA-256 mismatch: expected $expectedHash, got $actualHash" }
+              if ($actualHash -eq $expectedHash.ToLowerInvariant()) {
+                $hashStatus = 'PASS'
+              } else {
+                $hashStatus = 'MISMATCH'
+                $failures++
+                Write-Warning "$appName SHA-256 mismatch: expected $expectedHash, got $actualHash"
+              }
             } else {
               $hashStatus = 'UNSUPPORTED FORMAT'
               $failures++
             }
 
             $archiveStatus = 'NOT A 7-Zip ARCHIVE'
-            $payloadStatus = 'Not extracted'
+            $payloadStatus = 'Installer family / payload requires separate inspection'
             $extension = [IO.Path]::GetExtension($downloadPath)
-            $isArchive = $extension -match '(?i)^\.(zip|7z|rar|tar|gz|tgz)
-              $extractDir = Join-Path $appDir 'extracted'
-              New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
-              $extractOutput = & $sevenZip x -y "-o$extractDir" $downloadPath 2>&1
-              $extractExit = $LASTEXITCODE
-              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z x =====")
-              $extractOutput | Add-Content -LiteralPath $sevenZipLog
-              if ($extractExit -eq 0) {
-                $archiveStatus = 'LIST + EXTRACT PASS'
-                $exeFiles = @(Get-ChildItem -LiteralPath $extractDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
-                  ForEach-Object { $_.FullName.Substring($extractDir.Length).TrimStart('\','/') })
-                if ($exeFiles.Count -gt 0) { $payloadStatus = $exeFiles -join ', ' }
-                else { $payloadStatus = 'No EXE found in extracted payload' }
-
-                if ($manifest.bin) {
-                  $binPath = [string]$manifest.bin
-                  if ($binPath -match '^\[') { $binPath = '' }
-                  if ($binPath -and (Test-Path -LiteralPath (Join-Path $extractDir $binPath))) {
-                    Write-Host "$appName declared bin path exists: $binPath"
-                  } elseif ($binPath) {
-                    Write-Warning "$appName declared bin path not found at raw extraction root: $binPath"
-                  }
-                }
-              } else {
-                $archiveStatus = "EXTRACT FAILED (exit $extractExit)"
-                $payloadStatus = 'See 7zip.log'
-                if ($isArchive) { $failures++ }
-              }
-            } elseif ($isArchive) {
-              $archiveStatus = "ARCHIVE LIST FAILED (exit $listExit)"
-              $failures++
-            } elseif ($fileName -ieq [string]$manifest.bin) {
-              $archiveStatus = 'STANDALONE EXECUTABLE'
-              $payloadStatus = 'Downloaded filename matches manifest bin'
-            } else {
-              $payloadStatus = 'Installer family / payload requires separate inspection'
-            }
-
-            if ($payloadStatus.Length -gt 240) { $payloadStatus = $payloadStatus.Substring(0,237) + '...' }
-            $report.Add("| $appName | OK | $hashStatus | $archiveStatus | $($payloadStatus -replace '\|','/') |")
-          }
-
-          $report.Add('')
-          $report.Add('7-Zip transcript is uploaded as the review-manifest-7zip-logs artifact.')
-          $report | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          Write-Host "Inspection completed. Blocking errors: $failures"
-          if ($failures -gt 0) { exit 1 }
-
-      - name: Upload 7-Zip diagnostics
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: review-manifest-7zip-logs
-          path: ${{ runner.temp }}/review-manifest-inspector/7zip.log
-          if-no-files-found: warn
-
+            $isArchive = $extension -match '(?i)^\.(zip|7z|rar|tar|gz|tgz)$'
             $isDirectExecutable = ($extension -ieq '.exe') -and ($fileName -ieq [string]$manifest.bin)
 
             if ($isDirectExecutable) {
               $archiveStatus = 'STANDALONE EXECUTABLE'
               $payloadStatus = 'Downloaded filename matches manifest bin'
-              $listExit = -1
             } else {
               $listOutput = & $sevenZip l -slt $downloadPath 2>&1
               $listExit = $LASTEXITCODE
               Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z l =====")
               $listOutput | Add-Content -LiteralPath $sevenZipLog
-            }
 
-            if ($isDirectExecutable) {
-              # The binary itself is the package; do not pass it to 7-Zip.
-            } elseif ($listExit -eq 0) {
-              $extractDir = Join-Path $appDir 'extracted'
-              New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
-              $extractOutput = & $sevenZip x -y "-o$extractDir" $downloadPath 2>&1
-              $extractExit = $LASTEXITCODE
-              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z x =====")
-              $extractOutput | Add-Content -LiteralPath $sevenZipLog
-              if ($extractExit -eq 0) {
-                $archiveStatus = 'LIST + EXTRACT PASS'
-                $exeFiles = @(Get-ChildItem -LiteralPath $extractDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
-                  ForEach-Object { $_.FullName.Substring($extractDir.Length).TrimStart('\','/') })
-                if ($exeFiles.Count -gt 0) { $payloadStatus = $exeFiles -join ', ' }
-                else { $payloadStatus = 'No EXE found in extracted payload' }
+              if ($listExit -eq 0) {
+                $extractDir = Join-Path $appDir 'extracted'
+                New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+                $extractOutput = & $sevenZip x -y "-o$extractDir" $downloadPath 2>&1
+                $extractExit = $LASTEXITCODE
+                Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z x =====")
+                $extractOutput | Add-Content -LiteralPath $sevenZipLog
 
-                if ($manifest.bin) {
-                  $binPath = [string]$manifest.bin
-                  if ($binPath -match '^\[') { $binPath = '' }
-                  if ($binPath -and (Test-Path -LiteralPath (Join-Path $extractDir $binPath))) {
-                    Write-Host "$appName declared bin path exists: $binPath"
-                  } elseif ($binPath) {
-                    Write-Warning "$appName declared bin path not found at raw extraction root: $binPath"
+                if ($extractExit -eq 0) {
+                  $archiveStatus = 'LIST + EXTRACT PASS'
+                  $exeFiles = @(Get-ChildItem -LiteralPath $extractDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
+                    ForEach-Object { $_.FullName.Substring($extractDir.Length).TrimStart('\','/') })
+
+                  if ($exeFiles.Count -gt 0) {
+                    $payloadStatus = $exeFiles -join ', '
+                  } else {
+                    $payloadStatus = 'No EXE found in extracted payload'
                   }
+
+                  if ($manifest.bin -is [string] -and -not [string]::IsNullOrWhiteSpace($manifest.bin)) {
+                    $expectedBin = ([string]$manifest.bin).Replace('\','/')
+                    if ($exeFiles -contains $expectedBin) {
+                      Write-Host "$appName declared bin path exists in extracted payload: $expectedBin"
+                    } else {
+                      Write-Warning "$appName declared bin path not found in extracted payload: $expectedBin"
+                    }
+                  }
+                } else {
+                  $archiveStatus = "EXTRACT FAILED (exit $extractExit)"
+                  $payloadStatus = 'See 7zip.log'
+                  if ($isArchive) { $failures++ }
                 }
-              } else {
-                $archiveStatus = "EXTRACT FAILED (exit $extractExit)"
+              } elseif ($isArchive) {
+                $archiveStatus = "ARCHIVE LIST FAILED (exit $listExit)"
                 $payloadStatus = 'See 7zip.log'
-                if ($isArchive) { $failures++ }
+                $failures++
               }
-            } elseif ($isArchive) {
-              $archiveStatus = "ARCHIVE LIST FAILED (exit $listExit)"
-              $failures++
-            } elseif ($fileName -ieq [string]$manifest.bin) {
-              $archiveStatus = 'STANDALONE EXECUTABLE'
-              $payloadStatus = 'Downloaded filename matches manifest bin'
-            } else {
-              $payloadStatus = 'Installer family / payload requires separate inspection'
             }
 
-            if ($payloadStatus.Length -gt 240) { $payloadStatus = $payloadStatus.Substring(0,237) + '...' }
-            $report.Add("| $appName | OK | $hashStatus | $archiveStatus | $($payloadStatus -replace '\|','/') |")
+            if ($payloadStatus.Length -gt 240) {
+              $payloadStatus = $payloadStatus.Substring(0,237) + '...'
+            }
+            $safePayload = $payloadStatus -replace '\|','/'
+            $report.Add("| $appName | OK | $hashStatus | $archiveStatus | $safePayload |")
           }
 
           $report.Add('')
@@ -230,5 +192,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: review-manifest-7zip-logs
-          path: ${{ runner.temp }}/review-manifest-inspector/7zip.log
+          path: \${{ runner.temp }}/review-manifest-inspector/7zip.log
           if-no-files-found: warn
