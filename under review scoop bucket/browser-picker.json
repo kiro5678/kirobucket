@@ -1,0 +1,9 @@
+{
+    "version": "3.2.5",
+    "description": "Portable browser picker and URL router with per-domain rules and support for manually added executables.",
+    "homepage": "https://github.com/mortenn/BrowserPicker",
+    "license": "MIT",
+    "url": "https://github.com/mortenn/BrowserPicker/releases/download/v3.2.5/Portable.zip",
+    "hash": "7cdfe1d820fd3dc6c962fe6c79843cbaf182b0c67542b594a5936a0a471d95a9",
+    "notes": "Review only. The official portable ZIP and digest are known, but its archive layout has not been inspected in this workflow. Verify the exact BrowserPicker.exe path before adding bin and shortcuts or promoting this manifest to bucket."
+}
