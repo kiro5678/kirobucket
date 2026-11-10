@@ -26,14 +26,14 @@ jobs:
       - name: Checkout pull request
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Inspect staged manifests and package files
         shell: pwsh
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
@@ -103,16 +103,81 @@ jobs:
               $failures++
             }
 
-            $listOutput = & $sevenZip l -slt $downloadPath 2>&1
-            $listExit = $LASTEXITCODE
-            Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z l =====")
-            $listOutput | Add-Content -LiteralPath $sevenZipLog
             $archiveStatus = 'NOT A 7-Zip ARCHIVE'
             $payloadStatus = 'Not extracted'
             $extension = [IO.Path]::GetExtension($downloadPath)
-            $isArchive = $extension -match '(?i)^\.(zip|7z|rar|tar|gz|tgz)$'
+            $isArchive = $extension -match '(?i)^\.(zip|7z|rar|tar|gz|tgz)
+              $extractDir = Join-Path $appDir 'extracted'
+              New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+              $extractOutput = & $sevenZip x -y "-o$extractDir" $downloadPath 2>&1
+              $extractExit = $LASTEXITCODE
+              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z x =====")
+              $extractOutput | Add-Content -LiteralPath $sevenZipLog
+              if ($extractExit -eq 0) {
+                $archiveStatus = 'LIST + EXTRACT PASS'
+                $exeFiles = @(Get-ChildItem -LiteralPath $extractDir -Filter '*.exe' -File -Recurse -ErrorAction SilentlyContinue |
+                  ForEach-Object { $_.FullName.Substring($extractDir.Length).TrimStart('\','/') })
+                if ($exeFiles.Count -gt 0) { $payloadStatus = $exeFiles -join ', ' }
+                else { $payloadStatus = 'No EXE found in extracted payload' }
 
-            if ($listExit -eq 0) {
+                if ($manifest.bin) {
+                  $binPath = [string]$manifest.bin
+                  if ($binPath -match '^\[') { $binPath = '' }
+                  if ($binPath -and (Test-Path -LiteralPath (Join-Path $extractDir $binPath))) {
+                    Write-Host "$appName declared bin path exists: $binPath"
+                  } elseif ($binPath) {
+                    Write-Warning "$appName declared bin path not found at raw extraction root: $binPath"
+                  }
+                }
+              } else {
+                $archiveStatus = "EXTRACT FAILED (exit $extractExit)"
+                $payloadStatus = 'See 7zip.log'
+                if ($isArchive) { $failures++ }
+              }
+            } elseif ($isArchive) {
+              $archiveStatus = "ARCHIVE LIST FAILED (exit $listExit)"
+              $failures++
+            } elseif ($fileName -ieq [string]$manifest.bin) {
+              $archiveStatus = 'STANDALONE EXECUTABLE'
+              $payloadStatus = 'Downloaded filename matches manifest bin'
+            } else {
+              $payloadStatus = 'Installer family / payload requires separate inspection'
+            }
+
+            if ($payloadStatus.Length -gt 240) { $payloadStatus = $payloadStatus.Substring(0,237) + '...' }
+            $report.Add("| $appName | OK | $hashStatus | $archiveStatus | $($payloadStatus -replace '\|','/') |")
+          }
+
+          $report.Add('')
+          $report.Add('7-Zip transcript is uploaded as the review-manifest-7zip-logs artifact.')
+          $report | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          Write-Host "Inspection completed. Blocking errors: $failures"
+          if ($failures -gt 0) { exit 1 }
+
+      - name: Upload 7-Zip diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-manifest-7zip-logs
+          path: ${{ runner.temp }}/review-manifest-inspector/7zip.log
+          if-no-files-found: warn
+
+            $isDirectExecutable = ($extension -ieq '.exe') -and ($fileName -ieq [string]$manifest.bin)
+
+            if ($isDirectExecutable) {
+              $archiveStatus = 'STANDALONE EXECUTABLE'
+              $payloadStatus = 'Downloaded filename matches manifest bin'
+              $listExit = -1
+            } else {
+              $listOutput = & $sevenZip l -slt $downloadPath 2>&1
+              $listExit = $LASTEXITCODE
+              Add-Content -LiteralPath $sevenZipLog -Value ([Environment]::NewLine + "===== $appName : 7z l =====")
+              $listOutput | Add-Content -LiteralPath $sevenZipLog
+            }
+
+            if ($isDirectExecutable) {
+              # The binary itself is the package; do not pass it to 7-Zip.
+            } elseif ($listExit -eq 0) {
               $extractDir = Join-Path $appDir 'extracted'
               New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
               $extractOutput = & $sevenZip x -y "-o$extractDir" $downloadPath 2>&1
