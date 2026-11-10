@@ -1,0 +1,23 @@
+{
+    "version": "1.11.0",
+    "description": "Imports games from other launchers into the Steam library.",
+    "homepage": "https://github.com/PhilipK/BoilR",
+    "license": "GPL-3.0",
+    "url": "https://github.com/PhilipK/BoilR/releases/download/v.1.11.0/windows_BoilR.exe",
+    "hash": "b8a2e79020385ea0f301bebd5353a251e20f7b1bda792ed46a09ad82aebd8bb7",
+    "bin": "windows_BoilR.exe",
+    "shortcuts": [
+        [
+            "windows_BoilR.exe",
+            "BoilR"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/PhilipK/BoilR/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v\\.(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/PhilipK/BoilR/releases/download/v.$version/windows_BoilR.exe"
+    }
+}

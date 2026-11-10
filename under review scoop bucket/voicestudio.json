@@ -1,0 +1,33 @@
+{
+    "version": "0.5.7",
+    "description": "Open-source voice cloning, voice design, video dubbing, dictation, transcription, and audiobook creation.",
+    "homepage": "https://voicestudio.sh",
+    "license": {
+        "identifier": "AGPL-3.0-only",
+        "url": "https://github.com/debpalash/VoiceStudio/blob/main/LICENSE-NOTICE.md"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/debpalash/VoiceStudio/releases/download/v0.5.7/VoiceStudio-0.5.7-win-x64.exe",
+            "hash": "76c6385d404ae9f11b9e47d42996432ea4cd6c065afb06718c4842b39020cd80"
+        }
+    },
+    "notes": [
+        "Review draft only: this is an Electron/NSIS setup executable, not a confirmed portable archive.",
+        "The previous bucket manifest used #/dl.7z and a custom $PLUGINSDIR extraction step. The marker is removed until 7-Zip proves the inner archive and executable paths."
+    ],
+    "checkver": {
+        "github": "https://github.com/debpalash/VoiceStudio"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/debpalash/VoiceStudio/releases/download/v$version/VoiceStudio-$version-win-x64.exe"
+            }
+        },
+        "hash": {
+            "url": "$baseurl/SHA256SUMS.txt",
+            "regex": "$sha256\\s+\\*?$basename"
+        }
+    }
+}
