@@ -164,9 +164,7 @@ The installer type describes the package or setup technology used by the manifes
 
 ## Review before classifying
 
-This is the single review register. It contains 103 active manifests in `bucket/` with outstanding technical checks: the 98 legacy review manifests migrated into `bucket/`, `tinywall-shirazadam.json`, and the four notch manifests listed in this table. Some assets and SHA-256 digests are verified, but that alone does not establish successful extraction, installation, launch, update, or uninstall behavior. The register also records 30 project candidates that do not currently have a usable independent Scoop manifest: 10 notch projects, six archive-related projects or GUI distributions, four archive-mounting candidates, and ten Windows utilities or components reviewed on 2026-11-10. These are project-review entries, not active bucket manifests, and are not included in the count of 103.
 
-All existing manifest files remain in `bucket/`. Record outstanding review status and supporting evidence in this section; do not create a separate manifest-staging directory.
 
 | Manifest / project | Installer/package or source status | Outstanding verification / blocker |
 | --- | --- | --- |
