@@ -105,7 +105,7 @@ This is a **Portable MSI payload extraction** classification based on the Scoop 
 
 ### Wisp 0.6.1 and MonitorSnap 2.6.2 added on 2026-11-10
 
-- [`wisp`](../bucket/wisp.json) — **Portable**: uses the official Windows x64 ZIP. Upstream's v0.6.1 release notes state that the application files are at the archive root and identify `wisp.exe` as the launch target. Settings remain under `%APPDATA%\\wisp`; the default Alt+Space hotkey can conflict with PowerToys Run.
+- [`wisp`](../bucket/wisp.json) — **Portable**: uses the official Windows x64 ZIP. Upstream's v0.6.1 release notes state that the application files are at the archive root and identify `wisp.exe` as the launch target. Settings remain under `%APPDATA%\wisp`; the default Alt+Space hotkey can conflict with PowerToys Run.
 - [`monitorsnap`](../bucket/monitorsnap.json) — **Portable**: uses the publisher's single-file portable Windows x64 executable rather than the NSIS installer or MSI. Scoop renames it to `MonitorSnap.exe` and persists the adjacent `MonitorSnapData` folder used by the portable build.
 
 <!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->
@@ -441,4 +441,3 @@ Do not move these runtime caveats into the Nonportable list unless the manifest 
 
 - [Scoop App Manifests](https://github.com/ScoopInstaller/Scoop/wiki/App-Manifests) — installer, MSI extraction, Inno Setup, and archive URL-fragment behavior.
 - [Scoop README](https://github.com/ScoopInstaller/Scoop) — overview of Scoop's portable-app model and the separate `nonportable` bucket.
-
