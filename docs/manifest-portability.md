@@ -14,7 +14,6 @@
 | **Nonportable** | EXE setup, MSI, MSIX/AppX, MSIXBundle, driver/service installers, Windows font or registry registration | The manifest runs the vendor's setup routine, registers an MSIX/AppX package, installs a driver/service/runtime, installs fonts into Windows, or writes persistent Windows integration such as a protocol registration. This remains Nonportable even when the setup routine places the main files inside `$dir` or the Scoop app directory. |
 | **Review** | Unverified EXE setup, RMSKIN add-on, or MSIX/EXE with unverified unpackaged behavior | The manifest downloads a setup/package asset but its current instructions do not establish a safe, complete extraction or installation method. Do not assume it is Portable until the payload and launch path are verified. |
 
-
 ## Summary
 
 | Classification | Manifests | Installer/package types represented | How to interpret it |
@@ -161,10 +160,7 @@ The installer type describes the package or setup technology used by the manifes
 | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | MSI payload extraction + URL protocol registration | Extracts the MSI payload, then registers the `ytdlp-gui://` URL protocol under `HKCU\Software\Classes`; the registry entry points to the Scoop app path. |
 | [znote](../bucket/znote.json) | NSIS | Runs the vendor setup with `/S /D=$dir`. NSIS-style switches; engine inferred. |
 
-
 ## Review before classifying
-
-
 
 | Manifest / project | Installer/package or source status | Outstanding verification / blocker |
 | --- | --- | --- |
@@ -267,12 +263,6 @@ The installer type describes the package or setup technology used by the manifes
 | [vcredist-aio](../bucket/vcredist-aio.json) | x86/x64 ZIP / system runtime installer | The archive contains an administrator-run Visual C++ runtime installer. Its payload and effects on existing system runtimes need inspection. |
 | [visual-cpp-redist-aio](../bucket/visual-cpp-redist-aio.json) | x86/x64 ZIP / system runtime installer | The manifest runs Installer.cmd quietly with elevation. Verify the archive root, installer behavior, and system-wide runtime changes before promotion. |
 | [visual-cpp-redist-aio-arm64](../bucket/visual-cpp-redist-aio-arm64.json) | ARM64 SFX / system runtime installer | The manifest runs the vendor SFX quietly with elevation. Verify the switches and installation behavior; system runtimes are not removed by Scoop uninstall. |
-
-
-### File-association and migration projects reviewed on 2026-11-10
-
-| Project | Installer/package or source status | Outstanding verification / blocker |
-| --- | --- | --- |
 | [File Default Master](https://github.com/qianli-wang/default-app) | Standalone Windows EXE, latest published release v2.0.2 | The release contains `fix_default_app.exe`, but no SHA-256 is published in the release metadata. The executable has not been downloaded or inspected. Verify its digest and launch behavior before creating a manifest. |
 | [FTA-Manager](https://github.com/feiglein74/FTA-Manager) | PowerShell module source, ModuleVersion 1.2.0; no release assets | The repository contains a `.psd1`/`.psm1` module and helper scripts, but no published Windows binary or versioned release package. The README mentions an optional `SetFTA.exe`, which is not present in the repository root or `tools/`. Establish a pinned module package and a useful Scoop import/usage entry point before creating a manifest. |
 | [Windows Migration Health](https://github.com/NeedyNeet/windows-migration-health) | PowerShell script suite, latest release v2.3 has no attached assets | The `.cmd` launchers depend on sibling `.ps1` files and repository-relative `local`/configuration paths. Verify the tagged source archive layout, report/config persistence, and a versioned download with a verified SHA-256 before creating a manifest. |
@@ -326,7 +316,6 @@ The classification above concerns what the Scoop manifest does during installati
 | Whispra (project) | Windows setup EXE | v2.5.0 publishes a setup EXE and update metadata, but no separate portable package. Installer engine, silent arguments, custom install path, and uninstall behavior remain unverified. |
 
 Do not move these runtime caveats into the Nonportable list unless the manifest itself starts the installation or registration during `scoop install`.
-
 
 ## Classification rules for future manifest changes
 
