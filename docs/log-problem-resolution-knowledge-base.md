@@ -49,6 +49,16 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - When a new incident exposes a general repository rule, update the relevant permanent guide (for example, `docs/manifest-authoring.md`) as well as adding the incident entry here.
 
 ## Resolved incidents
+### 2026-11-10 — Avoid full REVIEW scan when a PR only deletes a staged manifest
+
+- **Status:** Resolved and verified.
+- **Affected area:** `.github/workflows/review-manifest-inspector.yml`; PR [#100](https://github.com/kiro5678/kirobucket/pull/100).
+- **Problem:** A pull request that only deleted a JSON file from `under review scoop bucket/` caused the Review Manifest Installer and Archive Inspector to inspect every remaining JSON file in the large review folder.
+- **Root cause:** The workflow used `git diff --diff-filter=ACMRT` to select active changed JSON files. Deleted files are excluded by that filter; when the resulting list was empty, the script fell back to `Get-ChildItem` over the entire review folder without checking whether the PR only deleted a file.
+- **Resolution:** The workflow now also collects all changed paths, identifies deleted review JSON files separately, and skips package inspection when no review JSON was added or modified. The full-folder scan remains available when the workflow itself changes without a deleted review manifest, preserving the inspector's regression-check behavior.
+- **Verification:** [actionlint run 42846454478](https://github.com/kiro5678/kirobucket/actions/runs/42846454478) passed on the corrected PR head. [Review inspector run 42846454250](https://github.com/kiro5678/kirobucket/actions/runs/42846454250) passed and its log explicitly reported that no added or modified review manifest JSON files changed, so package inspection was skipped. This verifies the deletion-only path; it does not represent a full-folder or package extraction test.
+- **Prevention:** Distinguish additions/modifications from deletions before applying an empty-list fallback. Do not interpret “no active changed files” as “scan the entire staging directory” when the PR only removes an item.
+
 
 ### 2026-11-10 — Promote the successful Pake Desktop extraction manifest
 
