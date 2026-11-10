@@ -52,6 +52,10 @@ The explicit portability classifications currently cover 894 of the 1030 active 
 - [`cram-cli`](../bucket/cram-cli.json) — **Portable (CLI only)**: uses the official Windows GNU-target ZIP containing `cram.exe`, `cram-extract.exe`, `cram_shell.dll`, and `libwinpthread-1.dll`. Scoop does not run `cram shell install` or install the separate proprietary Cram Studio application.
 - [`archivemount`](../bucket/archivemount.json) — **Portable (standalone EXE)**: uses the official standalone x86/x64/ARM64 executables. The application requires WinFsp to be installed separately; this manifest does not install its driver or service.
 
+### EyeGuard 2.1.1 added on 2026-11-10
+
+- [`eyeguard`](../bucket/eyeguard.json) — **Portable (standalone EXE)**: uses the upstream `EyeGuard_Portable.exe`, a separate single-file PyInstaller build; Scoop does not run `EyeGuard_Setup.exe` or Inno Setup. Settings are stored under `%APPDATA%\EyeGuard` and WebView data under `%LOCALAPPDATA%\EyeGuardWebview`. The optional Launch on Startup setting creates an HKCU Run entry.
+
 ### FsRover 0.6.0
 
 - [`fsrover`](../bucket/fsrover.json) — **Portable**: uses the official x64, x86, and ARM64 release ZIPs. All three SHA-256 digests match the official v0.6.0 release. The upstream MSBuild workflow packages `FsRover.exe` and `CliRover.exe` at the archive root, along with the license notices; it also includes the matching optional `libcdi` DLL when that build output is available. Archive and disk-image browsing/extraction does not require a Windows mount driver. Drive-letter mounting requires an already-installed WinFsp or Dokany driver; Scoop does not install or register either driver. SMART reading depends on the optional matching `libcdi` DLL, and raw physical-drive access requires administrator rights.
