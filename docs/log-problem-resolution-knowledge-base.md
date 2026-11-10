@@ -1023,3 +1023,23 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Related prevention:** For pull-request archive validation, prefer `github.event.pull_request.base.sha` over `github.event.before`, and compare that base SHA with the validated PR head. Otherwise a synchronize event can diff only the last commit and report zero changed manifests.
 - **Verification:** PR #99 workflow lint [42837223502](https://github.com/kiro5678/kirobucket/actions/runs/42837223502), review inspector [42837223588](https://github.com/kiro5678/kirobucket/actions/runs/42837223588), and archive validation [42837223541](https://github.com/kiro5678/kirobucket/actions/runs/42837223541) passed. The PR archive workflow inspected 18 manifests, including File Browser and VoiceStudio, with zero failures. Talon remained a non-archive / missing-checksum review candidate, not an official manifest.
 - **Prevention:** When a PowerShell script aggregates native-tool results in its own error counter, set the final process exit code explicitly on both success and failure paths. Do not use a native tool's stale `$LASTEXITCODE` as the job result.
+
+### 2026-11-10 — Keep URLProtocol registration on Scoop's persistent path
+
+- **Status:** Resolved and verified.
+- **Affected area:** `bucket/urlprotocol.json`; `.github/workflows/urlprotocol-stable-path-test.yml`; [PR #102](https://github.com/kiro5678/kirobucket/pull/102).
+- **Problem:** URLProtocol registers its own absolute executable path as the URL handler in `HKCU\Software\Classes\<protocol>\shell\open\command`. A normal Scoop install can put the executable under a version-specific app directory; after an update, a previously registered handler can still point at the old location.
+- **Root cause:** The application derives its handler command from `Process.GetCurrentProcess().MainModule.FileName` and stores that absolute path in the Registry. The path therefore has to remain stable for as long as a protocol registration exists.
+- **Resolution:** Store `URLProtocol.exe` in Scoop's persistent directory. Create a versioned `URLProtocol.cmd` launcher whose shim runs the persisted executable directly, and point the Start Menu shortcut at the same persisted executable. The `post_uninstall` hook removes only URL protocol registrations whose command exactly matches this app's persisted executable path, then removes the app shortcut and persisted executable.
+- **Verification:** [URLProtocol Stable Path Test](https://github.com/kiro5678/kirobucket/actions/runs/42847744462) passed on Windows. It installed URLProtocol through Scoop, verified the persisted executable, command launcher and Start Menu target, seeded a protocol registration, uninstalled URLProtocol, and verified cleanup. [PR validation](https://github.com/kiro5678/kirobucket/actions/runs/42847154699) passed Lint, Description, License, Hashes, Checkver and Autoupdate. After merge, [Checkver](https://github.com/kiro5678/kirobucket/actions/runs/42847694234), [archive validation](https://github.com/kiro5678/kirobucket/actions/runs/42847803379), and [autoupdate validation](https://github.com/kiro5678/kirobucket/actions/runs/42847909165) also passed.
+- **Prevention:** For Scoop-managed software that registers its executable path with Windows, keep the registered executable at a stable `persist` path and test both install and uninstall behavior. Do not register an executable from a version-specific directory.
+
+### 2026-11-10 — Normalize the maintenance knowledge-base line endings
+
+- **Status:** Resolved; post-fix CI verification pending.
+- **Affected area:** `docs/log-problem-resolution-knowledge-base.md`; [CI run](https://github.com/kiro5678/kirobucket/actions/runs/42848015865).
+- **Problem:** The bucket's Pester CI failed the `file newlines are CRLF` test.
+- **Root cause:** This Markdown file contained at least one line ending that was not CRLF. The CI log identified this exact path as the file with non-CRLF line endings.
+- **Resolution:** Normalize every line ending in this file to CRLF while recording the URLProtocol fix and this CI formatting issue.
+- **Verification:** The failing CI run identified this file and passed the trailing-whitespace check, but it ran before this correction. A new Pester CI run has not yet verified the corrected file; status remains pending until that test runs.
+- **Prevention:** Preserve CRLF line endings when editing repository text files, and inspect the Pester file-style checks after documentation changes.
