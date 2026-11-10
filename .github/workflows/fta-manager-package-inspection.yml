@@ -1,0 +1,181 @@
+name: FTA-Manager Package Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/fta-manager-package-inspection.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download, extract, and test PowerShell module
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Download pinned upstream source archive
+        id: package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $version = '1.2.0'
+          $commit = '9ca777511edaba2f828d25023477cbe9e4b5a33b'
+          $url = "https://github.com/feiglein74/FTA-Manager/archive/$commit.zip"
+          $root = Join-Path $env:RUNNER_TEMP 'fta-manager-package-inspection'
+          $extract = Join-Path $root 'extracted'
+          New-Item -ItemType Directory -Path $root, $extract -Force | Out-Null
+
+          $archive = Join-Path $root 'FTA-Manager-$commit.zip'
+          Write-Host "Downloading pinned FTA-Manager source: $url"
+          Invoke-WebRequest -Uri $url -OutFile $archive -TimeoutSec 600
+
+          $item = Get-Item -LiteralPath $archive
+          $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "ARCHIVE_URL: $url"
+          Write-Host "ARCHIVE_SIZE_BYTES: $($item.Length)"
+          Write-Host "ARCHIVE_SHA256: $hash"
+          "archive_url=$url" >> $env:GITHUB_OUTPUT
+          "archive_size=$($item.Length)" >> $env:GITHUB_OUTPUT
+          "archive_sha256=$hash" >> $env:GITHUB_OUTPUT
+          "archive_path=$archive" >> $env:GITHUB_OUTPUT
+          "extract_path=$extract" >> $env:GITHUB_OUTPUT
+          "expected_version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Inspect archive layout and extract
+        id: extract
+        shell: pwsh
+        env:
+          ARCHIVE_PATH: ${{ steps.package.outputs.archive_path }}
+          EXTRACT_PATH: ${{ steps.package.outputs.extract_path }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $cmd = Get-Command '7z.exe' -CommandType Application -ErrorAction SilentlyContinue
+            if ($cmd) { $sevenZip = $cmd.Source }
+          }
+          if (Test-Path -LiteralPath $sevenZip -PathType Leaf) {
+            $listing = @(& $sevenZip l -slt $env:ARCHIVE_PATH 2>&1 | ForEach-Object { "$_" })
+            $exitCode = $LASTEXITCODE
+            $listing | Set-Content -LiteralPath (Join-Path (Split-Path $env:ARCHIVE_PATH) '7zip-list.txt') -Encoding utf8
+            if ($exitCode -ne 0) { throw "7-Zip could not list the downloaded ZIP (exit $exitCode)." }
+          } else {
+            Write-Warning '7-Zip was not found; ZIP integrity will be tested by Expand-Archive.'
+          }
+
+          Expand-Archive -LiteralPath $env:ARCHIVE_PATH -DestinationPath $env:EXTRACT_PATH -Force
+          $manifests = @(Get-ChildItem -LiteralPath $env:EXTRACT_PATH -Filter 'FTA-Manager.psd1' -File -Recurse)
+          if ($manifests.Count -ne 1) {
+            throw "Expected one FTA-Manager.psd1 after extraction; found $($manifests.Count)."
+          }
+          $moduleRoot = $manifests[0].Directory.FullName
+          $topLevel = @(Get-ChildItem -LiteralPath $env:EXTRACT_PATH -Force)
+          if ($topLevel.Count -ne 1) {
+            throw "Expected one top-level archive directory; found $($topLevel.Count)."
+          }
+          $archiveRootName = $topLevel[0].Name
+          if ($moduleRoot -ne $topLevel[0].FullName) {
+            throw "Module files are nested below the archive root: $moduleRoot"
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $moduleRoot -File -Recurse -Force)
+          Write-Host "ARCHIVE_ROOT: $archiveRootName"
+          Write-Host "MODULE_ROOT: $moduleRoot"
+          Write-Host "EXTRACTED_FILE_COUNT: $($files.Count)"
+          Write-Host "MODULE_MANIFEST: $($manifests[0].FullName)"
+          "module_root=$moduleRoot" >> $env:GITHUB_OUTPUT
+          "archive_root=$archiveRootName" >> $env:GITHUB_OUTPUT
+          "extracted_files=$($files.Count)" >> $env:GITHUB_OUTPUT
+          "module_manifest=$($manifests[0].FullName)" >> $env:GITHUB_OUTPUT
+
+      - name: Validate module manifest and import with Windows PowerShell 5.1
+        shell: pwsh
+        env:
+          MODULE_MANIFEST: ${{ steps.extract.outputs.module_manifest }}
+          EXPECTED_VERSION: ${{ steps.package.outputs.expected_version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $testScript = Join-Path $env:RUNNER_TEMP 'test-fta-manager-module.ps1'
+          @'
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = $env:MODULE_MANIFEST
+          $expectedVersion = $env:EXPECTED_VERSION
+          $moduleInfo = Test-ModuleManifest -Path $manifestPath -ErrorAction Stop
+          if ([string]$moduleInfo.Version -ne $expectedVersion) {
+              throw "Module version mismatch. Expected $expectedVersion; found $($moduleInfo.Version)."
+          }
+
+          Import-Module -Name $manifestPath -Force -ErrorAction Stop
+          $requiredCommands = @('Get-FTA', 'Set-FTA', 'Get-PTA', 'Set-PTA', 'Get-AllFTA', 'Get-AllPTA')
+          $availableCommands = @(Get-Command -Module FTA-Manager | Select-Object -ExpandProperty Name)
+          $missing = @($requiredCommands | Where-Object { $_ -notin $availableCommands })
+          if ($missing.Count -gt 0) {
+              throw "Module import succeeded but required commands are missing: $($missing -join ', ')"
+          }
+
+          Write-Host "MODULE_VERSION: $($moduleInfo.Version)"
+          Write-Host "MODULE_GUID: $($moduleInfo.Guid)"
+          Write-Host "EXPORTED_COMMAND_COUNT: $($availableCommands.Count)"
+          Write-Host "REQUIRED_COMMANDS: $($requiredCommands -join ', ')"
+          Write-Host 'MODULE_IMPORT: PASS'
+          '@ | Set-Content -LiteralPath $testScript -Encoding utf8
+
+          $windowsPowerShell = Join-Path $env:WINDIR 'System32\WindowsPowerShell\v1.0\powershell.exe'
+          if (-not (Test-Path -LiteralPath $windowsPowerShell -PathType Leaf)) {
+              throw 'Windows PowerShell 5.1 executable was not found.'
+          }
+          & $windowsPowerShell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $testScript
+          if ($LASTEXITCODE -ne 0) {
+              throw "Windows PowerShell 5.1 module validation failed with exit code $LASTEXITCODE."
+          }
+
+      - name: Write package inspection summary
+        if: always()
+        shell: pwsh
+        env:
+          ARCHIVE_URL: ${{ steps.package.outputs.archive_url }}
+          ARCHIVE_SIZE: ${{ steps.package.outputs.archive_size }}
+          ARCHIVE_SHA256: ${{ steps.package.outputs.archive_sha256 }}
+          ARCHIVE_ROOT: ${{ steps.extract.outputs.archive_root }}
+          MODULE_ROOT: ${{ steps.extract.outputs.module_root }}
+          EXTRACTED_FILES: ${{ steps.extract.outputs.extracted_files }}
+        run: |
+          @(
+            '# FTA-Manager package inspection'
+            ''
+            "- Upstream commit: 9ca777511edaba2f828d25023477cbe9e4b5a33b"
+            "- Module version: 1.2.0"
+            "- Source archive: $env:ARCHIVE_URL"
+            "- Archive size: $env:ARCHIVE_SIZE bytes"
+            "- SHA-256: $env:ARCHIVE_SHA256"
+            "- Extracted archive root: $env:ARCHIVE_ROOT"
+            "- Module directory: $env:MODULE_ROOT"
+            "- Extracted file count: $env:EXTRACTED_FILES"
+            ''
+            '## Safety'
+            ''
+            '- No Set-FTA, Set-PTA, Disable-UCPD, Enable-UCPD, service installer, or scheduled-task installer was executed.'
+            '- No registry values, default-app associations, services, scheduled tasks, or UCPD settings were changed.'
+            '- Validation only extracted the source, checked the module manifest, and imported the module in Windows PowerShell 5.1.'
+          ) | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'fta-manager-inspection-summary.md') -Encoding utf8
+          Get-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'fta-manager-inspection-summary.md') |
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Upload inspection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fta-manager-package-inspection
+          path: |
+            ${{ runner.temp }}/fta-manager-package-inspection/
+            ${{ runner.temp }}/fta-manager-inspection-summary.md
+            ${{ runner.temp }}/test-fta-manager-module.ps1
+          if-no-files-found: warn
+          retention-days: 14
