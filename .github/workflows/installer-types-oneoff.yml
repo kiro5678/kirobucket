@@ -137,6 +137,26 @@ jobs:
                 $relative = $_.FullName.Substring($destination.Length).TrimStart('\','/')
                 $report.Add("$relative - $($_.Length) bytes")
               }
+              if ($env:TARGET_ID -eq 'aula-0.1.3') {
+                $innerArchive = Join-Path $destination '$PLUGINSDIR\app-64.7z'
+                if (!(Test-Path -LiteralPath $innerArchive -PathType Leaf)) { throw 'Aula app-64.7z payload was not found in the NSIS package.' }
+                $innerListing = @(& $sevenZip l -slt $innerArchive 2>&1 | ForEach-Object { "$_" })
+                if ($LASTEXITCODE -ne 0) { throw 'Could not list Aula app-64.7z payload.' }
+                $report.Add('')
+                $report.Add('Nested app-64.7z listing:')
+                $innerListing | ForEach-Object { $report.Add($_) }
+                $innerDestination = Join-Path $work 'aula-app-64'
+                New-Item -ItemType Directory -Path $innerDestination -Force | Out-Null
+                $innerOutput = @(& $sevenZip x -y "-o$innerDestination" $innerArchive 2>&1 | ForEach-Object { "$_" })
+                $innerExit = $LASTEXITCODE
+                $innerOutput | ForEach-Object { $report.Add($_) }
+                if ($innerExit -ne 0) { throw "Could not extract Aula app-64.7z payload (exit code $innerExit)." }
+                $report.Add('Nested app-64.7z extracted files:')
+                Get-ChildItem -LiteralPath $innerDestination -Recurse -File | ForEach-Object {
+                  $relative = $_.FullName.Substring($innerDestination.Length).TrimStart('\','/')
+                  $report.Add("$relative - $($_.Length) bytes")
+                }
+              }
             } else {
               $report.Add('7-Zip did not recognize this EXE as an extractable archive.')
             }
