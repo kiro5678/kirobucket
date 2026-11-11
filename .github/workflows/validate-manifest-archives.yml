@@ -73,6 +73,7 @@ on:
       - 'bucket/pake-xiaohongshu.json'
       - 'bucket/pake-youtubemusic.json'
       - 'bucket/pake-youtube.json'
+      - 'bucket/gloss.json'
   workflow_dispatch:
     inputs:
       manifest:
