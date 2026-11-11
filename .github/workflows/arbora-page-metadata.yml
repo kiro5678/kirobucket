@@ -1,0 +1,43 @@
+name: ArboraFM Download Page Metadata
+
+on:
+  push:
+    branches:
+      - inspect-arborafm-portable-0.9.0
+    paths:
+      - ".github/workflows/arbora-page-metadata.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect official download page
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($url in @('https://arborafm.dev/', 'https://arborafm.dev/download', 'https://arborafm.dev/license')) {
+            try {
+              Write-Host "=== $url ==="
+              $response = Invoke-WebRequest -Uri $url -TimeoutSec 30
+              $html = [string]$response.Content
+              Write-Host "HTTP_STATUS=$([int]$response.StatusCode)"
+              foreach ($tag in [regex]::Matches($html, '<a\b[^>]*>') | Select-Object -First 200) {
+                $tagText = $tag.Value -replace '\s+',' '
+                if ($tagText -match '(?i)(release|download|license|Arbora|\.zip|\.exe|0\.9\.0)') {
+                  Write-Host "ANCHOR=$tagText"
+                }
+              }
+              foreach ($link in [regex]::Matches($html, 'href="([^"]+)"') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique) {
+                if ($link -match '(?i)(release|download|license|Arbora|\.zip|\.exe)') { Write-Host "LINK=$link" }
+              }
+              foreach ($version in [regex]::Matches($html, '(?<![\d.])\d+\.\d+\.\d+(?![\d.])') | ForEach-Object { $_.Value } | Sort-Object -Unique) {
+                Write-Host "VERSION_CANDIDATE=$version"
+              }
+            } catch {
+              Write-Host "FETCH_ERROR=$($_.Exception.Message)"
+            }
+          }
