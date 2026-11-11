@@ -92,7 +92,7 @@ jobs:
           if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) { throw 'Scoop bootstrap did not provide the scoop command.' }
 
           git config --global protocol.file.allow always
-          $bucketPath = $env:GITHUB_WORKSPACE.Replace('\\','/')
+          $bucketPath = $env:GITHUB_WORKSPACE.Replace([char]92,[char]47)
           $bucketUrl = 'file:///' + $bucketPath
           scoop bucket add arborafm-test $bucketUrl
           if ($LASTEXITCODE -ne 0) { throw 'Could not add the temporary local bucket.' }
