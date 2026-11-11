@@ -27,8 +27,14 @@
         ]
     ],
     "checkver": {
-        "url": "https://purgeuninstaller.com/download",
-        "regex": "Purge\\.Uninstaller_(?<version>[\\d.]+)_x64-setup\\.exe"
+        "script": [
+            "$dl_url = 'https://purgeuninstaller.com/download/windows/1.0.1/Purge.Uninstaller_1.0.1_x64-setup.exe'",
+            "$dl_path = cache_path 'PurgeUninstaller' 'unknown' $dl_url",
+            "Invoke-WebRequest -Uri $dl_url -OutFile $dl_path",
+            "$version = (Get-Item -LiteralPath $dl_path).VersionInfo.FileVersion",
+            "Write-Output $version"
+        ],
+        "regex": "([\\d.]+)"
     },
     "autoupdate": {
         "url": "https://purgeuninstaller.com/download/windows/$version/Purge.Uninstaller_$version_x64-setup.exe"
