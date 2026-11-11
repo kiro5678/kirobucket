@@ -1,15 +1,10 @@
 name: Calculate SHA-256 for Download URLs
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/calculate-sha256.yml'
   workflow_dispatch:
     inputs:
       urls:
-        description: "Direct HTTPS download URL(s). Separate multiple URLs with a newline or comma."
+        description: "Direct HTTPS download URL(s). Separate multiple URLs with a newline or comma; leave empty to hash the WinPinMenu release ZIPs."
         required: false
         type: string
 
@@ -29,7 +24,9 @@ jobs:
         env:
           URLS_INPUT: ${{ inputs.urls }}
           DEFAULT_URLS: |
-            https://github.com/Jayich-Lab/tray-launcher/archive/refs/tags/v1.1.0.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-x64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-ARM64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-X86.zip
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
@@ -37,7 +34,7 @@ jobs:
           $urlText = $env:URLS_INPUT
           if ([string]::IsNullOrWhiteSpace($urlText)) {
             $urlText = $env:DEFAULT_URLS
-            Write-Host 'No URLs were provided; hashing the Tray Launcher v1.1.0 source archive.'
+            Write-Host 'No URLs were provided; hashing the default WinPinMenu 0.1.1 ZIPs.'
           }
 
           $urls = @(
