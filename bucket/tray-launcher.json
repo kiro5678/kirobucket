@@ -7,14 +7,6 @@
         "python"
     ],
     "url": "https://github.com/Jayich-Lab/tray-launcher/archive/refs/tags/v1.1.0.zip",
-    "post_install": [
-        "$source = Get-ChildItem -LiteralPath \"$dir\" -Filter 'pyproject.toml' -Recurse -File | Select-Object -First 1 -ExpandProperty DirectoryName",
-        "if (-not $source) { throw 'Could not find the tray-launcher source directory.' }",
-        "& python -m venv \"$dir\\venv\"",
-        "if ($LASTEXITCODE -ne 0) { throw 'Failed to create the Python virtual environment.' }",
-        "& \"$dir\\venv\\Scripts\\python.exe\" -m pip install --disable-pip-version-check --no-cache-dir \"$source\"",
-        "if ($LASTEXITCODE -ne 0) { throw 'Failed to install tray-launcher and its Python dependencies.' }"
-    ],
     "bin": "venv\\Scripts\\launcher.exe",
     "shortcuts": [
         [
@@ -30,5 +22,15 @@
     },
     "autoupdate": {
         "url": "https://github.com/Jayich-Lab/tray-launcher/archive/refs/tags/v$version.zip"
-    }
+    },
+    "pre_install": [
+        "$source = Get-ChildItem -LiteralPath $dir -Filter 'pyproject.toml' -Recurse -File | Select-Object -First 1 -ExpandProperty DirectoryName",
+        "if (-not $source) { throw 'Could not find the tray-launcher source directory.' }",
+        "$venv = Join-Path $dir 'venv'",
+        "& python -m venv $venv",
+        "if ($LASTEXITCODE -ne 0) { throw 'Failed to create the Python virtual environment.' }",
+        "$venvPython = Join-Path $venv 'Scripts\\python.exe'",
+        "& $venvPython -m pip install --disable-pip-version-check --no-cache-dir $source",
+        "if ($LASTEXITCODE -ne 0) { throw 'Failed to install tray-launcher and its Python dependencies.' }"
+    ]
 }
