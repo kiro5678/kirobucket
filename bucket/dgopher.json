@@ -1,0 +1,22 @@
+{
+    "version": "0.7.2",
+    "description": "Native desktop database client for SQL databases, Redis and local files.",
+    "homepage": "https://github.com/saanuregh/dgopher",
+    "license": "Apache-2.0",
+    "url": "https://github.com/saanuregh/dgopher/releases/download/v0.7.2/dgopher-0.7.2-windows-amd64.tar.gz",
+    "hash": "c3cf88a1123aff41146ededf7e36466d575f5866efd1f13c31462820fa5893b3",
+    "bin": "DGopher.exe",
+    "shortcuts": [
+        [
+            "DGopher.exe",
+            "DGopher"
+        ]
+    ],
+    "notes": "DGopher has a signed in-app updater. Use Scoop to update it; avoid running both update mechanisms concurrently.",
+    "checkver": {
+        "github": "https://github.com/saanuregh/dgopher"
+    },
+    "autoupdate": {
+        "url": "https://github.com/saanuregh/dgopher/releases/download/v$version/dgopher-$version-windows-amd64.tar.gz"
+    }
+}
