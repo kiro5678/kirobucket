@@ -91,7 +91,10 @@ jobs:
           }
           if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) { throw 'Scoop bootstrap did not provide the scoop command.' }
 
-          scoop bucket add arborafm-test $env:GITHUB_WORKSPACE
+          git config --global protocol.file.allow always
+          $bucketPath = $env:GITHUB_WORKSPACE.Replace('\\','/')
+          $bucketUrl = 'file:///' + $bucketPath
+          scoop bucket add arborafm-test $bucketUrl
           if ($LASTEXITCODE -ne 0) { throw 'Could not add the temporary local bucket.' }
           scoop install arbora
           if ($LASTEXITCODE -ne 0) { throw 'scoop install arbora failed.' }
