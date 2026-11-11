@@ -74,6 +74,8 @@ on:
       - 'bucket/pake-youtubemusic.json'
       - 'bucket/pake-youtube.json'
       - 'bucket/gloss.json'
+      - 'bucket/wintray.json'
+      - 'bucket/mygit.json'
   workflow_dispatch:
     inputs:
       manifest:
