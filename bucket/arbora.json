@@ -18,5 +18,6 @@
     "checkver": {
         "url": "https://arborafm.dev/download",
         "regex": "Arbora_([0-9.]+)_x64-portable[.]zip"
-    }
+    },
+    "license": "Proprietary"
 }
