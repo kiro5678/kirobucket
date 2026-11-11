@@ -32,6 +32,7 @@ on:
       - 'bucket/pake-youtube.json'
       - 'bucket/purge.json'
       - 'bucket/arbora.json'
+      - 'bucket/advanced-rdp.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -81,6 +82,7 @@ on:
       - 'bucket/lilt.json'
       - 'bucket/bili-fm.json'
       - 'bucket/kero.json'
+      - 'bucket/advanced-rdp.json'
   workflow_dispatch:
     inputs:
       manifest:
