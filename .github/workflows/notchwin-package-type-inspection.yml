@@ -84,28 +84,11 @@ jobs:
             throw "Expected the direct notchwin.exe payload to be x64; PE machine was 0x$('{0:X4}' -f $appMachine)."
           }
 
-          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
-          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
-            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
-            if ($null -ne $command) { $sevenZip = $command.Source } else { $sevenZip = $null }
-          }
-          $sevenZipResult = "not available on runner"
-          if ($null -ne $sevenZip) {
-            $listing = (& $sevenZip l -slt $setupPath 2>&1 | Out-String)
-            $sevenZipExit = $LASTEXITCODE
-            $listing | Set-Content -LiteralPath (Join-Path $root "setup-7zip-listing.txt") -Encoding utf8
-            $sevenZipResult = "exit code $sevenZipExit"
-            if ($sevenZipExit -ne 0) {
-              Write-Host "7-Zip does not list this Inno Setup file as a supported archive; the PE signature identifies the installer engine."
-            }
-          }
-
           $report = @(
             "NotchWin $version package inspection",
             "Setup SHA-256: $setupHash",
             "Setup engine signature: $setupEngine",
             "Setup executable architecture: $setupArchitecture",
-            "7-Zip listing attempt: $sevenZipResult",
             "Direct app SHA-256: $appHash",
             "Direct notchwin.exe: valid x64 PE application executable",
             "",
@@ -121,7 +104,6 @@ jobs:
             "- SHA-256: both official assets verified",
             "- Setup engine: $setupEngine",
             "- Setup PE type: $setupArchitecture",
-            "- 7-Zip listing: $sevenZipResult",
             "- Direct asset: valid x64 PE application executable",
             "- Selection for Scoop: use the direct `notchwin.exe` asset; do not treat it as an Inno Setup installer.",
             "",
