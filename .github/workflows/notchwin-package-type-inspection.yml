@@ -17,7 +17,7 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 15
     steps:
-      - name: Download, verify, and inspect official release files
+      - name: Verify release files and identify PE installer signatures
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
@@ -26,17 +26,7 @@ jobs:
           $version = "1.4.0"
           $release = "https://github.com/bhoominn/NotchWin-Releases/releases/download/v$version"
           $root = Join-Path $env:RUNNER_TEMP "notchwin-package-inspection"
-          $setupPath = Join-Path $root "NotchWin-Setup-$version.exe"
-          $appPath = Join-Path $root "notchwin.exe"
-          $extractPath = Join-Path $root "setup-extracted"
           New-Item -ItemType Directory -Path $root -Force | Out-Null
-
-          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
-          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
-            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
-            if ($null -eq $command) { throw "7-Zip was not found on the GitHub Actions runner." }
-            $sevenZip = $command.Source
-          }
 
           function Download-Verified {
             param([string]$Url, [string]$Path, [string]$ExpectedSha256)
@@ -52,58 +42,73 @@ jobs:
             return $actual
           }
 
+          function Read-PeMachine {
+            param([byte[]]$Bytes, [string]$Name)
+            if ($Bytes.Length -lt 64 -or $Bytes[0] -ne 0x4D -or $Bytes[1] -ne 0x5A) {
+              throw "$Name does not have a valid DOS MZ header."
+            }
+            $peOffset = [BitConverter]::ToInt32($Bytes, 0x3C)
+            if ($peOffset -lt 0 -or ($peOffset + 6) -gt $Bytes.Length) {
+              throw "$Name has an invalid PE header offset."
+            }
+            $signature = [System.Text.Encoding]::ASCII.GetString($Bytes, $peOffset, 4)
+            if ($signature -ne "PE`0`0") { throw "$Name does not contain a valid PE signature." }
+            return [BitConverter]::ToUInt16($Bytes, $peOffset + 4)
+          }
+
+          $setupPath = Join-Path $root "NotchWin-Setup-$version.exe"
+          $appPath = Join-Path $root "notchwin.exe"
           $setupHash = Download-Verified -Url "$release/NotchWin-Setup-$version.exe" -Path $setupPath -ExpectedSha256 "51783437e23da11b4cb2db7c9f857ad04f38ef6538ce796b7933860d1b6745dd"
           $appHash = Download-Verified -Url "$release/notchwin.exe" -Path $appPath -ExpectedSha256 "37f24b8c86a9a4c793f857dd0f864dad331217e616e0628e60f31f04530bf5a6"
 
-          $setupListing = (& $sevenZip l -slt $setupPath 2>&1 | Out-String)
-          $setupListExit = $LASTEXITCODE
-          $setupListing | Set-Content -LiteralPath (Join-Path $root "setup-7zip-listing.txt") -Encoding utf8
-          if ($setupListExit -ne 0) {
-            throw "7-Zip could not inspect the official Setup EXE (exit code $setupListExit)."
+          $setupBytes = [System.IO.File]::ReadAllBytes($setupPath)
+          $setupMachine = Read-PeMachine -Bytes $setupBytes -Name "NotchWin Setup"
+          $setupText = [System.Text.Encoding]::ASCII.GetString($setupBytes) + "`n" + [System.Text.Encoding]::Unicode.GetString($setupBytes)
+          $innoMatch = [regex]::Match($setupText, "Inno Setup Setup Data ((?<engineVersion>[0-9.]+))")
+          if (-not $innoMatch.Success) {
+            throw "The setup PE did not contain the expected Inno Setup signature."
           }
-
-          New-Item -ItemType Directory -Path $extractPath -Force | Out-Null
-          $extractLog = (& $sevenZip x $setupPath "-o$extractPath" -y -bd 2>&1 | Out-String)
-          $extractExit = $LASTEXITCODE
-          $extractLog | Set-Content -LiteralPath (Join-Path $root "setup-extraction.log") -Encoding utf8
-          if ($extractExit -ne 0) {
-            throw "7-Zip could not extract the Setup EXE (exit code $extractExit)."
-          }
-
-          $files = @(Get-ChildItem -LiteralPath $extractPath -File -Recurse -Force)
-          $mainExe = @($files | Where-Object { $_.Name -ieq "notchwin.exe" })
-          if ($mainExe.Count -eq 0) {
-            throw "Setup extraction completed, but notchwin.exe was not found in the extracted payload."
+          $engineVersion = $innoMatch.Groups["engineVersion"].Value
+          $setupEngine = "Inno Setup $engineVersion"
+          $setupArchitecture = switch ($setupMachine) {
+            0x014c { "x86 PE setup bootstrapper" }
+            0x8664 { "x64 PE setup bootstrapper" }
+            0xAA64 { "ARM64 PE setup bootstrapper" }
+            default { "PE machine 0x$('{0:X4}' -f $setupMachine)" }
           }
 
           $appBytes = [System.IO.File]::ReadAllBytes($appPath)
-          if ($appBytes.Length -lt 2 -or $appBytes[0] -ne 0x4D -or $appBytes[1] -ne 0x5A) {
-            throw "The direct notchwin.exe asset does not have a valid PE MZ header."
+          $appMachine = Read-PeMachine -Bytes $appBytes -Name "notchwin.exe"
+          if ($appMachine -ne 0x8664) {
+            throw "Expected the direct notchwin.exe payload to be x64; PE machine was 0x$('{0:X4}' -f $appMachine)."
           }
-          $appArchiveListing = (& $sevenZip l -slt $appPath 2>&1 | Out-String)
-          $appArchiveExit = $LASTEXITCODE
 
-          $typeLine = @($setupListing -split "`r?`n" | Where-Object { $_ -match "^Type\s*=" } | Select-Object -First 1)
-          $setupType = if ($typeLine.Count -gt 0) { $typeLine[0].Trim() } else { "7-Zip archive-compatible Windows setup EXE" }
-          $mainRelativePaths = @($mainExe | ForEach-Object { [System.IO.Path]::GetRelativePath($extractPath, $_.FullName).Replace("\", "/") })
+          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+            if ($null -ne $command) { $sevenZip = $command.Source } else { $sevenZip = $null }
+          }
+          $sevenZipResult = "not available on runner"
+          if ($null -ne $sevenZip) {
+            $listing = (& $sevenZip l -slt $setupPath 2>&1 | Out-String)
+            $sevenZipExit = $LASTEXITCODE
+            $listing | Set-Content -LiteralPath (Join-Path $root "setup-7zip-listing.txt") -Encoding utf8
+            $sevenZipResult = "exit code $sevenZipExit"
+            if ($sevenZipExit -ne 0) {
+              Write-Host "7-Zip does not list this Inno Setup file as a supported archive; the PE signature identifies the installer engine."
+            }
+          }
 
           $report = @(
             "NotchWin $version package inspection",
-            "Setup asset: NotchWin-Setup-$version.exe",
             "Setup SHA-256: $setupHash",
-            "7-Zip setup type: $setupType",
-            "Setup listing exit code: $setupListExit",
-            "Setup extraction exit code: $extractExit",
-            "Extracted file count: $($files.Count)",
-            "Application executable(s) found in setup payload:",
-            ($mainRelativePaths | ForEach-Object { "  $_" }),
+            "Setup engine signature: $setupEngine",
+            "Setup executable architecture: $setupArchitecture",
+            "7-Zip listing attempt: $sevenZipResult",
+            "Direct app SHA-256: $appHash",
+            "Direct notchwin.exe: valid x64 PE application executable",
             "",
-            "Direct asset: notchwin.exe",
-            "Direct asset SHA-256: $appHash",
-            "Direct asset PE header: valid MZ",
-            "Direct asset 7-Zip listing exit code: $appArchiveExit",
-            $(if ($appArchiveExit -eq 0) { "Direct asset is archive-readable; inspect listing before treating as a single-file payload." } else { "Direct asset is a standalone PE executable, not a 7-Zip archive." }),
-            "",
+            "Result: the Setup asset is an Inno Setup installer; the separate notchwin.exe asset is the direct x64 application executable.",
             "No installer or application was executed."
           )
           $report | Set-Content -LiteralPath (Join-Path $root "inspection-report.txt") -Encoding utf8
@@ -112,17 +117,17 @@ jobs:
           @(
             "## NotchWin package inspection — $version",
             "",
-            "- Setup asset SHA-256: verified",
-            "- Setup 7-Zip type: $setupType",
-            "- Setup extraction: PASS",
-            "- Main application executable in setup payload: $($mainRelativePaths -join ', ')",
-            "- Direct notchwin.exe SHA-256: verified",
-            "- Direct asset PE header: valid",
-            "- Direct asset is a standalone executable: $($appArchiveExit -ne 0)",
+            "- SHA-256: both official assets verified",
+            "- Setup engine: $setupEngine",
+            "- Setup PE type: $setupArchitecture",
+            "- 7-Zip listing: $sevenZipResult",
+            "- Direct asset: valid x64 PE application executable",
+            "- Selection for Scoop: use the direct `notchwin.exe` asset; do not treat it as an Inno Setup installer.",
             "",
-            "No installer or application was executed. Full listing and extraction logs are in the artifact."
+            "No installer or application was executed. Full report is in the artifact."
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+          Remove-Item -LiteralPath $setupPath, $appPath -Force
       - name: Upload package inspection report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
