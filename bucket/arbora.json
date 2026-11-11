@@ -1,6 +1,6 @@
 {
     "version": "0.9.0",
-    "description": "Windows file manager with bookmarks, saved sessions, SSH support, and PDF tools.",
+    "description": "Windows desktop file manager with bookmarks, saved sessions, SSH access, and PDF tools.",
     "homepage": "https://arborafm.dev/",
     "url": "https://arborafm.dev/releases/0.9.0/windows/Arbora_0.9.0_x64-portable.zip",
     "hash": "3c816c7a5961a56071a38745ad06342e441de62de16b027b22a565dda8ef3217",
