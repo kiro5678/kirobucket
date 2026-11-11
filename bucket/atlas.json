@@ -1,0 +1,37 @@
+{
+    "version": "1.1.0",
+    "description": "Local-first AI agent desktop app for coding and command execution.",
+    "homepage": "https://github.com/gvenusleo/Atlas",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/gvenusleo/Atlas/releases/download/v1.1.0/atlas-1.1.0-windows-amd64.tar.gz",
+            "hash": "415eb6f7411464cc535e8ca645429d207c8601e325a23693666b318d3300d1a9"
+        },
+        "arm64": {
+            "url": "https://github.com/gvenusleo/Atlas/releases/download/v1.1.0/atlas-1.1.0-windows-arm64.tar.gz",
+            "hash": "967597c47192581e47b1f3635eb76982ff0d4aa8d6a19868e183cf51ff8c55a7"
+        }
+    },
+    "bin": "Atlas.exe",
+    "shortcuts": [
+        [
+            "Atlas.exe",
+            "Atlas"
+        ]
+    ],
+    "notes": "This AI agent can read, modify and execute files and commands without per-action confirmation.",
+    "checkver": {
+        "github": "https://github.com/gvenusleo/Atlas"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/gvenusleo/Atlas/releases/download/v$version/atlas-$version-windows-amd64.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/gvenusleo/Atlas/releases/download/v$version/atlas-$version-windows-arm64.tar.gz"
+            }
+        }
+    }
+}
