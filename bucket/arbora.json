@@ -17,6 +17,6 @@
     },
     "checkver": {
         "url": "https://arborafm.dev/download",
-        "regex": "releases/([\\d.]+)/windows/Arbora_\\1_x64-portable\\.zip"
+        "regex": "Arbora_([\\\\d.]+)_x64-portable\\\\.zip"
     }
 }
