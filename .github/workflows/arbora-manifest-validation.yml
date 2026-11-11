@@ -55,10 +55,10 @@ jobs:
           $checkverText = $checkverOutput -join [Environment]::NewLine
           Write-Host '=== Scoop checkver output ==='
           $checkverOutput | ForEach-Object { Write-Host $_ }
-          if ($checkverText -match '(?i)(couldn''t\\s+(retrieve|find|match)|could\\s+not\\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)') {
+          if ($checkverText -match '(?i)(couldn''t\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)') {
             throw "Scoop checkver failed: $checkverText"
           }
-          if ($checkverText -notmatch '(?<![\\d.])0\\.9\\.0(?![\\d.])') {
+          if ($checkverText -notmatch '(?<![\d.])0\.9\.0(?![\d.])') {
             throw "Scoop checkver did not detect version 0.9.0: $checkverText"
           }
           Write-Host 'PASS: Scoop checkver detected 0.9.0 from the official download page.'
