@@ -1,0 +1,14 @@
+{
+    "version": "1.0.1",
+    "description": "Windows application uninstaller that identifies and removes leftover files and registry entries.",
+    "homepage": "https://purgeuninstaller.com/",
+    "license": "Proprietary",
+    "url": "https://purgeuninstaller.com/download/windows/1.0.1/Purge.Uninstaller_1.0.1_x64-setup.exe",
+    "checkver": {
+        "url": "https://purgeuninstaller.com/download",
+        "regex": "Purge\\.Uninstaller_(?<version>[\\d.]+)_x64-setup\\.exe"
+    },
+    "autoupdate": {
+        "url": "https://purgeuninstaller.com/download/windows/$version/Purge.Uninstaller_$version_x64-setup.exe"
+    }
+}
