@@ -9,9 +9,7 @@
             "hash": "77432a0ae14f62d791595276ec82d2f170885135f6863c220d2548390df71724"
         }
     },
-    "depends": [
-        "git"
-    ],
+    "depends": "git",
     "bin": "MyGit.exe",
     "shortcuts": [
         [
