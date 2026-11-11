@@ -76,6 +76,7 @@ on:
       - 'bucket/gloss.json'
       - 'bucket/wintray.json'
       - 'bucket/mygit.json'
+      - 'bucket/pail.json'
   workflow_dispatch:
     inputs:
       manifest:
