@@ -1,0 +1,34 @@
+{
+    "version": "1.1.0",
+    "description": "System-tray launcher for managing and running Windows batch scripts.",
+    "homepage": "https://github.com/Jayich-Lab/tray-launcher",
+    "license": "MIT",
+    "depends": [
+        "python"
+    ],
+    "url": "https://github.com/Jayich-Lab/tray-launcher/archive/refs/tags/v1.1.0.zip",
+    "post_install": [
+        "$source = Get-ChildItem -LiteralPath \"$dir\" -Filter 'pyproject.toml' -Recurse -File | Select-Object -First 1 -ExpandProperty DirectoryName",
+        "if (-not $source) { throw 'Could not find the tray-launcher source directory.' }",
+        "& python -m venv \"$dir\\venv\"",
+        "if ($LASTEXITCODE -ne 0) { throw 'Failed to create the Python virtual environment.' }",
+        "& \"$dir\\venv\\Scripts\\python.exe\" -m pip install --disable-pip-version-check --no-cache-dir \"$source\"",
+        "if ($LASTEXITCODE -ne 0) { throw 'Failed to install tray-launcher and its Python dependencies.' }"
+    ],
+    "bin": "venv\\Scripts\\launcher.exe",
+    "shortcuts": [
+        [
+            "venv\\Scripts\\launcher.exe",
+            "Tray Launcher",
+            "run"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/Jayich-Lab/tray-launcher/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v([\\d.]+)$"
+    },
+    "autoupdate": {
+        "url": "https://github.com/Jayich-Lab/tray-launcher/archive/refs/tags/v$version.zip"
+    }
+}
