@@ -80,6 +80,7 @@ on:
       - 'bucket/mayoi.json'
       - 'bucket/lilt.json'
       - 'bucket/bili-fm.json'
+      - 'bucket/kero.json'
   workflow_dispatch:
     inputs:
       manifest:
