@@ -148,7 +148,24 @@ jobs:
               $page = Invoke-WebRequest -Uri $pageUrl -TimeoutSec 45
               Write-Host "=== WEBSITE PAGE $pageUrl ==="
               $html = [string]$page.Content
-              foreach ($pattern in @('license','copyright','terms','privacy','github','version','ArboraFM')) {
+              foreach ($link in [regex]::Matches($html, 'href="([^"]+)"') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique | Select-Object -First 100) {
+                Write-Host "PAGE_LINK=$link"
+              }
+              foreach ($source in [regex]::Matches($html, '<script[^>]+src="([^"]+)"') | ForEach-Object { $_.Groups[1].Value } | Select-Object -First 20) {
+                try {
+                  $scriptUrl = if ($source -match '^https?://') { $source } else { ([System.Uri]::new([System.Uri]$pageUrl, $source)).AbsoluteUri }
+                  $scriptText = (Invoke-WebRequest -Uri $scriptUrl -TimeoutSec 45).Content
+                  Write-Host "PAGE_SCRIPT=$scriptUrl"
+                  foreach ($pattern in @('Arbora_[0-9.]+_x64-portable\.zip','/releases/','license','latestVersion','version')) {
+                    foreach ($match in [regex]::Matches([string]$scriptText, ".{0,100}$pattern.{0,160}", [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | Select-Object -First 8) {
+                      Write-Host "SCRIPT_CONTEXT=$($match.Value -replace '\\s+',' ')"
+                    }
+                  }
+                } catch {
+                  Write-Warning "Could not inspect script $source : $($_.Exception.Message)"
+                }
+              }
+              foreach ($pattern in @('Arbora_[0-9.]+_x64-portable\.zip','/releases/','license','copyright','terms','privacy','github','version','ArboraFM')) {
                 foreach ($match in [regex]::Matches($html, ".{0,100}$pattern.{0,180}", [System.Text.RegularExpressions.RegexOptions]::IgnoreCase) | Select-Object -First 5) {
                   Write-Host "PAGE_CONTEXT=$($match.Value -replace '\\s+',' ' -replace '<[^>]+>',' ' )"
                 }
