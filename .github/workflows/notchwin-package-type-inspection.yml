@@ -63,13 +63,14 @@ jobs:
 
           $setupBytes = [System.IO.File]::ReadAllBytes($setupPath)
           $setupMachine = Read-PeMachine -Bytes $setupBytes -Name "NotchWin Setup"
-          $setupText = [System.Text.Encoding]::ASCII.GetString($setupBytes) + "`n" + [System.Text.Encoding]::Unicode.GetString($setupBytes)
-          $innoMatch = [regex]::Match($setupText, "Inno Setup Setup Data ((?<engineVersion>[0-9.]+))")
-          if (-not $innoMatch.Success) {
+          $setupAscii = [System.Text.Encoding]::ASCII.GetString($setupBytes)
+          $innoIndex = $setupAscii.IndexOf("Inno Setup Setup Data", [System.StringComparison]::Ordinal)
+          if ($innoIndex -lt 0) {
             throw "The setup PE did not contain the expected Inno Setup signature."
           }
-          $engineVersion = $innoMatch.Groups["engineVersion"].Value
-          $setupEngine = "Inno Setup $engineVersion"
+          $signatureWindow = $setupAscii.Substring($innoIndex, [Math]::Min(100, $setupAscii.Length - $innoIndex))
+          $signatureLine = ($signatureWindow -split "[`0`r`n]" | Select-Object -First 1).Trim()
+          $setupEngine = $signatureLine
           $setupArchitecture = switch ($setupMachine) {
             0x014c { "x86 PE setup bootstrapper" }
             0x8664 { "x64 PE setup bootstrapper" }
