@@ -1,0 +1,133 @@
+name: NotchWin Package Type Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/notchwin-package-type-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Inspect NotchWin 1.4.0 Windows packages
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download, verify, and inspect official release files
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $version = "1.4.0"
+          $release = "https://github.com/bhoominn/NotchWin-Releases/releases/download/v$version"
+          $root = Join-Path $env:RUNNER_TEMP "notchwin-package-inspection"
+          $setupPath = Join-Path $root "NotchWin-Setup-$version.exe"
+          $appPath = Join-Path $root "notchwin.exe"
+          $extractPath = Join-Path $root "setup-extracted"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+            if ($null -eq $command) { throw "7-Zip was not found on the GitHub Actions runner." }
+            $sevenZip = $command.Source
+          }
+
+          function Download-Verified {
+            param([string]$Url, [string]$Path, [string]$ExpectedSha256)
+            Invoke-WebRequest -Uri $Url -OutFile $Path -MaximumRedirection 10 -TimeoutSec 900
+            if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+              throw "Download did not create: $Path"
+            }
+            $actual = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $ExpectedSha256.ToLowerInvariant()) {
+              throw "SHA-256 mismatch for $Path. Expected $ExpectedSha256; received $actual."
+            }
+            Write-Host "SHA-256 PASS: $([System.IO.Path]::GetFileName($Path)) = $actual"
+            return $actual
+          }
+
+          $setupHash = Download-Verified -Url "$release/NotchWin-Setup-$version.exe" -Path $setupPath -ExpectedSha256 "51783437e23da11b4cb2db7c9f857ad04f38ef6538ce796b7933860d1b6745dd"
+          $appHash = Download-Verified -Url "$release/notchwin.exe" -Path $appPath -ExpectedSha256 "37f24b8c86a9a4c793f857dd0f864dad331217e616e0628e60f31f04530bf5a6"
+
+          $setupListing = (& $sevenZip l -slt $setupPath 2>&1 | Out-String)
+          $setupListExit = $LASTEXITCODE
+          $setupListing | Set-Content -LiteralPath (Join-Path $root "setup-7zip-listing.txt") -Encoding utf8
+          if ($setupListExit -ne 0) {
+            throw "7-Zip could not inspect the official Setup EXE (exit code $setupListExit)."
+          }
+
+          New-Item -ItemType Directory -Path $extractPath -Force | Out-Null
+          $extractLog = (& $sevenZip x $setupPath "-o$extractPath" -y -bd 2>&1 | Out-String)
+          $extractExit = $LASTEXITCODE
+          $extractLog | Set-Content -LiteralPath (Join-Path $root "setup-extraction.log") -Encoding utf8
+          if ($extractExit -ne 0) {
+            throw "7-Zip could not extract the Setup EXE (exit code $extractExit)."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $extractPath -File -Recurse -Force)
+          $mainExe = @($files | Where-Object { $_.Name -ieq "notchwin.exe" })
+          if ($mainExe.Count -eq 0) {
+            throw "Setup extraction completed, but notchwin.exe was not found in the extracted payload."
+          }
+
+          $appBytes = [System.IO.File]::ReadAllBytes($appPath)
+          if ($appBytes.Length -lt 2 -or $appBytes[0] -ne 0x4D -or $appBytes[1] -ne 0x5A) {
+            throw "The direct notchwin.exe asset does not have a valid PE MZ header."
+          }
+          $appArchiveListing = (& $sevenZip l -slt $appPath 2>&1 | Out-String)
+          $appArchiveExit = $LASTEXITCODE
+
+          $typeLine = @($setupListing -split "`r?`n" | Where-Object { $_ -match "^Type\s*=" } | Select-Object -First 1)
+          $setupType = if ($typeLine.Count -gt 0) { $typeLine[0].Trim() } else { "7-Zip archive-compatible Windows setup EXE" }
+          $mainRelativePaths = @($mainExe | ForEach-Object { [System.IO.Path]::GetRelativePath($extractPath, $_.FullName).Replace("\", "/") })
+
+          $report = @(
+            "NotchWin $version package inspection",
+            "Setup asset: NotchWin-Setup-$version.exe",
+            "Setup SHA-256: $setupHash",
+            "7-Zip setup type: $setupType",
+            "Setup listing exit code: $setupListExit",
+            "Setup extraction exit code: $extractExit",
+            "Extracted file count: $($files.Count)",
+            "Application executable(s) found in setup payload:",
+            ($mainRelativePaths | ForEach-Object { "  $_" }),
+            "",
+            "Direct asset: notchwin.exe",
+            "Direct asset SHA-256: $appHash",
+            "Direct asset PE header: valid MZ",
+            "Direct asset 7-Zip listing exit code: $appArchiveExit",
+            $(if ($appArchiveExit -eq 0) { "Direct asset is archive-readable; inspect listing before treating as a single-file payload." } else { "Direct asset is a standalone PE executable, not a 7-Zip archive." }),
+            "",
+            "No installer or application was executed."
+          )
+          $report | Set-Content -LiteralPath (Join-Path $root "inspection-report.txt") -Encoding utf8
+          $report | ForEach-Object { Write-Host $_ }
+
+          @(
+            "## NotchWin package inspection — $version",
+            "",
+            "- Setup asset SHA-256: verified",
+            "- Setup 7-Zip type: $setupType",
+            "- Setup extraction: PASS",
+            "- Main application executable in setup payload: $($mainRelativePaths -join ', ')",
+            "- Direct notchwin.exe SHA-256: verified",
+            "- Direct asset PE header: valid",
+            "- Direct asset is a standalone executable: $($appArchiveExit -ne 0)",
+            "",
+            "No installer or application was executed. Full listing and extraction logs are in the artifact."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload package inspection report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: notchwin-package-inspection
+          path: ${{ runner.temp }}/notchwin-package-inspection/
+          if-no-files-found: warn
+          retention-days: 14
