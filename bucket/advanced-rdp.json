@@ -1,0 +1,28 @@
+{
+    "version": "1.0",
+    "description": "Windows Remote Desktop client with saved hosts and connection diagnostics.",
+    "homepage": "https://github.com/Gongzhui/Advanced-RDP",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Gongzhui/Advanced-RDP/releases/download/v1.0/AdvancedRdp-1.0-win-x64-portable.zip",
+            "hash": "67fdb55ae982d01f477e6b0bae7b0d91c445fc59bcd093b3e21635ebc552f521"
+        }
+    },
+    "bin": "Advanced RDP.exe",
+    "shortcuts": [
+        [
+            "Advanced RDP.exe",
+            "Advanced RDP"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Gongzhui/Advanced-RDP"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Gongzhui/Advanced-RDP/releases/download/v$version/AdvancedRdp-$version-win-x64-portable.zip"
+            }
+        }
+    }
+}
