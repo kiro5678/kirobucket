@@ -32,5 +32,6 @@
         "$venvPython = Join-Path $venv 'Scripts\\python.exe'",
         "& $venvPython -m pip install --disable-pip-version-check --no-cache-dir $source",
         "if ($LASTEXITCODE -ne 0) { throw 'Failed to install tray-launcher and its Python dependencies.' }"
-    ]
+    ],
+    "hash": "e2361626d9775b0f01c49396cb1f02f565142bd96070292cc782f3ee1ddfd735"
 }
