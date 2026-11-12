@@ -10,7 +10,7 @@
         },
         "arm64": {
             "url": "https://github.com/mindfreq/ipatlas/releases/download/v0.6.0/ipatlas-setup-0.6.0-arm64.exe",
-            "hash": "131ffebdfc8dde5cc3a01d677debc6cd38db85a13876bf11feb44eafd5f79f0d6ef"
+            "hash": "131ffebdfc8dde5cc3a01d677debc6cd38db85a13876bf11feb44afd5f79f0d6ef"
         }
     },
     "bin": "IPAtlas.exe",
@@ -30,7 +30,7 @@
                 "hash": {
                     "mode": "json",
                     "url": "https://api.github.com/repos/mindfreq/ipatlas/releases/tags/v$version",
-                    "jp": "$.assets[?(@.name == 'ipatlas-setup-' + $version + '-amd64.exe')].digest"
+                    "jp": "$.assets[?(@.name == '$basename')].digest"
                 }
             },
             "arm64": {
@@ -38,7 +38,7 @@
                 "hash": {
                     "mode": "json",
                     "url": "https://api.github.com/repos/mindfreq/ipatlas/releases/tags/v$version",
-                    "jp": "$.assets[?(@.name == 'ipatlas-setup-' + $version + '-arm64.exe')].digest"
+                    "jp": "$.assets[?(@.name == '$basename')].digest"
                 }
             }
         }
