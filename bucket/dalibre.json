@@ -1,0 +1,46 @@
+{
+    "version": "0.6.0",
+    "description": "Native desktop e-book library that reads and writes calibre libraries and supports book-source plugins.",
+    "homepage": "https://dalibre.randynamic.org",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/djyde/dalibre/releases/download/v0.6.0/dalibre-0.6.0-windows-amd64.tar.gz",
+            "hash": "04f5e9243a759c162cf45b577b06b6c97f87e06d57ad6766a85a0ed6ba8afe9c"
+        },
+        "arm64": {
+            "url": "https://github.com/djyde/dalibre/releases/download/v0.6.0/dalibre-0.6.0-windows-arm64.tar.gz",
+            "hash": "6e34fb39b8e68fa1a442f66f28445aad56f59d7d428e4e76660eb5b5fd6d017f"
+        }
+    },
+    "bin": "dalibre.exe",
+    "shortcuts": [
+        [
+            "dalibre.exe",
+            "Dalibre"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/djyde/dalibre"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/djyde/dalibre/releases/download/v$version/dalibre-$version-windows-amd64.tar.gz",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/djyde/dalibre/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'dalibre-$version-windows-amd64.tar.gz')].digest"
+                }
+            },
+            "arm64": {
+                "url": "https://github.com/djyde/dalibre/releases/download/v$version/dalibre-$version-windows-arm64.tar.gz",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/djyde/dalibre/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'dalibre-$version-windows-arm64.tar.gz')].digest"
+                }
+            }
+        }
+    }
+}
