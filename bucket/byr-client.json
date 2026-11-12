@@ -1,6 +1,6 @@
 {
     "version": "0.1.1",
-    "description": "Native desktop client for the BYR forum with account management, browsing, and local session storage.",
+    "description": "Portable native desktop client for the BYR forum with account management, browsing, and local session storage.",
     "homepage": "https://github.com/VeinsureLee/BYR-Client",
     "license": "Unknown",
     "architecture": {
@@ -30,5 +30,6 @@
                 }
             }
         }
-    }
+    },
+    "notes": "Uses the standalone BYR.Client.exe release asset rather than the separate setup executable."
 }

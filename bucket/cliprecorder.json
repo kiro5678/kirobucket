@@ -31,5 +31,6 @@
                 }
             }
         }
-    }
+    },
+    "notes": "Scoop extracts the Inno Setup application payload without running vendor setup tasks, including the installer's automatic-start registration."
 }

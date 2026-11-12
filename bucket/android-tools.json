@@ -30,5 +30,6 @@
                 }
             }
         }
-    }
+    },
+    "notes": "Keep the bundled android-tools directory beside android-tools.exe; the application requires both."
 }
