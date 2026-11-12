@@ -99,6 +99,9 @@ on:
       - 'bucket/hoyo-gacha.json'
       - 'bucket/sshyard.json'
       - 'bucket/pitstop.json'
+      - 'bucket/mylock.json'
+      - 'bucket/outrash.json'
+      - 'bucket/countdowner.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -159,6 +162,9 @@ on:
       - 'bucket/hoyo-gacha.json'
       - 'bucket/sshyard.json'
       - 'bucket/pitstop.json'
+      - 'bucket/mylock.json'
+      - 'bucket/outrash.json'
+      - 'bucket/countdowner.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
