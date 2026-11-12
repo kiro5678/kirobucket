@@ -91,6 +91,11 @@ on:
       - 'bucket/saundo.json'
       - 'bucket/gistmanager.json'
       - 'bucket/see.json'
+      - 'bucket/muo.json'
+      - 'bucket/lumiwerk.json'
+      - 'bucket/nanoapi.json'
+      - 'bucket/disklens.json'
+      - 'bucket/tcpconnbenchmark.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -143,6 +148,11 @@ on:
       - 'bucket/saundo.json'
       - 'bucket/gistmanager.json'
       - 'bucket/see.json'
+      - 'bucket/muo.json'
+      - 'bucket/lumiwerk.json'
+      - 'bucket/nanoapi.json'
+      - 'bucket/disklens.json'
+      - 'bucket/tcpconnbenchmark.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
