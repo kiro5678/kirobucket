@@ -145,6 +145,9 @@ on:
       - 'bucket/pickphoto.json'
       - 'bucket/meiro.json'
       - 'bucket/lunabox.json'
+      - 'bucket/nomo-mygo.json'
+      - 'bucket/tiktok-live-recorder.json'
+      - 'bucket/yoho-music.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -251,6 +254,9 @@ on:
       - 'bucket/pickphoto.json'
       - 'bucket/meiro.json'
       - 'bucket/lunabox.json'
+      - 'bucket/nomo-mygo.json'
+      - 'bucket/tiktok-live-recorder.json'
+      - 'bucket/yoho-music.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
