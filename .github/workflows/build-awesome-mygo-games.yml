@@ -12,6 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -269,3 +270,14 @@ jobs:
           fi
           git commit -m "chore: add Awesome MyGo game manifests"
           git push origin HEAD:master
+
+      - name: Dispatch manifest validation pipeline
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh workflow run manifest-pipeline.yml \
+            --repo "$GH_REPO" \
+            --ref master \
+            --field manifest="bucket/nova.json,bucket/hangman.json,bucket/neural-breach.json,bucket/game-presence.json,bucket/2048.json,bucket/apex-runner.json"
