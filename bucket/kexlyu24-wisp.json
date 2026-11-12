@@ -6,7 +6,8 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/kexlyu24/wisp/releases/download/v0.1.9/Wisp-0.1.9-windows-x64.zip",
-            "hash": "f4288e36df5df3dfd7f96e430cc28bdb47662d3a36f1ca3454f7410652ea66fe"
+            "hash": "f4288e36df5df3dfd7f96e430cc28bdb47662d3a36f1ca3454f7410652ea66fe",
+            "extract_dir": "Wisp-0.1.9-windows-x64"
         }
     },
     "shortcuts": [
@@ -27,7 +28,8 @@
                 "hash": {
                     "url": "https://api.github.com/repos/kexlyu24/wisp/releases/tags/v$version",
                     "regex": "\"name\"\\s*:\\s*\"Wisp-$version-windows-x64\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
-                }
+                },
+                "extract_dir": "Wisp-$version-windows-x64"
             }
         }
     }
