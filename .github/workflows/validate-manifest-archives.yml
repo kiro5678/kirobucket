@@ -96,6 +96,7 @@ on:
       - 'bucket/nanoapi.json'
       - 'bucket/disklens.json'
       - 'bucket/tcpconnbenchmark.json'
+      - 'bucket/hoyo-gacha.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -153,6 +154,7 @@ on:
       - 'bucket/nanoapi.json'
       - 'bucket/disklens.json'
       - 'bucket/tcpconnbenchmark.json'
+      - 'bucket/hoyo-gacha.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
