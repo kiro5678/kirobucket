@@ -136,6 +136,8 @@ on:
       - 'bucket/myshoes.json'
       - 'bucket/oriel.json'
       - 'bucket/zakki.json'
+      - 'bucket/quosparr.json'
+      - 'bucket/wagyu-music.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -233,6 +235,8 @@ on:
       - 'bucket/myshoes.json'
       - 'bucket/oriel.json'
       - 'bucket/zakki.json'
+      - 'bucket/quosparr.json'
+      - 'bucket/wagyu-music.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
