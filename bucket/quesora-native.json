@@ -16,8 +16,8 @@
         }
     },
     "checkver": {
-        "github": "https://github.com/ispacewang/quesora-native",
-        "regex": "v([0-9]+\\.[0-9]+\\.[0-9]+-preview\\.[0-9]+)"
+        "url": "https://github.com/ispacewang/quesora-native/releases",
+        "regex": "/releases/tag/v([0-9]+\\.[0-9]+\\.[0-9]+-preview\\.[0-9]+)"
     },
     "autoupdate": {
         "architecture": {
