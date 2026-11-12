@@ -161,6 +161,14 @@ on:
       - 'bucket/zeokeel-super-agent.json'
       - 'bucket/live-calendar.json'
       - 'bucket/live-mygo.json'
+      - 'bucket/motrix-mygo.json'
+      - 'bucket/mytoken.json'
+      - 'bucket/mytools.json'
+      - 'bucket/nemorous.json'
+      - 'bucket/pomodoro.json'
+      - 'bucket/universal-s3-ui.json'
+      - 'bucket/translator233.json'
+      - 'bucket/video-player.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -340,6 +348,14 @@ on:
       - 'bucket/zeokeel-super-agent.json'
       - 'bucket/live-calendar.json'
       - 'bucket/live-mygo.json'
+      - 'bucket/motrix-mygo.json'
+      - 'bucket/mytoken.json'
+      - 'bucket/mytools.json'
+      - 'bucket/nemorous.json'
+      - 'bucket/pomodoro.json'
+      - 'bucket/universal-s3-ui.json'
+      - 'bucket/translator233.json'
+      - 'bucket/video-player.json'
   workflow_dispatch:
     inputs:
       manifest:
