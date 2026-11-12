@@ -30,7 +30,9 @@
             "mode": "json",
             "url": "https://api.github.com/repos/oshell-desktop/oshell-desktop/releases/tags/v$version",
             "jp": "$.assets[?(@.name == 'OShell-Desktop-windows-amd64-single-file.zip')].digest"
-        }
+        },
+        "extract_dir": "windows-amd64-single-file"
     },
-    "notes": "The single-file build stores settings, transfer checkpoints, SSH settings, and update credentials beside the executable; Scoop persists these paths across upgrades. Use Scoop for version updates."
+    "notes": "The single-file build stores settings, transfer checkpoints, SSH settings, and update credentials beside the executable; Scoop persists these paths across upgrades. Use Scoop for version updates.",
+    "extract_dir": "windows-amd64-single-file"
 }
