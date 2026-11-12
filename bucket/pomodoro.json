@@ -1,0 +1,53 @@
+{
+    "version": "0.3.1",
+    "description": "Native Pomodoro timer with focus and break sessions, tray operation, statistics and local SQLite storage.",
+    "homepage": "https://github.com/mintonight/pomodoro",
+    "license": "Proprietary",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/mintonight/pomodoro/releases/download/v0.3.1/pomodoro-0.3.1-windows-amd64.tar.gz",
+            "hash": "6b44b9f396f25465c3b88441dfb8b8ec135318ce237638ebfcf813688876e643",
+            "bin": "pomodoro.exe",
+            "shortcuts": [
+                [
+                    "pomodoro.exe",
+                    "Pomodoro"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://github.com/mintonight/pomodoro/releases/download/v0.3.1/pomodoro-0.3.1-windows-arm64.tar.gz",
+            "hash": "b909074cdd552952838f29e6973251172881bcaea1a55067a44cd0db0a84cb76",
+            "bin": "pomodoro.exe",
+            "shortcuts": [
+                [
+                    "pomodoro.exe",
+                    "Pomodoro"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/mintonight/pomodoro"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/mintonight/pomodoro/releases/download/v$version/pomodoro-$version-windows-amd64.tar.gz",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/mintonight/pomodoro/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'pomodoro-$version-windows-amd64.tar.gz')].digest"
+                }
+            },
+            "arm64": {
+                "url": "https://github.com/mintonight/pomodoro/releases/download/v$version/pomodoro-$version-windows-arm64.tar.gz",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/mintonight/pomodoro/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'pomodoro-$version-windows-arm64.tar.gz')].digest"
+                }
+            }
+        }
+    }
+}
