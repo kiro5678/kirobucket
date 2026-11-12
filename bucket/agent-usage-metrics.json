@@ -9,10 +9,10 @@
             "hash": "89ab022e02fb5bdeaf01fbef4bc202da7bb93a47565a2eb48563058bcd614fdc"
         }
     },
-    "bin": "devin-usage-metrics.exe",
+    "bin": "Agent Usage Metrics.exe",
     "shortcuts": [
         [
-            "devin-usage-metrics.exe",
+            "Agent Usage Metrics.exe",
             "Agent Usage Metrics"
         ]
     ],
