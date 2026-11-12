@@ -10,7 +10,7 @@
         },
         "arm64": {
             "url": "https://github.com/mindfreq/ipatlas/releases/download/v0.6.0/ipatlas-setup-0.6.0-arm64.exe",
-            "hash": "131ffebdfc8dde5cc3a01d677debc6cd38db85a13876bf11feb44afd5f79f0d6ef"
+            "hash": "131ffebdfc8dde5cc3a01d677debc6cd38db85a13876bf11feb44d5f79f0d6ef"
         }
     },
     "bin": "IPAtlas.exe",
