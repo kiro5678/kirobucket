@@ -227,7 +227,6 @@ jobs:
               MsiSha256 = ""
               AppExePattern = "(?i)^Nova Island\.exe$"
             },
-            },
             @{
               Name = "Spotube"
               Version = "6.0.0"
