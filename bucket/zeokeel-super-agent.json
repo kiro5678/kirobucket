@@ -12,7 +12,8 @@
                     "zeokeel.exe",
                     "ZeoKeel Super Agent"
                 ]
-            ]
+            ],
+            "extract_dir": "windows"
         }
     },
     "checkver": {
@@ -29,5 +30,6 @@
                 }
             }
         }
-    }
+    },
+    "license": "MIT"
 }
