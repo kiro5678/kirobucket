@@ -13,7 +13,8 @@
                     "mytools.exe",
                     "mytools"
                 ]
-            ]
+            ],
+            "extract_dir": "windows-amd64"
         },
         "arm64": {
             "url": "https://github.com/yinshuwei/mytools/releases/download/v0.1.1/mytools-0.1.1-windows-arm64.tar.gz",
