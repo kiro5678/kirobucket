@@ -66,6 +66,10 @@ on:
       - 'bucket/osprey.json'
       - 'bucket/gogo-explorer.json'
       - 'bucket/new-century-renamer.json'
+      - 'bucket/myvnc.json'
+      - 'bucket/portproxy.json'
+      - 'bucket/lslan.json'
+      - 'bucket/golauncher.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -93,6 +97,10 @@ on:
       - 'bucket/osprey.json'
       - 'bucket/gogo-explorer.json'
       - 'bucket/new-century-renamer.json'
+      - 'bucket/myvnc.json'
+      - 'bucket/portproxy.json'
+      - 'bucket/lslan.json'
+      - 'bucket/golauncher.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
