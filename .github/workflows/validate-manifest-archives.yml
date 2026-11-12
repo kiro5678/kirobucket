@@ -144,6 +144,7 @@ on:
       - 'bucket/gzist-netkeeper.json'
       - 'bucket/myspotify.json'
       - 'bucket/yunji-uml.json'
+      - 'bucket/glint.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -251,6 +252,7 @@ on:
       - 'bucket/gzist-netkeeper.json'
       - 'bucket/myspotify.json'
       - 'bucket/yunji-uml.json'
+      - 'bucket/glint.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
