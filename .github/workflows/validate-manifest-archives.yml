@@ -104,6 +104,9 @@ on:
       - 'bucket/countdowner.json'
       - 'bucket/neohm.json'
       - 'bucket/locus.json'
+      - 'bucket/leaflet.json'
+      - 'bucket/arion.json'
+      - 'bucket/my-vm.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -169,6 +172,9 @@ on:
       - 'bucket/countdowner.json'
       - 'bucket/neohm.json'
       - 'bucket/locus.json'
+      - 'bucket/leaflet.json'
+      - 'bucket/arion.json'
+      - 'bucket/my-vm.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
