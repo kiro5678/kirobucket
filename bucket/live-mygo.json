@@ -13,7 +13,8 @@
                     "LiveMyGo.exe",
                     "Live MyGo"
                 ]
-            ]
+            ],
+            "extract_dir": "LiveMyGo-v0.4.2-beta.5-windows-amd64"
         }
     },
     "checkver": {
