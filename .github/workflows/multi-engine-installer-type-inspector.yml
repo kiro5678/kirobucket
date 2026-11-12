@@ -650,7 +650,8 @@ jobs:
             $scanOutput
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
-      - name: Inspect and extract embedded setup payload without executing
+      - name: Inspect and extract Pake embedded setup payload without executing
+        if: steps.source.outputs.target_product == 'Pake Desktop' && steps.source.outputs.pake_extraction_mode == 'true'
         shell: pwsh
         env:
           INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}

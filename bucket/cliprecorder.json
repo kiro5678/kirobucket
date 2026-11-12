@@ -32,5 +32,5 @@
             }
         }
     },
-    "notes": "Scoop extracts the Inno Setup application payload without running vendor setup tasks, including the installer's automatic-start registration."
+    "notes": "The upstream Inno Setup installer registers auto-start in HKCU; Scoop extracts the application files without applying that registry change."
 }
