@@ -25,7 +25,8 @@
                     "mytools.exe",
                     "mytools"
                 ]
-            ]
+            ],
+            "extract_dir": "windows-arm64"
         }
     },
     "checkver": {
