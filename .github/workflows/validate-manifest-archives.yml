@@ -153,6 +153,8 @@ on:
       - 'bucket/agentmeter.json'
       - 'bucket/quick-scan.json'
       - 'bucket/resobackup.json'
+      - 'bucket/atlas.json'
+      - 'bucket/sshgo.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -267,6 +269,8 @@ on:
       - 'bucket/agentmeter.json'
       - 'bucket/quick-scan.json'
       - 'bucket/resobackup.json'
+      - 'bucket/atlas.json'
+      - 'bucket/sshgo.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
