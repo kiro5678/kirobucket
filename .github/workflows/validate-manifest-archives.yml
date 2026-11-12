@@ -171,6 +171,7 @@ on:
       - 'bucket/video-player.json'
       - 'bucket/leafmark.json'
       - 'bucket/minicode.json'
+      - 'bucket/video-downloader.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -285,6 +286,7 @@ on:
       - 'bucket/kyokai.json'
       - 'bucket/leafmark.json'
       - 'bucket/minicode.json'
+      - 'bucket/video-downloader.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
