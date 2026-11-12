@@ -83,6 +83,9 @@ on:
       - 'bucket/hyla.json'
       - 'bucket/voke.json'
       - 'bucket/win-xinai-de-tools-mygo.json'
+      - 'bucket/ceramic.json'
+      - 'bucket/gotrust.json'
+      - 'bucket/yeek.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -127,6 +130,9 @@ on:
       - 'bucket/hyla.json'
       - 'bucket/voke.json'
       - 'bucket/win-xinai-de-tools-mygo.json'
+      - 'bucket/ceramic.json'
+      - 'bucket/gotrust.json'
+      - 'bucket/yeek.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
