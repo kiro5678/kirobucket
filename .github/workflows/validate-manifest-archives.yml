@@ -149,6 +149,16 @@ on:
       - 'bucket/bootie.json'
       - 'bucket/kivrix.json'
       - 'bucket/kyokai.json'
+      - 'bucket/baggy.json'
+      - 'bucket/miguwave.json'
+      - 'bucket/mygost.json'
+      - 'bucket/otool.json'
+      - 'bucket/pomodoro-mygo.json'
+      - 'bucket/quesora-native.json'
+      - 'bucket/rainforest.json'
+      - 'bucket/rivu.json'
+      - 'bucket/ytbplus.json'
+      - 'bucket/zeokeel-super-agent.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -316,6 +326,16 @@ on:
       - 'bucket/bentomail.json'
       - 'bucket/biternet.json'
       - 'bucket/bigo-live-recorder.json'
+      - 'bucket/baggy.json'
+      - 'bucket/miguwave.json'
+      - 'bucket/mygost.json'
+      - 'bucket/otool.json'
+      - 'bucket/pomodoro-mygo.json'
+      - 'bucket/quesora-native.json'
+      - 'bucket/rainforest.json'
+      - 'bucket/rivu.json'
+      - 'bucket/ytbplus.json'
+      - 'bucket/zeokeel-super-agent.json'
   workflow_dispatch:
     inputs:
       manifest:
