@@ -62,6 +62,10 @@ on:
       - 'bucket/gocompare.json'
       - 'bucket/videodown.json'
       - 'bucket/monitorbar.json'
+      - 'bucket/yolomcl.json'
+      - 'bucket/osprey.json'
+      - 'bucket/gogo-explorer.json'
+      - 'bucket/new-century-renamer.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -85,6 +89,10 @@ on:
       - 'bucket/gocompare.json'
       - 'bucket/videodown.json'
       - 'bucket/monitorbar.json'
+      - 'bucket/yolomcl.json'
+      - 'bucket/osprey.json'
+      - 'bucket/gogo-explorer.json'
+      - 'bucket/new-century-renamer.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
