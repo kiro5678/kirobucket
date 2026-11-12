@@ -1,6 +1,6 @@
 {
     "version": "0.1.9",
-    "description": "Dynamic Island-style notch for Windows 10/11 with media controls, synced lyrics, notifications, calendar, to-dos, Pomodoro timer, and file shelf. Developer: kexlyu24.",
+    "description": "Dynamic Island-style notch for Windows 10/11 with media controls, synced lyrics, notifications, calendar, to-dos, Pomodoro timer, and file shelf.",
     "homepage": "https://github.com/kexlyu24/wisp",
     "license": "MIT",
     "architecture": {
@@ -32,5 +32,6 @@
                 "extract_dir": "Wisp-$version-windows-x64"
             }
         }
-    }
+    },
+    "##": "Developer: kexlyu24"
 }
