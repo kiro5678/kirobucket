@@ -145,10 +145,6 @@ on:
       - 'bucket/myspotify.json'
       - 'bucket/yunji-uml.json'
       - '.github/workflows/validate-manifest-archives.yml'
-    - 'bucket/baidunetgo.json'
-    - 'bucket/gzist-netkeeper.json'
-    - 'bucket/myspotify.json'
-    - 'bucket/yunji-uml.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -324,10 +320,6 @@ concurrency:
   group: validate-manifest-archives-${{ github.ref }}
   cancel-in-progress: false
 
-    - 'bucket/baidunetgo.json'
-    - 'bucket/gzist-netkeeper.json'
-    - 'bucket/myspotify.json'
-    - 'bucket/yunji-uml.json'
 jobs:
   validate:
     name: Validate archive paths
