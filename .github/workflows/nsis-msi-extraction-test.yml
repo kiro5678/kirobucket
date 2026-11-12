@@ -226,7 +226,7 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Nova Island\.exe$"
-            }
+            },
             },
             @{
               Name = "Spotube"
@@ -237,6 +237,7 @@ jobs:
               MsiUrl = ""
               MsiSha256 = ""
               AppExePattern = "(?i)^Spotube\\.exe$"
+            }
           )
 
           $lessmsiExe = $null
