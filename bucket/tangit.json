@@ -1,0 +1,37 @@
+{
+    "version": "1.4.0",
+    "description": "Native Git desktop workspace with visual history, staging, commit graph and conflict resolution.",
+    "homepage": "https://github.com/FleetingEcho/TanGit",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/FleetingEcho/TanGit/releases/download/v1.4.0/tangit-1.4.0-windows-amd64.tar.gz",
+            "hash": "0c1fe90f555652c5807aa6e84effccd0f29680588dc32144d0d77bc2ae0b30a2"
+        },
+        "arm64": {
+            "url": "https://github.com/FleetingEcho/TanGit/releases/download/v1.4.0/tangit-1.4.0-windows-arm64.tar.gz",
+            "hash": "a08adcfcd310a34b9e809f218e6cd8814d38a803679362e9d7b30ec0b2a2d99e"
+        }
+    },
+    "bin": "TanGit.exe",
+    "shortcuts": [
+        [
+            "TanGit.exe",
+            "TanGit"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/FleetingEcho/TanGit"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/FleetingEcho/TanGit/releases/download/v$version/tangit-$version-windows-amd64.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/FleetingEcho/TanGit/releases/download/v$version/tangit-$version-windows-arm64.tar.gz"
+            }
+        }
+    },
+    "notes": "TanGit has signed in-app updates. Use Scoop as the update authority to avoid concurrent updates."
+}
