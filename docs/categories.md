@@ -22,7 +22,7 @@
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
-| Notes & Knowledge | 24 | [View](#notes-knowledge) |
+| Notes & Knowledge | 25 | [View](#notes-knowledge) |
 | Other Utilities | 131 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
@@ -40,7 +40,7 @@
 | Windows Customization | 93 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1073**
+**Total unique manifests: 1074**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -668,6 +668,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [butterfly](../bucket/butterfly.json) | 2.6.1 | 64bit: 27.3 MiB | 2026-10-28 | A powerful, minimalistic, cross-platform note-taking app | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [butterfly-nightly](../bucket/butterfly-nightly.json) | 2026.10.24.1034 | 64bit: 27.4 MiB / arm64: 26.4 MiB | 2026-10-24 | A powerful, minimalistic, cross-platform note-taking app (nightly build) | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [desktop-note-ok](../bucket/desktop-note-ok.json) | 4.66 | 64bit: 292.3 KiB | 2026-06-13 | Create and manage notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopNoteOK) |
+| [deepown](../bucket/deepown.json) | 1.1.4 | 11.8 MiB | 2026-11-10 | Local-first encrypted data vaults with direct device-to-device LAN sync and revision history. | [Homepage](https://deepown.app/) |
 | [pake-flomo](../bucket/pake-flomo.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Flomo. | [Homepage](https://v.flomoapp.com/mine) |
 | [flyout-notepad](../bucket/flyout-notepad.json) | 1.05 | 64bit: 234.8 KiB | 2026-08-17 | Dockable text and image workspace that opens from screen edges. | [Homepage](https://www.softwareok.com/?seite=Microsoft/FlyOutNotePad) |
 | [goldendict-ng](../bucket/goldendict-ng.json) | v26.11.0 | 64bit: 129.6 MiB | 2026-10-23 | A feature-rich dictionary lookup program, supporting multiple dictionary formats (StarDict/Babylon/Lingvo/Dictd/AARD/MDict/SDict) and online dictionaries, featuring perfect article rendering with the complete markup, illustrations and other content retained, and allowing you to type in words without any accents or correct case. | [Homepage](https://github.com/xiaoyifang/goldendict) |
