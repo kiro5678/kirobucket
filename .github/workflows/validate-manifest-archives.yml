@@ -58,6 +58,10 @@ on:
       - 'bucket/bentomail.json'
       - 'bucket/biternet.json'
       - 'bucket/bigo-live-recorder.json'
+      - 'bucket/mixmusic.json'
+      - 'bucket/gocompare.json'
+      - 'bucket/videodown.json'
+      - 'bucket/monitorbar.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -77,6 +81,10 @@ on:
       - 'bucket/portable-registrator.json'
       - 'bucket/ps-sfta.json'
       - 'bucket/win-link-router.json'
+      - 'bucket/mixmusic.json'
+      - 'bucket/gocompare.json'
+      - 'bucket/videodown.json'
+      - 'bucket/monitorbar.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
