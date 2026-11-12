@@ -13,7 +13,8 @@
                     "sona.exe",
                     "Sona"
                 ]
-            ]
+            ],
+            "extract_dir": "Sona"
         }
     },
     "checkver": {
