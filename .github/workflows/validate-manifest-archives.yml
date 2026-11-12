@@ -150,6 +150,9 @@ on:
       - 'bucket/yoho-music.json'
       - 'bucket/sshgo.json'
       - 'bucket/thesio.json'
+      - 'bucket/agentmeter.json'
+      - 'bucket/quick-scan.json'
+      - 'bucket/resobackup.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -261,6 +264,9 @@ on:
       - 'bucket/yoho-music.json'
       - 'bucket/sshgo.json'
       - 'bucket/thesio.json'
+      - 'bucket/agentmeter.json'
+      - 'bucket/quick-scan.json'
+      - 'bucket/resobackup.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
