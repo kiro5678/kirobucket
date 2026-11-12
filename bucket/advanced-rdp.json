@@ -9,10 +9,10 @@
             "hash": "67fdb55ae982d01f477e6b0bae7b0d91c445fc59bcd093b3e21635ebc552f521"
         }
     },
-    "bin": "AdvancedRdp.exe",
+    "bin": "Advanced RDP.exe",
     "shortcuts": [
         [
-            "AdvancedRdp.exe",
+            "Advanced RDP.exe",
             "Advanced RDP"
         ]
     ],
