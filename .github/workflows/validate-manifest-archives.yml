@@ -108,7 +108,6 @@ on:
       - 'bucket/arion.json'
       - 'bucket/my-vm.json'
       - 'bucket/anker-prime-desktop.json'
-      - 'bucket/fnmovie.json'
       - 'bucket/rclonedrive.json'
       - 'bucket/hergo.json'
       - 'bucket/klip.json'
@@ -208,7 +207,6 @@ on:
       - 'bucket/arion.json'
       - 'bucket/my-vm.json'
       - 'bucket/anker-prime-desktop.json'
-      - 'bucket/fnmovie.json'
       - 'bucket/rclonedrive.json'
       - 'bucket/hergo.json'
       - 'bucket/klip.json'
@@ -966,3 +964,4 @@ jobs:
           path: ${{ runner.temp }}/7zip.log
           if-no-files-found: ignore
           retention-days: 7
+
