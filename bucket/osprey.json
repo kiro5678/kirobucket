@@ -1,0 +1,36 @@
+{
+    "version": "2026.11.9",
+    "description": "Native desktop tool for reviewing code changes file by file.",
+    "homepage": "https://github.com/overcat/osprey",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/overcat/osprey/releases/download/$version/osprey-$version-windows-amd64.zip",
+            "hash": "06d03517465b57fe4b519d314fa8ab6f3366d0eb1645b7f7252f8ea9369010df"
+        },
+        "arm64": {
+            "url": "https://github.com/overcat/osprey/releases/download/$version/osprey-$version-windows-arm64.zip",
+            "hash": "92c0c97acea045e2a524dc79601f0a0cbc608c0ba050cc67de7c9d98203c1ff6"
+        }
+    },
+    "bin": "Osprey.exe",
+    "shortcuts": [
+        [
+            "Osprey.exe",
+            "Osprey"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/overcat/osprey"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/overcat/osprey/releases/download/$version/osprey-$version-windows-amd64.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/overcat/osprey/releases/download/$version/osprey-$version-windows-arm64.zip"
+            }
+        }
+    }
+}
