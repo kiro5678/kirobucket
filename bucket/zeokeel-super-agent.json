@@ -17,8 +17,8 @@
         }
     },
     "checkver": {
-        "github": "https://github.com/zeokeel/ZeoKeel-Super-Agent",
-        "regex": "v([0-9]+\\.[0-9]+\\.[0-9]+-rc\\.[0-9]+)"
+        "url": "https://github.com/zeokeel/ZeoKeel-Super-Agent/releases",
+        "regex": "/releases/tag/v([0-9]+\\.[0-9]+\\.[0-9]+-rc\\.[0-9]+)"
     },
     "autoupdate": {
         "architecture": {
