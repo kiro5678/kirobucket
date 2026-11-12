@@ -73,6 +73,9 @@ on:
       - 'bucket/mygo-launcher.json'
       - 'bucket/stage-manager-for-windows.json'
       - 'bucket/winswx.json'
+      - 'bucket/sweep.json'
+      - 'bucket/wslpilot.json'
+      - 'bucket/textviewer.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -107,6 +110,9 @@ on:
       - 'bucket/mygo-launcher.json'
       - 'bucket/stage-manager-for-windows.json'
       - 'bucket/winswx.json'
+      - 'bucket/sweep.json'
+      - 'bucket/wslpilot.json'
+      - 'bucket/textviewer.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
