@@ -42,5 +42,6 @@
                 }
             }
         }
-    }
+    },
+    "notes": "IPAM data and preferences are stored in the per-user application-data directory outside the Scoop package."
 }
