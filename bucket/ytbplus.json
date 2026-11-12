@@ -13,7 +13,8 @@
                     "ytbplus.exe",
                     "ytbplus"
                 ]
-            ]
+            ],
+            "extract_dir": "ytbplus"
         }
     },
     "checkver": {
