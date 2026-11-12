@@ -97,6 +97,8 @@ on:
       - 'bucket/disklens.json'
       - 'bucket/tcpconnbenchmark.json'
       - 'bucket/hoyo-gacha.json'
+      - 'bucket/sshyard.json'
+      - 'bucket/pitstop.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -155,6 +157,8 @@ on:
       - 'bucket/disklens.json'
       - 'bucket/tcpconnbenchmark.json'
       - 'bucket/hoyo-gacha.json'
+      - 'bucket/sshyard.json'
+      - 'bucket/pitstop.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
