@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       manifest:
-        description: "Manifest already committed to master that you want to validate, e.g. bucket/taskexplorer.json"
+        description: "Comma-separated manifest paths committed to master, e.g. bucket/a.json,bucket/b.json"
         required: true
         type: string
       force_update:
@@ -52,11 +52,17 @@ jobs:
           $needsTable = $false
 
           if ($env:EVENT_NAME -eq 'workflow_dispatch') {
-            $path = ([string]$env:MANIFEST_INPUT).Trim().Replace('\', '/')
-            if ($path -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
-              throw "Provide one manifest filename or bucket/filename.json. Received: $path"
+            $requestedPaths = @([string]$env:MANIFEST_INPUT -split '[,;\r\n]+' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+            if ($requestedPaths.Count -eq 0) {
+              throw 'Provide at least one manifest filename.'
             }
-            $manifestPaths.Add("bucket/$($Matches.name)")
+            foreach ($requestedPath in $requestedPaths) {
+              $path = $requestedPath.Trim().Replace('\', '/')
+              if ($path -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
+                throw "Provide root-level manifest filenames, optionally prefixed with bucket/. Received: $path"
+              }
+              $manifestPaths.Add("bucket/$($Matches.name)")
+            }
             $needsTable = $true
           } else {
             $before = [string]$env:PUSH_BEFORE
