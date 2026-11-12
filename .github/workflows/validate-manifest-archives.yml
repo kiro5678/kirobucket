@@ -81,6 +81,8 @@ on:
       - 'bucket/sunvale.json'
       - 'bucket/mouse-mapper.json'
       - 'bucket/hyla.json'
+      - 'bucket/voke.json'
+      - 'bucket/win-xinai-de-tools-mygo.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -123,6 +125,8 @@ on:
       - 'bucket/sunvale.json'
       - 'bucket/mouse-mapper.json'
       - 'bucket/hyla.json'
+      - 'bucket/voke.json'
+      - 'bucket/win-xinai-de-tools-mygo.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
