@@ -227,6 +227,16 @@ jobs:
               MsiSha256 = ""
               AppExePattern = "(?i)^Nova Island\.exe$"
             }
+            },
+            @{
+              Name = "Spotube"
+              Version = "6.0.0"
+              # Test whether the official NSIS setup exposes a Scoop-extractable application payload.
+              NsisUrl = "https://github.com/team-spotube/spotube/releases/download/v6.0.0/Spotube-windows-x86_64-setup.exe#/dl.7z"
+              NsisSha256 = "d7e073ead0707fcdfcc50074e88721b7df38dc10248eadafc346867e156c6e8d"
+              MsiUrl = ""
+              MsiSha256 = ""
+              AppExePattern = "(?i)^Spotube\\.exe$"
           )
 
           $lessmsiExe = $null
