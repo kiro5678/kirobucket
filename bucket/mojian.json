@@ -1,12 +1,12 @@
 {
-    "version": "0.4.0",
+    "version": "0.4.1",
     "description": "Native plain-text editor for local folders with tabs, split panes, terminals, Git diffs and PDF previews.",
     "homepage": "https://github.com/ox0pine/mojian",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/ox0pine/mojian/releases/download/v0.4.0/mojian-0.4.0-windows-amd64.tar.gz",
-            "hash": "505f1b8b9a306dad462e416404a19590043c1a260a1ea4a5e8ecefd7fa4169b1",
+            "url": "https://github.com/ox0pine/mojian/releases/download/v0.4.1/mojian-0.4.1-windows-amd64.tar.gz",
+            "hash": "7666a95bb3af487ef2f1b4b5c5dfe0a71b227bcf4aff33e22ed5d85b74c3bdb2",
             "bin": "Mojian.exe",
             "shortcuts": [
                 [
@@ -16,8 +16,8 @@
             ]
         },
         "arm64": {
-            "url": "https://github.com/ox0pine/mojian/releases/download/v0.4.0/mojian-0.4.0-windows-arm64.tar.gz",
-            "hash": "3359e4c4bd0b39eee46cbe4d49792d73d005f88862e5816346cb07371b7be1d3",
+            "url": "https://github.com/ox0pine/mojian/releases/download/v0.4.1/mojian-0.4.1-windows-arm64.tar.gz",
+            "hash": "efb197e0a6c53c69990c212fc6a646fbe8b3b20513cd51f9f8bb63f4ea08d56b",
             "bin": "Mojian.exe",
             "shortcuts": [
                 [
