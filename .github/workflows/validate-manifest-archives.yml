@@ -76,6 +76,11 @@ on:
       - 'bucket/sweep.json'
       - 'bucket/wslpilot.json'
       - 'bucket/textviewer.json'
+      - 'bucket/raydock.json'
+      - 'bucket/vocabox.json'
+      - 'bucket/sunvale.json'
+      - 'bucket/mouse-mapper.json'
+      - 'bucket/hyla.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -113,6 +118,11 @@ on:
       - 'bucket/sweep.json'
       - 'bucket/wslpilot.json'
       - 'bucket/textviewer.json'
+      - 'bucket/raydock.json'
+      - 'bucket/vocabox.json'
+      - 'bucket/sunvale.json'
+      - 'bucket/mouse-mapper.json'
+      - 'bucket/hyla.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
