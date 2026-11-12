@@ -186,6 +186,8 @@ on:
       - 'bucket/sona.json'
       - 'bucket/bamboo.json'
       - 'bucket/kite.json'
+      - 'bucket/hop-mygo.json'
+      - 'bucket/sakamoto.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -315,6 +317,8 @@ on:
       - 'bucket/sona.json'
       - 'bucket/bamboo.json'
       - 'bucket/kite.json'
+      - 'bucket/hop-mygo.json'
+      - 'bucket/sakamoto.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
