@@ -1,0 +1,14 @@
+{
+    "version": "0.1.0",
+    "description": "Native Git feature-branch review tool for examining complete changes without unrelated integration noise.",
+    "homepage": "https://github.com/jinghaihan/sift",
+    "license": "MIT",
+    "url": "https://github.com/jinghaihan/sift/releases/download/v0.1.0/sift-0.1.0-windows-amd64.tar.gz",
+    "hash": "a2f4e27592c5fb2c89961012a1ded98bdde92b81752013b32e461e1641b64c4a",
+    "bin": "sift.exe",
+    "shortcuts": [["sift.exe", "Sift"]],
+    "checkver": {"github": "https://github.com/jinghaihan/sift"},
+    "autoupdate": {
+        "url": "https://github.com/jinghaihan/sift/releases/download/v$version/sift-$version-windows-amd64.tar.gz"
+    }
+}
