@@ -1,0 +1,24 @@
+{
+    "version": "0.1.0",
+    "description": "Native Windows game launcher that finds installed games, displays Steam artwork and starts games.",
+    "homepage": "https://github.com/yaffalhakim1/nova",
+    "url": "https://github.com/kiro5678/kirobucket/releases/download/awesome-mygo-games/nova-0.1.0-x64.zip",
+    "hash": "842ef038cc98ffd601424c775ba284fb16ec29a023938d887cbc4eec20ad2840",
+    "shortcuts": [
+        [
+            "Nova.exe",
+            "Nova"
+        ]
+    ],
+    "checkver": {
+        "url": "https://raw.githubusercontent.com/yaffalhakim1/nova/master/mygo.json",
+        "jsonpath": "$.version"
+    },
+    "autoupdate": {
+        "url": "https://github.com/kiro5678/kirobucket/releases/download/awesome-mygo-games/nova-$version-x64.zip",
+        "hash": {
+            "url": "https://api.github.com/repos/kiro5678/kirobucket/releases/tags/awesome-mygo-games",
+            "jsonpath": "$.assets[?(@.name == 'nova-$version-x64.zip')].digest"
+        }
+    }
+}
