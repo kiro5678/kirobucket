@@ -159,6 +159,8 @@ on:
       - 'bucket/rivu.json'
       - 'bucket/ytbplus.json'
       - 'bucket/zeokeel-super-agent.json'
+      - 'bucket/live-calendar.json'
+      - 'bucket/live-mygo.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -336,6 +338,8 @@ on:
       - 'bucket/rivu.json'
       - 'bucket/ytbplus.json'
       - 'bucket/zeokeel-super-agent.json'
+      - 'bucket/live-calendar.json'
+      - 'bucket/live-mygo.json'
   workflow_dispatch:
     inputs:
       manifest:
