@@ -145,6 +145,10 @@ on:
       - 'bucket/myspotify.json'
       - 'bucket/yunji-uml.json'
       - 'bucket/glint.json'
+      - 'bucket/moko.json'
+      - 'bucket/bootie.json'
+      - 'bucket/kivrix.json'
+      - 'bucket/kyokai.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -253,6 +257,10 @@ on:
       - 'bucket/myspotify.json'
       - 'bucket/yunji-uml.json'
       - 'bucket/glint.json'
+      - 'bucket/moko.json'
+      - 'bucket/bootie.json'
+      - 'bucket/kivrix.json'
+      - 'bucket/kyokai.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
