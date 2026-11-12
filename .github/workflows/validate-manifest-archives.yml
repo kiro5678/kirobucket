@@ -141,6 +141,7 @@ on:
       - 'bucket/quarry.json'
       - 'bucket/herdr-desktop.json'
       - 'bucket/titen.json'
+      - 'bucket/xiangqi.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -243,6 +244,7 @@ on:
       - 'bucket/quarry.json'
       - 'bucket/herdr-desktop.json'
       - 'bucket/titen.json'
+      - 'bucket/xiangqi.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
