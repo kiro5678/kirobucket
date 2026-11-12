@@ -12,7 +12,8 @@
                     "Rainforest.exe",
                     "Rainforest"
                 ]
-            ]
+            ],
+            "extract_dir": "windows-amd64"
         }
     },
     "checkver": {
@@ -29,5 +30,6 @@
                 }
             }
         }
-    }
+    },
+    "license": "AGPL-3.0"
 }
