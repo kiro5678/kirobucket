@@ -1,0 +1,284 @@
+name: Build Awesome MyGo Windows Games
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/build-awesome-mygo-games.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/build-awesome-mygo-games.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: awesome-mygo-games
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ matrix.app.name }}
+    runs-on: windows-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        app:
+          - id: nova
+            name: Nova
+            repo: yaffalhakim1/nova
+            ref: master
+            exe: Nova.exe
+            description: Native Windows game launcher that finds installed games, displays Steam artwork and starts games.
+          - id: hangman
+            name: Hangman
+            repo: zerebos/hangman-mygo
+            ref: main
+            exe: Hangman.exe
+            description: Native Hangman game with animated guesses, synthesized sounds and word packs.
+          - id: neural-breach
+            name: Neural Breach
+            repo: ntnyq/NeuralBreach
+            ref: main
+            exe: Neural Breach.exe
+            description: Native cyberpunk breach puzzle game with a hex matrix and limited buffer.
+          - id: game-presence
+            name: Game Presence
+            repo: JoaoVitorOli/gamepresence
+            ref: main
+            exe: Game Presence.exe
+            description: Windows tray app that shows any running game on Discord with a custom name and cover.
+          - id: 2048
+            name: "2048"
+            repo: egoist/2048
+            ref: main
+            exe: "2048.exe"
+            description: Native desktop version of the 2048 number puzzle game.
+          - id: apex-runner
+            name: Apex Runner
+            repo: wan-kong/apex-helper
+            ref: main
+            exe: Apex Runner.exe
+            description: Windows game environment switcher for keyboard, IME and audio settings.
+    steps:
+      - name: Check out application source
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.app.repo }}
+          ref: ${{ matrix.app.ref }}
+          path: source/${{ matrix.app.id }}
+          persist-credentials: false
+
+      - name: Check out MyGo for Nova
+        if: matrix.app.id == 'nova'
+        uses: actions/checkout@v4
+        with:
+          repository: egoist/mygo
+          ref: main
+          path: source/mygo
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.27.3"
+          cache: false
+
+      - name: Build and package Windows x64 executable
+        shell: pwsh
+        env:
+          APP_ID: ${{ matrix.app.id }}
+          APP_NAME: ${{ matrix.app.name }}
+          APP_REPO: ${{ matrix.app.repo }}
+          APP_REF: ${{ matrix.app.ref }}
+          APP_EXE: ${{ matrix.app.exe }}
+          APP_DESCRIPTION: ${{ matrix.app.description }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $source = Join-Path $env:GITHUB_WORKSPACE "source/$env:APP_ID"
+          $dist = Join-Path $env:GITHUB_WORKSPACE 'dist'
+          New-Item -ItemType Directory -Path $dist -Force | Out-Null
+
+          $configPath = Join-Path $source 'mygo.json'
+          if (!(Test-Path -LiteralPath $configPath -PathType Leaf)) {
+              throw "Missing mygo.json: $configPath"
+          }
+          $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
+          $version = [string]$config.version
+          if ($version -notmatch '^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$') {
+              throw "Unsupported application version: $version"
+          }
+
+          $exePath = Join-Path $dist $env:APP_EXE
+          Push-Location $source
+          try {
+              go build -trimpath -ldflags "-s -w -H=windowsgui" -o $exePath .
+              if ($LASTEXITCODE -ne 0) {
+                  exit $LASTEXITCODE
+              }
+          }
+          finally {
+              Pop-Location
+          }
+
+          if (!(Test-Path -LiteralPath $exePath -PathType Leaf)) {
+              throw "Build did not produce $exePath"
+          }
+
+          $assetName = "$env:APP_ID-$version-x64.zip"
+          $zipPath = Join-Path $dist $assetName
+          Compress-Archive -LiteralPath $exePath -DestinationPath $zipPath -CompressionLevel Optimal -Force
+          $hash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $sourceCommit = (git -C $source rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0) {
+              throw 'Unable to read source commit.'
+          }
+
+          $metadata = [ordered]@{
+              id = $env:APP_ID
+              name = $env:APP_NAME
+              version = $version
+              repo = $env:APP_REPO
+              ref = $env:APP_REF
+              sourceCommit = $sourceCommit
+              exe = $env:APP_EXE
+              description = $env:APP_DESCRIPTION
+              homepage = "https://github.com/$env:APP_REPO"
+              rawConfig = "https://raw.githubusercontent.com/$env:APP_REPO/$env:APP_REF/mygo.json"
+              asset = $assetName
+              hash = $hash
+          }
+          $metadataPath = Join-Path $dist "$env:APP_ID.json"
+          [System.IO.File]::WriteAllText(
+              $metadataPath,
+              ($metadata | ConvertTo-Json -Depth 10),
+              [System.Text.UTF8Encoding]::new($false)
+          )
+
+      - name: Upload built application
+        uses: actions/upload-artifact@v4
+        with:
+          name: mygo-game-${{ matrix.app.id }}
+          path: |
+            dist/${{ matrix.app.id }}-*.zip
+            dist/${{ matrix.app.id }}.json
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    name: Publish release and update Scoop manifests
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out bucket
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Download Windows builds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: mygo-game-*
+          path: release
+          merge-multiple: true
+
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          tag="awesome-mygo-games"
+          shopt -s nullglob
+          assets=(release/*.zip)
+          test "${#assets[@]}" -eq 6
+          if gh release view "$tag" --repo "$GH_REPO" >/dev/null 2>&1; then
+            gh release upload "$tag" "${assets[@]}" --clobber --repo "$GH_REPO"
+          else
+            gh release create "$tag" "${assets[@]}" \
+              --repo "$GH_REPO" \
+              --title "Awesome MyGo Windows Games" \
+              --notes "Windows x64 builds compiled from the upstream source repositories by this bucket's GitHub Actions workflow." \
+              --latest=false
+          fi
+
+      - name: Generate Scoop manifests
+        run: |
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("release")
+          bucket = Path("bucket")
+          api = "https://api.github.com/repos/kiro5678/kirobucket/releases/tags/awesome-mygo-games"
+
+          for metadata_path in sorted(root.glob("*.json")):
+              data = json.loads(metadata_path.read_text(encoding="utf-8"))
+              asset_url = (
+                  "https://github.com/kiro5678/kirobucket/releases/download/"
+                  f"awesome-mygo-games/{data['asset']}"
+              )
+              manifest = {
+                  "version": data["version"],
+                  "description": data["description"],
+                  "homepage": data["homepage"],
+                  "url": asset_url,
+                  "hash": data["hash"],
+                  "shortcuts": [[data["exe"], data["name"]]],
+                  "checkver": {
+                      "url": data["rawConfig"],
+                      "jsonpath": "$.version"
+                  },
+                  "autoupdate": {
+                      "url": (
+                          "https://github.com/kiro5678/kirobucket/releases/download/"
+                          "awesome-mygo-games/"
+                          f"{data['id']}-$version-x64.zip"
+                      ),
+                      "hash": {
+                          "url": api,
+                          "jsonpath": (
+                              "$.assets[?(@.name == '"
+                              f"{data['id']}-$version-x64.zip')].digest"
+                          )
+                      }
+                  }
+              }
+              (bucket / f"{data['id']}.json").write_text(
+                  json.dumps(manifest, ensure_ascii=False, indent=4) + "\n",
+                  encoding="utf-8"
+              )
+          PY
+
+      - name: Commit generated Scoop manifests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bucket/nova.json bucket/hangman.json bucket/neural-breach.json bucket/game-presence.json bucket/2048.json bucket/apex-runner.json
+          if git diff --cached --quiet; then
+            echo "Scoop manifests are already up to date."
+            exit 0
+          fi
+          git commit -m "chore: add Awesome MyGo game manifests"
+          git push origin HEAD:master
+
+      - name: Dispatch manifest validation pipeline
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh workflow run manifest-pipeline.yml \
+            --repo "$GH_REPO" \
+            --ref master \
+            --field manifest="bucket/nova.json,bucket/hangman.json,bucket/neural-breach.json,bucket/game-presence.json,bucket/2048.json,bucket/apex-runner.json"
