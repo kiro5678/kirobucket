@@ -205,7 +205,6 @@ jobs:
               --repo "$GH_REPO" \
               --title "Awesome MyGo Windows Games" \
               --notes "Windows x64 builds compiled from the upstream source repositories by this bucket's GitHub Actions workflow." \
-              --latest=false
           fi
 
       - name: Generate Scoop manifests
