@@ -13,10 +13,10 @@
             "hash": "ca860a5f239ce02a7df48ff3691ce1afcc35afd7197b5db8cc7f17e0e3d4f2eb"
         }
     },
-    "bin": "hoyo-gacha.exe",
+    "bin": "Hoyo Gacha.exe",
     "shortcuts": [
         [
-            "hoyo-gacha.exe",
+            "Hoyo Gacha.exe",
             "Hoyo Gacha"
         ]
     ],
