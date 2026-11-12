@@ -138,6 +138,9 @@ on:
       - 'bucket/quosparr.json'
       - 'bucket/wagyu-music.json'
       - 'bucket/mcl.json'
+      - 'bucket/quarry.json'
+      - 'bucket/herdr-desktop.json'
+      - 'bucket/titen.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -237,6 +240,9 @@ on:
       - 'bucket/quosparr.json'
       - 'bucket/wagyu-music.json'
       - 'bucket/mcl.json'
+      - 'bucket/quarry.json'
+      - 'bucket/herdr-desktop.json'
+      - 'bucket/titen.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
