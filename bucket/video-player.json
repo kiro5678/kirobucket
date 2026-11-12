@@ -3,9 +3,7 @@
     "description": "Native desktop video player with subtitles, picture-in-picture and playlists; requires FFmpeg tools.",
     "homepage": "https://github.com/fazi-gondal/video",
     "license": "Proprietary",
-    "depends": [
-        "ffmpeg"
-    ],
+    "depends": "ffmpeg",
     "architecture": {
         "64bit": {
             "url": "https://github.com/fazi-gondal/video/releases/download/1.0.0/Video.Player.exe",
