@@ -32,6 +32,5 @@
                 "extract_dir": "Wisp-$version-windows-x64"
             }
         }
-    },
-    "##": "Developer: kexlyu24"
+    }
 }
