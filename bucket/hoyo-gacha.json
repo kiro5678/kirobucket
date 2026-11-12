@@ -1,0 +1,37 @@
+{
+    "version": "0.5.1",
+    "description": "Native desktop app for managing Genshin Impact, Honkai: Star Rail and Zenless Zone Zero gacha records.",
+    "homepage": "https://github.com/quantulr/hoyo-gacha",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v0.5.1/hoyo-gacha-0.5.1-windows-amd64.tar.gz",
+            "hash": "0cc4f8afd312b0481c1c0f05a7a418e67558585027c90770e0290f970288522b"
+        },
+        "arm64": {
+            "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v0.5.1/hoyo-gacha-0.5.1-windows-arm64.tar.gz",
+            "hash": "ca860a5f239ce02a7df48ff3691ce1afcc35afd7197b5db8cc7f17e0e3d4f2eb"
+        }
+    },
+    "bin": "hoyo-gacha.exe",
+    "shortcuts": [
+        [
+            "hoyo-gacha.exe",
+            "Hoyo Gacha"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/quantulr/hoyo-gacha"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v$version/hoyo-gacha-$version-windows-amd64.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v$version/hoyo-gacha-$version-windows-arm64.tar.gz"
+            }
+        }
+    },
+    "notes": "The app reads gacha-log cache data from local game files to refresh records and stores account records under the user's Windows application data directory, outside Scoop. It does not upload gacha records."
+}
