@@ -169,6 +169,8 @@ on:
       - 'bucket/universal-s3-ui.json'
       - 'bucket/translator233.json'
       - 'bucket/video-player.json'
+      - 'bucket/leafmark.json'
+      - 'bucket/minicode.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -281,6 +283,8 @@ on:
       - 'bucket/bootie.json'
       - 'bucket/kivrix.json'
       - 'bucket/kyokai.json'
+      - 'bucket/leafmark.json'
+      - 'bucket/minicode.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
