@@ -5,11 +5,11 @@
     "license": "MIT",
     "url": "https://github.com/biaobiaobiao108/fnmovie/releases/download/v1.4.0/-1.4.0-windows-amd64-portable.zip",
     "hash": "1c6231f928e5d88b09c4ad57ca8ba06b7a8c78d2198af9990fb50cda5d69dc23",
-    "bin": "哞哩影院.exe",
+    "bin": "FNMovie.exe",
     "shortcuts": [
         [
-            "哞哩影院.exe",
-            "哞哩影院"
+            "FNMovie.exe",
+            "FNMovie"
         ]
     ],
     "checkver": {
@@ -18,5 +18,6 @@
     "autoupdate": {
         "url": "https://github.com/biaobiaobiao108/fnmovie/releases/download/v$version/-$version-windows-amd64-portable.zip"
     },
-    "notes": "Requires access to a Feiniu Video server and an account authorized to view its media libraries. The portable archive includes the app, libmpv runtime files and third-party license notices."
+    "notes": "Requires access to a Feiniu Video server and an account authorized to view its media libraries. The portable archive includes the app, libmpv runtime files and third-party license notices.",
+    "pre_install": "$binary = Get-ChildItem -LiteralPath $dir -Filter '*.exe' -File | Select-Object -First 1; if ($null -eq $binary) { throw 'FNMovie executable was not found.' }; Rename-Item -LiteralPath $binary.FullName -NewName 'FNMovie.exe'"
 }
