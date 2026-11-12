@@ -1,0 +1,37 @@
+{
+    "version": "0.2.3",
+    "description": "Native source code reader with project tree, tabs, search, symbols, diffs and terminal.",
+    "homepage": "https://github.com/wibus-wee/see",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/wibus-wee/see/releases/download/v0.2.3/see-0.2.3-windows-amd64.tar.gz",
+            "hash": "b6f46ada6b6eecdf11849824efcf4c5d306d65eb485f1a36969b70783632d096"
+        },
+        "arm64": {
+            "url": "https://github.com/wibus-wee/see/releases/download/v0.2.3/see-0.2.3-windows-arm64.tar.gz",
+            "hash": "eef827255a5a1c3273b4ccc02bbfba1442abc8e08973d42e33d18a898a771d34"
+        }
+    },
+    "bin": "See.exe",
+    "shortcuts": [
+        [
+            "See.exe",
+            "See"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/wibus-wee/see"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/wibus-wee/see/releases/download/v$version/see-$version-windows-amd64.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/wibus-wee/see/releases/download/v$version/see-$version-windows-arm64.tar.gz"
+            }
+        }
+    },
+    "notes": "See has signed in-app updates. Use Scoop as the update authority; installations that are not writable by the current user cannot self-update."
+}

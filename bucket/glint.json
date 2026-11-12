@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "description": "Native Windows screenshot and screen-recording tool with annotations, OCR, redaction, transcription and editing.",
+    "homepage": "https://github.com/wobsoriano/glint",
+    "license": "MIT",
+    "url": "https://github.com/wobsoriano/glint/releases/download/v0.2.0/Glint-0.2.0-windows-x64-setup.exe#/dl.7z",
+    "hash": "1892e761c49cc319a5ffdf15c8ffeb92823004640adbb38a699e798a3c226f6f",
+    "bin": "Glint.exe",
+    "shortcuts": [
+        [
+            "Glint.exe",
+            "Glint"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/wobsoriano/glint"
+    },
+    "autoupdate": {
+        "url": "https://github.com/wobsoriano/glint/releases/download/v$version/Glint-$version-windows-x64-setup.exe#/dl.7z"
+    },
+    "notes": "The setup executable is extracted with Scoop's 7-Zip flow; the upstream NSIS installer is not run. Glint stores settings, its Library, presets and transcription models in %APPDATA%\\Glint. On clean Windows installations, the Visual C++ Redistributable may be needed for whisper.cpp transcription."
+}

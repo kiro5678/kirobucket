@@ -1,0 +1,37 @@
+{
+    "version": "1.1.1",
+    "description": "Native SSH and SFTP client with terminal tabs, split panes, host management and AI assistance.",
+    "homepage": "https://github.com/Licoy/sshyard",
+    "license": "AGPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Licoy/sshyard/releases/download/v1.1.1/sshyard-1.1.1-windows-amd64-portable.zip",
+            "hash": "d00699a46e2b7d6dd820405c36e6f0ddde58bf9d6be6dfd2f32e43a15d8838ff"
+        },
+        "arm64": {
+            "url": "https://github.com/Licoy/sshyard/releases/download/v1.1.1/sshyard-1.1.1-windows-arm64-portable.zip",
+            "hash": "25f9cba86f47eb7e5031c5442f262f8281b665d41c7e8a7f3d1b2c8b22e80597"
+        }
+    },
+    "bin": "SSHYard.exe",
+    "shortcuts": [
+        [
+            "SSHYard.exe",
+            "SSHYard"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Licoy/sshyard"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Licoy/sshyard/releases/download/v$version/sshyard-$version-windows-amd64-portable.zip"
+            },
+            "arm64": {
+                "url": "https://github.com/Licoy/sshyard/releases/download/v$version/sshyard-$version-windows-arm64-portable.zip"
+            }
+        }
+    },
+    "notes": "SSHYard stores settings, hosts, session data and secrets in the Windows user data directory outside Scoop. It has signed in-app updates; use Scoop as the update authority to avoid concurrent updates."
+}

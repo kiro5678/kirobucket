@@ -1,0 +1,38 @@
+{
+    "version": "0.3.0",
+    "description": "Windows disk-space analyzer for locating and permanently removing regenerable build artifacts.",
+    "homepage": "https://github.com/yaffalhakim1/sweep",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/yaffalhakim1/sweep/releases/download/v0.3.0/Sweep-0.3.0-windows-amd64.exe",
+            "hash": "4ec11c1576dbb56285ddced48c27e55d7f5311c16c9f3e187d10d5d4ac452bca"
+        },
+        "arm64": {
+            "url": "https://github.com/yaffalhakim1/sweep/releases/download/v0.3.0/Sweep-0.3.0-windows-arm64.exe",
+            "hash": "b054fbcef1995896dccc73b164b0b89b45114e0328f4a27697a23370bff9d17f"
+        }
+    },
+    "pre_install": "$binary = Get-ChildItem -LiteralPath $dir -Filter 'Sweep-*-windows-*.exe' -File | Select-Object -First 1; if ($null -eq $binary) { throw 'Sweep executable was not found.' }; Rename-Item -LiteralPath $binary.FullName -NewName 'Sweep.exe'",
+    "bin": "Sweep.exe",
+    "shortcuts": [
+        [
+            "Sweep.exe",
+            "Sweep"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/yaffalhakim1/sweep"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/yaffalhakim1/sweep/releases/download/v$version/Sweep-$version-windows-amd64.exe"
+            },
+            "arm64": {
+                "url": "https://github.com/yaffalhakim1/sweep/releases/download/v$version/Sweep-$version-windows-arm64.exe"
+            }
+        }
+    },
+    "notes": "Sweep permanently deletes selected build-artifact folders instead of sending them to the Recycle Bin. Review every selection before confirming."
+}
