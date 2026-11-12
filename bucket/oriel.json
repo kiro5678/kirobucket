@@ -1,0 +1,37 @@
+{
+    "version": "0.13.0",
+    "description": "Native personal timeline reader for RSS and RSSHub with a headless server mode.",
+    "homepage": "https://github.com/yangflow/oriel",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/yangflow/oriel/releases/download/v0.13.0/oriel-0.13.0-windows-amd64.tar.gz",
+            "hash": "84ca1511e06afb26ec81b05b5e6e36b3c2102248cb426a5535f59ffee86e0cc1"
+        },
+        "arm64": {
+            "url": "https://github.com/yangflow/oriel/releases/download/v0.13.0/oriel-0.13.0-windows-arm64.tar.gz",
+            "hash": "5b621577af1680040470b9a11f6767dff64ca864b6211d8fcc8f78d931b4b726"
+        }
+    },
+    "bin": "oriel.exe",
+    "shortcuts": [
+        [
+            "oriel.exe",
+            "Oriel"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/yangflow/oriel"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/yangflow/oriel/releases/download/v$version/oriel-$version-windows-amd64.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/yangflow/oriel/releases/download/v$version/oriel-$version-windows-arm64.tar.gz"
+            }
+        }
+    },
+    "notes": "Oriel offers in-app updates after confirmation. Use Scoop as the update authority to avoid running both update mechanisms concurrently."
+}
