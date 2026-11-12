@@ -7,10 +7,10 @@
         "64bit": {
             "url": "https://github.com/pteich/us3ui/releases/download/v0.13.2/universal-s3-gui-0.13.2-windows-amd64.tar.gz",
             "hash": "9ec4371b78d2addb01423d23426025db0fe78c0362aef7631006538f9bf8136a",
-            "bin": "universal-s3-gui.exe",
+            "bin": "Universal S3 GUI.exe",
             "shortcuts": [
                 [
-                    "universal-s3-gui.exe",
+                    "Universal S3 GUI.exe",
                     "Universal S3 GUI"
                 ]
             ]
