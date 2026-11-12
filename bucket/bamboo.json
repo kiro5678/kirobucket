@@ -7,13 +7,14 @@
         "64bit": {
             "url": "https://github.com/OldPanda/bamboo/releases/download/v0.2.2/Bamboo-0.2.2-windows-x64.zip",
             "hash": "72e51ac3a4c8828a27a58171d40e0668fa2ac27a8d3c4b723b4f497224b00362",
-            "bin": "Bamboo.exe",
+            "bin": "bamboo.exe",
             "shortcuts": [
                 [
-                    "Bamboo.exe",
+                    "bamboo.exe",
                     "Bamboo"
                 ]
-            ]
+            ],
+            "extract_dir": "Bamboo"
         }
     },
     "checkver": {
