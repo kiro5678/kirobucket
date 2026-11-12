@@ -18,10 +18,10 @@
         "arm64": {
             "url": "https://github.com/pteich/us3ui/releases/download/v0.13.2/universal-s3-gui-0.13.2-windows-arm64.tar.gz",
             "hash": "f06857b7db0866e58b8886732a058e9552c06aaafb19e91ed367c738c438e386",
-            "bin": "universal-s3-gui.exe",
+            "bin": "Universal S3 GUI.exe",
             "shortcuts": [
                 [
-                    "universal-s3-gui.exe",
+                    "Universal S3 GUI.exe",
                     "Universal S3 GUI"
                 ]
             ]
