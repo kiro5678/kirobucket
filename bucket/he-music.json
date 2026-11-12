@@ -1,0 +1,54 @@
+{
+    "version": "2.0.2",
+    "description": "Cross-platform music player for online and local libraries, playlists, downloads and audio playback.",
+    "homepage": "https://github.com/he-music/HE-Music",
+    "license": "AGPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/he-music/HE-Music/releases/download/v2.0.2/he-music-2.0.2-windows-amd64.tar.gz",
+            "hash": "d3f23bac6dc5b5f860c77117b23ee03612b9cf430cbe5eb5b14ad90bf19c2200",
+            "bin": "HE-Music.exe",
+            "shortcuts": [
+                [
+                    "HE-Music.exe",
+                    "HE-Music"
+                ]
+            ]
+        },
+        "arm64": {
+            "url": "https://github.com/he-music/HE-Music/releases/download/v2.0.2/he-music-2.0.2-windows-arm64.tar.gz",
+            "hash": "f033f0246a03e3d6e37dc10a3eddf70304bf9881965eb5394ac681d34af03754",
+            "bin": "HE-Music.exe",
+            "shortcuts": [
+                [
+                    "HE-Music.exe",
+                    "HE-Music"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "github": "https://github.com/he-music/HE-Music"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/he-music/HE-Music/releases/download/v$version/he-music-$version-windows-amd64.tar.gz",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/he-music/HE-Music/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'he-music-$version-windows-amd64.tar.gz')].digest"
+                }
+            },
+            "arm64": {
+                "url": "https://github.com/he-music/HE-Music/releases/download/v$version/he-music-$version-windows-arm64.tar.gz",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/he-music/HE-Music/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'he-music-$version-windows-arm64.tar.gz')].digest"
+                }
+            }
+        }
+    },
+    "notes": "Microsoft Edge WebView2 Runtime is required on Windows. The release includes the mpv playback bundle; no separate mpv installation is required."
+}
