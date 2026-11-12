@@ -108,6 +108,7 @@ on:
       - 'bucket/arion.json'
       - 'bucket/my-vm.json'
       - 'bucket/anker-prime-desktop.json'
+      - 'bucket/fnmovie.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -177,6 +178,7 @@ on:
       - 'bucket/arion.json'
       - 'bucket/my-vm.json'
       - 'bucket/anker-prime-desktop.json'
+      - 'bucket/fnmovie.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
