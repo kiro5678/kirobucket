@@ -134,6 +134,8 @@ on:
       - 'bucket/hergo.json'
       - 'bucket/klip.json'
       - 'bucket/myshoes.json'
+      - 'bucket/oriel.json'
+      - 'bucket/zakki.json'
       - '.github/workflows/validate-manifest-archives.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -229,6 +231,8 @@ on:
       - 'bucket/hergo.json'
       - 'bucket/klip.json'
       - 'bucket/myshoes.json'
+      - 'bucket/oriel.json'
+      - 'bucket/zakki.json'
       - '.github/workflows/validate-manifest-archives.yml'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
