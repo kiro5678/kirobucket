@@ -6,11 +6,13 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/YuanZhe-99/Kyokai/releases/download/v0.7.3/Kyokai-0.7.3-windows-amd64.zip",
-            "hash": "b34095996b0bb240196a57827a9e8c8f292466ce463b28f24f3180cf83439747"
+            "hash": "b34095996b0bb240196a57827a9e8c8f292466ce463b28f24f3180cf83439747",
+            "extract_dir": "windows-amd64"
         },
         "arm64": {
             "url": "https://github.com/YuanZhe-99/Kyokai/releases/download/v0.7.3/Kyokai-0.7.3-windows-arm64.zip",
-            "hash": "a43d7b15fa33737965e78909e2d0ebd0a8078a0a4be12e058c5ef32f4ed9d5fa"
+            "hash": "a43d7b15fa33737965e78909e2d0ebd0a8078a0a4be12e058c5ef32f4ed9d5fa",
+            "extract_dir": "windows-arm64"
         }
     },
     "bin": "Kyokai.exe",
@@ -26,10 +28,12 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/YuanZhe-99/Kyokai/releases/download/v$version/Kyokai-$version-windows-amd64.zip"
+                "url": "https://github.com/YuanZhe-99/Kyokai/releases/download/v$version/Kyokai-$version-windows-amd64.zip",
+                "extract_dir": "windows-amd64"
             },
             "arm64": {
-                "url": "https://github.com/YuanZhe-99/Kyokai/releases/download/v$version/Kyokai-$version-windows-arm64.zip"
+                "url": "https://github.com/YuanZhe-99/Kyokai/releases/download/v$version/Kyokai-$version-windows-arm64.zip",
+                "extract_dir": "windows-arm64"
             }
         }
     },
