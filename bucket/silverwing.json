@@ -16,6 +16,8 @@
         "github": "https://github.com/javatoai/silverwing"
     },
     "autoupdate": {
-        "url": "https://github.com/javatoai/silverwing/releases/download/v$version/silverwing-$version-windows-x64-portable.zip"
-    }
+        "url": "https://github.com/javatoai/silverwing/releases/download/v$version/silverwing-$version-windows-x64-portable.zip",
+        "extract_dir": "silverwing"
+    },
+    "extract_dir": "silverwing"
 }
