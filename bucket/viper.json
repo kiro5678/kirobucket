@@ -5,9 +5,19 @@
     "license": "MIT",
     "url": "https://github.com/qzh200/Viper/releases/download/v1.0.0/Viper-v1.0.0-windows-x64.zip",
     "hash": "ec3d6d746812416bc301b8734e04b5916640e5db5d3c122688d1e038aad14541",
-    "bin": "Viper.exe",
-    "shortcuts": [["Viper.exe", "Viper"]],
-    "checkver": {"github": "https://github.com/qzh200/Viper"},
+    "bin": [
+        "bin/viper.exe",
+        "bin/viperui.exe"
+    ],
+    "shortcuts": [
+        [
+            "bin/viperui.exe",
+            "Viper"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/qzh200/Viper"
+    },
     "autoupdate": {
         "url": "https://github.com/qzh200/Viper/releases/download/v$version/Viper-v$version-windows-x64.zip"
     },
