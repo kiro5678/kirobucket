@@ -1,0 +1,37 @@
+{
+    "version": "1.11.5",
+    "description": "Native tray app for monitoring Codex, Claude Code and Grok quota, local sessions and account management.",
+    "homepage": "https://github.com/Licoy/Quosparr",
+    "license": "AGPL-3.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Licoy/Quosparr/releases/download/v1.11.5/quosparr-1.11.5-windows-amd64.tar.gz",
+            "hash": "b4fec5b8225d70e5d2aa08f78aae1bba1e84c7e6a5ea793916899510c2fc0961"
+        },
+        "arm64": {
+            "url": "https://github.com/Licoy/Quosparr/releases/download/v1.11.5/quosparr-1.11.5-windows-arm64.tar.gz",
+            "hash": "bc4b4c17c96148debf2a8fe458872f46985f0c299a8fc4e3e9ab4358716a9eb9"
+        }
+    },
+    "bin": "Quosparr.exe",
+    "shortcuts": [
+        [
+            "Quosparr.exe",
+            "Quosparr"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Licoy/Quosparr"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Licoy/Quosparr/releases/download/v$version/quosparr-$version-windows-amd64.tar.gz"
+            },
+            "arm64": {
+                "url": "https://github.com/Licoy/Quosparr/releases/download/v$version/quosparr-$version-windows-arm64.tar.gz"
+            }
+        }
+    },
+    "notes": "Quosparr reads and can update local Codex, Claude Code and Grok account configuration when you explicitly switch accounts. Review the selected account before confirming changes; credentials are stored in user-profile locations outside Scoop."
+}
