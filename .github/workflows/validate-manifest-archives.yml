@@ -207,6 +207,8 @@ on:
       - 'bucket/moniflip.json'
       - 'bucket/wallpaper.json'
       - 'bucket/imyemail-cloud-mygo.json'
+      - 'bucket/healthfolio.json'
+      - 'bucket/motionduo.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -430,6 +432,8 @@ on:
       - 'bucket/moniflip.json'
       - 'bucket/wallpaper.json'
       - 'bucket/imyemail-cloud-mygo.json'
+      - 'bucket/healthfolio.json'
+      - 'bucket/motionduo.json'
   workflow_dispatch:
     inputs:
       manifest:
