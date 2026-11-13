@@ -106,7 +106,7 @@ The dedicated Windows Scoop install/uninstall run passed all three installer-ori
 
 ### Awesome MyGo Developer tools (2026-11-13)
 
-The five applications below use Scoop's `#/dl.7z` mode. Windows 7-Zip validation downloaded all seven published architecture assets, verified their SHA-256 values, and confirmed every declared shortcut/bin path after extraction. Scoop does not execute the vendor NSIS setup or its Windows registration routines, so these manifests are classified as **Portable**.
+The five applications below use Scoop's `#/dl.7z` mode. Windows 7-Zip validation downloaded all eight published architecture assets, verified their SHA-256 values, and confirmed every declared shortcut/bin path after extraction. Scoop does not execute the vendor NSIS setup or its Windows registration routines, so these manifests are classified as **Portable**.
 
 - [AxonHub](../bucket/axonhub.json) — **Portable**: extracts the official x64 and ARM64 payloads. It has signed in-app updates; use Scoop as the only update source.
 - [GoShell](../bucket/goshell.json) — **Portable**: extracts the official x64 and ARM64 payloads. Upstream labels it WIP and says the Windows app requires administrator rights at runtime.
