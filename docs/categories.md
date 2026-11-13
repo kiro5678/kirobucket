@@ -19,7 +19,7 @@
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
 | Images & Photos | 54 | [View](#images-photos) |
 | Keyboard & Language | 16 | [View](#keyboard-language) |
-| Media & Audio/Video | 49 | [View](#media-audio-video) |
+| Media & Audio/Video | 50 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
@@ -41,7 +41,7 @@
 | Windows Customization | 94 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1083**
+**Total unique manifests: 1084**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -536,6 +536,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [softwareok-mediaplayerok](../bucket/softwareok-mediaplayerok.json) | 1.01 | 64bit: 229.0 KiB | 2026-06-11 | Portable media player with playlists and automatic resume playback. | [Homepage](https://www.softwareok.com/?Download=MediaPlayerOK) |
 | [moviebox-tui](../bucket/moviebox-tui.json) | 0.1.27 | 4.9 MiB | 2026-10-29 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. | [Homepage](https://github.com/mesamirh/MovieBox-Tui) |
 | [ncspot](../bucket/ncspot.json) | 1.5.0 | 64bit: 5.8 MiB | 2026-10-01 | ncurses Spotify client written in Rust | [Homepage](https://github.com/hrkfdn/ncspot) |
+| [open-aria-exporter](../bucket/open-aria-exporter.json) | 0.1.11 | 64bit: 130.1 MiB | 2026-11-09 | Export Open Aria recordings from memory cards to side-by-side MP4 while preserving the original recording data. | [Homepage](https://github.com/Alpenl/openaria-bridge-sdk/tree/main/desktop/exporter) |
 | [opennow](../bucket/opennow.json) | 1.0.3 | 95.3 MiB | 2026-10-16 | An open-source GeForce NOW desktop client. | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) |
 | [openscreen](../bucket/openscreen.json) | 2.1.2 | 64bit: 170.6 MiB | 2026-10-19 | Open-source screen recording and video editing tool for creating polished demos. | [Homepage](https://getopenscreen.com/) |
 | [orfeo](../bucket/orfeo.json) | 1.6.0 | 137.1 MiB | 2026-10-31 | Piano-learning and MIDI visualization desktop app with interactive chord tools, note editing, and audio export. | [Homepage](https://orfeo.cc) |
