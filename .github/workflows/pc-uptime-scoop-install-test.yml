@@ -56,16 +56,15 @@ jobs:
           $env:SCOOP = $scoopRoot
           $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
 
-          $global:LASTEXITCODE = 0
-          & $scoopScript bucket add kirobucket $env:GITHUB_WORKSPACE
-          if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
-            throw "Could not add the checked-out kirobucket (exit code $global:LASTEXITCODE)."
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\pc-uptime.json'
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            throw "PC Uptime manifest was not found: $manifestPath"
           }
 
           $global:LASTEXITCODE = 0
-          & $scoopScript install pc-uptime
+          & $scoopScript install $manifestPath
           if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
-            throw "scoop install pc-uptime failed with exit code $global:LASTEXITCODE."
+            throw "scoop install of the local PC Uptime manifest failed with exit code $global:LASTEXITCODE."
           }
 
           $versionDir = Join-Path $scoopRoot 'apps\pc-uptime\current'
