@@ -46,6 +46,6 @@ This page records software from repository research that does not currently have
 
 ## Reconsideration requirements
 
-Before adding either application to `bucket/`, verify the current official Windows artifact, version mapping, architecture, installer/package type, SHA-256, extracted application files, and real launch executable. Use an installer-inspection workflow when the package type cannot be established from upstream documentation. A successful HTTP download alone does not establish that a valid Scoop manifest can be created.
+Before adding a candidate to `bucket/`, verify the current official Windows artifact, version mapping, architecture, installer/package type, SHA-256, extracted application files, and real launch executable. Use an installer-inspection workflow when the package type cannot be established from upstream documentation. A successful HTTP download alone does not establish that a valid Scoop manifest can be created.
 
 These entries describe why no manifest was created; they do not represent failed or installable manifests.
