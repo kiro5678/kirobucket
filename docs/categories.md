@@ -23,7 +23,7 @@
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
-| Notes & Knowledge | 25 | [View](#notes-knowledge) |
+| Notes & Knowledge | 26 | [View](#notes-knowledge) |
 | Other Utilities | 131 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
@@ -689,6 +689,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [softwareok-flyout-notepad](../bucket/softwareok-flyout-notepad.json) | 1.05 | 64bit: 234.8 KiB | 2026-08-17 | Dockable text and image workspace that opens from screen edges. | [Homepage](https://www.softwareok.com/?seite=Microsoft/FlyOutNotePad) |
 | [goldendict-ng](../bucket/goldendict-ng.json) | v26.11.0 | 64bit: 129.6 MiB | 2026-10-23 | A feature-rich dictionary lookup program, supporting multiple dictionary formats (StarDict/Babylon/Lingvo/Dictd/AARD/MDict/SDict) and online dictionaries, featuring perfect article rendering with the complete markup, illustrations and other content retained, and allowing you to type in words without any accents or correct case. | [Homepage](https://github.com/xiaoyifang/goldendict) |
 | [helixnotes](../bucket/helixnotes.json) | 1.3.6 | 9.0 MiB | 2026-09-30 | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. | [Homepage](https://helixnotes.com/) |
+| [jotilla](../bucket/jotilla.json) | 1.10.0 | 182.5 KiB | 2026-11-10 | Native sticky notes with autosave, an archive, calendar and text formatting. | [Homepage](https://garaugarau.github.io/Jotilla/) |
 | [lapis](../bucket/lapis.json) | 3.0.1 | 10.4 MiB | 2026-09-16 | Local-first note-taking app with AI assistant and peer-to-peer sync. | [Homepage](https://github.com/zexadev/lapisnote) |
 | [many-notes](../bucket/many-notes.json) | 0.18.1 | — | 2026-10-22 | Docker-powered local Markdown notes server launcher; requires Docker Desktop. | [Homepage](https://github.com/brufdev/many-notes) |
 | [markra](../bucket/markra.json) | 2.14.1 | 13.5 MiB | 2026-10-30 | Cross-platform Markdown editor and workspace for local-first notes. | [Homepage](https://github.com/markrahq/markra) |
