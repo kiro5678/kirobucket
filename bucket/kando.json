@@ -1,0 +1,54 @@
+{
+    "version": "0.12.0",
+    "description": "Native video language-learning app with local speech transcription, bilingual subtitles and AI translation.",
+    "homepage": "https://github.com/yldm-tech/Kando",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/yldm-tech/Kando/releases/download/v0.12.0/kando-setup-0.12.0-amd64.exe",
+            "hash": "60162b97c0065543e256d6092f1612c331a6261cf22ee6771d044e9557f2b2e4"
+        },
+        "arm64": {
+            "url": "https://github.com/yldm-tech/Kando/releases/download/v0.12.0/kando-setup-0.12.0-arm64.exe",
+            "hash": "ad8de795c7bc46aaaabc2af687330635fc3b4fdd071e0460c0ca81e805e7bd11"
+        }
+    },
+    "installer": {
+        "args": [
+            "/S"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "$uninstaller = Join-Path $env:LOCALAPPDATA 'Programs\\Kando\\Uninstall.exe'",
+            "if (Test-Path -LiteralPath $uninstaller -PathType Leaf) {",
+            "    & $uninstaller /S",
+            "    if ($LASTEXITCODE -ne 0) { throw \"Vendor uninstaller failed with exit code $LASTEXITCODE.\" }",
+            "}"
+        ]
+    },
+    "checkver": {
+        "github": "https://github.com/yldm-tech/Kando"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/yldm-tech/Kando/releases/download/v$version/kando-setup-$version-amd64.exe",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/yldm-tech/Kando/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'kando-setup-$version-amd64.exe')].digest"
+                }
+            },
+            "arm64": {
+                "url": "https://github.com/yldm-tech/Kando/releases/download/v$version/kando-setup-$version-arm64.exe",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/yldm-tech/Kando/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'kando-setup-$version-arm64.exe')].digest"
+                }
+            }
+        }
+    },
+    "notes": "Windows requires yt-dlp, FFmpeg and whisper-cli installed separately and available on PATH. The app also has an in-app updater; use Scoop as the update authority."
+}
