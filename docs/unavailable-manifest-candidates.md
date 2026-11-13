@@ -104,3 +104,22 @@ The remaining 41 names do not currently qualify for a new active manifest based 
 Open Aria Exporter is now available as [`open-aria-exporter`](../bucket/open-aria-exporter.json), using the published Windows amd64 release and its GitHub SHA-256 digest. Its license is recorded as `Unknown`; the manifest links directly to the upstream installer and does not rehost it.
 
 No JSON placeholders were created. A candidate can move into `bucket/` only after a current official Windows artifact, version mapping, architecture, SHA-256, package type, executable paths and install/uninstall behavior are established. Record a missing or unclear license as `Unknown`; public availability does not make a package open source. Beta packages, where deliberately accepted, must be named and tracked as beta manifests rather than presented as stable releases.
+
+
+## Music players — Windows desktop package review (checked 2026-11-13)
+
+### Dial — steeben
+
+- **Source:** [steeben/Dial](https://github.com/steeben/Dial)
+- **Current release:** [v1.7.1](https://github.com/steeben/Dial/releases/tag/v1.7.1), published 2026-11-13; its only release asset is `Dial-v1.7.1.apk`.
+- **Windows support in source:** the repository contains a `desktopApp` module and [DESKTOP.md](https://github.com/steeben/Dial/blob/main/DESKTOP.md) documents building Windows packages with Java 21 and WiX Toolset 3. However, the current [release workflow](https://github.com/steeben/Dial/blob/main/.github/workflows/release.yml) builds and publishes an Android APK only; no versioned Windows package is attached to the current releases.
+- **Decision:** do not create a Scoop manifest from source or invent a Windows download URL. Revisit when upstream publishes a versioned Windows portable ZIP or installer with a verifiable checksum and a tested package layout.
+
+### BitChord — kushagrasinghx
+
+- **Source:** [kushagrasinghx/BitChord](https://github.com/kushagrasinghx/BitChord)
+- **Current release:** [v1.9.1](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.9.1), published 2026-11-06; its assets are Android phone and Android TV APKs.
+- **Last Windows desktop package:** [v1.8](https://github.com/kushagrasinghx/BitChord/releases/tag/v1.8), published 2026-10-05, included Windows beta assets (`BitChord-1.8-beta1-windows-x64-portable.zip`, setup EXE and MSI). Subsequent releases v1.8.1, v1.9 and v1.9.1 publish Android APKs only. The current default branch no longer contains the desktop module or its desktop build documentation.
+- **Decision:** the Windows download is an old, one-off beta and is no longer updated by the current release line. Do not create a maintainable Scoop manifest from that obsolete beta. Revisit if upstream restores Windows desktop releases with current versioned packages and checksums.
+
+These projects are Android-first releases for Scoop purposes unless their upstreams resume publishing current Windows desktop artifacts. Android APK files are not Windows packages and must not be added as Scoop manifests.
