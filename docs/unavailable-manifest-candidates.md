@@ -61,3 +61,45 @@ These entries describe why no manifest was created; they do not represent failed
 - **MyClip** — [L92-Labs/myclip](https://github.com/L92-Labs/myclip). The current GitHub release does not provide a usable Windows desktop package; do not build a manifest from source alone.
 - **Shixin Input** — [shixin-labs/shixin-input](https://github.com/shixin-labs/shixin-input). The latest Windows assets are explicitly unsigned preview installers, not a verified stable Windows distribution.
 - **Clipboard-go**, **Locklark** and **Tendedero** — the project repositories currently expose no versioned GitHub Windows release asset suitable for a pinned manifest. Revisit when a versioned Windows package and checksum are published.
+
+## Awesome MyGo showcase — audit of the previously reported 46 candidates
+
+**Checked:** 2026-11-13
+
+The earlier filename comparison overstated the number of missing manifests. Four projects already have matching manifests under different Scoop names:
+
+| Showcase name | Existing manifest | Upstream |
+| --- | --- | --- |
+| Gist | `gistmanager` | [Oranjekop/GistManager](https://github.com/Oranjekop/GistManager) |
+| RNAxRay Desktop | `rnaxray` | [Vicky-0256/RNAxRAY](https://github.com/Vicky-0256/RNAxRAY) |
+| Nomo | `nomo-mygo` | [ZeroDevi1/nomo-mygo](https://github.com/ZeroDevi1/nomo-mygo) |
+| Xiangqi Go | `xiangqi` | [ch1y1z1/xiangqi_go](https://github.com/ch1y1z1/xiangqi_go) |
+
+The remaining 42 names do not currently qualify for a new active manifest based on the Windows release assets and upstream documentation checked. They are listed here to prevent duplicate research and placeholder manifests.
+
+| Category | Candidate | Current blocker |
+| --- | --- | --- |
+| Agents | [omo](https://github.com/QinYangWang/omo), [Mux](https://github.com/nomyfan/mux), [GoCode](https://github.com/ijry/GoCode), [Cyrene Terminal](https://github.com/YanChenBai/cyrene-terminal), [DeepSeek Harness](https://github.com/dhx007/mygo-dsh) | No versioned GitHub Windows release asset was published. |
+| Dev | [SBDb](https://github.com/congthien2003/dbl), [Patch](https://github.com/darylcecile/patch), [Twill](https://github.com/ziludev/twill), [MyCode](https://github.com/hunghg255/mycode) | No versioned Windows release asset was published. |
+| Dev | [Zeus](https://github.com/J4ck1e2000/Zeus) | The checked release contains a macOS DMG only. |
+| Dev | [KeyDepot](https://github.com/tbdsux/keydepot) | The available Windows package is a beta; upstream explicitly says its Windows build is untested, and asks users to try it only with backup copies of their keys. Revisit after Windows acceptance and security review. |
+| AI | [HyperAI](https://github.com/lesenelir/hyperai-desktop) | No versioned Windows release asset was published. |
+| AI | [InferYard Studio](https://github.com/sunny0826/inferyard/tree/main/studio) | The checked release contains a Python wheel and source archive, not the Windows desktop application. |
+| Network | [Jalin](https://github.com/firdausmntp/Jalin), [MyGo Browser](https://github.com/cecil-su/mygo-browser), [Site Sucker](https://github.com/maksqi/site-sucker) | No versioned Windows application package was published. MyGo Browser is currently source-only. |
+| Network | [WGM](https://github.com/qmaru/wgm) | The checked release tag has no downloadable assets. |
+| Network | [Meridian](https://github.com/alanbulan/meridian-vpn) | The Windows installer belongs to an alpha whose Windows build has the interface but no VPN backend. |
+| Notes | [Kata](https://github.com/yaffalhakim1/kata) | No versioned Windows release asset was published. |
+| System | [Desk](https://github.com/jitunayak/android-desk), [Sokki](https://github.com/sorrycc/Sokki), [Floater](https://github.com/Uninen/floater) | The checked project/release evidence is macOS-only; no suitable Windows package was found. |
+| System | [MyCast](https://github.com/feiniao233/MyCast) | A Windows alpha ZIP exists, but upstream documents the release as an alpha candidate and lists uncompleted real-device acceptance for IME, tray/hotkey, clipboard return, DPI and multi-monitor behavior. Do not promote it to an ordinary package before acceptance. |
+| System | [Clips](https://clips.5km.tech/) | No version-pinned Windows download with a verifiable checksum and inspectable package layout was confirmed. |
+| System | [Firn](https://github.com/frostyard/firn) | The checked releases publish Linux packages only. |
+| System | [MyClip](https://github.com/L92-Labs/myclip) | The checked release publishes Linux and macOS assets, but no Windows build. |
+| System | [Locklark](https://github.com/jihuayu/locklark), [Calculus](https://github.com/tortoise10h/calculus), [Downloader](https://github.com/josexy/go-downloader), [Clipboard-go](https://github.com/1e4DouWine/clipboard_go), [OpenUXP Installer](https://github.com/Moonvy/UPX-Installer-GO), [Tendedero in MyGo](https://github.com/HycJack/mygo-tendedero) | No versioned GitHub Windows release asset was published. |
+| System | [Chrome Profile Router](https://github.com/chinnsenn/chrome-profile-router) | A Windows ZIP exists, but upstream labels Windows experimental and untested on native Windows; the repository also has no declared license. |
+| Devices | [beekb](https://github.com/Kutius/beekb-driver), [NVR Status](https://github.com/dongsheng512/NVR-Status-Go) | No versioned Windows release asset was published. |
+| Media | [Ottr](https://github.com/QinYangWang/ottr), [Dual PNG](https://github.com/SinarPandora/dual-png), [MujicaCut](https://github.com/HycJack/mujicacut), [SmartImage Toolkit](https://github.com/Shirolin/SmartImage-Toolkit) | No versioned Windows release asset was published. MujicaCut is explicitly a timeline/demo project without a decoder or finished video renderer. |
+| Media | [Haruhikage](https://github.com/yxxbc/haruhikage-app) | The checked Windows release metadata contains updater files, but no Windows executable or archive asset. |
+| Media | [Open Aria Exporter](https://github.com/Alpenl/openaria-bridge-sdk/tree/main/desktop/exporter) | A Windows setup executable exists, but the repository's LICENSE expressly grants no right to use, copy or distribute the software without a separate written agreement. Do not create a Scoop manifest absent permission from the copyright holder. |
+| Game | [lom-dx2metal](https://github.com/li-yifei/lom-dx2metal) | This converts Direct3D 11 game assets for Apple's Metal player; the checked project has no Windows release package. |
+
+No JSON placeholders were created. A candidate can move into `bucket/` only after a current official Windows artifact, license/distribution rights, version mapping, architecture, SHA-256, package type, extracted executable paths and install/uninstall behavior are established. Beta packages, where deliberately accepted, must be named and tracked as beta manifests rather than presented as stable releases.
