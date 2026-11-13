@@ -3,7 +3,7 @@
     "description": "Native SSH client with terminal sessions, SFTP, and local host management.",
     "homepage": "https://github.com/neko233-com/nekossh",
     "license": "MIT",
-    "url": "https://github.com/neko233-com/nekossh/releases/download/v0.3.64/terminal233-setup-0.3.64-amd64.exe#/setup.exe",
+    "url": "https://github.com/neko233-com/nekossh/releases/download/v0.3.64/terminal233-setup-0.3.64-amd64.exe#/dl.7z",
     "hash": "977e9438a08c1b4b41911a9eefcaa339e3c9b901850558b5f65917c710c2348c",
     "installer": {
         "script": [
@@ -41,7 +41,7 @@
         "regex": "^v(?<version>[\\d.]+)$"
     },
     "autoupdate": {
-        "url": "https://github.com/neko233-com/nekossh/releases/download/v$version/terminal233-setup-$version-amd64.exe#/setup.exe",
+        "url": "https://github.com/neko233-com/nekossh/releases/download/v$version/terminal233-setup-$version-amd64.exe#/dl.7z",
         "hash": {
             "mode": "json",
             "url": "https://api.github.com/repos/neko233-com/nekossh/releases/tags/v$version",
