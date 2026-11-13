@@ -104,6 +104,19 @@ These entries are proposed in the current PR. The generated portability summary 
 The dedicated Windows Scoop install/uninstall run passed all three installer-oriented association manifests: PortableRegistrator, Default Programs Editor, and win-link-router. The archive-validation workflow is configured to inspect all changed manifests in this PR.
 
 
+### Awesome MyGo Developer tools (2026-11-13)
+
+The following Windows-native MyGo applications are installed through their official NSIS setup programs. They are **Nonportable** because setup registers the application with Windows, including an uninstall registration, even when Scoop directs application files into the Scoop version directory.
+
+- [AxonHub](../bucket/axonhub.json) — **Nonportable**: official MyGo NSIS setup for x64 and ARM64. The application also has signed in-app updates; use Scoop as the update authority.
+- [GoShell](../bucket/goshell.json) — **Nonportable**: official MyGo NSIS setup for x64 and ARM64. Upstream labels the application WIP and says the Windows app requires administrator rights.
+- [Mypack](../bucket/mypack.json) — **Nonportable**: official per-user NSIS setup for x64 and ARM64; follows the upstream Scoop manifest's install and uninstall commands.
+- [NekoSSH](../bucket/nekossh.json) — **Nonportable**: official MyGo NSIS setup for Windows x64. Host data and DPAPI-protected credentials remain in the current user's profile outside Scoop.
+- [RNAxRay Desktop](../bucket/rnaxray.json) — **Nonportable**: official MyGo NSIS setup for Windows x64; the release bundles its CPython and scientific runtime.
+
+KeyDepot and Repo Hopper remain under Review in [Manifest Review](manifest-review.md): their upstream documentation does not yet establish tested Windows support. Aurora Desktop remains unavailable because its latest release has no Windows desktop installer or desktop executable.
+
+
 ## Classification rules for future manifest changes
 
 1. Inspect the actual downloaded asset and its archive contents. The `.exe`, `.msi`, or `.msix` extension alone does not determine the class.
