@@ -18,6 +18,7 @@ This catalog covers the requested vendor pages and links each included program t
 | MiTeC Suite | 22 | [View](categories.md#mitec-suite) |
 | Neuber Suite | 2 | [View](categories.md#neuber-suite) |
 | Rizonesoft Suite | 14 | [View](categories.md#rizonesoft-suite) |
+| Skwire | 79 | [View](#skwire) |
 | SoftwareOK Suite | 81 | [View](categories.md#softwareok-suite) |
 | Sordum Suite | 63 | [View](categories.md#sordum-suite) |
 | Türkaysoft Suite | 8 | [View](categories.md#turkaysoft-suite) |
@@ -102,6 +103,92 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [Take Ownership](https://rizonesoft.com/gdm_downloads/take-ownership/) | Add or remove a Windows Take Ownership context-menu action | File Management | [take-ownership](../bucket/take-ownership.json) |
 | [USB Repair](https://rizonesoft.com/downloads/usb-repair/) | Diagnose and repair USB device problems | Storage & Disk Tools | [usb-repair](../bucket/usb-repair.json) |
 | [Watermin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Waterfox and compatible browsers | System Monitoring & Hardware | [watermin](../bucket/watermin.json) |
+
+## Skwire
+
+This section lists the 79 Skwire programs currently represented by manifests in this bucket.
+
+| Manifest |
+| --- |
+| [skwire-album-printer](../bucket/skwire-album-printer.json) |
+| [skwire-anuran](../bucket/skwire-anuran.json) |
+| [skwire-arti](../bucket/skwire-arti.json) |
+| [skwire-barbecue](../bucket/skwire-barbecue.json) |
+| [skwire-bestimate](../bucket/skwire-bestimate.json) |
+| [skwire-birthdays](../bucket/skwire-birthdays.json) |
+| [skwire-boot-snooze](../bucket/skwire-boot-snooze.json) |
+| [skwire-brickview](../bucket/skwire-brickview.json) |
+| [skwire-chopping-list](../bucket/skwire-chopping-list.json) |
+| [skwire-cliptrap](../bucket/skwire-cliptrap.json) |
+| [skwire-comic-book-archive-creator](../bucket/skwire-comic-book-archive-creator.json) |
+| [skwire-covart-ops](../bucket/skwire-covart-ops.json) |
+| [skwire-deletist](../bucket/skwire-deletist.json) |
+| [skwire-dimensions-2-folders](../bucket/skwire-dimensions-2-folders.json) |
+| [skwire-drive-letters-tool](../bucket/skwire-drive-letters-tool.json) |
+| [skwire-drop-zone](../bucket/skwire-drop-zone.json) |
+| [skwire-earl](../bucket/skwire-earl.json) |
+| [skwire-epcheck](../bucket/skwire-epcheck.json) |
+| [skwire-file-bucket](../bucket/skwire-file-bucket.json) |
+| [skwire-file-punter](../bucket/skwire-file-punter.json) |
+| [skwire-files-2-folder](../bucket/skwire-files-2-folder.json) |
+| [skwire-frameless](../bucket/skwire-frameless.json) |
+| [skwire-ie-proxy-toggle](../bucket/skwire-ie-proxy-toggle.json) |
+| [skwire-ipmi-tool-gui](../bucket/skwire-ipmi-tool-gui.json) |
+| [skwire-keycounter](../bucket/skwire-keycounter.json) |
+| [skwire-kled](../bucket/skwire-kled.json) |
+| [skwire-list-numberer](../bucket/skwire-list-numberer.json) |
+| [skwire-looper](../bucket/skwire-looper.json) |
+| [skwire-lucidity](../bucket/skwire-lucidity.json) |
+| [skwire-mat](../bucket/skwire-mat.json) |
+| [skwire-mpcpled](../bucket/skwire-mpcpled.json) |
+| [skwire-mph](../bucket/skwire-mph.json) |
+| [skwire-mycoff](../bucket/skwire-mycoff.json) |
+| [skwire-omdb-tool](../bucket/skwire-omdb-tool.json) |
+| [skwire-pdfinfogui](../bucket/skwire-pdfinfogui.json) |
+| [skwire-piggy-banks](../bucket/skwire-piggy-banks.json) |
+| [skwire-playtime](../bucket/skwire-playtime.json) |
+| [skwire-power-scheme-toggler](../bucket/skwire-power-scheme-toggler.json) |
+| [skwire-recursiview](../bucket/skwire-recursiview.json) |
+| [skwire-scheckbook](../bucket/skwire-scheckbook.json) |
+| [skwire-schecklist](../bucket/skwire-schecklist.json) |
+| [skwire-scurled](../bucket/skwire-scurled.json) |
+| [skwire-sensatronics-tray-tool](../bucket/skwire-sensatronics-tray-tool.json) |
+| [skwire-sfv-ninja](../bucket/skwire-sfv-ninja.json) |
+| [skwire-sigcheckgui](../bucket/skwire-sigcheckgui.json) |
+| [skwire-simguruploader](../bucket/skwire-simguruploader.json) |
+| [skwire-simple-word-gen](../bucket/skwire-simple-word-gen.json) |
+| [skwire-size-matters](../bucket/skwire-size-matters.json) |
+| [skwire-slyrics](../bucket/skwire-slyrics.json) |
+| [skwire-snap-db](../bucket/skwire-snap-db.json) |
+| [skwire-spews](../bucket/skwire-spews.json) |
+| [skwire-spinger](../bucket/skwire-spinger.json) |
+| [skwire-spinzip](../bucket/skwire-spinzip.json) |
+| [skwire-splat](../bucket/skwire-splat.json) |
+| [skwire-splaylistmaker](../bucket/skwire-splaylistmaker.json) |
+| [skwire-squeaky-mouse](../bucket/skwire-squeaky-mouse.json) |
+| [skwire-sspeedtest](../bucket/skwire-sspeedtest.json) |
+| [skwire-ssurfer](../bucket/skwire-ssurfer.json) |
+| [skwire-steam-url-converter](../bucket/skwire-steam-url-converter.json) |
+| [skwire-stray](../bucket/skwire-stray.json) |
+| [skwire-subahk](../bucket/skwire-subahk.json) |
+| [skwire-swavplayer](../bucket/skwire-swavplayer.json) |
+| [skwire-sweather](../bucket/skwire-sweather.json) |
+| [skwire-switcheroo](../bucket/skwire-switcheroo.json) |
+| [skwire-tags-2-folders](../bucket/skwire-tags-2-folders.json) |
+| [skwire-ten-timer](../bucket/skwire-ten-timer.json) |
+| [skwire-text-2-folders](../bucket/skwire-text-2-folders.json) |
+| [skwire-tiffinfogui](../bucket/skwire-tiffinfogui.json) |
+| [skwire-tiffsy-turvy](../bucket/skwire-tiffsy-turvy.json) |
+| [skwire-title-bar-battery](../bucket/skwire-title-bar-battery.json) |
+| [skwire-trackerr](../bucket/skwire-trackerr.json) |
+| [skwire-tray-host-checker](../bucket/skwire-tray-host-checker.json) |
+| [skwire-traylang](../bucket/skwire-traylang.json) |
+| [skwire-trout](../bucket/skwire-trout.json) |
+| [skwire-video-2-mp3](../bucket/skwire-video-2-mp3.json) |
+| [skwire-wallpaper-welder](../bucket/skwire-wallpaper-welder.json) |
+| [skwire-waste-not](../bucket/skwire-waste-not.json) |
+| [skwire-what](../bucket/skwire-what.json) |
+| [skwire-zero-zipper](../bucket/skwire-zero-zipper.json) |
 
 ## Awesome MyGo Showcase
 
