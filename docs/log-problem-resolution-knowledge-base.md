@@ -1088,3 +1088,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Problem:** The MuMuPlayer base manifest persisted `configs` and `vms`, but did not persist the shared `nx_device` directory. The separate Android 15 add-on installs its engine into the shared MuMuPlayer directory, so a base-app reinstall or update could leave that engine needing reinstallation.
 - **Resolution:** Added `nx_device` to the `persist` array in `bucket/mumuplayer.json`, retaining the existing `configs` and `vms` entries. The base manifest owns this shared path; the add-on manifest remains unchanged.
 - **Scope:** This is a Scoop manifest persistence change. It does not prove runtime compatibility of every future MuMuPlayer engine build; verify the emulator and Android engine after an actual upgrade.
+
+### 2026-11-14 — Prevent PC Uptime nested ZIP filename collision
+
+- **Problem:** Installation passed SHA-256 verification but 7-Zip exited with code 2 while extracting the outer release ZIP. The log reported `Cannot delete output file` for `Uptime-1.0.0-win-x64-portable.zip` because another process was using the file.
+- **Root cause:** The outer ZIP contains an inner ZIP with the exact same filename as the outer archive. During extraction, 7-Zip tried to create the nested ZIP at the path occupied by the currently open source archive.
+- **Resolution:** Added a Scoop URL fragment to save the downloaded outer archive as `Uptime-$version-win-x64-outer.zip`, while leaving the official remote asset URL and SHA-256 source unchanged. Applied the same local filename override to the autoupdate URL. The inner ZIP retains its original filename and remains compatible with the existing `pre_install` extraction hook.
+- **Verification:** Scoop's manifest documentation confirms that a `#/filename` URL fragment changes the local downloaded filename. Repository CI and a live Scoop install test are pending.
+- **Prevention:** When a ZIP contains another ZIP with an identical filename, rename the local outer archive through a Scoop URL fragment; do not modify the release asset or its checksum.
