@@ -755,7 +755,7 @@ jobs:
                   }
 
                   $extension = [System.IO.Path]::GetExtension($assetPath)
-                  $isCompressedTar = $pathPart -match '\.tar\.(gz|xz|bz2)$'
+                  $isCompressedTar = $pathPart -match '(?i)\.tar\.(gz|xz|bz2)$' -or $pathPart -match '(?i)\.tgz$'
                   if ($isForced7zip) {
                     $extension = '.7z'
                   } elseif ($isCompressedTar) {
