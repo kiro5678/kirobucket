@@ -1,10 +1,10 @@
 {
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Extracts ZIP, 7z, RAR, and tar archives in place, reusing archive space as files are extracted.",
     "homepage": "https://hatchzip.dev/",
     "license": "MIT",
-    "url": "https://github.com/xevrion/hatchzip/releases/download/v0.1.9/HatchZip-x64-portable.zip",
-    "hash": "f4f4f83a2f11a3687249f588b0cfb4a6a2d6aabd504c2112f8fc0ccb44ab39d8",
+    "url": "https://github.com/xevrion/hatchzip/releases/download/v0.1.10/HatchZip-x64-portable.zip",
+    "hash": "e46ba702eb6612cebf935da6e4e02b4f1e7083e7a9434126f185493b15c251db",
     "bin": [
         [
             "hatchzip.exe",
