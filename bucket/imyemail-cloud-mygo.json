@@ -29,8 +29,8 @@
     },
     "checkver": {
         "url": "https://api.github.com/repos/logdns/imyemail-cloud/releases?per_page=100",
-        "jsonpath": "$[?(@.tag_name =~ /mygo-v[0-9.]+/)].tag_name",
-        "regex": "mygo-v(?<version>[\\d.]+)"
+        "jsonpath": "$[*].tag_name",
+        "regex": "mygo-v([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {

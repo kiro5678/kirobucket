@@ -14,9 +14,7 @@
         }
     },
     "installer": {
-        "args": [
-            "/S"
-        ]
+        "args": "/S"
     },
     "uninstaller": {
         "script": [

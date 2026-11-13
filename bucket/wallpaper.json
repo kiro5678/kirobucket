@@ -14,9 +14,7 @@
         }
     },
     "installer": {
-        "args": [
-            "/S"
-        ]
+        "args": "/S"
     },
     "uninstaller": {
         "script": [
@@ -28,7 +26,9 @@
         ]
     },
     "checkver": {
-        "github": "https://github.com/Alpenl/wallpaper"
+        "url": "https://api.github.com/repos/Alpenl/wallpaper/releases?per_page=100",
+        "jsonpath": "$[0].tag_name",
+        "regex": "v([\\d.]+)"
     },
     "autoupdate": {
         "architecture": {
