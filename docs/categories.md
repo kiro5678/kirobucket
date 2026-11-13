@@ -13,7 +13,7 @@
 | Developer & Technical Tools | 51 | [View](#developer-technical-tools) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 84 | [View](#file-management) |
+| File Management | 85 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
@@ -41,7 +41,7 @@
 | Windows Customization | 94 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1082**
+**Total unique manifests: 1083**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -311,6 +311,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [explorer-dialog-path-selector-thiojoe](../bucket/explorer-dialog-path-selector-thiojoe.json) | 1.8.1 | 1.3 MiB | 2026-04-03 | Jump to paths in open Explorer or Directory Opus windows from Open/Save dialogs. | [Homepage](https://github.com/ThioJoe/ThioJoe-AHK-Scripts) |
 | [filebrowser](../bucket/filebrowser.json) | 2.63.23 | 15.3 MiB | 2026-07-27 | Self-hosted web file manager for managing files in a specified directory. | [Homepage](https://github.com/filebrowser/filebrowser) |
 | [filee](../bucket/filee.json) | 2.1.0 | 150.7 MiB | 2026-10-28 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
+| [filey](../bucket/filey.json) | 0.2.10 | 1.3 MiB | 2026-11-12 | Fast, keyboard-first file manager for Windows with split panels, tabs, previews, archive browsing, and Git integration. | [Homepage](https://github.com/Solessfir/Filey) |
 | [filepilot](../bucket/filepilot.json) | 1.0.7 | 64bit: 64.7 MiB | 2026-10-11 | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. | [Homepage](https://github.com/qup1010/FilePilot) |
 | [files-inspector](../bucket/files-inspector.json) | 4.55 | 18.3 MiB | 2026-06-16 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
 | [findly](../bucket/findly.json) | 1.0.2 | 4.3 MiB | 2026-08-11 | Windows utility for finding installed programs and their executable paths | [Homepage](https://findly.devslim.com/) |

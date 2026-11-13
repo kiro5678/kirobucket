@@ -1,0 +1,33 @@
+{
+    "version": "0.2.10",
+    "description": "Fast, keyboard-first file manager for Windows with split panels, tabs, previews, archive browsing, and Git integration.",
+    "homepage": "https://github.com/Solessfir/Filey",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Solessfir/Filey/releases/download/v0.2.10/Filey-0.2.10-windows-x64.zip",
+            "hash": "1480bd3dd41251d99c73473e84f20919784e88c3a5428aebcc5e86b9864dd75f"
+        }
+    },
+    "bin": "Filey.exe",
+    "shortcuts": [
+        [
+            "Filey.exe",
+            "Filey"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/Solessfir/Filey",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/Solessfir/Filey/releases/download/v$version/Filey-$version-windows-x64.zip"
+            }
+        }
+    },
+    "notes": [
+        "Use `scoop update filey` for updates; Filey's built-in updater can modify the Scoop-managed executable."
+    ]
+}
