@@ -33,5 +33,6 @@
             "url": "https://api.github.com/repos/AuZzii-Xssistant/Deckhand/releases/tags/v$version",
             "jp": "$.assets[?(@.name == '$basename')].digest"
         }
-    }
+    },
+    "notes": "Requires Microsoft Edge WebView2 Runtime."
 }
