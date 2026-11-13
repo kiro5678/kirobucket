@@ -1125,7 +1125,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-ram-monitor-gadget](../bucket/vovsoft-ram-monitor-gadget.json) | 2.0 | 2.4 MiB | 2026-08-13 | Portable edition of Vovsoft RAM Monitor Gadget. | [Homepage](https://vovsoft.com/software/ram-monitor-gadget/) |
 | [vovsoft-vov-stop-start](../bucket/vovsoft-vov-stop-start.json) | 2.0 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Vov Stop Start. | [Homepage](https://vovsoft.com/software/vov-stop-start/) |
 | [vovsoft-vov-system-uptime](../bucket/vovsoft-vov-system-uptime.json) | 1.8 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Vov System Uptime. | [Homepage](https://vovsoft.com/software/vov-system-uptime/) |
-| [pc-uptime](../bucket/pc-uptime.json) | 1.0.0 | 64bit: 56.5 MiB | 2026-11-02 | Windows utility for tracking PC uptime, reviewing session history, and analyzing system stability. | [Homepage](https://uptime-pc.vercel.app/) |
+| [pc-uptime](../bucket/pc-uptime.json) | 1.0.0 | 64bit: 56.4 MiB | 2026-11-02 | Windows utility for tracking PC uptime, reviewing session history, and analyzing system stability. | [Homepage](https://uptime-pc.vercel.app/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 
 ## Text-to-Speech (TTS)
