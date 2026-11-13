@@ -56,14 +56,16 @@ jobs:
           $env:SCOOP = $scoopRoot
           $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
 
+          $global:LASTEXITCODE = 0
           & $scoopScript bucket add kirobucket $env:GITHUB_WORKSPACE
-          if ($LASTEXITCODE -ne 0) {
-            throw "Could not add the checked-out kirobucket (exit code $LASTEXITCODE)."
+          if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+            throw "Could not add the checked-out kirobucket (exit code $global:LASTEXITCODE)."
           }
 
+          $global:LASTEXITCODE = 0
           & $scoopScript install pc-uptime
-          if ($LASTEXITCODE -ne 0) {
-            throw "scoop install pc-uptime failed with exit code $LASTEXITCODE."
+          if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+            throw "scoop install pc-uptime failed with exit code $global:LASTEXITCODE."
           }
 
           $versionDir = Join-Path $scoopRoot 'apps\pc-uptime\current'
@@ -108,9 +110,10 @@ jobs:
 
           $appRoot = Join-Path $scoopRoot 'apps\pc-uptime'
           if (Test-Path -LiteralPath $appRoot) {
+            $global:LASTEXITCODE = 0
             & $scoopScript uninstall pc-uptime
-            if ($LASTEXITCODE -ne 0) {
-              throw "scoop uninstall pc-uptime failed with exit code $LASTEXITCODE."
+            if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+              throw "scoop uninstall pc-uptime failed with exit code $global:LASTEXITCODE."
             }
           }
 
