@@ -1,9 +1,9 @@
 {
-    "version": "0.9.2",
+    "version": "0.9.1",
     "description": "ArboraFM desktop file manager for Windows with bookmarks, saved sessions, SSH access, and PDF tools.",
     "homepage": "https://arborafm.dev/",
-    "url": "https://arborafm.dev/releases/0.9.2/windows/Arbora_0.9.2_x64-portable.zip",
-    "hash": "f7619943bff670d6a9f84d3b35d35eeb2325fb02317d0b95a4da95865749fbf9",
+    "url": "https://arborafm.dev/releases/0.9.1/windows/Arbora_0.9.1_x64-portable.zip",
+    "hash": "9e017f0ba66f834e5fc57c404c9933db016e4482687f86cf7babe3530068f090",
     "bin": "Arbora.exe",
     "shortcuts": [
         [
