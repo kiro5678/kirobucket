@@ -1,0 +1,123 @@
+name: PC Uptime Scoop Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/pc-uptime.json'
+      - '.github/workflows/pc-uptime-scoop-install-test.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/pc-uptime.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install, verify nested ZIP extraction, and uninstall
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop in an isolated runner directory
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $scoopRoot = Join-Path $env:RUNNER_TEMP 'scoop-pc-uptime-test'
+          $installer = Join-Path $env:RUNNER_TEMP 'install-scoop.ps1'
+          Invoke-WebRequest -Uri 'https://get.scoop.sh' -OutFile $installer -TimeoutSec 120
+          & $installer -ScoopDir $scoopRoot
+
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          if (-not (Test-Path -LiteralPath $scoopScript -PathType Leaf)) {
+            throw "Scoop command script was not found: $scoopScript"
+          }
+
+          Write-Host "Scoop root: $scoopRoot"
+          Write-Host "Scoop script: $scoopScript"
+          "SCOOP_ROOT=$scoopRoot" >> $env:GITHUB_ENV
+
+      - name: Install PC Uptime from the checked-out bucket
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopRoot = $env:SCOOP_ROOT
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+
+          $global:LASTEXITCODE = 0
+          & $scoopScript bucket add kirobucket $env:GITHUB_WORKSPACE
+          if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+            throw "Could not add the checked-out kirobucket (exit code $global:LASTEXITCODE)."
+          }
+
+          $global:LASTEXITCODE = 0
+          & $scoopScript install pc-uptime
+          if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+            throw "scoop install pc-uptime failed with exit code $global:LASTEXITCODE."
+          }
+
+          $versionDir = Join-Path $scoopRoot 'apps\pc-uptime\current'
+          $application = Join-Path $versionDir 'Uptime.exe'
+          if (-not (Test-Path -LiteralPath $application -PathType Leaf)) {
+            $entries = @(Get-ChildItem -LiteralPath $versionDir -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
+            throw "Scoop reported success but Uptime.exe is missing from $versionDir. Found: $($entries -join ', ')"
+          }
+
+          $file = Get-Item -LiteralPath $application
+          if ($file.Length -le 0) {
+            throw 'Uptime.exe exists but is empty.'
+          }
+          $signature = [System.IO.File]::ReadAllBytes($application)
+          if ($signature.Length -lt 2 -or $signature[0] -ne 0x4D -or $signature[1] -ne 0x5A) {
+            throw 'Uptime.exe does not have a valid Windows PE MZ header.'
+          }
+
+          $hash = (Get-FileHash -LiteralPath $application -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "PASS: Scoop installed PC Uptime and extracted Uptime.exe ($($file.Length) bytes)."
+          Write-Host "Application SHA-256: $hash"
+          Write-Host "Installed executable: $application"
+          "UPTIME_EXE=$application" >> $env:GITHUB_ENV
+
+      - name: Uninstall PC Uptime and verify cleanup
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:SCOOP_ROOT)) {
+            Write-Host 'Scoop was not installed; cleanup test is skipped.'
+            exit 0
+          }
+
+          $scoopRoot = $env:SCOOP_ROOT
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          if (-not (Test-Path -LiteralPath $scoopScript -PathType Leaf)) {
+            Write-Host 'Scoop command script is unavailable; cleanup test is skipped.'
+            exit 0
+          }
+
+          $appRoot = Join-Path $scoopRoot 'apps\pc-uptime'
+          if (Test-Path -LiteralPath $appRoot) {
+            $global:LASTEXITCODE = 0
+            & $scoopScript uninstall pc-uptime
+            if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+              throw "scoop uninstall pc-uptime failed with exit code $global:LASTEXITCODE."
+            }
+          }
+
+          if (Test-Path -LiteralPath $appRoot) {
+            throw "Scoop uninstall left the PC Uptime app directory behind: $appRoot"
+          }
+          Write-Host 'PASS: Scoop uninstall removed the PC Uptime app directory.'
