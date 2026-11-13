@@ -21,7 +21,7 @@
             "if ($cmd -ne 'update') {",
             "    $uninstaller = Join-Path $dir 'Uninstall.exe'",
             "    if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw 'Open Aria Exporter NSIS uninstaller was not found in the Scoop version directory.' }",
-            "    $uninstallArgs = @('/S', ('\\"' + '_?=' + $dir + '\\"'))",
+            "    $uninstallArgs = @('/S', ('\"' + '_?=' + $dir + '\"'))",
             "    $process = Start-Process -FilePath $uninstaller -ArgumentList $uninstallArgs -Wait -PassThru -ErrorAction Stop",
             "    if ($process.ExitCode -ne 0) { throw \"Open Aria Exporter uninstaller exited with code $($process.ExitCode).\" }",
             "}"
