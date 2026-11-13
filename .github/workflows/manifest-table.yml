@@ -971,7 +971,7 @@ jobs:
               "| Classification | Manifests | Meaning |"
               "| --- | ---: | --- |"
               "| Portable | $portableCount | No normal vendor installation routine or persistent Windows integration is run. |"
-              "| Nonportable | $nonportableCount | The manifest runs installation or registers persistent Windows components. |"
+              "| Nonportable | $nonportableCount | The app runs setup, registers persistent Windows components, or requires executable/runtime payloads outside Scoop-managed paths. |"
               "| Review | $reviewCount | Portability checks or supporting evidence are still outstanding. |"
               "| **Total** | **$totalCount** | **All current JSON manifests in bucket/.** |"
               $summaryEndMarker
