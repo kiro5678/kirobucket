@@ -85,7 +85,8 @@
     ],
     "persist": [
         "configs",
-        "vms"
+        "vms",
+        "nx_device"
     ],
     "post_uninstall": [
         "Remove-Item \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\MuMuPlayer\" -Recurse -Force -ErrorAction SilentlyContinue",
