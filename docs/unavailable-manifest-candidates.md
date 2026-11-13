@@ -49,3 +49,15 @@ This page records software from repository research that does not currently have
 Before adding a candidate to `bucket/`, verify the current official Windows artifact, version mapping, architecture, installer/package type, SHA-256, extracted application files, and real launch executable. Use an installer-inspection workflow when the package type cannot be established from upstream documentation. A successful HTTP download alone does not establish that a valid Scoop manifest can be created.
 
 These entries describe why no manifest was created; they do not represent failed or installable manifests.
+
+
+## Awesome MyGo System category (checked 2026-11-13)
+
+### Projects not added
+
+- **MyCast** — [feiniao233/MyCast](https://github.com/feiniao233/MyCast). The current Windows release is `v0.1.0-alpha`; the upstream README identifies it as an alpha candidate and says key Windows behaviors (IME, tray/hotkey, clipboard return, DPI and multi-monitor) have not completed real-device acceptance. Revisit after a stable Windows release and acceptance.
+- **Mochi** — [maximousblk/mochi](https://github.com/maximousblk/mochi). The available Windows assets are published through a mutable `canary` pre-release; upstream describes the app as alpha. Do not track the canary as a stable Scoop release.
+- **Chrome Profile Router** — [chinnsenn/chrome-profile-router](https://github.com/chinnsenn/chrome-profile-router). Its README describes Windows support as experimental and not tested on native Windows; the repository has no declared license. Revisit after Windows support and licensing are clarified.
+- **MyClip** — [L92-Labs/myclip](https://github.com/L92-Labs/myclip). The current GitHub release does not provide a usable Windows desktop package; do not build a manifest from source alone.
+- **Shixin Input** — [shixin-labs/shixin-input](https://github.com/shixin-labs/shixin-input). The latest Windows assets are explicitly unsigned preview installers, not a verified stable Windows distribution.
+- **Clipboard-go**, **Locklark** and **Tendedero** — the project repositories currently expose no versioned GitHub Windows release asset suitable for a pinned manifest. Revisit when a versioned Windows package and checksum are published.
