@@ -5,6 +5,11 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/axonhub.json'
+      - 'bucket/goshell.json'
+      - 'bucket/mypack.json'
+      - 'bucket/nekossh.json'
+      - 'bucket/rnaxray.json'
       - 'bucket/edge-drop.json'
       - 'bucket/pinokio.json'
       - 'bucket/unsloth.json'
@@ -199,6 +204,11 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/axonhub.json'
+      - 'bucket/goshell.json'
+      - 'bucket/mypack.json'
+      - 'bucket/nekossh.json'
+      - 'bucket/rnaxray.json'
       - 'bucket/browser-picker.json'
       - 'bucket/default-programs-editor.json'
       - 'bucket/firefox-portable-default-browser.json'
