@@ -49,6 +49,16 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - When a new incident exposes a general repository rule, update the relevant permanent guide (for example, `docs/manifest-authoring.md`) as well as adding the incident entry here.
 
 ## Resolved incidents
+### 2026-11-13 — Restore CRLF compliance for manifest review documentation
+
+- **Status:** Resolved and verified.
+- **Affected area:** `docs/manifest-review.md`; `.github/workflows/ci.yml`.
+- **Problem:** Both PowerShell and PowerShell 7 CI jobs failed the Pester `file newlines are CRLF` test. The failure identified `docs/manifest-review.md`.
+- **Root cause:** The file contained 3 CRLF endings and 122 lone LF endings, while `.gitattributes` requires CRLF in the working tree.
+- **Resolution:** Normalized the file to 125 CRLF endings without changing its text (commit [7a2b02f](https://github.com/kiro5678/kirobucket/commit/7a2b02f0b6b4a29aec88c0415371db985e53dbd7)). Added `docs/**` to the CI push paths so future documentation edits run the repository style checks (commit [b28c6e8](https://github.com/kiro5678/kirobucket/commit/b28c6e8487fbcfa604b8367664667b5ed6ccdc1f)).
+- **Verification:** Re-fetching `docs/manifest-review.md` showed 125 CRLF and zero lone LF endings, with identical text after newline normalization. [Validate GitHub Actions Workflows run 43456285994](https://github.com/kiro5678/kirobucket/actions/runs/43456285994) passed. [CI run 43456286049](https://github.com/kiro5678/kirobucket/actions/runs/43456286049) passed the gate and both Pester matrix jobs (`powershell` and `pwsh`). The earlier failure was [run 43455425117](https://github.com/kiro5678/kirobucket/actions/runs/43455425117).
+- **Prevention:** Preserve CRLF in repository documentation and include documentation paths in CI triggers so newline/style regressions are checked on push.
+
 ### 2026-11-10 — Avoid full REVIEW scan when a PR only deletes a staged manifest
 
 - **Status:** Resolved and verified.
