@@ -13,23 +13,6 @@
             "hash": "2d8f38c7e7fb0691bfad52b31600ddeea24d3958e54e5e8cc2d317d5232024a0"
         }
     },
-    "installer": {
-        "script": [
-            "$setupPath = Join-Path $dir 'setup.exe'",
-            "$process = Start-Process -FilePath $setupPath -ArgumentList @('/S', \"/D=$dir\") -Wait -PassThru",
-            "if ($process.ExitCode -ne 0) { throw \"GoShell setup exited with code $($process.ExitCode).\" }",
-            "Remove-Item -LiteralPath $setupPath -Force"
-        ]
-    },
-    "uninstaller": {
-        "script": [
-            "$uninstallerPath = Join-Path $dir 'Uninstall.exe'",
-            "if (Test-Path -LiteralPath $uninstallerPath -PathType Leaf) {",
-            "    $process = Start-Process -FilePath $uninstallerPath -ArgumentList @('/S', \"_?=$dir\") -Wait -PassThru",
-            "    if ($process.ExitCode -ne 0) { throw \"GoShell uninstaller exited with code $($process.ExitCode).\" }",
-            "}"
-        ]
-    },
     "shortcuts": [
         [
             "Go Shell.exe",
