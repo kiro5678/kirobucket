@@ -1,6 +1,6 @@
 # Software candidates without a current Scoop-ready Windows package
 
-**Last checked:** 2026-11-10
+**Last checked:** 2026-11-13
 
 This page records software from repository research that does not currently have a suitable, version-pinned Windows download for a maintainable Scoop manifest. These are documentation-only entries: they are not active manifests and are not kept as placeholder JSON files in `bucket/` or `under review scoop bucket/`.
 
@@ -21,8 +21,31 @@ This page records software from repository research that does not currently have
 - **Older installer:** release [`v1.2.2.0_Release_Emergency`](https://github.com/mymiamo/MiaDock/releases/tag/v1.2.2.0_Release_Emergency) contains `MiaDock.Installer.exe`, but it is an older release and does not match the current source version or current Store distribution. It is not used as the basis for a current manifest.
 - **Decision:** do not create a Scoop manifest from an obsolete installer or invent a direct MSIX URL. Revisit only if upstream publishes a current, directly downloadable Windows package with a stable version and verifiable checksum, or a documented distribution path that can be managed correctly by Scoop.
 
+## Awesome MyGo AI category — Windows native apps (checked 2026-11-13)
+
+### AIO Proxy
+
+- **Source:** [aio-proxy/aio-proxy](https://github.com/aio-proxy/aio-proxy)
+- **Windows asset:** v0.42.5 publishes `aio-proxy-0.42.5-x64-setup.exe`, an NSIS setup package. The separate `cli-win32-x64` archive is the CLI, not the desktop app.
+- **Installation behavior:** the desktop setup installs into the current user's LocalAppData, creates a Start Menu shortcut and HKCU uninstall registration. Its uninstaller includes cleanup logic for the app-owned service/task, user PATH shims, startup value and support directory.
+- **Decision:** do not treat the setup EXE as portable or unpack it as a normal archive. A maintainable Nonportable manifest needs tested upgrade/uninstall behavior so Scoop updates do not remove the app's external service state or user data.
+
+### InferYard Studio
+
+- **Source:** [sunny0826/inferyard](https://github.com/sunny0826/inferyard/tree/main/studio)
+- **Latest release checked:** v0.0.3 publishes a Python wheel, source archive and runtime constraints; it does not publish a Windows Studio executable or installer.
+- **Build requirements:** Studio is a separate Go/MyGo desktop project. Its README requires Go 1.27.3 and a separately installed InferYard CLI, plus configured local model/engine assets and directories.
+- **Decision:** wait for a versioned Windows desktop release or a fully reproducible, tested source-build manifest. Do not use the Python CLI wheel as a substitute for the native Studio app.
+
+### MangaTrans
+
+- **Source:** [roketskiy/mangatrans](https://github.com/roketskiy/mangatrans)
+- **Current distribution:** no GitHub Releases or versioned Windows binary assets are published.
+- **Build/runtime requirements:** the upstream README requires CUDA 13, cuDNN, a CUDA build of `llama-server.exe`, ONNX Runtime cuda13, a MinGW-w64 toolchain for the engine and multiple separately downloaded OCR, inpainting and translation models.
+- **Decision:** do not create a Scoop manifest that pretends this is a self-contained Windows app or downloads several gigabytes of model files. Revisit when upstream publishes a versioned Windows package with a documented runtime strategy.
+
 ## Reconsideration requirements
 
-Before adding either application to `bucket/`, verify the current official Windows artifact, version mapping, architecture, installer/package type, SHA-256, extracted application files, and real launch executable. Use an installer-inspection workflow when the package type cannot be established from upstream documentation. A successful HTTP download alone does not establish that a valid Scoop manifest can be created.
+Before adding a candidate to `bucket/`, verify the current official Windows artifact, version mapping, architecture, installer/package type, SHA-256, extracted application files, and real launch executable. Use an installer-inspection workflow when the package type cannot be established from upstream documentation. A successful HTTP download alone does not establish that a valid Scoop manifest can be created.
 
 These entries describe why no manifest was created; they do not represent failed or installable manifests.
