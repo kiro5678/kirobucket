@@ -9,7 +9,7 @@
 | Browsers & Communication | 12 | [View](#browsers-communication) |
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
-| Cross-Device Integration | 4 | [View](#cross-device-integration) |
+| Cross-Device Integration | 6 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 51 | [View](#developer-technical-tools) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
@@ -41,7 +41,7 @@
 | Windows Customization | 93 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1079**
+**Total unique manifests: 1081**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -160,6 +160,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- | --- |
 | [adb-device-manager](../bucket/adb-device-manager.json) | 1.8 | 64bit: 165.6 MiB | 2026-07-12 | Desktop Android device manager with ADB, screen mirroring, file transfer, notifications, and media controls. | [Homepage](https://github.com/Shrey113/Adb-Device-Manager-2) |
 | [deskdrop](../bucket/deskdrop.json) | 1.3.3 | 287.8 MiB | 2026-09-05 | Legacy Deskdrop 1.x build for local-first clipboard sharing, file transfers, remote folder browsing, and continuity camera. | [Homepage](https://github.com/ChinmayyK/Link-All) |
+| [healthfolio](../bucket/healthfolio.json) | 0.0.18 | 64bit: 12.2 MiB / arm64: 11.1 MiB | 2026-11-13 | Receives Apple Health data from the Healthfolio iPhone app and stores it in local SQLite without cloud or account. | [Homepage](https://healthfolio.herosizy.dev) |
+| [motionduo](../bucket/motionduo.json) | 0.17.20 | 64bit: 44.8 MiB | 2026-10-27 | Software KVM for sharing one keyboard and mouse across Windows and Mac computers on the LAN. | [Homepage](https://github.com/alvin-7/motionduo) |
 | [nectarlink](../bucket/nectarlink.json) | 0.1.4 | — | 2026-10-17 | Local-first Android and Windows companion for notifications, calls, messages, clipboard, file transfer, screen mirroring, and phone apps. | [Homepage](https://github.com/thtbee/nectarlink) |
 | [twindesk](../bucket/twindesk.json) | 2.5.3 | 64bit: 121.5 MiB / arm64: 122.2 MiB | 2026-11-05 | Cross-device workspace for sharing screens, apps, files, clipboard, input, calls, and notifications across Windows, macOS, Linux, and Android. | [Homepage](https://github.com/InukaAsith/TwinDesk) |
 
