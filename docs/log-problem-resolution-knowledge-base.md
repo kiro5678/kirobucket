@@ -1076,10 +1076,10 @@ The repository CI remains responsible for validating manifest syntax and schema 
 
 ### 2026-11-13 — Correct the Scoop pull-request title format
 
-- **Status:** Title corrected; post-fix title-lint verification pending.
+- **Status:** Resolved and verified.
 - **Affected area:** Pull request #166 for `bucket/arbora.json`.
 - **Problem:** The `Lint Pull Request` workflow rejected the title `Update ArboraFM to 0.9.2` with `PR title does not follow Scoop naming convention`.
 - **Root cause:** The repository's title validator requires `<manifest-name[@version]|(chore)>: <description>`; a plain natural-language title does not meet that format.
 - **Resolution:** Changed the title to `arbora@0.9.2: update portable manifest`.
-- **Verification:** Archive validation run [43511006231](https://github.com/kiro5678/kirobucket/actions/runs/43511006231) and Pull Request Handler run [43511006214](https://github.com/kiro5678/kirobucket/actions/runs/43511006214) passed. The first title-lint run [43511006239](https://github.com/kiro5678/kirobucket/actions/runs/43511006239) failed before the title correction; a new synchronize event must verify the corrected title.
+- **Verification:** Archive validation run [43511006231](https://github.com/kiro5678/kirobucket/actions/runs/43511006231) and Pull Request Handler run [43511006214](https://github.com/kiro5678/kirobucket/actions/runs/43511006214) passed. The first title-lint run [43511006239](https://github.com/kiro5678/kirobucket/actions/runs/43511006239) failed before the title correction. After correcting the title, [Lint Pull Request run 43511365109](https://github.com/kiro5678/kirobucket/actions/runs/43511365109) passed, and the updated manifest passed [archive validation run 43511365089](https://github.com/kiro5678/kirobucket/actions/runs/43511365089). The [Pull Request Handler run 43511006214](https://github.com/kiro5678/kirobucket/actions/runs/43511006214) also passed.
 - **Prevention:** For a single-manifest version update, use `<manifest-name>@<version>: <description>`. Reserve `(chore): <description>` for repository maintenance changes. Check the title format before opening a PR.
