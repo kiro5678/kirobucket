@@ -8,6 +8,7 @@ on:
       - "scripts/*.ps1"
       - "scripts/**/*.ps1"
       - ".github/workflows/ci.yml"
+      - "docs/**"
   workflow_dispatch:
 
 permissions:
