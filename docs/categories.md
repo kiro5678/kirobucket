@@ -38,10 +38,10 @@
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 10 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 94 | [View](#windows-customization) |
+| Windows Customization | 97 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1085**
+**Total unique manifests: 1088**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -1237,6 +1237,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [funk-icu](../bucket/funk-icu.json) | 6 | 1.7 MiB | 2025-06-25 | Saves and restores Windows desktop icon layouts after display changes or icons being rearranged. | [Homepage](https://funk.eu/icu-icon-configuration-utility/) |
 | [softwareok-get-pixel-color](../bucket/softwareok-get-pixel-color.json) | 3.55 | 64bit: 144.3 KiB | 2026-06-30 | Read the color of a pixel on screen. | [Homepage](https://www.softwareok.com/?Download=GetPixelColor) |
 | [ghost-saver](../bucket/ghost-saver.json) | 1.0.0 | 160.2 KiB | 2026-09-19 | Open-source Windows screensaver with a color-cycling display and animated fireworks. | [Homepage](https://github.com/dmongrel/ghost-saver) |
+| [glassdesk](../bucket/glassdesk.json) | 1.8.0 | 435.5 KiB | 2026-11-13 | Glass-style Windows desktop organizer with auto-sorting fences and widgets. | [Homepage](https://github.com/Stapc-svg/GlassDesk) |
 | [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | 122.5 MiB | 2026-09-26 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
 | [iconswappergui](../bucket/iconswappergui.json) | 2.1.2 | 3.3 MiB | 2026-05-31 | Portable GUI for swapping Windows file and folder icons. | [Homepage](https://github.com/aj-phillips/IconSwapperGui) |
 | [softwareok-keep-mouse-speed-ok](../bucket/softwareok-keep-mouse-speed-ok.json) | 3.55 | 64bit: 53.7 KiB | 2026-04-25 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
@@ -1260,6 +1261,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [open-shell-nightly](../bucket/open-shell-nightly.json) | 4.4.202 | 9.7 MiB | 2026-10-12 | A collection of utilities bringing back classic features to Windows. Latest Open-Shell pre-release build. | [Homepage](https://github.com/Open-Shell/Open-Shell-Menu) |
 | [openglass](../bucket/openglass.json) | 3.0.2.3749 | 3.9 MiB | 2026-10-05 | A replacement for the Desktop Window Manager glass effect on Windows. | [Homepage](https://github.com/ALTaleX531/OpenGlass) |
 | [openrgb](../bucket/openrgb.json) | 1.1 | 64bit: 21.0 MiB / 32bit: 17.2 MiB | 2026-10-16 | RGB lighting control that does not depend on manufacturer software. | [Homepage](https://openrgb.org) |
+| [pecofence](../bucket/pecofence.json) | 0.4.0 | 4.7 MiB | 2026-11-13 | Open-source desktop organizer with glass fences, live folders, tabs, and Peek search. | [Homepage](https://github.com/DayuanJiang/PecoFence) |
+| [pickets](../bucket/pickets.json) | 1.0.2 | 72.0 MiB | 2026-10-03 | Lightweight desktop organizer for grouping Windows files, folders, and shortcuts into movable pickets. | [Homepage](https://github.com/Creeptones/Pickets) |
 | [softwareok-pointerstick](../bucket/softwareok-pointerstick.json) | 7.22 | 64bit: 749.0 KiB | 2026-10-26 | Display a virtual pointer stick on the desktop for presentations. | [Homepage](https://www.softwareok.com/?Download=PointerStick) |
 | [rebuild-shell-icon-cache](../bucket/rebuild-shell-icon-cache.json) | 1.3 | 788.1 KiB | 2021-11-23 | It rebuilds the icon cache to reset and reload the icon images into the icon cache. | [Homepage](https://www.sordum.org/rebuild-shell-icon-cache) |
 | [rightclicktools](../bucket/rightclicktools.json) | 2.0.4 | 4.8 MiB | 2026-10-03 | A set of powerful tools and shortcuts for the Windows Explorer context menu. | [Homepage](https://github.com/LesFerch/RightClickTools) |

@@ -132,6 +132,12 @@ KeyDepot and Repo Hopper remain under Review in [Manifest Review](manifest-revie
 ### Open Aria Exporter (2026-11-13)
 
 - [open-aria-exporter](../bucket/open-aria-exporter.json) — **Nonportable (NSIS installer)**: runs the official setup with `/S /D=$dir`, requires elevation, and creates an all-users Start Menu shortcut plus an HKLM uninstall entry. Scoop skips the old-version uninstaller during updates and runs `Uninstall.exe` during removal. Settings and export history remain under `%LOCALAPPDATA%\OpenAriaExporter`. The 64-bit installer is unsigned; the manifest records the upstream license as `Unknown`.
+### Desktop icon organizers (2026-11-14)
+
+- [pickets](../bucket/pickets.json) — **Portable**: uses the official single-file, self-contained Windows x64 executable without running setup. Layouts and logs remain under `%APPDATA%\Pickets`.
+- [pecofence](../bucket/pecofence.json) — **Portable**: uses the official portable ZIP and launches with `--portable`; the `config` directory is persisted across Scoop updates. Settings require the Microsoft Edge WebView2 Runtime.
+- [glassdesk](../bucket/glassdesk.json) — **Nonportable (per-user MSI)**: runs the official MSI with `msiexec /i` and removes it with `msiexec /x`. The MSI registers an HKCU startup entry and Start Menu shortcut. The upstream repository has no application license file, so the manifest uses `Unknown`.
+
 ## Classification rules for future manifest changes
 
 1. Inspect the actual downloaded asset and its archive contents. The `.exe`, `.msi`, or `.msix` extension alone does not determine the class.
