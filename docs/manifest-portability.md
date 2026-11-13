@@ -114,11 +114,6 @@ The five applications below use Scoop's `#/dl.7z` mode. Windows 7-Zip validation
 - [NekoSSH](../bucket/nekossh.json) — **Portable**: extracts the official Windows x64 payload. Host data and DPAPI-protected credentials remain in the current user's profile outside Scoop.
 - [RNAxRay Desktop](../bucket/rnaxray.json) — **Portable**: extracts the official Windows x64 payload; the release bundles its CPython and scientific runtime.
 
-- [AxonHub](../bucket/axonhub.json) — **Nonportable**: official MyGo NSIS setup for x64 and ARM64. The application also has signed in-app updates; use Scoop as the update authority.
-- [GoShell](../bucket/goshell.json) — **Nonportable**: official MyGo NSIS setup for x64 and ARM64. Upstream labels the application WIP and says the Windows app requires administrator rights.
-- [Mypack](../bucket/mypack.json) — **Nonportable**: official per-user NSIS setup for x64 and ARM64; follows the upstream Scoop manifest's install and uninstall commands.
-- [NekoSSH](../bucket/nekossh.json) — **Nonportable**: official MyGo NSIS setup for Windows x64. Host data and DPAPI-protected credentials remain in the current user's profile outside Scoop.
-- [RNAxRay Desktop](../bucket/rnaxray.json) — **Nonportable**: official MyGo NSIS setup for Windows x64; the release bundles its CPython and scientific runtime.
 
 KeyDepot and Repo Hopper remain under Review in [Manifest Review](manifest-review.md): their upstream documentation does not yet establish tested Windows support. Aurora Desktop remains unavailable because its latest release has no Windows desktop installer or desktop executable.
 
