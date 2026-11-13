@@ -38,10 +38,10 @@
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 10 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 93 | [View](#windows-customization) |
+| Windows Customization | 94 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1081**
+**Total unique manifests: 1082**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -1234,6 +1234,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [softwareok-keep-mouse-speed-ok](../bucket/softwareok-keep-mouse-speed-ok.json) | 3.55 | 64bit: 53.7 KiB | 2026-04-25 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
 | [komorebi](../bucket/komorebi.json) | 0.1.41 | 64bit: 26.7 MiB / arm64: 25.0 MiB | 2026-05-03 | A tiling window manager for Windows | [Homepage](https://github.com/LGUG2Z/komorebi) |
 | [komorebi-nightly](../bucket/komorebi-nightly.json) | 2026-08-22 | 64bit: 31.5 MiB / arm64: 27.0 MiB | 2026-11-01 | A tiling window manager for Windows (nightly builds) | [Homepage](https://github.com/LGUG2Z/komorebi) |
+| [winoverview](../bucket/winoverview.json) | 1.0.0 | 24.9 MiB | 2026-11-12 | Virtual desktop overview with live app previews, drag-and-drop switching, and snap layouts. | [Homepage](https://github.com/yoursfriendlyghost/WinOverview) |
 | [lively](../bucket/lively.json) | 2.2.1.0 | 208.0 MiB | 2025-09-18 | A free and open-source software that allows users to set animated desktop wallpapers and screensavers. | [Homepage](https://livelywallpaper.net/) |
 | [livewallpaper](../bucket/livewallpaper.json) | 4.0.1-alpha.4 | 4.2 MiB | 2026-10-10 | Dynamic wallpaper client for Windows | [Homepage](https://github.com/GiantappMan/livewallpaper) |
 | [lopesoft-filemenu-tools](../bucket/lopesoft-filemenu-tools.json) | 8.6 | 12.2 MiB | 2025-10-25 | Customize File Explorer context menus and provide built-in file and folder utilities. | [Homepage](https://www.lopesoft.com/index.php/en/products/filemenutools-en) |
