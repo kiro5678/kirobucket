@@ -169,6 +169,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [aio-proxy-cli](../bucket/aio-proxy-cli.json) | 0.42.5 | 64bit: 45.6 MiB | 2026-10-12 | Standalone CLI for a local AI gateway with protocol conversion, provider routing, and a web dashboard. | [Homepage](https://aioproxy.dev) |
 | [axonhub](../bucket/axonhub.json) | 1.0.0-rc.4 | 64bit: 35.6 MiB / arm64: 30.5 MiB | 2026-11-12 | Native desktop control panel for the AxonHub AI gateway. | [Homepage](https://github.com/looplj/axonhub) |
 | [c2flux](../bucket/c2flux.json) | 1.4.1 | 3.8 MiB | 2026-10-29 | c2flux | [Homepage](https://github.com/UncleRiot/c2flux) |
 | [cmtrace](../bucket/cmtrace.json) | 1.6.3 | 64bit: 35.7 MiB / arm64: 29.6 MiB | 2026-10-21 | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. | [Homepage](https://cmtraceopen.com) |
