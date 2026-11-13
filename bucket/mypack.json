@@ -5,11 +5,11 @@
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/sinhong2011/mypack/releases/download/v0.2.0/mypack-setup-0.2.0-amd64.exe#/setup.exe",
+            "url": "https://github.com/sinhong2011/mypack/releases/download/v0.2.0/mypack-setup-0.2.0-amd64.exe#/dl.7z",
             "hash": "2abf052f6998c0d7c22701ae8fe4eac24376c202db6b965a2491b19b2f575e66"
         },
         "arm64": {
-            "url": "https://github.com/sinhong2011/mypack/releases/download/v0.2.0/mypack-setup-0.2.0-arm64.exe#/setup.exe",
+            "url": "https://github.com/sinhong2011/mypack/releases/download/v0.2.0/mypack-setup-0.2.0-arm64.exe#/dl.7z",
             "hash": "55397b24fdde8dc5018d6dc231e514d312952d660503dc3b563dd8fba4629b77"
         }
     },
@@ -38,10 +38,10 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/sinhong2011/mypack/releases/download/v$version/mypack-setup-$version-amd64.exe#/setup.exe"
+                "url": "https://github.com/sinhong2011/mypack/releases/download/v$version/mypack-setup-$version-amd64.exe#/dl.7z"
             },
             "arm64": {
-                "url": "https://github.com/sinhong2011/mypack/releases/download/v$version/mypack-setup-$version-arm64.exe#/setup.exe"
+                "url": "https://github.com/sinhong2011/mypack/releases/download/v$version/mypack-setup-$version-arm64.exe#/dl.7z"
             }
         }
     }
