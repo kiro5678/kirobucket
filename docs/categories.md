@@ -9,7 +9,7 @@
 | Clipboard Tools | 18 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 4 | [View](#cross-device-integration) |
-| Developer & Technical Tools | 46 | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 51 | [View](#developer-technical-tools) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 84 | [View](#file-management) |
@@ -40,7 +40,7 @@
 | Windows Customization | 93 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1074**
+**Total unique manifests: 1079**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -165,11 +165,13 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [axonhub](../bucket/axonhub.json) | 1.0.0-rc.4 | 64bit: 35.6 MiB / arm64: 30.5 MiB | 2026-11-12 | Native desktop control panel for the AxonHub AI gateway. | [Homepage](https://github.com/looplj/axonhub) |
 | [c2flux](../bucket/c2flux.json) | 1.4.1 | 3.8 MiB | 2026-10-29 | c2flux | [Homepage](https://github.com/UncleRiot/c2flux) |
 | [cmtrace](../bucket/cmtrace.json) | 1.6.3 | 64bit: 35.7 MiB / arm64: 29.6 MiB | 2026-10-21 | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. | [Homepage](https://cmtraceopen.com) |
 | [code-server](../bucket/code-server.json) | 4.145.2 | 207.4 MiB | 2026-11-07 | Run VS Code in a browser using the self-hosted code-server. | [Homepage](https://github.com/coder/code-server) |
 | [detect-it-easy](../bucket/detect-it-easy.json) | 3.10 | 64bit: 24.0 MiB / 32bit: 21.9 MiB | 2026-04-21 | Tool for identifying packers, protectors, compilers, and file formats | [Homepage](https://github.com/horsicq/Detect-It-Easy) |
 | [firelink](../bucket/firelink.json) | 1.5.0 | 176.2 MiB | 2026-10-20 | Firelink | [Homepage](https://github.com/nimbold/Firelink) |
+| [goshell](../bucket/goshell.json) | 0.3.0 | 64bit: 9.4 MiB / arm64: 7.8 MiB | 2026-11-11 | Native SSH, Docker, and Kubernetes terminal client. | [Homepage](https://github.com/tk103331/goshell) |
 | [lopesoft-lopeedit](../bucket/lopesoft-lopeedit.json) | 5.8.1 | 4.7 MiB | 2020-04-09 | Tabbed programmer's editor and Notepad replacement with syntax highlighting. | [Homepage](https://www.lopesoft.com/index.php/en/products/lopeedit) |
 | [makerom](../bucket/makerom.json) | 0.19.0 | 240.8 KiB | 2026-01-18 | A CLI tool to create CTR (Nintendo 3DS) ROM images. | [Homepage](https://github.com/3DSGuy/Project_CTR) |
 | [mitec-dfm-editor](../bucket/mitec-dfm-editor.json) | 8.4.0 | 15.9 MiB | 2025-07-22 | Standalone editor for Delphi, FireMonkey and Lazarus form files in binary or text format. | [Homepage](https://www.mitec.cz/wp/mdfme/) |
@@ -183,9 +185,12 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mitec-structured-storage-viewer](../bucket/mitec-structured-storage-viewer.json) | 4.1.2 | 3.4 MiB | 2025-07-22 | Viewer and manager for Microsoft OLE structured-storage files. | [Homepage](https://www.mitec.cz/wp/mssv/) |
 | [mitec-uuid-generator](../bucket/mitec-uuid-generator.json) | 1.0.0 | 1.5 MiB | 2025-12-30 | Generates and decodes UUID values. | [Homepage](https://www.mitec.cz/wp/uuid/) |
 | [mitec-xml-viewer](../bucket/mitec-xml-viewer.json) | 6.5.0 | 6.0 MiB | 2025-07-22 | XML viewer with structured browsing and export features. | [Homepage](https://www.mitec.cz/wp/mxmlv/) |
+| [mypack](../bucket/mypack.json) | 0.2.0 | 64bit: 14.9 MiB / arm64: 13.8 MiB | 2026-11-12 | Turns websites and local HTML projects into standalone desktop apps. | [Homepage](https://github.com/sinhong2011/mypack) |
+| [nekossh](../bucket/nekossh.json) | 0.3.64 | 5.3 MiB | 2026-11-05 | Native SSH terminal and SFTP client with local host management. | [Homepage](https://github.com/neko233-com/nekossh) |
 | [paseo](../bucket/paseo.json) | 0.13.2 | 64bit: 138.3 MiB / arm64: 138.8 MiB | 2026-10-29 | Voice-controlled development environment for local AI coding agents. | [Homepage](https://paseo.sh) |
 | [powershell-np](../bucket/powershell-np.json) | 7.6.9 | 64bit: 112.1 MiB / 32bit: 105.3 MiB / arm64: 105.8 MiB | 2026-10-25 | PowerShell Core, the cross-platform task automation and configuration management framework/tool. | [Homepage](https://github.com/PowerShell/PowerShell) |
 | [pyinstxtractor-ng](../bucket/pyinstxtractor-ng.json) | 2026.07.03 | 7.6 MiB | 2026-07-03 | pyinstxtractor-ng is a tool to extract the contents of a Pyinstaller generated executable file. | [Homepage](https://github.com/pyinstxtractor/pyinstxtractor-ng) |
+| [rnaxray](../bucket/rnaxray.json) | 0.1.7 | 117.3 MiB | 2026-10-17 | Native desktop workbench for chimeric RNA read analysis and structure prediction. | [Homepage](https://github.com/Vicky-0256/RNAxRAY) |
 | [sordum-reg-converter](../bucket/sordum-reg-converter.json) | 1.2 | 439.0 KiB | 2021-03-27 | Reg Converter is a portable freeware utility to convert .reg data to .bat, .vbs, or .au3. (RegConverter可以将.reg文件转换为.bat，.vbs或.au3。这对于需要管理员权限才能合并到注册表中的文件或无人参与的自动化安装时特别有用。) | [Homepage](https://www.sordum.org/8478/reg-converter-v1-2/) |
 | [sordum-registry-key-jumper](../bucket/sordum-registry-key-jumper.json) | 1.3 | 964.8 KiB | 2025-12-01 | A tool that helps the user navigate to a user-defined registry key with minimal effort. | [Homepage](https://www.sordum.org/registry-key-jumper) |
 | [vcredist](../bucket/vcredist.json) | 14.51.36247.0 | 24.5 MiB | 2026-05-29 | Microsoft Visual C++ Redistributables bundle for all major versions. | [Homepage](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) |
