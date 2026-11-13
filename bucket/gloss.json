@@ -1,12 +1,12 @@
 {
-    "version": "0.3.31",
+    "version": "0.3.34",
     "description": "Native Git client with AI change auditing and commit intelligence.",
     "homepage": "https://carlopenlab.github.io/Gloss/",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/CarlOpenLab/Gloss/releases/download/v0.3.31/gloss-0.3.31-windows-amd64-portable.zip",
-            "hash": "0a651b793a178a58b7f4b2761399fc2737cdfd8abff0cdc7e1a356fefa6926a2"
+            "url": "https://github.com/CarlOpenLab/Gloss/releases/download/v0.3.34/gloss-0.3.34-windows-amd64-portable.zip",
+            "hash": "c571dac285cbf2fbfcfab7bda834b1b99367be29eb7b3f7e87bbff01818a89ff"
         }
     },
     "bin": "Gloss.exe",
