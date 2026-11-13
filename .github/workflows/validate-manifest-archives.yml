@@ -199,6 +199,14 @@ on:
       - 'bucket/hop-mygo.json'
       - 'bucket/sakamoto.json'
       - '.github/workflows/validate-manifest-archives.yml'
+      - 'bucket/kando.json'
+      - 'bucket/yt-music-player.json'
+      - 'bucket/pudmusic.json'
+      - 'bucket/ringo.json'
+      - 'bucket/jianshan.json'
+      - 'bucket/moniflip.json'
+      - 'bucket/wallpaper.json'
+      - 'bucket/imyemail-cloud-mygo.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -414,6 +422,14 @@ on:
       - 'bucket/universal-s3-ui.json'
       - 'bucket/translator233.json'
       - 'bucket/video-player.json'
+      - 'bucket/kando.json'
+      - 'bucket/yt-music-player.json'
+      - 'bucket/pudmusic.json'
+      - 'bucket/ringo.json'
+      - 'bucket/jianshan.json'
+      - 'bucket/moniflip.json'
+      - 'bucket/wallpaper.json'
+      - 'bucket/imyemail-cloud-mygo.json'
   workflow_dispatch:
     inputs:
       manifest:

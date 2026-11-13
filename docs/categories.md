@@ -1,3 +1,4 @@
+| [yt-music-player](../bucket/yt-music-player.json) | 0.3.0 | 64bit: 11.0 MiB / arm64: 9.2 MiB | 2026-10-23 | Lightweight YouTube Music desktop player with background playback. | [Homepage](https://github.com/xlanstar/yt-music-player) |
 ## Category Index
 
 | Category | Manifests | Link |
@@ -114,6 +115,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [belarc-advisor](../bucket/belarc-advisor.json) | 13.1 | 3.1 MiB | 2025-11-12 | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. | [Homepage](https://www.belarc.com/products/belarc-advisor) |
 | [biscuit](../bucket/biscuit.json) | 2.2.1 | 64bit: 212.8 MiB | 2026-10-31 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
 | [ef-mailbox-manager](../bucket/ef-mailbox-manager.json) | 26.10 | 64bit: 2.5 MiB | 2026-08-24 | Manages POP3 email accounts, checks servers on configurable schedules, and can download or delete messages. | [Homepage](https://efsoftware.com/mm/e.htm) |
+| [imyemail-cloud-mygo](../bucket/imyemail-cloud-mygo.json) | 0.3.4 | 64bit: 8.1 MiB / arm64: 7.4 MiB | 2026-10-10 | Portable native IMAP/SMTP email client with a bundled Rust mail engine. | [Homepage](https://github.com/logdns/imyemail-cloud) |
 | [mitec-mail-viewer](../bucket/mitec-mail-viewer.json) | 2.5.1 | 1.9 MiB | 2025-07-25 | Viewer for Outlook Express, Windows Mail/Live Mail, Thunderbird message databases and EML files. | [Homepage](https://www.mitec.cz/wp/mmv/) |
 | [rust-meow](../bucket/rust-meow.json) | 0.2.0 | 7.2 MiB | 2026-08-09 | Unofficial WhatsApp desktop linked-device client built with Tauri, SolidJS, and a Go whatsmeow sidecar. | [Homepage](https://github.com/thinkter/rust-meow) |
 | [pake-twitter](../bucket/pake-twitter.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Twitter (X). | [Homepage](https://x.com/) |
@@ -441,6 +443,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [imagemagick-q8](../bucket/imagemagick-q8.json) | 7.1.2-34 | 64bit: 11.5 MiB / arm64: 12.2 MiB | 2026-10-31 | Create, edit, compose, and convert 200+ bitmap image formats using 8-bit quantum depth. | [Homepage](https://imagemagick.org/) |
 | [imagetype](../bucket/imagetype.json) | 3.0.0 | 64bit: 59.7 MiB | 2026-05-29 | Accessible image editor for adding custom text to images | [Homepage](https://github.com/ahmedthebest31/ImageType) |
 | [imgconv](../bucket/imgconv.json) | 1.2 | 811.0 KiB | 2026-10-31 | Tiny Windows tray image converter with batch resizing and Explorer integration. | [Homepage](https://github.com/kiranohaiiro/ImgConv) |
+| [jianshan](../bucket/jianshan.json) | 0.1.11 | 64bit: 4.8 MiB | 2026-10-27 | Native image viewer with grid browsing, metadata sorting and RAW embedded-preview support. | [Homepage](https://github.com/ch1y1z1/jianshan) |
 | [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | 2.1 MiB | 2015-12-17 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
 | [nvidia-icat](../bucket/nvidia-icat.json) | 0.6.17 | 64bit: 108.9 MiB | 2024-02-05 | Image Comparison & Analysis Tool (ICAT) | [Homepage](https://www.nvidia.com/en-us/geforce/technologies/icat/) |
 | [Omoide](../bucket/Omoide.json) | 0.7.6 | 64bit: 207.5 MiB | 2026-10-21 | Offline-first, self-hosted photo and video library with local AI-powered organization and search. | [Homepage](https://github.com/EinAeffchen/Omoide) |
@@ -521,6 +524,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | 64bit: 75.6 MiB / arm64: 67.1 MiB | 2026-10-12 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
 | [haruna](../bucket/haruna.json) | 1944 | 64bit: 108.1 MiB | 2026-05-19 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
 
+| [kando](../bucket/kando.json) | 0.12.0 | 64bit: 12.2 MiB / arm64: 10.9 MiB | 2026-11-11 | Learn languages from videos with local speech transcription and bilingual subtitles. | [Homepage](https://github.com/yldm-tech/Kando) |
 | [lauschangriff](../bucket/lauschangriff.json) | 2.51 | 64bit: 141.0 KiB | 2021-05-15 | Portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) |
 | [pake-lizhi](../bucket/pake-lizhi.json) | 3.18.0 | 64bit: 3.9 MiB | 2026-11-04 | Pake-generated desktop wrapper for LiZhi. | [Homepage](https://lizhi.dengdengju.com/?from=pake) |
 | [mediaplayerok](../bucket/mediaplayerok.json) | 1.01 | 64bit: 229.0 KiB | 2026-06-11 | Portable media player with playlists and automatic resume playback. | [Homepage](https://www.softwareok.com/?Download=MediaPlayerOK) |
@@ -530,8 +534,10 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [openscreen](../bucket/openscreen.json) | 2.1.2 | 64bit: 170.6 MiB | 2026-10-19 | Open-source screen recording and video editing tool for creating polished demos. | [Homepage](https://getopenscreen.com/) |
 | [orfeo](../bucket/orfeo.json) | 1.6.0 | 137.1 MiB | 2026-10-31 | Piano-learning and MIDI visualization desktop app with interactive chord tools, note editing, and audio export. | [Homepage](https://orfeo.cc) |
 | [pake-programmusic](../bucket/pake-programmusic.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for ProgramMusic. | [Homepage](https://musicforprogramming.net/) |
+| [pudmusic](../bucket/pudmusic.json) | 1.2.1 | 64bit: 11.9 MiB / arm64: 10.8 MiB | 2026-11-11 | Native desktop player for Bilibili music and local audio files. | [Homepage](https://github.com/ShellMonster/PudMusic) |
 | [quick-audio-recorder](../bucket/quick-audio-recorder.json) | 1.3.0 | 50.8 MiB | 2026-10-17 | A minimalist Windows audio recorder for microphone, system audio, or both. | [Homepage](https://github.com/lukmay/QuickAudioRecorder) |
 | [recordly](../bucket/recordly.json) | 1.4.0 | 64bit: 176.7 MiB | 2026-09-08 | Open-source screen recorder and editor for polished demo videos. | [Homepage](https://github.com/webadderallorg/Recordly) |
+| [ringo](../bucket/ringo.json) | 0.2.1 | 64bit: 9.9 MiB / arm64: 8.4 MiB | 2026-11-11 | Unofficial native desktop Apple Music client with lyrics and library browsing. | [Homepage](https://github.com/LYJW131/ringo) |
 | [screenbox](../bucket/screenbox.json) | 0.24.0 | 64bit: 167.0 MiB | 2026-10-24 | LibVLC-based media player for the Universal Windows Platform. | [Homepage](https://github.com/huynhsontung/Screenbox) |
 | [shotcut](../bucket/shotcut.json) | 26.9.27 | 64bit: 203.5 MiB / arm64: 152.0 MiB | 2026-09-28 | Free, open source, cross-platform video editor. | [Homepage](https://www.shotcut.org) |
 | [sukut](../bucket/sukut.json) | 0.2.33 | 56.8 MiB | 2026-10-20 | Windows x64 audio utility that filters music from app audio to focus on speech. | [Homepage](https://github.com/altarafiya/Sukut) |
@@ -1071,6 +1077,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [mitec-system-information-extra](../bucket/mitec-system-information-extra.json) | 16.0.0 | 10.1 MiB | 2026-04-26 | System information utility for inspecting computer hardware and software, with report export. | [Homepage](https://www.mitec.cz/wp/msix/) |
 | [mitec-tapi-monitor](../bucket/mitec-tapi-monitor.json) | 1.2.0 | 1.9 MiB | 2025-08-11 | Monitors TAPI lines, telephones, service providers and call events. | [Homepage](https://www.mitec.cz/wp/mtapimon/) |
 | [mitec-task-manager-deluxe](../bucket/mitec-task-manager-deluxe.json) | 5.1.1 | 15.6 MiB | 2026-10-28 | Portable advanced replacement for Windows Task Manager, with process, service, network, disk, GPU and system monitoring. | [Homepage](https://www.mitec.cz/wp/tmx/) |
+| [moniflip](../bucket/moniflip.json) | 0.1.2 | 64bit: 5.2 MiB | 2026-10-13 | Switch monitor inputs between computers over DDC/CI from the Windows tray. | [Homepage](https://github.com/qzz0518/Moniflip) |
 | [MPOGPUFIX](../bucket/MPOGPUFIX.json) | 7 | 64bit: 3.3 MiB | 2026-04-20 | Small Windows utility for fixing GPU driver issues related to MPO and other graphics settings. | [Homepage](https://github.com/RedDot-3ND7355/MPO-GPU-FIX) |
 | [neuber-security-task-manager](../bucket/neuber-security-task-manager.json) | 3.2c | 2.8 MiB | 2026-01-23 | Process-inspection utility showing running processes, file paths, descriptions, and security-risk indicators; trialware. | [Homepage](https://www.neuber.com/taskmanager/) |
 | [nvidia-desktop-graphic-driver-np](../bucket/nvidia-desktop-graphic-driver-np.json) | 621.01 | 64bit: 989.1 MiB | 2026-10-20 | NVIDIA display driver (DCH) | [Homepage](https://www.nvidia.com/Download/index.aspx) |
@@ -1270,6 +1277,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-auto-change-wallpapers](../bucket/vovsoft-auto-change-wallpapers.json) | 1.4 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Auto Change Wallpapers. | [Homepage](https://vovsoft.com/software/auto-change-wallpapers/) |
 | [vovsoft-auto-mouse-clicker](../bucket/vovsoft-auto-mouse-clicker.json) | 3.2 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Auto Mouse Clicker. | [Homepage](https://vovsoft.com/software/auto-mouse-clicker/) |
 | [vovsoft-window-resizer](../bucket/vovsoft-window-resizer.json) | 5.0 | 2.7 MiB | 2026-09-17 | Portable edition of Vovsoft Window Resizer. | [Homepage](https://vovsoft.com/software/window-resizer/) |
+| [wallpaper](../bucket/wallpaper.json) | 0.3.4 | 64bit: 4.7 MiB / arm64: 4.0 MiB | 2026-10-23 | Dynamic desktop wallpaper player with a native Windows settings interface. | [Homepage](https://github.com/Alpenl/wallpaper) |
 | [wallpaper-changer](../bucket/wallpaper-changer.json) | 5.4.1 | 64bit: 45.3 MiB | 2026-08-15 | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) |
 | [wincux](../bucket/wincux.json) | 1.1.0 | 5.7 MiB | 2026-04-21 | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. | [Homepage](https://github.com/samcuxx/WinCux) |
 | [windhawk](../bucket/windhawk.json) | 2.0.0-alpha.8 | 142.0 MiB | 2025-12-08 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
