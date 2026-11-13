@@ -6,6 +6,7 @@ This catalog covers the requested vendor pages and links each included program t
 
 | Developer / Suite | Manifests | Link |
 | --- | ---: | --- |
+| Awesome MyGo Community | 173 | [View](#awesome-mygo-showcase) |
 | Aurelitec Suite | 5 | [View](categories.md#aurelitec-suite) |
 | Auslogics Suite | 15 | [View](categories.md#auslogics-suite) |
 | ChemTable Suite | 5 | [View](categories.md#chemtable-suite) |
@@ -101,6 +102,186 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [Take Ownership](https://rizonesoft.com/gdm_downloads/take-ownership/) | Add or remove a Windows Take Ownership context-menu action | File Management | [take-ownership](../bucket/take-ownership.json) |
 | [USB Repair](https://rizonesoft.com/downloads/usb-repair/) | Diagnose and repair USB device problems | Storage & Disk Tools | [usb-repair](../bucket/usb-repair.json) |
 | [Watermin](https://rizonesoft.com/downloads/firemin/) | Memory optimization for Waterfox and compatible browsers | System Monitoring & Hardware | [watermin](../bucket/watermin.json) |
+
+## Awesome MyGo Showcase
+
+[Awesome MyGo](https://awesomemygo.dev/showcase?lang=en) is a community catalog of third-party desktop applications built with the MyGo framework, not a single software publisher. This section lists the 173 MyGo-related Windows manifests currently present in this bucket. Each link opens the corresponding Scoop manifest.
+
+| Manifest |
+| --- |
+| [agentmeter](../bucket/agentmeter.json) |
+| [ally](../bucket/ally.json) |
+| [althea](../bucket/althea.json) |
+| [anker-prime-desktop](../bucket/anker-prime-desktop.json) |
+| [apigo](../bucket/apigo.json) |
+| [arcmd](../bucket/arcmd.json) |
+| [arion](../bucket/arion.json) |
+| [atlas](../bucket/atlas.json) |
+| [axonhub](../bucket/axonhub.json) |
+| [baggy](../bucket/baggy.json) |
+| [baidunetgo](../bucket/baidunetgo.json) |
+| [bamboo](../bucket/bamboo.json) |
+| [bentomail](../bucket/bentomail.json) |
+| [bigo-live-recorder](../bucket/bigo-live-recorder.json) |
+| [bili-fm](../bucket/bili-fm.json) |
+| [biternet](../bucket/biternet.json) |
+| [bootie](../bucket/bootie.json) |
+| [ceramic](../bucket/ceramic.json) |
+| [chatgo](../bucket/chatgo.json) |
+| [cloudshuttle](../bucket/cloudshuttle.json) |
+| [countdowner](../bucket/countdowner.json) |
+| [courrier](../bucket/courrier.json) |
+| [cpa-bar](../bucket/cpa-bar.json) |
+| [db-g](../bucket/db-g.json) |
+| [deckle](../bucket/deckle.json) |
+| [dgopher](../bucket/dgopher.json) |
+| [disklens](../bucket/disklens.json) |
+| [droi](../bucket/droi.json) |
+| [easytier-mygo](../bucket/easytier-mygo.json) |
+| [enowx](../bucket/enowx.json) |
+| [fnmovie](../bucket/fnmovie.json) |
+| [gistmanager](../bucket/gistmanager.json) |
+| [glide](../bucket/glide.json) |
+| [glint](../bucket/glint.json) |
+| [gocompare](../bucket/gocompare.json) |
+| [gogo-explorer](../bucket/gogo-explorer.json) |
+| [golauncher](../bucket/golauncher.json) |
+| [gorequest](../bucket/gorequest.json) |
+| [goshell](../bucket/goshell.json) |
+| [gosidian](../bucket/gosidian.json) |
+| [gotify-desktop](../bucket/gotify-desktop.json) |
+| [gotrust](../bucket/gotrust.json) |
+| [gzist-netkeeper](../bucket/gzist-netkeeper.json) |
+| [he-music](../bucket/he-music.json) |
+| [herdr-desktop](../bucket/herdr-desktop.json) |
+| [hergo](../bucket/hergo.json) |
+| [hop-mygo](../bucket/hop-mygo.json) |
+| [hoyo-gacha](../bucket/hoyo-gacha.json) |
+| [hyla](../bucket/hyla.json) |
+| [imyemail-cloud-mygo](../bucket/imyemail-cloud-mygo.json) |
+| [jianshan](../bucket/jianshan.json) |
+| [kando](../bucket/kando.json) |
+| [kero](../bucket/kero.json) |
+| [kite](../bucket/kite.json) |
+| [kivrix](../bucket/kivrix.json) |
+| [klip](../bucket/klip.json) |
+| [kopi](../bucket/kopi.json) |
+| [kotae](../bucket/kotae.json) |
+| [kube-desk](../bucket/kube-desk.json) |
+| [kura](../bucket/kura.json) |
+| [kyokai](../bucket/kyokai.json) |
+| [launchr](../bucket/launchr.json) |
+| [leaflet](../bucket/leaflet.json) |
+| [leafmark](../bucket/leafmark.json) |
+| [lilt](../bucket/lilt.json) |
+| [liubai](../bucket/liubai.json) |
+| [live-mygo](../bucket/live-mygo.json) |
+| [locus](../bucket/locus.json) |
+| [lorca](../bucket/lorca.json) |
+| [lslan](../bucket/lslan.json) |
+| [lucia](../bucket/lucia.json) |
+| [lumiwerk](../bucket/lumiwerk.json) |
+| [lunabox](../bucket/lunabox.json) |
+| [lzsync](../bucket/lzsync.json) |
+| [magpie-native-routing](../bucket/magpie-native-routing.json) |
+| [mami](../bucket/mami.json) |
+| [mayoi](../bucket/mayoi.json) |
+| [mcl](../bucket/mcl.json) |
+| [meiro](../bucket/meiro.json) |
+| [melo](../bucket/melo.json) |
+| [miguwave](../bucket/miguwave.json) |
+| [minicode](../bucket/minicode.json) |
+| [mira](../bucket/mira.json) |
+| [mixmusic](../bucket/mixmusic.json) |
+| [mojian](../bucket/mojian.json) |
+| [moko](../bucket/moko.json) |
+| [moniflip](../bucket/moniflip.json) |
+| [monitorbar](../bucket/monitorbar.json) |
+| [motrix-mygo](../bucket/motrix-mygo.json) |
+| [mouse-mapper](../bucket/mouse-mapper.json) |
+| [muo](../bucket/muo.json) |
+| [my-vm](../bucket/my-vm.json) |
+| [mygo-launcher](../bucket/mygo-launcher.json) |
+| [mygost](../bucket/mygost.json) |
+| [mylock](../bucket/mylock.json) |
+| [mypack](../bucket/mypack.json) |
+| [myshoes](../bucket/myshoes.json) |
+| [myspotify](../bucket/myspotify.json) |
+| [mytoken](../bucket/mytoken.json) |
+| [mytools](../bucket/mytools.json) |
+| [myvnc](../bucket/myvnc.json) |
+| [nanoapi](../bucket/nanoapi.json) |
+| [nekossh](../bucket/nekossh.json) |
+| [nemorous](../bucket/nemorous.json) |
+| [neohm](../bucket/neohm.json) |
+| [new-century-renamer](../bucket/new-century-renamer.json) |
+| [nomo-mygo](../bucket/nomo-mygo.json) |
+| [opendl](../bucket/opendl.json) |
+| [oriel](../bucket/oriel.json) |
+| [osprey](../bucket/osprey.json) |
+| [otool](../bucket/otool.json) |
+| [outrash](../bucket/outrash.json) |
+| [pickphoto](../bucket/pickphoto.json) |
+| [pitstop](../bucket/pitstop.json) |
+| [pomodoro](../bucket/pomodoro.json) |
+| [pomodoro-mygo](../bucket/pomodoro-mygo.json) |
+| [portproxy](../bucket/portproxy.json) |
+| [pudmusic](../bucket/pudmusic.json) |
+| [qmdr](../bucket/qmdr.json) |
+| [quarry](../bucket/quarry.json) |
+| [quesora-native](../bucket/quesora-native.json) |
+| [quick-scan](../bucket/quick-scan.json) |
+| [quosparr](../bucket/quosparr.json) |
+| [rainforest](../bucket/rainforest.json) |
+| [raydock](../bucket/raydock.json) |
+| [rclonedrive](../bucket/rclonedrive.json) |
+| [resobackup](../bucket/resobackup.json) |
+| [ringo](../bucket/ringo.json) |
+| [rivu](../bucket/rivu.json) |
+| [rnaxray](../bucket/rnaxray.json) |
+| [sakamoto](../bucket/sakamoto.json) |
+| [saundo](../bucket/saundo.json) |
+| [see](../bucket/see.json) |
+| [sessionary](../bucket/sessionary.json) |
+| [sift](../bucket/sift.json) |
+| [silverwing](../bucket/silverwing.json) |
+| [sona](../bucket/sona.json) |
+| [sshgo](../bucket/sshgo.json) |
+| [sshyard](../bucket/sshyard.json) |
+| [stage-manager-for-windows](../bucket/stage-manager-for-windows.json) |
+| [sunvale](../bucket/sunvale.json) |
+| [sweep](../bucket/sweep.json) |
+| [tangit](../bucket/tangit.json) |
+| [tcpconnbenchmark](../bucket/tcpconnbenchmark.json) |
+| [textviewer](../bucket/textviewer.json) |
+| [thesio](../bucket/thesio.json) |
+| [tiktok-live-recorder](../bucket/tiktok-live-recorder.json) |
+| [titen](../bucket/titen.json) |
+| [translator233](../bucket/translator233.json) |
+| [type](../bucket/type.json) |
+| [universal-s3-ui](../bucket/universal-s3-ui.json) |
+| [video-player](../bucket/video-player.json) |
+| [videodown](../bucket/videodown.json) |
+| [viper](../bucket/viper.json) |
+| [vocabox](../bucket/vocabox.json) |
+| [voke](../bucket/voke.json) |
+| [vray](../bucket/vray.json) |
+| [wagyu-music](../bucket/wagyu-music.json) |
+| [wallpaper](../bucket/wallpaper.json) |
+| [win-xinai-de-tools-mygo](../bucket/win-xinai-de-tools-mygo.json) |
+| [winswx](../bucket/winswx.json) |
+| [withdo](../bucket/withdo.json) |
+| [wslpilot](../bucket/wslpilot.json) |
+| [xiangqi](../bucket/xiangqi.json) |
+| [yeek](../bucket/yeek.json) |
+| [yoho-music](../bucket/yoho-music.json) |
+| [yolomcl](../bucket/yolomcl.json) |
+| [yourun](../bucket/yourun.json) |
+| [yt-music-player](../bucket/yt-music-player.json) |
+| [ytbplus](../bucket/ytbplus.json) |
+| [yunji-uml](../bucket/yunji-uml.json) |
+| [zakki](../bucket/zakki.json) |
+| [zeokeel-super-agent](../bucket/zeokeel-super-agent.json) |
 
 ## Checksum and update limitations
 
