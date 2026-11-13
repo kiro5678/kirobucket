@@ -13,15 +13,6 @@
             "hash": "55397b24fdde8dc5018d6dc231e514d312952d660503dc3b563dd8fba4629b77"
         }
     },
-    "installer": {
-        "script": [
-            "Start-Process -Wait \"$dir\\setup.exe\" -ArgumentList '/S', \"/D=$dir\"",
-            "Remove-Item \"$dir\\setup.exe\""
-        ]
-    },
-    "uninstaller": {
-        "script": "if (Test-Path \"$dir\\Uninstall.exe\") { Start-Process -Wait \"$dir\\Uninstall.exe\" -ArgumentList '/S', \"_?=$dir\" }"
-    },
     "bin": [
         [
             "Mypack.exe",
