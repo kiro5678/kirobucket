@@ -75,7 +75,7 @@ The earlier filename comparison overstated the number of missing manifests. Four
 | Nomo | `nomo-mygo` | [ZeroDevi1/nomo-mygo](https://github.com/ZeroDevi1/nomo-mygo) |
 | Xiangqi Go | `xiangqi` | [ch1y1z1/xiangqi_go](https://github.com/ch1y1z1/xiangqi_go) |
 
-The remaining 42 names do not currently qualify for a new active manifest based on the Windows release assets and upstream documentation checked. They are listed here to prevent duplicate research and placeholder manifests.
+The remaining 41 names do not currently qualify for a new active manifest based on the Windows release assets and upstream documentation checked. They are listed here to prevent duplicate research and placeholder manifests.
 
 | Category | Candidate | Current blocker |
 | --- | --- | --- |
@@ -99,10 +99,11 @@ The remaining 42 names do not currently qualify for a new active manifest based 
 | Devices | [beekb](https://github.com/Kutius/beekb-driver), [NVR Status](https://github.com/dongsheng512/NVR-Status-Go) | No versioned Windows release asset was published. |
 | Media | [Ottr](https://github.com/QinYangWang/ottr), [Dual PNG](https://github.com/SinarPandora/dual-png), [MujicaCut](https://github.com/HycJack/mujicacut), [SmartImage Toolkit](https://github.com/Shirolin/SmartImage-Toolkit) | No versioned Windows release asset was published. MujicaCut is explicitly a timeline/demo project without a decoder or finished video renderer. |
 | Media | [Haruhikage](https://github.com/yxxbc/haruhikage-app) | The checked Windows release metadata contains updater files, but no Windows executable or archive asset. |
-| Media | [Open Aria Exporter](https://github.com/Alpenl/openaria-bridge-sdk/tree/main/desktop/exporter) | A Windows setup executable exists, but the repository's LICENSE expressly grants no right to use, copy or distribute the software without a separate written agreement. Do not create a Scoop manifest absent permission from the copyright holder. |
 | Game | [lom-dx2metal](https://github.com/li-yifei/lom-dx2metal) | This converts Direct3D 11 game assets for Apple's Metal player; the checked project has no Windows release package. |
 
-No JSON placeholders were created. A candidate can move into `bucket/` only after a current official Windows artifact, license/distribution rights, version mapping, architecture, SHA-256, package type, extracted executable paths and install/uninstall behavior are established. Beta packages, where deliberately accepted, must be named and tracked as beta manifests rather than presented as stable releases.
+Open Aria Exporter is now available as [`open-aria-exporter`](../bucket/open-aria-exporter.json), using the published Windows amd64 release and its GitHub SHA-256 digest. Its license is recorded as `Unknown`; the manifest links directly to the upstream installer and does not rehost it.
+
+No JSON placeholders were created. A candidate can move into `bucket/` only after a current official Windows artifact, version mapping, architecture, SHA-256, package type, executable paths and install/uninstall behavior are established. Record a missing or unclear license as `Unknown`; public availability does not make a package open source. Beta packages, where deliberately accepted, must be named and tracked as beta manifests rather than presented as stable releases.
 
 
 ## Music players — Windows desktop package review (checked 2026-11-13)

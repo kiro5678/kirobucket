@@ -127,6 +127,9 @@ KeyDepot and Repo Hopper remain under Review in [Manifest Review](manifest-revie
 
 - [desk-widgets](../bucket/desk-widgets.json) — **Nonportable (standalone Windows EXE with user-level integration)**: the first launch creates a `deskwidgets://` protocol registration and a Start Menu shortcut. The uninstall hook removes only registrations and the running process associated with this Scoop app directory; default settings and cache under `%APPDATA%\DeskWidgets` are preserved. Creating `widgets.ini` beside the executable switches to portable mode, whose data is stored in the app version directory and is replaced on update. The built-in updater can overwrite the Scoop-managed executable, so use Scoop for updates.
 
+### Open Aria Exporter (2026-11-13)
+
+- [open-aria-exporter](../bucket/open-aria-exporter.json) — **Nonportable (NSIS installer)**: runs the official setup with `/S /D=$dir`, requires elevation, and creates an all-users Start Menu shortcut plus an HKLM uninstall entry. Scoop skips the old-version uninstaller during updates and runs `Uninstall.exe` during removal. Settings and export history remain under `%LOCALAPPDATA%\OpenAriaExporter`. The 64-bit installer is unsigned; the manifest records the upstream license as `Unknown`.
 ## Classification rules for future manifest changes
 
 1. Inspect the actual downloaded asset and its archive contents. The `.exe`, `.msi`, or `.msix` extension alone does not determine the class.
