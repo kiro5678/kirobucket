@@ -19,5 +19,5 @@
     "autoupdate": {
         "url": "https://github.com/aio-proxy/aio-proxy/releases/download/v$version/cli-win32-x64-$version.tgz"
     },
-    "notes": "The CLI upgrade command can replace its binary outside Scoop. Use 'scoop update aio-proxy-cli' for this installation; do not run 'aio-proxy upgrade' while Scoop manages it. Configuration is stored in %USERPROFILE%\\.aio-proxy and remains after uninstall."
+    "notes": "For this Scoop-managed install, update with 'scoop update aio-proxy-cli'; the built-in 'aio-proxy upgrade' command replaces the binary in place. Configuration is stored in %USERPROFILE%\\.aio-proxy and remains after uninstall."
 }
