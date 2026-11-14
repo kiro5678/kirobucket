@@ -1,0 +1,66 @@
+name: Knack NSIS install test
+
+on:
+  pull_request:
+    paths:
+      - "bucket/knack.json"
+      - ".github/workflows/knack-silent-install-test.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/knack.json"
+      - ".github/workflows/knack-silent-install-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-install-uninstall:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install, verify, and uninstall Knack
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $manifest = Get-Content -LiteralPath 'bucket/knack.json' -Raw | ConvertFrom-Json -ErrorAction Stop
+          if ($manifest.installer.args.Count -ne 2 -or $manifest.installer.args[0] -cne '/S' -or $manifest.installer.args[1] -cne '/D=$dir') {
+            throw 'Knack must use NSIS silent install args /S /D=$dir.'
+          }
+          if (-not $manifest.uninstaller.script) { throw 'Knack must define a tested NSIS uninstaller script.' }
+          $asset = $manifest.architecture.'64bit'
+          $installer = Join-Path $env:RUNNER_TEMP 'knack-setup.exe'
+          $installDir = Join-Path $env:RUNNER_TEMP 'Knack Scoop Install Test'
+          $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\dev.local.knack'
+          $shortcut = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Knack.lnk'
+
+          Invoke-WebRequest -Uri $asset.url -OutFile $installer
+          $actualHash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $asset.hash.ToLowerInvariant()) {
+            throw "Knack setup SHA-256 mismatch: expected $($asset.hash), got $actualHash."
+          }
+
+          if (Test-Path -LiteralPath $installDir) { Remove-Item -LiteralPath $installDir -Recurse -Force }
+          $setup = Start-Process -FilePath $installer -ArgumentList @('/S', "/D=$installDir") -Wait -PassThru
+          if ($setup.ExitCode -ne 0) { throw "Knack setup exited with code $($setup.ExitCode)." }
+          foreach ($file in @('Knack.exe', 'Uninstall.exe')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $installDir $file) -PathType Leaf)) {
+              throw "Knack setup did not create $file in the requested Scoop directory."
+            }
+          }
+          if (-not (Test-Path -LiteralPath $uninstallKey)) { throw 'Knack did not create its HKCU uninstall entry.' }
+          if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) { throw 'Knack did not create its Start Menu shortcut.' }
+
+          $uninstaller = Join-Path $installDir 'Uninstall.exe'
+          $uninstallArgs = @('/S', ('\"' + '_?=' + $installDir + '\"'))
+          $remove = Start-Process -FilePath $uninstaller -ArgumentList $uninstallArgs -Wait -PassThru
+          if ($remove.ExitCode -ne 0) { throw "Knack uninstaller exited with code $($remove.ExitCode)." }
+          if (Test-Path -LiteralPath $installDir) { throw 'Knack uninstaller left the Scoop install directory behind.' }
+          if (Test-Path -LiteralPath $uninstallKey) { throw 'Knack uninstaller left its HKCU uninstall entry behind.' }
+          if (Test-Path -LiteralPath $shortcut) { throw 'Knack uninstaller left its Start Menu shortcut behind.' }
+          Write-Host 'Knack x64 NSIS install and uninstall passed.'
