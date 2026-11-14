@@ -12,110 +12,91 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: Verify release asset and Scoop installation
+  inspect:
+    name: Inspect Modern and Classic release archives
     runs-on: windows-latest
     timeout-minutes: 20
 
     steps:
-      - name: Check old and current release assets
+      - name: Download, hash, and extract both official editions
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $headers = @{ 'User-Agent' = 'kirobucket-fluentcleaner-release-test'; 'Accept' = 'application/vnd.github+json' }
-
-          $oldApi = 'https://api.github.com/repos/builtbybel/FluentCleaner/releases/tags/26.11.01'
-          $oldResponse = Invoke-WebRequest -Uri $oldApi -Headers $headers -SkipHttpErrorCheck -TimeoutSec 60
-          if ([int]$oldResponse.StatusCode -ne 404) {
-            throw "Expected release tag 26.11.01 to return HTTP 404, got $($oldResponse.StatusCode)."
-          }
-          Write-Host 'PASS: release tag 26.11.01 returns HTTP 404.'
-
-          $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/builtbybel/FluentCleaner/releases/tags/26.11.02' -Headers $headers -TimeoutSec 60
-          if ($release.tag_name -ne '26.11.02') {
-            throw "Unexpected release tag: $($release.tag_name)"
+          $headers = @{
+            'User-Agent' = 'kirobucket-fluentcleaner-release-test'
+            'Accept' = 'application/vnd.github+json'
           }
 
-          $asset = @($release.assets | Where-Object { $_.name -eq 'FluentCleaner-win-x64.zip' }) | Select-Object -First 1
-          if ($null -eq $asset) {
-            throw 'FluentCleaner-win-x64.zip is missing from release 26.11.02.'
-          }
-
-          $expectedUrl = 'https://github.com/builtbybel/FluentCleaner/releases/download/26.11.02/FluentCleaner-win-x64.zip'
-          if ($asset.browser_download_url -ne $expectedUrl) {
-            throw "Unexpected asset URL: $($asset.browser_download_url)"
-          }
-
-          $expectedHash = ([string]$asset.digest -replace '^sha256:', '').ToLowerInvariant()
-          if ($expectedHash -notmatch '^[0-9a-f]{64}$') {
-            throw "Release asset has no valid SHA-256 digest: $($asset.digest)"
-          }
+          $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/builtbybel/FluentCleaner/releases/latest' -Headers $headers -TimeoutSec 60
+          $version = [string]$release.tag_name
+          if ([string]::IsNullOrWhiteSpace($version)) { throw 'Latest release has no tag_name.' }
+          Write-Host "LATEST_RELEASE=$version"
 
           $root = Join-Path $env:RUNNER_TEMP 'fluentcleaner-release-test'
           New-Item -ItemType Directory -Path $root -Force | Out-Null
-          $archive = Join-Path $root 'FluentCleaner-win-x64.zip'
-          Invoke-WebRequest -Uri $expectedUrl -OutFile $archive -MaximumRedirection 10 -TimeoutSec 600
 
-          $actualHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actualHash -ne $expectedHash) {
-            throw "SHA-256 mismatch. Actual=$actualHash Expected=$expectedHash"
-          }
-          Write-Host "PASS: release 26.11.02 archive downloaded."
-          Write-Host "SHA256: $actualHash"
+          $tests = @(
+            @{
+              Name = 'Modern'
+              Asset = 'FluentCleaner-win-x64.zip'
+              Executable = 'FCleaner.exe'
+            },
+            @{
+              Name = 'Classic'
+              Asset = 'FluentCleaner-Classic-net48.zip'
+              Executable = 'FluentCleaner.Classic.exe'
+            }
+          )
 
-          $extractDir = Join-Path $root 'extracted'
-          Expand-Archive -LiteralPath $archive -DestinationPath $extractDir -Force
-          $exe = Get-ChildItem -LiteralPath $extractDir -Filter 'FCleaner.exe' -File -Recurse | Select-Object -First 1
-          if ($null -eq $exe) {
-            throw 'Archive extraction succeeded but FCleaner.exe was not found.'
-          }
-          Write-Host "PASS: FCleaner.exe found at $($exe.FullName)"
+          foreach ($test in $tests) {
+            Write-Host ""
+            Write-Host "=== $($test.Name) ==="
 
-      - name: Install Scoop and test the official Extras manifest
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $ProgressPreference = 'SilentlyContinue'
-          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+            $asset = @($release.assets | Where-Object { $_.name -eq $test.Asset }) | Select-Object -First 1
+            if ($null -eq $asset) { throw "Missing release asset: $($test.Asset)" }
 
-          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
-          $scoop = Join-Path $env:USERPROFILE 'scoop\shims\scoop.ps1'
-          if (-not (Test-Path -LiteralPath $scoop -PathType Leaf)) {
-            throw "Scoop was not installed at the expected location: $scoop"
+            $expectedUrl = "https://github.com/builtbybel/FluentCleaner/releases/download/$version/$($test.Asset)"
+            if ($asset.browser_download_url -ne $expectedUrl) {
+              throw "Unexpected URL for $($test.Asset): $($asset.browser_download_url)"
+            }
+
+            $expectedHash = ([string]$asset.digest -replace '^sha256:', '').ToLowerInvariant()
+            if ($expectedHash -notmatch '^[0-9a-f]{64}$') {
+              throw "No valid SHA-256 digest published for $($test.Asset): $($asset.digest)"
+            }
+
+            $archive = Join-Path $root $test.Asset
+            Invoke-WebRequest -Uri $expectedUrl -OutFile $archive -MaximumRedirection 10 -TimeoutSec 600
+            $actualHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actualHash -ne $expectedHash) {
+              throw "SHA-256 mismatch for $($test.Asset). Actual=$actualHash Expected=$expectedHash"
+            }
+            Write-Host "PASS: Downloaded $($test.Asset)"
+            Write-Host "SHA256=$actualHash"
+
+            $destination = Join-Path $root $test.Name
+            Expand-Archive -LiteralPath $archive -DestinationPath $destination -Force
+            $files = @(Get-ChildItem -LiteralPath $destination -File -Recurse -Force)
+            if ($files.Count -eq 0) { throw "Archive contains no extracted files: $($test.Asset)" }
+
+            Write-Host "EXTRACTED_FILE_COUNT=$($files.Count)"
+            foreach ($file in $files) {
+              $relative = $file.FullName.Substring($destination.Length).TrimStart('\','/')
+              Write-Host ("{0} ({1} bytes)" -f $relative, $file.Length)
+            }
+
+            $exe = Get-ChildItem -LiteralPath $destination -Filter $test.Executable -File -Recurse -Force | Select-Object -First 1
+            if ($null -eq $exe) {
+              $foundExecutables = @(Get-ChildItem -LiteralPath $destination -Filter '*.exe' -File -Recurse -Force | Select-Object -ExpandProperty Name)
+              throw "Expected executable '$($test.Executable)' was not found. EXEs: $($foundExecutables -join ', ')"
+            }
+
+            Write-Host "PASS: Found launch executable $($exe.FullName)"
+            $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+            Write-Host "PRODUCT_VERSION=$($versionInfo.ProductVersion)"
+            Write-Host "FILE_VERSION=$($versionInfo.FileVersion)"
           }
 
-          $bucketPath = Join-Path $env:USERPROFILE 'scoop\buckets\extras'
-          if (-not (Test-Path -LiteralPath $bucketPath -PathType Container)) {
-            & $scoop bucket add extras
-            if ($LASTEXITCODE -ne 0) { throw 'Could not add the Scoop Extras bucket.' }
-          }
-
-          $manifestPath = Join-Path $bucketPath 'bucket\fluentcleaner.json'
-          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-            throw "Extras manifest not found: $manifestPath"
-          }
-
-          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-          if ($manifest.version -ne '26.11.02') {
-            throw "Expected Extras manifest version 26.11.02, found $($manifest.version)."
-          }
-          $expectedUrl = 'https://github.com/builtbybel/FluentCleaner/releases/download/26.11.02/FluentCleaner-win-x64.zip'
-          if ($manifest.architecture.'64bit'.url -ne $expectedUrl) {
-            throw "Extras manifest URL is incorrect: $($manifest.architecture.'64bit'.url)"
-          }
-          if ($manifest.architecture.'64bit'.hash -ne '3101d87162863e388f4a529b16fd1ac05e451d6476f8d458a30e82aeb2d9ec39') {
-            throw 'Extras manifest SHA-256 does not match the verified release asset.'
-          }
-          Write-Host 'PASS: Extras manifest version, URL, and SHA-256 are correct.'
-
-          & $scoop install extras/fluentcleaner
-          if ($LASTEXITCODE -ne 0) { throw 'Scoop install extras/fluentcleaner failed.' }
-
-          $installedExe = Join-Path $env:USERPROFILE 'scoop\apps\fluentcleaner\current\FCleaner.exe'
-          if (-not (Test-Path -LiteralPath $installedExe -PathType Leaf)) {
-            throw "Scoop installation completed but FCleaner.exe is missing: $installedExe"
-          }
-          Write-Host "PASS: Scoop installed FluentCleaner and FCleaner.exe exists."
-          & $scoop list
-          if ($LASTEXITCODE -ne 0) { throw 'Could not read the installed Scoop package list.' }
+          Write-Host ""
+          Write-Host 'PASS: Both editions downloaded, passed SHA-256 verification, and extracted successfully.'
