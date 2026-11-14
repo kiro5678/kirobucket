@@ -1,6 +1,6 @@
 {
     "version": "0.2.4",
-    "description": "File recovery utility for photos, documents, and other files on supported drives.",
+    "description": "Recover deleted photos, documents, and other files from supported drives.",
     "homepage": "https://github.com/sudo-py-dev/reclaim",
     "license": "MIT",
     "architecture": {
