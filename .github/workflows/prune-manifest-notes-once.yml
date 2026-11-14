@@ -1,0 +1,208 @@
+name: Prune nonessential manifest notes
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/*.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prune-manifest-notes
+  cancel-in-progress: false
+
+jobs:
+  prune:
+    name: Prune and normalize manifest notes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Keep only user-relevant notes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          important_markers = (
+              "requires", "requirement", "must be installed", "install separately",
+              "runtime", "webview", "ffmpeg", "winfsp", "projfs", "npcap",
+              "administrator", "admin rights", "elevation", "uac",
+              "driver", "service", "firewall", "registry", "hkcu", "hklm",
+              "url protocol", "protocol handler", "startup", "autostart",
+              "context menu", "file association", "shell integration", "native messaging",
+              "program files", "programdata", "system32", "system-wide", "machine-wide",
+              "appdata", "user data", "settings", "cache", "logs", "database", "history",
+              "credentials", "password", "token", "secret", "keychain", "dpapi", "private key",
+              "model", "workspace", "backup", "restore",
+              "non-commercial", "commercial use", "personal use only", "trial",
+              "license key", "licence key", "paid license", "paid licence",
+              "security", "risk", "warning", "unsigned", "smartscreen",
+              "permanently", "erase", "wipe", "format", "partition", "recycle bin",
+              "system restore", "bitlocker", "secure boot", "efi", "uefi",
+              "taskbar", "screen saver", "screensaver", "windows 10", "windows 11",
+              "built-in updater", "in-app updater", "self-updater", "self updater",
+              "updates independently", "update independently", "overwrite",
+              "separate installation", "does not register", "does not install",
+              "does not create", "does not enable", "does not start",
+              "not registered", "not installed", "not created", "not enabled",
+              "not removed by scoop", "remain after uninstall", "outside scoop",
+              "local network", "airplay", "hyper-v", "open-gl", "account",
+              "private api", "does not upload", "no cloud", "sidecar",
+              "keep ", "stored under", "stored in", "data remains", "data is stored",
+              "not supported", "unavailable", "cannot ", "conflict", "may change",
+              "only when enabled", "optional feature", "requires a separate",
+              "pre-release", "prerelease", "release candidate", "beta", "preview",
+          )
+
+          internal_markers = (
+              "sha-256", "sha256", "checksum", "workflow", "archive contents",
+              "archive layout", "shortcut target", "verified against",
+              "verified by the repository", "innosetup", "7-zip", "7zip",
+              "checkver", "download endpoint", "last-modified",
+              "pinned to upstream commit", "upstream commit",
+              "calculated from the current official download",
+              "refresh the hash", "does not publish a static",
+              "no static sha", "manifest uses", "manifest tracks",
+              "extraction test", "extraction workflow", "executable path",
+              "portable zip", "portable archive", "portable package",
+              "portable edition", "portable windows build", "portable executable",
+              "full package", "delta update", "not a portable archive",
+              "setup executable", "installer payload",
+              "official download page lists", "version from the final url",
+              "last-modified http date", "archive is inno setup",
+              "the release executable is a portable",
+          )
+
+          scoop_update_phrases = (
+              "use scoop to update", "use scoop for updates",
+              "use scoop as the update authority", "run scoop update",
+              "scoop update ",
+          )
+          updater_markers = (
+              "updater", "in-app update", "built-in update", "self-update",
+              "updates independently", "update independently", "overwrite",
+              "automatic update", "auto-update", "separate installation",
+          )
+          legal_markers = (
+              "non-commercial", "commercial use", "personal use only",
+              "trial", "license key", "licence key", "paid license",
+              "paid licence", "commercial third-party", "attribution",
+          )
+
+          def keep_note(value):
+              if not isinstance(value, str):
+                  return False
+              text = value.strip()
+              if not text:
+                  return False
+              low = text.casefold()
+
+              # A bare reminder to use Scoop is redundant. Keep it only when
+              # the note explains a competing in-app updater or separate install.
+              if any(phrase in low for phrase in scoop_update_phrases):
+                  if not any(marker in low for marker in updater_markers):
+                      return False
+
+              if any(marker in low for marker in internal_markers):
+                  has_user_value = (
+                      any(marker in low for marker in important_markers)
+                      or any(marker in low for marker in legal_markers)
+                  )
+                  if not has_user_value:
+                      return False
+
+              return True
+
+          changed_files = 0
+          removed_notes = 0
+          removed_properties = 0
+          moved_notes = 0
+          skipped_structures = 0
+
+          for path in sorted(Path("bucket").glob("*.json")):
+              raw = path.read_text(encoding="utf-8-sig")
+              try:
+                  data = json.loads(raw)
+              except Exception as exc:
+                  raise SystemExit(f"Invalid JSON in {path}: {exc}")
+
+              if not isinstance(data, dict) or "notes" not in data:
+                  continue
+
+              old_notes = data["notes"]
+              if isinstance(old_notes, str):
+                  notes = [old_notes]
+              elif isinstance(old_notes, list) and all(isinstance(item, str) for item in old_notes):
+                  notes = old_notes
+              else:
+                  skipped_structures += 1
+                  continue
+
+              kept = [note.strip() for note in notes if keep_note(note)]
+              removed_notes += len(notes) - len(kept)
+              was_last = list(data)[-1] == "notes"
+
+              if not kept:
+                  del data["notes"]
+                  removed_properties += 1
+              else:
+                  new_notes = kept[0] if len(kept) == 1 else kept
+                  data.pop("notes", None)
+                  data["notes"] = new_notes
+
+              if not was_last:
+                  moved_notes += 1
+
+              shape_changed = (
+                  (len(kept) == 1 and not isinstance(old_notes, str))
+                  or (len(kept) != 1 and isinstance(old_notes, str))
+              )
+              value_changed = len(kept) != len(notes) or shape_changed
+
+              if value_changed or not was_last:
+                  serialized = json.dumps(data, indent=4, ensure_ascii=False) + "\r\n"
+                  path.write_bytes(serialized.replace("\n", "\r\n").encode("utf-8"))
+                  changed_files += 1
+
+          summary = (
+              f"Changed manifests: {changed_files}\n"
+              f"Removed note entries: {removed_notes}\n"
+              f"Removed empty notes properties: {removed_properties}\n"
+              f"Moved notes to the final property: {moved_notes}\n"
+              f"Skipped unusual notes structures: {skipped_structures}"
+          )
+          print(summary)
+          Path("summary.txt").write_text(summary + "\n", encoding="utf-8")
+          PY
+
+      - name: Commit and push manifest changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- bucket
+          if git diff --cached --quiet; then
+            echo "No manifest note changes were needed."
+            exit 0
+          fi
+          git commit -m "chore: prune nonessential manifest notes"
+          git fetch origin master
+          git rebase origin/master
+          git push origin HEAD:master
+
+      - name: Publish cleanup summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f summary.txt ]; then
+            cat summary.txt >> "$GITHUB_STEP_SUMMARY"
+          fi
