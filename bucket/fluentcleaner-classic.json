@@ -1,5 +1,5 @@
 {
-    "version": "26.11.02",
+    "version": "1.19.269",
     "description": "Classic WinForms edition of FluentCleaner for Windows.",
     "homepage": "https://github.com/builtbybel/FluentCleaner",
     "license": "MIT",
@@ -17,8 +17,12 @@
         "Custom",
         "Winapp3.ini"
     ],
-    "checkver": "github",
+    "checkver": {
+        "url": "https://api.github.com/repos/builtbybel/FluentCleaner/releases/latest",
+        "jsonpath": "$.body",
+        "regex": "(?s)\\*\\*Classic\\*\\*.*?(?<version>[\\d]+\\.[\\d]+\\.[\\d]+)"
+    },
     "autoupdate": {
-        "url": "https://github.com/builtbybel/FluentCleaner/releases/download/$version/FluentCleaner-Classic-net48.zip"
+        "url": "https://github.com/builtbybel/FluentCleaner/releases/latest/download/FluentCleaner-Classic-net48.zip"
     }
 }
