@@ -30,6 +30,5 @@
                 }
             }
         }
-    },
-    "notes": "Uses the standalone BYR.Client.exe release asset rather than the separate setup executable."
-}
+    }
+}

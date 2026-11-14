@@ -35,6 +35,5 @@
         "url": "https://github.com/jimuzhe/tiez-clipboard/releases/download/v$version/TieZ_$version$matchPortableSuffix.zip",
         "extract_dir": "TieZ_$version$matchPortableSuffix"
     },
-    "notes": "Portable ZIP release. Scoop preserves the data directory across updates.",
     "extract_dir": "TieZ_0.3.3-portable"
-}
+}

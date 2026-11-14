@@ -20,7 +20,6 @@
             "Atlas"
         ]
     ],
-    "notes": "This AI agent can read, modify and execute files and commands without per-action confirmation.",
     "checkver": {
         "github": "https://github.com/gvenusleo/Atlas"
     },
@@ -33,5 +32,6 @@
                 "url": "https://github.com/gvenusleo/Atlas/releases/download/v$version/atlas-$version-windows-arm64.tar.gz"
             }
         }
-    }
-}
+    },
+    "notes": "This AI agent can read, modify and execute files and commands without per-action confirmation."
+}

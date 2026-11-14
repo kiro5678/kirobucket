@@ -25,8 +25,5 @@
             "regex": "\"name\"\\s*:\\s*\"SpotlightDL-v$version\\.zip\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
         }
     },
-    "notes": [
-        "Uses the official portable ZIP for the Windows .NET 9 release, not the separate Lockscreen Setup installer.",
-        "SpotlightDownloader.exe is exposed as a Scoop command. The bundled batch scripts are not added as shortcuts because they create their archive/cache beside the script inside Scoop's versioned app directory; use the command-line --outdir option for data you want to keep across updates."
-    ]
-}
+    "notes": "SpotlightDownloader.exe is exposed as a Scoop command. The bundled batch scripts are not added as shortcuts because they create their archive/cache beside the script inside Scoop's versioned app directory; use the command-line --outdir option for data you want to keep across updates."
+}

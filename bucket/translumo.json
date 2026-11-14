@@ -12,7 +12,6 @@
             "Translumo"
         ]
     ],
-    "notes": "DeepL and Yandex translation require API keys configured in Translumo settings.",
     "checkver": {
         "script": [
             "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
@@ -25,5 +24,6 @@
     },
     "autoupdate": {
         "url": "https://github.com/ramjke/Translumo/releases/download/v.$version/Translumo_$version.zip"
-    }
-}
+    },
+    "notes": "DeepL and Yandex translation require API keys configured in Translumo settings."
+}

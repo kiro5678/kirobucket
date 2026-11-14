@@ -3,10 +3,6 @@
     "description": "A fast, minimalist, AI-native email client for Windows.",
     "homepage": "https://skim-tech.com",
     "license": "MIT",
-    "notes": [
-        "Skim's built-in updater is disabled for Scoop-managed installs; use 'scoop update skim'.",
-        "Mail, settings, and credentials are stored outside the app folder and remain after uninstall."
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/nikserg/skim/releases/download/v1.0.34/Skim_1.0.34_x64-setup.exe#/dl.7z",
@@ -42,5 +38,9 @@
                 "url": "https://github.com/nikserg/skim/releases/download/v$version/Skim_$version_x64-setup.exe#/dl.7z"
             }
         }
-    }
-}
+    },
+    "notes": [
+        "Skim's built-in updater is disabled for Scoop-managed installs; use 'scoop update skim'.",
+        "Mail, settings, and credentials are stored outside the app folder and remain after uninstall."
+    ]
+}

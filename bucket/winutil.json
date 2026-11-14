@@ -3,7 +3,6 @@
     "description": "Chris Titus Tech's Windows Utility - Install Programs, Tweaks, Fixes, and Updates.",
     "homepage": "https://github.com/ChrisTitusTech/winutil",
     "license": "MIT",
-    "notes": "Open WinUtil from Command Prompt or PowerShell with gsudo winutil.",
     "suggest": {
         "gsudo": "main/gsudo"
     },
@@ -25,5 +24,6 @@
     "checkver": "github",
     "autoupdate": {
         "url": "https://github.com/ChrisTitusTech/winutil/releases/download/$version/winutil.ps1"
-    }
-}
+    },
+    "notes": "Open WinUtil from Command Prompt or PowerShell with gsudo winutil."
+}

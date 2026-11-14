@@ -12,7 +12,6 @@
             "MiTeC JSON Viewer"
         ]
     ],
-    "notes": "The official download page does not publish a static SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download. Refresh the hash if the upstream file changes.",
     "checkver": {
         "url": "https://www.mitec.cz/wp/mjsonv/",
         "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
@@ -21,4 +20,4 @@
         "url": "https://www.mitec.cz/wp/files/JSONView.zip"
     },
     "hash": "9c6d38bc040bae98e9847539220611e4dea915d27314463e602b880c3f845b21"
-}
+}

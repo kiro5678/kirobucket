@@ -12,7 +12,6 @@
             "MiTeC EXE Explorer"
         ]
     ],
-    "notes": "The official download page does not publish a static SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download. Refresh the hash if the upstream file changes.",
     "checkver": {
         "url": "https://www.mitec.cz/wp/mee/",
         "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
@@ -21,4 +20,4 @@
         "url": "https://www.mitec.cz/wp/files/EXE.zip"
     },
     "hash": "87b3bbf80301de96b871da5f1d4ce742c38182ee2fbc4414a28a2e7133011c78"
-}
+}

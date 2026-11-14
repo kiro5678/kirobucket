@@ -3,7 +3,6 @@
     "description": "Allows to get the best experience while using a DualShock 4 on PC.",
     "homepage": "https://github.com/schmaldeo/DS4Windows",
     "license": "GPLv3",
-    "notes": "ViGEmBus is required for DS4Windows to work; install it from within the application.",
     "suggest": {
         ".NET Desktop Runtime 8.0": "versions/windowsdesktop-runtime-8.0"
     },
@@ -74,5 +73,6 @@
                 "url": "https://github.com/schmaldeo/DS4Windows/releases/download/v$version/DS4Windows_$version_x86.zip"
             }
         }
-    }
-}
+    },
+    "notes": "ViGEmBus is required for DS4Windows to work; install it from within the application."
+}

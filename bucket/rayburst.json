@@ -3,10 +3,6 @@
     "description": "A full-featured download manager — rebuilt from the ground up (formerly Motrix Next).",
     "homepage": "https://rayburst.pages.dev",
     "license": "MIT",
-    "notes": [
-        "This manifest extracts the NSIS payload without running the vendor installer hooks. Windows protocol handlers, .torrent file association, and browser native-messaging registration are not added. Use the vendor installer when these integrations are required.",
-        "KiroBucket's NSIS extraction workflow verified the x64 and ARM64 payloads and confirmed rayburst.exe at the extraction root. The workflow did not launch the application."
-    ],
     "architecture": {
         "64bit": {
             "url": "https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.2/Rayburst_4.1.2_x64-setup.exe#/dl.7z",
@@ -36,5 +32,6 @@
                 "url": "https://github.com/AnInsomniacy/rayburst/releases/download/v$version/Rayburst_$version_arm64-setup.exe#/dl.7z"
             }
         }
-    }
-}
+    },
+    "notes": "This manifest extracts the NSIS payload without running the vendor installer hooks. Windows protocol handlers, .torrent file association, and browser native-messaging registration are not added. Use the vendor installer when these integrations are required."
+}

@@ -27,7 +27,6 @@
             ]
         }
     },
-    "notes": "Kero can optionally register its daemon as a per-user Windows scheduled task with kero daemon install-service; this is not run by the manifest. The app also includes a signed self-updater, so avoid running its updater and Scoop updates concurrently.",
     "checkver": {
         "github": "https://github.com/egoist/kero"
     },
@@ -40,5 +39,6 @@
                 "url": "https://github.com/egoist/kero/releases/download/v$version/kero-$version-windows-arm64.tar.gz"
             }
         }
-    }
-}
+    },
+    "notes": "Kero can optionally register its daemon as a per-user Windows scheduled task with kero daemon install-service; this is not run by the manifest. The app also includes a signed self-updater, so avoid running its updater and Scoop updates concurrently."
+}

@@ -44,6 +44,5 @@
                 "url": "https://github.com/cjpais/Handy/releases/download/v$version/Handy_$version_arm64-setup.exe"
             }
         }
-    },
-    "notes": "Portable settings, models, recordings, databases and logs are stored under Data, which Scoop persists across updates. Use scoop update handy to update the Scoop-managed copy."
-}
+    }
+}

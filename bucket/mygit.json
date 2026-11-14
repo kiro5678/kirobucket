@@ -17,7 +17,6 @@
             "MyGit"
         ]
     ],
-    "notes": "MyGit requires Git for Windows on PATH and includes its own updater.",
     "checkver": {
         "github": "https://github.com/Binaryify/MyGit"
     },
@@ -27,5 +26,6 @@
                 "url": "https://github.com/Binaryify/MyGit/releases/download/v$version/MyGit-windows-amd64.zip"
             }
         }
-    }
-}
+    },
+    "notes": "MyGit requires Git for Windows on PATH and includes its own updater."
+}

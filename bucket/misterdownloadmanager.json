@@ -14,7 +14,6 @@
         ]
     ],
     "persist": "data",
-    "notes": "Browser integration requires the upstream setup.exe; the portable ZIP does not register the native messaging host.",
     "checkver": {
         "url": "https://github.com/anefzaoui/misterdownloadmanager/releases/latest",
         "regex": "/releases/tag/v([\\d.]+)"
@@ -22,5 +21,6 @@
     "autoupdate": {
         "url": "https://github.com/anefzaoui/misterdownloadmanager/releases/download/v$version/MisterDownloadManager-$version-portable.zip",
         "extract_dir": "MisterDownloadManager-$version-portable"
-    }
-}
+    },
+    "notes": "Browser integration requires the upstream setup.exe; the portable ZIP does not register the native messaging host."
+}

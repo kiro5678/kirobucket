@@ -36,9 +36,5 @@
     ],
     "autoupdate": {
         "url": "https://download.ccleaner.com/portable/ccsetup$majorVersion$minorVersion.zip"
-    },
-    "notes": [
-        "Tracks the latest published CCleaner Portable build; CCleaner 7.x is distributed as an installer rather than a portable ZIP.",
-        "The SHA-256 value is from a third-party file-tested listing, not a publisher-provided digest."
-    ]
-}
+    }
+}

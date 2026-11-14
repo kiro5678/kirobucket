@@ -35,7 +35,6 @@
             "if ($process.ExitCode -ne 0) { throw \"Autorun Organizer uninstaller exited with code $($process.ExitCode).\" }"
         ]
     },
-    "notes": "Requires administrator rights. The normal Inno Setup installation runs at system scope, while /DIR keeps the application files in this Scoop version directory.",
     "checkver": {
         "script": [
             "$html = (Invoke-WebRequest -Uri 'https://www.chemtable.com/autorun-organizer.htm' -UseBasicParsing).Content",
@@ -59,5 +58,6 @@
         "    }",
         "    throw \"AutorunOrganizer.exe was not installed under the Scoop app directory: $dir\"",
         "}"
-    ]
-}
+    ],
+    "notes": "Requires administrator rights. The normal Inno Setup installation runs at system scope, while /DIR keeps the application files in this Scoop version directory."
+}

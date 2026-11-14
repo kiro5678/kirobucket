@@ -42,6 +42,5 @@
                 }
             }
         }
-    },
-    "notes": "Glide stores translation-service keys in plaintext under %APPDATA%\\Glide; use Scoop for updates."
-}
+    }
+}

@@ -10,10 +10,6 @@
             "MiTeC Certificate Generator"
         ]
     ],
-    "notes": [
-        "The official download page does not publish a static SHA-256 checksum; this manifest pins the SHA-256 calculated from the current official download. Refresh the hash if the upstream file changes.",
-        "The vendor limits freeware use to private, educational and non-commercial purposes; review the product license before commercial use."
-    ],
     "checkver": {
         "url": "https://www.mitec.cz/wp/cg/",
         "regex": "(?is)Version History.*?(?<version>\\d+(?:\\.\\d+)+)"
@@ -21,5 +17,6 @@
     "autoupdate": {
         "url": "https://www.mitec.cz/wp/files/CG.zip"
     },
-    "hash": "dab3421d6ca9629c938b86e267ce139d4f2ce54758f1125008bf7da158f28666"
-}
+    "hash": "dab3421d6ca9629c938b86e267ce139d4f2ce54758f1125008bf7da158f28666",
+    "notes": "The vendor limits freeware use to private, educational and non-commercial purposes; review the product license before commercial use."
+}

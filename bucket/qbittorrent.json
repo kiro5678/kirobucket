@@ -6,7 +6,6 @@
         "identifier": "GPL-3.0-or-later",
         "url": "https://github.com/qbittorrent/qBittorrent/blob/HEAD/COPYING"
     },
-    "notes": "To add qBittorrent file associations, run: reg import \"$dir\\install-associations.reg\"",
     "architecture": {
         "64bit": {
             "url": "https://downloads.sourceforge.net/project/qbittorrent/qbittorrent-win32/qbittorrent-5.3.0/qbittorrent_5.3.0_x64_setup.exe#/dl.7z",
@@ -61,5 +60,6 @@
                 "url": "https://downloads.sourceforge.net/project/qbittorrent/qbittorrent-win32/qbittorrent-$version/qbittorrent_$version_x64_setup.exe#/dl.7z"
             }
         }
-    }
-}
+    },
+    "notes": "To add qBittorrent file associations, run: reg import \"$dir\\install-associations.reg\""
+}

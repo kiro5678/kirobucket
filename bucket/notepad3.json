@@ -3,7 +3,6 @@
     "description": "Notepad-like text editor based on the Scintilla source code",
     "homepage": "https://www.rizonesoft.com/downloads/notepad3/",
     "license": "BSD-3-Clause",
-    "notes": "To add Notepad3 to the right-click context menu, run: reg import \"$dir\\install-context.reg\"",
     "architecture": {
         "64bit": {
             "url": "https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_7.26.602.1/Notepad3_7.26.602.1_x64_Portable.zip",
@@ -65,5 +64,6 @@
                 "url": "https://github.com/rizonesoft/Notepad3/releases/download/RELEASE_$version/Notepad3_$version_x86_Portable.zip"
             }
         }
-    }
-}
+    },
+    "notes": "To add Notepad3 to the right-click context menu, run: reg import \"$dir\\install-context.reg\""
+}
