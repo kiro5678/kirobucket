@@ -41,7 +41,6 @@ permissions:
 
 jobs:
   inspect:
-    if: github.event_name != 'push' || github.event.head_commit.message == 'Run installer inspector for SystemHero'
     name: Download and statically inspect target
     runs-on: windows-latest
     timeout-minutes: 30
@@ -82,52 +81,45 @@ jobs:
             $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'bucket/keptinflow.json')
             $runForWinToUSB = ($pushEvent.head_commit.message -match '(?i)WinToUSB') -or ($changedPaths -contains 'bucket/wintousb.json')
 
-            if ($pushEvent.head_commit.message -eq 'Run installer inspector for SystemHero') {
-              $url = 'https://github.com/mayaa79/SystemHero/releases/download/v1.2.1/SystemHero-Setup-1.2.1.exe'
-              $name = 'SystemHero-Setup-1.2.1.exe'
-              $expectedHash = '85e8d17781aaa56966ebae735023f33a2d0a40b87e955dbefd24c3debf16bb6b'
-              $targetProduct = 'SystemHero'
+            if ($runForPake) {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
+              $officialReleasePrefix = 'https://pake.run/updates/windows/'
+              $targetProduct = 'Pake Desktop'
+            } elseif ($runForKeptInFlow) {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/keptinflow.json'
+              $officialReleasePrefix = 'https://github.com/jwwpua/keptinflow-releases/releases/download/'
+              $targetProduct = 'KeptInFlow'
+            } elseif ($runForWinToUSB) {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/wintousb.json'
+              $officialReleasePrefix = 'https://www.easyuefi.com/wintousb/downloads/'
+              $targetProduct = 'WinToUSB'
             } else {
-              if ($runForPake) {
-                $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
-                $officialReleasePrefix = 'https://pake.run/updates/windows/'
-                $targetProduct = 'Pake Desktop'
-              } elseif ($runForKeptInFlow) {
-                $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/keptinflow.json'
-                $officialReleasePrefix = 'https://github.com/jwwpua/keptinflow-releases/releases/download/'
-                $targetProduct = 'KeptInFlow'
-              } elseif ($runForWinToUSB) {
-                $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/wintousb.json'
-                $officialReleasePrefix = 'https://www.easyuefi.com/wintousb/downloads/'
-                $targetProduct = 'WinToUSB'
-              } else {
-                $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/majorprivacy.json'
-                $officialReleasePrefix = 'https://github.com/xanasoft/MajorPrivacy/releases/download/'
-                $targetProduct = 'MajorPrivacy'
-              }
-
-              if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
-              $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
-              if ($targetProduct -eq 'Pake Desktop') {
-                $pakeExtractionMode = ([string]$manifest.extract_dir -eq 'lib\\app') -and ([string]$manifest.url -like '*#/dl.7z')
-                if ($pakeExtractionMode) {
-                  if ([string]$manifest.url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-x64-Setup.exe#/dl.7z') { throw 'Pake Desktop extraction manifest URL is not the official x64 setup asset with the 7-Zip marker.' }
-                  if ([string]$manifest.bin -ne 'Pake.exe') { throw 'Pake Desktop extraction manifest must shim Pake.exe.' }
-                } else {
-                  $arm64Source = $manifest.architecture.arm64
-                  $arm64Url = [string]$arm64Source.url
-                  $expectedArm64Hash = [string]$arm64Source.hash
-                  if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
-                  if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
-                }
-              }
-              $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
-              $url = [string]$source.url
-              $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
-              $expectedHash = [string]$source.hash
-              if (-not $url.StartsWith($officialReleasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) { throw "Manifest URL is not an official $targetProduct release asset." }
-              if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw "Manifest SHA-256 for $targetProduct must be a 64-character hexadecimal digest." }
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/majorprivacy.json'
+              $officialReleasePrefix = 'https://github.com/xanasoft/MajorPrivacy/releases/download/'
+              $targetProduct = 'MajorPrivacy'
             }
+
+            if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            if ($targetProduct -eq 'Pake Desktop') {
+              $pakeExtractionMode = ([string]$manifest.extract_dir -eq 'lib\app') -and ([string]$manifest.url -like '*#/dl.7z')
+              if ($pakeExtractionMode) {
+                if ([string]$manifest.url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-x64-Setup.exe#/dl.7z') { throw 'Pake Desktop extraction manifest URL is not the official x64 setup asset with the 7-Zip marker.' }
+                if ([string]$manifest.bin -ne 'Pake.exe') { throw 'Pake Desktop extraction manifest must shim Pake.exe.' }
+              } else {
+                $arm64Source = $manifest.architecture.arm64
+                $arm64Url = [string]$arm64Source.url
+                $expectedArm64Hash = [string]$arm64Source.hash
+                if ($arm64Url -ne 'https://pake.run/updates/windows/Tw93.Pake-win-arm64-Setup.exe') { throw 'Pake Desktop ARM64 URL is not the official setup asset.' }
+                if ($expectedArm64Hash.Length -ne 64) { throw 'Pake Desktop ARM64 hash must be exactly 64 characters.' }
+              }
+            }
+            $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
+            $url = [string]$source.url
+            $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
+            $expectedHash = [string]$source.hash
+            if (-not $url.StartsWith($officialReleasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) { throw "Manifest URL is not an official $targetProduct release asset." }
+            if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw "Manifest SHA-256 for $targetProduct must be a 64-character hexadecimal digest." }
           } elseif ($env:EVENT_NAME -eq 'pull_request') {
             $pullRequestEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
             $baseSha = [string]$pullRequestEvent.pull_request.base.sha
