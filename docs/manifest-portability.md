@@ -136,7 +136,7 @@ KeyDepot and Repo Hopper remain under Review in [Manifest Review](manifest-revie
 
 - [pickets](../bucket/pickets.json) — **Portable**: uses the official single-file, self-contained Windows x64 executable without running setup. Layouts and logs remain under `%APPDATA%\Pickets`.
 - [pecofence](../bucket/pecofence.json) — **Portable**: uses the official portable ZIP and launches with `--portable`; the `config` directory is persisted across Scoop updates. Settings require the Microsoft Edge WebView2 Runtime.
-- [glassdesk](../bucket/glassdesk.json) — **Nonportable (per-user MSI)**: runs the official MSI with `msiexec /i` and removes it with `msiexec /x`. The MSI registers an HKCU startup entry and Start Menu shortcut. The upstream repository has no application license file, so the manifest uses `Unknown`.
+- [glassdesk](../bucket/glassdesk.json) — **Portable (MSI extraction)**: extracts `GlassDesk.exe` and its configuration from the official MSI without invoking Windows Installer. Settings are migrated to Scoop's persistent data directory; automatic startup and the bundled MSI updater are disabled. The upstream repository has no application license file, so the manifest uses `Unknown`.
 
 ## Classification rules for future manifest changes
 
