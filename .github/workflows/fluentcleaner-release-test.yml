@@ -18,6 +18,8 @@ jobs:
     name: Test Modern and Classic manifests
     runs-on: windows-latest
     timeout-minutes: 20
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
 
     steps:
       - name: Checkout bucket
@@ -31,6 +33,7 @@ jobs:
           $headers = @{
             'User-Agent' = 'kirobucket-fluentcleaner-release-test'
             'Accept' = 'application/vnd.github+json'
+            'Authorization' = "Bearer $env:GITHUB_TOKEN"
           }
 
           $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/builtbybel/FluentCleaner/releases/latest' -Headers $headers -TimeoutSec 60
