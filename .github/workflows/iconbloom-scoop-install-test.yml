@@ -1,0 +1,150 @@
+name: Iconbloom Scoop Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/iconbloom-scoop-install-test.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install, verify, and uninstall Iconbloom
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop in an isolated runner directory
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $scoopRoot = Join-Path $env:RUNNER_TEMP 'scoop-iconbloom-test'
+          $installer = Join-Path $env:RUNNER_TEMP 'install-scoop.ps1'
+          Invoke-WebRequest -Uri 'https://get.scoop.sh' -OutFile $installer -TimeoutSec 120
+          & $installer -ScoopDir $scoopRoot
+          if ($LASTEXITCODE -ne 0) { throw "Scoop bootstrap failed with exit code $LASTEXITCODE." }
+
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          if (-not (Test-Path -LiteralPath $scoopScript -PathType Leaf)) {
+            throw "Scoop command script was not found: $scoopScript"
+          }
+
+          $env:SCOOP = $scoopRoot
+          "SCOOP_ROOT=$scoopRoot" >> $env:GITHUB_ENV
+          Write-Host "Scoop root: $scoopRoot"
+
+      - name: Install Iconbloom from the checked-out manifest
+        id: install_app
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopRoot = $env:SCOOP_ROOT
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\iconbloom.json'
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            throw "Iconbloom manifest was not found: $manifestPath"
+          }
+
+          $logPath = Join-Path $env:RUNNER_TEMP 'iconbloom-scoop-install.log'
+          Start-Transcript -LiteralPath $logPath -Force
+          try {
+            Write-Host "Installing manifest: $manifestPath"
+            $global:LASTEXITCODE = 0
+            & $scoopScript install $manifestPath
+            if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+              throw "Scoop install failed with exit code $global:LASTEXITCODE."
+            }
+          } finally {
+            Stop-Transcript | Out-Null
+          }
+
+          $versionDir = Join-Path $scoopRoot 'apps\iconbloom\current'
+          $application = Join-Path $versionDir 'Iconbloom.exe'
+          if (-not (Test-Path -LiteralPath $application -PathType Leaf)) {
+            $entries = @(Get-ChildItem -LiteralPath $versionDir -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
+            throw "Scoop install did not produce Iconbloom.exe at the manifest's declared path. Found: $($entries -join ', ')"
+          }
+
+          $file = Get-Item -LiteralPath $application
+          if ($file.Length -le 0) { throw 'Iconbloom.exe exists but is empty.' }
+          $bytes = [System.IO.File]::ReadAllBytes($application)
+          if ($bytes.Length -lt 2 -or $bytes[0] -ne 0x4D -or $bytes[1] -ne 0x5A) {
+            throw 'Iconbloom.exe does not have a Windows PE MZ header.'
+          }
+
+          $shim = Join-Path $scoopRoot 'shims\iconbloom.exe'
+          if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+            throw "Scoop did not create the expected bin shim: $shim"
+          }
+
+          $hash = (Get-FileHash -LiteralPath $application -Algorithm SHA256).Hash.ToLowerInvariant()
+          $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($application)
+          $report = [ordered]@{
+            manifest = 'bucket/iconbloom.json'
+            manifestVersion = '0.9.0'
+            scoopRoot = $scoopRoot
+            installedExecutable = $application
+            executableSizeBytes = $file.Length
+            executableSha256 = $hash
+            productName = $version.ProductName
+            fileVersion = $version.FileVersion
+            shim = $shim
+            shimExists = Test-Path -LiteralPath $shim
+            shortcutDeclared = $true
+            applicationLaunched = $false
+          }
+          $report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'iconbloom-install-report.json') -Encoding utf8
+          Write-Host 'PASS: Scoop installed Iconbloom and verified Iconbloom.exe and its shim.'
+          Write-Host ($report | ConvertTo-Json -Depth 6)
+          'ICONBLOOM_INSTALL_OK=true' >> $env:GITHUB_ENV
+
+      - name: Uninstall Iconbloom and verify Scoop cleanup
+        if: always() && env.SCOOP_ROOT != ''
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopRoot = $env:SCOOP_ROOT
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          if (-not (Test-Path -LiteralPath $scoopScript -PathType Leaf)) {
+            Write-Host 'Scoop command script is unavailable; uninstall check is skipped.'
+            exit 0
+          }
+
+          $appRoot = Join-Path $scoopRoot 'apps\iconbloom'
+          if (Test-Path -LiteralPath $appRoot) {
+            $global:LASTEXITCODE = 0
+            & $scoopScript uninstall iconbloom
+            if ($null -ne $global:LASTEXITCODE -and $global:LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed with exit code $global:LASTEXITCODE."
+            }
+          }
+
+          if (Test-Path -LiteralPath $appRoot) {
+            throw "Scoop uninstall left the Iconbloom app directory behind: $appRoot"
+          }
+
+          $shim = Join-Path $scoopRoot 'shims\iconbloom.exe'
+          if (Test-Path -LiteralPath $shim) {
+            throw "Scoop uninstall left the Iconbloom shim behind: $shim"
+          }
+
+          Write-Host 'PASS: Scoop uninstall removed Iconbloom app files and shim.'
+
+      - name: Upload install report and log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v7.0.2
+        with:
+          name: iconbloom-scoop-install-test
+          path: |
+            \${{ runner.temp }}/iconbloom-scoop-install.log
+            \${{ runner.temp }}/iconbloom-install-report.json
+          if-no-files-found: warn
+          retention-days: 7
