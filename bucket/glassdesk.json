@@ -8,7 +8,7 @@
     "persist": "settings",
     "shortcuts": [
         [
-            "GlassDesk.exe",
+            "Programs/GlassDesk/GlassDesk.exe",
             "GlassDesk"
         ]
     ],
