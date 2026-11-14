@@ -29,7 +29,7 @@
                 "url": "https://github.com/furkanbagci34/sablate-releases/releases/download/v$version/Sablate-Setup-$version.exe#/dl.7z",
                 "hash": {
                     "url": "https://api.github.com/repos/furkanbagci34/sablate-releases/releases/tags/v$version",
-                    "regex": "\"name\"\\s*:\\s*\"Sablate-Setup-$version\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
+                    "regex": "\"name\"\\s*:\\s*\"Sablate-Setup-[0-9.]+\\.exe\"[\\s\\S]*?\"digest\"\\s*:\\s*\"sha256:([a-f0-9]{64})\""
                 }
             }
         }
