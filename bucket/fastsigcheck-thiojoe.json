@@ -10,6 +10,9 @@
     },
     "autoupdate": {
         "url": "https://github.com/ThioJoe/FastSigCheck/releases/download/v$version/FastSigCheck.exe",
-        "bin": "FastSigCheck.exe"
+        "bin": "FastSigCheck.exe",
+        "hash": {
+            "mode": "download"
+        }
     }
 }
