@@ -7,5 +7,11 @@
     "notes": [
         "SigcheckGUI does not include the Sysinternals command-line engine. Download Sigcheck separately from https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck, extract sigcheck64.exe, rename it to sigcheck.exe, and place it beside SigcheckGUI.exe.",
         "The developer's distribution page identifies version 1.1.3 dated 2016-11-04. The program is freeware for non-commercial use only."
+    ],
+    "shortcuts": [
+        [
+            "SigcheckGUI.exe",
+            "Skwire - SigcheckGUI"
+        ]
     ]
-}
+}
