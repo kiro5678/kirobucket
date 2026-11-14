@@ -20,6 +20,9 @@
                 "F_Key_Sender.exe",
                 "F-Key Sender - ThioJoe"
             ]
-        ]
+        ],
+        "hash": {
+            "mode": "download"
+        }
     }
 }
