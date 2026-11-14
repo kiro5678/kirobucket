@@ -45,6 +45,15 @@ jobs:
           $modern = Get-Content -LiteralPath $modernPath -Raw | ConvertFrom-Json
           $classic = Get-Content -LiteralPath $classicPath -Raw | ConvertFrom-Json
 
+          $modernVersionMatch = [regex]::Match([string]$release.body, [string]$modern.checkver.regex)
+          if (-not $modernVersionMatch.Success) {
+            throw 'Could not extract Modern application version from the official release notes.'
+          }
+          $publishedModernVersion = $modernVersionMatch.Groups['version'].Value
+          if ([string]::IsNullOrWhiteSpace($publishedModernVersion)) {
+            throw 'Modern version capture is empty.'
+          }
+
           $classicVersionMatch = [regex]::Match([string]$release.body, [string]$classic.checkver.regex)
           if (-not $classicVersionMatch.Success) {
             throw 'Could not extract Classic application version from the official release notes.'
@@ -53,20 +62,19 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($publishedClassicVersion)) {
             throw 'Classic version capture is empty.'
           }
+
           Write-Host "RELEASE_TAG=$releaseTag"
+          Write-Host "MODERN_APPLICATION_VERSION=$publishedModernVersion"
           Write-Host "CLASSIC_APPLICATION_VERSION=$publishedClassicVersion"
 
-          if ([string]$modern.version -ne $releaseTag) {
-            throw "Modern manifest version $($modern.version) does not match latest release tag $releaseTag."
+          if ([string]$modern.version -ne $publishedModernVersion) {
+            throw "Modern manifest version $($modern.version) does not match published Modern version $publishedModernVersion."
           }
           if ([string]$classic.version -ne $publishedClassicVersion) {
             throw "Classic manifest version $($classic.version) does not match published Classic version $publishedClassicVersion."
           }
-          if ([string]$classic.checkver.jsonpath -ne '$.body') {
-            throw 'Classic checkver must read the release body.'
-          }
-          if ([string]$classic.autoupdate.url -ne 'https://github.com/builtbybel/FluentCleaner/releases/latest/download/FluentCleaner-Classic-net48.zip') {
-            throw 'Classic autoupdate must use the latest Classic asset URL, independent of the release tag.'
+          if ([string]$modern.checkver.jsonpath -ne '$.body' -or [string]$classic.checkver.jsonpath -ne '$.body') {
+            throw 'Both checkver configurations must read the official release body.'
           }
 
           $tests = @(
@@ -100,8 +108,9 @@ jobs:
             $asset = @($release.assets | Where-Object { $_.name -eq $test.Asset }) | Select-Object -First 1
             if ($null -eq $asset) { throw "Missing release asset: $($test.Asset)" }
 
-            if ($test.Url -ne $asset.browser_download_url) {
-              throw "$($test.Name) manifest URL does not match the official asset URL."
+            $expectedUrl = "https://github.com/builtbybel/FluentCleaner/releases/latest/download/$($test.Asset)"
+            if ($test.Url -ne $expectedUrl) {
+              throw "$($test.Name) manifest URL must use the official latest-download URL: $expectedUrl"
             }
             if ($test.ExtractDir -ne $test.ExpectedExtractDir) {
               throw "$($test.Name) extract_dir is '$($test.ExtractDir)', expected '$($test.ExpectedExtractDir)'."
@@ -113,10 +122,10 @@ jobs:
             }
 
             $archive = Join-Path $root $test.Asset
-            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $archive -MaximumRedirection 10 -TimeoutSec 600
+            Invoke-WebRequest -Uri $test.Url -OutFile $archive -MaximumRedirection 10 -TimeoutSec 600
             $actualHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
             if ($actualHash -ne $expectedHash) {
-              throw "$($test.Name) download SHA-256 mismatch. Actual=$actualHash Expected=$expectedHash"
+              throw "$($test.Name) latest-download URL hash mismatch. Actual=$actualHash Expected=$expectedHash"
             }
 
             $destination = Join-Path $root $test.Name
@@ -124,8 +133,9 @@ jobs:
             $exe = Get-ChildItem -LiteralPath $destination -Filter $test.Executable -File -Recurse -Force | Select-Object -First 1
             if ($null -eq $exe) { throw "$($test.Name) executable was not found after extraction." }
 
-            Write-Host "PASS: $($test.Name) URL, hash, and archive extraction."
+            Write-Host "PASS: $($test.Name) latest-download URL, hash, and archive extraction."
             Write-Host "MANIFEST_VERSION=$($test.ManifestVersion)"
+            Write-Host "RELEASE_ASSET_URL=$($asset.browser_download_url)"
             Write-Host "SHA256=$actualHash"
             Write-Host "EXECUTABLE=$($exe.FullName)"
 
@@ -151,7 +161,7 @@ jobs:
           }
           Write-Host "Scoop installed: $scoop"
 
-      - name: Test Classic checkver and autoupdate
+      - name: Test Modern and Classic checkver and autoupdate
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -161,21 +171,45 @@ jobs:
             throw "Scoop checkver script not found: $checkverScript"
           }
 
-          $testDir = Join-Path $env:RUNNER_TEMP 'fluentcleaner-checkver'
-          New-Item -ItemType Directory -Path $testDir -Force | Out-Null
-          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\fluentcleaner-classic.json') -Destination (Join-Path $testDir 'fluentcleaner-classic.json')
+          $cases = @(
+            @{
+              App = 'fluentcleaner'
+              Manifest = 'bucket\fluentcleaner.json'
+              ExpectedVersion = '26.11.01'
+              ExpectedUrl = 'https://github.com/builtbybel/FluentCleaner/releases/latest/download/FluentCleaner-win-x64.zip'
+            },
+            @{
+              App = 'fluentcleaner-classic'
+              Manifest = 'bucket\fluentcleaner-classic.json'
+              ExpectedVersion = '1.19.269'
+              ExpectedUrl = 'https://github.com/builtbybel/FluentCleaner/releases/latest/download/FluentCleaner-Classic-net48.zip'
+            }
+          )
 
-          $checkverOutput = @(& $checkverScript -App 'fluentcleaner-classic' -Dir $testDir -Update -ForceUpdate -ThrowError 2>&1)
-          $checkverOutput | ForEach-Object { Write-Host $_ }
+          foreach ($case in $cases) {
+            $testDir = Join-Path (Join-Path $env:RUNNER_TEMP 'fluentcleaner-checkver') $case.App
+            New-Item -ItemType Directory -Path $testDir -Force | Out-Null
+            Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $case.Manifest) -Destination (Join-Path $testDir "$($case.App).json")
 
-          $updated = Get-Content -LiteralPath (Join-Path $testDir 'fluentcleaner-classic.json') -Raw | ConvertFrom-Json
-          if ($updated.version -ne '1.19.269') {
-            throw "Scoop checkver returned Classic version $($updated.version), expected 1.19.269."
+            $checkverOutput = @(& $checkverScript -App $case.App -Dir $testDir -Update -ForceUpdate -ThrowError 2>&1)
+            $checkverOutput | ForEach-Object { Write-Host $_ }
+
+            $updated = Get-Content -LiteralPath (Join-Path $testDir "$($case.App).json") -Raw | ConvertFrom-Json
+            if ([string]$updated.version -ne $case.ExpectedVersion) {
+              throw "Scoop checkver returned $($case.App) version $($updated.version), expected $($case.ExpectedVersion)."
+            }
+
+            if ($case.App -eq 'fluentcleaner') {
+              $updatedUrl = [string]$updated.architecture.'64bit'.url
+            }
+            else {
+              $updatedUrl = [string]$updated.url
+            }
+            if ($updatedUrl -ne $case.ExpectedUrl) {
+              throw "Scoop autoupdate produced an unexpected URL for $($case.App): $updatedUrl"
+            }
+            Write-Host "PASS: Scoop checkver and autoupdate for $($case.App)."
           }
-          if ($updated.url -ne 'https://github.com/builtbybel/FluentCleaner/releases/latest/download/FluentCleaner-Classic-net48.zip') {
-            throw "Scoop autoupdate produced an unexpected URL: $($updated.url)"
-          }
-          Write-Host 'PASS: Scoop checkver keeps Classic version at 1.19.269 and autoupdate uses the latest Classic asset.'
 
       - name: Install and verify both local manifests
         shell: pwsh
