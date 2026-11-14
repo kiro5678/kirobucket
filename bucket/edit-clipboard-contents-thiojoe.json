@@ -20,6 +20,9 @@
                 "EditClipboardContents_$version.exe",
                 "Edit Clipboard Contents - ThioJoe"
             ]
-        ]
+        ],
+        "hash": {
+            "mode": "download"
+        }
     }
 }
