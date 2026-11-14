@@ -209,6 +209,7 @@ on:
       - 'bucket/imyemail-cloud-mygo.json'
       - 'bucket/healthfolio.json'
       - 'bucket/motionduo.json'
+      - 'bucket/reclaim.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -434,6 +435,7 @@ on:
       - 'bucket/imyemail-cloud-mygo.json'
       - 'bucket/healthfolio.json'
       - 'bucket/motionduo.json'
+      - 'bucket/reclaim.json'
   workflow_dispatch:
     inputs:
       manifest:
