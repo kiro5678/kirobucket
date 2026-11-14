@@ -443,6 +443,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [softwareok-find-same-images-ok](../bucket/softwareok-find-same-images-ok.json) | 6.16 | 64bit: 1.2 MiB | 2026-10-21 | Find duplicate or similar images. | [Homepage](https://www.softwareok.com/?Download=Find.Same.Images.OK) |
 | [flyphotos](../bucket/flyphotos.json) | 2.7.4 | 64bit: 45.0 MiB / arm64: 41.3 MiB | 2026-10-13 | Fast and modern photo viewer for Windows. | [Homepage](https://github.com/riyasy/FlyPhotos) |
 | [fractus-atlas](../bucket/fractus-atlas.json) | 2.3.0 | 32bit: 13.2 MiB | 2024-06-23 | An image viewer that lets you move images quickly into folders | [Homepage](https://github.com/Jimskapt/fractus-atlas) |
+| [framely](../bucket/framely.json) | 0.4.6 | 135.6 MiB | 2026-11-12 | Native screenshot, annotation, image pinning, screen recording, and offline OCR tool. | [Homepage](https://github.com/wildalley/framely) |
 | [funk-bic](../bucket/funk-bic.json) | 2 | 7.8 MiB | 2025-06-25 | Batch-crops images from a folder and saves cropped outputs to a separate directory. | [Homepage](https://funk.eu/bic-batch-image-cropper/) |
 | [funk-cop](../bucket/funk-cop.json) | 0.0.3.5 | 464.7 KiB | 2025-06-25 | Screen color picker with multiple color-code formats, magnifier, clipboard copy, and a built-in color chart. | [Homepage](https://funk.eu/cop/) |
 | [imageglass](../bucket/imageglass.json) | 10.0.6.906 | 64bit: 41.9 MiB / arm64: 39.6 MiB | 2026-09-05 | A fast, modern, open-source image viewer for Windows | [Homepage](https://imageglass.org) |
