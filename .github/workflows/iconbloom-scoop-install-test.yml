@@ -144,7 +144,7 @@ jobs:
         with:
           name: iconbloom-scoop-install-test
           path: |
-            \${{ runner.temp }}/iconbloom-scoop-install.log
-            \${{ runner.temp }}/iconbloom-install-report.json
+            ${{ runner.temp }}/iconbloom-scoop-install.log
+            ${{ runner.temp }}/iconbloom-install-report.json
           if-no-files-found: warn
           retention-days: 7
