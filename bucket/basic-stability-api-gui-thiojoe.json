@@ -20,7 +20,11 @@
                 "BasicStabilityAPI.exe",
                 "Basic Stability API GUI - ThioJoe"
             ]
-        ]
+        ],
+        "hash": {
+            "mode": "download"
+        }
     },
-    "notes": "Requires your own Stability AI API key. The app prompts for the key and saves it for subsequent sessions."
+    "notes": "Requires your own Stability AI API key. The app prompts for the key and saves it for subsequent sessions.",
+    "hash": "8bab5eb30679de739a34c65d1afc282473fc7b778d1e13146c5398e4fa9a4052"
 }
