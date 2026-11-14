@@ -311,6 +311,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [ef-multi-file-renamer](../bucket/ef-multi-file-renamer.json) | 26.10 | 64bit: 2.1 MiB | 2026-08-24 | Batch-renames files and directories using reusable rules, filters, and a real-time preview. | [Homepage](https://efsoftware.com/mr/e.htm) |
 | [everything-cmdpal](../bucket/everything-cmdpal.json) | 0.9.26030.0 | 64bit: 13.4 MiB | 2026-07-10 | Everything search extension for PowerToys Command Palette | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) |
 | [explorer-dialog-path-selector-thiojoe](../bucket/explorer-dialog-path-selector-thiojoe.json) | 1.8.1 | 1.3 MiB | 2026-04-03 | Jump to paths in open Explorer or Directory Opus windows from Open/Save dialogs. | [Homepage](https://github.com/ThioJoe/ThioJoe-AHK-Scripts) |
+| [file-arbor](../bucket/file-arbor.json) | — | — | — | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
 | [filebrowser](../bucket/filebrowser.json) | 2.63.23 | 15.3 MiB | 2026-07-27 | Self-hosted web file manager for managing files in a specified directory. | [Homepage](https://github.com/filebrowser/filebrowser) |
 | [filee](../bucket/filee.json) | 2.1.0 | 150.7 MiB | 2026-10-28 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
 | [filey](../bucket/filey.json) | 0.2.10 | 1.3 MiB | 2026-11-12 | Fast, keyboard-first file manager for Windows with split panels, tabs, previews, archive browsing, and Git integration. | [Homepage](https://github.com/Solessfir/Filey) |
@@ -554,6 +555,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [sukut](../bucket/sukut.json) | 0.2.33 | 56.8 MiB | 2026-10-20 | Windows x64 audio utility that filters music from app audio to focus on speech. | [Homepage](https://github.com/altarafiya/Sukut) |
 | [ventic](../bucket/ventic.json) | 0.5.0 | 71.3 MiB | 2026-08-28 | A media library and BitTorrent player for the desktop and Android TV. | [Homepage](https://github.com/ventic/ventic) |
 | [video2x](../bucket/video2x.json) | 6.4.0 | 64bit: 217.0 MiB | 2025-01-24 | A Machine learning-based lossless video super resolution framework | [Homepage](https://github.com/k4yt3x/video2x) |
+| [vidray](../bucket/vidray.json) | — | — | — | Local video compressor and converter with bundled FFmpeg. | [Homepage](https://vidray.app/) |
 | [volumey](../bucket/volumey.json) | 1.5.4.0 | 64bit: 49.3 MiB | 2026-10-31 | Volume mixer with global hotkeys for controlling Windows audio. | [Homepage](https://github.com/G-Stas/Volumey) |
 | [vovsoft-batch-audio-converter](../bucket/vovsoft-batch-audio-converter.json) | 2.1 | 19.7 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Audio Converter. | [Homepage](https://vovsoft.com/software/batch-audio-converter/) |
 | [vovsoft-batch-video-upscaler](../bucket/vovsoft-batch-video-upscaler.json) | 1.2 | 33.1 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Video Upscaler. | [Homepage](https://vovsoft.com/software/batch-video-upscaler/) |
@@ -696,6 +698,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [goldendict-ng](../bucket/goldendict-ng.json) | v26.11.0 | 64bit: 129.6 MiB | 2026-10-23 | A feature-rich dictionary lookup program, supporting multiple dictionary formats (StarDict/Babylon/Lingvo/Dictd/AARD/MDict/SDict) and online dictionaries, featuring perfect article rendering with the complete markup, illustrations and other content retained, and allowing you to type in words without any accents or correct case. | [Homepage](https://github.com/xiaoyifang/goldendict) |
 | [helixnotes](../bucket/helixnotes.json) | 1.3.6 | 9.0 MiB | 2026-09-30 | Local Markdown note-taking app with rich editing, tasks, graph view, and version history. | [Homepage](https://helixnotes.com/) |
 | [jotilla](../bucket/jotilla.json) | 1.10.0 | 182.5 KiB | 2026-11-10 | Native sticky notes with autosave, an archive, calendar and text formatting. | [Homepage](https://garaugarau.github.io/Jotilla/) |
+| [khaoyu-note](../bucket/khaoyu-note.json) | — | — | — | Local-first visual workspace for notes, boards, tables, kanban and drawings. | [Homepage](https://dezuhan.github.io/khaoyu-note/) |
 | [lapis](../bucket/lapis.json) | 3.0.1 | 10.4 MiB | 2026-09-16 | Local-first note-taking app with AI assistant and peer-to-peer sync. | [Homepage](https://github.com/zexadev/lapisnote) |
 | [many-notes](../bucket/many-notes.json) | 0.18.1 | — | 2026-10-22 | Docker-powered local Markdown notes server launcher; requires Docker Desktop. | [Homepage](https://github.com/brufdev/many-notes) |
 | [markra](../bucket/markra.json) | 2.14.1 | 13.5 MiB | 2026-10-30 | Cross-platform Markdown editor and workspace for local-first notes. | [Homepage](https://github.com/markrahq/markra) |
@@ -707,6 +710,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [softwareok-short-door-note](../bucket/softwareok-short-door-note.json) | 4.18 | 64bit: 338.4 KiB | 2026-03-08 | Create short notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=ShortDoorNote) |
 | [siyuan](../bucket/siyuan.json) | 3.8.8 | 64bit: 227.3 MiB / arm64: 192.6 MiB | 2026-10-29 | Personal knowledge management and note-taking software. | [Homepage](https://github.com/siyuan-note/siyuan) |
 | [tiro-notes](../bucket/tiro-notes.json) | 0.30.3 | 87.6 MiB | 2022-06-05 | Open-source, cross-platform Markdown note-taking app. | [Homepage](https://github.com/dotgreg/tiro-notes) |
+| [textfold](../bucket/textfold.json) | — | — | — | Local document reader and research workspace with bundled Python runtime. | [Homepage](https://github.com/chenxiachan/textfold) |
 | [vovsoft-vov-sticky-notes](../bucket/vovsoft-vov-sticky-notes.json) | 11.1 | 6.9 MiB | 2026-10-16 | Portable edition of Vovsoft Vov Sticky Notes. | [Homepage](https://vovsoft.com/software/vov-sticky-notes/) |
 | [zinc](../bucket/zinc.json) | 2.0.1 | 37.2 MiB | 2026-10-23 | Offline-first notes app with local Wi-Fi sync between desktop and mobile. | [Homepage](https://zincnotes.com/) |
 | [znote](../bucket/znote.json) | 4.9.3 | 64bit: 224.9 MiB | 2026-09-14 | Markdown-based note-taking app for developers. | [Homepage](https://github.com/alagrede/znote-app) |
@@ -994,6 +998,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | --- | --- | --- | --- | --- | --- |
 | [handy](../bucket/handy.json) | 0.9.8 | 64bit: 18.7 MiB / arm64: 12.8 MiB | 2026-10-03 | Offline speech-to-text desktop app with local Whisper and Parakeet transcription. | [Homepage](https://handy.computer/) |
 | [one-asr](../bucket/one-asr.json) | 1.4.0 | 83.5 MiB | 2026-11-02 | 本地 · 离线 · 批量音视频 → SRT 字幕 | [Homepage](https://github.com/eclipse005/OneAsr) |
+| [sablate](../bucket/sablate.json) | — | — | — | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
 | [vovsoft-audio-to-lyrics-converter](../bucket/vovsoft-audio-to-lyrics-converter.json) | 1.5 | 146.0 MiB | 2026-08-29 | Portable edition of Vovsoft Audio to Lyrics Converter. | [Homepage](https://vovsoft.com/software/audio-to-lyrics-converter/) |
 | [vovsoft-speech-to-subtitle-converter](../bucket/vovsoft-speech-to-subtitle-converter.json) | 2.5 | 166.6 MiB | 2026-09-20 | Portable edition of Vovsoft Speech to Subtitle Converter. | [Homepage](https://vovsoft.com/software/speech-to-subtitle-converter/) |
 | [vovsoft-speech-to-text-converter](../bucket/vovsoft-speech-to-text-converter.json) | 6.0 | 255.1 MiB | 2026-10-07 | Portable edition of Vovsoft Speech to Text Converter. | [Homepage](https://vovsoft.com/software/speech-to-text-converter/) |
