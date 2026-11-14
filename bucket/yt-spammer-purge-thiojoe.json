@@ -21,7 +21,10 @@
                 "YTSpammerPurge.$version.exe",
                 "YouTube Spammer Purge - ThioJoe"
             ]
-        ]
+        ],
+        "hash": {
+            "mode": "download"
+        }
     },
     "notes": "Requires a Google Cloud OAuth client file named client_secret.json in the app directory. Review matched comments and selected actions before confirming deletion, reporting, or hiding."
 }
