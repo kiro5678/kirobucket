@@ -164,7 +164,7 @@ jobs:
 
           $checkverOutput = @(& $checkverScript -App 'fluentcleaner-classic' -Dir $testDir -Update -ForceUpdate -ThrowError 2>&1)
           $checkverOutput | ForEach-Object { Write-Host $_ }
-          if ($LASTEXITCODE -ne 0) { throw 'Scoop checkver/autoupdate failed for FluentCleaner Classic.' }
+          if (($checkverOutput -join "`n") -notmatch 'fluentcleaner-classic: 1\.19\.269') { throw 'Scoop checkver did not report Classic application version 1.19.269.' }
 
           $updated = Get-Content -LiteralPath (Join-Path $testDir 'fluentcleaner-classic.json') -Raw | ConvertFrom-Json
           if ($updated.version -ne '1.19.269') {
