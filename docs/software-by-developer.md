@@ -21,6 +21,7 @@ This catalog covers the requested vendor pages and links each included program t
 | Skwire | 79 | [View](#skwire) |
 | SoftwareOK Suite | 81 | [View](categories.md#softwareok-suite) |
 | Sordum Suite | 63 | [View](categories.md#sordum-suite) |
+| ThioJoe | 13 | [View](#thiojoe) |
 | Türkaysoft Suite | 8 | [View](categories.md#turkaysoft-suite) |
 | Vovsoft Suite | 174 | [View](categories.md#vovsoft-suite) |
 
@@ -189,6 +190,24 @@ This section lists the 79 Skwire programs currently represented by manifests in 
 | [skwire-waste-not](../bucket/skwire-waste-not.json) |
 | [skwire-what](../bucket/skwire-what.json) |
 | [skwire-zero-zipper](../bucket/skwire-zero-zipper.json) |
+
+## ThioJoe
+
+| Program | Primary function | Functional category | Manifest |
+| --- | --- | --- | --- |
+| [Basic Stability API GUI](https://github.com/ThioJoe/BasicStabilityAPI-GUI) | Generate and upscale images through the Stability AI API | Images & Photos | [basic-stability-api-gui-thiojoe](../bucket/basic-stability-api-gui-thiojoe.json) |
+| [Double KeyPress Monitor](https://github.com/ThioJoe/Double-KeyPress-Monitor) | Detect and log rapid repeated keystrokes and keyboard chatter | System Monitoring & Hardware | [double-keypress-monitor-thiojoe](../bucket/double-keypress-monitor-thiojoe.json) |
+| [Edit Clipboard Contents](https://github.com/ThioJoe/Edit-Clipboard-Contents) | Inspect, edit, export, and remove individual Windows clipboard formats | Clipboard Tools | [edit-clipboard-contents-thiojoe](../bucket/edit-clipboard-contents-thiojoe.json) |
+| [Explorer Dialog Path Selector](https://github.com/ThioJoe/ThioJoe-AHK-Scripts) | Navigate to paths in Explorer or Directory Opus from Open/Save dialogs | File Management | [explorer-dialog-path-selector-thiojoe](../bucket/explorer-dialog-path-selector-thiojoe.json) |
+| [F-Key Sender](https://github.com/ThioJoe/F-Key-Sender) | Send F13–F24 and custom keyboard input with modifier keys | Keyboard & Language | [f-key-sender-thiojoe](../bucket/f-key-sender-thiojoe.json) |
+| [FastSigCheck](https://github.com/ThioJoe/FastSigCheck) | Verify embedded Windows Authenticode signatures | Security | [fastsigcheck-thiojoe](../bucket/fastsigcheck-thiojoe.json) |
+| [jpeg2png](https://github.com/ThioJoe/jpeg2png) | Restore smoother images from JPEG data | Images & Photos | [jpeg2png-thiojoe](../bucket/jpeg2png-thiojoe.json) |
+| [Modern Windows Message Box Generator](https://github.com/ThioJoe/Modern-Windows-Message-Box-Generator) | Create customizable modern Windows message boxes and Task Dialogs | Developer & Technical Tools | [modern-windows-message-box-generator-thiojoe](../bucket/modern-windows-message-box-generator-thiojoe.json) |
+| [Stream Deck Brightness Controller](https://github.com/ThioJoe/StreamDeckBrightnessController) | Set the brightness of an Elgato Stream Deck display from the command line | System Monitoring & Hardware | [streamdeck-brightness-controller-thiojoe](../bucket/streamdeck-brightness-controller-thiojoe.json) |
+| [Thio's Background App Notifier](https://github.com/ThioJoe/Thio-Background-App-Notifier) | Detect new auto-starting background services and scheduled tasks | System Monitoring & Hardware | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) |
+| [Thio's Universal Agent](https://github.com/ThioJoe/Thio-Universal-Agent) | AI desktop agent for guided or autonomous GUI interaction | Other Utilities | [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) |
+| [Windows Super God Mode](https://github.com/ThioJoe/Windows-Super-God-Mode) | Generate shortcuts to Windows special folders, settings, task links, and URI protocols | Windows Customization | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) |
+| [YouTube Spammer Purge](https://github.com/ThioJoe/YT-Spammer-Purge) | Scan YouTube comments and review potential spam for moderation | Browsers & Communication | [yt-spammer-purge-thiojoe](../bucket/yt-spammer-purge-thiojoe.json) |
 
 ## Awesome MyGo Showcase
 
