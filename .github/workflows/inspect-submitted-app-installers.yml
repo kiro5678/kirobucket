@@ -1,0 +1,174 @@
+name: Inspect submitted Windows app installers
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/inspect-submitted-app-installers.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify installer payloads
+    runs-on: windows-latest
+    timeout-minutes: 50
+
+    steps:
+      - name: Download, verify, and inspect official installer payloads
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if (-not $command) { throw '7-Zip was not found on the runner.' }
+            $sevenZip = $command.Source
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP 'kirobucket-installer-payload-inspection'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+          $targets = @(
+            @{
+              Name = 'File Arbor'
+              File = 'File-Arbor-Setup-1.4.0.exe'
+              Url = 'https://github.com/furkanbagci34/file-arbor-releases/releases/download/v1.4.0/File-Arbor-Setup-1.4.0.exe'
+              Sha256 = '94f54aca7c4b619a7d7facd1874eef43f8a497d57cd1e86fcb987db3eaff70c7'
+            },
+            @{
+              Name = 'VidRay'
+              File = 'Vidray_1.0.2_x64-setup.exe'
+              Url = 'https://github.com/furkanbagci34/vidray-releases/releases/download/v1.0.2/Vidray_1.0.2_x64-setup.exe'
+              Sha256 = 'c87c7930fcdb56818b8534ee7878d511974a5351137451b6451869ce4854e9af'
+            },
+            @{
+              Name = 'Sablate'
+              File = 'Sablate-Setup-1.0.2.exe'
+              Url = 'https://github.com/furkanbagci34/sablate-releases/releases/download/v1.0.2/Sablate-Setup-1.0.2.exe'
+              Sha256 = 'e4b4c919a4d169dc0e23ed56d96c7d3bc5bf759b9bc14141a999e72c423f32d8'
+            },
+            @{
+              Name = 'Khaoyu Note'
+              File = 'Khaoyu.Note_0.36.0_x64-setup.exe'
+              Url = 'https://github.com/dezuhan/khaoyu-note/releases/download/v0.36.0/Khaoyu.Note_0.36.0_x64-setup.exe'
+              Sha256 = '108e6df84872b6ec09e5fc21f2f58b63f4b3bce25f3d6dc1d5c7455b37f38d38'
+            },
+            @{
+              Name = 'TextFold'
+              File = 'TextFold-win-x64-setup.exe'
+              Url = 'https://github.com/chenxiachan/textfold/releases/download/v0.10.50/TextFold-win-x64-setup.exe'
+              Sha256 = 'ca0cac15e4a37f13ffca2406fd0b1bc0ccc0a94586fb5d5ea16a314675d37787'
+            }
+          )
+
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('# Windows installer payload inspection')
+          $summary.Add('')
+          $summary.Add('Downloads are checked against the official release SHA-256 digests. Installers are not executed.')
+          $summary.Add('')
+
+          foreach ($target in $targets) {
+            Write-Host ''
+            Write-Host '============================================================'
+            Write-Host "$($target.Name) — $($target.File)"
+            Write-Host '============================================================'
+
+            $appRoot = Join-Path $root ($target.Name -replace '[^A-Za-z0-9_-]', '-')
+            $downloadPath = Join-Path $appRoot $target.File
+            $outerRoot = Join-Path $appRoot 'installer-payload'
+            $innerRoot = Join-Path $appRoot 'application-payload'
+            New-Item -ItemType Directory -Path $outerRoot -Force | Out-Null
+
+            Invoke-WebRequest -Uri $target.Url -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 900
+            if (-not (Test-Path -LiteralPath $downloadPath -PathType Leaf)) {
+              throw "Download did not create the expected file: $($target.Url)"
+            }
+
+            $actualHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actualHash -ne $target.Sha256) {
+              throw "SHA-256 mismatch for $($target.Name). Expected $($target.Sha256), got $actualHash."
+            }
+            Write-Host "SHA-256 PASS: $actualHash"
+
+            $listLog = Join-Path $appRoot 'installer-list.txt'
+            $extractLog = Join-Path $appRoot 'installer-extract.txt'
+            & $sevenZip l -slt $downloadPath *> $listLog
+            if ($LASTEXITCODE -ne 0) {
+              throw "7-Zip could not inspect $($target.File). Read $listLog."
+            }
+
+            & $sevenZip x -y "-o$outerRoot" $downloadPath *> $extractLog
+            if ($LASTEXITCODE -ne 0) {
+              throw "7-Zip could not extract $($target.File). Read $extractLog."
+            }
+
+            $nestedArchives = @(
+              Get-ChildItem -LiteralPath $outerRoot -File -Recurse -Force |
+                Where-Object { $_.Name -match '(?i)^app-(64|arm64|32)\.7z$' }
+            )
+            $applicationRoot = $outerRoot
+            if ($nestedArchives.Count -gt 0) {
+              New-Item -ItemType Directory -Path $innerRoot -Force | Out-Null
+              foreach ($archive in $nestedArchives) {
+                Write-Host "Nested application archive: $($archive.FullName)"
+                & $sevenZip x -y "-o$innerRoot" $archive.FullName
+                if ($LASTEXITCODE -ne 0) {
+                  throw "Could not extract nested application archive: $($archive.FullName)"
+                }
+              }
+              $applicationRoot = $innerRoot
+            }
+
+            $outerExecutables = @(
+              Get-ChildItem -LiteralPath $outerRoot -File -Recurse -Force |
+                Where-Object { $_.Extension -ieq '.exe' } |
+                ForEach-Object {
+                  [System.IO.Path]::GetRelativePath($outerRoot, $_.FullName).Replace('\', '/')
+                }
+            )
+            $applicationExecutables = @(
+              Get-ChildItem -LiteralPath $applicationRoot -File -Recurse -Force |
+                Where-Object { $_.Extension -ieq '.exe' -and $_.Name -notmatch '(?i)^unins.*\.exe$|^uninstall.*\.exe$' } |
+                ForEach-Object {
+                  [PSCustomObject]@{
+                    Path = [System.IO.Path]::GetRelativePath($applicationRoot, $_.FullName).Replace('\', '/')
+                    Size = $_.Length
+                  }
+                }
+            )
+
+            if ($applicationExecutables.Count -eq 0) {
+              throw "No application EXE was found after extracting $($target.Name). Outer EXEs: $($outerExecutables -join ', ')."
+            }
+
+            $allFiles = @(Get-ChildItem -LiteralPath $applicationRoot -File -Recurse -Force)
+            $summary.Add("## $($target.Name)")
+            $summary.Add("- SHA-256: PASS")
+            $summary.Add("- Installer archive extraction: PASS")
+            $summary.Add("- Nested app-*.7z archives: $($nestedArchives.Count)")
+            foreach ($archive in $nestedArchives) {
+              $summary.Add("  - $([System.IO.Path]::GetRelativePath($outerRoot, $archive.FullName).Replace('\', '/'))")
+            }
+            $summary.Add("- Extracted application files: $($allFiles.Count)")
+            $summary.Add('- Executables in application payload:')
+            foreach ($exe in $applicationExecutables) {
+              $summary.Add("  - $($exe.Path) ($($exe.Size) bytes)")
+              Write-Host "APP EXE: $($exe.Path) [$($exe.Size) bytes]"
+            }
+            $summary.Add('- Installer-level EXEs:')
+            foreach ($exe in $outerExecutables | Select-Object -First 30) {
+              $summary.Add("  - $exe")
+            }
+            $summary.Add('')
+            Write-Host "Application payload files: $($allFiles.Count)"
+          }
+
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          Write-Host ''
+          Write-Host 'All official installer files passed SHA-256, archive extraction, and application-EXE discovery.'
