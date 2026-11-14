@@ -126,13 +126,16 @@ jobs:
           removed_properties = 0
           moved_notes = 0
           skipped_structures = 0
+          skipped_invalid = 0
 
           for path in sorted(Path("bucket").glob("*.json")):
               raw = path.read_text(encoding="utf-8-sig")
               try:
                   data = json.loads(raw)
               except Exception as exc:
-                  raise SystemExit(f"Invalid JSON in {path}: {exc}")
+                  skipped_invalid += 1
+                  print(f"SKIP invalid JSON in {path}: {exc}")
+                  continue
 
               if not isinstance(data, dict) or "notes" not in data:
                   continue
@@ -177,7 +180,8 @@ jobs:
               f"Removed note entries: {removed_notes}\n"
               f"Removed empty notes properties: {removed_properties}\n"
               f"Moved notes to the final property: {moved_notes}\n"
-              f"Skipped unusual notes structures: {skipped_structures}"
+              f"Skipped unusual notes structures: {skipped_structures}\n"
+              f"Skipped invalid JSON files: {skipped_invalid}"
           )
           print(summary)
           Path("summary.txt").write_text(summary + "\n", encoding="utf-8")
