@@ -32,7 +32,5 @@
             }
         }
     },
-    "notes": [
-        "Notes, boards and other local data are stored under %LOCALAPPDATA%\\Khaoyu Note, outside the Scoop app directory."
-    ]
+    "notes": "Notes, boards and other local data are stored under %LOCALAPPDATA%\\Khaoyu Note, outside the Scoop app directory."
 }
