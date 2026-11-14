@@ -1,0 +1,134 @@
+name: Awesome MyGo Native Windows manifest tests
+
+on:
+  pull_request:
+    paths:
+      - "bucket/ooxml-translator.json"
+      - "bucket/reso-backup.json"
+      - ".github/workflows/awesome-mygo-native-tests.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/ooxml-translator.json"
+      - "bucket/reso-backup.json"
+      - ".github/workflows/awesome-mygo-native-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-package-tests:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Scoop's canonical manifest formatting
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopSource = Join-Path $env:RUNNER_TEMP 'Scoop-Source'
+          $formatDir = Join-Path $env:RUNNER_TEMP 'Manifest-Format-Test'
+          git clone --depth 1 https://github.com/ScoopInstaller/Scoop.git $scoopSource
+          New-Item -ItemType Directory -Path $formatDir -Force | Out-Null
+          foreach ($name in @('ooxml-translator', 'reso-backup')) {
+            $source = Join-Path 'bucket' "$name.json"
+            $copy = Join-Path $formatDir "$name.json"
+            Copy-Item -LiteralPath $source -Destination $copy
+            $before = [System.IO.File]::ReadAllText($copy)
+            & (Join-Path $scoopSource 'bin/formatjson.ps1') -Dir $formatDir -App $name
+            if ($LASTEXITCODE -ne 0) { throw "Scoop formatter failed for $name." }
+            $after = [System.IO.File]::ReadAllText($copy)
+            if ($before -cne $after) {
+              $beforeLines = $before -split "`r?`n"
+              $afterLines = $after -split "`r?`n"
+              Write-Host "Original $name manifest:"
+              $beforeLines | ForEach-Object { Write-Host "  $_" }
+              Write-Host "Formatted $name manifest:"
+              $afterLines | ForEach-Object { Write-Host "  $_" }
+              throw "$name.json does not match Scoop's canonical JSON formatter."
+            }
+            Write-Host "$name.json matches Scoop's canonical JSON formatter."
+          }
+
+      - name: Test OOXML Translator NSIS install and uninstall
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $manifest = Get-Content -LiteralPath 'bucket/ooxml-translator.json' -Raw | ConvertFrom-Json -ErrorAction Stop
+          if ($manifest.installer.args.Count -ne 2 -or $manifest.installer.args[0] -cne '/S' -or $manifest.installer.args[1] -cne '/D=$dir') {
+            throw 'OOXML Translator must use NSIS silent install args /S /D=$dir.'
+          }
+          if (-not $manifest.uninstaller.script) { throw 'OOXML Translator must define its NSIS uninstaller script.' }
+          $installer = Join-Path $env:RUNNER_TEMP 'ooxml-translator-setup.exe'
+          $installDir = Join-Path $env:RUNNER_TEMP 'OOXML Translator Scoop Install Test'
+          $uninstallKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\com.lemos.ooxmltranslator'
+          $shortcut = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\OOXML Translator.lnk'
+
+          Invoke-WebRequest -Uri $manifest.url -OutFile $installer
+          $actualHash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $manifest.hash.ToLowerInvariant()) {
+            throw "OOXML Translator setup SHA-256 mismatch: expected $($manifest.hash), got $actualHash."
+          }
+
+          if (Test-Path -LiteralPath $installDir) { Remove-Item -LiteralPath $installDir -Recurse -Force }
+          $setup = Start-Process -FilePath $installer -ArgumentList @('/S', "/D=$installDir") -Wait -PassThru
+          if ($setup.ExitCode -ne 0) { throw "OOXML Translator setup exited with code $($setup.ExitCode)." }
+          foreach ($file in @('OOXML Translator.exe', 'Uninstall.exe')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $installDir $file) -PathType Leaf)) {
+              throw "OOXML Translator setup did not create $file in the requested Scoop directory."
+            }
+          }
+          if (-not (Test-Path -LiteralPath $uninstallKey)) { throw 'OOXML Translator did not create its HKCU uninstall entry.' }
+          if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) { throw 'OOXML Translator did not create its Start Menu shortcut.' }
+
+          $uninstaller = Join-Path $installDir 'Uninstall.exe'
+          $uninstallArgs = @('/S', ('\"' + '_?=' + $installDir + '\"'))
+          $remove = Start-Process -FilePath $uninstaller -ArgumentList $uninstallArgs -Wait -PassThru
+          if ($remove.ExitCode -ne 0) { throw "OOXML Translator uninstaller exited with code $($remove.ExitCode)." }
+          if (Test-Path -LiteralPath $installDir) { throw 'OOXML Translator uninstaller left the Scoop install directory behind.' }
+          if (Test-Path -LiteralPath $uninstallKey) { throw 'OOXML Translator uninstaller left its HKCU uninstall entry behind.' }
+          if (Test-Path -LiteralPath $shortcut) { throw 'OOXML Translator uninstaller left its Start Menu shortcut behind.' }
+          Write-Host 'OOXML Translator x64 NSIS install and uninstall passed.'
+
+      - name: Test ReSo Backup Windows binary and encrypted backup round trip
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $manifest = Get-Content -LiteralPath 'bucket/reso-backup.json' -Raw | ConvertFrom-Json -ErrorAction Stop
+          $asset = $manifest.architecture.'64bit'
+          $binary = Join-Path $env:RUNNER_TEMP 'rsbackup_windows_amd64.exe'
+          $sourceDir = Join-Path $env:RUNNER_TEMP 'reso-source'
+          $backupDir = Join-Path $env:RUNNER_TEMP 'reso-backup'
+          $restoreDir = Join-Path $env:RUNNER_TEMP 'reso-restore'
+          $sourceFile = Join-Path $sourceDir 'smoke-test.txt'
+          $password = 'Scoop-GitHub-Actions-Test-Only-2026'
+
+          Invoke-WebRequest -Uri $asset.url -OutFile $binary
+          $actualHash = (Get-FileHash -LiteralPath $binary -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $asset.hash.ToLowerInvariant()) {
+            throw "ReSo Backup SHA-256 mismatch: expected $($asset.hash), got $actualHash."
+          }
+
+          New-Item -ItemType Directory -Path $sourceDir, $backupDir, $restoreDir -Force | Out-Null
+          Set-Content -LiteralPath $sourceFile -Value 'ReSo Backup portable Windows smoke test.' -NoNewline -Encoding utf8
+          & $binary backup --input $sourceFile --shares 5 --threshold 3 --password $password --encrypt --out-dir $backupDir
+          if ($LASTEXITCODE -ne 0) { throw "ReSo Backup command failed with exit code $LASTEXITCODE." }
+
+          $shard = Get-ChildItem -LiteralPath $backupDir -Filter '*.rs.001' -File | Select-Object -First 1
+          if ($null -eq $shard) { throw 'ReSo Backup did not create the first encrypted shard.' }
+          $metadata = Get-ChildItem -LiteralPath $backupDir -Filter '*.rsmeta' -File | Select-Object -First 1
+          if ($null -eq $metadata) { throw 'ReSo Backup did not create the metadata file.' }
+
+          & $binary restore --input $shard.FullName --password $password --out-dir $restoreDir
+          if ($LASTEXITCODE -ne 0) { throw "ReSo Backup restore failed with exit code $LASTEXITCODE." }
+          $restoredFile = Join-Path $restoreDir 'smoke-test.txt'
+          if (-not (Test-Path -LiteralPath $restoredFile -PathType Leaf)) { throw 'ReSo Backup did not restore the source file.' }
+          $sourceHash = (Get-FileHash -LiteralPath $sourceFile -Algorithm SHA256).Hash
+          $restoredHash = (Get-FileHash -LiteralPath $restoredFile -Algorithm SHA256).Hash
+          if ($sourceHash -ne $restoredHash) { throw 'ReSo Backup restored file differs from the original.' }
+          Write-Host 'ReSo Backup Windows x64 binary, encrypted backup, and restore round trip passed.'
