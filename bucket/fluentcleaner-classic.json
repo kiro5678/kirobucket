@@ -1,15 +1,11 @@
 {
-    "version": "26.09.01",
+    "version": "26.11.02",
     "description": "Classic WinForms edition of FluentCleaner for Windows.",
     "homepage": "https://github.com/builtbybel/FluentCleaner",
     "license": "MIT",
-    "url": "https://github.com/builtbybel/FluentCleaner/releases/download/26.09.01/FluentCleaner-Classic-net48.zip",
-    "hash": "42703e673cff81eb9d2ec7f8eacaaf93fa009915ffca40e54b63ba789d80fe85",
-    "pre_install": [
-        "$exe = Get-ChildItem -Path $dir -Filter 'FluentCleaner.Classic.exe' -Recurse -File | Select-Object -First 1",
-        "if ($null -eq $exe) { throw 'FluentCleaner.Classic.exe was not found in the archive.' }",
-        "if ($exe.DirectoryName -ne $dir) { Copy-Item -Path $exe.FullName -Destination (Join-Path $dir 'FluentCleaner.Classic.exe') -Force }"
-    ],
+    "url": "https://github.com/builtbybel/FluentCleaner/releases/download/26.11.02/FluentCleaner-Classic-net48.zip",
+    "hash": "8a93a8a08f2141fc532ed16b4e1534d84b3e66650507d5affe38ec6e0c3c1d4e",
+    "extract_dir": "FluentCleaner-net48",
     "bin": "FluentCleaner.Classic.exe",
     "shortcuts": [
         [
@@ -17,11 +13,11 @@
             "FluentCleaner Classic"
         ]
     ],
-    "checkver": {
-        "url": "https://api.github.com/repos/builtbybel/FluentCleaner/releases/latest",
-        "jsonpath": "$.name",
-        "regex": "FluentCleaner (?<version>[\\d.]+) / [\\d.]+ \\(Classic\\)"
-    },
+    "persist": [
+        "Custom",
+        "Winapp3.ini"
+    ],
+    "checkver": "github",
     "autoupdate": {
         "url": "https://github.com/builtbybel/FluentCleaner/releases/download/$version/FluentCleaner-Classic-net48.zip"
     }
