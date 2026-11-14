@@ -23,7 +23,7 @@
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
-| Notes & Knowledge | 26 | [View](#notes-knowledge) |
+| Notes & Knowledge | 24 | [View](#notes-knowledge) |
 | Other Utilities | 131 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
@@ -41,7 +41,7 @@
 | Windows Customization | 97 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1088**
+**Total unique manifests: 1086**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -700,10 +700,8 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [jotilla](../bucket/jotilla.json) | 1.10.0 | 182.5 KiB | 2026-11-10 | Native sticky notes with autosave, an archive, calendar and text formatting. | [Homepage](https://garaugarau.github.io/Jotilla/) |
 | [khaoyu-note](../bucket/khaoyu-note.json) | — | — | — | Local-first visual workspace for notes, boards, tables, kanban and drawings. | [Homepage](https://dezuhan.github.io/khaoyu-note/) |
 | [lapis](../bucket/lapis.json) | 3.0.1 | 10.4 MiB | 2026-09-16 | Local-first note-taking app with AI assistant and peer-to-peer sync. | [Homepage](https://github.com/zexadev/lapisnote) |
-| [many-notes](../bucket/many-notes.json) | 0.18.1 | — | 2026-10-22 | Docker-powered local Markdown notes server launcher; requires Docker Desktop. | [Homepage](https://github.com/brufdev/many-notes) |
 | [markra](../bucket/markra.json) | 2.14.1 | 13.5 MiB | 2026-10-30 | Cross-platform Markdown editor and workspace for local-first notes. | [Homepage](https://github.com/markrahq/markra) |
 | [mdnote](../bucket/mdnote.json) | 2.0.1 | — | — | Lightweight Markdown and plain-text editor with formatted editing, live preview, tables, tabs, and multi-encoding support. | [Homepage](https://github.com/Lahai-Roi/MDNote) |
-| [note-mark](../bucket/note-mark.json) | 1.1.2 | — | 2026-11-07 | Docker-powered Markdown notes server launcher; Windows is not officially supported upstream. | [Homepage](https://github.com/enchant97/note-mark) |
 | [meshnotes](../bucket/meshnotes.json) | 0.4.1 | 14.2 MiB | 2025-12-20 | Open-source local-first note-taking application with LAN synchronization. | [Homepage](https://github.com/meshnotes/meshnotes) |
 | [pake-notion](../bucket/pake-notion.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Notion. | [Homepage](https://app.notion.com) |
 | [paperweight](../bucket/paperweight.json) | 0.6.0 | 88.2 MiB | 2026-08-27 | A local-first desktop app for collecting, organizing, and working with notes and documents | [Homepage](https://github.com/wslyvh/paperweight) |
