@@ -1,5 +1,5 @@
 name: Update Manifest Documentation
-# Regenerate README and docs indexes when manifest metadata or installer-type inference changes.
+# Regenerate README and docs indexes when manifest metadata, installer inference, or portability classifications change.
 
 on:
   workflow_dispatch:
@@ -9,6 +9,7 @@ on:
     paths:
       - .github/workflows/manifest-table.yml
       - docs/categories.md
+      - docs/manifest-portability.md
       - bucket/**
 
 concurrency:
@@ -970,8 +971,8 @@ jobs:
               $summaryStartMarker
               "| Classification | Manifests | Meaning |"
               "| --- | ---: | --- |"
-              "| Portable | $portableCount | No normal vendor installation routine or persistent Windows integration is run. |"
-              "| Nonportable | $nonportableCount | The app runs setup, registers persistent Windows components, or requires executable/runtime payloads outside Scoop-managed paths. |"
+              "| Portable | $portableCount | Scoop extracts the app into its managed directory without running vendor setup; user data and per-user actions performed by the app at runtime do not change this class. |"
+              "| Nonportable | $nonportableCount | The manifest runs vendor setup or installs required system components, or the app requires executable/runtime payloads outside Scoop-managed paths. |"
               "| Review | $reviewCount | Portability checks or supporting evidence are still outstanding. |"
               "| **Total** | **$totalCount** | **All current JSON manifests in bucket/.** |"
               $summaryEndMarker
