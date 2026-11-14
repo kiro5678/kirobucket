@@ -25,6 +25,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Verify Scoop's canonical manifest formatting
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopSource = Join-Path $env:RUNNER_TEMP 'Scoop-Source'
+          $formatDir = Join-Path $env:RUNNER_TEMP 'Manifest-Format-Test'
+          git clone --depth 1 https://github.com/ScoopInstaller/Scoop.git $scoopSource
+          New-Item -ItemType Directory -Path $formatDir -Force | Out-Null
+          foreach ($name in @('ooxml-translator', 'reso-backup')) {
+            $source = Join-Path 'bucket' "$name.json"
+            $copy = Join-Path $formatDir "$name.json"
+            Copy-Item -LiteralPath $source -Destination $copy
+            $before = [System.IO.File]::ReadAllText($copy)
+            & (Join-Path $scoopSource 'bin/formatjson.ps1') -Dir $formatDir -App $name
+            if ($LASTEXITCODE -ne 0) { throw "Scoop formatter failed for $name." }
+            $after = [System.IO.File]::ReadAllText($copy)
+            if ($before -cne $after) {
+              $beforeLines = $before -split "`r?`n"
+              $afterLines = $after -split "`r?`n"
+              Write-Host "Original $name manifest:"
+              $beforeLines | ForEach-Object { Write-Host "  $_" }
+              Write-Host "Formatted $name manifest:"
+              $afterLines | ForEach-Object { Write-Host "  $_" }
+              throw "$name.json does not match Scoop's canonical JSON formatter."
+            }
+            Write-Host "$name.json matches Scoop's canonical JSON formatter."
+          }
+
       - name: Test OOXML Translator NSIS install and uninstall
         shell: pwsh
         run: |
