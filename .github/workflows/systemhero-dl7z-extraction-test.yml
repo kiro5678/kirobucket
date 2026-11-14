@@ -1,0 +1,117 @@
+name: SystemHero dl.7z Extraction Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/systemhero-dl7z-extraction-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extraction:
+    name: Test Scoop dl.7z extraction
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download official release and test dl.7z extraction
+        id: test
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/mayaa79/SystemHero/releases/latest' -Headers @{ 'User-Agent' = 'kirobucket-systemhero-dl7z-test' }
+          $asset = @($release.assets | Where-Object { $_.name -eq 'SystemHero-Setup-' + $release.tag_name.TrimStart('v') + '.exe' }) | Select-Object -First 1
+          if ($null -eq $asset) { throw "Official release asset was not found for $($release.tag_name)." }
+          $expected = ([string]$asset.digest -replace '^sha256:', '').ToLowerInvariant()
+          if ($expected -notmatch '^[0-9a-f]{64}$') { throw 'The official release does not provide a valid SHA-256 digest.' }
+
+          $root = Join-Path $env:RUNNER_TEMP 'systemhero-dl7z-test'
+          $downloadDir = Join-Path $root 'download'
+          $extractDir = Join-Path $root 'extracted'
+          New-Item -ItemType Directory -Path $downloadDir, $extractDir -Force | Out-Null
+
+          $installer = Join-Path $downloadDir $asset.name
+          $dl7z = Join-Path $downloadDir 'dl.7z'
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SHA-256 mismatch. Expected=$expected Actual=$actual" }
+          Copy-Item -LiteralPath $installer -Destination $dl7z -Force
+
+          $sevenZip = Get-Command '7z.exe' -CommandType Application -ErrorAction Stop | Select-Object -First 1
+          $reportPath = Join-Path $root 'report.txt'
+          $lines = [System.Collections.Generic.List[string]]::new()
+          $lines.Add("SystemHero dl.7z extraction test")
+          $lines.Add("Release: $($release.tag_name)")
+          $lines.Add("Asset: $($asset.name)")
+          $lines.Add("Source: $($asset.browser_download_url)")
+          $lines.Add("Size: $($asset.size) bytes")
+          $lines.Add("SHA-256: $actual")
+          $lines.Add("7-Zip: $($sevenZip.Source)")
+          $lines.Add('')
+
+          Write-Host "Release: $($release.tag_name)"
+          Write-Host "SHA-256 verified: $actual"
+          Write-Host "Testing Scoop-compatible filename: dl.7z"
+
+          $testOutput = @(& $sevenZip.Source t $dl7z 2>&1)
+          $testExit = $LASTEXITCODE
+          $lines.Add("7ZIP_TEST_EXIT=$testExit")
+          $testOutput | ForEach-Object { $lines.Add([string]$_); Write-Host $_ }
+
+          $extractOutput = @(& $sevenZip.Source x $dl7z "-o$extractDir" -y 2>&1)
+          $extractExit = $LASTEXITCODE
+          $lines.Add("")
+          $lines.Add("7ZIP_EXTRACT_EXIT=$extractExit")
+          $extractOutput | ForEach-Object { $lines.Add([string]$_); Write-Host $_ }
+
+          $files = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+          $dirs = @(Get-ChildItem -LiteralPath $extractDir -Directory -Recurse -Force -ErrorAction SilentlyContinue)
+          $exe = @($files | Where-Object { $_.Name -ieq 'SystemHero.exe' })
+          $lines.Add("")
+          $lines.Add("EXTRACTED_FILES=$($files.Count)")
+          $lines.Add("EXTRACTED_DIRECTORIES=$($dirs.Count)")
+          foreach ($file in $files | Sort-Object FullName) {
+            $relative = $file.FullName.Substring($extractDir.Length).TrimStart('\')
+            $lines.Add("FILE: $relative ($($file.Length) bytes)")
+          }
+
+          if ($exe.Count -gt 0) {
+            foreach ($target in $exe) {
+              $lines.Add("SYSTEMHERO_EXE: $($target.FullName)")
+              Write-Host "SYSTEMHERO_EXE: $($target.FullName)"
+            }
+          }
+
+          $lines | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $lines | ForEach-Object { Write-Host $_ }
+
+          @(
+            "## SystemHero dl.7z extraction test"
+            ""
+            "- **Release:** $($release.tag_name)"
+            "- **SHA-256:** verified"
+            "- **7-Zip test exit:** $testExit"
+            "- **7-Zip extraction exit:** $extractExit"
+            "- **Extracted files:** $($files.Count)"
+            "- **SystemHero.exe found:** $($exe.Count -gt 0)"
+            ""
+            "The installer was not executed."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          if ($testExit -ne 0) { throw "7-Zip could not test the installer renamed as dl.7z (exit $testExit)." }
+          if ($extractExit -ne 0 -or $files.Count -eq 0) { throw "7-Zip dl.7z extraction failed (exit $extractExit)." }
+          if ($exe.Count -eq 0) { throw '7-Zip extracted files, but SystemHero.exe was not present.' }
+
+      - name: Upload extraction report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: systemhero-dl7z-extraction-report
+          path: ${{ runner.temp }}/systemhero-dl7z-test/report.txt
+          if-no-files-found: warn
+          retention-days: 7
