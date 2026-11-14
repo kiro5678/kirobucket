@@ -113,7 +113,7 @@ jobs:
           Write-Host "Processed $($results.Count) file(s)."
 
       - name: Upload hash results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sha256-results
           path: ${{ runner.temp }}/sha256-results/
