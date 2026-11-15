@@ -6,7 +6,7 @@ This catalog covers the requested vendor pages and links each included program t
 
 | Developer / Suite | Manifests | Link |
 | --- | ---: | --- |
-| Awesome MyGo Community | 173 | [View](#awesome-mygo-showcase) |
+| Awesome MyGo Community | 174 | [View](#awesome-mygo-showcase) |
 | Aurelitec Suite | 5 | [View](#aurelitec) |
 | Auslogics Suite | 15 | [View](categories.md#auslogics-suite) |
 | ChemTable Suite | 5 | [View](categories.md#chemtable-suite) |
@@ -211,7 +211,7 @@ This section lists the 79 Skwire programs currently represented by manifests in 
 
 ## Awesome MyGo Showcase
 
-[Awesome MyGo](https://awesomemygo.dev/showcase?lang=en) is a community catalog of third-party desktop applications built with the MyGo framework, not a single software publisher. This section lists the 173 MyGo-related Windows manifests currently present in this bucket. Each link opens the corresponding Scoop manifest.
+[Awesome MyGo](https://awesomemygo.dev/showcase?lang=en) is a community catalog of third-party desktop applications built with the MyGo framework, not a single software publisher. This section lists the 174 MyGo-related Windows manifests currently present in this bucket. Each link opens the corresponding Scoop manifest.
 
 | Manifest |
 | --- |
@@ -384,6 +384,7 @@ This section lists the 79 Skwire programs currently represented by manifests in 
 | [yoho-music](../bucket/yoho-music.json) |
 | [yolomcl](../bucket/yolomcl.json) |
 | [yourun](../bucket/yourun.json) |
+| [yt-music-player](../bucket/yt-music-player.json) |
 | [ytbplus](../bucket/ytbplus.json) |
 | [yunji-uml](../bucket/yunji-uml.json) |
 | [zakki](../bucket/zakki.json) |
