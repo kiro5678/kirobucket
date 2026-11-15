@@ -590,9 +590,9 @@ Developer listing of 4 manifests associated with FuumiSoft.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [file-arbor](../bucket/file-arbor.json) | 1.4.0 | — | — | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
-| [purge-uninstaller](../bucket/purge-uninstaller.json) | 1.0.1 | — | — | Windows application uninstaller that identifies and removes leftover files and registry entries. | [Homepage](https://purgeuninstaller.com/) |
-| [sablate](../bucket/sablate.json) | 1.0.2 | — | — | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
+| [file-arbor](../bucket/file-arbor.json) | 1.4.1 | 116.9 MiB | 2026-11-14 | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
+| [purge-uninstaller](../bucket/purge-uninstaller.json) | 1.1.0 | 2.6 MiB | 2026-11-15 | Windows application uninstaller that identifies and removes leftover files and registry entries. | [Homepage](https://purgeuninstaller.com/) |
+| [sablate](../bucket/sablate.json) | 1.1.1 | 225.0 MiB | 2026-11-15 | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
 | [vidray](../bucket/vidray.json) | 1.0.2 | — | — | Local video compressor and converter with bundled FFmpeg. | [Homepage](https://vidray.app/) |
 
 <a id="neuber-suite"></a>
