@@ -1,12 +1,12 @@
 {
-    "version": "1.5",
+    "version": "1.6",
     "description": "Android desktop experience for controlling and mirroring Android devices.",
     "homepage": "https://github.com/Shrey113/Android-Dex",
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Shrey113/Android-Dex/releases/download/Android-Dex-v.1.5/Android_Dex_Windows.zip",
-            "hash": "c4b32f568baf88db4e8881851929383a7435ac4bd449bc925b3ed586ff508d00"
+            "url": "https://github.com/Shrey113/Android-Dex/releases/download/Android-Dex-v.1.6/Android_Dex_Windows.zip",
+            "hash": "1e224fb39738c130c1b97e1d3f8b6562ab3a1c906b158dbbb3a8b6889539c38e"
         }
     },
     "bin": "Android_Dex.exe",
