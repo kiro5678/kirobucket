@@ -295,7 +295,7 @@
 | [ef-multi-file-renamer](../bucket/ef-multi-file-renamer.json) | 26.10 | 64bit: 2.1 MiB | 2026-08-24 | Batch-renames files and directories using reusable rules, filters, and a real-time preview. | [Homepage](https://efsoftware.com/mr/e.htm) |
 | [everything-cmdpal](../bucket/everything-cmdpal.json) | 0.9.26030.0 | 64bit: 13.4 MiB | 2026-07-10 | Everything search extension for PowerToys Command Palette | [Homepage](https://github.com/lin-ycv/EverythingCommandPalette) |
 | [explorer-dialog-path-selector-thiojoe](../bucket/explorer-dialog-path-selector-thiojoe.json) | 1.8.1 | 1.3 MiB | 2026-04-03 | Jump to paths in open Explorer or Directory Opus windows from Open/Save dialogs. | [Homepage](https://github.com/ThioJoe/ThioJoe-AHK-Scripts) |
-| [file-arbor](../bucket/file-arbor.json) | — | — | — | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
+| [file-arbor](../bucket/file-arbor.json) | 1.4.1 | 116.9 MiB | 2026-11-14 | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
 | [filebrowser](../bucket/filebrowser.json) | 2.63.23 | 15.3 MiB | 2026-07-27 | Self-hosted web file manager for managing files in a specified directory. | [Homepage](https://github.com/filebrowser/filebrowser) |
 | [filee](../bucket/filee.json) | 2.1.0 | 150.7 MiB | 2026-10-28 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
 | [filey](../bucket/filey.json) | 0.2.10 | 1.3 MiB | 2026-11-12 | Fast, keyboard-first file manager for Windows with split panels, tabs, previews, archive browsing, and Git integration. | [Homepage](https://github.com/Solessfir/Filey) |
@@ -984,7 +984,7 @@
 | --- | --- | --- | --- | --- | --- |
 | [handy](../bucket/handy.json) | 0.9.8 | 64bit: 18.7 MiB / arm64: 12.8 MiB | 2026-10-03 | Offline speech-to-text desktop app with local Whisper and Parakeet transcription. | [Homepage](https://handy.computer/) |
 | [one-asr](../bucket/one-asr.json) | 1.4.0 | 83.5 MiB | 2026-11-02 | 本地 · 离线 · 批量音视频 → SRT 字幕 | [Homepage](https://github.com/eclipse005/OneAsr) |
-| [sablate](../bucket/sablate.json) | — | — | — | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
+| [sablate](../bucket/sablate.json) | 1.1.1 | 225.0 MiB | 2026-11-15 | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
 | [vovsoft-audio-to-lyrics-converter](../bucket/vovsoft-audio-to-lyrics-converter.json) | 1.5 | 146.0 MiB | 2026-08-29 | Portable edition of Vovsoft Audio to Lyrics Converter. | [Homepage](https://vovsoft.com/software/audio-to-lyrics-converter/) |
 | [vovsoft-speech-to-subtitle-converter](../bucket/vovsoft-speech-to-subtitle-converter.json) | 2.5 | 166.6 MiB | 2026-09-20 | Portable edition of Vovsoft Speech to Subtitle Converter. | [Homepage](https://vovsoft.com/software/speech-to-subtitle-converter/) |
 | [vovsoft-speech-to-text-converter](../bucket/vovsoft-speech-to-text-converter.json) | 6.0 | 255.1 MiB | 2026-10-07 | Portable edition of Vovsoft Speech to Text Converter. | [Homepage](https://vovsoft.com/software/speech-to-text-converter/) |
