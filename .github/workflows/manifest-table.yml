@@ -612,7 +612,7 @@ jobs:
 
           $manifestData = [System.Collections.Generic.List[object]]::new()
           foreach ($file in $manifestFiles) {
-              $relativePath = $file.FullName.Substring($env:GITHUB_WORKSPACE.Length + 1).Replace('\\', '/')
+              $relativePath = $file.FullName.Substring($env:GITHUB_WORKSPACE.Length + 1).Replace('\', '/')
               $addedDate = Get-ManifestAddedDate $relativePath
               $raw = Get-Content -Path $file.FullName -Raw
               $json = $null
