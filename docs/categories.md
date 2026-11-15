@@ -1183,7 +1183,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 | [vovsoft-batch-translator](../bucket/vovsoft-batch-translator.json) | 5.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Translator. | [Homepage](https://vovsoft.com/software/batch-translator/) |
 | [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | 4.3 | 44.3 MiB | 2026-09-09 | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
 | [vovsoft-subtitle-translator](../bucket/vovsoft-subtitle-translator.json) | 3.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
-| [whispra](../bucket/whispra.json) | 2.5.0 | 64bit: 193.8 MiB | 2026-11-10 | Real-time voice, text, and screen translation for Windows. | [Homepage](https://whispra.xyz/) |json) | 3.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Subtitle Translator. | [Homepage](https://vovsoft.com/software/subtitle-translator/) |
+| [whispra](../bucket/whispra.json) | 2.5.0 | 64bit: 193.8 MiB | 2026-11-10 | Real-time voice, text, and screen translation for Windows. | [Homepage](https://whispra.xyz/) |
 
 ## Weather & Information
 
