@@ -9,7 +9,7 @@
 | Clipboard Tools | 19 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 7 | [View](#cross-device-integration) |
-| Developer & Technical Tools | 57 | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
@@ -151,6 +151,7 @@
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [aio-proxy-cli](../bucket/aio-proxy-cli.json) | 0.42.5 | 64bit: 45.6 MiB | 2026-10-12 | Standalone CLI for a local AI gateway with protocol conversion, provider routing, and a web dashboard. | [Homepage](https://aioproxy.dev) |
+| [atlas-terminal](../bucket/atlas-terminal.json) | 0.2.47 | 64bit: 10.9 MiB | 2026-11-14 | GPU-accelerated native terminal for Windows with tabs, split panes, themes, and CLI tools. | [Homepage](https://github.com/akrram0/atlas-terminal) |
 | [axonhub](../bucket/axonhub.json) | 1.0.0-rc.4 | 64bit: 35.6 MiB / arm64: 30.5 MiB | 2026-11-12 | Native desktop control panel for the AxonHub AI gateway. | [Homepage](https://github.com/looplj/axonhub) |
 | [c2flux](../bucket/c2flux.json) | 1.4.1 | 3.8 MiB | 2026-10-29 | c2flux | [Homepage](https://github.com/UncleRiot/c2flux) |
 | [cmtrace](../bucket/cmtrace.json) | 1.6.3 | 64bit: 35.7 MiB / arm64: 29.6 MiB | 2026-10-21 | Free, open-source CMTrace replacement for Windows log files: ConfigMgr/SCCM, Intune IME, and Autopilot ESP diagnostics, DSRegCmd triage, .evtx viewing, real-time log tailing, and Windows error-code lookup. | [Homepage](https://cmtraceopen.com) |
