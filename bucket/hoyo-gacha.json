@@ -1,16 +1,16 @@
 {
-    "version": "0.5.1",
+    "version": "0.6.0",
     "description": "Native desktop app for managing Genshin Impact, Honkai: Star Rail and Zenless Zone Zero gacha records.",
     "homepage": "https://github.com/quantulr/hoyo-gacha",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v0.5.1/hoyo-gacha-0.5.1-windows-amd64.tar.gz",
-            "hash": "0cc4f8afd312b0481c1c0f05a7a418e67558585027c90770e0290f970288522b"
+            "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v0.6.0/hoyo-gacha-0.6.0-windows-amd64.tar.gz",
+            "hash": "f4acfc72689867dd8b17848152bf82e8888b9a86c52ed18d29c85ab24458814b"
         },
         "arm64": {
-            "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v0.5.1/hoyo-gacha-0.5.1-windows-arm64.tar.gz",
-            "hash": "ca860a5f239ce02a7df48ff3691ce1afcc35afd7197b5db8cc7f17e0e3d4f2eb"
+            "url": "https://github.com/quantulr/hoyo-gacha/releases/download/v0.6.0/hoyo-gacha-0.6.0-windows-arm64.tar.gz",
+            "hash": "3f32e7c21599cba2095ac193b19d154994864fe6d7b69fe300fa6c5bb34f797a"
         }
     },
     "bin": "Hoyo Gacha.exe",
