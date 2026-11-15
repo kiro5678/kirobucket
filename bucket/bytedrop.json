@@ -15,7 +15,6 @@
             "ByteDrop"
         ]
     ],
-    "persist": "data",
     "env_set": {
         "BYTEDROP_APPDATA": "$persist_dir\\data"
     },
