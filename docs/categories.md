@@ -1,4 +1,3 @@
-| [yt-music-player](../bucket/yt-music-player.json) | 0.3.0 | 64bit: 11.0 MiB / arm64: 9.2 MiB | 2026-10-23 | Lightweight YouTube Music desktop player with background playback. | [Homepage](https://github.com/xlanstar/yt-music-player) |
 ## Category Index
 
 | Category | Manifests | Link |
