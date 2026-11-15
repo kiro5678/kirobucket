@@ -73,7 +73,7 @@ jobs:
           $failures = @()
           $notExercised = @()
           $testedCount = 0
-          $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
+          $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON|Could not update .+hash for .+ failed)"
 
           foreach ($candidate in $manifestPaths) {
             $relativePath = ([string]$candidate).Trim().Replace('\', '/')
@@ -179,6 +179,14 @@ jobs:
               $outputText = $output -join [Environment]::NewLine
               if ($outputText -match $failurePattern) {
                 throw "Scoop reported a version/update error: $($Matches[0])"
+              }
+
+              # Scoop logs a missing GitHub release digest before downloading the asset and computing SHA-256.
+              # Allow this lookup miss only when the fallback actually computed a SHA-256.
+              $hashFallbacks = [regex]::Matches($outputText, '(?im)Could not find hash in\s+\S+')
+              $computedHashes = [regex]::Matches($outputText, '(?im)Computed hash:\s*[a-f0-9]{64}')
+              if ($hashFallbacks.Count -gt $computedHashes.Count) {
+                throw "Scoop could not find a published hash and did not complete the SHA-256 fallback for $manifestName."
               }
 
               if ($forceUpdate -or $outputText -match '(?i)autoupdate available') {
