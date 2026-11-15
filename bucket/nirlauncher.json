@@ -1,6 +1,6 @@
 {
     "version": "1.30.27",
-    "description": "Official portable NirSoft utility bundle with individual Start Menu shortcuts for its GUI applications.",
+    "description": "Official portable NirSoft utility bundle with individual Start Menu shortcuts for its 253 GUI applications.",
     "homepage": "https://launcher.nirsoft.net/",
     "license": "Freeware",
     "url": "https://download.nirsoft.net/nirsoft_package_enc_1.30.27.zip#/nirsoft_package_enc_1.30.27.zip_",
@@ -1031,5 +1031,10 @@
             "find": "SHA256 Hash:[\\s\\S]{0,160}?([a-fA-F\\d]{64})"
         }
     },
-    "notes": "The official package includes the NirLauncher executable, but no NirLauncher shortcut or Scoop command shim is created. Start Menu shortcuts are created for the 253 audited GUI utilities only; 11 console-only utilities are intentionally excluded. The x64 executable is selected when the package provides one. NK2Edit requires a commercial license for business use."
+    "notes": "The upstream NirLauncher executable, configuration, and autorun file are removed after extraction. No NirLauncher shortcut or Scoop command shim is created. Individual Start Menu shortcuts are created for the 253 audited GUI utilities; the 11 console-only utilities are excluded. The x64 executable is selected when available. NK2Edit requires a commercial license for business use.",
+    "post_install": [
+        "Remove-Item -LiteralPath \"$dir\\NirLauncher.exe\" -Force -ErrorAction SilentlyContinue",
+        "Remove-Item -LiteralPath \"$dir\\NirLauncher.cfg\" -Force -ErrorAction SilentlyContinue",
+        "Remove-Item -LiteralPath \"$dir\\autorun.inf\" -Force -ErrorAction SilentlyContinue"
+    ]
 }
