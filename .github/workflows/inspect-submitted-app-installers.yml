@@ -39,7 +39,7 @@ jobs:
               Name = 'Purge Uninstaller'
               File = 'Purge.Uninstaller_1.1.0_x64-setup.exe'
               Url = 'https://purgeuninstaller.com/download/windows/1.1.0/Purge.Uninstaller_1.1.0_x64-setup.exe'
-              Sha256 = ''
+              Sha256 = '91706a681eaab1615d42243e4282c733cd1b8af5581207232effc8d1adad167a'
               InspectPayload = $false
             },
             @{
