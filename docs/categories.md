@@ -15,8 +15,8 @@
 | File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
-| Games & Game Utilities | 19 | [View](#games-game-utilities) |
-| Images & Photos | 58 | [View](#images-photos) |
+| Games & Game Utilities | 20 | [View](#games-game-utilities) |
+| Images & Photos | 60 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 55 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
@@ -40,7 +40,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1124**
+**Total unique categorized manifests: 1127**
 
 
 ## Android & Device Tools
@@ -407,6 +407,7 @@
 | [endfield-logs](../bucket/endfield-logs.json) | 1.2.1 | 226.2 MiB | 2026-04-22 | "Arknights: Endfield" combat analysis tool based on NpCup packet capture analysis | [Homepage](https://github.com/deepdarkssj/ZMDLogs) |
 | [softwareok-freecell-ok](../bucket/softwareok-freecell-ok.json) | 1.07 | 64bit: 616.8 KiB | 2026-10-16 | Play FreeCell solitaire. | [Homepage](https://www.softwareok.com/?Download=FreeCellOK) |
 | [game-cheats-manager](../bucket/game-cheats-manager.json) | 2.5.4 | 51.3 MiB | 2026-10-11 | Game cheats manager for Windows. | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) |
+| [full-screen-dlss5-wrapper-thiojoe](../bucket/full-screen-dlss5-wrapper-thiojoe.json) | 1.1.0 | 1.2 MiB | 2026-09-12 | Full-screen DLSS 5 graphics wrapper for the Windows desktop or a selected window. | [Homepage](https://github.com/ThioJoe/Full-Screen-DLSS5-Wrapper) |
 | [softwareok-matrix-coronako](../bucket/softwareok-matrix-coronako.json) | 2.41 | 64bit: 1.0 MiB | 2026-05-13 | Small 3D game from SoftwareOK. | [Homepage](https://www.softwareok.com/?seite=Microsoft/MatriX.CoronaKO) |
 | [softwareok-minesweeper-ok](../bucket/softwareok-minesweeper-ok.json) | 1.21 | 64bit: 243.0 KiB | 2026-10-18 | Play Minesweeper on Windows. | [Homepage](https://www.softwareok.com/?Download=MineSweeperOK) |
 | [nightlight-launcher](../bucket/nightlight-launcher.json) | 5.3.0 | 64bit: 110.7 MiB | 2026-10-21 | Electron game launcher for managing a Steam library and launching games. | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) |
@@ -425,6 +426,7 @@
 | [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | 2.0.0 | 11.9 MiB | 2026-09-21 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
 | [basic-stability-api-gui-thiojoe](../bucket/basic-stability-api-gui-thiojoe.json) | 1.0.0 | 360.4 KiB | 2024-04-20 | GUI client for generating and upscaling images through the Stability AI API. | [Homepage](https://github.com/ThioJoe/BasicStabilityAPI-GUI) |
 | [jpeg2png-thiojoe](../bucket/jpeg2png-thiojoe.json) | 1.02 | 64bit: 1.4 MiB / 32bit: 1.3 MiB | 2024-10-30 | Command-line utility for smoother JPEG decoding and restoration. | [Homepage](https://github.com/ThioJoe/jpeg2png) |
+| [libwebp-tools-gui-thiojoe](../bucket/libwebp-tools-gui-thiojoe.json) | 1.0.0 | 55.8 KiB | 2024-04-23 | GUI wrappers for the cWebP and dWebP tools to encode and decode WebP images. | [Homepage](https://github.com/ThioJoe/LibWebpToolsGUI) |
 | [softwareok-film-strip-explorer](../bucket/softwareok-film-strip-explorer.json) | 1.05 | 64bit: 1.1 MiB | 2026-05-10 | Browse images in a film-strip explorer. | [Homepage](https://www.softwareok.com/?Download=Film.Strip.Explorer) |
 | [softwareok-find-same-images-ok](../bucket/softwareok-find-same-images-ok.json) | 6.16 | 64bit: 1.2 MiB | 2026-10-21 | Find duplicate or similar images. | [Homepage](https://www.softwareok.com/?Download=Find.Same.Images.OK) |
 | [flyphotos](../bucket/flyphotos.json) | 2.7.4 | 64bit: 45.0 MiB / arm64: 41.3 MiB | 2026-10-13 | Fast and modern photo viewer for Windows. | [Homepage](https://github.com/riyasy/FlyPhotos) |
@@ -449,6 +451,7 @@
 | [photomanager-nightly](../bucket/photomanager-nightly.json) | 2026.09.11 | 62.0 MiB | 2026-09-11 | Cross-platform photo manager and lightweight digital asset manager (nightly channel). | [Homepage](https://github.com/Hawkynt/PhotoManager) |
 | [pictkura](../bucket/pictkura.json) | 1.0.1 | 64bit: 10.8 MiB | 2026-10-23 | Photo manager for importing from camera cards and browsing RAW, HEIC, AVIF, video and other image files. | [Homepage](https://harusame64.github.io/pictkura/) |
 | [screenit](../bucket/screenit.json) | 0.2.2 | 6.5 MiB | 2026-11-02 | Native Windows screenshot, screen recording, annotation, and OCR tool. | [Homepage](https://github.com/Busbar2297/screenit) |
+| [svg-thumbnail-extension-thiojoe](../bucket/svg-thumbnail-extension-thiojoe.json) | 1.11.1 | 484.0 KiB | 2026-07-28 | Native Windows Explorer thumbnail provider for SVG and SVGZ files; MSI installation. | [Homepage](https://github.com/ThioJoe/win-svg-thumbs-rust) |
 | [selfphotos](../bucket/selfphotos.json) | 0.9.0 | 346.1 MiB | 2026-10-24 | Cross-platform photo and video management desktop app with local-first privacy. | [Homepage](https://selfphotos.com/) |
 | [tagstudio](../bucket/tagstudio.json) | 9.6.4 | 152.6 MiB | 2026-10-02 | A user-focused photo and file management system. | [Homepage](https://github.com/TagStudioDev/TagStudio) |
 | [tagstudio-x86_64](../bucket/tagstudio-x86_64.json) | 9.6.4 | 158.0 MiB | 2026-10-02 | A user-focused photo and file management system. | [Homepage](https://github.com/TagStudioDev/TagStudio) |
