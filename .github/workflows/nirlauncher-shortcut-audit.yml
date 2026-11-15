@@ -220,6 +220,46 @@ jobs:
           $rows | Export-Csv -LiteralPath $report -NoTypeInformation -Encoding UTF8
 
           $eligible = @($rows | Where-Object { $_.Decision -eq 'SHORTCUT CANDIDATE' })
+          $manifestShortcuts = @($manifest.shortcuts)
+          $expectedNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+          foreach ($row in $eligible) { [void]$expectedNames.Add([string]$row.Utility) }
+          $declaredNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+          $shortcutFailures = [System.Collections.Generic.List[string]]::new()
+          foreach ($shortcut in $manifestShortcuts) {
+            if ($shortcut -isnot [System.Array] -or $shortcut.Count -lt 2) {
+              $shortcutFailures.Add('Malformed shortcut declaration.')
+              continue
+            }
+            $targetPath = ([string]$shortcut[0]).Replace('/', '\')
+            $shortcutName = [string]$shortcut[1]
+            if (-not $targetPath.StartsWith('NirSoft\', [System.StringComparison]::OrdinalIgnoreCase)) {
+              $shortcutFailures.Add("Shortcut target is outside NirSoft: $targetPath")
+              continue
+            }
+            if (-not $shortcutName.StartsWith('NirSoft\', [System.StringComparison]::OrdinalIgnoreCase)) {
+              $shortcutFailures.Add("Shortcut name is outside the NirSoft Start Menu folder: $shortcutName")
+              continue
+            }
+            $utilityName = $shortcutName.Substring('NirSoft\'.Length)
+            if (-not $declaredNames.Add($utilityName)) {
+              $shortcutFailures.Add("Duplicate Start Menu shortcut: $utilityName")
+            }
+            $resolvedTarget = Join-Path $extractRoot $targetPath
+            if (-not (Test-Path -LiteralPath $resolvedTarget -PathType Leaf)) {
+              $shortcutFailures.Add("Shortcut target does not exist in the official archive: $targetPath")
+            }
+          }
+          $missingNames = @($expectedNames | Where-Object { -not $declaredNames.Contains($_) })
+          $unexpectedNames = @($declaredNames | Where-Object { -not $expectedNames.Contains($_) })
+          if ($manifestShortcuts.Count -ne $eligible.Count) {
+            $shortcutFailures.Add("Manifest declares $($manifestShortcuts.Count) shortcuts, but the audit found $($eligible.Count) GUI utilities.")
+          }
+          if ($missingNames.Count -gt 0) { $shortcutFailures.Add("Missing utility shortcuts: $($missingNames -join ', ')") }
+          if ($unexpectedNames.Count -gt 0) { $shortcutFailures.Add("Unexpected utility shortcuts: $($unexpectedNames -join ', ')") }
+          Write-Host "Manifest shortcuts: $($manifestShortcuts.Count)"
+          Write-Host "Shortcut validation failures: $($shortcutFailures.Count)"
+          foreach ($failure in $shortcutFailures) { Write-Host "SHORTCUT CHECK FAILED | $failure" }
+          if ($shortcutFailures.Count -gt 0) { throw ($shortcutFailures -join [Environment]::NewLine) }
           $console = @($rows | Where-Object { $_.Decision -like 'EXCLUDE - console*' })
           $missing = @($rows | Where-Object { $_.Decision -like 'EXCLUDE - executable*' })
           $review = @($rows | Where-Object { $_.Decision -like 'REVIEW -*' })
