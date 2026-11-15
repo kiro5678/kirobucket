@@ -45,27 +45,6 @@
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
-## Developer Index
-
-| Developer / Suite | Manifests | Link |
-| --- | ---: | --- |
-| Aurelitec Suite | 5 | [View](#aurelitec-suite) |
-| Auslogics Suite | 15 | [View](#auslogics-suite) |
-| ChemTable Suite | 5 | [View](#chemtable-suite) |
-| ComputerSluggish Suite | 1 | [View](#computersluggish-suite) |
-| EFSoftware Suite | 13 | [View](#efsoftware-suite) |
-| Eric Zimmerman Suite | 31 | [View](#eric-zimmerman-suite) |
-| Funk.eu Suite | 7 | [View](#funk-eu-suite) |
-| GRC Suite | 18 | [View](#grc-suite) |
-| MiTeC Suite | 22 | [View](#mitec-suite) |
-| Neuber Suite | 2 | [View](#neuber-suite) |
-| Rizonesoft Suite | 14 | [View](#rizonesoft-suite) |
-| SoftwareOK Suite | 81 | [View](#softwareok-suite) |
-| Sordum Suite | 59 | [View](#sordum-suite) |
-| ThioJoe Suite | 13 | [View](#thiojoe-suite) |
-| Türkaysoft Suite | 8 | [View](#turkaysoft-suite) |
-| Vovsoft Suite | 174 | [View](#vovsoft-suite) |
-
 ## Android & Device Tools
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
