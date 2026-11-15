@@ -195,8 +195,20 @@ jobs:
             }
           }
 
-          $rows = @($rows | Sort-Object Utility, SelectedPath -Unique)
-          if ($rows.Count -eq 0) { throw 'nirsoft.nlp contained no executable references in exe fields.' }
+          $rawRows = @($rows)
+          if ($rawRows.Count -eq 0) { throw 'nirsoft.nlp contained no executable references in exe fields.' }
+
+          # Merge x86 and x64 entries so each utility gets exactly one shortcut.
+          $rows = @($rawRows | Group-Object Utility | ForEach-Object {
+            $gui = @($_.Group | Where-Object { $_.Decision -eq 'SHORTCUT CANDIDATE' })
+            if ($gui.Count -gt 0) {
+              $x64 = @($gui | Where-Object { $_.Architecture -eq 'x64' })
+              if ($x64.Count -gt 0) { $x64[0] } else { $gui[0] }
+            } else {
+              $_.Group | Select-Object -First 1
+            }
+          } | Sort-Object Utility)
+
           $report = Join-Path $env:RUNNER_TEMP 'nirsoft-shortcut-audit.csv'
           $rows | Export-Csv -LiteralPath $report -NoTypeInformation -Encoding UTF8
 
@@ -235,7 +247,7 @@ jobs:
         with:
           name: nirsoft-shortcut-audit
           path: |
-            \${{ runner.temp }}/nirsoft-shortcut-audit.csv
-            \${{ runner.temp }}/nirsoft.nlp
+            ${{ runner.temp }}/nirsoft-shortcut-audit.csv
+            ${{ runner.temp }}/nirsoft.nlp
           if-no-files-found: ignore
           retention-days: 14
