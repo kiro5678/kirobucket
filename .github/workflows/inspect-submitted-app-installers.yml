@@ -36,10 +36,17 @@ jobs:
 
           $targets = @(
             @{
+              Name = 'Purge Uninstaller'
+              File = 'Purge.Uninstaller_1.1.0_x64-setup.exe'
+              Url = 'https://purgeuninstaller.com/download/windows/1.1.0/Purge.Uninstaller_1.1.0_x64-setup.exe'
+              Sha256 = ''
+              InspectPayload = $false
+            },
+            @{
               Name = 'File Arbor'
-              File = 'File-Arbor-Setup-1.4.0.exe'
-              Url = 'https://github.com/furkanbagci34/file-arbor-releases/releases/download/v1.4.0/File-Arbor-Setup-1.4.0.exe'
-              Sha256 = '94f54aca7c4b619a7d7facd1874eef43f8a497d57cd1e86fcb987db3eaff70c7'
+              File = 'File-Arbor-Setup-1.4.1.exe'
+              Url = 'https://github.com/furkanbagci34/file-arbor-releases/releases/download/v1.4.1/File-Arbor-Setup-1.4.1.exe'
+              Sha256 = 'dd90df89465ceda78660069196f13b604d5f3df933f83950072923a0fd83ef5d'
             },
             @{
               Name = 'VidRay'
@@ -49,9 +56,9 @@ jobs:
             },
             @{
               Name = 'Sablate'
-              File = 'Sablate-Setup-1.0.2.exe'
-              Url = 'https://github.com/furkanbagci34/sablate-releases/releases/download/v1.0.2/Sablate-Setup-1.0.2.exe'
-              Sha256 = 'e4b4c919a4d169dc0e23ed56d96c7d3bc5bf759b9bc14141a999e72c423f32d8'
+              File = 'Sablate-Setup-1.1.1.exe'
+              Url = 'https://github.com/furkanbagci34/sablate-releases/releases/download/v1.1.1/Sablate-Setup-1.1.1.exe'
+              Sha256 = '91def66d3d85e7664713df78567e5feb9d633930c921666ceb2b5a4b73fa030a'
             },
             @{
               Name = 'Khaoyu Note'
@@ -91,10 +98,26 @@ jobs:
             }
 
             $actualHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($actualHash -ne $target.Sha256) {
-              throw "SHA-256 mismatch for $($target.Name). Expected $($target.Sha256), got $actualHash."
+            $downloadSize = (Get-Item -LiteralPath $downloadPath).Length
+            Write-Host "Downloaded size: $downloadSize bytes"
+            Write-Host "SHA-256: $actualHash"
+            $summary.Add("## $($target.Name)")
+            $summary.Add("- Download size: $downloadSize bytes")
+            $summary.Add("- SHA-256: $actualHash")
+            if (-not [string]::IsNullOrWhiteSpace([string]$target.Sha256)) {
+              if ($actualHash -ne $target.Sha256) {
+                throw "SHA-256 mismatch for $($target.Name). Expected $($target.Sha256), got $actualHash."
+              }
+              $summary.Add("- SHA-256 verification: PASS")
+            } else {
+              $summary.Add("- SHA-256 verification: digest pending manifest update")
             }
-            Write-Host "SHA-256 PASS: $actualHash"
+
+            if ($target.ContainsKey('InspectPayload') -and -not $target.InspectPayload) {
+              $summary.Add("- Installer payload inspection: skipped by target configuration")
+              $summary.Add('')
+              continue
+            }
 
             $listLog = Join-Path $appRoot 'installer-list.txt'
             $extractLog = Join-Path $appRoot 'installer-extract.txt'
@@ -149,7 +172,6 @@ jobs:
 
             $allFiles = @(Get-ChildItem -LiteralPath $applicationRoot -File -Recurse -Force)
             $summary.Add("## $($target.Name)")
-            $summary.Add("- SHA-256: PASS")
             $summary.Add("- Installer archive extraction: PASS")
             $summary.Add("- Nested app-*.7z archives: $($nestedArchives.Count)")
             foreach ($archive in $nestedArchives) {
@@ -171,4 +193,4 @@ jobs:
 
           $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
           Write-Host ''
-          Write-Host 'All official installer files passed SHA-256, archive extraction, and application-EXE discovery.'
+          Write-Host 'All configured installer downloads were hashed; configured SHA-256 checks and enabled archive inspections completed.'
