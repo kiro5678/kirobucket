@@ -1099,8 +1099,8 @@ The repository CI remains responsible for validating manifest syntax and schema 
 
 ## CI failure: duplicate carriage return in bucket manifest endings (2026-11-15)
 
-- **Status:** The affected files have been normalized; full CI verification is recorded in the follow-up run.
+- **Status:** Resolved and verified.
 - **Affected area:** 303 `bucket/*.json` manifests listed by [CI run 43752189892](https://github.com/kiro5678/kirobucket/actions/runs/43752189892).
 - **Problem:** The affected files ended with `CRCRLF` instead of a single `CRLF`. Scoop's `file newlines are CRLF` test splits on `CRLF` and detects the remaining carriage return.
 - **Resolution:** Normalized all line separators in the 303 manifests to `CRLF` and ensured exactly one final `CRLF`, without changing JSON values or manifest settings.
-- **Verification:** Re-fetched representative manifests from the beginning, middle, and end of the affected list; each had zero lone `CR`/`LF` characters and one final `CRLF`. The repository-wide Pester rerun is triggered by the accompanying documentation commit.
+- **Verification:** Re-fetched representative manifests from the beginning, middle, and end of the affected list; each had zero lone `CR`/`LF` characters and one final `CRLF`. The repository-wide [CI run 43756958743](https://github.com/kiro5678/kirobucket/actions/runs/43756958743) passed both Pester jobs: 6 tests passed and 0 failed in PowerShell 7, and 6 passed and 0 failed in Windows PowerShell. The `file newlines are CRLF` test passed in both jobs.
