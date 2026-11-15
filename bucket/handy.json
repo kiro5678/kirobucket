@@ -1,5 +1,5 @@
 {
-    "version": "0.10.0",
+    "version": "0.10.1",
     "description": "Offline speech-to-text desktop app with local Whisper and Parakeet transcription.",
     "homepage": "https://handy.computer/",
     "license": {
@@ -8,12 +8,12 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/cjpais/Handy/releases/download/v0.10.0/Handy_0.10.0_x64-setup.exe",
-            "hash": "d4c02386d6b4b2a8ef8e53a7ce5c6c417d554005e91b3529def3920e0e786d03"
+            "url": "https://github.com/cjpais/Handy/releases/download/v0.10.1/Handy_0.10.1_x64-setup.exe",
+            "hash": "3d0c05cfe2717370e64ca71e6cb36dd575d8b0f28424f48e00efe18565a04edf"
         },
         "arm64": {
-            "url": "https://github.com/cjpais/Handy/releases/download/v0.10.0/Handy_0.10.0_arm64-setup.exe",
-            "hash": "2cec8defbe193d9cf837ac7e2f55880d685c486b0f15d2da11fa71f36de4c3d1"
+            "url": "https://github.com/cjpais/Handy/releases/download/v0.10.1/Handy_0.10.1_arm64-setup.exe",
+            "hash": "b001d3c58d61e09529bc9e18a1df5eb64bd42681d69b034db3a354edecc33650"
         }
     },
     "installer": {
