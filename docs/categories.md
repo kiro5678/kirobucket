@@ -31,7 +31,7 @@
 | Security | 41 | [View](#security) |
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
-| Sync & Backup | 11 | [View](#sync-backup) |
+| Sync & Backup | 12 | [View](#sync-backup) |
 | System Monitoring & Hardware | 76 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
@@ -41,7 +41,7 @@
 | Windows Customization | 97 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1095**
+**Total unique manifests: 1096**
 
 Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
@@ -1049,6 +1049,7 @@ Functional categories assign each manifest once. Developer/publisher suites belo
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [qurbspace](../bucket/qurbspace.json) | 0.2.0-beta.11 | 9.7 MiB | 2026-11-15 | End-to-end encrypted file sharing, synchronization, and phone-to-computer backups. | [Homepage](https://github.com/saqibsiddiq/QurbSpace) |
 | [Auslogics-bitreplica](../bucket/Auslogics-bitreplica.json) | 2.6.0.3 | 13.7 MiB | 2026-05-19 | File backup and synchronization utility | [Homepage](https://www.bitreplica.com/download/) |
 | [backup-start-menu-layout](../bucket/backup-start-menu-layout.json) | 1.6 | 987.9 KiB | 2024-07-27 | A simple app that allows users to backup and restore their StartMenu layout. | [Homepage](https://www.sordum.org/backup-start-menu-layout) |
 | [ef-autosync](../bucket/ef-autosync.json) | 26.10 | 64bit: 467.8 KiB | 2026-08-24 | Portable utility for synchronizing files and folders between PCs, USB flash drives, external drives, and other storage. | [Homepage](https://efsoftware.com/as/e.htm) |
