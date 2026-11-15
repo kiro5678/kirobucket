@@ -1,6 +1,6 @@
 {
     "version": "2026.11.05",
-    "description": "One Scoop package containing the Sysinternals Suite, Ctrl2Cap, and RootkitRevealer in a single application directory.",
+    "description": "One Scoop package containing the Sysinternals Suite, Ctrl2Cap, RootkitRevealer, and the standalone 64-bit/ARM64 PortMon builds in a single application directory.",
     "homepage": "https://learn.microsoft.com/sysinternals/downloads/",
     "license": {
         "identifier": "Freeware",
@@ -11,12 +11,14 @@
             "url": [
                 "https://download.sysinternals.com/files/SysinternalsSuite.zip",
                 "https://download.sysinternals.com/files/Ctrl2Cap.zip",
-                "https://download.sysinternals.com/files/RootkitRevealer.zip"
+                "https://download.sysinternals.com/files/RootkitRevealer.zip",
+                "https://download.sysinternals.com/files/PortMon.zip"
             ],
             "hash": [
                 "e7f49d1f4477e416b3051636dc44929b20ae025b46a1ee4cd8c1f1e869af6ae6",
                 "4e28152f1ff55f8fdebff3bf7b4d8352bdd7607544f4e86a60f067c0d130a56f",
-                "e43c338065e4f0b44d73cdda38b9d3ba1bcca2504960fa921cdf071da9a046f1"
+                "e43c338065e4f0b44d73cdda38b9d3ba1bcca2504960fa921cdf071da9a046f1",
+                "ba9795f89315b84c21345b1a05b305ed2880de1fb04c58c7cfc9ebe24eedcdbb"
             ],
             "bin": [
                 [
@@ -309,6 +311,10 @@
                 [
                     "RootkitRevealer.exe",
                     "RootkitRevealer"
+                ],
+                [
+                    "portmon64.exe",
+                    "portmon"
                 ]
             ],
             "shortcuts": [
@@ -679,8 +685,14 @@
             ]
         },
         "arm64": {
-            "url": "https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip",
-            "hash": "f2ec09acc20e6e698b7bffea3abb41ce5c034a3090308a9de3d4415b146c9e1b",
+            "url": [
+                "https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip",
+                "https://download.sysinternals.com/files/PortMon.zip"
+            ],
+            "hash": [
+                "f2ec09acc20e6e698b7bffea3abb41ce5c034a3090308a9de3d4415b146c9e1b",
+                "ba9795f89315b84c21345b1a05b305ed2880de1fb04c58c7cfc9ebe24eedcdbb"
+            ],
             "bin": [
                 [
                     "accesschk64a.exe",
@@ -905,6 +917,10 @@
                 [
                     "ZoomIt64a.exe",
                     "ZoomIt"
+                ],
+                [
+                    "portmon64a.exe",
+                    "portmon"
                 ]
             ],
             "shortcuts": [
@@ -1001,7 +1017,8 @@
                 "url": [
                     "https://download.sysinternals.com/files/SysinternalsSuite.zip",
                     "https://download.sysinternals.com/files/Ctrl2Cap.zip",
-                    "https://download.sysinternals.com/files/RootkitRevealer.zip"
+                    "https://download.sysinternals.com/files/RootkitRevealer.zip",
+                    "https://download.sysinternals.com/files/PortMon.zip"
                 ]
             },
             "32bit": {
@@ -1012,13 +1029,16 @@
                 ]
             },
             "arm64": {
-                "url": "https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip"
+                "url": [
+                    "https://download.sysinternals.com/files/SysinternalsSuite-ARM64.zip",
+                    "https://download.sysinternals.com/files/PortMon.zip"
+                ]
             }
         }
     },
     "notes": [
-        "This single Scoop app extracts the official Sysinternals Suite plus the standalone Ctrl2Cap and RootkitRevealer archives into the same application directory.",
+        "This single Scoop app extracts the official Sysinternals Suite plus the standalone Ctrl2Cap, RootkitRevealer, and PortMon archives into the same application directory.",
         "Ctrl2Cap is a kernel-mode keyboard filter driver. The manifest only extracts its files; it does not install or activate the driver. Run Ctrl2Cap manually only when you intend to install it.",
-        "The ARM64 build contains the official ARM64 Sysinternals Suite. Ctrl2Cap and RootkitRevealer are not included in the ARM64 build."
+        "The ARM64 build contains the official ARM64 Sysinternals Suite and the standalone PortMon ARM64 executable. Ctrl2Cap and RootkitRevealer are not included in the ARM64 build."
     ]
 }
