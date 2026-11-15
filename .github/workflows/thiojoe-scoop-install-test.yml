@@ -1,0 +1,123 @@
+name: Temporary ThioJoe Scoop Install Test
+
+on:
+  push:
+    branches:
+      - add-thiojoe-remaining-apps
+
+permissions:
+  contents: read
+
+jobs:
+  install-test:
+    runs-on: windows-latest
+    env:
+      SCOOP: ${{ github.workspace }}\\scoop-test
+    steps:
+      - name: Install Scoop in an isolated runner directory
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = "$env:SCOOP\shims;$env:PATH"
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value "$env:SCOOP\shims"
+          if (-not (Test-Path (Join-Path $env:SCOOP 'shims\scoop.ps1'))) {
+            throw 'Scoop bootstrap did not create scoop.ps1.'
+          }
+          scoop --version
+
+      - name: Add the PR branch as a local test bucket
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $bucketPath = Join-Path $env:SCOOP 'buckets\kirotest'
+          New-Item -ItemType Directory -Path (Split-Path $bucketPath -Parent) -Force | Out-Null
+          git clone --depth 1 --branch add-thiojoe-remaining-apps https://github.com/kiro5678/kirobucket.git $bucketPath
+          if (-not (Test-Path (Join-Path $bucketPath 'bucket\libwebp-tools-gui-thiojoe.json'))) {
+            throw 'The new GUI manifest was not found in the cloned bucket.'
+          }
+          scoop bucket list
+
+      - name: Install and verify LibWebpToolsGUI and its dependency
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop install libwebp-tools-gui-thiojoe
+          $guiDir = (scoop prefix libwebp-tools-gui-thiojoe | Select-Object -Last 1).Trim()
+          $libwebpDir = (scoop prefix libwebp | Select-Object -Last 1).Trim()
+          Write-Host "GUI directory: $guiDir"
+          Write-Host "libwebp directory: $libwebpDir"
+
+          foreach ($file in @('cWebpGUI.exe','dWebpGUI.exe','cwebp.exe','dwebp.exe')) {
+            $path = Join-Path $guiDir $file
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Expected file missing from GUI directory: $path"
+            }
+            Write-Host "Verified: $path"
+          }
+
+          $dlls = @(Get-ChildItem -LiteralPath $guiDir -Filter '*.dll' -File)
+          if ($dlls.Count -lt 1) { throw 'No libwebp DLL was copied beside the GUI executables.' }
+          $dlls | ForEach-Object { Write-Host "Verified DLL: $($_.Name)" }
+
+          & (Join-Path $guiDir 'cwebp.exe') -version
+          if ($LASTEXITCODE -ne 0) { throw "cwebp.exe returned exit code $LASTEXITCODE." }
+          & (Join-Path $guiDir 'dwebp.exe') -version
+          if ($LASTEXITCODE -ne 0) { throw "dwebp.exe returned exit code $LASTEXITCODE." }
+
+      - name: Install and verify Full-Screen DLSS5 Wrapper
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop install full-screen-dlss5-wrapper-thiojoe
+          $appDir = (scoop prefix full-screen-dlss5-wrapper-thiojoe | Select-Object -Last 1).Trim()
+          $app = Join-Path $appDir 'FullScreenWrapperForDLSS5.exe'
+          if (-not (Test-Path -LiteralPath $app -PathType Leaf)) {
+            throw "DLSS wrapper executable not found: $app"
+          }
+          $signature = Get-AuthenticodeSignature -FilePath $app
+          if ($signature.Status -ne 'Valid') {
+            throw "DLSS wrapper signature status is $($signature.Status), expected Valid."
+          }
+          Write-Host "Verified standalone executable and Authenticode signature: $app"
+
+      - name: Install and verify SVG Thumbnail Extension through Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop install svg-thumbnail-extension-thiojoe
+          $appDir = (scoop prefix svg-thumbnail-extension-thiojoe | Select-Object -Last 1).Trim()
+          $msi = Join-Path $appDir 'setup.msi_'
+          if (-not (Test-Path -LiteralPath $msi -PathType Leaf)) {
+            throw "Scoop did not retain the MSI payload: $msi"
+          }
+          $signature = Get-AuthenticodeSignature -FilePath $msi
+          if ($signature.Status -ne 'Valid') {
+            throw "SVG Thumbnail Extension MSI signature status is $($signature.Status)."
+          }
+
+          $uninstallRoots = @(
+            'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*',
+            'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*',
+            'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'
+          )
+          $entry = Get-ItemProperty -Path $uninstallRoots -ErrorAction SilentlyContinue |
+            Where-Object { $_.DisplayName -eq "Thio's SVG Thumbnail Extension" } |
+            Select-Object -First 1
+          if (-not $entry) { throw 'Scoop MSI install did not create the expected uninstall registration.' }
+          Write-Host "SVG_SCOOP_INSTALL|$($entry.DisplayName)|$($entry.PSChildName)"
+
+          scoop uninstall svg-thumbnail-extension-thiojoe
+          $remaining = Get-ItemProperty -Path $uninstallRoots -ErrorAction SilentlyContinue |
+            Where-Object { $_.DisplayName -eq "Thio's SVG Thumbnail Extension" }
+          if ($remaining) { throw 'SVG Thumbnail Extension uninstall registration remains after Scoop uninstall.' }
+          Write-Host 'SVG_SCOOP_UNINSTALL|PASS'
+
+      - name: Uninstall test apps
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          scoop uninstall full-screen-dlss5-wrapper-thiojoe
+          scoop uninstall libwebp-tools-gui-thiojoe
