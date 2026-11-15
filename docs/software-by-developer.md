@@ -18,7 +18,7 @@ This catalog covers the requested vendor pages and links each included program t
 | GRC Suite | 18 | [View](#grc-suite) |
 | MiTeC Suite | 22 | [View](#mitec-suite) |
 | Neuber Suite | 2 | [View](#neuber-suite) |
-| Rizonesoft Suite | 15 | [View](#rizonesoft-suite) |
+| Rizonesoft Suite | 14 | [View](#rizonesoft-suite) |
 | Sordum Suite | 59 | [View](#sordum-suite) |
 | Skwire | 79 | [View](#skwire) |
 | SoftwareOK Suite | 81 | [View](#softwareok-suite) |
