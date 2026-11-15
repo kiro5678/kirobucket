@@ -1,0 +1,28 @@
+{
+    "version": "1.30.27",
+    "description": "Official portable NirLauncher bundle containing 200+ NirSoft utilities, extracted together into one Scoop application directory.",
+    "homepage": "https://launcher.nirsoft.net/",
+    "license": "Freeware",
+    "url": "https://download.nirsoft.net/nirsoft_package_enc_1.30.27.zip#/nirsoft_package_enc_1.30.27.zip_",
+    "hash": "cd1c69778f3503b799c3ac68ab5f88f6aa38bf52944c4e5401a435b4b4e8ad06",
+    "pre_install": "Expand-7zipArchive \"$dir\\nirsoft_package_enc_$version.zip_\" \"$dir\" -Switches '-pnirsoft9876$' -Removal",
+    "bin": "NirLauncher.exe",
+    "shortcuts": [
+        [
+            "NirLauncher.exe",
+            "NirSoft\\NirLauncher"
+        ]
+    ],
+    "checkver": {
+        "url": "https://launcher.nirsoft.net/downloads/index.html",
+        "regex": "nirsoft_package_enc_([\\d.]+)\\.zip"
+    },
+    "autoupdate": {
+        "url": "https://download.nirsoft.net/nirsoft_package_enc_$version.zip#/nirsoft_package_enc_$version.zip_",
+        "hash": {
+            "url": "https://launcher.nirsoft.net/downloads/index.html",
+            "find": "SHA256 Hash:[\\s\\S]{0,160}?([a-fA-F\\d]{64})"
+        }
+    },
+    "notes": "NirSoft states that the NirLauncher bundle contains most utilities, but excludes some very old tools. NK2Edit requires a commercial license for business use."
+}
