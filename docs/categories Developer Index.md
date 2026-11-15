@@ -22,7 +22,7 @@
 | Sordum Suite | 59 | [View](#sordum-suite) |
 | Skwire | 79 | [View](#skwire) |
 | SoftwareOK Suite | 81 | [View](#softwareok-suite) |
-| ThioJoe Suite | 19 | [View](#thiojoe-suite) |
+| ThioJoe Suite | 20 | [View](#thiojoe-suite) |
 | Türkaysoft Suite | 8 | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | [View](#vovsoft-suite) |
 
@@ -642,7 +642,7 @@ Publisher cross-list of 14 manifests associated with Rizonesoft. Each entry is a
 <a id="thiojoe-suite"></a>
 ## ThioJoe Suite
 
-Publisher cross-list of 19 manifests associated with ThioJoe. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
+Publisher cross-list of 20 manifests associated with ThioJoe. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -653,6 +653,7 @@ Publisher cross-list of 19 manifests associated with ThioJoe. Each entry is also
 | [f-key-sender-thiojoe](../bucket/f-key-sender-thiojoe.json) | 1.1.2 | 251.9 KiB | 2024-09-26 | Send F13–F24 and custom keyboard input with modifier keys. | [Homepage](https://github.com/ThioJoe/F-Key-Sender) |
 | [fastsigcheck-thiojoe](../bucket/fastsigcheck-thiojoe.json) | 1.0.1 | 42.9 KiB | 2024-06-24 | Verify embedded Windows Authenticode signatures through the native WinVerifyTrust API. | [Homepage](https://github.com/ThioJoe/FastSigCheck) |
 | [full-screen-dlss5-wrapper-thiojoe](../bucket/full-screen-dlss5-wrapper-thiojoe.json) | 1.1.0 | 1.2 MiB | 2026-09-12 | Full-screen DLSS 5 graphics wrapper with adjustable model controls and capture tools; requires an RTX 50-series GPU. | [Homepage](https://github.com/ThioJoe/Full-Screen-DLSS5-Wrapper) |
+| [gmic-animator-thiojoe](../bucket/gmic-animator-thiojoe.json) | 1.0.0 | 85.7 MiB | 2024-05-21 | GUI for creating G'MIC filter animations and GIFs; installs G'MIC CLI and FFmpeg dependencies. | [Homepage](https://github.com/ThioJoe/Gmic-Animation-Tools) |
 | [jpeg2png-thiojoe](../bucket/jpeg2png-thiojoe.json) | 1.02 | 64bit: 1.4 MiB / 32bit: 1.3 MiB | 2024-10-30 | Command-line utility for smoother JPEG decoding and restoration. | [Homepage](https://github.com/ThioJoe/jpeg2png) |
 | [libwebp-tools-gui-thiojoe](../bucket/libwebp-tools-gui-thiojoe.json) | 1.0.0 | 55.8 KiB | 2024-04-23 | GUI front ends for encoding to and decoding from WebP using libwebp. | [Homepage](https://github.com/ThioJoe/LibWebpToolsGUI) |
 | [modern-windows-message-box-generator-thiojoe](../bucket/modern-windows-message-box-generator-thiojoe.json) | 1.2.1 | 111.7 MiB | 2025-03-30 | Generate customizable modern Windows message boxes and Task Dialogs. | [Homepage](https://github.com/ThioJoe/Modern-Windows-Message-Box-Generator) |

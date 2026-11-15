@@ -16,7 +16,7 @@
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 20 | [View](#games-game-utilities) |
-| Images & Photos | 60 | [View](#images-photos) |
+| Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 55 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
@@ -41,7 +41,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1203**
+**Total unique categorized manifests: 1204**
 
 
 ## Android & Device Tools
@@ -425,6 +425,7 @@
 | --- | --- | --- | --- | --- | --- |
 | [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | 2.0.0 | 11.9 MiB | 2026-09-21 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
 | [basic-stability-api-gui-thiojoe](../bucket/basic-stability-api-gui-thiojoe.json) | 1.0.0 | 360.4 KiB | 2024-04-20 | GUI client for generating and upscaling images through the Stability AI API. | [Homepage](https://github.com/ThioJoe/BasicStabilityAPI-GUI) |
+| [gmic-animator-thiojoe](../bucket/gmic-animator-thiojoe.json) | 1.0.0 | 85.7 MiB | 2024-05-21 | Windows GUI for animating G'MIC filter parameters and exporting frame sequences or GIFs. | [Homepage](https://github.com/ThioJoe/Gmic-Animation-Tools) |
 | [jpeg2png-thiojoe](../bucket/jpeg2png-thiojoe.json) | 1.02 | 64bit: 1.4 MiB / 32bit: 1.3 MiB | 2024-10-30 | Command-line utility for smoother JPEG decoding and restoration. | [Homepage](https://github.com/ThioJoe/jpeg2png) |
 | [libwebp-tools-gui-thiojoe](../bucket/libwebp-tools-gui-thiojoe.json) | 1.0.0 | 55.8 KiB | 2024-04-23 | GUI wrappers for the cWebP and dWebP tools to encode and decode WebP images. | [Homepage](https://github.com/ThioJoe/LibWebpToolsGUI) |
 | [softwareok-film-strip-explorer](../bucket/softwareok-film-strip-explorer.json) | 1.05 | 64bit: 1.1 MiB | 2026-05-10 | Browse images in a film-strip explorer. | [Homepage](https://www.softwareok.com/?Download=Film.Strip.Explorer) |
