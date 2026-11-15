@@ -1130,7 +1130,7 @@
 | [vovsoft-vov-system-uptime](../bucket/vovsoft-vov-system-uptime.json) | 1.8 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Vov System Uptime. | [Homepage](https://vovsoft.com/software/vov-system-uptime/) |
 | [pc-uptime](../bucket/pc-uptime.json) | 1.0.0 | 64bit: 56.4 MiB | 2026-11-02 | Windows utility for tracking PC uptime, reviewing session history, and analyzing system stability. | [Homepage](https://uptime-pc.vercel.app/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
-| [sysinternals](../bucket/sysinternals.json) | 2026.11.05 | — | 2026-11-05 | One Scoop app containing the Sysinternals Suite, Ctrl2Cap, and RootkitRevealer. | [Homepage](https://learn.microsoft.com/sysinternals/downloads/) |
+| [sysinternals](../bucket/sysinternals.json) | 2026.11.05 | — | 2026-11-05 | One Scoop app containing the Sysinternals Suite, Ctrl2Cap, RootkitRevealer, and 64-bit/ARM64 PortMon. | [Homepage](https://learn.microsoft.com/sysinternals/downloads/) |
 
 ## Text-to-Speech (TTS)
 
@@ -1376,7 +1376,7 @@ These 75 individual tool manifests are sourced from the [official ScoopInstaller
 scoop install kirobucket/sysinternals
 ```
 
-The all-in-one manifest extracts the official Sysinternals Suite together with the standalone Ctrl2Cap and RootkitRevealer archives into one application directory. The individual manifests below remain available for separate installs.
+The all-in-one manifest extracts the official Sysinternals Suite together with the standalone Ctrl2Cap, RootkitRevealer, and 64-bit/ARM64 PortMon files into one application directory. The individual manifests below remain available for separate installs.
 
 | Manifest |
 | --- |
