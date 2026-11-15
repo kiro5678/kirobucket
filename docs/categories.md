@@ -32,6 +32,7 @@
 | Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
 | Sync & Backup | 12 | [View](#sync-backup) |
 | System Monitoring & Hardware | 78 | [View](#system-monitoring-hardware) |
+| Sysinternals Suite | 76 | [View](#sysinternals-suite) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
@@ -40,7 +41,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1127**
+**Total unique categorized manifests: 1203**
 
 
 ## Android & Device Tools
@@ -1363,3 +1364,86 @@
 | [sordum-fix-print-spooler](../bucket/sordum-fix-print-spooler.json) | 1.3 | 921.1 KiB | 2026-08-22 | A small tool for fixing or disabling the Print Spooler service in Windows. | [Homepage](https://www.sordum.org/fix-print-spooler) |
 | [sordum-safe-mode-launcher](../bucket/sordum-safe-mode-launcher.json) | 1.1 | 983.4 KiB | 2025-09-22 | Safe Mode Launcher is a freeware GUI app to restart your computer in Safe Mode. | [Homepage](https://www.sordum.org/12964/safe-mode-launcher-v1-1/) |
 | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1.8 | 1.0 MiB | 2026-06-16 | Sordum's Windows Update Blocker. A freeware that helps you to completely disable or enable Automatic Updates on your Windows system | [Homepage](https://www.sordum.org/9470/windows-update-blocker-v1-8/) |
+
+## Sysinternals Suite
+
+Microsoft Sysinternals utilities grouped in one Scoop subfolder. These manifests are sourced from the [official ScoopInstaller Sysinternals bucket](https://github.com/ScoopInstaller/Sysinternals).
+
+| Manifest |
+| --- |
+| [accesschk](../bucket/sysinternals/accesschk.json) |
+| [accessenum](../bucket/sysinternals/accessenum.json) |
+| [adexplorer](../bucket/sysinternals/adexplorer.json) |
+| [adinsight](../bucket/sysinternals/adinsight.json) |
+| [adrestore](../bucket/sysinternals/adrestore.json) |
+| [autologon](../bucket/sysinternals/autologon.json) |
+| [autoruns](../bucket/sysinternals/autoruns.json) |
+| [bginfo](../bucket/sysinternals/bginfo.json) |
+| [cacheset](../bucket/sysinternals/cacheset.json) |
+| [clockres](../bucket/sysinternals/clockres.json) |
+| [contig](../bucket/sysinternals/contig.json) |
+| [coreinfo](../bucket/sysinternals/coreinfo.json) |
+| [cpustres](../bucket/sysinternals/cpustres.json) |
+| [ctrl2cap](../bucket/sysinternals/ctrl2cap.json) |
+| [debugview](../bucket/sysinternals/debugview.json) |
+| [desktops](../bucket/sysinternals/desktops.json) |
+| [disk2vhd](../bucket/sysinternals/disk2vhd.json) |
+| [diskext](../bucket/sysinternals/diskext.json) |
+| [diskmon](../bucket/sysinternals/diskmon.json) |
+| [diskview](../bucket/sysinternals/diskview.json) |
+| [du](../bucket/sysinternals/du.json) |
+| [efsdump](../bucket/sysinternals/efsdump.json) |
+| [findlinks](../bucket/sysinternals/findlinks.json) |
+| [handle](../bucket/sysinternals/handle.json) |
+| [hex2dec](../bucket/sysinternals/hex2dec.json) |
+| [junction](../bucket/sysinternals/junction.json) |
+| [ldmdump](../bucket/sysinternals/ldmdump.json) |
+| [listdlls](../bucket/sysinternals/listdlls.json) |
+| [livekd](../bucket/sysinternals/livekd.json) |
+| [loadorder](../bucket/sysinternals/loadorder.json) |
+| [logonsessions](../bucket/sysinternals/logonsessions.json) |
+| [movefile](../bucket/sysinternals/movefile.json) |
+| [notmyfault](../bucket/sysinternals/notmyfault.json) |
+| [ntfsinfo](../bucket/sysinternals/ntfsinfo.json) |
+| [pendmoves](../bucket/sysinternals/pendmoves.json) |
+| [pipelist](../bucket/sysinternals/pipelist.json) |
+| [portmon](../bucket/sysinternals/portmon.json) |
+| [procdump](../bucket/sysinternals/procdump.json) |
+| [process-explorer](../bucket/sysinternals/process-explorer.json) |
+| [procmon](../bucket/sysinternals/procmon.json) |
+| [psexec](../bucket/sysinternals/psexec.json) |
+| [psfile](../bucket/sysinternals/psfile.json) |
+| [psgetsid](../bucket/sysinternals/psgetsid.json) |
+| [psinfo](../bucket/sysinternals/psinfo.json) |
+| [pskill](../bucket/sysinternals/pskill.json) |
+| [pslist](../bucket/sysinternals/pslist.json) |
+| [psloggedon](../bucket/sysinternals/psloggedon.json) |
+| [psloglist](../bucket/sysinternals/psloglist.json) |
+| [pspasswd](../bucket/sysinternals/pspasswd.json) |
+| [psping](../bucket/sysinternals/psping.json) |
+| [psservice](../bucket/sysinternals/psservice.json) |
+| [psshutdown](../bucket/sysinternals/psshutdown.json) |
+| [pssuspend](../bucket/sysinternals/pssuspend.json) |
+| [pstools](../bucket/sysinternals/pstools.json) |
+| [rammap](../bucket/sysinternals/rammap.json) |
+| [rdcman](../bucket/sysinternals/rdcman.json) |
+| [regdelnull](../bucket/sysinternals/regdelnull.json) |
+| [regjump](../bucket/sysinternals/regjump.json) |
+| [rootkit-revealer](../bucket/sysinternals/rootkit-revealer.json) |
+| [ru](../bucket/sysinternals/ru.json) |
+| [sdelete](../bucket/sysinternals/sdelete.json) |
+| [shareenum](../bucket/sysinternals/shareenum.json) |
+| [shellrunas](../bucket/sysinternals/shellrunas.json) |
+| [sigcheck](../bucket/sysinternals/sigcheck.json) |
+| [streams](../bucket/sysinternals/streams.json) |
+| [strings](../bucket/sysinternals/strings.json) |
+| [sync](../bucket/sysinternals/sync.json) |
+| [sysinternals-suite](../bucket/sysinternals/sysinternals-suite.json) |
+| [sysmon](../bucket/sysinternals/sysmon.json) |
+| [tcpview](../bucket/sysinternals/tcpview.json) |
+| [testlimit](../bucket/sysinternals/testlimit.json) |
+| [vmmap](../bucket/sysinternals/vmmap.json) |
+| [volumeid](../bucket/sysinternals/volumeid.json) |
+| [whois](../bucket/sysinternals/whois.json) |
+| [winobj](../bucket/sysinternals/winobj.json) |
+| [zoomit](../bucket/sysinternals/zoomit.json) |
