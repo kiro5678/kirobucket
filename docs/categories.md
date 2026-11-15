@@ -37,7 +37,7 @@
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 10 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 99 | [View](#windows-customization) |
+| Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 **Total unique categorized manifests: 1124**
@@ -1228,6 +1228,7 @@
 | [dragwin](../bucket/dragwin.json) | 1.1.6 | 31.8 MiB | 2025-12-03 | Move and resize Windows without holding Alt or Control. | [Homepage](https://github.com/PinchToDebug/DragWin) |
 | [fancywm](../bucket/fancywm.json) | 2.19.0 | 8.4 MiB | 2026-03-14 | Windows tiling window manager designed for power users. | [Homepage](https://github.com/FancyWM/fancywm) |
 | [fancywm-msix-cert](../bucket/fancywm-msix-cert.json) | 2.19.0 | 812 B | 2026-03-14 | FancyWM MSIX signing certificate (download only; for MSIX installation). | [Homepage](https://github.com/FancyWM/fancywm) |
+| [fluidwin](../bucket/fluidwin.json) | 1.2.2 | 64bit: 1.0 MiB | 2026-11-14 | Windows 11 desktop shell with a dock, dynamic notch, window animations, and control center. | [Homepage](https://github.com/clooudfn/FluidWin) |
 | [FoliCon](../bucket/FoliCon.JSON) | 5.3.1 | 64bit: 15.6 MiB | 2026-08-30 | Folder icon customizer for movies, TV shows, music, games, anime, and books. | [Homepage](https://github.com/DineshSolanki/FoliCon) |
 | [softwareok-fontviewok](../bucket/softwareok-fontviewok.json) | 9.33 | 64bit: 307.6 KiB | 2026-05-06 | Create a quick visual overview of installed fonts. | [Homepage](https://www.softwareok.com/?Download=FontViewOK) |
 | [funk-hrc](../bucket/funk-hrc.json) | 2.1 | 471.4 KiB | 2025-06-25 | Tray utility for assigning hotkeys to switch between display resolutions. | [Homepage](https://funk.eu/hrc/) |
