@@ -1,0 +1,118 @@
+name: Temporary O&O Product Static Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/oo-products-inspection.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download official files and run static inspection
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $targets = @(
+            @{ Name = 'O&O DiskRecovery'; Version = '14.0.17'; Url = 'https://dl5.oo-software.com/files/oodiskrecovery14/140/OODiskRecovery1464Enu.exe' },
+            @{ Name = 'O&O AutoBackup'; Version = '8.2.1014'; Url = 'https://dl5.oo-software.com/files/ooautobackup8/82/OOAutoBackup8.exe' },
+            @{ Name = 'O&O DiskImage'; Version = '23.2.26060'; Url = 'https://dl5.oo-software.com/files/oodiskimage23/232/OODiskImage23PremiumEnu.exe' },
+            @{ Name = 'O&O DiskCommander'; Version = '5.1.1020'; Url = 'https://dl5.oo-software.com/files/oodiskcommander5/510/OODiskCommander5PremiumEnu.exe' },
+            @{ Name = 'O&O Defrag'; Version = '32.1.26138'; Url = 'https://dl5.oo-software.com/files/oodefrag32/321/OOD32Professional64Enu.exe' },
+            @{ Name = 'O&O SafeErase'; Version = '22.0.26169'; Url = 'https://dl5.oo-software.com/files/oosafeerase22/220/OOSafeErase22Professional64Enu.exe' },
+            @{ Name = 'O&O RegEditor'; Version = '16.1.6660'; Url = 'https://dl5.oo-software.com/files/ooregeditor16/161/OORegEditor.exe' },
+            @{ Name = 'O&O DeskInfo'; Version = '2.0.1033'; Url = 'https://dl5.oo-software.com/files/oodeskinfo2/OODeskInfo2.exe' }
+          )
+
+          $work = Join-Path $env:RUNNER_TEMP 'oo-products-inspection'
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# O&O products — official download static inspection')
+          $report.Add('')
+          $report.Add('Date: 2026-11-16')
+          $report.Add('')
+          $report.Add('Files were downloaded from O&O official download hosts. No product executable or installer was executed.')
+          $report.Add('')
+
+          $apiHeaders = @{
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            'User-Agent' = 'kirobucket-static-inspector'
+          }
+          $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/horsicq/DIE-engine/releases/latest' -Headers $apiHeaders -TimeoutSec 45
+          $dieAsset = $release.assets | Where-Object {
+            $_.name -eq "die_win64_$($release.tag_name).zip" -or $_.name -match '^die_win64_portable_[0-9.]+_x64[.]zip$'
+          } | Select-Object -First 1
+          if (-not $dieAsset) { throw "Detect It Easy x64 asset not found in $($release.tag_name)." }
+          $dieZip = Join-Path $work $dieAsset.name
+          Invoke-WebRequest -Uri $dieAsset.browser_download_url -OutFile $dieZip -TimeoutSec 300
+          if ($dieAsset.digest -match '^sha256:(?<digest>[0-9a-fA-F]{64})$') {
+            $dieHash = (Get-FileHash -LiteralPath $dieZip -Algorithm SHA256).Hash
+            if ($dieHash -ine $Matches.digest) { throw 'Detect It Easy download SHA-256 mismatch.' }
+          }
+          $dieDir = Join-Path $work 'die'
+          Expand-Archive -LiteralPath $dieZip -DestinationPath $dieDir -Force
+          $diec = Get-ChildItem -LiteralPath $dieDir -Filter diec.exe -Recurse -File | Select-Object -First 1
+          if (-not $diec) { throw 'diec.exe missing from Detect It Easy archive.' }
+          $report.Add("Detect It Easy release: $($release.tag_name)")
+          $report.Add('')
+
+          foreach ($target in $targets) {
+            $uri = [uri]$target.Url
+            $fileName = [IO.Path]::GetFileName($uri.AbsolutePath)
+            $path = Join-Path $work $fileName
+            Write-Host "Downloading $($target.Name): $($target.Url)"
+            Invoke-WebRequest -Uri $target.Url -OutFile $path -TimeoutSec 600
+            $item = Get-Item -LiteralPath $path
+            if ($item.Length -le 0) { throw "Empty download: $($target.Name)" }
+            $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+            $sig = Get-AuthenticodeSignature -LiteralPath $path
+            $info = [Diagnostics.FileVersionInfo]::GetVersionInfo($path)
+            $dieOutput = @(& $diec.FullName -d -u -b -a $path 2>&1 | ForEach-Object { "$_" })
+            $dieExit = $LASTEXITCODE
+            if ($dieOutput.Count -eq 0 -or $dieExit -ne 0) {
+              throw "Detect It Easy static inspection failed for $($target.Name), exit code $dieExit."
+            }
+            $report.Add("## $($target.Name)")
+            $report.Add("- Product page version: $($target.Version)")
+            $report.Add("- Direct URL: $($target.Url)")
+            $report.Add("- Filename: $fileName")
+            $report.Add("- Size: $($item.Length) bytes")
+            $report.Add("- SHA-256: $hash")
+            $report.Add("- Authenticode: $($sig.Status)")
+            $report.Add("- Signer: $(if ($sig.SignerCertificate) { $sig.SignerCertificate.Subject } else { '(no signer certificate)' })")
+            $report.Add("- File version: $($info.FileVersion)")
+            $report.Add("- Product name: $($info.ProductName)")
+            $report.Add('- Static Detect It Easy output:')
+            foreach ($line in $dieOutput) { $report.Add("  $line") }
+            $report.Add('')
+            Write-Host "$($target.Name) SHA-256: $hash"
+            $dieOutput | ForEach-Object { Write-Host $_ }
+          }
+
+          $reportPath = Join-Path $env:GITHUB_WORKSPACE 'logs/manifests/2026-11-16-oo-products-static-inspection.md'
+          New-Item -ItemType Directory -Path (Split-Path -Parent $reportPath) -Force | Out-Null
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+
+      - name: Commit inspection report
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- logs/manifests/2026-11-16-oo-products-static-inspection.md
+          git commit -m "docs: record O&O product static inspection"
+          git push
