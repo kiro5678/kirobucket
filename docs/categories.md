@@ -144,6 +144,7 @@
 | [motionduo](../bucket/motionduo.json) | 0.17.20 | 64bit: 44.8 MiB | 2026-10-27 | Software KVM for sharing one keyboard and mouse across Windows and Mac computers on the LAN. | [Homepage](https://github.com/alvin-7/motionduo) |
 | [nectarlink](../bucket/nectarlink.json) | 0.1.4 | — | 2026-10-17 | Local-first Android and Windows companion for notifications, calls, messages, clipboard, file transfer, screen mirroring, and phone apps. | [Homepage](https://github.com/thtbee/nectarlink) |
 | [twindesk](../bucket/twindesk.json) | 2.5.3 | 64bit: 121.5 MiB / arm64: 122.2 MiB | 2026-11-05 | Cross-device workspace for sharing screens, apps, files, clipboard, input, calls, and notifications across Windows, macOS, Linux, and Android. | [Homepage](https://github.com/InukaAsith/TwinDesk) |
+| [bytedrop](../bucket/bytedrop.json) | 1.0.0 | 64bit: 27.7 MiB | 2026-11-14 | Browser-based file and clipboard transfer between a PC and phones or other devices over LAN, Mobile Hotspot, or a Cloudflare tunnel. | [Homepage](https://github.com/HusseinWalid48/ByteDrop) |
 
 ## Developer & Technical Tools
 
