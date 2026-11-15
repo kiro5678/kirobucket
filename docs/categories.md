@@ -1367,9 +1367,15 @@
 | [sordum-safe-mode-launcher](../bucket/sordum-safe-mode-launcher.json) | 1.1 | 983.4 KiB | 2025-09-22 | Safe Mode Launcher is a freeware GUI app to restart your computer in Safe Mode. | [Homepage](https://www.sordum.org/12964/safe-mode-launcher-v1-1/) |
 | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1.8 | 1.0 MiB | 2026-06-16 | Sordum's Windows Update Blocker. A freeware that helps you to completely disable or enable Automatic Updates on your Windows system | [Homepage](https://www.sordum.org/9470/windows-update-blocker-v1-8/) |
 
-## Sysinternals Suite
+## Sysinternals Utilities
 
-Microsoft Sysinternals utilities grouped in one Scoop subfolder. These manifests are sourced from the [official ScoopInstaller Sysinternals bucket](https://github.com/ScoopInstaller/Sysinternals).
+These 75 individual tool manifests are sourced from the [official ScoopInstaller Sysinternals bucket](https://github.com/ScoopInstaller/Sysinternals). To install the collection as one Scoop app, use [sysinternals.json](../bucket/sysinternals.json):
+
+```powershell
+scoop install kirobucket/sysinternals
+```
+
+The all-in-one manifest extracts the official Sysinternals Suite together with the standalone Ctrl2Cap and RootkitRevealer archives into one application directory. The individual manifests below remain available for separate installs.
 
 | Manifest |
 | --- |
