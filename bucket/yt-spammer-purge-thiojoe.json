@@ -23,5 +23,6 @@
       ]
     ]
   },
-  "notes": "Requires a Google Cloud OAuth client file named client_secret.json in the app directory. Review matched comments and selected actions before confirming deletion, reporting, or hiding."
+  "notes": "Requires a Google Cloud OAuth client file named client_secret.json in the app directory. Review matched comments and selected actions before confirming deletion, reporting, or hiding.",
+  "hash": "b480fba80a021429dfcb58ee2b40402135d64cc32a15b35a9e8586323358079a"
 }
