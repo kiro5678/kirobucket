@@ -396,4 +396,3 @@ This section lists the 79 Skwire programs currently represented by manifests in 
 ## Checksum and update limitations
 
 Thumbico's SHA-256 comes from the digest published with its official GitHub release. Other added downloads do not publish checksums on their official pages, so their manifests state that SHA-256 is not pinned. The Funk.eu manifests also need manual URL maintenance if the publisher changes a Download Monitor file ID.
-
