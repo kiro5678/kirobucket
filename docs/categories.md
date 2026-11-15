@@ -42,7 +42,6 @@
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 **Total unique manifests: 1096**
 
-Functional categories assign each manifest once. Developer/publisher suites below are cross-lists; their counts overlap with functional categories and are not additional unique manifests.
 
 ## Android & Device Tools
 
