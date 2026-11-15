@@ -13,6 +13,7 @@
 | EFSoftware Suite | 13 | [View](#efsoftware-suite) |
 | Eric Zimmerman Suite | 31 | [View](#eric-zimmerman-suite) |
 | Funk.eu Suite | 7 | [View](#funk-eu-suite) |
+| FuumiSoft | 4 | [View](#fuumisoft) |
 | GRC Suite | 18 | [View](#grc-suite) |
 | MiTeC Suite | 22 | [View](#mitec-suite) |
 | Neuber Suite | 2 | [View](#neuber-suite) |
@@ -583,6 +584,18 @@ Publisher cross-list of 7 manifests associated with Funk.eu. Each entry is also 
 Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each manifest documents this limitation; a future change to a file ID will require updating that manifest's URL. The SHA-256 values are not published by Funk.eu and are therefore not pinned.
 
 <a id="neuber-suite"></a>
+<a id="fuumisoft"></a>
+## FuumiSoft
+
+Developer listing of 4 manifests associated with FuumiSoft.
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [file-arbor](../bucket/file-arbor.json) | 1.4.0 | — | — | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
+| [purge-uninstaller](../bucket/purge-uninstaller.json) | 1.0.1 | — | — | Windows application uninstaller that identifies and removes leftover files and registry entries. | [Homepage](https://purgeuninstaller.com/) |
+| [sablate](../bucket/sablate.json) | 1.0.2 | — | — | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
+| [vidray](../bucket/vidray.json) | 1.0.2 | — | — | Local video compressor and converter with bundled FFmpeg. | [Homepage](https://vidray.app/) |
+
 ## Neuber Suite
 
 Publisher cross-list of 2 manifests associated with Neuber Software. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
