@@ -583,7 +583,6 @@ Publisher cross-list of 7 manifests associated with Funk.eu. Each entry is also 
 
 Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each manifest documents this limitation; a future change to a file ID will require updating that manifest's URL. The SHA-256 values are not published by Funk.eu and are therefore not pinned.
 
-<a id="neuber-suite"></a>
 <a id="fuumisoft"></a>
 ## FuumiSoft
 
@@ -596,6 +595,7 @@ Developer listing of 4 manifests associated with FuumiSoft.
 | [sablate](../bucket/sablate.json) | 1.0.2 | — | — | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
 | [vidray](../bucket/vidray.json) | 1.0.2 | — | — | Local video compressor and converter with bundled FFmpeg. | [Homepage](https://vidray.app/) |
 
+<a id="neuber-suite"></a>
 ## Neuber Suite
 
 Publisher cross-list of 2 manifests associated with Neuber Software. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
