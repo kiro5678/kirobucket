@@ -32,7 +32,7 @@ https://github.com/ScoopInstaller/BucketTemplate
 
 ## Software by developer and function
 
-See [the source-site software catalog](docs/software-by-developer.md) for a developer-grouped index, with each app's primary function and manifest link. The [category index](docs/categories.md) lists manifests by function and publisher suite.
+See [the source-site software catalog](docs/categories Developer Index.md) for a developer-grouped index, with each app's primary function and manifest link. The [category index](docs/categories.md) lists manifests by function and publisher suite.
 
 ## Manifests
 
