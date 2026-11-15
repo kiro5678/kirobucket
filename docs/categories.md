@@ -40,7 +40,7 @@
 | Windows Customization | 99 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1124**
+**Total unique categorized manifests: 1124**
 
 
 ## Android & Device Tools
