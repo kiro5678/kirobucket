@@ -22,7 +22,7 @@ This catalog covers the requested vendor pages and links each included program t
 | Skwire | 79 | [View](#skwire) |
 | SoftwareOK Suite | 81 | [View](categories.md#softwareok-suite) |
 | ThioJoe Suite | 13 | [View](#thiojoe) |
-| Türkaysoft Suite | 8 | [View](categories.md#turkaysoft-suite) |
+| Türkaysoft Suite | 8 | [View](categories.md#türkaysoft-suite) |
 | Vovsoft Suite | 174 | [View](categories.md#vovsoft-suite) |
 
 ## Aurelitec
