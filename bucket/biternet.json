@@ -27,4 +27,4 @@
         }
     },
     "notes": "Saved account credentials are stored unencrypted in the local user configuration file biternet-go/settings.json."
-}
+}

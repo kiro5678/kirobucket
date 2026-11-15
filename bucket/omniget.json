@@ -38,4 +38,4 @@
         "Creates portable.txt beside the executable so settings, databases, cookies, plugins, caches, downloader tools, and WebView2 data are stored in the persisted data directory.",
         "The app supports in-place portable self-updates. Prefer updating through Scoop so the installed version metadata remains synchronized."
     ]
-}
+}

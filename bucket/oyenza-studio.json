@@ -25,4 +25,4 @@
         "The application stores user data under %APPDATA%\\Poni and cache/log files under %LOCALAPPDATA%\\Poni; these paths are outside the Scoop app directory.",
         "The application's own update mechanism is left unchanged."
     ]
-}
+}

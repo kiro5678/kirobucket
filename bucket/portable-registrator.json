@@ -21,4 +21,4 @@
         "The application writes Windows file-type and protocol registration when the user configures associations. Review each change carefully; this manifest does not bypass Windows protected default-app controls.",
         "The upstream repository does not publish a LICENSE file or an explicit reuse licence."
     ]
-}
+}

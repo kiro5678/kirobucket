@@ -38,4 +38,4 @@
         "The upstream project says Keyboard Sounds is no longer under active feature development and is maintained for bug fixes; development has moved to Keyboard Sounds Pro: https://github.com/keyboard-sounds/keyboardsounds-pro.",
         "This manifest does not move the application's settings or custom profiles into the Scoop directory on D:."
     ]
-}
+}

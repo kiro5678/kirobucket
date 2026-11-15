@@ -60,4 +60,4 @@
         "Remove-Item -LiteralPath $persistExe -Force -ErrorAction SilentlyContinue"
     ],
     "notes": "The executable is launched directly from Scoop's persistent directory so registered URL protocols keep a stable path across updates."
-}
+}

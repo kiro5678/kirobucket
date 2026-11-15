@@ -49,4 +49,4 @@
         "The upstream Windows installer adds inbound Windows Firewall rules, changes the WebClient FileSizeLimitInBytes registry value, and adds a certificate to the TrustedPeople store. These actions are intentionally not run by Scoop; features that depend on them may require manual setup.",
         "TwinDesk stores settings and pairing data under %APPDATA%\\MacShare, outside the Scoop directory. Scoop uninstall does not remove this user data."
     ]
-}
+}

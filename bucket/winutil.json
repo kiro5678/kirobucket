@@ -26,4 +26,4 @@
         "url": "https://github.com/ChrisTitusTech/winutil/releases/download/$version/winutil.ps1"
     },
     "notes": "Open WinUtil from Command Prompt or PowerShell with gsudo winutil."
-}
+}

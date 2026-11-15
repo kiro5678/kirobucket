@@ -26,4 +26,4 @@
         "url": "https://github.com/ramjke/Translumo/releases/download/v.$version/Translumo_$version.zip"
     },
     "notes": "DeepL and Yandex translation require API keys configured in Translumo settings."
-}
+}

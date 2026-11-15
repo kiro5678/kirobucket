@@ -23,4 +23,4 @@
         "The extracted payload contains ADM.exe at the application root, tools\\ffmpeg.exe, tools\\yt-dlp.exe, tools\\aria2c.exe, and the Chromium/Firefox extension files.",
         "Scoop extracts the application payload only. It does not run the vendor install sections that register HKCU\\Software\\ASM\\ADM, the adm-download:// URL protocol, the optional HKCU startup entry, or vendor Start Menu/Desktop shortcuts. Browser integration relying on that URL protocol and the vendor autostart option are therefore not configured by this manifest."
     ]
-}
+}

@@ -39,4 +39,4 @@
         "The application has its own signed GitHub updater. Disable automatic updates in the application Settings if Scoop is to manage application updates.",
         "Settings and operation history remain outside Scoop under %APPDATA%\\com.thonyy.download-organizer and are not removed by Scoop uninstall."
     ]
-}
+}

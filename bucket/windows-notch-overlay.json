@@ -36,4 +36,4 @@
         "The portable app bundles framework-dependent .NET 8 media-session and notification helpers. Install the .NET 8 Runtime separately if those helper-powered features do not start; Scoop does not run a vendor setup.",
         "The upstream project notes that release binaries are not commercially code-signed, so Windows SmartScreen may show a warning. Verify the SHA-256 before running the file."
     ]
-}
+}

@@ -23,4 +23,4 @@
         "extract_dir": "MisterDownloadManager-$version-portable"
     },
     "notes": "Browser integration requires the upstream setup.exe; the portable ZIP does not register the native messaging host."
-}
+}

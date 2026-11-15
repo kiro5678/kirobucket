@@ -43,4 +43,4 @@
         "Skim's built-in updater is disabled for Scoop-managed installs; use 'scoop update skim'.",
         "Mail, settings, and credentials are stored outside the app folder and remain after uninstall."
     ]
-}
+}

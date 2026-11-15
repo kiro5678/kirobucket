@@ -28,4 +28,4 @@
         }
     },
     "notes": "Use `scoop update filey` for updates; Filey's built-in updater can modify the Scoop-managed executable."
-}
+}

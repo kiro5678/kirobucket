@@ -39,4 +39,4 @@
         "The installer may download and install the .NET Desktop Runtime if a compatible version is missing; an internet connection is required.",
         "Scoop uninstall removes the current user's Fluent Store MSIX package. The app package is not stored as an ordinary portable folder under the Scoop app directory."
     ]
-}
+}

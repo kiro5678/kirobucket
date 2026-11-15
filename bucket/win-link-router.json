@@ -43,4 +43,4 @@
         "The application stores its configuration and route logs under %APPDATA%\\win-link-router. That user data is outside Scoop and is retained when the application is uninstalled.",
         "The application's own updater is enabled by default and checks for releases independently of Scoop. Disable Auto Updates in the application settings to keep Scoop as the update source."
     ]
-}
+}

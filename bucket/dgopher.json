@@ -19,4 +19,4 @@
         "url": "https://github.com/saanuregh/dgopher/releases/download/v$version/dgopher-$version-windows-amd64.tar.gz"
     },
     "notes": "DGopher has a signed in-app updater. Use Scoop to update it; avoid running both update mechanisms concurrently."
-}
+}

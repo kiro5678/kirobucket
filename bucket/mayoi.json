@@ -41,4 +41,4 @@
         }
     },
     "notes": "Mayoi includes its own signed in-app updater. Scoop can also manage the installed version; avoid running both update mechanisms at the same time."
-}
+}

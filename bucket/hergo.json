@@ -18,4 +18,4 @@
     "autoupdate": {
         "url": "https://github.com/Maidang1/hergo/releases/download/v$version/hergo-$version-windows-amd64.tar.gz"
     }
-}
+}

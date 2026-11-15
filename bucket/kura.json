@@ -18,4 +18,4 @@
     "autoupdate": {
         "url": "https://github.com/ArnoChenFx/kura/releases/download/v$version/kura-$version-windows-amd64.tar.gz"
     }
-}
+}

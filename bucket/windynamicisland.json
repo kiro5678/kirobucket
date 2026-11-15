@@ -37,4 +37,4 @@
         "The project sets WindowsAppSDKSelfContained=true, which does not make the separate Microsoft.NETCore.App runtime self-contained. The app needs .NET 8 Runtime. This bucket suggests versions/windowsdesktop-runtime-8.0 because that official Scoop package installs the .NET Runtime together with the additional Windows Desktop Runtime; the app's runtimeconfig itself requests only Microsoft.NETCore.App.",
         "Settings, notes, shelf data, and logs are stored under %LOCALAPPDATA%\\\\WinDynamicIsland. The optional Run-at-startup setting is controlled by the application and is not enabled by this manifest."
     ]
-}
+}

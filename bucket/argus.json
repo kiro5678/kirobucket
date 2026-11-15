@@ -17,4 +17,4 @@
     },
     "extract_dir": "argus-v3.0.0-windows-amd64",
     "notes": "Keep argus.exe beside its matching .rule directory. By default, CLI reports are written to the current working directory; use --output-dir to choose another location."
-}
+}

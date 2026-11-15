@@ -62,4 +62,4 @@
         }
     },
     "notes": "To add qBittorrent file associations, run: reg import \"$dir\\install-associations.reg\""
-}
+}

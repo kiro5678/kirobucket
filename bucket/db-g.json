@@ -19,4 +19,4 @@
         "url": "https://github.com/Kuangcp/DB-G/releases/download/v$version/db-g-$version-windows-amd64.tar.gz"
     },
     "notes": "DB-G has signed in-app updates. Use Scoop to update it; avoid running both update mechanisms concurrently."
-}
+}

@@ -899,4 +899,4 @@
         "if (-not (Test-Path \"$persist_dir\\run-command\\Run-Command.ini\")) { New-Item -Path \"$dir\\run-command\\Run-Command.ini\" -ItemType File | Out-Null }"
     ],
     "notes": "Each archive is extracted into its own subfolder inside this single Scoop package."
-}
+}

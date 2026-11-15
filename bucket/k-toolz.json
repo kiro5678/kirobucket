@@ -51,4 +51,4 @@
         "PawnIO and ViGEmBus are optional drivers installed only through explicit actions in the app. Optional PlainOSD, network statistics and StutterHunter features can create elevated Task Scheduler tasks; remove those tasks manually if no longer needed after uninstall.",
         "Settings and game-library data remain under %APPDATA%\\K-Toolz; the WebView2 profile remains under %LOCALAPPDATA%\\K-Toolz\\WebView2. The app's built-in updater remains enabled."
     ]
-}
+}

@@ -58,4 +58,4 @@
     },
     "##": "Installer Type: Standalone EXE",
     "notes": "Requires WinFsp to be installed separately; its signed driver/service is not installed by Scoop. This manifest only installs the standalone command-line executable."
-}
+}

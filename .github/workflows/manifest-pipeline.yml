@@ -29,6 +29,7 @@ concurrency:
 
 jobs:
   pipeline:
+    if: ${{ !contains(github.event.head_commit.message || '', '[crlf-only]') }}
     name: Run manifest stages in order
     runs-on: windows-latest
     timeout-minutes: 360

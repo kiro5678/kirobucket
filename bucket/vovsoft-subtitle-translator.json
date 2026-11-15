@@ -21,4 +21,4 @@
         "if (-not (Test-Path -LiteralPath \"$dir\\key.txt\" -PathType Leaf)) { New-Item -ItemType File -Path \"$dir\\key.txt\" | Out-Null }"
     ],
     "persist": "key.txt"
-}
+}

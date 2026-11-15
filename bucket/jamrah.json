@@ -26,4 +26,4 @@
             "jsonpath": "$.assets[?(@.name == 'jamrah.ahmmed29-win-Portable.zip')].digest"
         }
     }
-}
+}

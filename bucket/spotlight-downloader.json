@@ -26,4 +26,4 @@
         }
     },
     "notes": "SpotlightDownloader.exe is exposed as a Scoop command. The bundled batch scripts are not added as shortcuts because they create their archive/cache beside the script inside Scoop's versioned app directory; use the command-line --outdir option for data you want to keep across updates."
-}
+}

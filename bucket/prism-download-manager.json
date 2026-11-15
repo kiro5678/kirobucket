@@ -25,4 +25,4 @@
         "Prism registers its browser native-messaging host for the current Windows user when the app starts. pre_uninstall removes only registrations that point to this Scoop copy.",
         "Requires the Microsoft Edge WebView2 Runtime; the upstream README says it is preinstalled on Windows 10 and 11."
     ]
-}
+}

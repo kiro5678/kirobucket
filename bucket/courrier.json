@@ -34,4 +34,4 @@
         }
     },
     "notes": "Windows 10 requires the Microsoft Edge WebView2 Runtime. Use Scoop to update; do not use the app's built-in updater."
-}
+}

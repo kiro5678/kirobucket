@@ -29,4 +29,4 @@
         "Review the template before importing: it includes file associations and URL protocols, including mailto. Do not merge it unchanged. Windows 11 may still require the user to choose Firefox Portable from Settings > Apps > Default Apps; UCPD-protected defaults are not forced by this template.",
         "The upstream repository contains no LICENSE file or declared reuse licence; treat the template as proprietary and review it before redistribution or modification."
     ]
-}
+}

@@ -19,4 +19,4 @@
         "url": "https://github.com/Curtion/dji-mic-rx/releases/download/v$version/dji-mic-rx.exe"
     },
     "notes": "The app has a signed self-updater; prefer Scoop for updates. Installing or removing the receiver control-interface driver requires administrator rights."
-}
+}

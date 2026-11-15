@@ -25,4 +25,4 @@
         }
     },
     "notes": "The Windows setup executable is extracted by Scoop without running its installer. The release bundles its CPython and scientific runtime."
-}
+}

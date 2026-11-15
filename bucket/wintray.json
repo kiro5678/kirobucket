@@ -24,4 +24,4 @@
         }
     },
     "notes": "The portable app stores its settings and logs under %LOCALAPPDATA%\\WinTray. Configuring automatic startup can create or update Windows login startup entries."
-}
+}

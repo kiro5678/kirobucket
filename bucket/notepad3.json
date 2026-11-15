@@ -66,4 +66,4 @@
         }
     },
     "notes": "To add Notepad3 to the right-click context menu, run: reg import \"$dir\\install-context.reg\""
-}
+}

@@ -23,4 +23,4 @@
             "jp": "$.assets[?(@.name == 'tomoru-$version-windows-amd64.tar.gz')].digest"
         }
     }
-}
+}

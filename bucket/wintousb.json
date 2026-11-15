@@ -45,4 +45,4 @@
         "url": "https://www.easyuefi.com/wintousb/downloads/WinToUSB_Free.exe"
     },
     "notes": "The Free Edition is restricted to personal, non-commercial home use. The installer suppresses its own Start Menu icons so the shortcut is managed by Scoop. Run WinToUSB as administrator when creating or cloning bootable media because these operations modify disk partitions and boot components."
-}
+}

@@ -48,4 +48,4 @@
         "url": "https://www.sordum.org/files/download/sordum-monitor-off/MonitorOff.zip"
     },
     "notes": "run 'pushd \"$dir\" && _MonitorOff_Config.vbs && popd' to configure MonitorOff"
-}
+}

@@ -27,4 +27,4 @@
         "The shim passes -NoUpdate so Scoop, rather than the script, manages updates.",
         "Use -Dest to save the downloaded tools outside the Scoop installation directory."
     ]
-}
+}

@@ -24,4 +24,4 @@
             "jp": "$.assets[?(@.name == 'MiniMuse-v$version.exe')].digest"
         }
     }
-}
+}

@@ -36,4 +36,4 @@
         "Keyboard Sounds Pro stores its profiles, rules, and related data under %USERPROFILE%\\keyboardsounds-pro, outside the Scoop app directory. This manifest does not relocate that data to D:.",
         "The upstream project has an open request for a native portable build: https://github.com/keyboard-sounds/keyboardsounds-pro/issues/26."
     ]
-}
+}

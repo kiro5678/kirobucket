@@ -18,4 +18,4 @@
     "autoupdate": {
         "url": "https://github.com/geeker-xiao/NanoAPI/releases/download/v$version/NanoAPI-$version-windows-amd64.zip"
     }
-}
+}

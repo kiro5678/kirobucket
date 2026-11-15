@@ -19,4 +19,4 @@
     "autoupdate": {
         "url": "https://github.com/aio-proxy/aio-proxy/releases/download/v$version/cli-win32-x64-$version.tgz"
     }
-}
+}

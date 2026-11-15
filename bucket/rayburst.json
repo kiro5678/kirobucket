@@ -34,4 +34,4 @@
         }
     },
     "notes": "This manifest extracts the NSIS payload without running the vendor installer hooks. Windows protocol handlers, .torrent file association, and browser native-messaging registration are not added. Use the vendor installer when these integrations are required."
-}
+}

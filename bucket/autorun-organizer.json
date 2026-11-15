@@ -60,4 +60,4 @@
         "}"
     ],
     "notes": "Requires administrator rights. The normal Inno Setup installation runs at system scope, while /DIR keeps the application files in this Scoop version directory."
-}
+}

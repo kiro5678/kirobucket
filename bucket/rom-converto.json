@@ -31,4 +31,4 @@
         "This manifest installs the standalone Windows GUI executable. It does not run the upstream NSIS setup installer.",
         "The app has its own portable updater. Prefer updating through Scoop so the installed version metadata remains synchronized."
     ]
-}
+}

@@ -21,4 +21,4 @@
         "url": "https://github.com/qianli-wang/default-app/releases/download/v$version/fix_default_app.exe"
     },
     "notes": "The application requests administrator rights when launched."
-}
+}

@@ -54,4 +54,4 @@
         "Belarc Advisor is licensed for personal use only; commercial and government use is not permitted under the standard license.",
         "The post-install check verifies that BelarcAdvisor.exe was actually placed inside the Scoop app directory. The installer is vendor-managed and its /D directory override has not been independently confirmed on a live Windows installation."
     ]
-}
+}

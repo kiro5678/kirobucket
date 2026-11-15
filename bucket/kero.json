@@ -41,4 +41,4 @@
         }
     },
     "notes": "Kero can optionally register its daemon as a per-user Windows scheduled task with kero daemon install-service; this is not run by the manifest. The app also includes a signed self-updater, so avoid running its updater and Scoop updates concurrently."
-}
+}

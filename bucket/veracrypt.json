@@ -112,4 +112,4 @@
         "Mounting volumes requires administrator privileges and loads a Windows driver. In some unmount scenarios, the driver may remain loaded until Windows restarts.",
         "Configuration.xml is persisted across Scoop updates. Mounted volumes and the runtime driver are managed by Windows."
     ]
-}
+}

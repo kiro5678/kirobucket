@@ -35,4 +35,4 @@
         "Scoop installs the module files only; it does not install the optional service or alter file associations.",
         "Commands that change file associations require care; disabling UCPD can weaken Windows protection for default-app associations."
     ]
-}
+}

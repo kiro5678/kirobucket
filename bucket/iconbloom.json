@@ -33,4 +33,4 @@
         "User data and icon backups are stored in %LOCALAPPDATA%\\Iconbloom and remain after Scoop uninstall.",
         "Use Revert all before uninstalling if you want to restore customized icons and taskbar settings."
     ]
-}
+}
