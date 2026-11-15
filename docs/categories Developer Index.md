@@ -17,6 +17,7 @@
 | GRC Suite | 18 | [View](#grc-suite) |
 | MiTeC Suite | 22 | [View](#mitec-suite) |
 | Neuber Suite | 2 | [View](#neuber-suite) |
+| NirSoft Suite | 2 | [View](#nirsoft-suite) |
 | Rizonesoft Suite | 14 | [View](#rizonesoft-suite) |
 | Sordum Suite | 59 | [View](#sordum-suite) |
 | Skwire | 79 | [View](#skwire) |
@@ -606,6 +607,16 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 | [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | 2.1 MiB | 2015-12-17 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
 
 Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter. Their current downloads are installer executables, not verified portable payloads; they are not included until unattended installation and uninstallation can be validated. PC On/Off Time, Svchost Process Analyzer, and VoicesInstaller are freeware but do not publish numbered versions. They need a verified version signal before being added under the bucket's update-tracking rules.
+
+<a id="nirsoft-suite"></a>
+## NirSoft Suite
+
+Publisher cross-list of 2 manifests associated with NirSoft. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [nirlauncher](../bucket/nirlauncher.json) | 1.30.27 | 40.0 MiB | 2026-11-02 | Official portable launcher bundle containing 200+ NirSoft utilities in one application folder. | [Homepage](https://launcher.nirsoft.net/) |
+| [nirlauncher.schinese](../bucket/nirlauncher.schinese.json) | 1.30.27 | — | — | Simplified Chinese translation pack for the NirSoft utilities included in NirLauncher. | [Homepage](https://launcher.nirsoft.net/) |
 
 <a id="rizonesoft-suite"></a>
 ## Rizonesoft Suite
