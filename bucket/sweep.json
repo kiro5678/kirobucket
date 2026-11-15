@@ -1,16 +1,16 @@
 {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "Windows disk-space analyzer for locating and permanently removing regenerable build artifacts.",
     "homepage": "https://github.com/yaffalhakim1/sweep",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/yaffalhakim1/sweep/releases/download/v0.3.0/Sweep-0.3.0-windows-amd64.exe",
-            "hash": "4ec11c1576dbb56285ddced48c27e55d7f5311c16c9f3e187d10d5d4ac452bca"
+            "url": "https://github.com/yaffalhakim1/sweep/releases/download/v0.4.0/Sweep-0.4.0-windows-amd64.exe",
+            "hash": "7f2a72f78884fd6418be5e7e27fa4ab83403661d2576c90351f457fe7320d56c"
         },
         "arm64": {
-            "url": "https://github.com/yaffalhakim1/sweep/releases/download/v0.3.0/Sweep-0.3.0-windows-arm64.exe",
-            "hash": "b054fbcef1995896dccc73b164b0b89b45114e0328f4a27697a23370bff9d17f"
+            "url": "https://github.com/yaffalhakim1/sweep/releases/download/v0.4.0/Sweep-0.4.0-windows-arm64.exe",
+            "hash": "4a158f346edee376401eb68874a14b5c48748c244e88760514dca8efe1100e28"
         }
     },
     "pre_install": "$binary = Get-ChildItem -LiteralPath $dir -Filter 'Sweep-*-windows-*.exe' -File | Select-Object -First 1; if ($null -eq $binary) { throw 'Sweep executable was not found.' }; Rename-Item -LiteralPath $binary.FullName -NewName 'Sweep.exe'",
