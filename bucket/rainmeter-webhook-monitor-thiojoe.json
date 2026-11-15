@@ -27,5 +27,6 @@
             ]
         ]
     },
-    "notes": "Requires Rainmeter to be installed. The configuration file and debug logs are persisted across updates. The executable is a self-contained .NET 8 single-file application."
+    "notes": "Requires Rainmeter to be installed. The configuration file and debug logs are persisted across updates. The executable is a self-contained .NET 8 single-file application.",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000"
 }
