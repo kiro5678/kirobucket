@@ -7,21 +7,21 @@ This catalog covers the requested vendor pages and links each included program t
 | Developer / Suite | Manifests | Link |
 | --- | ---: | --- |
 | Awesome MyGo Community | 174 | [View](#awesome-mygo-showcase) |
-| Aurelitec Suite | 5 | [View](categories.md#aurelitec-suite) |
+| Aurelitec Suite | 5 | [View](#aurelitec) |
 | Auslogics Suite | 15 | [View](categories.md#auslogics-suite) |
 | ChemTable Suite | 5 | [View](categories.md#chemtable-suite) |
-| ComputerSluggish Suite | 1 | [View](categories.md#computersluggish-suite) |
-| EFSoftware Suite | 13 | [View](categories.md#efsoftware-suite) |
+| ComputerSluggish Suite | 1 | [View](#computersluggish) |
+| EFSoftware Suite | 13 | [View](#efsoftware) |
 | Eric Zimmerman Suite | 31 | [View](categories.md#eric-zimmerman-suite) |
-| Funk.eu Suite | 7 | [View](categories.md#funk-eu-suite) |
+| Funk.eu Suite | 7 | [View](#funk-eu) |
 | GRC Suite | 18 | [View](categories.md#grc-suite) |
 | MiTeC Suite | 22 | [View](categories.md#mitec-suite) |
-| Neuber Suite | 2 | [View](categories.md#neuber-suite) |
-| Rizonesoft Suite | 14 | [View](categories.md#rizonesoft-suite) |
+| Neuber Suite | 2 | [View](#neuber-software) |
+| Rizonesoft Suite | 15 | [View](#rizonesoft) |
+| Sordum Suite | 59 | [View](categories.md#sordum-suite) |
 | Skwire | 79 | [View](#skwire) |
 | SoftwareOK Suite | 81 | [View](categories.md#softwareok-suite) |
-| Sordum Suite | 63 | [View](categories.md#sordum-suite) |
-| ThioJoe | 13 | [View](#thiojoe) |
+| ThioJoe Suite | 13 | [View](#thiojoe) |
 | Türkaysoft Suite | 8 | [View](categories.md#turkaysoft-suite) |
 | Vovsoft Suite | 174 | [View](categories.md#vovsoft-suite) |
 
