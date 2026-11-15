@@ -44,10 +44,30 @@ jobs:
 
           $archive = Join-Path $env:RUNNER_TEMP 'nirlauncher-package.zip'
           $extractRoot = Join-Path $env:RUNNER_TEMP 'nirlauncher-extracted'
-          Invoke-WebRequest -Uri $downloadUrl -OutFile $archive -MaximumRedirection 10 -TimeoutSec 900
+          $response = Invoke-WebRequest -Uri $downloadUrl -OutFile $archive -MaximumRedirection 10 -TimeoutSec 900 -PassThru -Headers @{
+            Referer = 'https://launcher.nirsoft.net/'
+            'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36'
+          }
           $actualHash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash
+          $archiveInfo = Get-Item -LiteralPath $archive
+          $stream = [System.IO.File]::OpenRead($archive)
+          try {
+            $bytes = [byte[]]::new([Math]::Min(48, [int]$stream.Length))
+            [void]$stream.Read($bytes, 0, $bytes.Length)
+          } finally { $stream.Dispose() }
+          $headerHex = [BitConverter]::ToString($bytes)
+          $headerText = [System.Text.Encoding]::UTF8.GetString($bytes)
+          $contentType = [string]$response.Headers['Content-Type']
+          $finalUri = [string]$response.BaseResponse.RequestMessage.RequestUri
+          Write-Host "Download status: $($response.StatusCode)"
+          Write-Host "Download content type: $contentType"
+          Write-Host "Download final URI: $finalUri"
+          Write-Host "Downloaded file size: $($archiveInfo.Length) bytes"
+          Write-Host "Downloaded file header (hex): $headerHex"
+          Write-Host "Downloaded file header (text): $headerText"
+          Write-Host "Downloaded SHA-256: $actualHash"
           if ($actualHash -ine $expectedHash) {
-            throw "NirLauncher SHA-256 mismatch. Expected $expectedHash; got $actualHash."
+            throw "NirLauncher SHA-256 mismatch. Expected $expectedHash; got $actualHash. Inspect the download status, content type, size, and header above; the archive was not extracted."
           }
           Write-Host "Package SHA-256 verified: $actualHash"
 
