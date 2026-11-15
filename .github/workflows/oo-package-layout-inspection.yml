@@ -1,0 +1,119 @@
+name: Temporary O&O Package Layout Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/oo-package-layout-inspection.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check archive structure and embedded installer markers
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $targets = @(
+            @{ Name = 'O&O DiskRecovery'; Url = 'https://dl5.oo-software.com/files/oodiskrecovery14/140/OODiskRecovery1464Enu.exe' },
+            @{ Name = 'O&O AutoBackup'; Url = 'https://dl5.oo-software.com/files/ooautobackup8/82/OOAutoBackup8.exe' },
+            @{ Name = 'O&O DiskImage'; Url = 'https://dl5.oo-software.com/files/oodiskimage23/232/OODiskImage23PremiumEnu.exe' },
+            @{ Name = 'O&O DiskCommander'; Url = 'https://dl5.oo-software.com/files/oodiskcommander5/510/OODiskCommander5PremiumEnu.exe' },
+            @{ Name = 'O&O Defrag'; Url = 'https://dl5.oo-software.com/files/oodefrag32/321/OOD32Professional64Enu.exe' },
+            @{ Name = 'O&O SafeErase'; Url = 'https://dl5.oo-software.com/files/oosafeerase22/220/OOSafeErase22Professional64Enu.exe' },
+            @{ Name = 'O&O RegEditor'; Url = 'https://dl5.oo-software.com/files/ooregeditor16/161/OORegEditor.exe' },
+            @{ Name = 'O&O DeskInfo'; Url = 'https://dl5.oo-software.com/files/oodeskinfo2/OODeskInfo2.exe' }
+          )
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { throw '7-Zip was not found on the runner.' }
+          $work = Join-Path $env:RUNNER_TEMP 'oo-package-layout'
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# O&O packages — static archive and installer marker inspection')
+          $report.Add('')
+          $report.Add('No executable was run. Extraction, when possible, was performed only for file listing and path inspection.')
+          $report.Add('')
+
+          foreach ($target in $targets) {
+            $name = [IO.Path]::GetFileName(([uri]$target.Url).AbsolutePath)
+            $path = Join-Path $work $name
+            Invoke-WebRequest -Uri $target.Url -OutFile $path -TimeoutSec 600
+            $report.Add("## $($target.Name) — $name")
+            $test = @(& $sevenZip t -bso0 -bsp0 $path 2>&1 | ForEach-Object { "$_" })
+            $testExit = $LASTEXITCODE
+            $report.Add("- 7-Zip test exit code: $testExit")
+            foreach ($line in $test | Select-Object -Last 8) { $report.Add("  $line") }
+
+            $list = @(& $sevenZip l -slt $path 2>&1 | ForEach-Object { "$_" })
+            $listExit = $LASTEXITCODE
+            $report.Add("- 7-Zip list exit code: $listExit")
+            if ($listExit -eq 0) {
+              foreach ($line in $list | Select-Object -Last 150) { $report.Add("  $line") }
+              $extract = Join-Path $work ([IO.Path]::GetFileNameWithoutExtension($name))
+              New-Item -ItemType Directory -Path $extract -Force | Out-Null
+              $null = & $sevenZip x -y -bd "-o$extract" $path 2>&1
+              $extractExit = $LASTEXITCODE
+              $report.Add("- Static extraction exit code: $extractExit")
+              if ($extractExit -eq 0) {
+                $entries = Get-ChildItem -LiteralPath $extract -Recurse -File -Force
+                $report.Add("- Extracted file count: $($entries.Count)")
+                foreach ($entry in $entries | Select-Object -First 120) {
+                  $report.Add("  - $($entry.FullName.Substring($extract.Length).TrimStart('\','/')) ($($entry.Length) bytes)")
+                }
+              }
+            } else {
+              foreach ($line in $list | Select-Object -Last 10) { $report.Add("  $line") }
+            }
+
+            $bytes = [IO.File]::ReadAllBytes($path)
+            $ascii = [Text.Encoding]::ASCII.GetString($bytes)
+            $unicode = [Text.Encoding]::Unicode.GetString($bytes)
+            $textBlob = $ascii + "`n" + $unicode
+            $patterns = @(
+              'Inno Setup|Inno Setup Setup Data',
+              'NullsoftInst|Nullsoft Install System|NSIS',
+              'WixBundle|WixBurn',
+              'InstallShield',
+              'Advanced Installer|Caphyon',
+              'InstallAware',
+              'InstallAnywhere|Zero G',
+              'Wise Installation Wizard|Wise Installer',
+              'InstallForge',
+              'Setup Factory',
+              'BitRock|InstallBuilder',
+              'Qt Installer Framework|QtIFW',
+              'SquirrelSetup|Squirrel.Windows',
+              '7zS.sfx|7-Zip SFX',
+              'O&O Setup|OOSetup|O&O Software Setup',
+              'msiexec.exe|Windows Installer'
+            )
+            $hits = foreach ($pattern in $patterns) {
+              if ([regex]::IsMatch($textBlob, $pattern, [Text.RegularExpressions.RegexOptions]::IgnoreCase)) { $pattern }
+            }
+            $report.Add("- Installer marker candidates: $(if ($hits) { $hits -join '; ' } else { '(none found)' })")
+            $report.Add('')
+            Write-Host "Finished static inspection: $($target.Name) (7z test=$testExit, list=$listExit)"
+          }
+
+          $reportPath = Join-Path $env:GITHUB_WORKSPACE 'logs/manifests/2026-11-16-oo-package-layout-inspection.md'
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+
+      - name: Commit inspection report
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- logs/manifests/2026-11-16-oo-package-layout-inspection.md
+          git commit -m "docs: record O&O package layout inspection"
+          git push
