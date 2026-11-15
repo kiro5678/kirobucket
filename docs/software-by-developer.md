@@ -1,6 +1,4 @@
-# Software by Developer
-
-This catalog covers the requested vendor pages and links each included program to its Scoop manifest. Programs are also grouped by their primary function in [KiroBucket Categories](categories.md). EFSoftware was already represented by 13 manifests, so those entries are cross-referenced rather than duplicated.
+# categories Developer Index
 
 ## Developer Index
 
