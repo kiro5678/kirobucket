@@ -32,7 +32,7 @@
 | Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
 | Sync & Backup | 12 | [View](#sync-backup) |
 | System Monitoring & Hardware | 78 | [View](#system-monitoring-hardware) |
-| Sysinternals Suite | 76 | [View](#sysinternals-suite) |
+| Sysinternals Utilities | 75 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
