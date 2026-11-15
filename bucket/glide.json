@@ -1,16 +1,16 @@
 {
-    "version": "0.1.3",
+    "version": "2026.1113.1",
     "description": "Native selection and screenshot translator for Windows and macOS",
     "homepage": "https://github.com/anghunk/glide",
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/anghunk/glide/releases/download/v0.1.3/glide-0.1.3-windows-amd64.zip",
-            "hash": "4fac083d2b32a66941467c2607a18cf35249dbe369cac17dfb72bbcadb97cabb"
+            "url": "https://github.com/anghunk/glide/releases/download/v2026.1113.1/glide-2026.1113.1-windows-amd64.zip",
+            "hash": "6210c037e9cf19395b77450acafc209877573da491e210716b92864a9f3396ed"
         },
         "arm64": {
-            "url": "https://github.com/anghunk/glide/releases/download/v0.1.3/glide-0.1.3-windows-arm64.zip",
-            "hash": "a6e5b6755f8c11ca12e7c46ee4766caa9366ae28436443b58fe1f85fa6628a2d"
+            "url": "https://github.com/anghunk/glide/releases/download/v2026.1113.1/glide-2026.1113.1-windows-arm64.zip",
+            "hash": "77c655dc596552fa667ec3f796cd2271d669f87b283610eedb188a564621ff2a"
         }
     },
     "bin": "Glide.exe",
