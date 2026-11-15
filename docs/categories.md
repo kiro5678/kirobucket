@@ -31,7 +31,7 @@
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
 | Sync & Backup | 12 | [View](#sync-backup) |
-| System Monitoring & Hardware | 78 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
 | Sysinternals Utilities | 75 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
@@ -41,7 +41,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1204**
+**Total unique categorized manifests: 1205**
 
 
 ## Android & Device Tools
@@ -1130,6 +1130,7 @@
 | [vovsoft-vov-system-uptime](../bucket/vovsoft-vov-system-uptime.json) | 1.8 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Vov System Uptime. | [Homepage](https://vovsoft.com/software/vov-system-uptime/) |
 | [pc-uptime](../bucket/pc-uptime.json) | 1.0.0 | 64bit: 56.4 MiB | 2026-11-02 | Windows utility for tracking PC uptime, reviewing session history, and analyzing system stability. | [Homepage](https://uptime-pc.vercel.app/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [sysinternals](../bucket/sysinternals.json) | 2026.11.05 | — | 2026-11-05 | One Scoop app containing the Sysinternals Suite, Ctrl2Cap, and RootkitRevealer. | [Homepage](https://learn.microsoft.com/sysinternals/downloads/) |
 
 ## Text-to-Speech (TTS)
 
