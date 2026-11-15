@@ -3,25 +3,9 @@
     "description": "End-to-end encrypted file sharing, synchronization, and phone-to-computer backups.",
     "homepage": "https://github.com/saqibsiddiq/QurbSpace",
     "license": "MIT OR Apache-2.0",
-    "url": "https://github.com/saqibsiddiq/QurbSpace/releases/download/v0.2.0-beta.11/qurb_0.2.0-beta.11_x64-setup.exe",
+    "url": "https://github.com/saqibsiddiq/QurbSpace/releases/download/v0.2.0-beta.11/qurb_0.2.0-beta.11_x64-setup.exe#/dl.7z",
     "hash": "08faedcb2f3e952d72b5e8bdb2bb99c7991a9c4ee6ba95fb925d82cc304c85b5",
     "##": "Installer Type: NSIS",
-    "installer": {
-        "args": [
-            "/S",
-            "/D=$dir"
-        ]
-    },
-    "uninstaller": {
-        "script": [
-            "if ($cmd -ne 'update') {",
-            "    $uninstaller = Join-Path $dir 'uninstall.exe'",
-            "    if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw 'QurbSpace NSIS uninstaller was not found in the Scoop version directory.' }",
-            "    $process = Start-Process -FilePath $uninstaller -ArgumentList \"/S _?=$dir\" -Wait -PassThru -ErrorAction Stop",
-            "    if ($process.ExitCode -ne 0) { throw \"QurbSpace NSIS uninstaller exited with code $($process.ExitCode).\" }",
-            "}"
-        ]
-    },
     "bin": "qurb-desktop.exe",
     "shortcuts": [
         [
