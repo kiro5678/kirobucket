@@ -9,7 +9,7 @@
 | Clipboard Tools | 19 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 6 | [View](#cross-device-integration) |
-| Developer & Technical Tools | 52 | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 53 | [View](#developer-technical-tools) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
@@ -23,7 +23,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 28 | [View](#notch) |
 | Notes & Knowledge | 24 | [View](#notes-knowledge) |
-| Other Utilities | 131 | [View](#other-utilities) |
+| Other Utilities | 132 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
@@ -31,7 +31,7 @@
 | Speech-to-Text (STT) | 5 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
 | Sync & Backup | 12 | [View](#sync-backup) |
-| System Monitoring & Hardware | 76 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 77 | [View](#system-monitoring-hardware) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
@@ -40,7 +40,7 @@
 | Windows Customization | 97 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique manifests: 1096**
+**Total unique manifests: 1099**
 
 
 ## Android & Device Tools
@@ -202,6 +202,7 @@
 | [vovsoft-text-statistics-analyzer](../bucket/vovsoft-text-statistics-analyzer.json) | 4.0 | 6.7 MiB | 2026-08-20 | Portable edition of Vovsoft Text Statistics Analyzer. | [Homepage](https://vovsoft.com/software/text-statistics-analyzer/) |
 | [vovsoft-web-platform-identifier](../bucket/vovsoft-web-platform-identifier.json) | 1.6 | 3.2 MiB | 2026-08-13 | Portable edition of Vovsoft Web Platform Identifier. | [Homepage](https://vovsoft.com/software/web-platform-identifier/) |
 | [vovsoft-xml-to-csv-converter](../bucket/vovsoft-xml-to-csv-converter.json) | 1.4 | 2.2 MiB | 2026-08-13 | Portable edition of Vovsoft XML to CSV Converter. | [Homepage](https://vovsoft.com/software/xml-to-csv-converter/) |
+| [windows-input-monitoring-tests-thiojoe](../bucket/windows-input-monitoring-tests-thiojoe.json) | 1.0.0 | 30.0 KiB | 2025-01-27 | Test Windows keyboard input monitoring methods, including Raw Input, low-level hooks, and window messages. | [Homepage](https://github.com/ThioJoe/Windows-Input-Monitoring-Tests) |
 | [withdo](../bucket/withdo.json) | 0.15.0 | 16.5 MiB | 2026-11-05 | Local-first AI task manager and desktop assistant with agent integrations. | [Homepage](https://github.com/QingYunA/withdo) |
 | [xfetch](../bucket/xfetch.json) | 1.0.1 | 64bit: 8.3 MiB | 2026-10-25 | A customizable system information fetch tool. | [Homepage](https://xfetch-cli.github.io/web/) |
 | [zafuse](../bucket/zafuse.json) | 26.12 | 731.5 KiB | 2026-10-10 | INI file analysis tool for finding inconsistencies across configuration files. | [Homepage](https://github.com/turkaysoft/zafuse) |
@@ -713,6 +714,7 @@
 | [hob](../bucket/hob.json) | 0.2.6 | — | — | Local AI desktop assistant for working with documents, files, and everyday tasks using models that run on your computer. | [Homepage](https://www.hob.chat/) |
 | [monitorsnap](../bucket/monitorsnap.json) | 2.6.2 | — | — | Save and restore Windows display layouts, resolutions, refresh rates, and hotkey presets. | [Homepage](https://github.com/GTRows/MonitorSnap) |
 | [msstore-downloader](../bucket/msstore-downloader.json) | 1.0.2 | — | — | Windows desktop utility for retrieving and downloading Microsoft Store app packages. | [Homepage](https://github.com/inteliboy/MSStoreDownloader) |
+| [rainmeter-webhook-monitor-thiojoe](../bucket/rainmeter-webhook-monitor-thiojoe.json) | 1.1.1 | 59.6 MiB | 2025-04-19 | Receive webhook messages and send configured commands to Rainmeter skins. | [Homepage](https://github.com/ThioJoe/Rainmeter-Webhook-Monitor) |
 | [skim](../bucket/skim.json) | 1.0.34 | — | — | A fast, minimalist, AI-native email client for Windows. | [Homepage](https://skim-tech.com) |
 | [systemtraymenu-v1](../bucket/systemtraymenu-v1.json) | 1.3.5.0 | — | — | Open-source desktop toolbar and Start Menu alternative for browsing and opening files, folders, and links. | [Homepage](https://github.com/Hofknecht/SystemTrayMenu) |
 | [systemtraymenu-v3](../bucket/systemtraymenu-v3.json) | 3.1.256 | — | — | Portable folder-based launcher and menu for files, programs and links. | [Homepage](https://hofknecht.eu/systemtraymenu/en.html) |
@@ -1104,6 +1106,7 @@
 | [sysmanager](../bucket/sysmanager.json) | 1.131.3 | 81.3 MiB | 2026-10-31 | Modern Windows system monitoring and management toolkit. | [Homepage](https://github.com/laurentiu021/SystemManager) |
 | [systeminformer](../bucket/systeminformer.json) | 4.0.26241.138 | 21.1 MiB | 2026-08-29 | A powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware. | [Homepage](https://systeminformer.com/) |
 | [taskexplorer](../bucket/taskexplorer.json) | 2.0.1 | 64bit: 17.8 MiB | 2026-10-12 | Advanced process and system monitoring tool | [Homepage](https://github.com/DavidXanatos/TaskExplorer) |
+| [test-architecture-speed-thiojoe](../bucket/test-architecture-speed-thiojoe.json) | 1.0.0 | 64bit: 85.1 KiB / 32bit: 55.3 KiB | 2024-12-06 | Benchmark x86 and x64 executable performance across linked lists, allocations, strings, binary trees, and dictionaries; includes a results comparer. | [Homepage](https://github.com/ThioJoe/Test-Architecture-Speed) |
 | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | 1.4.1 | 273.8 KiB | 2026-07-28 | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
 | [turkaysoft-glow](../bucket/turkaysoft-glow.json) | 26.14 | 1.9 MiB | 2026-10-16 | Advanced system analysis software for Windows. | [Homepage](https://github.com/turkaysoft/glow) |
 | [uefitool](../bucket/uefitool.json) | A76 | 64bit: 6.8 MiB / 32bit: 5.1 MiB | 2026-10-24 | UEFITool is a viewer and editor of firmware images conforming to UEFI Platform Interface (PI) Specifications. | [Homepage](https://github.com/LongSoft/UEFITool) |
@@ -1917,7 +1920,7 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 
 ## ThioJoe Suite
 
-Publisher cross-list of 13 manifests associated with ThioJoe. Each entry is also listed under its functional category above.
+Publisher cross-list of 16 manifests associated with ThioJoe. Each entry is also listed under its functional category above.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -1929,8 +1932,11 @@ Publisher cross-list of 13 manifests associated with ThioJoe. Each entry is also
 | [fastsigcheck-thiojoe](../bucket/fastsigcheck-thiojoe.json) | 1.0.1 | 42.9 KiB | 2024-06-24 | Verify embedded Windows Authenticode signatures through the native WinVerifyTrust API. | [Homepage](https://github.com/ThioJoe/FastSigCheck) |
 | [jpeg2png-thiojoe](../bucket/jpeg2png-thiojoe.json) | 1.02 | 64bit: 1.4 MiB / 32bit: 1.3 MiB | 2024-10-30 | Command-line utility for smoother JPEG decoding and restoration. | [Homepage](https://github.com/ThioJoe/jpeg2png) |
 | [modern-windows-message-box-generator-thiojoe](../bucket/modern-windows-message-box-generator-thiojoe.json) | 1.2.1 | 111.7 MiB | 2025-03-30 | Generate customizable modern Windows message boxes and Task Dialogs. | [Homepage](https://github.com/ThioJoe/Modern-Windows-Message-Box-Generator) |
+| [rainmeter-webhook-monitor-thiojoe](../bucket/rainmeter-webhook-monitor-thiojoe.json) | 1.1.1 | 59.6 MiB | 2025-04-19 | Receives webhooks and executes configured commands in Rainmeter skins. | [Homepage](https://github.com/ThioJoe/Rainmeter-Webhook-Monitor) |
 | [streamdeck-brightness-controller-thiojoe](../bucket/streamdeck-brightness-controller-thiojoe.json) | 1.0.1 | 31.1 KiB | 2025-06-28 | Set the display brightness of an Elgato Stream Deck from the command line. | [Homepage](https://github.com/ThioJoe/StreamDeckBrightnessController) |
+| [test-architecture-speed-thiojoe](../bucket/test-architecture-speed-thiojoe.json) | 1.0.0 | 64bit: 85.1 KiB / 32bit: 55.3 KiB | 2024-12-06 | Compares benchmark results for x86 and x64 builds across several .NET operations. | [Homepage](https://github.com/ThioJoe/Test-Architecture-Speed) |
 | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) | 1.4.1 | 273.8 KiB | 2026-07-28 | Lightweight Windows tool that notifies you about new auto-starting background services and scheduled tasks. | [Homepage](https://github.com/ThioJoe/Thio-Background-App-Notifier) |
 | [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) | 0.5.2 | 80.0 MiB | 2026-05-31 | AI desktop agent that guides or automates GUI interactions across Windows applications. | [Homepage](https://github.com/ThioJoe/Thio-Universal-Agent) |
+| [windows-input-monitoring-tests-thiojoe](../bucket/windows-input-monitoring-tests-thiojoe.json) | 1.0.0 | 30.0 KiB | 2025-01-27 | Tests Windows keyboard input monitoring methods, including Raw Input and low-level hooks. | [Homepage](https://github.com/ThioJoe/Windows-Input-Monitoring-Tests) |
 | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) | 1.2.4 | 234.8 KiB | 2026-11-08 | Create shortcuts to Windows special folders, settings pages, task links, and URL protocols. | [Homepage](https://github.com/ThioJoe/Windows-Super-God-Mode) |
 | [yt-spammer-purge-thiojoe](../bucket/yt-spammer-purge-thiojoe.json) | 2.18.0 | 19.7 MiB | 2025-05-27 | Scan YouTube comments for spam and review matches for moderation actions. | [Homepage](https://github.com/ThioJoe/YT-Spammer-Purge) |

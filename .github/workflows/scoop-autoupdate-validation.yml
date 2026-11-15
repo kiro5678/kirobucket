@@ -126,23 +126,72 @@ jobs:
               $testManifest = Get-Content -LiteralPath $testManifestPath -Raw | ConvertFrom-Json -AsHashtable
               $hashSeedPlan = [System.Collections.Generic.List[object]]::new()
 
+              function Get-ManifestStringItems {
+                param([object]$Value)
+
+                if ($null -eq $Value) { return }
+                if ($Value -is [string]) {
+                  Write-Output ([string]$Value)
+                  return
+                }
+                if ($Value -is [System.Collections.IEnumerable]) {
+                  foreach ($item in $Value) {
+                    if ($null -eq $item) {
+                      Write-Output ''
+                    } else {
+                      Write-Output ([string]$item)
+                    }
+                  }
+                }
+              }
+
+              # Seed every URL independently. Scoop manifests may declare multiple assets
+              # per architecture, with a corresponding hash entry for each asset.
               if ($testManifest.ContainsKey('architecture') -and $testManifest.architecture) {
                 foreach ($architectureName in $testManifest.architecture.Keys) {
                   $architecture = $testManifest.architecture[$architectureName]
-                  if ($architecture.url -and [string]::IsNullOrWhiteSpace([string]$architecture.hash)) {
+                  $urlItems = @(Get-ManifestStringItems $architecture.url)
+                  $hashItems = @(Get-ManifestStringItems $architecture.hash)
+                  for ($urlIndex = 0; $urlIndex -lt $urlItems.Count; $urlIndex++) {
+                    $currentHash = ''
+                    if ($hashItems.Count -eq 1 -and $urlItems.Count -gt 1) {
+                      $currentHash = [string]$hashItems[0]
+                    } elseif ($urlIndex -lt $hashItems.Count) {
+                      $currentHash = [string]$hashItems[$urlIndex]
+                    }
+                    if ([string]::IsNullOrWhiteSpace($currentHash)) {
+                      $hashSeedPlan.Add([ordered]@{
+                        scope = 'architecture'
+                        name = [string]$architectureName
+                        url = [string]$urlItems[$urlIndex]
+                        url_index = $urlIndex
+                        url_count = $urlItems.Count
+                        url_was_array = ($architecture.url -is [array])
+                      })
+                    }
+                  }
+                }
+              } else {
+                $urlItems = @(Get-ManifestStringItems $testManifest.url)
+                $hashItems = @(Get-ManifestStringItems $testManifest.hash)
+                for ($urlIndex = 0; $urlIndex -lt $urlItems.Count; $urlIndex++) {
+                  $currentHash = ''
+                  if ($hashItems.Count -eq 1 -and $urlItems.Count -gt 1) {
+                    $currentHash = [string]$hashItems[0]
+                  } elseif ($urlIndex -lt $hashItems.Count) {
+                    $currentHash = [string]$hashItems[$urlIndex]
+                  }
+                  if ([string]::IsNullOrWhiteSpace($currentHash)) {
                     $hashSeedPlan.Add([ordered]@{
-                      scope = 'architecture'
-                      name = [string]$architectureName
-                      url = [string]$architecture.url
+                      scope = 'root'
+                      name = ''
+                      url = [string]$urlItems[$urlIndex]
+                      url_index = $urlIndex
+                      url_count = $urlItems.Count
+                      url_was_array = ($testManifest.url -is [array])
                     })
                   }
                 }
-              } elseif ($testManifest.url -and [string]::IsNullOrWhiteSpace([string]$testManifest.hash)) {
-                $hashSeedPlan.Add([ordered]@{
-                  scope = 'root'
-                  name = ''
-                  url = [string]$testManifest.url
-                })
               }
 
               foreach ($seed in $hashSeedPlan) {
@@ -159,9 +208,28 @@ jobs:
                 Remove-Item -LiteralPath $seedPath -Force -ErrorAction SilentlyContinue
 
                 if ($seed.scope -eq 'architecture') {
-                  $testManifest.architecture[$seed.name]['hash'] = $seedHash
+                  $targetManifest = $testManifest.architecture[$seed.name]
                 } else {
-                  $testManifest['hash'] = $seedHash
+                  $targetManifest = $testManifest
+                }
+
+                $existingHashes = @(Get-ManifestStringItems $targetManifest.hash)
+                $hashValues = [System.Collections.Generic.List[string]]::new()
+                for ($hashIndex = 0; $hashIndex -lt [int]$seed.url_count; $hashIndex++) {
+                  if ($hashIndex -lt $existingHashes.Count) {
+                    $hashValues.Add([string]$existingHashes[$hashIndex])
+                  } elseif ($existingHashes.Count -eq 1) {
+                    $hashValues.Add([string]$existingHashes[0])
+                  } else {
+                    $hashValues.Add('')
+                  }
+                }
+                $hashValues[[int]$seed.url_index] = $seedHash
+
+                if ($seed.url_was_array -or [int]$seed.url_count -gt 1) {
+                  $targetManifest['hash'] = @($hashValues.ToArray())
+                } else {
+                  $targetManifest['hash'] = $seedHash
                 }
                 Write-Host "Temporary SHA-256 seed for $manifestName ($($seed.scope)): $seedHash"
               }

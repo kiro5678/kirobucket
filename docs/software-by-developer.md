@@ -21,7 +21,7 @@ This catalog covers the requested vendor pages and links each included program t
 | Sordum Suite | 59 | [View](categories.md#sordum-suite) |
 | Skwire | 79 | [View](#skwire) |
 | SoftwareOK Suite | 81 | [View](categories.md#softwareok-suite) |
-| ThioJoe Suite | 13 | [View](#thiojoe) |
+| ThioJoe Suite | 16 | [View](#thiojoe) |
 | Türkaysoft Suite | 8 | [View](categories.md#türkaysoft-suite) |
 | Vovsoft Suite | 174 | [View](categories.md#vovsoft-suite) |
 
@@ -203,9 +203,12 @@ This section lists the 79 Skwire programs currently represented by manifests in 
 | [FastSigCheck](https://github.com/ThioJoe/FastSigCheck) | Verify embedded Windows Authenticode signatures | Security | [fastsigcheck-thiojoe](../bucket/fastsigcheck-thiojoe.json) |
 | [jpeg2png](https://github.com/ThioJoe/jpeg2png) | Restore smoother images from JPEG data | Images & Photos | [jpeg2png-thiojoe](../bucket/jpeg2png-thiojoe.json) |
 | [Modern Windows Message Box Generator](https://github.com/ThioJoe/Modern-Windows-Message-Box-Generator) | Create customizable modern Windows message boxes and Task Dialogs | Developer & Technical Tools | [modern-windows-message-box-generator-thiojoe](../bucket/modern-windows-message-box-generator-thiojoe.json) |
+| [Rainmeter Webhook Monitor](https://github.com/ThioJoe/Rainmeter-Webhook-Monitor) | Receive webhook messages and execute configured commands in Rainmeter skins | Other Utilities | [rainmeter-webhook-monitor-thiojoe](../bucket/rainmeter-webhook-monitor-thiojoe.json) |
 | [Stream Deck Brightness Controller](https://github.com/ThioJoe/StreamDeckBrightnessController) | Set the brightness of an Elgato Stream Deck display from the command line | System Monitoring & Hardware | [streamdeck-brightness-controller-thiojoe](../bucket/streamdeck-brightness-controller-thiojoe.json) |
+| [Test Architecture Speed](https://github.com/ThioJoe/Test-Architecture-Speed) | Benchmark x86 and x64 executables and compare their JSON results | System Monitoring & Hardware | [test-architecture-speed-thiojoe](../bucket/test-architecture-speed-thiojoe.json) |
 | [Thio's Background App Notifier](https://github.com/ThioJoe/Thio-Background-App-Notifier) | Detect new auto-starting background services and scheduled tasks | System Monitoring & Hardware | [thio-background-app-notifier](../bucket/thio-background-app-notifier.json) |
 | [Thio's Universal Agent](https://github.com/ThioJoe/Thio-Universal-Agent) | AI desktop agent for guided or autonomous GUI interaction | Other Utilities | [thio-universal-agent-thiojoe](../bucket/thio-universal-agent-thiojoe.json) |
+| [Windows Input Monitoring Tests](https://github.com/ThioJoe/Windows-Input-Monitoring-Tests) | Test Windows keyboard input monitoring methods such as Raw Input and low-level hooks | Developer & Technical Tools | [windows-input-monitoring-tests-thiojoe](../bucket/windows-input-monitoring-tests-thiojoe.json) |
 | [Windows Super God Mode](https://github.com/ThioJoe/Windows-Super-God-Mode) | Generate shortcuts to Windows special folders, settings, task links, and URI protocols | Windows Customization | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) |
 | [YouTube Spammer Purge](https://github.com/ThioJoe/YT-Spammer-Purge) | Scan YouTube comments and review potential spam for moderation | Browsers & Communication | [yt-spammer-purge-thiojoe](../bucket/yt-spammer-purge-thiojoe.json) |
 
