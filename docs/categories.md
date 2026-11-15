@@ -12,7 +12,7 @@
 | Developer & Technical Tools | 52 | [View](#developer-technical-tools) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 85 | [View](#file-management) |
+| File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 34 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 19 | [View](#games-game-utilities) |
@@ -307,7 +307,6 @@
 | [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | 12.2 MiB | 2026-04-15 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
 | [mouzi](../bucket/mouzi.json) | 0.2.1 | 64bit: 17.7 MiB | 2026-09-27 | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. | [Homepage](https://github.com/hsr88/mouzi) |
 | [mucommander](../bucket/mucommander.json) | 1.6.2-1 | 64bit: 135.4 MiB | 2026-05-14 | Dual-pane file manager (stable release). | [Homepage](https://www.mucommander.com) |
-
 | [softwareok-new-file-time](../bucket/softwareok-new-file-time.json) | 8.31 | 32bit: 154.0 KiB / 64bit: 181.6 KiB | 2026-10-30 | NewFileTime is a Windows tool that provides you easy access to correct or manipulate any of the timestamps for any file and folder on your Windows system. | [Homepage](http://www.softwareok.com/?seite=Microsoft/NewFileTime) |
 | [softwareok-new-file-time.unicode](../bucket/softwareok-new-file-time.unicode.json) | 8.31 | 159.1 KiB | 2026-10-30 | NewFileTime is a Windows tool that provides you easy access to correct or manipulate any of the timestamps for any file and folder on your Windows system. | [Homepage](http://www.softwareok.com/?seite=Microsoft/NewFileTime) |
 | [nirlauncher.schinese](../bucket/nirlauncher.schinese.json) | 1.30.26 | — | — | Most of NirSoft utilities are translated to other languages by volunteers from around the world. In the following section, you can download all translations of the desired language in one zip file, and extract them into NirSoft folder with all other utilities. After you do that, you'll be able to use the utilities of NirSoft in your preferred language, as long as there is a translation file for the utility that you use. | [Homepage](https://launcher.nirsoft.net/) |
