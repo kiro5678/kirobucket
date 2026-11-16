@@ -26,5 +26,5 @@
             }
         }
     },
-    "notes": "Portable freeware. Settings are stored in the current user's LocalAppData by default; placing OODeskInfo.cfg beside the executable enables portable configuration."
+    "notes": "Portable freeware requiring no administrator rights or background service. Settings default to the current user's LocalAppData; place OODeskInfo.cfg beside the executable for portable configuration."
 }

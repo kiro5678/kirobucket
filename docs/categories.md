@@ -983,6 +983,8 @@
 | [vovsoft-file-checksum-calculator](../bucket/vovsoft-file-checksum-calculator.json) | 2.5 | 2.9 MiB | 2026-08-13 | Portable edition of Vovsoft File Checksum Calculator. | [Homepage](https://vovsoft.com/software/file-checksum-calculator/) |
 | [vovsoft-password-generator](../bucket/vovsoft-password-generator.json) | 2.2 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Password Generator. | [Homepage](https://vovsoft.com/software/password-generator/) |
 | [yamira](../bucket/yamira.json) | 26.11 | 667.5 KiB | 2026-10-10 | USB drive protection tool for Windows. | [Homepage](https://github.com/turkaysoft/yamira) |
+| [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
+
 
 ## Speech-to-Text (STT)
 
@@ -1030,6 +1032,11 @@
 | [vovsoft-disk-benchmark](../bucket/vovsoft-disk-benchmark.json) | 2.0 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Disk Benchmark. | [Homepage](https://vovsoft.com/software/disk-benchmark/) |
 | [vovsoft-disk-monitor-gadget](../bucket/vovsoft-disk-monitor-gadget.json) | 2.1 | 2.5 MiB | 2026-08-13 | Portable edition of Vovsoft Disk Monitor Gadget. | [Homepage](https://vovsoft.com/software/disk-monitor-gadget/) |
 | [vovsoft-prevent-disk-sleep](../bucket/vovsoft-prevent-disk-sleep.json) | 5.3 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Prevent Disk Sleep. | [Homepage](https://vovsoft.com/software/prevent-disk-sleep/) |
+| [oo-diskrecovery](../bucket/oo-diskrecovery.json) | 14.0.17 | — | — | Recover deleted files and data from damaged file systems. | [Homepage](https://www.oo-software.com/en/products/oodiskrecovery) |
+| [oo-diskimage](../bucket/oo-diskimage.json) | 23.2.26060 | — | — | Create and restore full disk images and Windows system backups. | [Homepage](https://www.oo-software.com/en/diskimage-backup-your-data) |
+| [oo-diskcommander](../bucket/oo-diskcommander.json) | 5.1.1020 | — | — | Analyze drives and inspect storage contents. | [Homepage](https://www.oo-software.com/en/oodiskcommander) |
+| [oo-defrag](../bucket/oo-defrag.json) | 32.1.26138 | — | — | Defragment and optimize Windows storage drives. | [Homepage](https://www.oo-software.com/en/products/oodefrag) |
+
 
 ## Sync & Backup
 
@@ -1047,6 +1054,8 @@
 | [sordum-simple-firefox-backup](../bucket/sordum-simple-firefox-backup.json) | 1.2 | 956.4 KiB | 2025-05-01 | Simple Firefox Backup is a lightweight application that helps users create backup copies of their Mozilla Firefox data. | [Homepage](https://www.sordum.org/12298/simple-firefox-backup-v1-2/) |
 | [stimesync](../bucket/stimesync.json) | 1.0.1 | 937.3 KiB | 2023-09-14 | Simple SNTP atomic clock time sync GUI app for Windows. | [Homepage](https://github.com/setsumi/stimesync) |
 | [syncthing](../bucket/syncthing.json) | 2.1.7 | 64bit: 13.6 MiB / 32bit: 13.3 MiB / arm64: 12.3 MiB | 2026-10-21 | Open Source Continuous File Synchronization. | [Homepage](https://syncthing.net/) |
+| [oo-autobackup](../bucket/oo-autobackup.json) | 8.2.1014 | 64bit: 87.6 MiB | — | Automatically back up and synchronize files and folders. | [Homepage](https://www.oo-software.com/en/autobackup-sync-files) |
+
 
 ## System Monitoring & Hardware
 
@@ -1131,6 +1140,8 @@
 | [pc-uptime](../bucket/pc-uptime.json) | 1.0.0 | 64bit: 56.4 MiB | 2026-11-02 | Windows utility for tracking PC uptime, reviewing session history, and analyzing system stability. | [Homepage](https://uptime-pc.vercel.app/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [sysinternals](../bucket/sysinternals.json) | 2026.11.05 | — | 2026-11-05 | One Scoop app containing the Sysinternals Suite, Ctrl2Cap, RootkitRevealer, and 64-bit/ARM64 PortMon. | [Homepage](https://learn.microsoft.com/sysinternals/downloads/) |
+| [oo-deskinfo](../bucket/oo-deskinfo.json) | 2.0.1033 | 64bit: 76.3 MiB | 2026-01-28 | Portable desktop system information overlay and resource monitor. | [Homepage](https://www.oo-software.com/en/oodeskinfo) |
+
 
 ## Text-to-Speech (TTS)
 
@@ -1359,6 +1370,8 @@
 | [winscript](../bucket/winscript.json) | 2.27.1 | 13.2 MiB | 2026-10-31 | Open-source Windows tool for building custom scripts for debloating, privacy, performance and app installation. | [Homepage](https://winscript.cc/) |
 | [winutil](../bucket/winutil.json) | 26.10.07 | 906.1 KiB | 2026-10-07 | Windows utility for installing programs, applying system tweaks, troubleshooting, and configuring Windows updates. | [Homepage](https://winutil.christitus.com/) |
 | [winzenith](../bucket/winzenith.json) | 1.3.5 | 63.2 MiB | 2026-10-01 | Portable Windows system optimizer and cleaner with startup manager, scheduled tasks, software updater, uninstaller, and system tools. | [Homepage](https://winzenith.github.io/) |
+| [oo-regeditor](../bucket/oo-regeditor.json) | 16.1.6660 | 15.1 MiB | — | Portable advanced Windows Registry editor. | [Homepage](https://www.oo-software.com/en/ooregeditor) |
+
 
 ## Windows Update & Management
 
