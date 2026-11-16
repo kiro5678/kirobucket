@@ -22,7 +22,7 @@
 | Media & Audio/Video | 55 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
-| Notch | 29 | [View](#notch) |
+| Notch | 30 | [View](#notch) |
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
 | Other Utilities | 135 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
@@ -42,7 +42,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1219**
+**Total unique categorized manifests: 1220**
 
 
 ## Android & Device Tools
@@ -693,6 +693,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [winnotch](../bucket/winnotch.json) | 0.7.2 | 64bit: 75.0 MiB | 2026-07-03 | Dynamic Island-style notch overlay for Windows with media controls, calendar, battery, webcam, volume and brightness HUDs, file staging, and plugins. | [Homepage](https://n3uralcreativity.github.io/WinNotch/) |
 | [wnotch](../bucket/wnotch.json) | 0.22.0 | 64bit: 70.0 MiB | 2026-10-30 | Windows Dynamic Notch with media controls, system HUDs, file shelf, terminal, agent integrations, widgets, and plugins. | [Homepage](https://github.com/Brick-Bread/WNotch) |
 | [yata](../bucket/yata.json) | 0.7.1 | 64bit: 2.6 MiB | 2026-10-29 | Windows Dynamic Notch with synchronized lyrics, calendar, reminders, tasks, Pomodoro timer, and animated Raven companion. | [Homepage](https://getyata.app/) |
+| [wowisland](../bucket/wowisland.json) | 0.1.4 | 64bit: 10.8 MiB | 2026-11-16 | Dynamic Island overlay for Windows with music controls, synced lyrics, notifications, downloads, and phone sharing. | [Homepage](https://github.com/Belius303/wowisland) |
 
 ## Notes & Knowledge
 
