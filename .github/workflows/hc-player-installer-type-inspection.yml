@@ -122,7 +122,165 @@ jobs:
           # Download the current Windows x64 portable build of Detect It Easy.
           $dieRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/horsicq/DIE-engine/releases/latest" -Headers $headers -TimeoutSec 45
           $dieAsset = $dieRelease.assets |
-            Where-Object { $_.name -match '^die_win64_portable_[0-9.]+_x64\.zip$' } |
+            Where-Object { $_.name -match '^die_win64_[0-9.]+\.zip } |
+            Select-Object -First 1
+          if (-not $dieAsset) {
+            throw "Could not find a Windows x64 portable Detect It Easy archive."
+          }
+
+          $dieZip = Join-Path $workDir $dieAsset.name
+          $dieDir = Join-Path $workDir "die-tool"
+          Invoke-WebRequest -Uri $dieAsset.browser_download_url -OutFile $dieZip -MaximumRedirection 10 -TimeoutSec 300
+          if ((Get-Item -LiteralPath $dieZip).Length -lt 100KB) {
+            throw "Detect It Easy archive is unexpectedly small."
+          }
+          if ($dieAsset.digest -match '^sha256:([0-9a-fA-F]{64})$') {
+            $dieExpected = $Matches[1]
+            $dieActual = (Get-FileHash -LiteralPath $dieZip -Algorithm SHA256).Hash
+            if ($dieActual -ine $dieExpected) {
+              throw "Detect It Easy archive SHA-256 mismatch."
+            }
+          } else {
+            Write-Warning "No GitHub SHA-256 digest was provided for the Detect It Easy archive."
+          }
+
+          Expand-Archive -LiteralPath $dieZip -DestinationPath $dieDir -Force
+          $diec = Get-ChildItem -LiteralPath $dieDir -Filter "diec.exe" -Recurse -File |
+            Select-Object -First 1
+          if (-not $diec) { throw "diec.exe was not found in the Detect It Easy archive." }
+
+          # Run Detect It Easy; this analyzes the file and does not launch the installer.
+          $dieOutput = @(& $diec.FullName $installer 2>&1 | ForEach-Object { "$_" })
+          $dieExitCode = $LASTEXITCODE
+          $dieOutput | Set-Content -LiteralPath (Join-Path $workDir "02-detect-it-easy.txt") -Encoding utf8
+          if ($dieExitCode -ne 0 -or $dieOutput.Count -eq 0) {
+            throw "Detect It Easy failed with exit code $dieExitCode."
+          }
+          Write-Output "Detect It Easy version: $($dieRelease.tag_name)"
+          $dieOutput | ForEach-Object { Write-Output $_ }
+
+          # Scan ASCII and UTF-16 strings for installer-family markers and possible switches.
+          # These matches are clues only; they do not prove that a command-line switch works.
+          $signatureRegex = [System.Text.RegularExpressions.Regex]::new(
+            'Inno Setup Setup Data|Inno Setup|NullsoftInst|Nullsoft Install System|NSIS|WixBundle|WixBurn|InstallShield|Advanced Installer|Caphyon|InstallAware|SquirrelSetup|Squirrel\.Windows|7zS\.sfx|Qt Installer Framework|QtIFW',
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+          )
+          $switchRegex = [System.Text.RegularExpressions.Regex]::new(
+            '(?i)(/VERYSILENT|/SILENT|/SUPPRESSMSGBOXES|/NORESTART|/DIR=|/CURRENTUSER|/ALLUSERS|/S\b|/D=|--silent|--quiet|--unattended)',
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+          )
+          $markerHits = [System.Collections.Generic.List[string]]::new()
+          $switchHits = [System.Collections.Generic.List[string]]::new()
+
+          $stream = [System.IO.File]::OpenRead($installer)
+          try {
+            $chunkSize = 4MB
+            $overlap = 1024
+            $buffer = [byte[]]::new($chunkSize + $overlap)
+            $carry = 0
+            while ($true) {
+              $read = $stream.Read($buffer, $carry, $chunkSize)
+              if ($read -eq 0) { break }
+              $total = $carry + $read
+              $ascii = [System.Text.Encoding]::ASCII.GetString($buffer, 0, $total)
+              $unicodeLength = $total - ($total % 2)
+              $unicode = [System.Text.Encoding]::Unicode.GetString($buffer, 0, $unicodeLength).Replace([string][char]0, "")
+
+              foreach ($block in @($ascii, $unicode)) {
+                foreach ($match in $signatureRegex.Matches($block)) {
+                  if (-not $markerHits.Contains($match.Value)) { $markerHits.Add($match.Value) }
+                }
+                foreach ($match in $switchRegex.Matches($block)) {
+                  if (-not $switchHits.Contains($match.Value)) { $switchHits.Add($match.Value) }
+                }
+              }
+
+              $carry = [Math]::Min($overlap, $total)
+              [Array]::Copy($buffer, $total - $carry, $buffer, 0, $carry)
+            }
+          } finally {
+            $stream.Dispose()
+          }
+
+          # Try a read-only archive listing when 7-Zip is available on the runner.
+          $sevenZip = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+          if (-not $sevenZip) { $sevenZip = Get-Command "7z" -ErrorAction SilentlyContinue }
+          $archiveListing = @()
+          if ($sevenZip) {
+            $archiveListing = @(& $sevenZip.Source l -slt $installer 2>&1 | ForEach-Object { "$_" })
+            $archiveListing | Set-Content -LiteralPath (Join-Path $workDir "03-7zip-listing.txt") -Encoding utf8
+          }
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add("HC Player installer static analysis")
+          $report.Add("===================================")
+          $report.Add("Release: $($release.tag_name)")
+          $report.Add("File: $($asset.name)")
+          $report.Add("SHA-256: $actualHash")
+          $report.Add("PE architecture: $architecture")
+          $report.Add("")
+          $report.Add("Detect It Easy output:")
+          foreach ($line in $dieOutput) { $report.Add([string]$line) }
+          $report.Add("")
+          $report.Add("Installer-family strings (heuristic):")
+          if ($markerHits.Count) {
+            foreach ($hit in $markerHits) { $report.Add("- $hit") }
+          } else {
+            $report.Add("No recognized installer-family marker was found.")
+          }
+          $report.Add("")
+          $report.Add("Possible command-line switch strings (not verified):")
+          if ($switchHits.Count) {
+            foreach ($hit in $switchHits) { $report.Add("- $hit") }
+          } else {
+            $report.Add("No recognized silent-install switch strings were found.")
+          }
+          $report.Add("")
+          if ($sevenZip) {
+            $report.Add("7-Zip archive listing (read-only; exit code $LASTEXITCODE):")
+            foreach ($line in ($archiveListing | Select-Object -First 100)) { $report.Add([string]$line) }
+          } else {
+            $report.Add("7-Zip was unavailable; archive listing was skipped.")
+          }
+          $report.Add("")
+          $report.Add("Caution: string matches can originate from bundled libraries. Detect It Easy output is the primary installer-family evidence.")
+          $report.Add("The target installer was never executed and no application payload was installed.")
+          $report | Set-Content -LiteralPath (Join-Path $workDir "04-final-report.txt") -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+
+          @(
+            ""
+            "## HC Player installer identification"
+            ""
+            "- **Release:** $($release.tag_name)"
+            "- **File:** $($asset.name)"
+            "- **SHA-256:** $actualHash"
+            "- **PE architecture:** $architecture"
+            "- **Detect It Easy:** $($dieRelease.tag_name)"
+            ""
+            "### Detect It Easy output"
+            ""
+            $dieOutput
+            ""
+            "### Installer-family strings (heuristic)"
+            ""
+            $(if ($markerHits.Count) { $markerHits | ForEach-Object { "- $_" } } else { "No recognized marker found." })
+            ""
+            "### Possible command-line switches (not verified)"
+            ""
+            $(if ($switchHits.Count) { $switchHits | ForEach-Object { "- $_" } } else { "No recognized switch strings found." })
+            ""
+            "The installer was not executed."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload inspection reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hc-player-installer-inspection
+          path: hc-player-inspection/*.txt
+          if-no-files-found: warn
+ } |
             Select-Object -First 1
           if (-not $dieAsset) {
             throw "Could not find a Windows x64 portable Detect It Easy archive."
