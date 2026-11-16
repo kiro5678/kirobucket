@@ -17,7 +17,7 @@
     ],
     "checkver": {
         "url": "https://www.oo-software.com/en/oodeskinfo/update",
-        "regex": "Version\\s+(?<version>2\\.0\\.\\d+)"
+        "regex": "Version\\s+(?<version>(?<major>\\d+)\\.\\d+\\.\\d+)"
     },
     "autoupdate": {
         "architecture": {
