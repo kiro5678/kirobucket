@@ -1,0 +1,138 @@
+name: inPace Scoop Install Test
+
+on:
+  pull_request:
+    paths:
+      - "bucket/inpace.json"
+      - ".github/workflows/inpace-scoop-install-test.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/inpace.json"
+      - ".github/workflows/inpace-scoop-install-test.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install and launch inPace through Scoop
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: my_bucket
+
+      - name: Install Scoop and register kirobucket
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $env:SCOOP_ALLOW_ADMIN = "1"
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri "https://get.scoop.sh" -TimeoutSec 60 | Invoke-Expression
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            throw "Scoop installation did not expose the scoop command."
+          }
+
+          scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not register kirobucket."
+          }
+
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE "scoop" }
+          $bucketManifest = Join-Path $scoopRoot "buckets\kirobucket\bucket\inpace.json"
+          if (-not (Test-Path -LiteralPath (Split-Path -Parent $bucketManifest))) {
+            throw "The registered kirobucket manifest directory was not found."
+          }
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE "my_bucket\bucket\inpace.json") -Destination $bucketManifest -Force
+
+          scoop install inpace
+          if ($LASTEXITCODE -ne 0) {
+            throw "scoop install inpace failed."
+          }
+
+      - name: Verify Scoop paths, persistent data, and application startup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE "scoop" }
+          $prefix = Join-Path $scoopRoot "apps\inpace\current"
+          if (-not (Test-Path -LiteralPath $prefix -PathType Container)) {
+            throw "inPace install directory was not found: $prefix"
+          }
+
+          $exe = Join-Path $prefix "inPace.exe"
+          if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+            throw "The official Windows ZIP did not install inPace.exe at the expected path."
+          }
+
+          $expectedHome = Join-Path $scoopRoot "persist\inpace\data"
+          $configuredHome = [Environment]::GetEnvironmentVariable("INPACE_HOME", "User")
+          if ([string]::IsNullOrWhiteSpace($configuredHome)) {
+            throw "Scoop did not persist the INPACE_HOME environment variable."
+          }
+          if ([IO.Path]::GetFullPath($configuredHome).TrimEnd("\") -ne [IO.Path]::GetFullPath($expectedHome).TrimEnd("\")) {
+            throw "INPACE_HOME points outside Scoop persist: $configuredHome"
+          }
+          if (-not (Test-Path -LiteralPath $expectedHome -PathType Container)) {
+            throw "The inPace data directory was not linked into Scoop persist."
+          }
+
+          $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
+          $listener.Start()
+          $port = $listener.LocalEndpoint.Port
+          $listener.Stop()
+
+          $env:INPACE_HOME = $expectedHome
+          $process = Start-Process -FilePath $exe -ArgumentList @("--no-browser", "--port", [string]$port) -PassThru -WindowStyle Hidden
+          $ready = $false
+          try {
+            for ($attempt = 0; $attempt -lt 90; $attempt++) {
+              if ($process.HasExited) {
+                throw "inPace exited before its local server became ready (exit code $($process.ExitCode))."
+              }
+              try {
+                $response = Invoke-WebRequest -Uri "http://127.0.0.1:$port/setup" -TimeoutSec 5 -ErrorAction Stop
+                if ($response.Content -match "Welcome to inPace") {
+                  $ready = $true
+                  break
+                }
+              } catch {
+                Start-Sleep -Seconds 1
+              }
+            }
+            if (-not $ready) {
+              throw "The inPace local server did not return its setup page."
+            }
+            if (-not (Test-Path -LiteralPath (Join-Path $expectedHome "running.json") -PathType Leaf)) {
+              throw "inPace did not write its runtime state inside Scoop persist."
+            }
+          }
+          finally {
+            try {
+              Invoke-WebRequest -Uri "http://127.0.0.1:$port/quit" -Method Post -TimeoutSec 5 -ErrorAction Stop | Out-Null
+            } catch {}
+            if (-not $process.HasExited) {
+              Wait-Process -Id $process.Id -Timeout 10 -ErrorAction SilentlyContinue
+            }
+            if (-not $process.HasExited) {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          @(
+            "## inPace Scoop install test"
+            ""
+            "- Installed from the official Windows ZIP release."
+            "- Scoop executable shim target: inPace.exe"
+            "- INPACE_HOME: $expectedHome"
+            "- Persistent runtime state: confirmed"
+            "- Local setup-page startup smoke test: passed"
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+          Write-Host "inPace installed and passed executable, Scoop persistence, and local-server startup checks."
