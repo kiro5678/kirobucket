@@ -26,7 +26,7 @@
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
 | Other Utilities | 135 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
-| PDF & Documents | 31 | [View](#pdf-documents) |
+| PDF & Documents | 32 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
 | Security | 42 | [View](#security) |
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
@@ -39,10 +39,10 @@
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 10 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 100 | [View](#windows-customization) |
+| Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1217**
+**Total unique categorized manifests: 1219**
 
 
 ## Android & Device Tools
@@ -889,7 +889,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [paperlight](../bucket/paperlight.json) | 1.2.3 | — | 2026-11-15 | Local Windows desktop search and indexing for PDF, Word, Excel, and PowerPoint documents. | [Homepage](https://github.com/webKing021/paperlight) |
+| [paperlight](../bucket/paperlight.json) | 1.2.3 | 5.3 MiB | 2026-11-15 | Local Windows desktop search and indexing for PDF, Word, Excel, and PowerPoint documents. | [Homepage](https://github.com/webKing021/paperlight) |
 | [file-converter-pro](../bucket/file-converter-pro.json) | 1.0.7 | 154.7 MiB | 2026-08-19 | Free offline all-in-one file converter for Windows. Converts documents, images, audio and video locally. | [Homepage](https://github.com/Hyacinthe-primus/File_Converter_Pro) |
 | [jopdf](../bucket/jopdf.json) | 2.4.2.1 | 64bit: 30.0 MiB | 2026-10-13 | Free Windows PDF editor and reader for editing, annotating, converting, merging, splitting, compressing, and protecting PDF files. | [Homepage](https://www.jopdf.com/) |
 | [office-365-apps-home-np](../bucket/office-365-apps-home-np.json) | 16.0.20430.20146 | — | 2026-10-19 | Family of client software, server software and services developed by Microsoft. This package only includes Excel, PowerPoint and Word. | [Homepage](https://www.office.com/) |
@@ -1238,7 +1238,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [meridian-shell](../bucket/meridian-shell.json) | 1.0-beta-1 | — | 2026-11-16 | Windows 11 shell replacement with an alternative taskbar, Start menu, and file manager. | [Homepage](https://github.com/meridiandrive/Meridian-Shell) |
+| [meridian-shell](../bucket/meridian-shell.json) | 1.0-beta-1 | 3.5 MiB | 2026-11-16 | Windows 11 shell replacement with an alternative taskbar, Start menu, and file manager. | [Homepage](https://github.com/meridiandrive/Meridian-Shell) |
 | [softwareok-12-ants](../bucket/softwareok-12-ants.json) | 6.91 | 64bit: 290.1 KiB | 2026-04-24 | Display animated ants on the Windows desktop. | [Homepage](https://www.softwareok.com/?Download=12-Ants) |
 | [softwareok-4ur-windows-8-mouse-balls](../bucket/softwareok-4ur-windows-8-mouse-balls.json) | 4.91 | 64bit: 112.3 KiB | 2026-04-21 | Show animated mouse-ball effects on the desktop. | [Homepage](https://www.softwareok.com/?Download=4ur-Windows-8-Mouse-Balls) |
 | [aerial](../bucket/aerial.json) | 1.3.0 | 64bit: 198.5 MiB / arm64: 196.4 MiB | 2026-10-23 | Apple TV-style Windows screen saver with aerial videos, local video playback, and configurable overlays. | [Homepage](https://github.com/OrangeJedi/Aerial) |
