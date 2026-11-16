@@ -214,6 +214,7 @@ on:
       - 'bucket/motionduo.json'
       - 'bucket/reclaim.json'
       - 'bucket/xdman.json'
+      - 'bucket/winmac-dock.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -444,6 +445,7 @@ on:
       - 'bucket/motionduo.json'
       - 'bucket/reclaim.json'
       - 'bucket/xdman.json'
+      - 'bucket/winmac-dock.json'
   workflow_dispatch:
     inputs:
       manifest:
