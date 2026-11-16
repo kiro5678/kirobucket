@@ -7,7 +7,7 @@
     "hash": "728d0f51af0afb1094e46893b96369d3baa9ea1cfde488400568eb55e36a01e0",
     "shortcuts": [
         [
-            "ws-watchdog.exe",
+            "ws-strip.exe",
             "Meridian Shell"
         ],
         [
@@ -28,7 +28,7 @@
         "url": "https://github.com/meridiandrive/Meridian-Shell/releases/download/v$version/MeridianShell-Setup-$version.exe#/dl.7z"
     },
     "notes": [
-        "Scoop extracts the NSIS application payload into the managed app directory; the vendor setup is not run.",
+        "Scoop extracts the NSIS application payload into the managed app directory; the vendor setup is not run. Start the main bar with Meridian Shell.",
         "The vendor setup's per-user Start Menu and sign-in registration steps are not run; Scoop creates the shortcuts listed above.",
         "The application stores settings under %APPDATA%\\WorkplaceShell, outside the Scoop app directory.",
         "Running tools\\use-meridian-shell.cmd changes the current user's Winlogon Shell value. Use tools\\use-explorer.cmd to restore Windows Explorer.",
