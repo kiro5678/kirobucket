@@ -18,7 +18,7 @@
         "if ($LASTEXITCODE -ne 0) { throw \"DiskMonitor source build failed with exit code $LASTEXITCODE.\" }",
         "if (-not (Test-Path -LiteralPath (Join-Path $publish 'DiskMonitor.exe') -PathType Leaf)) { throw 'DiskMonitor.exe was not produced by the .NET publish step.' }",
         "Remove-Item -LiteralPath (Join-Path $dir '.nuget') -Recurse -Force -ErrorAction SilentlyContinue",
-        "$launcher = @('@echo off','setlocal','set DOTNET_BUNDLE_EXTRACT_BASE_DIR=%~dp0bundle','pushd %~dp0','\"%~dp0publish\\DiskMonitor.exe\" %*','set \"exitcode=%ERRORLEVEL%\"','popd','exit /b %exitcode%') -join [Environment]::NewLine",
+        "$launcher = @('@echo off','setlocal','set \"DOTNET_BUNDLE_EXTRACT_BASE_DIR=%~dp0bundle\"','pushd \"%~dp0\"','\"%~dp0publish\\DiskMonitor.exe\" %*','set \"exitcode=%ERRORLEVEL%\"','popd','exit /b %exitcode%') -join [Environment]::NewLine",
         "Set-Content -LiteralPath (Join-Path $dir 'diskmonitor.cmd') -Value $launcher -Encoding ASCII",
         "if (-not (Test-Path -LiteralPath (Join-Path $dir 'io_monitor.csv') -PathType Leaf)) { New-Item -ItemType File -Path (Join-Path $dir 'io_monitor.csv') -Force | Out-Null }",
         "Remove-Item -LiteralPath (Join-Path $dir '.dotnet-home') -Recurse -Force -ErrorAction SilentlyContinue",
