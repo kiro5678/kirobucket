@@ -172,7 +172,8 @@ jobs:
           $prefix = ([string]($prefixOutput | Select-Object -Last 1)).Trim()
           $exe = Join-Path $prefix "publish\\DiskMonitor.exe"
           $launcher = Join-Path $prefix "diskmonitor.cmd"
-          $shim = Join-Path $scoopRoot "shims\\diskmonitor.exe"
+          $shimDirectory = Join-Path $scoopRoot "shims"
+          $shimFiles = @(Get-ChildItem -LiteralPath $shimDirectory -File -Filter "diskmonitor*")
           $persistCsv = Join-Path $scoopRoot "persist\\diskmonitor\\io_monitor.csv"
           if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
             throw "DiskMonitor.exe was not built inside the Scoop app directory."
@@ -183,8 +184,8 @@ jobs:
           if (-not (Select-String -LiteralPath $launcher -Pattern 'DOTNET_BUNDLE_EXTRACT_BASE_DIR=%~dp0bundle' -Quiet)) {
             throw "The launcher does not direct native bundle extraction into the Scoop version directory."
           }
-          if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
-            throw "The DiskMonitor command shim was not created."
+          if ($shimFiles.Count -eq 0) {
+            throw "Scoop did not create a command shim for DiskMonitor."
           }
           if (-not (Test-Path -LiteralPath $persistCsv -PathType Leaf)) {
             throw "DiskMonitor's CSV log file was not linked into Scoop persist."
@@ -217,8 +218,9 @@ jobs:
           if (Test-Path -LiteralPath $prefix) {
             throw "The DiskMonitor app directory remains after Scoop uninstall."
           }
-          if (Test-Path -LiteralPath $shim) {
-            throw "The DiskMonitor command shim remains after Scoop uninstall."
+          $remainingShims = @(Get-ChildItem -LiteralPath $shimDirectory -File -Filter "diskmonitor*" -ErrorAction SilentlyContinue)
+          if ($remainingShims.Count -gt 0) {
+            throw "DiskMonitor command shim files remain after Scoop uninstall: $($remainingShims.Name -join ', ')"
           }
           if (-not (Test-Path -LiteralPath $persistCsv -PathType Leaf)) {
             throw "Scoop uninstall did not preserve DiskMonitor's CSV log file."
