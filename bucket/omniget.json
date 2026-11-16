@@ -32,9 +32,7 @@
         "Rename-Item -LiteralPath $portableExe.FullName -NewName 'OmniGet.exe'",
         "New-Item -ItemType File -Path (Join-Path $dir 'portable.txt') -Force | Out-Null"
     ],
-    "post_install": [
-        "if (!(Test-Path -LiteralPath (Join-Path $dir 'OmniGet.exe') -PathType Leaf)) { throw 'OmniGet.exe was not installed in the Scoop version directory.' }"
-    ],
+    "post_install": "if (!(Test-Path -LiteralPath (Join-Path $dir 'OmniGet.exe') -PathType Leaf)) { throw 'OmniGet.exe was not installed in the Scoop version directory.' }",
     "persist": "data",
     "shortcuts": [
         [
