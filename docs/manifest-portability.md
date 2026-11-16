@@ -14,7 +14,7 @@
 <a id="all-bucket-manifests-by-installer-type"></a>
 ## Portable and Nonportable manifests grouped by installer type
 
-Each installer type appears once. Manifests are grouped under Portable or Nonportable; items awaiting verification remain in [Manifest Review](manifest-review.md).
+Each installer type appears once. Manifests are grouped under Portable or Nonportable; items awaiting verification remain in [Manifest Review](manifest-review.md). The canonical Nonportable list is maintained in [manifest-portability-nonportable.md](manifest-portability-nonportable.md); the summary and installer-type tables below are generated from that source.
 
 | Portable manifests (1307) | Nonportable manifests (2) | Installer Type |
 | --- | --- | --- |
