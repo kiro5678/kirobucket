@@ -29,7 +29,7 @@
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
 | Security | 41 | [View](#security) |
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
-| Storage & Disk Tools | 31 | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 32 | [View](#storage-disk-tools) |
 | Sync & Backup | 12 | [View](#sync-backup) |
 | System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
 | Sysinternals Utilities | 75 | [View](#sysinternals-utilities) |
@@ -41,7 +41,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1205**
+**Total unique categorized manifests: 1206**
 
 
 ## Android & Device Tools
@@ -1009,6 +1009,7 @@
 | [cleanly](../bucket/cleanly.json) | 0.2.0 | 105.9 MiB | 2026-11-03 | Windows cleaner for caches, temporary files, large files, duplicate files, and startup entries. | [Homepage](https://github.com/0xCodez/cleanly) |
 | [compactgui](../bucket/compactgui.json) | 4.0.0-beta.12 | 64bit: 2.8 MiB | 2025-02-24 | Reduce the space taken up by games and programs on disk by using native Windows APIs. | [Homepage](https://github.com/IridiumIO/CompactGUI) |
 | [diskgeek](../bucket/diskgeek.json) | 1.1.1 | 32.1 MiB | 2026-09-26 | A free, self-contained disk space analyser for Windows. | [Homepage](https://github.com/techygeekshome/DiskGeek) |
+| [diskwatch](../bucket/diskwatch.json) | 0.7.2 | 1.0 MiB | 2026-11-14 | Read-only disk diagnostics TUI for devices, volumes, disk I/O, SMART health, and busy files. | [Homepage](https://github.com/matthart1983/diskwatch) |
 | [dvd-drive-repair](../bucket/dvd-drive-repair.json) | 11.2.3.2920 | 2.5 MiB | 2024-02-26 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
 | [fsrover](../bucket/fsrover.json) | 0.6.0 | 64bit: 4.0 MiB / arm64: 4.1 MiB / 32bit: 3.6 MiB | 2026-10-02 | Read-only multi-filesystem explorer for archives, disk images, partitions, and volumes. | [Homepage](https://github.com/a1ive/FsRover) |
 | [grc-bootable](../bucket/grc-bootable.json) | 2024.04.21 | 309.5 KiB | 2024-04-21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
