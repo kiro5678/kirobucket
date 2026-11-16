@@ -104,6 +104,7 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
           $exe = Join-Path $env:GITHUB_WORKSPACE "publish\DiskMonitor.exe"
+          $env:DOTNET_BUNDLE_EXTRACT_BASE_DIR = Join-Path $env:GITHUB_WORKSPACE "publish-bundle"
           $process = Start-Process -FilePath $exe -WorkingDirectory (Split-Path -Parent $exe) -PassThru -NoNewWindow
           try {
             Start-Sleep -Seconds 4
