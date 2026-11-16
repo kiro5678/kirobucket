@@ -11,7 +11,7 @@
 | Cross-Device Integration | 7 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
 | Disk Monitor | 9 | [View](#disk-monitor) |
-| Download Managers | 23 | [View](#download-managers) |
+| Download Managers | 24 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
@@ -42,7 +42,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1216**
+**Total unique categorized manifests: 1217**
 
 
 ## Android & Device Tools
@@ -242,7 +242,8 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [imfile](../bucket/imfile.json) | 2.3.4 | 64bit: 152.0 MiB / arm64: 141.8 MiB | 2026-08-13 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
 | [misterdownloadmanager](../bucket/misterdownloadmanager.json) | 0.5.2 | 19.0 MiB | 2026-11-09 | Open-source Rust download manager for Windows with multi-connection downloads, torrent support, and browser integration. | [Homepage](https://github.com/anefzaoui/misterdownloadmanager) |
 | [motrix](../bucket/motrix.json) | 2.0.1 | 64bit: 159.8 MiB / arm64: 157.3 MiB | 2026-10-29 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
-| [omniget](../bucket/omniget.json) | 0.14.0 | — | 2026-10-31 | All-in-one desktop download manager for courses, videos, music, and 1,800+ websites, with built-in media and study tools. | [Homepage](https://github.com/OpenSelena/omniget) |
+| [omniget](../bucket/omniget.json) | 0.10.1 | 64bit: 116.5 MiB | 2026-09-21 | Desktop download manager and local MCP server for downloads, media, files, chats, and developer tools. | [Homepage](https://getomniget.com) |
+| [omniget-openselena](../bucket/omniget-openselena.json) | 0.16.6 | 64bit: 101.3 MiB | 2026-11-13 | Independent LibreGet fork of OmniGet with course, video, music, and social-platform downloads plus built-in media tools. | [Homepage](https://github.com/OpenSelena/libreget) |
 | [prism-download-manager](../bucket/prism-download-manager.json) | 1.2.4 | 16.5 MiB | 2026-11-01 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
 | [nanaget](../bucket/nanaget.json) | 1.3.1609.0 | 3.8 MiB | 2026-09-20 | Lightweight file transfer utility based on aria2 and XAML Islands. | [Homepage](https://github.com/M2Team/NanaGet) |
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
