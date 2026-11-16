@@ -47,14 +47,14 @@
     "checkver": {
         "script": [
             "$release = Invoke-RestMethod -Uri 'https://api.github.com/repos/OpenSelena/libreget/releases/latest' -Headers @{ 'User-Agent' = 'kirobucket-checkver' } -TimeoutSec 30 -ErrorAction Stop",
-            "$versionMatch = [regex]::Match([string]$release.tag_name, '^v(?<version>[\\d.]+)$')",
-            "if (-not $versionMatch.Success) { throw 'Unable to parse the latest LibreGet release tag.' }",
-            "$releaseVersion = $versionMatch.Groups['version'].Value",
-            "$asset = $release.assets | Where-Object { $_.name -match ('^(omniget|libreget)_' + [regex]::Escape($releaseVersion) + '_x64-portable\\.exe$') } | Select-Object -First 1",
-            "if ($null -eq $asset) { throw 'The latest LibreGet release has no Windows x64 portable executable.' }",
-            "Write-Output \"$($release.tag_name) $($asset.name)\""
+            "$portableAssets = @($release.assets | Where-Object { $_.name -match '^(omniget|libreget)_[\\d.]+_x64-portable\\.exe$' })",
+            "if ($portableAssets.Count -eq 0) { throw 'Latest LibreGet release has no Windows x64 portable executable.' }",
+            "$asset = $portableAssets | Sort-Object @{ Expression = { if ($_.name -like 'libreget_*') { 0 } else { 1 } } }, name | Select-Object -First 1",
+            "$assetMatch = [regex]::Match([string]$asset.name, '^(?:omniget|libreget)_(?<version>[\\d.]+)_x64-portable\\.exe$')",
+            "if (-not $assetMatch.Success) { throw 'Could not parse the LibreGet portable asset version.' }",
+            "Write-Output \"$($assetMatch.Groups['version'].Value) $($asset.name)\""
         ],
-        "regex": "^v(?<version>[\\d.]+) (?<asset>[\\w.-]+)$"
+        "regex": "^(?<version>[\\d.]+) (?<asset>[\\w.-]+)$"
     },
     "autoupdate": {
         "architecture": {
