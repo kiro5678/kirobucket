@@ -144,9 +144,13 @@ jobs:
           }
           Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE "bucket\\diskmonitor.json") -Destination $bucketManifest -Force
 
-          scoop checkver diskmonitor
-          if ($LASTEXITCODE -ne 0) {
-            throw "Scoop checkver failed for diskmonitor."
+          $checkverScript = Join-Path $scoopRoot "apps\\scoop\\current\\bin\\checkver.ps1"
+          if (-not (Test-Path -LiteralPath $checkverScript -PathType Leaf)) {
+            throw "Scoop's official checkver.ps1 script was not found."
+          }
+          & $checkverScript "diskmonitor" -Dir (Join-Path $scoopRoot "buckets\\kirobucket\\bucket") -ThrowError
+          if (-not $?) {
+            throw "The official Scoop checkver script failed for diskmonitor."
           }
 
           scoop install diskmonitor
