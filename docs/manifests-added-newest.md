@@ -8,6 +8,7 @@ Installer Type is inferred from manifest metadata and the declared download form
 
 | Name | Category | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [disk-activity-monitor](../bucket/disk-activity-monitor.json) | Storage & Disk Tools | 1.4.16 | 64bit: 83.4 MiB | EXE | 2026-11-16 | 2026-08-16 | [Homepage](https://github.com/andrewtheart/DiskActivityMonitor) | Windows SSD/HDD endurance monitor with ETW process attribution, SMART telemetry, write trends, and alerts. |
 | [diskdrift](../bucket/diskdrift.json) | Storage & Disk Tools | 0.1.2 | 64bit: 70.2 MiB | Inno | 2026-11-16 | 2026-11-06 | [Homepage](https://github.com/AnwarRezk/disk-monitor) | Windows disk-space monitor that records free-space changes, storage growth, and the processes writing to disk. |
 | [hc-player](../bucket/hc-player.json) | Other Utilities | 1.7.1 | 64bit: 163.2 MiB | Inno | 2026-11-16 | 2026-11-15 | [Homepage](https://github.com/henzfdev/HC-Player) | Modern Windows media player built on mpv and WinUI, with HDR, subtitles, playlists, shaders, and Anime4K. |
 | [oo-appbuster](../bucket/oo-appbuster.json) | Windows Privacy & Tweaks | 3.1.1029 | 81.6 MiB | EXE | 2026-11-16 | 2026-11-10 | [Homepage](https://www.oo-software.com/en/ooappbuster) | Portable Windows utility for reviewing, removing, and restoring built-in and third-party apps. |
