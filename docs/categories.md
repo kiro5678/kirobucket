@@ -1340,6 +1340,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | 64bit: 9.1 MiB / 32bit: 8.6 MiB / arm64: 8.3 MiB | 2025-09-18 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
 | [winlestia](../bucket/winlestia.json) | 0.9.0 | 184.0 MiB | 2026-11-01 | Caelestia-inspired Windows 11 desktop shell with a customizable dock, dynamic themes, glass effects and desktop tools. | [Homepage](https://github.com/lilidoxdev/winlestia) |
 | [softwareok-zigarettenschachtel-spruch](../bucket/softwareok-zigarettenschachtel-spruch.json) | 2.32 | 64bit: 64.7 KiB | 2021-05-31 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
+| [winmac-dock](../bucket/winmac-dock.json) | 0.9.2 | 64bit: 83.2 MiB / arm64: 79.3 MiB | 2026-11-12 | Standalone WinUI 3 dock for Windows 11 with macOS-style magnification and native Windows visuals. | [Homepage](https://github.com/Asteski/WinMac-Dock) |
 
 ## Windows Privacy & Tweaks
 
