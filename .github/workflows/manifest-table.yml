@@ -821,6 +821,7 @@ jobs:
                   Added = $addedDate
                   Date = $date
                   Homepage = $item.Homepage
+                  RelativePath = $item.RelativePath
                   InstallerType = $item.InstallerType
                   DownloadSize = $downloadSize
                   Row = "| [$nameEscaped]($($item.RelativePath)) | $categoryEscaped | $versionEscaped | $downloadSize | $installerTypeEscaped | $addedDate | $date | $homepageCell | $descriptionEscaped |"
