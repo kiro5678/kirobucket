@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - ".github/workflows/deepseek-harness-extraction-test.yml"
+      - "bucket/deepseek-harness.json"
   pull_request:
     paths:
       - ".github/workflows/deepseek-harness-extraction-test.yml"
+      - "bucket/deepseek-harness.json"
   workflow_dispatch:
 
 permissions:
@@ -19,6 +21,9 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
       - name: Download and inspect the official installer
         shell: pwsh
         run: |
@@ -32,6 +37,12 @@ jobs:
           New-Item -ItemType Directory -Path $root, $outer, $inner -Force | Out-Null
 
           $url = 'https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/deepseek-harness.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          $manifestUrl = ([string]$manifest.architecture.'64bit'.url) -replace '#/dl\.7z$', ''
+          $expectedHash = [string]$manifest.architecture.'64bit'.hash
+          $expectedVersion = [string]$manifest.version
+          if ($manifestUrl -ne $url) { throw "Manifest URL does not match the official download URL: $manifestUrl" }
           Invoke-WebRequest -Uri $url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 900
           if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) {
             throw 'The official installer download did not create a file.'
@@ -39,6 +50,9 @@ jobs:
 
           $file = Get-Item -LiteralPath $setup
           $sha256 = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($sha256 -ne $expectedHash) { throw "Manifest SHA-256 mismatch. Expected $expectedHash, received $sha256." }
+          $productVersion = [string](Get-Item -LiteralPath $setup).VersionInfo.ProductVersion
+          if ($productVersion -ne $expectedVersion) { throw "Manifest version mismatch. Expected $expectedVersion, downloaded $productVersion." }
           $signature = Get-AuthenticodeSignature -FilePath $setup
 
           @(
@@ -93,6 +107,10 @@ jobs:
           Write-Host "Outer executable count: $($outerExecutables.Count)"
           Write-Host "Nested archive count: $($nestedArchives.Count)"
 
+          if ($nestedArchives.Count -ne 1 -or $nestedArchives[0].Name -ne 'app-64.7z') {
+            throw "Expected exactly one app-64.7z nested payload; found $($nestedArchives.Count)."
+          }
+
           $inventory = [System.Collections.Generic.List[string]]::new()
           foreach ($item in $outerFiles | Sort-Object FullName) {
             $relative = [System.IO.Path]::GetRelativePath($outer, $item.FullName).Replace('\', '/')
@@ -106,7 +124,7 @@ jobs:
 
           foreach ($archive in $nestedArchives) {
             $archiveName = [System.IO.Path]::GetFileNameWithoutExtension($archive.Name)
-            $destination = Join-Path $inner ($archiveName -replace '[^A-Za-z0-9_-]', '-')
+            $destination = $outer
             New-Item -ItemType Directory -Path $destination -Force | Out-Null
             Write-Host "Extracting nested archive: $($archive.FullName)"
             & $sevenZipPath x $archive.FullName "-o$destination" -y -bd *> (Join-Path $root "nested-$archiveName-extraction.log")
@@ -155,6 +173,29 @@ jobs:
               Get-ChildItem -LiteralPath $directory -Filter 'app.asar' -File -Recurse -Force
             }
           )
+          $mainApp = Join-Path $outer 'DeepSeek Harness.exe'
+          $appAsar = Join-Path $outer 'resources/app.asar'
+          if (-not (Test-Path -LiteralPath $mainApp -PathType Leaf)) {
+            throw 'The extracted app-64.7z payload does not contain DeepSeek Harness.exe at its root.'
+          }
+          if (-not (Test-Path -LiteralPath $appAsar -PathType Leaf)) {
+            throw 'The extracted app-64.7z payload does not contain resources/app.asar.'
+          }
+
+          # Simulate the Scoop post_install cleanup while keeping the application in one directory.
+          Remove-Item -LiteralPath $nestedArchives[0].FullName -Force
+          $pluginDir = Join-Path $outer '$PLUGINSDIR'
+          if (Test-Path -LiteralPath $pluginDir -PathType Container) {
+            Remove-Item -LiteralPath $pluginDir -Recurse -Force
+          }
+          $uninstaller = Join-Path $outer 'Uninstall DeepSeek Harness.exe'
+          if (Test-Path -LiteralPath $uninstaller -PathType Leaf) {
+            Remove-Item -LiteralPath $uninstaller -Force
+          }
+          if (-not (Test-Path -LiteralPath $mainApp -PathType Leaf) -or
+              -not (Test-Path -LiteralPath $appAsar -PathType Leaf)) {
+            throw 'The application payload did not survive installer-file cleanup.'
+          }
 
           $summary = [System.Collections.Generic.List[string]]::new()
           $summary.Add('# DeepSeek Harness Windows installer inspection')
@@ -164,7 +205,11 @@ jobs:
           $summary.Add("- SHA-256: $sha256")
           $summary.Add("- Authenticode status: $($signature.Status)")
           $summary.Add("- Signer: $($signature.SignerCertificate.Subject)")
-          $summary.Add("- Product version: $((Get-Item -LiteralPath $setup).VersionInfo.ProductVersion)")
+          $summary.Add("- Product version: $productVersion")
+          $summary.Add("- Manifest URL, version and SHA-256: PASS")
+          $summary.Add("- Scoop-style second-stage extraction and cleanup: PASS")
+          $summary.Add("- Main executable: $mainApp")
+          $summary.Add("- Main app bundle: $appAsar")
           $summary.Add("- 7-Zip list: PASS")
           $summary.Add("- 7-Zip extraction: PASS")
           $summary.Add("- Nested archives: $($nestedArchives.Count)")
