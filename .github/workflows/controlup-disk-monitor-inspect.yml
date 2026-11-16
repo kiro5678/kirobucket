@@ -40,55 +40,67 @@ jobs:
             $report.Add("- SHA-256: $hash")
             $report.Add("- Authenticode status: $($signature.Status)")
             $report.Add("- Signer: $($signature.SignerCertificate.Subject)")
+            $signtool = Get-Command signtool.exe -ErrorAction SilentlyContinue
+            if ($signtool) {
+              $signtoolOutput = @(& $signtool.Source verify /pa /all /v $msi 2>&1 | ForEach-Object { [string]$_ })
+              $signtoolExit = $LASTEXITCODE
+              $report.Add("- signtool verify exit code: $signtoolExit")
+              foreach ($line in ($signtoolOutput | Select-Object -Last 12)) { $report.Add("- signtool: $line") }
+            } else {
+              $report.Add('- signtool.exe not found on runner.')
+            }
             $report.Add('')
             $wi = New-Object -ComObject WindowsInstaller.Installer
             $db = $wi.OpenDatabase($msi, 0)
 
             function Get-MsiRows {
-              param([Parameter(Mandatory)][string]$Query)
+              param(
+                [Parameter(Mandatory)][string]$Query,
+                [Parameter(Mandatory)][int]$FieldCount
+              )
               $view = $db.OpenView($Query)
               $view.Execute()
               $rows = [System.Collections.Generic.List[object]]::new()
-              while ($record = $view.Fetch()) {
-                $values = [System.Collections.Generic.List[string]]::new()
-                for ($column = 1; $column -le $record.FieldCount; $column++) {
-                  $values.Add([string]$record.StringData($column))
+              while ($null -ne ($record = $view.Fetch())) {
+                $values = [string[]]::new($FieldCount)
+                for ($column = 1; $column -le $FieldCount; $column++) {
+                  $values[$column - 1] = [string]$record.StringData($column)
                 }
-                $rows.Add(@($values))
+                $rows.Add([PSCustomObject]@{ Values = $values })
               }
               $view.Close()
-              return $rows
+              return $rows.ToArray()
             }
 
             $properties = @{}
-            foreach ($row in (Get-MsiRows -Query 'SELECT `Property`, `Value` FROM `Property`')) {
-              $properties[[string]$row[0]] = [string]$row[1]
+            foreach ($row in (Get-MsiRows -Query 'SELECT `Property`, `Value` FROM `Property`' -FieldCount 2)) {
+              $properties[[string]$row.Values[0]] = [string]$row.Values[1]
             }
             $report.Add('## MSI properties')
             foreach ($key in @('ProductName','ProductVersion','Manufacturer','ProductCode','UpgradeCode','InstallLocation')) {
               if ($properties.ContainsKey($key)) { $report.Add("- ${key}: $($properties[$key])") }
             }
-            $tableNames = @((Get-MsiRows -Query 'SELECT `Name` FROM `_Tables`') | ForEach-Object { [string]$_[0] })
+            $tableNames = @((Get-MsiRows -Query 'SELECT `Name` FROM `_Tables`' -FieldCount 1) | ForEach-Object { [string]$_.Values[0] })
             $report.Add('')
             $report.Add('## MSI service/custom-action metadata')
             if ($tableNames -contains 'ServiceInstall') {
               $report.Add('### ServiceInstall')
-              foreach ($row in (Get-MsiRows -Query 'SELECT `Name`, `DisplayName`, `StartType`, `ServiceType`, `Arguments`, `Component_` FROM `ServiceInstall`')) {
-                $report.Add("- Name=$($row[0]); DisplayName=$($row[1]); StartType=$($row[2]); ServiceType=$($row[3]); Arguments=$($row[4]); Component=$($row[5])")
+              foreach ($row in (Get-MsiRows -Query 'SELECT `Name`, `DisplayName`, `StartType`, `ServiceType`, `Arguments`, `Component_` FROM `ServiceInstall`' -FieldCount 6)) {
+                $report.Add("- Name=$($row.Values[0]); DisplayName=$($row.Values[1]); StartType=$($row.Values[2]); ServiceType=$($row.Values[3]); Arguments=$($row.Values[4]); Component=$($row.Values[5])")
               }
             } else { $report.Add('- No ServiceInstall table.') }
             if ($tableNames -contains 'CustomAction') {
               $report.Add('### CustomAction')
-              foreach ($row in (Get-MsiRows -Query 'SELECT `Action`, `Type`, `Source`, `Target` FROM `CustomAction`')) {
-                $report.Add("- Action=$($row[0]); Type=$($row[1]); Source=$($row[2]); Target=$($row[3])")
+              foreach ($row in (Get-MsiRows -Query 'SELECT `Action`, `Type`, `Source`, `Target` FROM `CustomAction`' -FieldCount 4)) {
+                $report.Add("- Action=$($row.Values[0]); Type=$($row.Values[1]); Source=$($row.Values[2]); Target=$($row.Values[3])")
               }
             } else { $report.Add('- No CustomAction table.') }
 
             if ($tableNames -contains 'File') {
               $report.Add('')
               $report.Add('## Payload file table')
-              foreach ($row in (Get-MsiRows -Query 'SELECT `FileName`, `FileSize`, `Component_` FROM `File`')) {
-                $report.Add("- $($row[0]) | $($row[1]) bytes | Component $($row[2])")
+              foreach ($row in (Get-MsiRows -Query 'SELECT `FileName`, `FileSize`, `Component_` FROM `File`' -FieldCount 3)) {
+                $report.Add("- $($row.Values[0]) | $($row.Values[1]) bytes | Component $($row.Values[2])")
               }
             }
 
