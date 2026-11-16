@@ -12,6 +12,7 @@ Use the column links to open alternative views sorted by name, category, manifes
 <!-- KIROBUCKET-MANIFEST-TABLE-START -->
 <a id="manifests-newest"></a>
 | Name [↑](manifests-name-az.md) [↓](manifests-name-za.md) | Category [↑](manifests-category-az.md) [↓](manifests-category-za.md) | Version | Size | Installer Type | MANIFEST ADDED [↓](manifests-added-newest.md) [↑](manifests-added-oldest.md) | PROGRAM UPDATE [↓](manifests-newest.md) [↑](manifests-oldest.md) | Homepage | Description |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | [deskboard](../bucket/deskboard.json) | Productivity & Launchers | 0.14.0 | 8.4 MiB | 7Z archive | 2026-10-31 | 2026-11-16 | [Homepage](https://deskboard.geeke.app) | Turns local folders into customizable visual workspaces with widgets, annotations, and notes. |
 | [eric-get-tools](../bucket/eric-get-tools.json) | Forensics & Diagnostics | 2026.10.23 | 16.4 KiB | ZIP archive | 2026-10-25 | 2026-11-16 | [Homepage](https://ericzimmerman.github.io/) | Eric Zimmerman's Get-ZimmermanTools: PowerShell downloader and updater for his forensic tools. |
 | [inpace](../bucket/inpace.json) | Other Utilities | 1.28.2 | 64bit: 21.7 MiB | ZIP archive | 2026-11-16 | 2026-11-16 | [Homepage](https://mahmoudyosrimahmoud13.github.io/inPace/) | Offline-first learning manager for courses, study progress, milestones, quizzes, and reminders. |
