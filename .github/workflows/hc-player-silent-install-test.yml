@@ -6,6 +6,7 @@ on:
     branches:
       - master
     paths:
+      - "bucket/hc-player.json"
       - ".github/workflows/hc-player-silent-install-test.yml"
 
 permissions:
@@ -18,6 +19,9 @@ jobs:
     timeout-minutes: 25
 
     steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
       - name: Download, silently install, inspect, and uninstall HC Player
         shell: pwsh
         run: |
@@ -102,7 +106,7 @@ jobs:
 
             New-Item -ItemType Directory -Path $installDir -Force | Out-Null
             Add-Report 'Running verified installer with Inno Setup silent arguments.'
-            $argumentLine = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /DIR="' + $installDir + '"'
+            $argumentLine = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- /CURRENTUSER /DIR="' + $installDir + '"'
             Add-Report "Arguments: $argumentLine"
 
             $process = Start-Process -FilePath $installer -ArgumentList $argumentLine -PassThru
@@ -158,33 +162,58 @@ jobs:
             Add-Report "HC Player Start Menu/Desktop shortcuts: $($newShortcuts.Count)"
             foreach ($shortcut in $newShortcuts) { Add-Report "Shortcut: $shortcut" }
 
-            Add-Report 'Running Inno uninstaller silently.'
-            $uninstallArgs = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART'
-            Add-Report "Uninstaller arguments: $uninstallArgs"
-            $remove = Start-Process -FilePath $uninstaller.FullName -ArgumentList $uninstallArgs -PassThru
-            try {
-              Wait-Process -Id $remove.Id -Timeout 600 -ErrorAction Stop
-            } catch {
-              Stop-Process -Id $remove.Id -Force -ErrorAction SilentlyContinue
-              throw 'HC Player silent uninstaller did not finish within 10 minutes.'
-            }
-            $remove.Refresh()
-            Add-Report "Uninstaller exit code: $($remove.ExitCode)"
-            if ($remove.ExitCode -ne 0) { throw "HC Player uninstaller exited with code $($remove.ExitCode)." }
+            $isPerUser = [bool]($entries | Where-Object { $_.Key -like 'HKCU:*' })
+            $isPerMachine = [bool]($entries | Where-Object { $_.Key -like 'HKLM:*' })
+            Add-Report "Inno /CURRENTUSER override honored: $isPerUser"
+            Add-Report "Machine-wide registration detected: $isPerMachine"
 
-            Start-Sleep -Seconds 2
-            if (Test-Path -LiteralPath $mainExe -PathType Leaf) {
-              throw 'HC Player.exe remains after silent uninstall.'
+            $runningApp = @(Get-CimInstance -ClassName Win32_Process -ErrorAction SilentlyContinue |
+              Where-Object { $_.Name -ieq 'HC Player.exe' -and $_.ExecutablePath -like ($installDir + '*') })
+            Add-Report "HC Player application processes before uninstall: $($runningApp.Count)"
+            foreach ($p in $runningApp) {
+              Add-Report "Stopping HC Player PID $($p.ProcessId): $($p.ExecutablePath)"
+              Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
             }
-            if (Test-Path -LiteralPath $installDir -PathType Container) {
-              $remaining = @(Get-ChildItem -LiteralPath $installDir -Force -ErrorAction SilentlyContinue)
-              if ($remaining.Count -gt 0) {
-                throw "The Scoop install directory was not removed; remaining entries: $($remaining.Name -join ', ')."
+
+            Add-Report 'Running the publisher-declared quiet-uninstall mode.'
+            $uninstallArgs = '/SILENT /SUPPRESSMSGBOXES /NORESTART'
+            Add-Report "Uninstaller arguments: $uninstallArgs"
+            $remove = Start-Process -FilePath $uninstaller.FullName -ArgumentList $uninstallArgs -WorkingDirectory $installDir -PassThru
+            try {
+              Wait-Process -Id $remove.Id -Timeout 180 -ErrorAction Stop
+              $remove.Refresh()
+              Add-Report "Uninstaller process exit code: $($remove.ExitCode)"
+              if ($remove.ExitCode -ne 0) { throw "HC Player uninstaller exited with code $($remove.ExitCode)." }
+            } catch {
+              Add-Report "Uninstaller did not finish within 180 seconds: $($_.Exception.Message)"
+              $uninstallProcesses = @(Get-CimInstance -ClassName Win32_Process -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -match '(?i)^(_?unins|unins)' -or ($_.ExecutablePath -and $_.ExecutablePath -like ($installDir + '*')) })
+              foreach ($p in $uninstallProcesses) {
+                Add-Report "Uninstaller process: PID $($p.ProcessId) | $($p.Name) | $($p.ExecutablePath) | $($p.CommandLine)"
               }
             }
+
+            $uninstallDeadline = [DateTimeOffset]::UtcNow.AddSeconds(120)
+            do {
+              Start-Sleep -Seconds 2
+              $remainingEntries = @(Get-HCPlayerUninstallEntries)
+              $mainStillExists = Test-Path -LiteralPath $mainExe -PathType Leaf
+              if (-not $mainStillExists -and $remainingEntries.Count -eq 0) { break }
+            } while ([DateTimeOffset]::UtcNow -lt $uninstallDeadline)
             $remainingEntries = @(Get-HCPlayerUninstallEntries)
-            if ($remainingEntries.Count -gt 0) {
-              throw "HC Player uninstall registry entry remains after removal: $($remainingEntries.Key -join '; ')."
+            $mainStillExists = Test-Path -LiteralPath $mainExe -PathType Leaf
+            $uninstallerStillExists = Test-Path -LiteralPath $uninstaller.FullName -PathType Leaf
+            $remaining = if (Test-Path -LiteralPath $installDir -PathType Container) {
+              @(Get-ChildItem -LiteralPath $installDir -Force -ErrorAction SilentlyContinue)
+            } else { @() }
+            Add-Report "HC Player.exe remains: $mainStillExists"
+            Add-Report "Inno uninstaller remains: $uninstallerStillExists"
+            Add-Report "Uninstall registry entries remaining: $($remainingEntries.Count)"
+            Add-Report "Entries remaining under install path: $($remaining.Count)"
+            foreach ($item in $remaining) { Add-Report "Remaining: $($item.Name)" }
+
+            if ($mainStillExists -or $remainingEntries.Count -gt 0 -or $remaining.Count -gt 0) {
+              throw 'The Inno Setup uninstaller did not fully remove HC Player from the requested directory.'
             }
             Add-Report 'Silent uninstall removed application files and registered uninstall entries: PASS'
 
@@ -221,6 +250,6 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: hc-player-silent-install-report
-          path: \${{ runner.temp }}/hc-player-silent-install-test/hc-player-install-report.txt
+          path: ${{ runner.temp }}/hc-player-silent-install-test/hc-player-install-report.txt
           if-no-files-found: warn
           retention-days: 14
