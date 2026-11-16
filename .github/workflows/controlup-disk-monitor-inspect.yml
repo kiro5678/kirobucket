@@ -75,7 +75,7 @@ jobs:
               $matches = Select-String -LiteralPath $script.FullName -Pattern 'New-Service|Remove-Service|sc\.exe|CreateService|DeleteService|Start-Service|Stop-Service|DiskMonitor' -ErrorAction SilentlyContinue
               foreach ($match in ($matches | Select-Object -First 30)) {
                 $relative = $script.FullName.Substring($extract.Length).TrimStart('\')
-                $report.Add("- $relative:$($match.LineNumber): $($match.Line.Trim())")
+                $report.Add("- ${relative}:$($match.LineNumber): $($match.Line.Trim())")
               }
             }
 
