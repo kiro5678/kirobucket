@@ -11,7 +11,7 @@
 | Cross-Device Integration | 7 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
 | Disk Monitor | 9 | [View](#disk-monitor) |
-| Download Managers | 22 | [View](#download-managers) |
+| Download Managers | 23 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
@@ -42,7 +42,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1215**
+**Total unique categorized manifests: 1216**
 
 
 ## Android & Device Tools
@@ -254,6 +254,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [vovsoft-batch-url-downloader](../bucket/vovsoft-batch-url-downloader.json) | 6.4 | 5.3 MiB | 2026-10-28 | Portable edition of Vovsoft Batch URL Downloader. | [Homepage](https://vovsoft.com/software/batch-url-downloader/) |
 | [vovsoft-download-mailbox-emails](../bucket/vovsoft-download-mailbox-emails.json) | 2.1 | 2.9 MiB | 2026-08-13 | Portable edition of Vovsoft Download Mailbox Emails. | [Homepage](https://vovsoft.com/software/download-mailbox-emails/) |
 | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | 1.0.0 | 9.4 MiB | 2026-09-20 | Desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. | [Homepage](https://github.com/imsyy/yt-dlp-gui) |
+| [xdman](../bucket/xdman.json) | 9.0.11 | 64bit: 63.2 MiB / arm64: 60.9 MiB | 2026-11-15 | Fast, resumable download accelerator and streaming video downloader. | [Homepage](https://xtremedownloadmanager.com/) |
 
 ## Emulators & Compatibility
 

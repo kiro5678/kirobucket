@@ -211,6 +211,7 @@ on:
       - 'bucket/healthfolio.json'
       - 'bucket/motionduo.json'
       - 'bucket/reclaim.json'
+      - 'bucket/xdman.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -438,6 +439,7 @@ on:
       - 'bucket/healthfolio.json'
       - 'bucket/motionduo.json'
       - 'bucket/reclaim.json'
+      - 'bucket/xdman.json'
   workflow_dispatch:
     inputs:
       manifest:
