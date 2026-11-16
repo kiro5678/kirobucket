@@ -1,0 +1,102 @@
+name: Temporary O&O Official MSI Verification
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/oo-msi-verification.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download official MSI packages and inspect metadata
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $targets = @(
+            @{ Name = 'O&O DiskRecovery'; Arch = 'x64'; Url = 'https://package.oo-software.com/winget/diskrecovery/14.0.17/oodiskrecovery_14.0.17_eng_x64.msi'; Hash = 'a9bd2dfd64129b695aa62985b24d404043e9731a77869982c20df9134b5e9348'; ProductCode = '{B5BDE2B4-EB65-4964-8D37-7AE7C26AC3C2}' },
+            @{ Name = 'O&O DiskImage Premium'; Arch = 'x64'; Url = 'https://package.oo-software.com/winget/diskimage/23.2.26060/oodiskimage_23.2.26060_premium_eng_x64.msi'; Hash = 'a137231f9dbc5f86b0936d3f34bc7815b5795d2029ebe39c61ff85752dda0672'; ProductCode = '{8E21DB8B-6FED-40C8-A785-C9E9D5841EE0}' },
+            @{ Name = 'O&O DiskCommander Premium'; Arch = 'x64'; Url = 'https://package.oo-software.com/winget/diskcommander/5.1.1020/oodiskcommander_5.1.1020_premium_eng_x64.msi'; Hash = 'f87ad3816874e80498a1aad811aafdf533484080da64563976711791031ad41f'; ProductCode = '{F860E37B-B95E-40A7-82BF-D72E1C5568F3}' },
+            @{ Name = 'O&O Defrag Professional'; Arch = 'x64'; Url = 'https://package.oo-software.com/winget/defrag/32.1.26138/oodefrag_32.1.26138_pro_eng_x64.msi'; Hash = '567ff36c6dc10462acf5a29cb48397ef913f6c4fb54d13bd7027b7d73cb20f2e'; ProductCode = '{4D5FE9E3-FBDC-441A-98CE-01C40973D808}' },
+            @{ Name = 'O&O Defrag Professional'; Arch = 'arm64'; Url = 'https://package.oo-software.com/winget/defrag/32.1.26138/oodefrag_32.1.26138_pro_eng_arm64.msi'; Hash = 'c79871736ad40ebfa9c965f98582f47b034a47a651f4f4e31c40a1ba7c95ec3a'; ProductCode = '{AC687987-BBFD-41A2-B37F-CB14B8AEC930}' },
+            @{ Name = 'O&O SafeErase Professional'; Arch = 'x64'; Url = 'https://package.oo-software.com/winget/safeerase/22.0.26169/oosafeerase_22.0.26169_pro_eng_x64.msi'; Hash = '04c9294b2f691989bf04118910a9fa10e4d03833cefc717bb39df7a111ccd8ec'; ProductCode = '{A9AD78AB-7B9B-4921-8B05-A5E10368D684}' }
+          )
+          $work = Join-Path $env:RUNNER_TEMP 'oo-msi-check'
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $installer = New-Object -ComObject WindowsInstaller.Installer
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# O&O official MSI package verification')
+          $report.Add('')
+          $report.Add('All packages were downloaded without running msiexec or installing software.')
+          $report.Add('')
+
+          foreach ($target in $targets) {
+            $file = Join-Path $work ([IO.Path]::GetFileName(([uri]$target.Url).AbsolutePath))
+            Invoke-WebRequest -Uri $target.Url -OutFile $file -TimeoutSec 600
+            $hash = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($hash -ne $target.Hash) { throw "$($target.Name) $($target.Arch) SHA-256 mismatch: $hash" }
+            $signature = Get-AuthenticodeSignature -LiteralPath $file
+            $db = $installer.OpenDatabase($file, 0)
+            $properties = @{}
+            $view = $db.OpenView("SELECT Property, Value FROM Property")
+            $view.Execute()
+            while ($record = $view.Fetch()) { $properties[$record.StringData(1)] = $record.StringData(2) }
+            $view.Close()
+            $productCode = [string]$properties['ProductCode']
+            if ($productCode -ine $target.ProductCode) { throw "$($target.Name) $($target.Arch) ProductCode mismatch: $productCode" }
+            $serviceNames = @()
+            try {
+              $view = $db.OpenView('SELECT Name FROM ServiceInstall')
+              $view.Execute()
+              while ($record = $view.Fetch()) { $serviceNames += $record.StringData(1) }
+              $view.Close()
+            } catch {
+              $serviceNames = @('(table unavailable or no ServiceInstall table)')
+            }
+            $shortcuts = @()
+            try {
+              $view = $db.OpenView('SELECT Name FROM Shortcut')
+              $view.Execute()
+              while ($record = $view.Fetch()) { $shortcuts += $record.StringData(1) }
+              $view.Close()
+            } catch {
+              $shortcuts = @('(table unavailable)')
+            }
+            $report.Add("## $($target.Name) ($($target.Arch))")
+            $report.Add("- URL: $($target.Url)")
+            $report.Add("- SHA-256 verified: $hash")
+            $report.Add("- Authenticode: $($signature.Status)")
+            $report.Add("- Signer: $(if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { '(no signer certificate)' })")
+            $report.Add("- ProductName: $($properties['ProductName'])")
+            $report.Add("- ProductVersion: $($properties['ProductVersion'])")
+            $report.Add("- Manufacturer: $($properties['Manufacturer'])")
+            $report.Add("- ProductCode: $productCode")
+            $report.Add("- UpgradeCode: $($properties['UpgradeCode'])")
+            $report.Add("- ServiceInstall entries: $(if ($serviceNames) { $serviceNames -join ', ' } else { '(none)' })")
+            $report.Add("- Shortcut entries: $(if ($shortcuts) { $shortcuts -join ', ' } else { '(none)' })")
+            $report.Add('')
+            Write-Host "$($target.Name) ($($target.Arch): SHA-256 and ProductCode verified"
+          }
+
+          $path = Join-Path $env:GITHUB_WORKSPACE 'logs/manifests/2026-11-16-oo-msi-package-verification.md'
+          $report | Set-Content -LiteralPath $path -Encoding utf8
+
+      - name: Commit verification report
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- logs/manifests/2026-11-16-oo-msi-package-verification.md
+          git commit -m "docs: verify O&O official MSI packages"
+          git push
