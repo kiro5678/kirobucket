@@ -10,7 +10,7 @@
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 7 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
-| Disk Monitor | 7 | [View](#disk-monitor) |
+| Disk Monitor | 8 | [View](#disk-monitor) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
@@ -42,7 +42,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1210**
+**Total unique categorized manifests: 1211**
 
 
 ## Android & Device Tools
@@ -223,6 +223,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [diskwatch](../bucket/diskwatch.json) | 0.7.2 | 1.0 MiB | 2026-11-14 | Read-only disk diagnostics TUI for devices, volumes, disk I/O, SMART health, and busy files. | [Homepage](https://github.com/matthart1983/diskwatch) |
 | [hdsentinel-portable](../bucket/hdsentinel-portable.json) | 6.40 | 46.7 MiB | 2026-03-04 | Hard disk and SSD monitoring, health analysis, testing and repair tool. | [Homepage](https://www.hdsentinel.com/) |
 | [syscap](../bucket/syscap.json) | 0.29.0 | — | 2026-11-07 | Visual disk, file, process, and network activity navigator for Windows. | [Homepage](https://syscap.net/) |
+| [watchfs](../bucket/watchfs.json) | 0.2.0-beta.4 | 209.5 KiB | 2026-06-17 | Per-process Windows file I/O monitor with kernel ETW capture, live TUI, SQLite history, alerts, and export. | [Homepage](https://github.com/berki6/WatchFS) |
 | [vovsoft-disk-monitor-gadget](../bucket/vovsoft-disk-monitor-gadget.json) | 2.1 | 2.5 MiB | 2026-08-13 | Portable edition of Vovsoft Disk Monitor Gadget. | [Homepage](https://vovsoft.com/software/disk-monitor-gadget/) |
 
 ## Download Managers

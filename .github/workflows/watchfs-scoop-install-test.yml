@@ -1,0 +1,122 @@
+name: WatchFS Scoop Install Test
+
+on:
+  pull_request:
+    paths:
+      - "bucket/watchfs.json"
+      - ".github/workflows/watchfs-scoop-install-test.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/watchfs.json"
+      - ".github/workflows/watchfs-scoop-install-test.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install WatchFS through Scoop
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verify the upstream beta marker
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $url = "https://raw.githubusercontent.com/berki6/WatchFS/main/docs/contributing.md"
+          $document = (Invoke-WebRequest -Uri $url -TimeoutSec 45).Content
+          $pattern = 'Current beta:\*\* `v(?<version>\d+\.\d+\.\d+-beta\.\d+)`'
+          $match = [regex]::Match($document, $pattern)
+          if (-not $match.Success) {
+            throw "The upstream current-beta version marker no longer matches the manifest checkver expression."
+          }
+          $upstreamVersion = $match.Groups["version"].Value
+          $manifest = Get-Content -LiteralPath "bucket/watchfs.json" -Raw | ConvertFrom-Json
+          if ($upstreamVersion -ne $manifest.version) {
+            throw "Manifest version $($manifest.version) differs from upstream current beta $upstreamVersion."
+          }
+          Write-Host "Upstream current beta and checkver expression match: $upstreamVersion"
+
+      - name: Install Scoop, register bucket, and test manifest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $env:SCOOP_ALLOW_ADMIN = "1"
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri "https://get.scoop.sh" -TimeoutSec 60 | Invoke-Expression
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            throw "Scoop installation did not expose the scoop command."
+          }
+
+          scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not register kirobucket."
+          }
+
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE "scoop" }
+          $bucketManifest = Join-Path $scoopRoot "buckets\kirobucket\bucket\watchfs.json"
+          if (-not (Test-Path -LiteralPath (Split-Path -Parent $bucketManifest))) {
+            throw "The registered kirobucket manifest directory was not found."
+          }
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE "bucket\watchfs.json") -Destination $bucketManifest -Force
+
+          scoop install watchfs
+          if ($LASTEXITCODE -ne 0) {
+            throw "scoop install watchfs failed."
+          }
+
+          $prefixOutput = scoop prefix watchfs
+          if ($LASTEXITCODE -ne 0) { throw "Could not resolve the WatchFS Scoop install directory." }
+          $prefix = ([string]($prefixOutput | Select-Object -Last 1)).Trim()
+          if (-not (Test-Path -LiteralPath $prefix -PathType Container)) {
+            throw "WatchFS install directory was not found: $prefix"
+          }
+
+          $launcher = Join-Path $prefix "watchfs.cmd"
+          $packages = Join-Path $prefix "site-packages"
+          if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+            throw "The manifest pre_install hook did not create watchfs.cmd."
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $packages "watchfs\cli\main.py"))) {
+            throw "WatchFS was not installed into the Scoop version directory."
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $packages "pyetwkit"))) {
+            throw "The pyetwkit ETW dependency was not installed into the Scoop version directory."
+          }
+
+          python --version
+          if ($LASTEXITCODE -ne 0) { throw "The Scoop Python dependency is not available on PATH." }
+
+          watchfs --help
+          if ($LASTEXITCODE -ne 0) { throw "The WatchFS shim failed to invoke the CLI." }
+
+          watchfs doctor
+          if ($LASTEXITCODE -ne 0) { throw "The WatchFS doctor command failed." }
+
+          $database = Join-Path $prefix "data\watchfs.db"
+          if (-not (Test-Path -LiteralPath $database -PathType Leaf)) {
+            throw "WatchFS did not create its database inside the persisted data directory."
+          }
+
+          $persistedDatabase = Join-Path $scoopRoot "persist\watchfs\data\watchfs.db"
+          if (-not (Test-Path -LiteralPath $persistedDatabase -PathType Leaf)) {
+            throw "The WatchFS database is not present in Scoop's persistent data directory."
+          }
+
+          @(
+            "## WatchFS Scoop install test"
+            ""
+            "- Version: $($manifest.version)"
+            "- Python: $((python --version 2>&1 | Out-String).Trim())"
+            "- Runtime dependencies: stored under the Scoop version directory"
+            "- SQLite database: stored in Scoop persist data"
+            "- CLI shim and doctor smoke tests: passed"
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+          Write-Host "WatchFS installed and passed the Scoop shim, dependency, doctor, and persistence checks."
