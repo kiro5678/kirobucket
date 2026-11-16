@@ -70,14 +70,15 @@ jobs:
               throw "Scoop persistent data root does not exist: $persistRoot"
             }
 
-            [PSCustomObject]@{
+            $summary = [PSCustomObject]@{
               InstallDirectory = $prefix
               Executable       = $exe
               FileVersion      = (Get-Item -LiteralPath $exe).VersionInfo.FileVersion
               ProfileDirectory = $profile
               WebViewDirectory = $webview
               PersistDirectory = $persistRoot
-            } | Format-List
+            }
+            Write-Host ($summary | Format-List | Out-String)
             return @{
               Prefix = $prefix
               Profile = $profile
