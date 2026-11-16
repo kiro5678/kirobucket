@@ -42,6 +42,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [takeoff-launcher](../bucket/takeoff-launcher.json) | 1.0.4 | 299.9 KiB | 2026-09-17 | Focused, lightweight native Windows application launcher | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
+| **TOTAL DOWNLOAD SIZE** | — | **0.29 MiB** | — | — | — |
 
 <a id="auslogics-suite"></a>
 ## Auslogics Suite
@@ -64,6 +65,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [Auslogics-system-information](../bucket/Auslogics-system-information.json) | 2.0.0.8 | 20.5 MiB | 2026-08-26 | Hardware and operating system information utility | [Homepage](https://www.auslogics.com/en/software/system-information/) |
 | [Auslogics-video-grabber](../bucket/Auslogics-video-grabber.json) | 1.0.0.13 | 74.5 MiB | 2026-07-24 | Online video capture and download utility | [Homepage](https://www.auslogics.com/en/software/video-grabber/) |
 | [Auslogics-windows-slimmer](../bucket/Auslogics-windows-slimmer.json) | 5.2.0.6 | 23.4 MiB | 2026-04-29 | Windows cleanup and disk space management utility | [Homepage](https://www.auslogics.com/en/software/windows-slimmer/) |
+| **TOTAL DOWNLOAD SIZE** | — | **399.60 MiB** | — | — | — |
 
 <a id="chemtable-suite"></a>
 ## ChemTable Suite
@@ -76,6 +78,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [reg-organizer](../bucket/reg-organizer.json) | 9.96 | 26.0 MiB | 2026-10-20 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
 | [reg-organizer-portable](../bucket/reg-organizer-portable.json) | 9.96 | 26.5 MiB | 2026-10-20 | Official portable distribution of Reg Organizer for Windows maintenance and registry cleanup | [Homepage](https://www.chemtable.com/organizer.htm) |
 | [soft-organizer](../bucket/soft-organizer.json) | 10.50 | 17.1 MiB | 2026-06-16 | Application uninstaller with detection and removal of leftover program traces | [Homepage](https://www.chemtable.com/soft-organizer.htm) |
+| **TOTAL DOWNLOAD SIZE** | — | **107.40 MiB** | — | — | — |
 
 <a id="eric-zimmerman-suite"></a>
 ## Eric Zimmerman Suite
@@ -114,6 +117,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [eric-vscmount](../bucket/eric-vscmount.json) | 2026.10.0 | 1.1 MiB | 2026-10-23 | Eric Zimmerman's VSCMount: Mount Windows Volume Shadow Copies to a drive letter. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-wxtcmd](../bucket/eric-wxtcmd.json) | 2026.10.1 | 3.7 MiB | 2026-10-25 | Eric Zimmerman's WxTCmd: Parser for Windows 10/11 Timeline database artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-xwfim](../bucket/eric-xwfim.json) | 2026.10.1 | 89.6 MiB | 2026-10-26 | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. | [Homepage](https://ericzimmerman.github.io/) |
+| **TOTAL DOWNLOAD SIZE** | — | **970.68 MiB** | — | — | — |
 
 <a id="grc-suite"></a>
 ## GRC Suite
@@ -139,6 +143,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [grc-unplug-n-pray](../bucket/grc-unplug-n-pray.json) | 2001.12.28 | 32.4 KiB | 2001-12-28 | GRC UnPlug n' Pray: Legacy utility for checking and enabling/disabling the historical Windows UPnP service. | [Homepage](https://www.grc.com/unpnp/unpnp.htm) |
 | [grc-validrive](../bucket/grc-validrive.json) | 2023.10.06 | 96.4 KiB | 2023-10-06 | GRC ValiDrive: Spot-checks USB mass-storage drives to detect fraudulent capacity and failed read/write storage. | [Homepage](https://www.grc.com/validrive.htm) |
 | [grc-wizmo](../bucket/grc-wizmo.json) | 2008.06.25 | 48.4 KiB | 2008-06-25 | GRC Wizmo: Command-line Windows utility for display power, screen savers, audio control, shutdown, and other desktop commands. | [Homepage](https://www.grc.com/wizmo/wizmo.htm) |
+| **TOTAL DOWNLOAD SIZE** | — | **1.72 MiB** | — | — | — |
 
 <a id="mitec-suite"></a>
 ## MiTeC Suite
@@ -168,6 +173,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [mitec-uuid-generator](../bucket/mitec-uuid-generator.json) | 1.0.0 | 1.5 MiB | 2025-12-30 | Generates and decodes UUID values. | [Homepage](https://www.mitec.cz/wp/uuid/) |
 | [mitec-windows-registry-recovery](../bucket/mitec-windows-registry-recovery.json) | 3.1.3 | 5.3 MiB | 2025-07-22 | Reads offline Windows Registry hives and extracts configuration information; also provides live Registry backup. | [Homepage](https://www.mitec.cz/wp/mwrr/) |
 | [mitec-xml-viewer](../bucket/mitec-xml-viewer.json) | 6.5.0 | 6.0 MiB | 2025-07-22 | XML viewer with structured browsing and export features. | [Homepage](https://www.mitec.cz/wp/mxmlv/) |
+| **TOTAL DOWNLOAD SIZE** | — | **153.90 MiB** | — | — | — |
 
 <a id="softwareok-suite"></a>
 ## SoftwareOK Suite
@@ -256,6 +262,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [softwareok-winbin2iso](../bucket/softwareok-winbin2iso.json) | 6.79 | 64bit: 157.6 KiB | 2026-10-19 | Convert BIN CD images to ISO images. | [Homepage](https://www.softwareok.com/?Download=WinBin2Iso) |
 | [softwareok-winscan2pdf](../bucket/softwareok-winscan2pdf.json) | 9.79 | 195.8 KiB | 2026-10-13 | Save scanned documents as PDF files. | [Homepage](https://www.softwareok.com/?Download=WinScan2PDF) |
 | [softwareok-zigarettenschachtel-spruch](../bucket/softwareok-zigarettenschachtel-spruch.json) | 2.32 | 64bit: 64.7 KiB | 2021-05-31 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
+| **TOTAL DOWNLOAD SIZE** | — | **54.65 MiB** | — | — | — |
 
 <a id="vovsoft-suite"></a>
 ## Vovsoft Suite
@@ -437,6 +444,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [vovsoft-world-heatmap-creator](../bucket/vovsoft-world-heatmap-creator.json) | 2.0 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft World Heatmap Creator. | [Homepage](https://vovsoft.com/software/world-heatmap-creator/) |
 | [vovsoft-xls-to-csv-converter](../bucket/vovsoft-xls-to-csv-converter.json) | 2.3 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft XLS to CSV Converter. | [Homepage](https://vovsoft.com/software/xls-to-csv-converter/) |
 | [vovsoft-xml-to-csv-converter](../bucket/vovsoft-xml-to-csv-converter.json) | 1.4 | 2.2 MiB | 2026-08-13 | Portable edition of Vovsoft XML to CSV Converter. | [Homepage](https://vovsoft.com/software/xml-to-csv-converter/) |
+| **TOTAL DOWNLOAD SIZE** | — | **2,031.00 MiB** | — | — | — |
 
 <a id="sordum-suite"></a>
 ## Sordum Suite
@@ -503,6 +511,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [sordum-window-topmost-control](../bucket/sordum-window-topmost-control.json) | 1.3 | 828.1 KiB | 2023-01-02 | Portable utility for keeping selected windows always on top. | [Homepage](https://www.sordum.org/9182/window-topmost-control-v1-3/) |
 | [sordum-windows-settings-blocker](../bucket/sordum-windows-settings-blocker.json) | 1.2 | 917.5 KiB | 2024-04-01 | To stop users from changing settings in Windows 11 and 10 you can try our portable freeware Windows Settings Blocker Application. | [Homepage](https://www.sordum.org/11128/windows-settings-blocker-v1-2/) |
 | [sordum-windows-update-blocker](../bucket/sordum-windows-update-blocker.json) | 1.8 | 1.0 MiB | 2026-06-16 | Sordum's Windows Update Blocker. A freeware that helps you to completely disable or enable Automatic Updates on your Windows system | [Homepage](https://www.sordum.org/9470/windows-update-blocker-v1-8/) |
+| **TOTAL DOWNLOAD SIZE** | — | **56.93 MiB** | — | — | — |
 
 <a id="efsoftware-suite"></a>
 ## EFSoftware Suite
@@ -523,6 +532,7 @@ The size column sums only the primary/default Windows download sizes for manifes
 | [ef-startup-manager](../bucket/ef-startup-manager.json) | 26.10 | 64bit: 1.3 MiB | 2026-08-24 | Manages programs that launch with Windows and can control startup order and delays. | [Homepage](https://efsoftware.com/su/e.htm) |
 | [ef-system-monitor](../bucket/ef-system-monitor.json) | 26.10 | 64bit: 614.2 KiB | 2026-08-24 | Monitors local and remote system resources and performance, including CPU, memory, disks, and other metrics. | [Homepage](https://efsoftware.com/sm/e.htm) |
 | [ef-talk-scriber](../bucket/ef-talk-scriber.json) | 26.10 | 64bit: 829.7 KiB | 2026-08-24 | Combines a text editor and audio player to support keyboard-driven transcription of recordings. | [Homepage](https://efsoftware.com/ts/e.htm) |
+| **TOTAL DOWNLOAD SIZE** | — | **29.57 MiB** | — | — | — |
 
 The order/download page is already represented by 13 manifests; creating them again would duplicate existing packages.
 
@@ -540,6 +550,7 @@ The order/download page is already represented by 13 manifests; creating them ag
 | [walpa](../bucket/walpa.json) | 26.10 | 736.7 KiB | 2026-10-10 | Lossless raster icon recoloring tool for Windows. | [Homepage](https://github.com/turkaysoft/walpa) |
 | [yamira](../bucket/yamira.json) | 26.11 | 667.5 KiB | 2026-10-10 | USB drive protection tool for Windows. | [Homepage](https://github.com/turkaysoft/yamira) |
 | [zafuse](../bucket/zafuse.json) | 26.12 | 731.5 KiB | 2026-10-10 | INI file analysis tool for finding inconsistencies across configuration files. | [Homepage](https://github.com/turkaysoft/zafuse) |
+| **TOTAL DOWNLOAD SIZE** | — | **7.05 MiB** | — | — | — |
 
 <a id="aurelitec-suite"></a>
 ## Aurelitec Suite
@@ -552,6 +563,7 @@ The order/download page is already represented by 13 manifests; creating them ag
 | [aurelitec-pixelhealer](../bucket/aurelitec-pixelhealer.json) | 1.5.0.30 | 24.8 KiB | 2015-11-06 | Portable display utility that attempts to recover stuck or hot pixels. | [Homepage](https://www.aurelitec.com/pixelhealer/) |
 | [aurelitec-thumbico](../bucket/aurelitec-thumbico.json) | 2.0.0 | 11.9 MiB | 2026-09-21 | View Windows-generated thumbnails and icons at selectable sizes, and export them to image formats. | [Homepage](https://www.aurelitec.com/thumbico/) |
 | [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | 2.5.0.30 | 15.2 KiB | 2015-11-07 | Creates small portable HTML files for storing and opening individual bookmarks. | [Homepage](https://www.aurelitec.com/portmarks/) |
+| **TOTAL DOWNLOAD SIZE** | — | **12.03 MiB** | — | — | — |
 
 <a id="computersluggish-suite"></a>
 ## ComputerSluggish Suite
@@ -560,6 +572,7 @@ The order/download page is already represented by 13 manifests; creating them ag
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [computersluggish-cs-easy-unlocker](../bucket/computersluggish-cs-easy-unlocker.json) | 1.1.7.0 | 866.4 KiB | 2026-07-05 | Identifies processes locking files or folders and helps release handles that prevent access. | [Homepage](https://computersluggish.com/cs-easy-unlocker/) |
+| **TOTAL DOWNLOAD SIZE** | — | **0.85 MiB** | — | — | — |
 
 Other main desktop products listed by ComputerSluggish currently link to MSI installers (Easy Gamer Utility, Easy System Utility, Ultimate Power Assistant, Phoenix Customizer, Blocker Web, Distraction Blocker, and Computer Game Booster). They are not included yet because their MSI layouts and Scoop-managed install/uninstall behavior have not been validated. Easy Browser Cleaner is a browser extension, not a standalone Windows desktop program. aSysPanel and AceShutdown need a verified current version/download source before they can be packaged.
 
@@ -576,6 +589,7 @@ Other main desktop products listed by ComputerSluggish currently link to MSI ins
 | [funk-icu](../bucket/funk-icu.json) | 6 | 1.7 MiB | 2025-06-25 | Saves and restores Windows desktop icon layouts after display changes or icons being rearranged. | [Homepage](https://funk.eu/icu-icon-configuration-utility/) |
 | [funk-bic](../bucket/funk-bic.json) | 2 | 7.8 MiB | 2025-06-25 | Batch-crops images from a folder and saves cropped outputs to a separate directory. | [Homepage](https://funk.eu/bic-batch-image-cropper/) |
 | [funk-ssd](../bucket/funk-ssd.json) | 4 | 535.3 KiB | 2025-06-25 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
+| **TOTAL DOWNLOAD SIZE** | — | **27.10 MiB** | — | — | — |
 
 Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each manifest documents this limitation; a future change to a file ID will require updating that manifest's URL. The SHA-256 values are not published by Funk.eu and are therefore not pinned.
 
@@ -589,6 +603,7 @@ Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each ma
 | [purge-uninstaller](../bucket/purge-uninstaller.json) | 1.1.0 | 2.6 MiB | 2026-11-15 | Windows application uninstaller that identifies and removes leftover files and registry entries. | [Homepage](https://purgeuninstaller.com/) |
 | [sablate](../bucket/sablate.json) | 1.1.1 | 225.0 MiB | 2026-11-15 | Local speech transcription and subtitle translation with bundled Whisper and FFmpeg engines. | [Homepage](https://sablate.com/) |
 | [vidray](../bucket/vidray.json) | 1.0.2 | — | — | Local video compressor and converter with bundled FFmpeg. | [Homepage](https://vidray.app/) |
+| **TOTAL DOWNLOAD SIZE** | — | **362.50 MiB known; 1 unavailable** | — | — | — |
 
 <a id="neuber-suite"></a>
 ## Neuber Suite
@@ -598,6 +613,7 @@ Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each ma
 | --- | --- | --- | --- | --- | --- |
 | [neuber-security-task-manager](../bucket/neuber-security-task-manager.json) | 3.2c | 2.8 MiB | 2026-01-23 | Process-inspection utility showing running processes, file paths, descriptions, and security-risk indicators; trialware. | [Homepage](https://www.neuber.com/taskmanager/) |
 | [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | 2.1 MiB | 2015-12-17 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
+| **TOTAL DOWNLOAD SIZE** | — | **4.90 MiB** | — | — | — |
 
 Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter. Their current downloads are installer executables, not verified portable payloads; they are not included until unattended installation and uninstallation can be validated. PC On/Off Time, Svchost Process Analyzer, and VoicesInstaller are freeware but do not publish numbered versions. They need a verified version signal before being added under the bucket's update-tracking rules.
 
@@ -617,6 +633,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [oo-regeditor](../bucket/oo-regeditor.json) | 16.1.6660 | 15.1 MiB | — | Portable advanced Windows Registry editor. | [Homepage](https://www.oo-software.com/en/ooregeditor) |
 | [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
 | [oo-shutup10](../bucket/oo-shutup10.json) | 3.7.1143 | — | 2026-11-10 | Portable privacy utility for reviewing and changing Windows 10 and 11 settings. | [Homepage](https://www.oo-software.com/en/shutup10) |
+| **TOTAL DOWNLOAD SIZE** | — | **605.60 MiB** | — | — | — |
 
 <a id="nirsoft-suite"></a>
 ## NirSoft Suite
@@ -626,6 +643,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | --- | --- | --- | --- | --- | --- |
 | [nirlauncher](../bucket/nirlauncher.json) | 1.30.27 | 40.0 MiB | 2026-11-02 | Official portable launcher bundle containing 200+ NirSoft utilities in one application folder. | [Homepage](https://launcher.nirsoft.net/) |
 | [nirlauncher.schinese](../bucket/nirlauncher.schinese.json) | 1.30.27 | — | — | Simplified Chinese translation pack for the NirSoft utilities included in NirLauncher. | [Homepage](https://launcher.nirsoft.net/) |
+| **TOTAL DOWNLOAD SIZE** | — | **Unavailable** | — | — | — |
 
 <a id="rizonesoft-suite"></a>
 ## Rizonesoft Suite
@@ -646,6 +664,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [take-ownership](../bucket/take-ownership.json) | 11.1.1.869 | 2.3 MiB | 2025-04-07 | Portable utility that can add or remove a Take Ownership context-menu action. | [Homepage](https://rizonesoft.com/gdm_downloads/take-ownership/) |
 | [usb-repair](../bucket/usb-repair.json) | 11.2.3.2380 | 2.3 MiB | 2025-07-03 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
 | [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| **TOTAL DOWNLOAD SIZE** | — | **268.80 MiB** | — | — | — |
 
 <a id="thiojoe-suite"></a>
 ## ThioJoe Suite
@@ -673,6 +692,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [windows-input-monitoring-tests-thiojoe](../bucket/windows-input-monitoring-tests-thiojoe.json) | 1.0.0 | 30.0 KiB | 2025-01-27 | Tests Windows keyboard input monitoring methods, including Raw Input and low-level hooks. | [Homepage](https://github.com/ThioJoe/Windows-Input-Monitoring-Tests) |
 | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) | 1.2.4 | 234.8 KiB | 2026-11-08 | Create shortcuts to Windows special folders, settings pages, task links, and URL protocols. | [Homepage](https://github.com/ThioJoe/Windows-Super-God-Mode) |
 | [yt-spammer-purge-thiojoe](../bucket/yt-spammer-purge-thiojoe.json) | 2.18.0 | 19.7 MiB | 2025-05-27 | Scan YouTube comments for spam and review matches for moderation actions. | [Homepage](https://github.com/ThioJoe/YT-Spammer-Purge) |
+| **TOTAL DOWNLOAD SIZE** | — | **363.61 MiB** | — | — | — |
 
 
 ## Skwire
@@ -759,6 +779,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [skwire-waste-not](../bucket/skwire-waste-not.json) |
 | [skwire-what](../bucket/skwire-what.json) |
 | [skwire-zero-zipper](../bucket/skwire-zero-zipper.json) |
+| **TOTAL DOWNLOAD SIZE: 77.80 MiB known** |
 
 
 ## Awesome MyGo Showcase
@@ -941,6 +962,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [yunji-uml](../bucket/yunji-uml.json) |
 | [zakki](../bucket/zakki.json) |
 | [zeokeel-super-agent](../bucket/zeokeel-super-agent.json) |
+| **TOTAL DOWNLOAD SIZE: 3,342.30 MiB known** |
 
 
 ## Checksum and update limitations
