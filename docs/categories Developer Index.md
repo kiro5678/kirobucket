@@ -28,16 +28,8 @@
 | Vovsoft Suite | 174 | 4 | 2,031.00 MiB | [View](#vovsoft-suite) |
 | **Total** | **745** | **81 identified** | **8,878.28 MiB** | — |
 
-**Counting notes (checked 2026-11-16):** The missing-program count is based on identifiable Windows desktop software in the developer's published catalogue that is not represented by a manifest. Web/cloud services, browser extensions and bundles of already-manifested programs are excluded. `—` means a complete count could not be verified. The MiTeC count includes 13 standalone programs listed in its legacy downloads catalogue; some may be old or no longer maintained. NirSoft's utilities are covered by the `nirlauncher` bundle and are not counted as individually missing.
-
-The size column sums only the primary/default Windows download sizes for manifests listed in this index, using the **Size** column in [Manifest Inventory](manifests.md). Alternative architectures are not added together; manifests without a published size are omitted from the total. The total therefore describes the indexed manifests, not the additional programs that do not yet have manifests.
-
-**Catalogues used for the non-zero counts:** [Awesome MyGo candidate audit](unavailable-manifest-candidates.md), [ComputerSluggish](https://computersluggish.com/software/), [Funk.eu](https://funk.eu/), [GRC freeware](https://www.grc.com/freeupdated.htm), [MiTeC legacy downloads](https://www.mitec.cz/Downloads/), [Neuber](https://www.neuber.com/download/products.html), [O&O products](https://www.oo-software.com/en/products), [Sordum downloads](https://www.sordum.org/downloads/), [Vovsoft Windows software](https://vovsoft.com/windows-software/).
-
-
 <a id="akiraeng"></a>
 ## AkiraEng
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -46,7 +38,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 
 <a id="auslogics-suite"></a>
 ## Auslogics Suite
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -70,7 +61,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 <a id="chemtable-suite"></a>
 ## ChemTable Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [autorun-organizer](../bucket/autorun-organizer.json) | 7.02 | 19.5 MiB | 2026-10-02 | Windows startup manager for reviewing and controlling auto-start entries | [Homepage](https://www.chemtable.com/autorun-organizer.htm) |
@@ -82,7 +72,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 
 <a id="eric-zimmerman-suite"></a>
 ## Eric Zimmerman Suite
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -122,7 +111,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 <a id="grc-suite"></a>
 ## GRC Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [grc-bootable](../bucket/grc-bootable.json) | 2024.04.21 | 309.5 KiB | 2024-04-21 | GRC BootAble: Creates bootable FreeDOS media to check whether a PC can boot a BIOS/legacy environment. | [Homepage](https://www.grc.com/bootable.htm) |
@@ -147,7 +135,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 
 <a id="mitec-suite"></a>
 ## MiTeC Suite
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -177,7 +164,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 
 <a id="softwareok-suite"></a>
 ## SoftwareOK Suite
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -266,7 +252,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 
 <a id="vovsoft-suite"></a>
 ## Vovsoft Suite
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -449,7 +434,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 <a id="sordum-suite"></a>
 ## Sordum Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [sordum-6to4-remover](../bucket/sordum-6to4-remover.json) | 1.2 | 281.0 KiB | 2017-05-07 | Utility for removing unwanted Microsoft 6to4 tunnel adapters from Windows. | [Homepage](https://www.sordum.org/6423/tunnel-adapter-microsoft-6to4-adapter-remover/) |
@@ -516,7 +500,6 @@ The size column sums only the primary/default Windows download sizes for manifes
 <a id="efsoftware-suite"></a>
 ## EFSoftware Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [ef-commander](../bucket/ef-commander.json) | 26.10 | 64bit: 7.5 MiB | 2026-08-24 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
@@ -539,7 +522,6 @@ The order/download page is already represented by 13 manifests; creating them ag
 <a id="turkaysoft-suite"></a>
 ## Türkaysoft Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [astel](../bucket/astel.json) | 26.11 | 878.7 KiB | 2026-10-10 | Encrypted password manager for Windows. | [Homepage](https://github.com/turkaysoft/astel) |
@@ -555,7 +537,6 @@ The order/download page is already represented by 13 manifests; creating them ag
 <a id="aurelitec-suite"></a>
 ## Aurelitec Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [aurelitec-cinemadrape](../bucket/aurelitec-cinemadrape.json) | 2.2.0 | 53.7 KiB | 2017-09-08 | Portable screen-dimming overlay that blacks out areas outside the active work region to reduce visual distractions. | [Homepage](https://www.aurelitec.com/cinemadrape/) |
@@ -568,7 +549,6 @@ The order/download page is already represented by 13 manifests; creating them ag
 <a id="computersluggish-suite"></a>
 ## ComputerSluggish Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [computersluggish-cs-easy-unlocker](../bucket/computersluggish-cs-easy-unlocker.json) | 1.1.7.0 | 866.4 KiB | 2026-07-05 | Identifies processes locking files or folders and helps release handles that prevent access. | [Homepage](https://computersluggish.com/cs-easy-unlocker/) |
@@ -578,7 +558,6 @@ Other main desktop products listed by ComputerSluggish currently link to MSI ins
 
 <a id="funk-eu-suite"></a>
 ## Funk.eu Suite
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -596,7 +575,6 @@ Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each ma
 <a id="fuumisoft"></a>
 ## FuumiSoft
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [file-arbor](../bucket/file-arbor.json) | 1.4.1 | 116.9 MiB | 2026-11-14 | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
@@ -608,7 +586,6 @@ Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each ma
 <a id="neuber-suite"></a>
 ## Neuber Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [neuber-security-task-manager](../bucket/neuber-security-task-manager.json) | 3.2c | 2.8 MiB | 2026-01-23 | Process-inspection utility showing running processes, file paths, descriptions, and security-risk indicators; trialware. | [Homepage](https://www.neuber.com/taskmanager/) |
@@ -619,7 +596,6 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 
 <a id="oo-software-gmbh"></a>
 ## O&O Software GmbH
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -637,7 +613,6 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 
 <a id="nirsoft-suite"></a>
 ## NirSoft Suite
-
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -669,7 +644,6 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 <a id="thiojoe-suite"></a>
 ## ThioJoe Suite
 
-
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [basic-stability-api-gui-thiojoe](../bucket/basic-stability-api-gui-thiojoe.json) | 1.0.0 | 360.4 KiB | 2024-04-20 | GUI client for generating and upscaling images through the Stability AI API. | [Homepage](https://github.com/ThioJoe/BasicStabilityAPI-GUI) |
@@ -694,9 +668,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [yt-spammer-purge-thiojoe](../bucket/yt-spammer-purge-thiojoe.json) | 2.18.0 | 19.7 MiB | 2025-05-27 | Scan YouTube comments for spam and review matches for moderation actions. | [Homepage](https://github.com/ThioJoe/YT-Spammer-Purge) |
 | **TOTAL DOWNLOAD SIZE** | — | **363.61 MiB** | — | — | — |
 
-
 ## Skwire
-
 
 | Manifest |
 | --- |
@@ -780,7 +752,6 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [skwire-what](../bucket/skwire-what.json) |
 | [skwire-zero-zipper](../bucket/skwire-zero-zipper.json) |
 | **TOTAL DOWNLOAD SIZE: 77.80 MiB known** |
-
 
 ## Awesome MyGo Showcase
 
@@ -963,7 +934,6 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [zakki](../bucket/zakki.json) |
 | [zeokeel-super-agent](../bucket/zeokeel-super-agent.json) |
 | **TOTAL DOWNLOAD SIZE: 3,342.30 MiB known** |
-
 
 ## Checksum and update limitations
 
