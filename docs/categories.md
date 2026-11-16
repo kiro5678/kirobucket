@@ -15,7 +15,7 @@
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
-| Forensics & Diagnostics | 35 | [View](#forensics-diagnostics) |
+| Forensics & Diagnostics | 36 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 20 | [View](#games-game-utilities) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
@@ -42,7 +42,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1214**
+**Total unique categorized manifests: 1215**
 
 
 ## Android & Device Tools
@@ -411,7 +411,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [eric-wxtcmd](../bucket/eric-wxtcmd.json) | 2026.10.1 | 3.7 MiB | 2026-10-25 | Eric Zimmerman's WxTCmd: Parser for Windows 10/11 Timeline database artifacts. | [Homepage](https://ericzimmerman.github.io/) |
 | [eric-xwfim](../bucket/eric-xwfim.json) | 2026.10.1 | 89.6 MiB | 2026-10-26 | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. | [Homepage](https://ericzimmerman.github.io/) |
 | [joas-drivertrust-auditor](../bucket/joas-drivertrust-auditor.json) | 5 | 48.5 KiB source + PySide6 | 2025-08-25 | DriverTrust Auditor: inventories Windows drivers, verifies signatures, and evaluates WDAC/HVCI and LOLDrivers risk. | [Homepage](https://github.com/JoasASantos/DriverTrust-Auditor) |
-| [oo-bluecon](../bucket/oo-bluecon.json) | 25.0.27026 | — | 2026-11-04 | Bootable Windows recovery environment for offline system repair, troubleshooting, and data recovery. | [Homepage](https://www.oo-software.com/en/bluecontrial) |
+| [oo-bluecon](../bucket/oo-bluecon.json) | 25.0.27026 | 338.3 MiB | 2026-11-04 | Bootable Windows recovery environment for offline system repair, troubleshooting, and data recovery. | [Homepage](https://www.oo-software.com/en/bluecontrial) |
 | [triagesuite](../bucket/triagesuite.json) | 0.3.0 | 64bit: 56.5 MiB / arm64: 34.9 MiB | 2026-09-20 | Rust-based forensic parsers and orchestrator for offline Velociraptor Windows triage captures. | [Homepage](https://github.com/darkoperator/TriageSuite) |
 
 ## Games & Game Utilities
