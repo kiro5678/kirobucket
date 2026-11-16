@@ -1,0 +1,51 @@
+{
+    "##": "Portable extraction from the official Inno Setup package. Scoop extracts the application payload; the vendor installer is not executed.",
+    "version": "1.4.16",
+    "description": "Windows SSD/HDD endurance monitor with ETW process attribution, SMART telemetry, write trends, and alerts.",
+    "homepage": "https://github.com/andrewtheart/DiskActivityMonitor",
+    "license": "Unknown",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/andrewtheart/DiskActivityMonitor/releases/download/v1.4.16/DiskActivityMonitor-Setup-1.4.16-x64.exe",
+            "hash": "358f9924e194a3227ad87b71f0f4009ae6a4dbdde52901c867ae5b64ca867835"
+        }
+    },
+    "innosetup": true,
+    "bin": [
+        [
+            "service\\DiskActivityMonitor.Service.exe",
+            "dam-service"
+        ],
+        [
+            "tray\\DiskActivityMonitor.Tray.exe",
+            "dam-tray"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "tray\\DiskActivityMonitor.Tray.exe",
+            "Disk Activity Monitor",
+            "--show",
+            "app.ico"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/andrewtheart/DiskActivityMonitor"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/andrewtheart/DiskActivityMonitor/releases/download/v$version/DiskActivityMonitor-Setup-$version-x64.exe"
+            }
+        },
+        "hash": {
+            "mode": "download"
+        }
+    },
+    "notes": [
+        "Scoop uses its native Inno Setup extraction. The vendor setup is not run, so no Windows service, Program Files installation, or startup entry is registered.",
+        "Start the collector with `dam-service`. It runs as a foreground console process; keep its terminal window open. Running elevated enables ETW process attribution and additional SMART/reliability data. Without elevation, some telemetry is reduced.",
+        "Start the tray dashboard with `dam-tray` or the Start Menu shortcut.",
+        "The application stores its database, machine configuration, and logs in `%ProgramData%\\DiskActivityMonitor`; per-user settings are stored in `%LOCALAPPDATA%\\DiskActivityMonitor`. These locations are controlled by the upstream application and remain outside Scoop."
+    ]
+}
