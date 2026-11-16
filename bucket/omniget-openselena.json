@@ -34,9 +34,7 @@
         "Rename-Item -LiteralPath $portableExe.FullName -NewName 'LibreGet.exe'",
         "New-Item -ItemType File -Path (Join-Path $dir 'portable.txt') -Force | Out-Null"
     ],
-    "post_install": [
-        "if (!(Test-Path -LiteralPath (Join-Path $dir 'LibreGet.exe') -PathType Leaf)) { throw 'LibreGet.exe was not installed in the Scoop version directory.' }"
-    ],
+    "post_install": "if (!(Test-Path -LiteralPath (Join-Path $dir 'LibreGet.exe') -PathType Leaf)) { throw 'LibreGet.exe was not installed in the Scoop version directory.' }",
     "persist": "data",
     "shortcuts": [
         [
