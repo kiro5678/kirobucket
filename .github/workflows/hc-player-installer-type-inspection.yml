@@ -206,8 +206,16 @@ jobs:
           $sevenZip = Get-Command "7z.exe" -ErrorAction SilentlyContinue
           if (-not $sevenZip) { $sevenZip = Get-Command "7z" -ErrorAction SilentlyContinue }
           $archiveListing = @()
+          $sevenZipExitCode = $null
           if ($sevenZip) {
-            $archiveListing = @(& $sevenZip.Source l -slt $installer 2>&1 | ForEach-Object { "$_" })
+            $nativeErrorPreference = $PSNativeCommandUseErrorActionPreference
+            $PSNativeCommandUseErrorActionPreference = $false
+            try {
+              $archiveListing = @(& $sevenZip.Source l -slt $installer 2>&1 | ForEach-Object { "$_" })
+              $sevenZipExitCode = $LASTEXITCODE
+            } finally {
+              $PSNativeCommandUseErrorActionPreference = $nativeErrorPreference
+            }
             $archiveListing | Set-Content -LiteralPath (Join-Path $workDir "03-7zip-listing.txt") -Encoding utf8
           }
 
