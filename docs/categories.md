@@ -28,7 +28,7 @@
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
-| Security | 41 | [View](#security) |
+| Security | 42 | [View](#security) |
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
 | Sync & Backup | 12 | [View](#sync-backup) |
@@ -42,7 +42,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1212**
+**Total unique categorized manifests: 1213**
 
 
 ## Android & Device Tools
@@ -964,6 +964,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [astel](../bucket/astel.json) | 26.11 | 878.7 KiB | 2026-10-10 | Encrypted password manager for Windows. | [Homepage](https://github.com/turkaysoft/astel) |
 | [Auslogics-anti-malware](../bucket/Auslogics-anti-malware.json) | 1.23.0.4 | 16.0 MiB | 2026-05-19 | Malware scanning and protection utility | [Homepage](https://www.auslogics.com/en/software/anti-malware/) |
 | [fastsigcheck-thiojoe](../bucket/fastsigcheck-thiojoe.json) | 1.0.1 | 42.9 KiB | 2024-06-24 | Verify embedded Windows Authenticode signatures through the native WinVerifyTrust API. | [Homepage](https://github.com/ThioJoe/FastSigCheck) |
+| [fibratus](../bucket/fibratus.json) | 3.1.1 | — | 2026-08-19 | Windows endpoint security sensor for real-time kernel telemetry, threat detection, memory scanning, and forensics. | [Homepage](https://fibratus.io/) |
 | [softwareok-blank-and-secure](../bucket/softwareok-blank-and-secure.json) | 8.44 | 64bit: 238.0 KiB | 2026-10-29 | Securely overwrite and delete files. | [Homepage](https://www.softwareok.com/?Download=BlankAndSecure) |
 | [crowdsec](../bucket/crowdsec.json) | 1.8.2 | 114.3 MiB | 2026-10-26 | Open-source security engine that detects and responds to malicious behavior. | [Homepage](https://github.com/crowdsecurity/crowdsec) |
 | [dgreadiness](../bucket/dgreadiness.json) | 3.6 | 31.7 KiB | 2025-02-14 | Device Guard and Credential Guard hardware readiness tool | [Homepage](https://www.microsoft.com/en-us/download/details.aspx?id=53337) |
