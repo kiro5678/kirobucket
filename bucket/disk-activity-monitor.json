@@ -1,6 +1,7 @@
 {
+    "##": "Portable extraction from the official Inno Setup package. Scoop extracts the application payload; the vendor installer is not executed.",
     "version": "1.4.16",
-    "description": "Windows SSD/HDD monitor with ETW process attribution, SMART telemetry, write trends, and alerts.",
+    "description": "Windows SSD/HDD endurance monitor with ETW process attribution, SMART telemetry, write trends, and alerts.",
     "homepage": "https://github.com/andrewtheart/DiskActivityMonitor",
     "license": "Unknown",
     "architecture": {
@@ -10,65 +11,27 @@
         }
     },
     "innosetup": true,
-    "pre_install": [
-        "$ErrorActionPreference = 'Stop'",
-        "$payloads = @(",
-        "    @{ Name = 'service'; Executable = 'DiskActivityMonitor.Service.exe' },",
-        "    @{ Name = 'tray'; Executable = 'DiskActivityMonitor.Tray.exe' }",
-        ")",
-        "foreach ($payload in $payloads) {",
-        "    $foundFiles = @(Get-ChildItem -LiteralPath $dir -Filter $payload.Executable -File -Recurse -ErrorAction Stop)",
-        "    if ($foundFiles.Count -ne 1) { throw \"Expected exactly one $($payload.Executable) in the Inno Setup payload; found $($foundFiles.Count).\" }",
-        "    $source = $foundFiles[0].Directory.FullName",
-        "    $destination = Join-Path $dir $payload.Name",
-        "    if (-not [string]::Equals([IO.Path]::GetFullPath($source).TrimEnd('\\'), [IO.Path]::GetFullPath($destination).TrimEnd('\\'), [StringComparison]::OrdinalIgnoreCase)) {",
-        "        New-Item -ItemType Directory -Path $destination -Force | Out-Null",
-        "        Get-ChildItem -LiteralPath $source -Force | Move-Item -Destination $destination -Force",
-        "    }",
-        "}",
-        "$icon = Get-ChildItem -LiteralPath $dir -Filter 'app.ico' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1",
-        "$rootIcon = Join-Path $dir 'app.ico'",
-        "if ($icon -and -not [string]::Equals([IO.Path]::GetFullPath($icon.FullName), [IO.Path]::GetFullPath($rootIcon), [StringComparison]::OrdinalIgnoreCase)) { Copy-Item -LiteralPath $icon.FullName -Destination $rootIcon -Force }",
-        "$launcherContent = @'",
-        "$ErrorActionPreference = 'Stop'",
-        "$serviceExe = Join-Path $PSScriptRoot 'service\\DiskActivityMonitor.Service.exe'",
-        "$trayExe = Join-Path $PSScriptRoot 'tray\\DiskActivityMonitor.Tray.exe'",
-        "if (-not (Test-Path -LiteralPath $serviceExe -PathType Leaf)) { throw 'Disk Activity Monitor collector executable is missing.' }",
-        "if (-not (Test-Path -LiteralPath $trayExe -PathType Leaf)) { throw 'Disk Activity Monitor tray executable is missing.' }",
-        "if (-not (Get-Process -Name 'DiskActivityMonitor.Service' -ErrorAction SilentlyContinue)) {",
-        "    Start-Process -FilePath $serviceExe -WorkingDirectory (Split-Path -Parent $serviceExe) -WindowStyle Hidden",
-        "}",
-        "if (-not (Get-Process -Name 'DiskActivityMonitor.Tray' -ErrorAction SilentlyContinue)) {",
-        "    Start-Process -FilePath $trayExe -ArgumentList '--show' -WorkingDirectory (Split-Path -Parent $trayExe)",
-        "}",
-        "'@",
-        "[IO.File]::WriteAllText((Join-Path $dir 'Run-DiskActivityMonitor.ps1'), $launcherContent, [Text.UTF8Encoding]::new($false))"
-    ],
-    "pre_uninstall": [
-        "$appRoot = [IO.Path]::GetFullPath((Split-Path -Parent $dir)).TrimEnd('\\') + '\\'",
-        "Get-Process -Name 'DiskActivityMonitor.Service','DiskActivityMonitor.Tray' -ErrorAction SilentlyContinue | ForEach-Object {",
-        "    try {",
-        "        if ($_.Path -and [IO.Path]::GetFullPath($_.Path).StartsWith($appRoot, [StringComparison]::OrdinalIgnoreCase)) {",
-        "            Stop-Process -Id $_.Id -Force -ErrorAction Stop",
-        "        }",
-        "    } catch { }",
-        "}"
-    ],
     "bin": [
         [
-            "Run-DiskActivityMonitor.ps1",
-            "disk-activity-monitor"
+            "service\\DiskActivityMonitor.Service.exe",
+            "dam-service"
+        ],
+        [
+            "tray\\DiskActivityMonitor.Tray.exe",
+            "dam-tray"
         ]
     ],
     "shortcuts": [
         [
-            "Run-DiskActivityMonitor.ps1",
+            "tray\\DiskActivityMonitor.Tray.exe",
             "Disk Activity Monitor",
-            "",
+            "--show",
             "app.ico"
         ]
     ],
-    "checkver": "github",
+    "checkver": {
+        "github": "https://github.com/andrewtheart/DiskActivityMonitor"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
@@ -80,7 +43,9 @@
         }
     },
     "notes": [
-        "The Inno Setup package is extracted only. Its Windows service registration and startup tasks are not executed; the collector runs as a normal process from the Scoop directory.",
-        "The application stores its database and collector configuration in %ProgramData%\\DiskActivityMonitor and per-user settings in %LOCALAPPDATA%\\DiskActivityMonitor."
+        "Scoop uses its native Inno Setup extraction. The vendor setup is not run, so no Windows service, Program Files installation, or startup entry is registered.",
+        "Start the collector with `dam-service`. It runs as a foreground console process; keep its terminal window open. Running elevated enables ETW process attribution and additional SMART/reliability data. Without elevation, some telemetry is reduced.",
+        "Start the tray dashboard with `dam-tray` or the Start Menu shortcut.",
+        "The application stores its database, machine configuration, and logs in `%ProgramData%\\DiskActivityMonitor`; per-user settings are stored in `%LOCALAPPDATA%\\DiskActivityMonitor`. These locations are controlled by the upstream application and remain outside Scoop."
     ]
 }
