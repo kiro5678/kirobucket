@@ -5,8 +5,9 @@
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://api.syscap.net/download/zip",
-            "hash": "e70dcd90abc35ee7ad4b2ebf656b85a11dd55742a82bbc7fe33b7b2d21fab34b"
+            "url": "https://api.syscap.net/download/zip#/dl.zip",
+            "hash": "e70dcd90abc35ee7ad4b2ebf656b85a11dd55742a82bbc7fe33b7b2d21fab34b",
+            "extract_dir": "SysCap"
         }
     },
     "shortcuts": [
@@ -23,7 +24,7 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://api.syscap.net/download/zip",
+                "url": "https://api.syscap.net/download/zip#/dl.zip",
                 "hash": {
                     "mode": "download"
                 }
