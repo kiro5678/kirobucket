@@ -24,7 +24,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 29 | [View](#notch) |
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
-| Other Utilities | 134 | [View](#other-utilities) |
+| Other Utilities | 135 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 31 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
@@ -42,7 +42,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1213**
+**Total unique categorized manifests: 1214**
 
 
 ## Android & Device Tools
@@ -736,6 +736,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [eyeguard](../bucket/eyeguard.json) | 3.0.0 | — | — | Windows eye-care suite with screen color and brightness controls, reading aids, and break reminders. | [Homepage](https://github.com/hocinechero/EyeGuard) |
 | [escape-key-process-killer](../bucket/escape-key-process-killer.json) | 2.1 | 54.2 KiB | 2026-11-10 | Command-line utility that terminates a specified Windows process when you press ESC. | [Homepage](https://github.com/ElektroStudios/Escape-Key-Process-Killer) |
 | [hob](../bucket/hob.json) | 0.2.6 | — | — | Local AI desktop assistant for working with documents, files, and everyday tasks using models that run on your computer. | [Homepage](https://www.hob.chat/) |
+| [inpace](../bucket/inpace.json) | 1.28.2 | 21.7 MiB | 2026-11-16 | Offline-first learning manager for courses, study progress, milestones, quizzes, and reminders. | [Homepage](https://mahmoudyosrimahmoud13.github.io/inPace/) |
 | [monitorsnap](../bucket/monitorsnap.json) | 2.6.2 | — | — | Save and restore Windows display layouts, resolutions, refresh rates, and hotkey presets. | [Homepage](https://github.com/GTRows/MonitorSnap) |
 | [msstore-downloader](../bucket/msstore-downloader.json) | 1.0.2 | — | — | Windows desktop utility for retrieving and downloading Microsoft Store app packages. | [Homepage](https://github.com/inteliboy/MSStoreDownloader) |
 | [nirlauncher](../bucket/nirlauncher.json) | 1.30.27 | 40.0 MiB | 2026-11-02 | Official portable launcher bundle containing 200+ NirSoft utilities in one application folder. | [Homepage](https://launcher.nirsoft.net/) |
