@@ -10,7 +10,7 @@
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 7 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
-| Disk Monitor | 8 | [View](#disk-monitor) |
+| Disk Monitor | 9 | [View](#disk-monitor) |
 | Download Managers | 22 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
@@ -42,7 +42,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1211**
+**Total unique categorized manifests: 1212**
 
 
 ## Android & Device Tools
@@ -220,6 +220,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | 26.4 MiB | 2026-04-29 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
 | [disk-activity-monitor](../bucket/disk-activity-monitor.json) | 1.4.16 | 83.4 MiB | 2026-08-16 | Windows SSD/HDD endurance monitor with ETW process attribution, SMART telemetry, write trends, and alerts. | [Homepage](https://github.com/andrewtheart/DiskActivityMonitor) |
 | [diskdrift](../bucket/diskdrift.json) | 0.1.2 | 70.2 MiB | 2026-11-06 | Windows disk-space monitoring suite that records free-space changes, top writers, and storage growth. | [Homepage](https://github.com/AnwarRezk/disk-monitor) |
+| [diskmonitor](../bucket/diskmonitor.json) | 70b93aa644d4045395b4e4482ba954009422b482 | — | 2026-06-18 | Windows console utility for per-process disk I/O monitoring with ETW attribution. | [Homepage](https://github.com/Mainkill1/DiskMonitor) |
 | [diskwatch](../bucket/diskwatch.json) | 0.7.2 | 1.0 MiB | 2026-11-14 | Read-only disk diagnostics TUI for devices, volumes, disk I/O, SMART health, and busy files. | [Homepage](https://github.com/matthart1983/diskwatch) |
 | [hdsentinel-portable](../bucket/hdsentinel-portable.json) | 6.40 | 46.7 MiB | 2026-03-04 | Hard disk and SSD monitoring, health analysis, testing and repair tool. | [Homepage](https://www.hdsentinel.com/) |
 | [syscap](../bucket/syscap.json) | 0.29.0 | — | 2026-11-07 | Visual disk, file, process, and network activity navigator for Windows. | [Homepage](https://syscap.net/) |
