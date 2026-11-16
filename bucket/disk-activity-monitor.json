@@ -43,9 +43,6 @@
         }
     },
     "notes": [
-        "Scoop uses its native Inno Setup extraction. The vendor setup is not run, so no Windows service, Program Files installation, or startup entry is registered.",
-        "Start the collector with `dam-service`. It runs as a foreground console process; keep its terminal window open. Running elevated enables ETW process attribution and additional SMART/reliability data. Without elevation, some telemetry is reduced.",
-        "Start the tray dashboard with `dam-tray` or the Start Menu shortcut.",
-        "The application stores its database, machine configuration, and logs in `%ProgramData%\\DiskActivityMonitor`; per-user settings are stored in `%LOCALAPPDATA%\\DiskActivityMonitor`. These locations are controlled by the upstream application and remain outside Scoop."
+        "Run `dam-service` in an elevated terminal and keep it open; launch the dashboard with `dam-tray`. Data is stored outside Scoop in `%ProgramData%\\DiskActivityMonitor` and `%LOCALAPPDATA%\\DiskActivityMonitor`."
     ]
 }
