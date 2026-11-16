@@ -1,0 +1,121 @@
+name: DiskMonitor Source Build Test
+
+on:
+  push:
+    branches:
+      - diskmonitor-source-build-verification
+    paths:
+      - ".github/workflows/diskmonitor-source-build-test.yml"
+      - "bucket/diskmonitor.json"
+  pull_request:
+    paths:
+      - ".github/workflows/diskmonitor-source-build-test.yml"
+      - "bucket/diskmonitor.json"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and launch DiskMonitor from pinned source
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Download pinned upstream source and calculate SHA-256
+        id: source
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $commit = "70b93aa644d4045395b4e4482ba954009422b482"
+          $url = "https://github.com/Mainkill1/DiskMonitor/archive/$commit.zip"
+          $archive = Join-Path $env:RUNNER_TEMP "DiskMonitor-$commit.zip"
+          Invoke-WebRequest -Uri $url -OutFile $archive -TimeoutSec 120
+          if (-not (Test-Path -LiteralPath $archive -PathType Leaf)) {
+            throw "The pinned DiskMonitor source archive was not downloaded."
+          }
+          $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          "sha256=$hash" >> $env:GITHUB_OUTPUT
+          "commit=$commit" >> $env:GITHUB_OUTPUT
+          Write-Host "DISKMONITOR_SOURCE_ARCHIVE_SHA256=$hash"
+          Write-Host "DISKMONITOR_SOURCE_COMMIT=$commit"
+          "## DiskMonitor source verification" >> $env:GITHUB_STEP_SUMMARY
+          "" >> $env:GITHUB_STEP_SUMMARY
+          "- Upstream commit: $commit" >> $env:GITHUB_STEP_SUMMARY
+          "- Source ZIP SHA-256: `$hash" >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Extract and inspect the source archive
+        id: extract
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $commit = "70b93aa644d4045395b4e4482ba954009422b482"
+          $archive = Join-Path $env:RUNNER_TEMP "DiskMonitor-$commit.zip"
+          $source = Join-Path $env:RUNNER_TEMP "DiskMonitor-source"
+          Expand-Archive -LiteralPath $archive -DestinationPath $source -Force
+          $project = Get-ChildItem -LiteralPath $source -Filter "DiskMonitor.csproj" -File -Recurse |
+            Select-Object -First 1
+          if (-not $project) {
+            throw "DiskMonitor.csproj was not found in the pinned source archive."
+          }
+          [xml]$projectXml = Get-Content -LiteralPath $project.FullName -Raw
+          $appVersion = [string]$projectXml.Project.PropertyGroup.Version
+          if ([string]::IsNullOrWhiteSpace($appVersion)) {
+            throw "The upstream project version could not be read from DiskMonitor.csproj."
+          }
+          "project=$($project.FullName)" >> $env:GITHUB_OUTPUT
+          "app_version=$appVersion" >> $env:GITHUB_OUTPUT
+          Write-Host "Upstream application version: $appVersion"
+          Write-Host "Project file: $($project.FullName)"
+
+      - name: Publish self-contained Windows x64 executable
+        shell: pwsh
+        env:
+          PROJECT_PATH: ${{ steps.extract.outputs.project }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $env:NUGET_PACKAGES = Join-Path $env:RUNNER_TEMP "DiskMonitor-NuGet"
+          $env:DOTNET_CLI_HOME = Join-Path $env:RUNNER_TEMP "DiskMonitor-dotnet-home"
+          $publish = Join-Path $env:GITHUB_WORKSPACE "publish"
+          New-Item -ItemType Directory -Path $publish -Force | Out-Null
+          dotnet publish "$env:PROJECT_PATH" --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false --output $publish
+          if ($LASTEXITCODE -ne 0) {
+            throw "dotnet publish failed with exit code $LASTEXITCODE."
+          }
+          $exe = Join-Path $publish "DiskMonitor.exe"
+          if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+            throw "The build did not produce publish\DiskMonitor.exe."
+          }
+          $file = Get-Item -LiteralPath $exe
+          Write-Host "Built executable: $($file.FullName)"
+          Write-Host "Executable size: $($file.Length) bytes"
+          "Built executable: $($file.Length) bytes" >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Launch smoke test
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $exe = Join-Path $env:GITHUB_WORKSPACE "publish\DiskMonitor.exe"
+          $process = Start-Process -FilePath $exe -WorkingDirectory (Split-Path -Parent $exe) -PassThru -NoNewWindow
+          try {
+            Start-Sleep -Seconds 4
+            $process.Refresh()
+            if ($process.HasExited) {
+              throw "DiskMonitor exited during the launch smoke test (exit code $($process.ExitCode))."
+            }
+            Write-Host "DiskMonitor remained running for four seconds."
+            "Launch smoke test: process remained alive for four seconds." >> $env:GITHUB_STEP_SUMMARY
+          }
+          finally {
+            if (-not $process.HasExited) {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            }
+          }
