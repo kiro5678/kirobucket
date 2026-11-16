@@ -1,5 +1,5 @@
 {
-    "##": "Portable extraction from the official Inno Setup package. The vendor setup is not executed and no Windows service or Run-key entry is created.",
+    "##": "Portable extraction from the official Inno Setup package. Scoop's persist feature keeps the application data; the vendor setup is not executed.",
     "version": "0.1.2",
     "description": "Windows disk-space monitor that records free-space changes, storage growth, and the processes writing to disk.",
     "homepage": "https://github.com/AnwarRezk/disk-monitor",
@@ -11,23 +11,6 @@
         }
     },
     "innosetup": true,
-    "pre_install": [
-        "$persistDataDir = Join-Path $persist_dir 'data'",
-        "if (Test-Path -LiteralPath $persistDataDir -PathType Container) {",
-        "    $dataDir = $persistDataDir",
-        "} else {",
-        "    $dataDir = Join-Path $dir 'data'",
-        "    New-Item -ItemType Directory -Path $dataDir -Force | Out-Null",
-        "}",
-        "$acl = [System.Security.AccessControl.DirectorySecurity]::new()",
-        "$acl.SetAccessRuleProtection($true, $false)",
-        "$inherit = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit -bor [System.Security.AccessControl.InheritanceFlags]::ObjectInherit",
-        "$acl.AddAccessRule([System.Security.AccessControl.FileSystemAccessRule]::new([System.Security.Principal.SecurityIdentifier]::new('S-1-5-18'), [System.Security.AccessControl.FileSystemRights]::FullControl, $inherit, [System.Security.AccessControl.PropagationFlags]::None, [System.Security.AccessControl.AccessControlType]::Allow))",
-        "$acl.AddAccessRule([System.Security.AccessControl.FileSystemAccessRule]::new([System.Security.Principal.SecurityIdentifier]::new('S-1-5-32-544'), [System.Security.AccessControl.FileSystemRights]::FullControl, $inherit, [System.Security.AccessControl.PropagationFlags]::None, [System.Security.AccessControl.AccessControlType]::Allow))",
-        "$usersRights = [System.Security.AccessControl.FileSystemRights]::ReadAndExecute -bor [System.Security.AccessControl.FileSystemRights]::Synchronize",
-        "$acl.AddAccessRule([System.Security.AccessControl.FileSystemAccessRule]::new([System.Security.Principal.SecurityIdentifier]::new('S-1-5-32-545'), $usersRights, $inherit, [System.Security.AccessControl.PropagationFlags]::None, [System.Security.AccessControl.AccessControlType]::Allow))",
-        "Set-Acl -LiteralPath $dataDir -AclObject $acl"
-    ],
     "post_install": [
         "$configPath = Join-Path $dir 'Collector\\appsettings.json'",
         "if (-not (Test-Path -LiteralPath $configPath -PathType Leaf)) { throw \"DiskDrift configuration file was not found: $configPath\" }",
@@ -69,10 +52,10 @@
         }
     },
     "notes": [
-        "Portable install: Scoop extracts the application files from the Inno Setup package; the vendor setup and its service-registration steps are not run.",
+        "Scoop extracts the application files from the Inno Setup package; the vendor setup and its service-registration steps are not run.",
+        "The database and logs are stored in the Scoop persistent data directory through the standard persist mechanism.",
         "Start the Collector from an elevated PowerShell session with: diskdrift-collector. Keep that console window open while monitoring.",
         "Start the tray and dashboard with: diskdrift, or use the Start Menu shortcut.",
-        "The Collector must run elevated because the upstream application requires Administrator rights for its system-wide monitoring. It runs as a console process, not as a Windows service, and does not start automatically with Windows.",
-        "The database and logs are stored in Scoop's persistent data directory and are retained when the application is uninstalled."
+        "The Collector requires Administrator rights for system-wide monitoring. It runs as a console process, not as a Windows service, and does not start automatically with Windows."
     ]
 }
