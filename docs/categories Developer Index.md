@@ -17,7 +17,7 @@
 | GRC Suite | 18 | 3 | 1.72 MiB | [View](#grc-suite) |
 | MiTeC Suite | 22 | 13 | 153.90 MiB | [View](#mitec-suite) |
 | Neuber Suite | 2 | 6 | 4.90 MiB | [View](#neuber-suite) |
-| O&O Software GmbH | 10 | 1 | 605.60 MiB | [View](#oo-software-gmbh) |
+| O&O Software GmbH | 11 | 0 | 605.60 MiB | [View](#oo-software-gmbh) |
 | NirSoft Suite | 2 | 0 | — | [View](#nirsoft-suite) |
 | Rizonesoft Suite | 14 | 0 | 268.80 MiB | [View](#rizonesoft-suite) |
 | Sordum Suite | 59 | 4 | 56.93 MiB | [View](#sordum-suite) |
@@ -26,7 +26,7 @@
 | ThioJoe Suite | 20 | — | 363.61 MiB | [View](#thiojoe-suite) |
 | Türkaysoft Suite | 8 | 0 | 7.05 MiB | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | 4 | 2,031.00 MiB | [View](#vovsoft-suite) |
-| **Total** | **745** | **81 identified** | **8,878.28 MiB** | — |
+| **Total** | **746** | **80 identified** | **8,878.28 MiB** | — |
 
 <a id="akiraeng"></a>
 ## AkiraEng
@@ -606,6 +606,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [oo-diskcommander](../bucket/oo-diskcommander.json) | 5.1.1020 | — | — | Analyze drives and inspect storage contents. | [Homepage](https://www.oo-software.com/en/oodiskcommander) |
 | [oo-diskimage](../bucket/oo-diskimage.json) | 23.2.26060 | — | — | Create and restore full disk images and Windows system backups. | [Homepage](https://www.oo-software.com/en/diskimage-backup-your-data) |
 | [oo-diskrecovery](../bucket/oo-diskrecovery.json) | 14.0.17 | — | — | Recover deleted files and data from damaged file systems. | [Homepage](https://www.oo-software.com/en/products/oodiskrecovery) |
+| [oo-bluecon](../bucket/oo-bluecon.json) | 25.0.27026 | — | 2026-11-04 | Bootable Windows recovery environment for offline system repair, troubleshooting, and data recovery. | [Homepage](https://www.oo-software.com/en/bluecontrial) |
 | [oo-regeditor](../bucket/oo-regeditor.json) | 16.1.6660 | 15.1 MiB | — | Portable advanced Windows Registry editor. | [Homepage](https://www.oo-software.com/en/ooregeditor) |
 | [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
 | [oo-shutup10](../bucket/oo-shutup10.json) | 3.7.1143 | — | 2026-11-10 | Portable privacy utility for reviewing and changing Windows 10 and 11 settings. | [Homepage](https://www.oo-software.com/en/shutup10) |
