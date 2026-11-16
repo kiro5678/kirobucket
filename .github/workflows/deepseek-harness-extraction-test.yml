@@ -1,0 +1,208 @@
+name: DeepSeek Harness Windows Extraction Test
+
+on:
+  push:
+    paths:
+      - ".github/workflows/deepseek-harness-extraction-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Inspect official Windows installer without running it
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Download and inspect the official installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $root = Join-Path $env:RUNNER_TEMP 'deepseek-harness-inspection'
+          $setup = Join-Path $root 'dsh-latest-windows-x64.exe'
+          $outer = Join-Path $root 'outer'
+          $inner = Join-Path $root 'inner'
+          New-Item -ItemType Directory -Path $root, $outer, $inner -Force | Out-Null
+
+          $url = 'https://download.deepseek.com/desktop/dsh-latest-windows-x64.exe'
+          Invoke-WebRequest -Uri $url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 900
+          if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) {
+            throw 'The official installer download did not create a file.'
+          }
+
+          $file = Get-Item -LiteralPath $setup
+          $sha256 = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          $signature = Get-AuthenticodeSignature -FilePath $setup
+
+          @(
+            "URL: $url"
+            "File size: $($file.Length) bytes"
+            "SHA256: $sha256"
+            "Signature status: $($signature.Status)"
+            "Signer: $($signature.SignerCertificate.Subject)"
+            "Product version: $((Get-Item -LiteralPath $setup).VersionInfo.ProductVersion)"
+            "File version: $((Get-Item -LiteralPath $setup).VersionInfo.FileVersion)"
+          ) | Set-Content -LiteralPath (Join-Path $root 'installer-metadata.txt') -Encoding utf8
+
+          Write-Host "SHA256: $sha256"
+          Write-Host "File size: $($file.Length) bytes"
+          Write-Host "Signature status: $($signature.Status)"
+          Write-Host "Signer: $($signature.SignerCertificate.Subject)"
+          Write-Host "Product version: $((Get-Item -LiteralPath $setup).VersionInfo.ProductVersion)"
+
+          $sevenZip = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+          if (-not $sevenZip) {
+            choco install 7zip -y --no-progress
+            $candidate = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+            if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
+              throw "7-Zip installation did not provide $candidate"
+            }
+            $sevenZipPath = $candidate
+          } else {
+            $sevenZipPath = $sevenZip.Source
+          }
+
+          & $sevenZipPath l -slt $setup *> (Join-Path $root 'outer-listing.txt')
+          $listExit = $LASTEXITCODE
+          Write-Host "7-Zip listing exit code: $listExit"
+          if ($listExit -ne 0) {
+            throw '7-Zip could not list the official setup as an archive.'
+          }
+
+          & $sevenZipPath x $setup "-o$outer" -y -bd *> (Join-Path $root 'outer-extraction.log')
+          $extractExit = $LASTEXITCODE
+          Write-Host "7-Zip extraction exit code: $extractExit"
+          if ($extractExit -ne 0) {
+            throw '7-Zip could not extract the official setup.'
+          }
+
+          $outerFiles = @(Get-ChildItem -LiteralPath $outer -File -Recurse -Force)
+          $outerExecutables = @($outerFiles | Where-Object { $_.Extension -ieq '.exe' })
+          $nestedArchives = @(
+            $outerFiles | Where-Object { $_.Extension.ToLowerInvariant() -in @('.7z', '.zip', '.cab') }
+          )
+
+          Write-Host "Outer file count: $($outerFiles.Count)"
+          Write-Host "Outer executable count: $($outerExecutables.Count)"
+          Write-Host "Nested archive count: $($nestedArchives.Count)"
+
+          $inventory = [System.Collections.Generic.List[string]]::new()
+          foreach ($item in $outerFiles | Sort-Object FullName) {
+            $relative = [System.IO.Path]::GetRelativePath($outer, $item.FullName).Replace('\', '/')
+            $line = "OUTER $relative [$($item.Length) bytes]"
+            $inventory.Add($line)
+            Write-Host $line
+          }
+
+          $appRoots = [System.Collections.Generic.List[string]]::new()
+          $appRoots.Add($outer)
+
+          foreach ($archive in $nestedArchives) {
+            $archiveName = [System.IO.Path]::GetFileNameWithoutExtension($archive.Name)
+            $destination = Join-Path $inner ($archiveName -replace '[^A-Za-z0-9_-]', '-')
+            New-Item -ItemType Directory -Path $destination -Force | Out-Null
+            Write-Host "Extracting nested archive: $($archive.FullName)"
+            & $sevenZipPath x $archive.FullName "-o$destination" -y -bd *> (Join-Path $root "nested-$archiveName-extraction.log")
+            $nestedExit = $LASTEXITCODE
+            Write-Host "Nested extraction exit code ($($archive.Name)): $nestedExit"
+            if ($nestedExit -ne 0) {
+              throw "7-Zip could not extract nested archive $($archive.Name)."
+            }
+            $appRoots.Add($destination)
+            foreach ($item in Get-ChildItem -LiteralPath $destination -File -Recurse -Force) {
+              $relative = [System.IO.Path]::GetRelativePath($destination, $item.FullName).Replace('\', '/')
+              $line = "NESTED $relative [$($item.Length) bytes]"
+              $inventory.Add($line)
+              Write-Host $line
+            }
+          }
+
+          $allExecutables = @(
+            foreach ($directory in $appRoots) {
+              Get-ChildItem -LiteralPath $directory -File -Recurse -Force |
+                Where-Object { $_.Extension -ieq '.exe' } |
+                ForEach-Object {
+                  [PSCustomObject]@{
+                    Root = $directory
+                    Name = $_.Name
+                    Path = [System.IO.Path]::GetRelativePath($directory, $_.FullName).Replace('\', '/')
+                    Size = $_.Length
+                  }
+                }
+            }
+          )
+
+          if ($allExecutables.Count -eq 0) {
+            throw 'No executable was found in the extracted installer payload.'
+          }
+
+          $candidateExecutables = @(
+            $allExecutables | Where-Object {
+              $_.Name -match '(?i)(deepseek|harness|dsh)' -and
+              $_.Name -notmatch '(?i)(uninstall|update|elevate|crash)'
+            }
+          )
+
+          $asarFiles = @(
+            foreach ($directory in $appRoots) {
+              Get-ChildItem -LiteralPath $directory -Filter 'app.asar' -File -Recurse -Force
+            }
+          )
+
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('# DeepSeek Harness Windows installer inspection')
+          $summary.Add('')
+          $summary.Add("- Installer URL: $url")
+          $summary.Add("- Size: $($file.Length) bytes")
+          $summary.Add("- SHA-256: $sha256")
+          $summary.Add("- Authenticode status: $($signature.Status)")
+          $summary.Add("- Signer: $($signature.SignerCertificate.Subject)")
+          $summary.Add("- Product version: $((Get-Item -LiteralPath $setup).VersionInfo.ProductVersion)")
+          $summary.Add("- 7-Zip list: PASS")
+          $summary.Add("- 7-Zip extraction: PASS")
+          $summary.Add("- Nested archives: $($nestedArchives.Count)")
+          $summary.Add("- Extracted executables: $($allExecutables.Count)")
+          $summary.Add("- Electron app.asar files: $($asarFiles.Count)")
+          $summary.Add('')
+          $summary.Add('## Executable inventory')
+          foreach ($exe in $allExecutables) {
+            $summary.Add("- $($exe.Path) ($($exe.Size) bytes)")
+          }
+          $summary.Add('')
+          $summary.Add('## Likely application executable candidates')
+          foreach ($exe in $candidateExecutables) {
+            $summary.Add("- $($exe.Path) ($($exe.Size) bytes)")
+          }
+          $summary.Add('')
+          $summary.Add('## Archive inventory')
+          foreach ($line in $inventory) { $summary.Add("- $line") }
+          $summary.Add('')
+          $summary.Add('The setup executable was not launched. The extracted application was not launched.')
+          $summary | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          $inventory | Set-Content -LiteralPath (Join-Path $root 'payload-inventory.txt') -Encoding utf8
+
+          if ($candidateExecutables.Count -eq 0) {
+            Write-Warning 'No executable name matched DeepSeek/Harness/DSH; inspect the complete executable inventory before creating a manifest.'
+          }
+
+      - name: Remove downloaded and extracted binaries
+        if: always()
+        shell: pwsh
+        run: |
+          $root = Join-Path $env:RUNNER_TEMP 'deepseek-harness-inspection'
+          foreach ($name in @('dsh-latest-windows-x64.exe', 'outer', 'inner')) {
+            Remove-Item -LiteralPath (Join-Path $root $name) -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+      - name: Upload inspection logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deepseek-harness-windows-inspection
+          path: ${{ runner.temp }}/deepseek-harness-inspection/
+          if-no-files-found: warn
+          retention-days: 14
