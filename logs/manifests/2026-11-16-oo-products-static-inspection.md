@@ -30,7 +30,7 @@ Detect It Easy release: 4.0.0
       (Heur) Packer: Generic [Overlay high entropy]
       Debug data: Records [CodeView, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
-  
+
 
 ## O&O AutoBackup
 - Product page version: 8.2.1014
@@ -57,7 +57,7 @@ Detect It Easy release: 4.0.0
       (Heur) Packer: Generic [Sections like a protector + Embedded PE in resources + Overlay high entropy]
       Debug data: Records [CodeView, Ext-DLL Characteristics, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
-  
+
 
 ## O&O DiskImage
 - Product page version: 23.2.26060
@@ -83,7 +83,7 @@ Detect It Easy release: 4.0.0
       (Heur) Packer: Generic [Overlay high entropy]
       Debug data: Records [CodeView, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
-  
+
 
 ## O&O DiskCommander
 - Product page version: 5.1.1020
@@ -109,7 +109,7 @@ Detect It Easy release: 4.0.0
       (Heur) Packer: Generic [Overlay high entropy]
       Debug data: Records [CodeView, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
-  
+
 
 ## O&O Defrag
 - Product page version: 32.1.26138
@@ -136,7 +136,7 @@ Detect It Easy release: 4.0.0
       Debug data: Records [CodeView, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
       Archive: Microsoft Cabinet File (1.03) [MSZip, 80.3%, 2 files]
-  
+
 
 ## O&O SafeErase
 - Product page version: 22.0.26169
@@ -162,7 +162,7 @@ Detect It Easy release: 4.0.0
       (Heur) Packer: Generic [Overlay high entropy]
       Debug data: Records [CodeView, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
-  
+
 
 ## O&O RegEditor
 - Product page version: 16.1.6660
@@ -189,7 +189,7 @@ Detect It Easy release: 4.0.0
       Debug data: Records [CodeView, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
       (Heur) Licensing: Contains [Strings]
-  
+
 
 ## O&O DeskInfo
 - Product page version: 2.0.1033
@@ -215,5 +215,5 @@ Detect It Easy release: 4.0.0
       (Heur) Packer: Generic [Sections like a protector + Embedded PE in resources + Overlay high entropy]
       Debug data: Records [CodeView, VC Feature, POGO]
       (Heur) Debug data: Contains [Absolute PDB path]
-  
+
 
