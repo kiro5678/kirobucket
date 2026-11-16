@@ -1,0 +1,32 @@
+{
+    "version": "14.0.17",
+    "description": "Windows data recovery utility for recovering deleted files and data from damaged file systems.",
+    "homepage": "https://www.oo-software.com/en/products/oodiskrecovery",
+    "license": "Shareware",
+    "url": "https://package.oo-software.com/winget/diskrecovery/14.0.17/oodiskrecovery_14.0.17_eng_x64.msi#/setup.msi_",
+    "hash": "a9bd2dfd64129b695aa62985b24d404043e9731a77869982c20df9134b5e9348",
+    "installer": {
+        "script": [
+            "$msi = Join-Path $dir 'setup.msi_'",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw 'O&O DiskRecovery MSI was not found: ' + $msi }",
+            "$log = Join-Path $dir 'oo-diskrecovery-install.log'",
+            "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/i', \"`\"$msi`\"\", '/qn', 'REBOOT=ReallySuppress', '/norestart', '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
+            "if ($process.ExitCode -notin @(0, 3010)) { throw \"O&O DiskRecovery installation failed with exit code $($process.ExitCode). Log: $log\" }"
+        ]
+    },
+    "uninstaller": {
+        "script": [
+            "$log = Join-Path $dir 'oo-diskrecovery-uninstall.log'",
+            "$productCode = '{B5BDE2B4-EB65-4964-8D37-7AE7C26AC3C2}'",
+            "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/x', $productCode, '/qn', 'REBOOT=ReallySuppress', '/norestart', '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
+            "if ($process.ExitCode -notin @(0, 3010)) { throw \"O&O DiskRecovery uninstallation failed with exit code $($process.ExitCode). Log: $log\" }"
+        ]
+    },
+    "checkver": {
+        "url": "https://www.oo-software.com/en/download/current/oodiskrecovery",
+        "regex": "Build\\s+(?<version>\\d+\\.\\d+\\.\\d+)"
+    },
+    "autoupdate": {
+        "url": "https://package.oo-software.com/winget/diskrecovery/14.0.17/oodiskrecovery_14.0.17_eng_x64.msi#/setup.msi_"
+    }
+}
