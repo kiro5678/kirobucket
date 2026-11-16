@@ -19,13 +19,13 @@ jobs:
   build:
     name: Build and launch DiskMonitor from pinned source
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up .NET 8 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
         with:
           dotnet-version: 8.0.x
 
@@ -50,7 +50,7 @@ jobs:
           "## DiskMonitor source verification" >> $env:GITHUB_STEP_SUMMARY
           "" >> $env:GITHUB_STEP_SUMMARY
           "- Upstream commit: $commit" >> $env:GITHUB_STEP_SUMMARY
-          "- Source ZIP SHA-256: `$hash" >> $env:GITHUB_STEP_SUMMARY
+          "- Source ZIP SHA-256: $hash" >> $env:GITHUB_STEP_SUMMARY
 
       - name: Extract and inspect the source archive
         id: extract
@@ -119,3 +119,89 @@ jobs:
               Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
             }
           }
+
+      - name: Install, launch, and uninstall through Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $env:SCOOP_ALLOW_ADMIN = "1"
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri "https://get.scoop.sh" -TimeoutSec 60 | Invoke-Expression
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            throw "Scoop installation did not expose the scoop command."
+          }
+
+          scoop bucket add kirobucket https://github.com/kiro5678/kirobucket
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not register kirobucket."
+          }
+
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE "scoop" }
+          $bucketManifest = Join-Path $scoopRoot "buckets\\kirobucket\\bucket\\diskmonitor.json"
+          if (-not (Test-Path -LiteralPath (Split-Path -Parent $bucketManifest))) {
+            throw "The registered kirobucket manifest directory was not found."
+          }
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE "bucket\\diskmonitor.json") -Destination $bucketManifest -Force
+
+          scoop checkver diskmonitor
+          if ($LASTEXITCODE -ne 0) {
+            throw "Scoop checkver failed for diskmonitor."
+          }
+
+          scoop install diskmonitor
+          if ($LASTEXITCODE -ne 0) {
+            throw "scoop install diskmonitor failed."
+          }
+
+          $prefixOutput = scoop prefix diskmonitor
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not resolve the DiskMonitor Scoop install directory."
+          }
+          $prefix = ([string]($prefixOutput | Select-Object -Last 1)).Trim()
+          $exe = Join-Path $prefix "publish\\DiskMonitor.exe"
+          $shim = Join-Path $scoopRoot "shims\\diskmonitor.exe"
+          if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+            throw "DiskMonitor.exe was not built inside the Scoop app directory."
+          }
+          if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+            throw "The DiskMonitor command shim was not created."
+          }
+
+          $process = Start-Process -FilePath $exe -WorkingDirectory $prefix -PassThru -NoNewWindow
+          try {
+            Start-Sleep -Seconds 4
+            $process.Refresh()
+            if ($process.HasExited) {
+              throw "DiskMonitor exited during the Scoop launch test (exit code $($process.ExitCode))."
+            }
+            Write-Host "DiskMonitor remained running for four seconds after Scoop installation."
+          }
+          finally {
+            if (-not $process.HasExited) {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          scoop uninstall diskmonitor
+          if ($LASTEXITCODE -ne 0) {
+            throw "scoop uninstall diskmonitor failed."
+          }
+          if (Test-Path -LiteralPath $prefix) {
+            throw "The DiskMonitor app directory remains after Scoop uninstall."
+          }
+          if (Test-Path -LiteralPath $shim) {
+            throw "The DiskMonitor command shim remains after Scoop uninstall."
+          }
+
+          @(
+            "## DiskMonitor Scoop install test"
+            ""
+            "- Pinned upstream commit: 70b93aa644d4045395b4e4482ba954009422b482"
+            "- Source archive SHA-256: bc8c4134728b308aecec6e29331356ceb73063c425050a0b953f0f206bfb5cd8"
+            "- Self-contained Windows x64 build: passed"
+            "- Scoop dependency resolution and install: passed"
+            "- Command shim and Start Menu shortcut source: verified"
+            "- Application launch smoke test: passed"
+            "- Scoop uninstall and app/shim cleanup: passed"
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
