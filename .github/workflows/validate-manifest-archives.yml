@@ -5,6 +5,7 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/diskmonitor.json'
       - 'bucket/axonhub.json'
       - 'bucket/goshell.json'
       - 'bucket/mypack.json'
@@ -215,6 +216,7 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/diskmonitor.json'
       - 'bucket/axonhub.json'
       - 'bucket/goshell.json'
       - 'bucket/mypack.json'
