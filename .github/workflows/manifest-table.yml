@@ -876,44 +876,21 @@ jobs:
           $lineBreak = [string][char]10
           $portabilityContent = [regex]::Replace($portabilityContent, "\r\n|\r", $lineBreak)
 
-          # Read the Nonportable column from the current generated inventory.
-          # This preserves classifications when the old standalone Nonportable list is removed.
-          $inventoryStartMarker = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-START -->"
-          $inventoryEndMarker = "<!-- KIROBUCKET-INSTALLER-TYPE-TABLE-END -->"
-          $inventoryStartIndex = $portabilityContent.IndexOf($inventoryStartMarker, [System.StringComparison]::Ordinal)
-          $inventoryEndIndex = $portabilityContent.IndexOf($inventoryEndMarker, [System.StringComparison]::Ordinal)
-          if ($inventoryStartIndex -lt 0 -or $inventoryEndIndex -le $inventoryStartIndex) {
-              throw "Portability inventory markers are missing or out of order."
-          }
-          $existingInventory = $portabilityContent.Substring(
-              $inventoryStartIndex,
-              $inventoryEndIndex - $inventoryStartIndex
-          )
-          $lineFeed = [string][char]10
-          $headerLine = @($existingInventory -split $lineFeed | Where-Object { $_ -match '^\|\s*Portable\b' } | Select-Object -First 1)
-          if ($headerLine.Count -eq 0) {
-              throw "Could not find the Portable/Nonportable inventory table header."
-          }
-          $headerCells = @($headerLine[0].Trim().Trim('|').Split('|') | ForEach-Object { $_.Trim() })
-          $nonportableColumn = -1
-          for ($column = 0; $column -lt $headerCells.Count; $column++) {
-              if ($headerCells[$column] -match '^Nonportable\b') {
-                  $nonportableColumn = $column
-                  break
-              }
-          }
-          if ($nonportableColumn -lt 0) {
-              throw "Could not locate the Nonportable column in the existing inventory."
+          # Read Nonportable classifications from a stable source file, never from generated output.
+          # This prevents concurrent documentation runs from erasing the classifications.
+          $nonportableSourcePath = Join-Path $env:GITHUB_WORKSPACE "docs/manifest-portability-nonportable.md"
+          if (-not (Test-Path -LiteralPath $nonportableSourcePath -PathType Leaf)) {
+              throw "Canonical Nonportable source file not found: $nonportableSourcePath"
           }
 
+          $nonportableSourceContent = [System.IO.File]::ReadAllText($nonportableSourcePath)
           $nonportableSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-          foreach ($line in ($existingInventory -split $lineFeed)) {
-              if ($line -notmatch '^\|') { continue }
-              $cells = @($line.Trim().Trim('|').Split('|'))
-              if ($cells.Count -le $nonportableColumn) { continue }
-              foreach ($match in [regex]::Matches($cells[$nonportableColumn], '\]\(\.\./bucket/(?<path>[^)]+\.json)\)')) {
-                  [void]$nonportableSet.Add([System.IO.Path]::GetFileNameWithoutExtension($match.Groups["path"].Value))
-              }
+          foreach ($match in [regex]::Matches($nonportableSourceContent, '\]\(\.\./bucket/(?<path>[^)]+\.json)\)')) {
+              [void]$nonportableSet.Add([System.IO.Path]::GetFileNameWithoutExtension($match.Groups["path"].Value))
+          }
+
+          if ($nonportableSet.Count -eq 0) {
+              throw "No Nonportable manifest records were parsed from $nonportableSourcePath."
           }
 
           $reviewPath = Join-Path $docsPath "manifest-review.md"
