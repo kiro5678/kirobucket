@@ -57,7 +57,7 @@ jobs:
             "- Version: v$version"
             "- URL: $url"
             "- Size: $($item.Length) bytes"
-            "- SHA-256: `$hash`"
+            "- SHA-256: $hash"
           ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
 
           Expand-Archive -LiteralPath $archive -DestinationPath $work -Force
