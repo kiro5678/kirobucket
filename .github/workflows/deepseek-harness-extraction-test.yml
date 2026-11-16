@@ -24,6 +24,12 @@ jobs:
       - name: Checkout bucket
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Checkout Scoop core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+
       - name: Download and inspect the official installer
         shell: pwsh
         run: |
@@ -236,6 +242,38 @@ jobs:
           if ($candidateExecutables.Count -eq 0) {
             Write-Warning 'No executable name matched DeepSeek/Harness/DSH; inspect the complete executable inventory before creating a manifest.'
           }
+
+      - name: Validate manifest with the official Scoop schema and checkver
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/deepseek-harness.json'
+          $scoopRoot = Join-Path $env:GITHUB_WORKSPACE 'scoop_core'
+          $schemaPath = Join-Path $scoopRoot 'schema.json'
+          $validatorPath = Join-Path $scoopRoot 'supporting/validator/bin/Scoop.Validator.dll'
+
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw 'DeepSeek Harness manifest is missing.' }
+          if (-not (Test-Path -LiteralPath $schemaPath -PathType Leaf)) { throw 'Official Scoop schema.json is missing.' }
+          if (-not (Test-Path -LiteralPath $validatorPath -PathType Leaf)) { throw 'Official Scoop.Validator.dll is missing.' }
+
+          Add-Type -Path $validatorPath
+          $validator = New-Object Scoop.Validator($schemaPath, $true)
+          $validator.Validate($manifestPath)
+          if ($validator.Errors.Count -gt 0) {
+            Write-Host $validator.ErrorsAsString -ForegroundColor Red
+            throw "Scoop schema validation failed with $($validator.Errors.Count) error(s)."
+          }
+          Write-Host 'Official Scoop manifest schema: PASS'
+
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          $release = Invoke-RestMethod -Uri $manifest.checkver.url -Headers @{ 'User-Agent' = 'kirobucket-manifest-validation' } -TimeoutSec 30
+          $tag = [string]$release[0].tag_name
+          $match = [regex]::Match($tag, [string]$manifest.checkver.regex)
+          if (-not $match.Success) { throw "checkver regex did not match latest release tag: $tag" }
+          if ($match.Groups[1].Value -ne [string]$manifest.version) {
+            throw "checkver returned $($match.Groups[1].Value), but manifest version is $($manifest.version)."
+          }
+          Write-Host "Official GitHub release checkver: PASS ($tag => $($match.Groups[1].Value))"
 
       - name: Remove downloaded and extracted binaries
         if: always()
