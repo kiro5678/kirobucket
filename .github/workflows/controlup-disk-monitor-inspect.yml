@@ -40,7 +40,7 @@ jobs:
             $report.Add("- SHA-256: $hash")
             $report.Add("- PowerShell Authenticode status: $($signature.Status)")
             $report.Add("- Signer: $($signature.SignerCertificate.Subject)")
-            
+
             $signtoolPath = Get-ChildItem -LiteralPath "${env:ProgramFiles(x86)}\Windows Kits\10\bin" -Filter signtool.exe -File -Recurse -ErrorAction SilentlyContinue |
               Sort-Object FullName -Descending | Select-Object -First 1 -ExpandProperty FullName
             if ($signtoolPath) {
