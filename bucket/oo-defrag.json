@@ -54,5 +54,5 @@
             }
         }
     },
-    "notes": "Nonportable: installs O&O Defrag's system-wide background agent service. Installation and removal require administrator approval; a restart may be required."
+    "notes": "Nonportable: installs O&O Defrag's system-wide background agent service. Installation and removal require administrator approval; a restart may be required. Scoop retains the original MSI in its version directory so its ProductCode remains available for native Windows Installer removal."
 }
