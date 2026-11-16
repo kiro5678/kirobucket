@@ -52,10 +52,6 @@
         }
     },
     "notes": [
-        "Scoop extracts the application files from the Inno Setup package; the vendor setup and its service-registration steps are not run.",
-        "The database and logs are stored in the Scoop persistent data directory through the standard persist mechanism.",
-        "Start the Collector from an elevated PowerShell session with: diskdrift-collector. Keep that console window open while monitoring.",
-        "Start the tray and dashboard with: diskdrift, or use the Start Menu shortcut.",
-        "The Collector requires Administrator rights for system-wide monitoring. It runs as a console process, not as a Windows service, and does not start automatically with Windows."
+        "Run `diskdrift-collector` from an elevated PowerShell window and keep it open; launch the dashboard with `diskdrift`. Data is stored in Scoop's persistent `data` directory."
     ]
 }
