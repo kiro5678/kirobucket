@@ -208,14 +208,12 @@ jobs:
           $archiveListing = @()
           $sevenZipExitCode = $null
           if ($sevenZip) {
-            $nativeErrorPreference = $PSNativeCommandUseErrorActionPreference
-            $PSNativeCommandUseErrorActionPreference = $false
-            try {
-              $archiveListing = @(& $sevenZip.Source l -slt $installer 2>&1 | ForEach-Object { "$_" })
-              $sevenZipExitCode = $LASTEXITCODE
-            } finally {
-              $PSNativeCommandUseErrorActionPreference = $nativeErrorPreference
-            }
+            $stdoutFile = Join-Path $workDir "03-7zip-listing.stdout.txt"
+            $stderrFile = Join-Path $workDir "03-7zip-listing.stderr.txt"
+            $process = Start-Process -FilePath $sevenZip.Source -ArgumentList @("l", "-slt", $installer) -Wait -PassThru -NoNewWindow -RedirectStandardOutput $stdoutFile -RedirectStandardError $stderrFile
+            $sevenZipExitCode = $process.ExitCode
+            if (Test-Path -LiteralPath $stdoutFile) { $archiveListing += Get-Content -LiteralPath $stdoutFile }
+            if (Test-Path -LiteralPath $stderrFile) { $archiveListing += Get-Content -LiteralPath $stderrFile }
             $archiveListing | Set-Content -LiteralPath (Join-Path $workDir "03-7zip-listing.txt") -Encoding utf8
           }
 
