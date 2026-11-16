@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'bucket/torrentplayer.json'
+      - '.github/workflows/torrentplayer-portable-verification.yml'
   workflow_dispatch:
 
 permissions:
