@@ -173,6 +173,7 @@ jobs:
           $exe = Join-Path $prefix "publish\\DiskMonitor.exe"
           $launcher = Join-Path $prefix "diskmonitor.cmd"
           $shim = Join-Path $scoopRoot "shims\\diskmonitor.exe"
+          $persistCsv = Join-Path $scoopRoot "persist\\diskmonitor\\io_monitor.csv"
           if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
             throw "DiskMonitor.exe was not built inside the Scoop app directory."
           }
@@ -184,6 +185,9 @@ jobs:
           }
           if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
             throw "The DiskMonitor command shim was not created."
+          }
+          if (-not (Test-Path -LiteralPath $persistCsv -PathType Leaf)) {
+            throw "DiskMonitor's CSV log file was not linked into Scoop persist."
           }
 
           $env:DOTNET_BUNDLE_EXTRACT_BASE_DIR = Join-Path $prefix "bundle"
@@ -216,6 +220,9 @@ jobs:
           if (Test-Path -LiteralPath $shim) {
             throw "The DiskMonitor command shim remains after Scoop uninstall."
           }
+          if (-not (Test-Path -LiteralPath $persistCsv -PathType Leaf)) {
+            throw "Scoop uninstall did not preserve DiskMonitor's CSV log file."
+          }
 
           @(
             "## DiskMonitor Scoop install test"
@@ -227,4 +234,5 @@ jobs:
             "- Command shim and Start Menu shortcut source: verified"
             "- Application launch smoke test: passed"
             "- Scoop uninstall and app/shim cleanup: passed"
+            "- CSV log persisted after uninstall: passed"
           ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
