@@ -5,7 +5,7 @@
 | Developer / Suite | Manifests | Programs without Manifest | Total Download Size | Link |
 | --- | ---: | ---: | ---: | --- |
 | AkiraEng | 1 | — | 0.29 MiB | [View](#akiraeng) |
-| Awesome MyGo Community | 174 | — | 3,342.30 MiB | [View](#awesome-mygo-showcase) |
+| Awesome MyGo Community | 174 | 41 | 3,342.30 MiB | [View](#awesome-mygo-showcase) |
 | Aurelitec Suite | 5 | 0 | 12.03 MiB | [View](#aurelitec-suite) |
 | Auslogics Suite | 15 | 0 | 399.60 MiB | [View](#auslogics-suite) |
 | ChemTable Suite | 5 | 0 | 107.40 MiB | [View](#chemtable-suite) |
@@ -26,7 +26,7 @@
 | ThioJoe Suite | 20 | — | 363.61 MiB | [View](#thiojoe-suite) |
 | Türkaysoft Suite | 8 | 0 | 7.05 MiB | [View](#turkaysoft-suite) |
 | Vovsoft Suite | 174 | 4 | 2,031.00 MiB | [View](#vovsoft-suite) |
-| **Total** | **745** | **40 identified** | **8,878.28 MiB** | — |
+| **Total** | **745** | **81 identified** | **8,878.28 MiB** | — |
 
 **Counting notes (checked 2026-11-16):** The missing-program count is based on identifiable Windows desktop software in the developer's published catalogue that is not represented by a manifest. Web/cloud services, browser extensions and bundles of already-manifested programs are excluded. `—` means a complete count could not be verified. The MiTeC count includes 13 standalone programs listed in its legacy downloads catalogue; some may be old or no longer maintained. NirSoft's utilities are covered by the `nirlauncher` bundle and are not counted as individually missing.
 
