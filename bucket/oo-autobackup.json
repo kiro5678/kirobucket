@@ -26,5 +26,5 @@
             }
         }
     },
-    "notes": "Portable single-file application; O&O AutoBackup is shareware and requires a valid license after its evaluation period. Keep the executable in a permanent Scoop-managed location for scheduled backups."
+    "notes": "Portable single-file x64 application. Scheduled backups depend on the executable remaining in a permanent location and running in the notification area; a valid license is required after the evaluation period."
 }

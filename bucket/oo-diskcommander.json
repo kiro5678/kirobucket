@@ -39,5 +39,5 @@
     "autoupdate": {
         "url": "https://package.oo-software.com/winget/diskcommander/$version/oodiskcommander_$version_premium_eng_x64.msi#/setup.msi_"
     },
-    "notes": "Nonportable: installs through O&O's official per-machine MSI package and registers Start Menu shortcuts and Windows integration. Administrator approval is required."
+    "notes": "Nonportable: installs through O&O's official per-machine MSI package and registers Start Menu shortcuts and Windows integration. Administrator approval is required. Scoop retains the original MSI in its version directory so its ProductCode remains available for native Windows Installer removal."
 }

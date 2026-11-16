@@ -8,153 +8,153 @@ No executable was run. Extraction, when possible, was performed only for file li
   Path = !ControlEvent
   Size = 1536
   Packed Size = 1536
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !MsiFileHash
   Size = 20
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !CustomAction
   Size = 36
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !EventMapping
   Size = 40
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.HelpIcon.exe
   Size = 4846
   Packed Size = 8192
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUIWixca
   Size = 107008
   Packed Size = 110592
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !LaunchCondition
   Size = 8
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminUISequence
   Size = 42
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ControlCondition
   Size = 504
   Packed Size = 512
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_New
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Up
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !FeatureComponents
   Size = 8
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallUISequence
   Size = 102
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.StartMenuIcon.exe
   Size = 287934
   Packed Size = 290816
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.INSTSERVICE.DLL
   Size = 2240000
   Packed Size = 2240512
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Info
   Size = 1078
   Packed Size = 1088
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminExecuteSequence
   Size = 48
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdvtExecuteSequence
   Size = 48
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Banner
   Size = 28384
   Packed Size = 28672
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Dialog
   Size = 442916
   Packed Size = 446464
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Exclam
   Size = 766
   Packed Size = 768
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallExecuteSequence
   Size = 144
   Packed Size = 192
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]DigitalSignature
   Size = 6045
   Packed Size = 8192
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]SummaryInformation
   Size = 472
   Packed Size = 512
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]MsiDigitalSignatureEx
   Size = 20
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
 - Static extraction exit code: 0
 - Extracted file count: 49
   - !_Columns (1352 bytes)
@@ -216,7 +216,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read
   Offset = 6714368
   Virtual Address = 0x669000
-  
+
   Path = .data
   Size = 20992
   Packed Size = 20992
@@ -224,7 +224,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read Write
   Offset = 8342016
   Virtual Address = 0x7F7000
-  
+
   Path = .pdata
   Size = 234192
   Packed Size = 234496
@@ -232,7 +232,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read
   Offset = 8363008
   Virtual Address = 0x810000
-  
+
   Path = .didat
   Size = 56
   Packed Size = 512
@@ -240,7 +240,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read Write
   Offset = 8597504
   Virtual Address = 0x84A000
-  
+
   Path = Section
   Size = 8
   Packed Size = 512
@@ -248,87 +248,87 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read Write
   Offset = 8598016
   Virtual Address = 0x84B000
-  
+
   Path = .rsrc\version.txt
   Size = 1830
   Packed Size = 1830
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\1.ico
   Size = 1150
   Packed Size = 1128
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\2.ico
   Size = 4286
   Packed Size = 4264
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\3.ico
   Size = 9662
   Packed Size = 9640
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\4.ico
   Size = 270398
   Packed Size = 270376
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\RCDATA\CLRDEBUGINFO
   Size = 36
   Packed Size = 36
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\RCDATA\CLRDEBUGINFOWINDOWSAMD64
   Size = 36
   Packed Size = 36
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\RCDATA\MINIDUMP_EMBEDDED_AUXILIARY_PROVIDER
   Size = 1356632
   Packed Size = 1356632
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\GROUP_ICON\32512
   Size = 62
   Packed Size = 62
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\MANIFEST\1
   Size = 4435
   Packed Size = 4435
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .reloc
   Size = 30960
   Packed Size = 31232
@@ -336,31 +336,31 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Discardable Read
   Offset = 10247168
   Virtual Address = 0x9DF000
-  
+
   Path = CERTIFICATE
   Size = 13416
   Packed Size = 13416
   Virtual Size = 13416
-  Characteristics = 
+  Characteristics =
   Offset = 91842248
-  Virtual Address = 
-  
+  Virtual Address =
+
   Path = [0]
   Size = 81563848
   Packed Size = 81563848
   Virtual Size = 81563848
-  Characteristics = 
+  Characteristics =
   Offset = 10278400
-  Virtual Address = 
-  
+  Virtual Address =
+
   Path = .rsrc_1
   Size = 421
   Packed Size = 421
   Virtual Size = 421
-  Characteristics = 
+  Characteristics =
   Offset = 10246747
-  Virtual Address = 
-  
+  Virtual Address =
+
 - Static extraction exit code: 0
 - Extracted file count: 21
   - .CLR_UEF (215 bytes)
@@ -392,153 +392,153 @@ No executable was run. Extraction, when possible, was performed only for file li
   Path = Binary.OOINS.DLL
   Size = 2626664
   Packed Size = 2629632
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !RemoveRegistry
   Size = 20
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ServiceConfig
   Size = 24
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ServiceControl
   Size = 12
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ServiceInstall
   Size = 32
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUIWixca
   Size = 135440
   Packed Size = 139264
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !LaunchCondition
   Size = 12
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminUISequence
   Size = 42
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ControlCondition
   Size = 424
   Packed Size = 448
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_New
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Up
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !FeatureComponents
   Size = 96
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallUISequence
   Size = 108
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.DiskImageIcon.exe
   Size = 285478
   Packed Size = 286720
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Info
   Size = 1078
   Packed Size = 1088
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminExecuteSequence
   Size = 48
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdvtExecuteSequence
   Size = 48
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !WixCloseApplication
   Size = 104
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Banner
   Size = 85896
   Packed Size = 86016
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Dialog
   Size = 615320
   Packed Size = 618496
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Exclam
   Size = 766
   Packed Size = 768
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallExecuteSequence
   Size = 240
   Packed Size = 256
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]DigitalSignature
   Size = 13431
   Packed Size = 16384
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]SummaryInformation
   Size = 500
   Packed Size = 512
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]MsiDigitalSignatureEx
   Size = 32
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
 - Static extraction exit code: 0
 - Extracted file count: 58
   - !_Columns (1864 bytes)
@@ -607,153 +607,153 @@ No executable was run. Extraction, when possible, was performed only for file li
   Path = !EventMapping
   Size = 104
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.OODCIcon.exe
   Size = 285478
   Packed Size = 286720
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUIWixca
   Size = 135440
   Packed Size = 139264
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !LaunchCondition
   Size = 12
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminUISequence
   Size = 60
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ControlCondition
   Size = 456
   Packed Size = 512
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ModuleSignature
   Size = 6
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ModuleComponents
   Size = 48
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_New
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Up
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !FeatureComponents
   Size = 40
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallUISequence
   Size = 120
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Info
   Size = 1078
   Packed Size = 1088
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminExecuteSequence
   Size = 66
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdvtExecuteSequence
   Size = 66
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !WixCloseApplication
   Size = 52
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Banner
   Size = 85896
   Packed Size = 86016
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Dialog
   Size = 615320
   Packed Size = 618496
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Exclam
   Size = 766
   Packed Size = 768
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallExecuteSequence
   Size = 186
   Packed Size = 192
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]DigitalSignature
   Size = 11585
   Packed Size = 12288
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]SummaryInformation
   Size = 520
   Packed Size = 576
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]MsiDigitalSignatureEx
   Size = 32
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixCA.6FE72086_B0AF_4220_9E46_5B6FC038D74E
   Size = 240408
   Packed Size = 241664
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.OODCIcon.6FE72086_B0AF_4220_9E46_5B6FC038D74E.exe
   Size = 285478
   Packed Size = 286720
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
 - Static extraction exit code: 0
 - Extracted file count: 57
   - !_Columns (1640 bytes)
@@ -818,14 +818,14 @@ No executable was run. Extraction, when possible, was performed only for file li
 ## O&O Defrag — OOD32Professional64Enu.exe
 - 7-Zip test exit code: 0
 - 7-Zip list exit code: 0
-  
+
   7-Zip 26.05 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-10-21
-  
+
   Scanning the drive for archives:
   1 file, 26193016 bytes (25 MiB)
-  
+
   Listing archive: D:\a\_temp\oo-package-layout\OOD32Professional64Enu.exe
-  
+
   --
   Path = D:\a\_temp\oo-package-layout\OOD32Professional64Enu.exe
   Type = PE
@@ -853,7 +853,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Heap Reserve = 1048576
   Heap Commit = 4096
   Virtual Address = 0x400000
-  Comment = 
+  Comment =
   {
   FileVersion: 32.1.26138.0
   FileVersion: 32.1.26138
@@ -871,7 +871,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Comments: A:1000$L:1031$O:MultiArch$P:60
   Comments: A:1000$L:1031$P:500$O:MultiArch
   FileDescription: O&O Defrag Setup
-  FileDescription: 
+  FileDescription:
   FileDescription: TODO: <File description>
   InternalName: Stub.exe
   InternalName: stub.exe
@@ -909,7 +909,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Volumes = 1
   Volume Index = 0
   ID = 0
-  
+
   ----------
   Path = setup.msi
   Size = 15622144
@@ -917,14 +917,14 @@ No executable was run. Extraction, when possible, was performed only for file li
   Attributes = AT
   Method = MSZip
   Block = 0
-  
+
   Path = setup_arm64.msi
   Size = 16044032
   Modified = 2026-10-01 17:56:56
   Attributes = AT
   Method = MSZip
   Block = 0
-  
+
 - Static extraction exit code: 0
 - Extracted file count: 2
   - setup_arm64.msi (16044032 bytes)
@@ -937,153 +937,153 @@ No executable was run. Extraction, when possible, was performed only for file li
   Path = !LaunchCondition
   Size = 16
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminUISequence
   Size = 66
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ControlCondition
   Size = 552
   Packed Size = 576
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ModuleSignature
   Size = 60
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !ModuleComponents
   Size = 168
   Packed Size = 192
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !MsiServiceConfig
   Size = 14
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.SetupActions
   Size = 117864
   Packed Size = 118784
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_New
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Up
   Size = 318
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !FeatureComponents
   Size = 120
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallUISequence
   Size = 144
   Packed Size = 192
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.SafeEraseIcon.exe
   Size = 285478
   Packed Size = 286720
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Info
   Size = 1078
   Packed Size = 1088
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdminExecuteSequence
   Size = 72
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !AdvtExecuteSequence
   Size = 72
   Packed Size = 128
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Banner
   Size = 85896
   Packed Size = 86016
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Bmp_Dialog
   Size = 615320
   Packed Size = 618496
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixUI_Ico_Exclam
   Size = 766
   Packed Size = 768
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = !InstallExecuteSequence
   Size = 288
   Packed Size = 320
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]DigitalSignature
   Size = 13431
   Packed Size = 16384
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]SummaryInformation
   Size = 520
   Packed Size = 576
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = [5]MsiDigitalSignatureEx
   Size = 32
   Packed Size = 64
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Binary.WixCA.46D57611_57FC_48D0_817D_74CB335699A8
   Size = 240408
   Packed Size = 241664
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.SafeEraseIcon.7A5DA94B_6F1D_4767_BB64_4AE745F78CB0.exe
   Size = 285478
   Packed Size = 286720
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
   Path = Icon.FileShredderIcon.54F04CAE_68A2_4198_B1F4_CDFD267A763B.exe
   Size = 285478
   Packed Size = 286720
-  Created = 
-  Modified = 
-  
+  Created =
+  Modified =
+
 - Static extraction exit code: 0
 - Extracted file count: 63
   - !_Columns (1872 bytes)
@@ -1155,139 +1155,139 @@ No executable was run. Extraction, when possible, was performed only for file li
 - 7-Zip test exit code: 0
 - 7-Zip list exit code: 0
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\30999
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31000
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31001
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31002
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31003
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31004
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31005
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31006
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31007
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31008
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31009
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31010
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\GROUP_CURSOR\31011
   Size = 20
   Packed Size = 20
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1031\GROUP_ICON\128
   Size = 104
   Packed Size = 104
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1031\GROUP_ICON\129
   Size = 118
   Packed Size = 118
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\1033\MANIFEST\1
   Size = 805
   Packed Size = 805
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .reloc
   Size = 72104
   Packed Size = 72192
@@ -1295,15 +1295,15 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Discardable Read
   Offset = 8178688
   Virtual Address = 0x7D8000
-  
+
   Path = CERTIFICATE
   Size = 13416
   Packed Size = 13416
   Virtual Size = 13416
-  Characteristics = 
+  Characteristics =
   Offset = 8250880
-  Virtual Address = 
-  
+  Virtual Address =
+
 - Static extraction exit code: 0
 - Extracted file count: 82
   - .data (38400 bytes)
@@ -1398,7 +1398,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read Write
   Offset = 7915008
   Virtual Address = 0x78F000
-  
+
   Path = .pdata
   Size = 221376
   Packed Size = 221696
@@ -1406,7 +1406,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read
   Offset = 7953920
   Virtual Address = 0x7AF000
-  
+
   Path = .didat
   Size = 56
   Packed Size = 512
@@ -1414,7 +1414,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read Write
   Offset = 8175616
   Virtual Address = 0x7E6000
-  
+
   Path = Section
   Size = 8
   Packed Size = 512
@@ -1422,7 +1422,7 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read Write
   Offset = 8176128
   Virtual Address = 0x7E7000
-  
+
   Path = _RDATA
   Size = 78344
   Packed Size = 78848
@@ -1430,87 +1430,87 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Read
   Offset = 8176640
   Virtual Address = 0x7E8000
-  
+
   Path = .rsrc\version.txt
   Size = 1858
   Packed Size = 1858
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\1.ico
   Size = 1150
   Packed Size = 1128
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\2.ico
   Size = 4286
   Packed Size = 4264
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\3.ico
   Size = 9662
   Packed Size = 9640
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\ICON\4.ico
   Size = 270398
   Packed Size = 270376
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\RCDATA\CLRDEBUGINFO
   Size = 36
   Packed Size = 36
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\RCDATA\CLRDEBUGINFOWINDOWSAMD64
   Size = 36
   Packed Size = 36
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\RCDATA\MINIDUMP_EMBEDDED_AUXILIARY_PROVIDER
   Size = 1346912
   Packed Size = 1346912
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\GROUP_ICON\32512
   Size = 62
   Packed Size = 62
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .rsrc\MANIFEST\1
   Size = 4066
   Packed Size = 4066
-  Virtual Size = 
-  Characteristics = 
-  Offset = 
-  Virtual Address = 
-  
+  Virtual Size =
+  Characteristics =
+  Offset =
+  Virtual Address =
+
   Path = .reloc
   Size = 32316
   Packed Size = 32768
@@ -1518,31 +1518,31 @@ No executable was run. Extraction, when possible, was performed only for file li
   Characteristics = InitializedData Discardable Read
   Offset = 9893888
   Virtual Address = 0x98C000
-  
+
   Path = CERTIFICATE
   Size = 11568
   Packed Size = 11568
   Virtual Size = 11568
-  Characteristics = 
+  Characteristics =
   Offset = 79977048
-  Virtual Address = 
-  
+  Virtual Address =
+
   Path = [0]
   Size = 70050392
   Packed Size = 70050392
   Virtual Size = 70050392
-  Characteristics = 
+  Characteristics =
   Offset = 9926656
-  Virtual Address = 
-  
+  Virtual Address =
+
   Path = .rsrc_1
   Size = 246
   Packed Size = 246
   Virtual Size = 246
-  Characteristics = 
+  Characteristics =
   Offset = 9893642
-  Virtual Address = 
-  
+  Virtual Address =
+
 - Static extraction exit code: 0
 - Extracted file count: 22
   - _RDATA (78344 bytes)

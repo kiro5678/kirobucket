@@ -39,5 +39,5 @@
     "autoupdate": {
         "url": "https://package.oo-software.com/winget/diskrecovery/$version/oodiskrecovery_$version_eng_x64.msi#/setup.msi_"
     },
-    "notes": "Nonportable: uses O&O's official per-machine Windows Installer package and registers the application with Windows. Scoop uninstall removes the MSI ProductCode. Administrator approval is required; a restart may be requested."
+    "notes": "Nonportable: uses O&O's official per-machine Windows Installer package and registers the application with Windows. Scoop uninstall removes the MSI ProductCode. Administrator approval is required; a restart may be requested. Scoop retains the original MSI in its version directory so its ProductCode remains available for native Windows Installer removal."
 }
