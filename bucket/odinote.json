@@ -13,13 +13,13 @@
         }
     },
     "pre_install": [
-        "$payload = Join-Path $dir '`$PLUGINSDIR\\app-64.7z'",
+        "$payload = Join-Path $dir '$PLUGINSDIR\\app-64.7z'",
         "if (!(Test-Path -LiteralPath $payload -PathType Leaf)) { throw 'The embedded Electron app-64.7z payload was not found in the NSIS package.' }",
         "Expand-7zipArchive $payload $dir"
     ],
     "post_install": [
         "if (!(Test-Path -LiteralPath (Join-Path $dir 'Odinote.exe') -PathType Leaf)) { throw 'Odinote.exe was not extracted into the Scoop version directory.' }",
-        "Remove-Item -LiteralPath (Join-Path $dir '`$PLUGINSDIR'), (Join-Path $dir '`$R0'), (Join-Path $dir 'Uninstall Odinote.exe') -Recurse -Force -ErrorAction SilentlyContinue"
+        "Remove-Item -LiteralPath (Join-Path $dir '$PLUGINSDIR'), (Join-Path $dir '$R0'), (Join-Path $dir 'Uninstall Odinote.exe') -Recurse -Force -ErrorAction SilentlyContinue"
     ],
     "bin": [
         [
