@@ -13,11 +13,10 @@
             "hash": "75a8be78ef3429e6bc4b80983098aa95abae5aeb248c8cae894d8b2b6c1821f1"
         }
     },
-    "extract_dir": "PFiles64\\XDM",
-    "bin": "xdm-app.exe",
+    "bin": "PFiles64\\XDM\\xdm-app.exe",
     "shortcuts": [
         [
-            "xdm-app.exe",
+            "PFiles64\\XDM\\xdm-app.exe",
             "Xtreme Download Manager"
         ]
     ],
