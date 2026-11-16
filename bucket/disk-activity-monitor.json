@@ -1,6 +1,6 @@
 {
     "version": "1.4.16",
-    "description": "Windows SSD/HDD endurance monitor with ETW process attribution, SMART telemetry, write trends, and alerts.",
+    "description": "Windows SSD/HDD monitor with ETW process attribution, SMART telemetry, write trends, and alerts.",
     "homepage": "https://github.com/andrewtheart/DiskActivityMonitor",
     "license": "Unknown",
     "architecture": {
@@ -9,32 +9,65 @@
             "hash": "358f9924e194a3227ad87b71f0f4009ae6a4dbdde52901c867ae5b64ca867835"
         }
     },
-    "installer": {
-        "args": [
-            "/VERYSILENT",
-            "/SUPPRESSMSGBOXES",
-            "/NORESTART",
-            "/SP-",
-            "/TASKS=!autostart"
+    "innosetup": true,
+    "pre_install": [
+        "$ErrorActionPreference = 'Stop'",
+        "$payloads = @(",
+        "    @{ Name = 'service'; Executable = 'DiskActivityMonitor.Service.exe' },",
+        "    @{ Name = 'tray'; Executable = 'DiskActivityMonitor.Tray.exe' }",
+        ")",
+        "foreach ($payload in $payloads) {",
+        "    $matches = @(Get-ChildItem -LiteralPath $dir -Filter $payload.Executable -File -Recurse -ErrorAction Stop)",
+        "    if ($matches.Count -ne 1) { throw \"Expected exactly one $($payload.Executable) in the Inno Setup payload; found $($matches.Count).\" }",
+        "    $source = $matches[0].Directory.FullName",
+        "    $destination = Join-Path $dir $payload.Name",
+        "    if (-not [string]::Equals([IO.Path]::GetFullPath($source).TrimEnd('\\'), [IO.Path]::GetFullPath($destination).TrimEnd('\\'), [StringComparison]::OrdinalIgnoreCase)) {",
+        "        New-Item -ItemType Directory -Path $destination -Force | Out-Null",
+        "        Get-ChildItem -LiteralPath $source -Force | Move-Item -Destination $destination -Force",
+        "    }",
+        "}",
+        "$icon = Get-ChildItem -LiteralPath $dir -Filter 'app.ico' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1",
+        "$rootIcon = Join-Path $dir 'app.ico'",
+        "if ($icon -and -not [string]::Equals([IO.Path]::GetFullPath($icon.FullName), [IO.Path]::GetFullPath($rootIcon), [StringComparison]::OrdinalIgnoreCase)) { Copy-Item -LiteralPath $icon.FullName -Destination $rootIcon -Force }",
+        "$launcherContent = @'",
+        "$ErrorActionPreference = 'Stop'",
+        "$serviceExe = Join-Path $PSScriptRoot 'service\\DiskActivityMonitor.Service.exe'",
+        "$trayExe = Join-Path $PSScriptRoot 'tray\\DiskActivityMonitor.Tray.exe'",
+        "if (-not (Test-Path -LiteralPath $serviceExe -PathType Leaf)) { throw 'Disk Activity Monitor collector executable is missing.' }",
+        "if (-not (Test-Path -LiteralPath $trayExe -PathType Leaf)) { throw 'Disk Activity Monitor tray executable is missing.' }",
+        "if (-not (Get-Process -Name 'DiskActivityMonitor.Service' -ErrorAction SilentlyContinue)) {",
+        "    Start-Process -FilePath $serviceExe -WorkingDirectory (Split-Path -Parent $serviceExe) -WindowStyle Hidden",
+        "}",
+        "if (-not (Get-Process -Name 'DiskActivityMonitor.Tray' -ErrorAction SilentlyContinue)) {",
+        "    Start-Process -FilePath $trayExe -ArgumentList '--show' -WorkingDirectory (Split-Path -Parent $trayExe)",
+        "}",
+        "'@",
+        "[IO.File]::WriteAllText((Join-Path $dir 'Run-DiskActivityMonitor.ps1'), $launcherContent, [Text.UTF8Encoding]::new($false))"
+    ],
+    "pre_uninstall": [
+        "$appRoot = [IO.Path]::GetFullPath((Split-Path -Parent $dir)).TrimEnd('\\') + '\\'",
+        "Get-Process -Name 'DiskActivityMonitor.Service','DiskActivityMonitor.Tray' -ErrorAction SilentlyContinue | ForEach-Object {",
+        "    try {",
+        "        if ($_.Path -and [IO.Path]::GetFullPath($_.Path).StartsWith($appRoot, [StringComparison]::OrdinalIgnoreCase)) {",
+        "            Stop-Process -Id $_.Id -Force -ErrorAction Stop",
+        "        }",
+        "    } catch { }",
+        "}"
+    ],
+    "bin": [
+        [
+            "Run-DiskActivityMonitor.ps1",
+            "disk-activity-monitor"
         ]
-    },
-    "uninstaller": {
-        "script": [
-            "$programFiles = [Environment]::GetFolderPath([Environment+SpecialFolder]::ProgramFiles)",
-            "$uninstaller = Join-Path $programFiles 'Disk Activity Monitor\\unins000.exe'",
-            "if (Test-Path -LiteralPath $uninstaller) {",
-            "    $process = Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART' -Wait -PassThru",
-            "    if ($process.ExitCode -ne 0) { throw \"Disk Activity Monitor uninstaller failed with exit code $($process.ExitCode).\" }",
-            "} else {",
-            "    $service = Get-Service -Name 'DiskActivityMonitor' -ErrorAction SilentlyContinue",
-            "    if ($service) {",
-            "        if ($service.Status -ne 'Stopped') { Stop-Service -Name 'DiskActivityMonitor' -Force -ErrorAction Stop; $service.WaitForStatus('Stopped', [TimeSpan]::FromSeconds(20)) }",
-            "        & \"$env:SystemRoot\\System32\\sc.exe\" delete DiskActivityMonitor | Out-Null",
-            "        if ($LASTEXITCODE -ne 0) { throw 'Failed to delete the DiskActivityMonitor service.' }",
-            "    }",
-            "}"
+    ],
+    "shortcuts": [
+        [
+            "Run-DiskActivityMonitor.ps1",
+            "Disk Activity Monitor",
+            "",
+            "app.ico"
         ]
-    },
+    ],
     "checkver": "github",
     "autoupdate": {
         "architecture": {
@@ -47,7 +80,7 @@
         }
     },
     "notes": [
-        "Nonportable: the vendor installer registers a Windows service and installs files under Program Files; installation requires elevation.",
-        "The vendor uninstaller removes the service and application files. Monitoring data and settings outside the application directory are retained."
+        "The Inno Setup package is extracted only. Its Windows service registration and startup tasks are not executed; the collector runs as a normal process from the Scoop directory.",
+        "The application stores its database and collector configuration in %ProgramData%\\DiskActivityMonitor and per-user settings in %LOCALAPPDATA%\\DiskActivityMonitor."
     ]
 }
