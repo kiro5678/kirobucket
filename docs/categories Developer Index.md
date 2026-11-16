@@ -2,30 +2,38 @@
 
 ## Developer Index
 
-| Developer / Suite | Manifests | Link |
-| --- | ---: | --- |
-| AkiraEng | 1 | [View](#akiraeng) |
-| Awesome MyGo Community | 174 | [View](#awesome-mygo-showcase) |
-| Aurelitec Suite | 5 | [View](#aurelitec-suite) |
-| Auslogics Suite | 15 | [View](#auslogics-suite) |
-| ChemTable Suite | 5 | [View](#chemtable-suite) |
-| ComputerSluggish Suite | 1 | [View](#computersluggish-suite) |
-| EFSoftware Suite | 13 | [View](#efsoftware-suite) |
-| Eric Zimmerman Suite | 31 | [View](#eric-zimmerman-suite) |
-| Funk.eu Suite | 7 | [View](#funk-eu-suite) |
-| FuumiSoft | 4 | [View](#fuumisoft) |
-| GRC Suite | 18 | [View](#grc-suite) |
-| MiTeC Suite | 22 | [View](#mitec-suite) |
-| Neuber Suite | 2 | [View](#neuber-suite) |
-| O&O Software GmbH | 10 | [View](#oo-software-gmbh) |
-| NirSoft Suite | 2 | [View](#nirsoft-suite) |
-| Rizonesoft Suite | 14 | [View](#rizonesoft-suite) |
-| Sordum Suite | 59 | [View](#sordum-suite) |
-| Skwire | 79 | [View](#skwire) |
-| SoftwareOK Suite | 81 | [View](#softwareok-suite) |
-| ThioJoe Suite | 20 | [View](#thiojoe-suite) |
-| Türkaysoft Suite | 8 | [View](#turkaysoft-suite) |
-| Vovsoft Suite | 174 | [View](#vovsoft-suite) |
+| Developer / Suite | Manifests | Programs without Manifest | Total Download Size | Link |
+| --- | ---: | ---: | ---: | --- |
+| AkiraEng | 1 | — | 0.29 MiB | [View](#akiraeng) |
+| Awesome MyGo Community | 174 | — | 3,342.30 MiB | [View](#awesome-mygo-showcase) |
+| Aurelitec Suite | 5 | 0 | 12.03 MiB | [View](#aurelitec-suite) |
+| Auslogics Suite | 15 | 0 | 399.60 MiB | [View](#auslogics-suite) |
+| ChemTable Suite | 5 | 0 | 107.40 MiB | [View](#chemtable-suite) |
+| ComputerSluggish Suite | 1 | 8 | 0.85 MiB | [View](#computersluggish-suite) |
+| EFSoftware Suite | 13 | 0 | 29.57 MiB | [View](#efsoftware-suite) |
+| Eric Zimmerman Suite | 31 | 0 | 970.68 MiB | [View](#eric-zimmerman-suite) |
+| Funk.eu Suite | 7 | 1 | 27.10 MiB | [View](#funk-eu-suite) |
+| FuumiSoft | 4 | 0 | 362.50 MiB | [View](#fuumisoft) |
+| GRC Suite | 18 | 3 | 1.72 MiB | [View](#grc-suite) |
+| MiTeC Suite | 22 | 13 | 153.90 MiB | [View](#mitec-suite) |
+| Neuber Suite | 2 | 6 | 4.90 MiB | [View](#neuber-suite) |
+| O&O Software GmbH | 10 | 1 | 605.60 MiB | [View](#oo-software-gmbh) |
+| NirSoft Suite | 2 | 0 | — | [View](#nirsoft-suite) |
+| Rizonesoft Suite | 14 | 0 | 268.80 MiB | [View](#rizonesoft-suite) |
+| Sordum Suite | 59 | 4 | 56.93 MiB | [View](#sordum-suite) |
+| Skwire | 79 | 0 | 77.80 MiB | [View](#skwire) |
+| SoftwareOK Suite | 81 | 0 | 54.65 MiB | [View](#softwareok-suite) |
+| ThioJoe Suite | 20 | — | 363.61 MiB | [View](#thiojoe-suite) |
+| Türkaysoft Suite | 8 | 0 | 7.05 MiB | [View](#turkaysoft-suite) |
+| Vovsoft Suite | 174 | 4 | 2,031.00 MiB | [View](#vovsoft-suite) |
+| **Total** | **745** | **40 identified** | **8,878.28 MiB** | — |
+
+**Counting notes (checked 2026-11-16):** The missing-program count is based on identifiable Windows desktop software in the developer's published catalogue that is not represented by a manifest. Web/cloud services, browser extensions and bundles of already-manifested programs are excluded. `—` means a complete count could not be verified. The MiTeC count includes 13 standalone programs listed in its legacy downloads catalogue; some may be old or no longer maintained. NirSoft's utilities are covered by the `nirlauncher` bundle and are not counted as individually missing.
+
+The size column sums only the primary/default Windows download sizes for manifests listed in this index, using the **Size** column in [Manifest Inventory](manifests.md). Alternative architectures are not added together; manifests without a published size are omitted from the total. The total therefore describes the indexed manifests, not the additional programs that do not yet have manifests.
+
+**Catalogues used for the non-zero counts:** [Awesome MyGo candidate audit](unavailable-manifest-candidates.md), [ComputerSluggish](https://computersluggish.com/software/), [Funk.eu](https://funk.eu/), [GRC freeware](https://www.grc.com/freeupdated.htm), [MiTeC legacy downloads](https://www.mitec.cz/Downloads/), [Neuber](https://www.neuber.com/download/products.html), [O&O products](https://www.oo-software.com/en/products), [Sordum downloads](https://www.sordum.org/downloads/), [Vovsoft Windows software](https://vovsoft.com/windows-software/).
+
 
 <a id="akiraeng"></a>
 ## AkiraEng
