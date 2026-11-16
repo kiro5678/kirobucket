@@ -17,6 +17,7 @@
 | GRC Suite | 18 | [View](#grc-suite) |
 | MiTeC Suite | 22 | [View](#mitec-suite) |
 | Neuber Suite | 2 | [View](#neuber-suite) |
+| O&O Software GmbH | 10 | [View](#oo-software-gmbh) |
 | NirSoft Suite | 2 | [View](#nirsoft-suite) |
 | Rizonesoft Suite | 14 | [View](#rizonesoft-suite) |
 | Sordum Suite | 59 | [View](#sordum-suite) |
@@ -607,6 +608,24 @@ Publisher cross-list of 2 manifests associated with Neuber Software. Each entry 
 | [neuber-fonttwister](../bucket/neuber-fonttwister.json) | 1.5 | 2.1 MiB | 2015-12-17 | Font and text-effect editor for creating stylized 2D/3D headings, logos, banners, and video thumbnails. | [Homepage](https://www.neuber.com/twister/) |
 
 Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter. Their current downloads are installer executables, not verified portable payloads; they are not included until unattended installation and uninstallation can be validated. PC On/Off Time, Svchost Process Analyzer, and VoicesInstaller are freeware but do not publish numbered versions. They need a verified version signal before being added under the bucket's update-tracking rules.
+
+<a id="oo-software-gmbh"></a>
+## O&O Software GmbH
+
+Publisher cross-list of 10 manifests associated with O&O Software GmbH. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [oo-appbuster](../bucket/oo-appbuster.json) | 3.1.1029 | — | 2026-11-10 | Portable utility for reviewing, removing and restoring built-in and third-party Windows apps. | [Homepage](https://www.oo-software.com/en/ooappbuster) |
+| [oo-autobackup](../bucket/oo-autobackup.json) | 8.2.1014 | 64bit: 87.6 MiB | — | Automatically back up and synchronize files and folders. | [Homepage](https://www.oo-software.com/en/autobackup-sync-files) |
+| [oo-defrag](../bucket/oo-defrag.json) | 32.1.26138 | — | — | Defragment and optimize Windows storage drives. | [Homepage](https://www.oo-software.com/en/products/oodefrag) |
+| [oo-deskinfo](../bucket/oo-deskinfo.json) | 2.0.1033 | 64bit: 76.3 MiB | 2026-01-28 | Portable desktop system information overlay and resource monitor. | [Homepage](https://www.oo-software.com/en/oodeskinfo) |
+| [oo-diskcommander](../bucket/oo-diskcommander.json) | 5.1.1020 | — | — | Analyze drives and inspect storage contents. | [Homepage](https://www.oo-software.com/en/oodiskcommander) |
+| [oo-diskimage](../bucket/oo-diskimage.json) | 23.2.26060 | — | — | Create and restore full disk images and Windows system backups. | [Homepage](https://www.oo-software.com/en/diskimage-backup-your-data) |
+| [oo-diskrecovery](../bucket/oo-diskrecovery.json) | 14.0.17 | — | — | Recover deleted files and data from damaged file systems. | [Homepage](https://www.oo-software.com/en/products/oodiskrecovery) |
+| [oo-regeditor](../bucket/oo-regeditor.json) | 16.1.6660 | 15.1 MiB | — | Portable advanced Windows Registry editor. | [Homepage](https://www.oo-software.com/en/ooregeditor) |
+| [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
+| [oo-shutup10](../bucket/oo-shutup10.json) | 3.7.1143 | — | 2026-11-10 | Portable privacy utility for reviewing and changing Windows 10 and 11 settings. | [Homepage](https://www.oo-software.com/en/shutup10) |
 
 <a id="nirsoft-suite"></a>
 ## NirSoft Suite
