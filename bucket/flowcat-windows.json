@@ -1,0 +1,36 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json",
+    "version": "0.3.0",
+    "description": "Per-process disk I/O monitor with disk write alerts, per-app network traffic, and NVMe health monitoring for Windows.",
+    "homepage": "https://github.com/tab16360/flowcat-windows",
+    "license": "Apache-2.0",
+    "url": "https://github.com/tab16360/flowcat-windows/releases/download/v0.3.0/FlowCat-Windows-x64-Setup.exe",
+    "hash": "5659792626861960cff14a6252c6e0dab434028ee0d302306f5b131bed75afe1",
+    "installer": {
+        "args": [
+            "/VERYSILENT",
+            "/SUPPRESSMSGBOXES",
+            "/NORESTART",
+            "/SP-",
+            "/DIR=\"$dir\""
+        ]
+    },
+    "uninstaller": {
+        "file": "unins000.exe",
+        "args": [
+            "/VERYSILENT",
+            "/SUPPRESSMSGBOXES",
+            "/NORESTART"
+        ]
+    },
+    "checkver": {
+        "github": "https://github.com/tab16360/flowcat-windows"
+    },
+    "autoupdate": {
+        "url": "https://github.com/tab16360/flowcat-windows/releases/download/v$version/FlowCat-Windows-x64-Setup.exe",
+        "hash": {
+            "mode": "github"
+        }
+    },
+    "notes": "The Inno Setup installer requires administrator approval and registers the FlowCat Collector Windows service. Program files are directed to the Scoop version directory; statistics history is stored in %ProgramData%\\FlowCatWindows and is retained when the app is uninstalled."
+}

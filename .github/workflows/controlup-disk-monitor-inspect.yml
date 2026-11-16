@@ -1,0 +1,127 @@
+name: Inspect ControlUp Disk Monitor MSI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/controlup-disk-monitor-inspect.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download and inspect the official MSI
+        id: inspect
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://www.controlup.com/wp-content/files/ControlUp_Disk_Monitor_09.25.msi'
+          $work = Join-Path $env:RUNNER_TEMP 'controlup-disk-monitor'
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $msi = Join-Path $work 'ControlUp_Disk_Monitor_09.25.msi'
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# ControlUp Disk Monitor MSI inspection')
+          $report.Add('')
+          $report.Add("- Source: $url")
+          $report.Add("- Checked: $([DateTime]::UtcNow.ToString('yyyy-MM-dd HH:mm:ss UTC'))")
+          try {
+            Invoke-WebRequest -Uri $url -OutFile $msi -TimeoutSec 180 -MaximumRedirection 10
+            $item = Get-Item -LiteralPath $msi
+            $hash = (Get-FileHash -LiteralPath $msi -Algorithm SHA256).Hash.ToLowerInvariant()
+            $signature = Get-AuthenticodeSignature -FilePath $msi
+            $report.Add("- Download size: $($item.Length) bytes")
+            $report.Add("- SHA-256: $hash")
+            $report.Add("- Authenticode status: $($signature.Status)")
+            $report.Add("- Signer: $($signature.SignerCertificate.Subject)")
+            $report.Add('')
+            $wi = New-Object -ComObject WindowsInstaller.Installer
+            $db = $wi.OpenDatabase($msi, 0)
+
+            function Get-MsiRows {
+              param([Parameter(Mandatory)][string]$Query)
+              $view = $db.OpenView($Query)
+              $view.Execute()
+              $rows = [System.Collections.Generic.List[object]]::new()
+              while ($record = $view.Fetch()) {
+                $values = [System.Collections.Generic.List[string]]::new()
+                for ($column = 1; $column -le $record.FieldCount; $column++) {
+                  $values.Add([string]$record.StringData($column))
+                }
+                $rows.Add(@($values))
+              }
+              $view.Close()
+              return $rows
+            }
+
+            $properties = @{}
+            foreach ($row in (Get-MsiRows -Query 'SELECT `Property`, `Value` FROM `Property`')) {
+              $properties[[string]$row[0]] = [string]$row[1]
+            }
+            $report.Add('## MSI properties')
+            foreach ($key in @('ProductName','ProductVersion','Manufacturer','ProductCode','UpgradeCode','InstallLocation')) {
+              if ($properties.ContainsKey($key)) { $report.Add("- $key: $($properties[$key])") }
+            }
+            $tableNames = @((Get-MsiRows -Query 'SELECT `Name` FROM `_Tables`') | ForEach-Object { [string]$_[0] })
+            $report.Add('')
+            $report.Add('## MSI service/custom-action metadata')
+            if ($tableNames -contains 'ServiceInstall') {
+              $report.Add('### ServiceInstall')
+              foreach ($row in (Get-MsiRows -Query 'SELECT `Name`, `DisplayName`, `StartType`, `ServiceType`, `Arguments`, `Component_` FROM `ServiceInstall`')) {
+                $report.Add("- Name=$($row[0]); DisplayName=$($row[1]); StartType=$($row[2]); ServiceType=$($row[3]); Arguments=$($row[4]); Component=$($row[5])")
+              }
+            } else { $report.Add('- No ServiceInstall table.') }
+            if ($tableNames -contains 'CustomAction') {
+              $report.Add('### CustomAction')
+              foreach ($row in (Get-MsiRows -Query 'SELECT `Action`, `Type`, `Source`, `Target` FROM `CustomAction`')) {
+                $report.Add("- Action=$($row[0]); Type=$($row[1]); Source=$($row[2]); Target=$($row[3])")
+              }
+            } else { $report.Add('- No CustomAction table.') }
+
+            if ($tableNames -contains 'File') {
+              $report.Add('')
+              $report.Add('## Payload file table')
+              foreach ($row in (Get-MsiRows -Query 'SELECT `FileName`, `FileSize`, `Component_` FROM `File`')) {
+                $report.Add("- $($row[0]) | $($row[1]) bytes | Component $($row[2])")
+              }
+            }
+
+            $extract = Join-Path $work 'admin-image'
+            New-Item -ItemType Directory -Path $extract -Force | Out-Null
+            $arguments = @('/a', "`"$msi`"", '/qn', '/norestart', "TARGETDIR=`"$extract`"")
+            $process = Start-Process -FilePath 'msiexec.exe' -ArgumentList $arguments -Wait -PassThru
+            $report.Add('')
+            $report.Add('## Administrative extraction test')
+            $report.Add("- msiexec /a exit code: $($process.ExitCode)")
+            $extracted = @(Get-ChildItem -LiteralPath $extract -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 100)
+            $report.Add("- Files extracted (up to 100 listed): $($extracted.Count)")
+            foreach ($file in $extracted) { $report.Add("- $($file.FullName.Substring($extract.Length).TrimStart('\'))") }
+            if ($process.ExitCode -notin @(0,3010)) {
+              throw "MSI administrative extraction failed with exit code $($process.ExitCode)."
+            }
+            $report.Add('')
+            $report.Add('MSI download, hash, metadata inspection and administrative extraction completed.')
+            $report | Set-Content -LiteralPath (Join-Path $work 'inspection.md') -Encoding utf8
+            $report | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+            "sha256=$hash" >> $env:GITHUB_OUTPUT
+          } catch {
+            $report.Add('')
+            $report.Add("FAILED: $($_.Exception.Message)")
+            $report | Set-Content -LiteralPath (Join-Path $work 'inspection.md') -Encoding utf8
+            $report | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+            throw
+          }
+      - name: Upload inspection report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: controlup-disk-monitor-msi-inspection
+          path: ${{ runner.temp }}/controlup-disk-monitor/inspection.md
+          if-no-files-found: warn
+          retention-days: 14
