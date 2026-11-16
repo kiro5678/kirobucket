@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - ".github/workflows/deepseek-harness-extraction-test.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/deepseek-harness-extraction-test.yml"
   workflow_dispatch:
 
 permissions:
