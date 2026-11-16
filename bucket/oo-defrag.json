@@ -16,7 +16,7 @@
     "installer": {
         "script": [
             "$msi = Join-Path $dir 'setup.msi_'",
-            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw 'O&O Defrag MSI was not found: ' + $msi }",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw ('O&O Defrag MSI was not found: ' + $msi) }",
             "$log = Join-Path $dir 'oo-defrag-install.log'",
             "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/i', \"`\"$msi`\"\", '/qn', 'REBOOT=ReallySuppress', '/norestart', '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
             "if ($process.ExitCode -notin @(0, 3010)) { throw \"O&O Defrag installation failed with exit code $($process.ExitCode). Log: $log\" }"
