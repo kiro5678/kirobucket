@@ -8,7 +8,7 @@
     "installer": {
         "script": [
             "$msi = Join-Path $dir 'setup.msi_'",
-            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw 'O&O DiskRecovery MSI was not found: ' + $msi }",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw ('O&O DiskRecovery MSI was not found: '' + $msi) }",
             "$log = Join-Path $dir 'oo-diskrecovery-install.log'",
             "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/i', \"`\"$msi`\"\", '/qn', 'REBOOT=ReallySuppress', '/norestart', '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
             "if ($process.ExitCode -notin @(0, 3010)) { throw \"O&O DiskRecovery installation failed with exit code $($process.ExitCode). Log: $log\" }"
@@ -28,5 +28,6 @@
     },
     "autoupdate": {
         "url": "https://package.oo-software.com/winget/diskrecovery/14.0.17/oodiskrecovery_14.0.17_eng_x64.msi#/setup.msi_"
-    }
+    },
+    "notes": "Nonportable: uses O&O's official per-machine Windows Installer package and registers the application with Windows. Scoop uninstall removes the MSI ProductCode. Administrator approval is required; a restart may be requested."
 }
