@@ -1,0 +1,282 @@
+name: HC Player Installer Type Inspection
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/hc-player-installer-type-inspection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Identify the official HC Player Windows installer
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Download, verify, and statically inspect the latest release
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $workDir = Join-Path $env:GITHUB_WORKSPACE "hc-player-inspection"
+          New-Item -ItemType Directory -Path $workDir -Force | Out-Null
+
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            "User-Agent" = "kirobucket-hc-player-installer-inspector"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+
+          # Resolve the official stable release and the x64 setup asset.
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/henzfdev/HC-Player/releases/latest" -Headers $headers -TimeoutSec 45
+          if ($release.draft -or $release.prerelease) {
+            throw "The latest HC Player release is a draft or prerelease."
+          }
+
+          $asset = $release.assets |
+            Where-Object { $_.name -match '^HC_Player_[0-9][0-9A-Za-z.-]*_x64_Setup\.exe$' } |
+            Select-Object -First 1
+          if (-not $asset) {
+            throw "Could not identify the official x64 Setup.exe in release $($release.tag_name)."
+          }
+          if ($asset.digest -notmatch '^sha256:([0-9a-fA-F]{64})$') {
+            throw "GitHub did not provide a valid SHA-256 digest for $($asset.name)."
+          }
+          $expectedHash = $Matches[1].ToLowerInvariant()
+
+          $installer = Join-Path $workDir $asset.name
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 900
+          $item = Get-Item -LiteralPath $installer
+          if ($item.Length -le 0) { throw "Downloaded installer is empty." }
+          if ($item.Length -gt 1GB) { throw "Downloaded installer exceeds the 1 GiB safety limit." }
+
+          $actualHash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) {
+            throw "SHA-256 mismatch. Expected $expectedHash; received $actualHash."
+          }
+
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          $signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { "(no signer certificate)" }
+
+          # Read PE architecture without launching the downloaded executable.
+          $stream = [System.IO.File]::OpenRead($installer)
+          try {
+            $header = [byte[]]::new(64)
+            $read = $stream.Read($header, 0, 64)
+            if ($read -lt 64 -or $header[0] -ne 0x4D -or $header[1] -ne 0x5A) {
+              throw "Downloaded file does not have a valid DOS MZ header."
+            }
+            $peOffset = [BitConverter]::ToInt32($header, 0x3C)
+            if ($peOffset -lt 0 -or ($peOffset + 6) -gt $stream.Length) {
+              throw "Downloaded file has an invalid PE header offset."
+            }
+            $stream.Position = $peOffset
+            $peHeader = [byte[]]::new(6)
+            if ($stream.Read($peHeader, 0, 6) -ne 6) {
+              throw "Could not read the PE header."
+            }
+            $peSignature = [System.Text.Encoding]::ASCII.GetString($peHeader, 0, 4)
+            if ($peSignature -ne ("PE" + [char]0 + [char]0)) {
+              throw "Downloaded file does not contain a valid PE signature."
+            }
+            $machine = [BitConverter]::ToUInt16($peHeader, 4)
+            $architecture = switch ($machine) {
+              0x8664 { "x64 (AMD64)" }
+              0x014c { "x86 (i386)" }
+              0xAA64 { "ARM64" }
+              default { "Unknown PE machine 0x{0:X4}" -f $machine }
+            }
+          } finally {
+            $stream.Dispose()
+          }
+
+          $metadata = @(
+            "HC Player release: $($release.tag_name)"
+            "Published: $($release.published_at)"
+            "Asset: $($asset.name)"
+            "Download URL: $($asset.browser_download_url)"
+            "Size: $($item.Length) bytes"
+            "SHA-256: $actualHash (matches GitHub release digest)"
+            "PE architecture: $architecture"
+            "Product name: $($versionInfo.ProductName)"
+            "File description: $($versionInfo.FileDescription)"
+            "File version: $($versionInfo.FileVersion)"
+            "Authenticode status: $($signature.Status)"
+            "Signer: $signer"
+            "The installer was downloaded for static inspection only; it was not executed."
+          )
+          $metadata | Set-Content -LiteralPath (Join-Path $workDir "01-release-metadata.txt") -Encoding utf8
+          $metadata | ForEach-Object { Write-Output $_ }
+
+          @("## HC Player release asset", "") +
+            ($metadata | ForEach-Object { "- $_" }) |
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          # Download the current Windows x64 portable build of Detect It Easy.
+          $dieRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/horsicq/DIE-engine/releases/latest" -Headers $headers -TimeoutSec 45
+          $dieAsset = $dieRelease.assets |
+            Where-Object { $_.name -match '^die_win64_portable_[0-9.]+_x64\.zip$' } |
+            Select-Object -First 1
+          if (-not $dieAsset) {
+            throw "Could not find a Windows x64 portable Detect It Easy archive."
+          }
+
+          $dieZip = Join-Path $workDir $dieAsset.name
+          $dieDir = Join-Path $workDir "die-tool"
+          Invoke-WebRequest -Uri $dieAsset.browser_download_url -OutFile $dieZip -MaximumRedirection 10 -TimeoutSec 300
+          if ((Get-Item -LiteralPath $dieZip).Length -lt 100KB) {
+            throw "Detect It Easy archive is unexpectedly small."
+          }
+          if ($dieAsset.digest -match '^sha256:([0-9a-fA-F]{64})$') {
+            $dieExpected = $Matches[1]
+            $dieActual = (Get-FileHash -LiteralPath $dieZip -Algorithm SHA256).Hash
+            if ($dieActual -ine $dieExpected) {
+              throw "Detect It Easy archive SHA-256 mismatch."
+            }
+          } else {
+            Write-Warning "No GitHub SHA-256 digest was provided for the Detect It Easy archive."
+          }
+
+          Expand-Archive -LiteralPath $dieZip -DestinationPath $dieDir -Force
+          $diec = Get-ChildItem -LiteralPath $dieDir -Filter "diec.exe" -Recurse -File |
+            Select-Object -First 1
+          if (-not $diec) { throw "diec.exe was not found in the Detect It Easy archive." }
+
+          # Run Detect It Easy; this analyzes the file and does not launch the installer.
+          $dieOutput = @(& $diec.FullName $installer 2>&1 | ForEach-Object { "$_" })
+          $dieExitCode = $LASTEXITCODE
+          $dieOutput | Set-Content -LiteralPath (Join-Path $workDir "02-detect-it-easy.txt") -Encoding utf8
+          if ($dieExitCode -ne 0 -or $dieOutput.Count -eq 0) {
+            throw "Detect It Easy failed with exit code $dieExitCode."
+          }
+          Write-Output "Detect It Easy version: $($dieRelease.tag_name)"
+          $dieOutput | ForEach-Object { Write-Output $_ }
+
+          # Scan ASCII and UTF-16 strings for installer-family markers and possible switches.
+          # These matches are clues only; they do not prove that a command-line switch works.
+          $signatureRegex = [System.Text.RegularExpressions.Regex]::new(
+            'Inno Setup Setup Data|Inno Setup|NullsoftInst|Nullsoft Install System|NSIS|WixBundle|WixBurn|InstallShield|Advanced Installer|Caphyon|InstallAware|SquirrelSetup|Squirrel\.Windows|7zS\.sfx|Qt Installer Framework|QtIFW',
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+          )
+          $switchRegex = [System.Text.RegularExpressions.Regex]::new(
+            '(?i)(/VERYSILENT|/SILENT|/SUPPRESSMSGBOXES|/NORESTART|/DIR=|/CURRENTUSER|/ALLUSERS|/S\b|/D=|--silent|--quiet|--unattended)',
+            [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+          )
+          $markerHits = [System.Collections.Generic.List[string]]::new()
+          $switchHits = [System.Collections.Generic.List[string]]::new()
+
+          $stream = [System.IO.File]::OpenRead($installer)
+          try {
+            $chunkSize = 4MB
+            $overlap = 1024
+            $buffer = [byte[]]::new($chunkSize + $overlap)
+            $carry = 0
+            while ($true) {
+              $read = $stream.Read($buffer, $carry, $chunkSize)
+              if ($read -eq 0) { break }
+              $total = $carry + $read
+              $ascii = [System.Text.Encoding]::ASCII.GetString($buffer, 0, $total)
+              $unicodeLength = $total - ($total % 2)
+              $unicode = [System.Text.Encoding]::Unicode.GetString($buffer, 0, $unicodeLength).Replace([string][char]0, "")
+
+              foreach ($block in @($ascii, $unicode)) {
+                foreach ($match in $signatureRegex.Matches($block)) {
+                  if (-not $markerHits.Contains($match.Value)) { $markerHits.Add($match.Value) }
+                }
+                foreach ($match in $switchRegex.Matches($block)) {
+                  if (-not $switchHits.Contains($match.Value)) { $switchHits.Add($match.Value) }
+                }
+              }
+
+              $carry = [Math]::Min($overlap, $total)
+              [Array]::Copy($buffer, $total - $carry, $buffer, 0, $carry)
+            }
+          } finally {
+            $stream.Dispose()
+          }
+
+          # Try a read-only archive listing when 7-Zip is available on the runner.
+          $sevenZip = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+          if (-not $sevenZip) { $sevenZip = Get-Command "7z" -ErrorAction SilentlyContinue }
+          $archiveListing = @()
+          if ($sevenZip) {
+            $archiveListing = @(& $sevenZip.Source l -slt $installer 2>&1 | ForEach-Object { "$_" })
+            $archiveListing | Set-Content -LiteralPath (Join-Path $workDir "03-7zip-listing.txt") -Encoding utf8
+          }
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add("HC Player installer static analysis")
+          $report.Add("===================================")
+          $report.Add("Release: $($release.tag_name)")
+          $report.Add("File: $($asset.name)")
+          $report.Add("SHA-256: $actualHash")
+          $report.Add("PE architecture: $architecture")
+          $report.Add("")
+          $report.Add("Detect It Easy output:")
+          foreach ($line in $dieOutput) { $report.Add([string]$line) }
+          $report.Add("")
+          $report.Add("Installer-family strings (heuristic):")
+          if ($markerHits.Count) {
+            foreach ($hit in $markerHits) { $report.Add("- $hit") }
+          } else {
+            $report.Add("No recognized installer-family marker was found.")
+          }
+          $report.Add("")
+          $report.Add("Possible command-line switch strings (not verified):")
+          if ($switchHits.Count) {
+            foreach ($hit in $switchHits) { $report.Add("- $hit") }
+          } else {
+            $report.Add("No recognized silent-install switch strings were found.")
+          }
+          $report.Add("")
+          if ($sevenZip) {
+            $report.Add("7-Zip archive listing (read-only; exit code $LASTEXITCODE):")
+            foreach ($line in ($archiveListing | Select-Object -First 100)) { $report.Add([string]$line) }
+          } else {
+            $report.Add("7-Zip was unavailable; archive listing was skipped.")
+          }
+          $report.Add("")
+          $report.Add("Caution: string matches can originate from bundled libraries. Detect It Easy output is the primary installer-family evidence.")
+          $report.Add("The target installer was never executed and no application payload was installed.")
+          $report | Set-Content -LiteralPath (Join-Path $workDir "04-final-report.txt") -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+
+          @(
+            ""
+            "## HC Player installer identification"
+            ""
+            "- **Release:** $($release.tag_name)"
+            "- **File:** $($asset.name)"
+            "- **SHA-256:** $actualHash"
+            "- **PE architecture:** $architecture"
+            "- **Detect It Easy:** $($dieRelease.tag_name)"
+            ""
+            "### Detect It Easy output"
+            ""
+            $dieOutput
+            ""
+            "### Installer-family strings (heuristic)"
+            ""
+            $(if ($markerHits.Count) { $markerHits | ForEach-Object { "- $_" } } else { "No recognized marker found." })
+            ""
+            "### Possible command-line switches (not verified)"
+            ""
+            $(if ($switchHits.Count) { $switchHits | ForEach-Object { "- $_" } } else { "No recognized switch strings found." })
+            ""
+            "The installer was not executed."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload inspection reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: hc-player-installer-inspection
+          path: hc-player-inspection/*.txt
+          if-no-files-found: warn
