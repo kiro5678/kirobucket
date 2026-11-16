@@ -218,7 +218,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [Auslogics-ssd-optimizer](../bucket/Auslogics-ssd-optimizer.json) | 2.2.0.6 | 26.4 MiB | 2026-04-29 | SSD optimization and health utility | [Homepage](https://www.auslogics.com/en/software/ssd-optimizer/) |
-| [disk-activity-monitor](../bucket/disk-activity-monitor.json) | 1.4.16 | 83.4 MiB | 2026-08-16 | Windows SSD/HDD endurance monitor with ETW process attribution, SMART telemetry, write trends, and alerts. | [Homepage](https://github.com/andrewtheart/DiskActivityMonitor) |
+| [diskactivitymonitor](../bucket/diskactivitymonitor.json) | 1.4.16 | 83.4 MiB | 2026-08-16 | Windows SSD/HDD endurance monitor with ETW process attribution, SMART telemetry, write trends, and alerts. | [Homepage](https://github.com/andrewtheart/DiskActivityMonitor) |
 | [diskdrift](../bucket/diskdrift.json) | 0.1.2 | 70.2 MiB | 2026-11-06 | Windows disk-space monitoring suite that records free-space changes, top writers, and storage growth. | [Homepage](https://github.com/AnwarRezk/disk-monitor) |
 | [diskmonitor](../bucket/diskmonitor.json) | 70b93aa644d4045395b4e4482ba954009422b482 | — | 2026-06-18 | Windows console utility for per-process disk I/O monitoring with ETW attribution. | [Homepage](https://github.com/Mainkill1/DiskMonitor) |
 | [flowcat-windows](../bucket/flowcat-windows.json) | 0.3.0 | 2.4 MiB | 2026-11-03 | Per-process disk I/O, disk write alerts, network traffic and NVMe health monitor for Windows. | [Homepage](https://github.com/tab16360/flowcat-windows) |
