@@ -1,0 +1,21 @@
+{
+    "version": "0.7.2",
+    "description": "Read-only disk diagnostics TUI for devices, volumes, disk I/O, SMART health, and busy files.",
+    "homepage": "https://github.com/matthart1983/diskwatch",
+    "license": "MIT",
+    "url": "https://github.com/matthart1983/diskwatch/releases/download/v0.7.2/diskwatch-windows-x86_64.tar.gz",
+    "hash": "c4bdc6696281e92be2ce3ce3e2f5a3885bbea3b4387c73e4c562b647c6ec3336",
+    "bin": "diskwatch-windows-x86_64.exe",
+    "checkver": {
+        "github": "https://github.com/matthart1983/diskwatch"
+    },
+    "autoupdate": {
+        "url": "https://github.com/matthart1983/diskwatch/releases/download/v$version/diskwatch-windows-x86_64.tar.gz",
+        "hash": {
+            "mode": "json",
+            "url": "https://api.github.com/repos/matthart1983/diskwatch/releases/tags/v$version",
+            "jp": "$.assets[?(@.name == '$basename')].digest"
+        }
+    },
+    "notes": "Windows x86_64 release. Optional smartmontools enables full SMART attribute tables."
+}
