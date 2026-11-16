@@ -18,18 +18,15 @@
         "if ($LASTEXITCODE -ne 0) { throw \"DiskMonitor source build failed with exit code $LASTEXITCODE.\" }",
         "if (-not (Test-Path -LiteralPath (Join-Path $publish 'DiskMonitor.exe') -PathType Leaf)) { throw 'DiskMonitor.exe was not produced by the .NET publish step.' }",
         "Remove-Item -LiteralPath (Join-Path $dir '.nuget') -Recurse -Force -ErrorAction SilentlyContinue",
+        "$launcher = '@echo off' + [Environment]::NewLine + 'setlocal' + [Environment]::NewLine + 'set DOTNET_BUNDLE_EXTRACT_BASE_DIR=%~dp0bundle' + [Environment]::NewLine + '\"%~dp0publish\\\\DiskMonitor.exe\" %*' + [Environment]::NewLine + 'exit /b %ERRORLEVEL%'",
+        "Set-Content -LiteralPath (Join-Path $dir 'diskmonitor.cmd') -Value $launcher -Encoding ASCII",
         "Remove-Item -LiteralPath (Join-Path $dir '.dotnet-home') -Recurse -Force -ErrorAction SilentlyContinue",
         "if ($project.Directory.FullName -ne $dir) { Remove-Item -LiteralPath $project.Directory.FullName -Recurse -Force }"
     ],
-    "bin": [
-        [
-            "publish\\DiskMonitor.exe",
-            "diskmonitor"
-        ]
-    ],
+    "bin": "diskmonitor.cmd",
     "shortcuts": [
         [
-            "publish\\DiskMonitor.exe",
+            "diskmonitor.cmd",
             "DiskMonitor"
         ]
     ],
@@ -45,6 +42,6 @@
     },
     "notes": [
         "The upstream repository publishes source only; this manifest pins a full Git commit and builds the Windows x64 application during installation. The upstream project version at this commit is 1.13.",
-        "The build uses the dotnet-sdk dependency and publishes a self-contained single-file executable inside the Scoop app directory. ETW-enhanced process attribution requires an elevated terminal."
+        "The build uses the dotnet-sdk dependency and publishes a self-contained single-file executable inside the Scoop app directory. Native runtime files are extracted into the app's bundle directory, not the user TEMP directory. ETW-enhanced process attribution requires an elevated terminal."
     ]
 }
