@@ -16,10 +16,20 @@
     },
     "uninstaller": {
         "script": [
+            "$msi = Join-Path $dir 'setup.msi_'",
+            "if (!(Test-Path -LiteralPath $msi -PathType Leaf)) { throw ('O&O SafeErase Professional MSI was not found: ' + $msi) }",
+            "$installer = New-Object -ComObject WindowsInstaller.Installer",
+            "$database = $installer.OpenDatabase($msi, 0)",
+            "$view = $database.OpenView(\"SELECT Value FROM Property WHERE Property='ProductCode'\")",
+            "$view.Execute()",
+            "$record = $view.Fetch()",
+            "if ($null -eq $record) { throw 'Could not read ProductCode from the retained MSI.' }",
+            "$productCode = [string]$record.StringData(1)",
+            "$view.Close()",
+            "if ($productCode -notmatch '^\\{[0-9A-Fa-f-]{36}\\}$') { throw ('Unexpected MSI ProductCode: ' + $productCode) }",
             "$log = Join-Path $dir 'oo-safeerase-uninstall.log'",
-            "$productCode = '{A9AD78AB-7B9B-4921-8B05-A5E10368D684}'",
             "$process = Start-Process -FilePath 'msiexec.exe' -ArgumentList @('/x', $productCode, '/qn', 'REBOOT=ReallySuppress', '/norestart', '/L*V', \"`\"$log`\"\") -Wait -PassThru -Verb RunAs -ErrorAction Stop",
-            "if ($process.ExitCode -notin @(0, 3010)) { throw \"O&O SafeErase Professional uninstallation failed with exit code $($process.ExitCode). Log: $log\" }"
+            "if ($process.ExitCode -notin @(0, 3010, 1605)) { throw \"O&O SafeErase Professional uninstallation failed with exit code $($process.ExitCode). Log: $log\" }"
         ]
     },
     "checkver": {
