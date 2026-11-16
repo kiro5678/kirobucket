@@ -30,7 +30,6 @@
 <a id="akiraeng"></a>
 ## AkiraEng
 
-Developer listing of 1 manifest published by AkiraEng.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -39,7 +38,6 @@ Developer listing of 1 manifest published by AkiraEng.
 <a id="auslogics-suite"></a>
 ## Auslogics Suite
 
-Publisher cross-list of 15 manifests associated with Auslogics. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -62,7 +60,6 @@ Publisher cross-list of 15 manifests associated with Auslogics. Each entry is al
 <a id="chemtable-suite"></a>
 ## ChemTable Suite
 
-Publisher cross-list of 5 manifests associated with ChemTable. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -75,7 +72,6 @@ Publisher cross-list of 5 manifests associated with ChemTable. Each entry is als
 <a id="eric-zimmerman-suite"></a>
 ## Eric Zimmerman Suite
 
-Publisher cross-list of 31 manifests associated with Eric Zimmerman. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -114,7 +110,6 @@ Publisher cross-list of 31 manifests associated with Eric Zimmerman. Each entry 
 <a id="grc-suite"></a>
 ## GRC Suite
 
-Publisher cross-list of 18 manifests associated with GRC. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -140,7 +135,6 @@ Publisher cross-list of 18 manifests associated with GRC. Each entry is also lis
 <a id="mitec-suite"></a>
 ## MiTeC Suite
 
-Publisher cross-list of 22 manifests associated with MiTeC. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -170,7 +164,6 @@ Publisher cross-list of 22 manifests associated with MiTeC. Each entry is also l
 <a id="softwareok-suite"></a>
 ## SoftwareOK Suite
 
-Publisher cross-list of 81 manifests associated with SoftwareOK. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -259,7 +252,6 @@ Publisher cross-list of 81 manifests associated with SoftwareOK. Each entry is a
 <a id="vovsoft-suite"></a>
 ## Vovsoft Suite
 
-Publisher cross-list of 174 manifests associated with Vovsoft. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -441,7 +433,6 @@ Publisher cross-list of 174 manifests associated with Vovsoft. Each entry is als
 <a id="sordum-suite"></a>
 ## Sordum Suite
 
-Publisher cross-list of 59 manifests associated with Sordum. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -508,7 +499,6 @@ Publisher cross-list of 59 manifests associated with Sordum. Each entry is also 
 <a id="efsoftware-suite"></a>
 ## EFSoftware Suite
 
-Publisher cross-list of 13 manifests associated with EFSoftware. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -531,7 +521,6 @@ The order/download page is already represented by 13 manifests; creating them ag
 <a id="turkaysoft-suite"></a>
 ## Türkaysoft Suite
 
-Publisher cross-list of 8 manifests associated with Türkaysoft. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -547,7 +536,6 @@ Publisher cross-list of 8 manifests associated with Türkaysoft. Each entry is a
 <a id="aurelitec-suite"></a>
 ## Aurelitec Suite
 
-Publisher cross-list of 5 manifests associated with Aurelitec. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -560,7 +548,6 @@ Publisher cross-list of 5 manifests associated with Aurelitec. Each entry is als
 <a id="computersluggish-suite"></a>
 ## ComputerSluggish Suite
 
-Publisher cross-list of 1 manifests associated with ComputerSluggish. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -571,7 +558,6 @@ Other main desktop products listed by ComputerSluggish currently link to MSI ins
 <a id="funk-eu-suite"></a>
 ## Funk.eu Suite
 
-Publisher cross-list of 7 manifests associated with Funk.eu. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -588,7 +574,6 @@ Funk.eu uses opaque Download Monitor file IDs instead of versioned URLs. Each ma
 <a id="fuumisoft"></a>
 ## FuumiSoft
 
-Developer listing of 4 manifests associated with FuumiSoft.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -600,7 +585,6 @@ Developer listing of 4 manifests associated with FuumiSoft.
 <a id="neuber-suite"></a>
 ## Neuber Suite
 
-Publisher cross-list of 2 manifests associated with Neuber Software. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -612,7 +596,6 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 <a id="oo-software-gmbh"></a>
 ## O&O Software GmbH
 
-Publisher cross-list of 10 manifests associated with O&O Software GmbH. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -630,7 +613,6 @@ Publisher cross-list of 10 manifests associated with O&O Software GmbH. Each ent
 <a id="nirsoft-suite"></a>
 ## NirSoft Suite
 
-Publisher cross-list of 2 manifests associated with NirSoft. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -639,7 +621,6 @@ Publisher cross-list of 2 manifests associated with NirSoft. Each entry is also 
 
 <a id="rizonesoft-suite"></a>
 ## Rizonesoft Suite
-Publisher cross-list of 14 manifests associated with Rizonesoft. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -661,7 +642,6 @@ Publisher cross-list of 14 manifests associated with Rizonesoft. Each entry is a
 <a id="thiojoe-suite"></a>
 ## ThioJoe Suite
 
-Publisher cross-list of 20 manifests associated with ThioJoe. Each entry is also listed in [KiroBucket Categories](categories.md) under its functional category.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
@@ -689,7 +669,6 @@ Publisher cross-list of 20 manifests associated with ThioJoe. Each entry is also
 
 ## Skwire
 
-This section lists the 79 Skwire programs currently represented by manifests in this bucket.
 
 | Manifest |
 | --- |
