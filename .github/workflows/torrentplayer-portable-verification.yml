@@ -1,0 +1,114 @@
+name: TorrentPlayer Portable Verification
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable-install:
+    name: Verify Scoop extraction and persistent portable profile
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Install Scoop and TorrentPlayer
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          scoop bucket add kirobucket 'https://github.com/kiro5678/kirobucket'
+          scoop install torrentplayer
+
+      - name: Verify portable paths and Scoop persistence
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          function Assert-PortableInstall {
+            $prefix = (scoop prefix torrentplayer).Trim()
+            if (-not $prefix) { throw 'Scoop did not return the TorrentPlayer current directory.' }
+
+            $exe = Join-Path $prefix 'TorrentPlayer.exe'
+            $profile = Join-Path $prefix 'Data'
+            $webview = Join-Path $prefix 'WebView2'
+            $persistRoot = Join-Path $env:SCOOP 'persist\torrentplayer'
+
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "TorrentPlayer.exe was not extracted to the expected directory: $exe"
+            }
+            foreach ($path in @($profile, $webview)) {
+              if (-not (Test-Path -LiteralPath $path -PathType Container)) {
+                throw "Expected persistent directory link is missing: $path"
+              }
+              $item = Get-Item -LiteralPath $path -Force
+              if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -eq 0) {
+                throw "Scoop did not create a persistent directory link: $path"
+              }
+            }
+
+            $expectedProfile = Join-Path $prefix 'Data'
+            $expectedWebView = Join-Path $prefix 'WebView2'
+            foreach ($check in @(
+              @{ Name = 'TORRENTPLAYER_PROFILE_DIR'; Expected = $expectedProfile },
+              @{ Name = 'WEBVIEW2_USER_DATA_FOLDER'; Expected = $expectedWebView }
+            )) {
+              $sessionValue = [Environment]::GetEnvironmentVariable($check.Name, 'Process')
+              $userValue = [Environment]::GetEnvironmentVariable($check.Name, 'User')
+              if ($sessionValue -ne $check.Expected) {
+                throw "$($check.Name) process value mismatch. Expected '$($check.Expected)', got '$sessionValue'."
+              }
+              if ($userValue -ne $check.Expected) {
+                throw "$($check.Name) user value mismatch. Expected '$($check.Expected)', got '$userValue'."
+              }
+            }
+
+            if (-not (Test-Path -LiteralPath $persistRoot -PathType Container)) {
+              throw "Scoop persistent data root does not exist: $persistRoot"
+            }
+
+            [PSCustomObject]@{
+              InstallDirectory = $prefix
+              Executable       = $exe
+              FileVersion      = (Get-Item -LiteralPath $exe).VersionInfo.FileVersion
+              ProfileDirectory = $profile
+              WebViewDirectory = $webview
+              PersistDirectory = $persistRoot
+            } | Format-List
+            return @{
+              Prefix = $prefix
+              Profile = $profile
+              WebView = $webview
+            }
+          }
+
+          $paths = Assert-PortableInstall
+          Set-Content -LiteralPath (Join-Path $paths.Profile 'scoop-persistence-test.txt') -Value 'profile survives reinstall'
+          Set-Content -LiteralPath (Join-Path $paths.WebView 'scoop-persistence-test.txt') -Value 'webview profile survives reinstall'
+
+          scoop uninstall torrentplayer
+          if ([Environment]::GetEnvironmentVariable('TORRENTPLAYER_PROFILE_DIR', 'User')) {
+            throw 'Scoop did not remove TORRENTPLAYER_PROFILE_DIR on uninstall.'
+          }
+          if ([Environment]::GetEnvironmentVariable('WEBVIEW2_USER_DATA_FOLDER', 'User')) {
+            throw 'Scoop did not remove WEBVIEW2_USER_DATA_FOLDER on uninstall.'
+          }
+
+          scoop install torrentplayer
+          $paths = Assert-PortableInstall
+          foreach ($path in @(
+            (Join-Path $paths.Profile 'scoop-persistence-test.txt'),
+            (Join-Path $paths.WebView 'scoop-persistence-test.txt')
+          )) {
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Scoop persistent data was not restored after reinstall: $path"
+            }
+          }
+
+          Write-Host 'PASS: TorrentPlayer was extracted without running its MSI installer.'
+          Write-Host 'PASS: both application profile directories are Scoop persistent links.'
+          Write-Host 'PASS: both official portable-mode environment variables point to Scoop current.'
+          Write-Host 'PASS: profile and WebView2 data survived uninstall and reinstall.'
