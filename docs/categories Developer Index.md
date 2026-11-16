@@ -601,12 +601,12 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | --- | --- | --- | --- | --- | --- |
 | [oo-appbuster](../bucket/oo-appbuster.json) | 3.1.1029 | — | 2026-11-10 | Portable utility for reviewing, removing and restoring built-in and third-party Windows apps. | [Homepage](https://www.oo-software.com/en/ooappbuster) |
 | [oo-autobackup](../bucket/oo-autobackup.json) | 8.2.1014 | 64bit: 87.6 MiB | — | Automatically back up and synchronize files and folders. | [Homepage](https://www.oo-software.com/en/autobackup-sync-files) |
+| [oo-bluecon](../bucket/oo-bluecon.json) | 25.0.27026 | — | 2026-11-04 | Bootable Windows recovery environment for offline system repair, troubleshooting, and data recovery. | [Homepage](https://www.oo-software.com/en/bluecontrial) |
 | [oo-defrag](../bucket/oo-defrag.json) | 32.1.26138 | — | — | Defragment and optimize Windows storage drives. | [Homepage](https://www.oo-software.com/en/products/oodefrag) |
 | [oo-deskinfo](../bucket/oo-deskinfo.json) | 2.0.1033 | 64bit: 76.3 MiB | 2026-01-28 | Portable desktop system information overlay and resource monitor. | [Homepage](https://www.oo-software.com/en/oodeskinfo) |
 | [oo-diskcommander](../bucket/oo-diskcommander.json) | 5.1.1020 | — | — | Analyze drives and inspect storage contents. | [Homepage](https://www.oo-software.com/en/oodiskcommander) |
 | [oo-diskimage](../bucket/oo-diskimage.json) | 23.2.26060 | — | — | Create and restore full disk images and Windows system backups. | [Homepage](https://www.oo-software.com/en/diskimage-backup-your-data) |
 | [oo-diskrecovery](../bucket/oo-diskrecovery.json) | 14.0.17 | — | — | Recover deleted files and data from damaged file systems. | [Homepage](https://www.oo-software.com/en/products/oodiskrecovery) |
-| [oo-bluecon](../bucket/oo-bluecon.json) | 25.0.27026 | — | 2026-11-04 | Bootable Windows recovery environment for offline system repair, troubleshooting, and data recovery. | [Homepage](https://www.oo-software.com/en/bluecontrial) |
 | [oo-regeditor](../bucket/oo-regeditor.json) | 16.1.6660 | 15.1 MiB | — | Portable advanced Windows Registry editor. | [Homepage](https://www.oo-software.com/en/ooregeditor) |
 | [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
 | [oo-shutup10](../bucket/oo-shutup10.json) | 3.7.1143 | — | 2026-11-10 | Portable privacy utility for reviewing and changing Windows 10 and 11 settings. | [Homepage](https://www.oo-software.com/en/shutup10) |
