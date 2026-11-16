@@ -1031,10 +1031,5 @@
             "find": "SHA256 Hash:[\\s\\S]{0,160}?([a-fA-F\\d]{64})"
         }
     },
-    "notes": "The upstream NirLauncher executable, configuration, and autorun file are removed after extraction. No NirLauncher shortcut or Scoop command shim is created. Individual Start Menu shortcuts are created for the 253 audited GUI utilities; the 11 console-only utilities are excluded. The x64 executable is selected when available. NK2Edit requires a commercial license for business use.",
-    "post_install": [
-        "Remove-Item -LiteralPath \"$dir\\NirLauncher.exe\" -Force -ErrorAction SilentlyContinue",
-        "Remove-Item -LiteralPath \"$dir\\NirLauncher.cfg\" -Force -ErrorAction SilentlyContinue",
-        "Remove-Item -LiteralPath \"$dir\\autorun.inf\" -Force -ErrorAction SilentlyContinue"
-    ]
+    "notes": "The original NirLauncher.exe, NirLauncher.cfg, and autorun.inf are retained in the package root. No NirLauncher shortcut or Scoop command shim is created. Individual Start Menu shortcuts are created for the 253 audited GUI utilities; the 11 console-only utilities are excluded. The x64 executable is selected when available. NK2Edit requires a commercial license for business use."
 }
