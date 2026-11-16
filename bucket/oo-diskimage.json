@@ -39,5 +39,5 @@
     "autoupdate": {
         "url": "https://package.oo-software.com/winget/diskimage/$version/oodiskimage_$version_premium_eng_x64.msi#/setup.msi_"
     },
-    "notes": "Nonportable: installs the OODiskImagePremiumService Windows service through O&O's official MSI package. Installation and removal require administrator approval; a restart may be requested."
+    "notes": "Nonportable: installs the OODiskImagePremiumService Windows service through O&O's official MSI package. Installation and removal require administrator approval; a restart may be requested. Scoop retains the original MSI in its version directory so its ProductCode remains available for native Windows Installer removal."
 }
