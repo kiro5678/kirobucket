@@ -159,6 +159,87 @@ jobs:
           Write-Output "Detect It Easy version: $($dieRelease.tag_name)"
           $dieOutput | ForEach-Object { Write-Output $_ }
 
+          # Test the exact Inno Setup extraction helper used by Scoop.
+          $innounpUrl = "https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip"
+          $innounpExpectedHash = "10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd"
+          $innounpZip = Join-Path $workDir "innounp-2.zip"
+          $innounpRoot = Join-Path $workDir "innounp-helper"
+          $innoExtractRoot = Join-Path $workDir "innosetup-app-payload"
+
+          Invoke-WebRequest -Uri $innounpUrl -OutFile $innounpZip -MaximumRedirection 5 -TimeoutSec 180
+          $innounpActualHash = (Get-FileHash -LiteralPath $innounpZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($innounpActualHash -ne $innounpExpectedHash) {
+            throw "Scoop innounp helper SHA-256 mismatch. Expected $innounpExpectedHash; received $innounpActualHash."
+          }
+
+          Expand-Archive -LiteralPath $innounpZip -DestinationPath $innounpRoot -Force
+          $innounp = Get-ChildItem -LiteralPath $innounpRoot -Filter "innounp.exe" -File -Recurse |
+            Select-Object -First 1
+          if (-not $innounp) { throw "The verified Scoop innounp archive did not contain innounp.exe." }
+
+          New-Item -ItemType Directory -Path $innoExtractRoot -Force | Out-Null
+          $innounpList = @(& $innounp.FullName -v $installer 2>&1 | ForEach-Object { "$_" })
+          $innounpListExitCode = $LASTEXITCODE
+          $innounpList | Set-Content -LiteralPath (Join-Path $workDir "03-innounp-list.txt") -Encoding utf8
+          if ($innounpListExitCode -ne 0) {
+            throw "Scoop innounp could not read the Inno Setup installer (exit code $innounpListExitCode)."
+          }
+
+          $innounpExtract = @(& $innounp.FullName -x "-d$innoExtractRoot" $installer "-y" "-c{app}" 2>&1 | ForEach-Object { "$_" })
+          $innounpExtractExitCode = $LASTEXITCODE
+          $innounpExtract | Set-Content -LiteralPath (Join-Path $workDir "04-innounp-extraction.txt") -Encoding utf8
+          if ($innounpExtractExitCode -ne 0) {
+            throw "Scoop innounp failed to extract the Inno {app} payload (exit code $innounpExtractExitCode): $(($innounpExtract | Select-Object -Last 8) -join ' ')"
+          }
+
+          $payloadFiles = @(Get-ChildItem -LiteralPath $innoExtractRoot -File -Recurse -Force)
+          if ($payloadFiles.Count -eq 0) {
+            throw "innounp returned success but the extracted {app} payload is empty."
+          }
+          $payloadExecutables = @($payloadFiles | Where-Object { $_.Extension -ieq ".exe" })
+          $payloadLibraries = @($payloadFiles | Where-Object { $_.Extension -ieq ".dll" })
+          $portableMarker = Test-Path -LiteralPath (Join-Path $innoExtractRoot "portable.flag") -PathType Leaf
+
+          $payloadReport = [System.Collections.Generic.List[string]]::new()
+          $payloadReport.Add("Scoop innounp extraction test")
+          $payloadReport.Add("=============================")
+          $payloadReport.Add("Helper SHA-256: $innounpActualHash")
+          $payloadReport.Add("innounp list exit code: $innounpListExitCode")
+          $payloadReport.Add("innounp extraction exit code: $innounpExtractExitCode")
+          $payloadReport.Add("Extracted files: $($payloadFiles.Count)")
+          $payloadReport.Add("EXE files: $($payloadExecutables.Count)")
+          $payloadReport.Add("DLL files: $($payloadLibraries.Count)")
+          $payloadReport.Add("portable.flag included by publisher: $portableMarker")
+          $payloadReport.Add("")
+          $payloadReport.Add("Application executables:")
+          foreach ($exe in $payloadExecutables) {
+            $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+            $payloadReport.Add("- $($exe.FullName.Substring($innoExtractRoot.Length).TrimStart('\')) | $($exe.Length) bytes | $($info.FileDescription) | $($info.FileVersion)")
+          }
+          $payloadReport.Add("")
+          $payloadReport.Add("Top-level payload entries:")
+          Get-ChildItem -LiteralPath $innoExtractRoot -Force |
+            ForEach-Object { $payloadReport.Add("- $($_.Name) [$($_.Mode)]") }
+          $payloadReport | Set-Content -LiteralPath (Join-Path $workDir "05-innounp-payload-report.txt") -Encoding utf8
+          $payloadReport | ForEach-Object { Write-Output $_ }
+
+          @(
+            ""
+            "## Scoop-compatible Inno Setup extraction"
+            ""
+            "- **innounp helper SHA-256:** $innounpActualHash"
+            "- **List exit code:** $innounpListExitCode"
+            "- **Extraction exit code:** $innounpExtractExitCode"
+            "- **Extracted files:** $($payloadFiles.Count)"
+            "- **EXE files:** $($payloadExecutables.Count)"
+            "- **DLL files:** $($payloadLibraries.Count)"
+            "- **Publisher included portable.flag:** $portableMarker"
+            ""
+            "### Extracted executables"
+            ""
+            $(if ($payloadExecutables.Count) { $payloadExecutables | ForEach-Object { "- $($_.FullName.Substring($innoExtractRoot.Length).TrimStart('\'))" } } else { "No executable files were found." })
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
           # Scan ASCII and UTF-16 strings for installer-family markers and possible switches.
           # These matches are clues only; they do not prove that a command-line switch works.
           $signatureRegex = [System.Text.RegularExpressions.Regex]::new(
