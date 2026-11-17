@@ -1,0 +1,21 @@
+{
+    "version": "0.5.0",
+    "description": "Windows Services manager with advanced search, dry-run plans, snapshots, and service drift detection.",
+    "homepage": "https://betterwindowsservices.donislawdev.com/",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/donislawdev/BetterWindowsServices/releases/download/v0.5.0/BetterWindowsServices-win-x64.zip",
+    "hash": "a96423ac6f1574c479a8d5cdd6b5d892fe00099519f51a689e8395c4bee750a2",
+    "shortcuts": [
+        [
+            "BetterWindowsServices.exe",
+            "Better Windows Services"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/donislawdev/BetterWindowsServices"
+    },
+    "autoupdate": {
+        "url": "https://github.com/donislawdev/BetterWindowsServices/releases/download/v$version/BetterWindowsServices-win-x64.zip"
+    },
+    "extract_dir": "BetterWindowsServices"
+}

@@ -1,0 +1,20 @@
+{
+    "version": "0.3.0",
+    "description": "Command-line utility for emitting, validating, formatting, and reporting edge-case test-value packs.",
+    "homepage": "https://naughtykeyboard.donislawdev.com/",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/donislawdev/Naughty-Keyboard/releases/download/v0.3.0/nkb_0.3.0_windows_amd64.zip",
+    "hash": "7020199b0142babe513577f148800ba261ca279db8fdbc57bb2d110f05e06995",
+    "bin": [
+        [
+            "nkb.exe",
+            "nkb"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/donislawdev/Naughty-Keyboard"
+    },
+    "autoupdate": {
+        "url": "https://github.com/donislawdev/Naughty-Keyboard/releases/download/v$version/nkb_$version_windows_amd64.zip"
+    }
+}

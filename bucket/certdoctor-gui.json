@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "description": "Graphical interface for diagnosing TLS and certificate trust across Windows and development runtimes.",
+    "homepage": "https://github.com/donislawdev/certdoctor",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/donislawdev/certdoctor/releases/download/v0.2.0/certdoctor-gui_0.2.0_windows_amd64.zip",
+    "hash": "33b2a46e06eb1986dfc7f90fed03cb02a0b732f08f792b6d00c617c88092e56d",
+    "shortcuts": [
+        [
+            "certdoctor-gui.exe",
+            "Cert Doctor"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/donislawdev/certdoctor"
+    },
+    "autoupdate": {
+        "url": "https://github.com/donislawdev/certdoctor/releases/download/v$version/certdoctor-gui_$version_windows_amd64.zip"
+    }
+}
