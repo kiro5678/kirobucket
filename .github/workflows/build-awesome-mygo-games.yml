@@ -66,7 +66,7 @@ jobs:
             description: Windows game environment switcher for keyboard, IME and audio settings.
     steps:
       - name: Check out application source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{ matrix.app.repo }}
           ref: ${{ matrix.app.ref }}
@@ -75,7 +75,7 @@ jobs:
 
       - name: Check out MyGo for Nova
         if: matrix.app.id == 'nova'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: egoist/mygo
           ref: main
@@ -177,7 +177,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out bucket
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: master
           fetch-depth: 0
