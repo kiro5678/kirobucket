@@ -7,7 +7,7 @@
         "64bit": {
             "url": "https://github.com/skwir-org/skwir/releases/download/v0.5.1/skwir-0.5.1-windows-x86_64.zip",
             "hash": "b1d05c3cdaeb174693ffa906b6374e23f44d1fba01241c9b068bd229644ecea9",
-            "extract_dir": "skwir-$version-windows-x86_64"
+            "extract_dir": "skwir-0.5.1-windows-x86_64"
         }
     },
     "bin": "skwir.exe",
