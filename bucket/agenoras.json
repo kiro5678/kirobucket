@@ -10,20 +10,24 @@
         }
     },
     "pre_install": [
-        "$payload = Join-Path $dir '$PLUGINSDIR\\app-64.7z'",
+        "$scoopRoot = if (-not [string]::IsNullOrWhiteSpace($env:SCOOP)) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }",
+        "$appRoot = Join-Path $scoopRoot 'apps\\agenoras'",
+        "$appVersionDir = Get-ChildItem -LiteralPath $appRoot -Directory -Force -ErrorAction Stop | Where-Object { $_.Name -ne 'current' } | Sort-Object CreationTimeUtc -Descending | Select-Object -First 1",
+        "if (-not $appVersionDir) { throw 'Could not locate the new Agenoras Scoop version directory.' }",
+        "$appDir = $appVersionDir.FullName",
+        "$payload = Join-Path $appDir '$PLUGINSDIR\\app-64.7z'",
         "if (-not (Test-Path -LiteralPath $payload -PathType Leaf)) { throw 'Agenoras nested app-64.7z payload was not found in the NSIS extraction.' }",
-        "$sevenZip = Join-Path $env:SCOOP 'apps\\7zip\\current\\7z.exe'",
-        "if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }",
-        "& $sevenZip x $payload \"-o$dir\" -y -bd",
-        "if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $dir 'Agenoras.exe') -PathType Leaf)) { throw 'Could not extract the Agenoras application payload.' }",
-        "$data = Join-Path $dir 'data'",
+        "$sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source",
+        "& $sevenZip x $payload \"-o$appDir\" -y -bd",
+        "if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $appDir 'Agenoras.exe') -PathType Leaf)) { throw 'Could not extract the Agenoras application payload.' }",
+        "$data = Join-Path $appDir 'data'",
         "New-Item -ItemType Directory -Path $data -Force | Out-Null",
-        "$launcher = Join-Path $dir 'Agenoras-portable.cmd'",
+        "$launcher = Join-Path $appDir 'Agenoras-portable.cmd'",
         "$launcherContent = [string]::Join([Environment]::NewLine, @('@echo off', 'setlocal', 'set \"APPDATA=%~dp0data\\Roaming\"', 'set \"LOCALAPPDATA=%~dp0data\\Local\"', 'if not exist \"%APPDATA%\" mkdir \"%APPDATA%\"', 'if not exist \"%LOCALAPPDATA%\" mkdir \"%LOCALAPPDATA%\"', 'start \"\" /D \"%~dp0\" \"%~dp0Agenoras.exe\" %*', ''))",
         "[System.IO.File]::WriteAllText($launcher, $launcherContent, [System.Text.Encoding]::ASCII)",
-        "Remove-Item -LiteralPath (Join-Path $dir '$PLUGINSDIR') -Recurse -Force",
-        "Remove-Item -LiteralPath (Join-Path $dir '$R0') -Recurse -Force -ErrorAction SilentlyContinue",
-        "Remove-Item -LiteralPath (Join-Path $dir 'dl.7z') -Force -ErrorAction SilentlyContinue"
+        "Remove-Item -LiteralPath (Join-Path $appDir '$PLUGINSDIR') -Recurse -Force",
+        "Remove-Item -LiteralPath (Join-Path $appDir '$R0') -Recurse -Force -ErrorAction SilentlyContinue",
+        "Remove-Item -LiteralPath (Join-Path $appDir 'dl.7z') -Force -ErrorAction SilentlyContinue"
     ],
     "bin": [
         [
