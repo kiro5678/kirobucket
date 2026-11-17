@@ -1,0 +1,116 @@
+name: Temporary Agenoras Scoop Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/test-agenoras-scoop-install.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  install-test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+          }
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
+          $env:SCOOP = $scoopRoot
+          $env:Path = (Join-Path $scoopRoot 'shims') + ';' + $env:Path
+          (Join-Path $scoopRoot 'shims') | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          scoop --version
+
+      - name: Install Agenoras from the manifest and verify portable layout
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\agenoras.json'
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            throw "Agenoras manifest was not found: $manifestPath"
+          }
+
+          scoop install $manifestPath
+          if ($LASTEXITCODE -ne 0) { throw "Scoop install failed with exit code $LASTEXITCODE." }
+
+          $prefix = (& scoop prefix agenoras | Select-Object -Last 1).Trim()
+          if (-not (Test-Path -LiteralPath $prefix -PathType Container)) {
+            throw "Scoop did not create the Agenoras installation directory: $prefix"
+          }
+
+          $required = @(
+            (Join-Path $prefix 'Agenoras.exe'),
+            (Join-Path $prefix 'Agenoras-portable.cmd'),
+            (Join-Path $prefix 'data')
+          )
+          foreach ($path in $required) {
+            if (-not (Test-Path -LiteralPath $path)) { throw "Required portable payload item is missing: $path" }
+          }
+
+          $launcher = Join-Path $prefix 'Agenoras-portable.cmd'
+          $launcherText = Get-Content -LiteralPath $launcher -Raw
+          foreach ($expected in @('APPDATA=%~dp0data\Roaming','LOCALAPPDATA=%~dp0data\Local','Agenoras.exe')) {
+            if ($launcherText -notmatch [regex]::Escape($expected)) {
+              throw "Portable launcher is missing expected setting: $expected"
+            }
+          }
+
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
+          $persistedData = Join-Path $scoopRoot 'persist\agenoras\data'
+          if (-not (Test-Path -LiteralPath $persistedData -PathType Container)) {
+            throw "Scoop did not create the persisted data directory: $persistedData"
+          }
+
+          $shim = Get-Command agenoras -ErrorAction Stop
+          Write-Host "Scoop prefix: $prefix"
+          Write-Host "Scoop shim: $($shim.Source)"
+          Write-Host "Persisted data: $persistedData"
+
+          $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          $shortcuts = @(Get-ChildItem -LiteralPath $shortcutRoot -Filter 'Agenoras.lnk' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($shortcuts.Count -eq 0) { throw 'The Agenoras Start Menu shortcut was not created.' }
+          $shell = New-Object -ComObject WScript.Shell
+          $shortcut = $shell.CreateShortcut($shortcuts[0].FullName)
+          if (-not (Test-Path -LiteralPath $shortcut.TargetPath -PathType Leaf)) {
+            throw "The Agenoras shortcut target is missing: $($shortcut.TargetPath)"
+          }
+          Write-Host "Start Menu shortcut: $($shortcuts[0].FullName)"
+          Write-Host "Shortcut target: $($shortcut.TargetPath)"
+
+          $mailtoKey = 'HKCU:\Software\Classes\Agenoras.mailto'
+          if (Test-Path -LiteralPath $mailtoKey) {
+            throw 'Portable Scoop install unexpectedly registered the Windows mailto protocol.'
+          }
+
+          @(
+            '## Agenoras Scoop install test'
+            ''
+            '- Scoop installed the manifest successfully.'
+            '- The NSIS installer was extracted; it was not executed.'
+            '- The nested app-64.7z payload was extracted by the manifest pre_install hook.'
+            '- Agenoras.exe and its portable CMD launcher are present.'
+            '- Scoop created the persisted data directory.'
+            '- The Agenoras command shim and Start Menu shortcut exist.'
+            '- No mailto registry association was created.'
+            '- The application itself was not launched.'
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Uninstall test package
+        if: always()
+        shell: pwsh
+        run: |
+          if (Get-Command scoop -ErrorAction SilentlyContinue) {
+            scoop uninstall agenoras
+            if ($LASTEXITCODE -ne 0) { Write-Warning "Scoop uninstall returned exit code $LASTEXITCODE." }
+          }
