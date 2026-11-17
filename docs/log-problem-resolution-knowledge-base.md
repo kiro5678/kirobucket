@@ -1144,3 +1144,9 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Problem:** The Scoop Pester CI check `file newlines are CRLF` failed because this Markdown file contained mixed CRLF and LF line endings. The check reported the checked-out file under `my_bucket/docs/`.
 - **Resolution:** Normalize every line separator to a single CRLF and retain one final CRLF. No Markdown text or repository records were intentionally changed. The repository `.gitattributes` already declares `* text=auto eol=crlf`.
 - **Prevention:** Keep this knowledge base consistently CRLF; after editing it, verify it contains no lone LF or CR characters before committing.
+
+## 2026-11-17 — Correct Multron Download Manager archive root
+
+- **Problem:** Archive validation confirmed the ZIP SHA-256 but failed the declared launch path. The executable is stored at `Multron-Download-Manager/multron-download-manager.exe`, not at the ZIP root.
+- **Resolution:** Set `extract_dir` to `Multron-Download-Manager`. This flattens the verified application directory into Scoop's version directory, so the existing root-relative `bin` and shortcut paths are correct. Keep `persist: "data"` because the app's data directory is beside the executable after extraction.
+- **Prevention:** Check the actual archive listing for the executable, shortcut target, and data folder. Do not infer that a ZIP has a flat root from the README's run command.
