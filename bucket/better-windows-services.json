@@ -16,5 +16,6 @@
     },
     "autoupdate": {
         "url": "https://github.com/donislawdev/BetterWindowsServices/releases/download/v$version/BetterWindowsServices-win-x64.zip"
-    }
+    },
+    "extract_dir": "BetterWindowsServices"
 }

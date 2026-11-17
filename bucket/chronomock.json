@@ -16,5 +16,6 @@
     },
     "autoupdate": {
         "url": "https://github.com/donislawdev/ChronoMock/releases/download/v$version/ChronoMock-app-win-x64.zip"
-    }
+    },
+    "extract_dir": "ChronoMock"
 }
