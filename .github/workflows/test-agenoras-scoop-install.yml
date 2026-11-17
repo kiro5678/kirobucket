@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - ".github/workflows/test-agenoras-scoop-install.yml"
+      - "bucket/agenoras.json"
 
 permissions:
   contents: read
