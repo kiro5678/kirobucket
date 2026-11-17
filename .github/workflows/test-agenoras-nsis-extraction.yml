@@ -1,0 +1,114 @@
+name: Temporary Agenoras NSIS extraction check
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/test-agenoras-nsis-extraction.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Verify and unpack the official NSIS release without executing it
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $url = "https://github.com/ciegolink/agenoras/releases/download/v0.1.9/Agenoras-Setup.exe"
+          $expected = "6825846c798f236c9c029442c66e7633c0c48d1788b8916f2cd46fb07036170a"
+          $root = Join-Path $env:RUNNER_TEMP "agenoras-nsis"
+          $installer = Join-Path $root "Agenoras-Setup.exe"
+          $outer = Join-Path $root "outer"
+          New-Item -ItemType Directory -Path $outer -Force | Out-Null
+
+          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+            if (-not $command) { throw "7-Zip was not found on the hosted runner." }
+            $sevenZip = $command.Source
+          }
+
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 900
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SHA-256 mismatch. Expected $expected; got $actual." }
+          Write-Host "SHA-256 verified: $actual"
+
+          $bytes = [System.IO.File]::ReadAllBytes($installer)
+          $signatureText = [System.Text.Encoding]::ASCII.GetString($bytes) + [System.Text.Encoding]::Unicode.GetString($bytes)
+          if ($signatureText -notmatch "(?i)NullsoftInst|NSIS") {
+            throw "The binary did not contain an NSIS signature."
+          }
+          Write-Host "Static signature: NSIS"
+
+          $listing = & $sevenZip l -slt $installer 2>&1
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $root "nsis-listing.txt") -Encoding utf8
+          Write-Host "7-Zip list exit code: $listExit"
+          if ($listExit -ne 0) { throw "7-Zip could not list the NSIS installer." }
+
+          $output = & $sevenZip x $installer "-o$outer" -y -bd 2>&1
+          $extractExit = $LASTEXITCODE
+          $output | Set-Content -LiteralPath (Join-Path $root "nsis-extraction.log") -Encoding utf8
+          Write-Host "7-Zip outer extraction exit code: $extractExit"
+          if ($extractExit -ne 0) { throw "7-Zip could not extract the NSIS installer." }
+
+          $searchDirs = [System.Collections.Generic.List[string]]::new()
+          $searchDirs.Add($outer)
+          $nestedArchives = @(Get-ChildItem -LiteralPath $outer -File -Recurse -Force |
+            Where-Object { $_.Extension.ToLowerInvariant() -in @(".7z", ".zip", ".cab") })
+          foreach ($archive in $nestedArchives) {
+            $name = [System.IO.Path]::GetFileNameWithoutExtension($archive.Name)
+            $destination = Join-Path $root ("nested-" + ($name -replace "[^A-Za-z0-9_-]", "-"))
+            New-Item -ItemType Directory -Path $destination -Force | Out-Null
+            Write-Host "Nested archive: $($archive.FullName) [$($archive.Length) bytes]"
+            $nestedOutput = & $sevenZip x $archive.FullName "-o$destination" -y -bd 2>&1
+            $nestedExit = $LASTEXITCODE
+            $nestedOutput | Set-Content -LiteralPath (Join-Path $root ("nested-" + $name + ".log")) -Encoding utf8
+            Write-Host "Nested extraction exit code: $nestedExit"
+            if ($nestedExit -eq 0) { $searchDirs.Add($destination) }
+          }
+
+          $files = @()
+          foreach ($directory in $searchDirs) {
+            $files += Get-ChildItem -LiteralPath $directory -File -Recurse -Force |
+              ForEach-Object {
+                [PSCustomObject]@{
+                  Root = Split-Path -Leaf $directory
+                  RelativePath = [System.IO.Path]::GetRelativePath($directory, $_.FullName).Replace("\", "/")
+                  Name = $_.Name
+                  Size = $_.Length
+                }
+              }
+          }
+
+          $files | Sort-Object Root, RelativePath | Format-Table -AutoSize
+          $main = @($files | Where-Object { $_.Name -ieq "Agenoras.exe" })
+          $uninstaller = @($files | Where-Object { $_.Name -match "(?i)^Uninstall.*\.exe$" })
+          Write-Host "Agenoras.exe found: $($main.Count)"
+          Write-Host "Uninstaller candidates: $($uninstaller.Name -join ', ')"
+          if ($main.Count -eq 0) {
+            throw "The main Agenoras executable was not found in the extracted NSIS payload."
+          }
+
+          $nestedMain = @($main | Where-Object { $_.Root -like "nested-*" })
+          $method = if ($nestedMain.Count -gt 0) { "NSIS #/dl.7z plus second-stage nested archive extraction" } else { "NSIS #/dl.7z direct extraction" }
+          @(
+            "## Agenoras extraction check"
+            ""
+            "- Release: v0.1.9"
+            "- SHA-256: verified"
+            "- Installer signature: NSIS"
+            "- Outer 7-Zip extraction: success"
+            "- Nested archives: $($nestedArchives.Count)"
+            "- Main executable: $($main.RelativePath -join ', ')"
+            "- Uninstaller candidates: $($uninstaller.Name -join ', ')"
+            "- Candidate portable method: $method"
+            "- The installer was not executed."
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
