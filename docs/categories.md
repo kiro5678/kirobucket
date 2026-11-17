@@ -11,15 +11,15 @@
 | Cross-Device Integration | 7 | [View](#cross-device-integration) |
 | Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
 | Disk Monitor | 9 | [View](#disk-monitor) |
-| Download Managers | 24 | [View](#download-managers) |
+| Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
-| Forensics & Diagnostics | 36 | [View](#forensics-diagnostics) |
+| Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 20 | [View](#games-game-utilities) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 55 | [View](#media-audio-video) |
+| Media & Audio/Video | 56 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
@@ -42,7 +42,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1220**
+**Total unique categorized manifests: 1223**
 
 
 ## Android & Device Tools
@@ -242,6 +242,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [imfile](../bucket/imfile.json) | 2.3.4 | 64bit: 152.0 MiB / arm64: 141.8 MiB | 2026-08-13 | Full-featured download manager for HTTP, FTP, BitTorrent, Magnet and eD2k. | [Homepage](https://github.com/imfile-io/imfile-desktop) |
 | [misterdownloadmanager](../bucket/misterdownloadmanager.json) | 0.5.2 | 19.0 MiB | 2026-11-09 | Open-source Rust download manager for Windows with multi-connection downloads, torrent support, and browser integration. | [Homepage](https://github.com/anefzaoui/misterdownloadmanager) |
 | [motrix](../bucket/motrix.json) | 2.0.1 | 64bit: 159.8 MiB / arm64: 157.3 MiB | 2026-10-29 | Open-source download manager powered by aria2. | [Homepage](https://github.com/agalwood/Motrix) |
+| [multron-download-manager](../bucket/multron-download-manager.json) | 0.0.11 | 12.4 MiB | 2026-10-29 | Multi-connection download manager with video downloads, torrents and browser extensions. | [Homepage](https://github.com/Multron-Community/Multron-Download-Manager) |
 | [omniget](../bucket/omniget.json) | 0.10.1 | 64bit: 116.5 MiB | 2026-09-21 | Desktop download manager and local MCP server for downloads, media, files, chats, and developer tools. | [Homepage](https://getomniget.com) |
 | [omniget-openselena](../bucket/omniget-openselena.json) | 0.16.6 | 64bit: 101.3 MiB | 2026-11-13 | Independent LibreGet fork of OmniGet with course, video, music, and social-platform downloads plus built-in media tools. | [Homepage](https://github.com/OpenSelena/libreget) |
 | [prism-download-manager](../bucket/prism-download-manager.json) | 1.2.4 | 16.5 MiB | 2026-11-01 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
@@ -414,6 +415,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [eric-xwfim](../bucket/eric-xwfim.json) | 2026.10.1 | 89.6 MiB | 2026-10-26 | Eric Zimmerman's XWFIM: Installation manager for X-Ways Forensics. | [Homepage](https://ericzimmerman.github.io/) |
 | [joas-drivertrust-auditor](../bucket/joas-drivertrust-auditor.json) | 5 | 48.5 KiB source + PySide6 | 2025-08-25 | DriverTrust Auditor: inventories Windows drivers, verifies signatures, and evaluates WDAC/HVCI and LOLDrivers risk. | [Homepage](https://github.com/JoasASantos/DriverTrust-Auditor) |
 | [oo-bluecon](../bucket/oo-bluecon.json) | 25.0.27026 | 338.3 MiB | 2026-11-04 | Bootable Windows recovery environment for offline system repair, troubleshooting, and data recovery. | [Homepage](https://www.oo-software.com/en/bluecontrial) |
+| [sak-utility](../bucket/sak-utility.json) | 0.9.3 | 90.0 MiB | 2026-11-16 | Portable Windows technician toolkit for profile migration, diagnostics, application management, disk and USB imaging, network and email tools. | [Homepage](https://github.com/RandyNorthrup/S.A.K.-Utility) |
 | [triagesuite](../bucket/triagesuite.json) | 0.3.0 | 64bit: 56.5 MiB / arm64: 34.9 MiB | 2026-09-20 | Rust-based forensic parsers and orchestrator for offline Velociraptor Windows triage captures. | [Homepage](https://github.com/darkoperator/TriageSuite) |
 
 ## Games & Game Utilities
@@ -565,6 +567,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [screenbox](../bucket/screenbox.json) | 0.24.0 | 64bit: 167.0 MiB | 2026-10-24 | LibVLC-based media player for the Universal Windows Platform. | [Homepage](https://github.com/huynhsontung/Screenbox) |
 | [shotcut](../bucket/shotcut.json) | 26.9.27 | 64bit: 203.5 MiB / arm64: 152.0 MiB | 2026-09-28 | Free, open source, cross-platform video editor. | [Homepage](https://www.shotcut.org) |
 | [sukut](../bucket/sukut.json) | 0.2.33 | 56.8 MiB | 2026-10-20 | Windows x64 audio utility that filters music from app audio to focus on speech. | [Homepage](https://github.com/altarafiya/Sukut) |
+| [stream-goat](../bucket/stream-goat.json) | 9.0.1 | 129.9 MiB | 2026-11-16 | Streaming media center for movies, series, anime and Live TV with CloudStream extensions and Stremio add-ons. | [Homepage](https://github.com/sherazi5110/stream-goat) |
 | [ventic](../bucket/ventic.json) | 0.5.0 | 71.3 MiB | 2026-08-28 | A media library and BitTorrent player for the desktop and Android TV. | [Homepage](https://github.com/ventic/ventic) |
 | [video2x](../bucket/video2x.json) | 6.4.0 | 64bit: 217.0 MiB | 2025-01-24 | A Machine learning-based lossless video super resolution framework | [Homepage](https://github.com/k4yt3x/video2x) |
 | [vidray](../bucket/vidray.json) | — | — | — | Local video compressor and converter with bundled FFmpeg. | [Homepage](https://vidray.app/) |
