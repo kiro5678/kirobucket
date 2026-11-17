@@ -266,9 +266,14 @@ jobs:
             for ($assetIndex = 0; $assetIndex -lt $sourceUrls.Count; $assetIndex++) {
               $candidateUrl = [string]$sourceUrls[$assetIndex]
               $downloadUrl = ($candidateUrl -split '#', 2)[0]
-              if ($downloadUrl -notmatch '(?i)\.exe$') { continue }
-
-              $installerName = [System.IO.Path]::GetFileName(([System.Uri]$downloadUrl).AbsolutePath)
+              $candidateUri = [System.Uri]$candidateUrl
+              $fragmentName = [System.Uri]::UnescapeDataString($candidateUri.Fragment.TrimStart('#'))
+              if ($fragmentName -match '^/(?<name>[^/]+\.exe)$') {
+                $installerName = $Matches.name
+              } else {
+                if ($downloadUrl -notmatch '(?i)\.exe$') { continue }
+                $installerName = [System.IO.Path]::GetFileName(([System.Uri]$downloadUrl).AbsolutePath)
+              }
               if ([string]::IsNullOrWhiteSpace($installerName)) {
                 throw "Could not determine the EXE filename for $env:MANIFEST_PATH."
               }
