@@ -9,9 +9,6 @@
             "hash": "6825846c798f236c9c029442c66e7633c0c48d1788b8916f2cd46fb07036170a"
         }
     },
-    "depends": [
-        "7zip"
-    ],
     "pre_install": [
         "$payload = Join-Path $dir '$PLUGINSDIR\\app-64.7z'",
         "if (-not (Test-Path -LiteralPath $payload -PathType Leaf)) { throw 'Agenoras nested app-64.7z payload was not found in the NSIS extraction.' }",
