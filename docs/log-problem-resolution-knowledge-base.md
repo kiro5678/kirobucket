@@ -49,6 +49,15 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - When a new incident exposes a general repository rule, update the relevant permanent guide (for example, `docs/manifest-authoring.md`) as well as adding the incident entry here.
 
 ## Resolved incidents
+### 2026-11-17 — Extract and smoke-test Agenoras' nested NSIS payload
+
+- **Status:** Resolved and verified for payload extraction and process startup; application features and uninstall cleanup remain untested.
+- **Affected area:** `bucket/agenoras.json`; `docs/manifest-authoring.md`; `docs/manifest-portability.md`.
+- **Problem:** The official Agenoras v0.1.9 Windows download is an NSIS setup EXE. Its outer archive contains the actual Electron application in `$PLUGINSDIR\app-64.7z`, so a single 7-Zip extraction does not expose `Agenoras.exe` at the Scoop app root.
+- **Root cause:** The publisher's electron-builder NSIS package uses a second-stage 7-Zip archive inside the outer NSIS payload.
+- **Resolution:** Use the verified official setup URL with `#/dl.7z`, then extract the nested `app-64.7z` in `pre_install`. Scoop runs `pre_install` after archive extraction and before generating shims and shortcuts, so `Agenoras.exe` is present when `bin` and `shortcuts` are processed. The vendor installer is not executed; therefore its mailto and Registered Applications registry entries are not created. The manifest leaves Electron user data at its documented default `%APPDATA%\Agenoras` location instead of assuming an unverified data-directory override.
+- **Verification:** [NSIS extraction diagnostic](https://github.com/kiro5678/kirobucket/actions/runs/44091249226) verified the official SHA-256, NSIS signature, outer archive extraction, nested archive extraction, and `Agenoras.exe` path. [Launch smoke test](https://github.com/kiro5678/kirobucket/actions/runs/44094924059) passed on Windows Server 2025: the extracted executable remained running for 15 seconds without running setup. [Workflow lint](https://github.com/kiro5678/kirobucket/actions/runs/44094924038) passed. Manifest Checkver passed in both PowerShell shells ([run](https://github.com/kiro5678/kirobucket/actions/runs/44092597387)); archive validation ([run](https://github.com/kiro5678/kirobucket/actions/runs/44092695401)), Autoupdate validation ([run](https://github.com/kiro5678/kirobucket/actions/runs/44092787565)), and CI ([run](https://github.com/kiro5678/kirobucket/actions/runs/44092884361)) passed on the preceding manifest revisions. GUI interaction, account setup, mail/calendar synchronization, updater execution, and uninstall cleanup were not tested.
+- **Prevention:** For NSIS installers that contain nested archives, inspect and verify each layer. Run the second extraction in `pre_install` when the final executable is referenced by `bin` or `shortcuts`; do not assume a successful outer extraction is a complete application payload.
 ### 2026-11-17 — Correct LLPlayer GitHub checkver repository URL
 
 - **Status:** Resolved and verified.
