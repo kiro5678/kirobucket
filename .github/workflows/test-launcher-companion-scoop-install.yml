@@ -51,7 +51,7 @@ jobs:
             throw "Official Scoop checkver script was not found: $checkver"
           }
           & $checkver -App 'launcher-companion' -Dir $bucketPath -ThrowError
-          if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed with exit code $LASTEXITCODE." }
+          if (-not $?) { throw 'Official Scoop checkver reported an unsuccessful result.' }
 
       - name: Install Launcher Companion and verify portable persistence
         shell: pwsh
