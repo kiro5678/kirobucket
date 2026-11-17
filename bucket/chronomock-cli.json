@@ -1,0 +1,20 @@
+{
+    "version": "0.6.0-rc.1",
+    "description": "Command-line tool for running Windows applications with simulated dates, times, and accelerated clocks.",
+    "homepage": "https://chronomock.donislawdev.com/cli-reference/",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/donislawdev/ChronoMock/releases/download/v0.6.0-rc.1/ChronoMock-cli-win.zip",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "bin": [
+        [
+            "chrono.exe",
+            "chrono"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/donislawdev/ChronoMock"
+    },
+    "autoupdate": {
+        "url": "https://github.com/donislawdev/ChronoMock/releases/download/v$version/ChronoMock-cli-win.zip"
+    }
+}

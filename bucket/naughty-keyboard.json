@@ -1,0 +1,20 @@
+{
+    "version": "0.3.0",
+    "description": "Send edge-case test values such as invisible Unicode, boundary lengths, and malformed dates into Windows forms.",
+    "homepage": "https://naughtykeyboard.donislawdev.com/",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/donislawdev/Naughty-Keyboard/releases/download/v0.3.0/nkb-gui_0.3.0_windows_amd64.zip",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "shortcuts": [
+        [
+            "nkb-gui.exe",
+            "Naughty Keyboard"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/donislawdev/Naughty-Keyboard"
+    },
+    "autoupdate": {
+        "url": "https://github.com/donislawdev/Naughty-Keyboard/releases/download/v$version/nkb-gui_$version_windows_amd64.zip"
+    }
+}

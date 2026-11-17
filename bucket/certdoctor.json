@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "description": "Diagnose TLS and certificate trust problems across Windows, Java, Git, curl, Node.js, and Python stores.",
+    "homepage": "https://github.com/donislawdev/certdoctor",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/donislawdev/certdoctor/releases/download/v0.2.0/certdoctor_0.2.0_windows_amd64.zip",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "bin": [
+        [
+            "certdoctor.exe",
+            "certdoctor"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/donislawdev/certdoctor"
+    },
+    "autoupdate": {
+        "url": "https://github.com/donislawdev/certdoctor/releases/download/v$version/certdoctor_$version_windows_amd64.zip"
+    }
+}

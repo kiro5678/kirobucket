@@ -1,0 +1,20 @@
+{
+    "version": "0.6.0-rc.1",
+    "description": "Run Windows applications against a simulated date and time without changing the system clock.",
+    "homepage": "https://chronomock.donislawdev.com/",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/donislawdev/ChronoMock/releases/download/v0.6.0-rc.1/ChronoMock-app-win-x64.zip",
+    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "shortcuts": [
+        [
+            "ChronoMock.exe",
+            "Chrono Mock"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/donislawdev/ChronoMock"
+    },
+    "autoupdate": {
+        "url": "https://github.com/donislawdev/ChronoMock/releases/download/v$version/ChronoMock-app-win-x64.zip"
+    }
+}
