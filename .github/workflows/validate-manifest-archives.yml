@@ -215,6 +215,7 @@ on:
       - 'bucket/reclaim.json'
       - 'bucket/xdman.json'
       - 'bucket/winmac-dock.json'
+      - 'bucket/llplayer.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -446,6 +447,7 @@ on:
       - 'bucket/reclaim.json'
       - 'bucket/xdman.json'
       - 'bucket/winmac-dock.json'
+      - 'bucket/llplayer.json'
   workflow_dispatch:
     inputs:
       manifest:

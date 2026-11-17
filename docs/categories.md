@@ -19,7 +19,7 @@
 | Games & Game Utilities | 20 | [View](#games-game-utilities) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 56 | [View](#media-audio-video) |
+| Media & Audio/Video | 57 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
@@ -42,7 +42,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1223**
+**Total unique categorized manifests: 1224**
 
 
 ## Android & Device Tools
@@ -550,6 +550,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [haruna](../bucket/haruna.json) | 1944 | 64bit: 108.1 MiB | 2026-05-19 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
 
 | [kando](../bucket/kando.json) | 0.12.0 | 64bit: 12.2 MiB / arm64: 10.9 MiB | 2026-11-11 | Learn languages from videos with local speech transcription and bilingual subtitles. | [Homepage](https://github.com/yldm-tech/Kando) |
+| [llplayer](../bucket/llplayer.json) | 0.3.0 | 64bit: 202.9 MiB | 2026-04-19 | Media player for language learning with dual subtitles, AI-generated subtitles, and real-time translation. | [Homepage](https://llplayer.com) |
 | [softwareok-lauschangriff](../bucket/softwareok-lauschangriff.json) | 2.51 | 64bit: 141.0 KiB | 2021-05-15 | Portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) |
 | [pake-lizhi](../bucket/pake-lizhi.json) | 3.18.0 | 64bit: 3.9 MiB | 2026-11-04 | Pake-generated desktop wrapper for LiZhi. | [Homepage](https://lizhi.dengdengju.com/?from=pake) |
 | [softwareok-mediaplayerok](../bucket/softwareok-mediaplayerok.json) | 1.01 | 64bit: 229.0 KiB | 2026-06-11 | Portable media player with playlists and automatic resume playback. | [Homepage](https://www.softwareok.com/?Download=MediaPlayerOK) |
