@@ -33,14 +33,9 @@
     ],
     "shortcuts": [
         [
-            "Agenoras-portable.cmd",
-            "Agenoras",
-            "",
-            "Agenoras.exe"
+            "Agenoras.exe",
+            "Agenoras"
         ]
-    ],
-    "persist": [
-        "data"
     ],
     "checkver": {
         "url": "https://api.github.com/repos/ciegolink/agenoras/releases/latest",
@@ -56,7 +51,7 @@
     },
     "notes": [
         "The official Windows release is an NSIS installer containing a nested app-64.7z archive. Scoop extracts both layers with 7-Zip; the installer is not executed.",
-        "The Electron user-data directory is redirected to the persisted data folder inside Scoop.",
+        "Electron stores settings and user data in its default userData directory under %APPDATA%\\Agenoras; this data remains outside the Scoop application directory.",
         "The original NSIS installer registers Agenoras as a Windows mail app and mailto protocol handler. This portable manifest intentionally does not write those registry associations."
     ]
 }
