@@ -1,11 +1,6 @@
 name: Excavator
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/excavator.yml'
   workflow_dispatch:
   schedule:
     # run every 4 hours
@@ -43,6 +38,7 @@ jobs:
         env:
           # Optional dedicated token with Actions read permission; falls back to the workflow token.
           GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN || github.token }}
+          EVENT_NAME: ${{ github.event_name }}
           EXCAVATE_RESULT: ${{ needs.excavate.result }}
         run: |
           $ErrorActionPreference = 'Stop'
@@ -56,6 +52,10 @@ jobs:
           }
 
           try {
+            if ($env:EVENT_NAME -notin @('schedule', 'workflow_dispatch', 'repository_dispatch')) {
+              throw "Unsupported Excavator trigger '$env:EVENT_NAME'. Use schedule or workflow_dispatch."
+            }
+
             $jobsUri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID/jobs?per_page=100"
             $jobList = Invoke-RestMethod -Uri $jobsUri -Headers $headers -TimeoutSec 60 -ErrorAction Stop
             $excavateJob = @($jobList.jobs | Where-Object { $_.name -eq 'Excavate' } | Select-Object -First 1)
