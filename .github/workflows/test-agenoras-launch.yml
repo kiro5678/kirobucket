@@ -1,0 +1,74 @@
+name: Temporary Agenoras launch smoke test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/test-agenoras-launch.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  launch:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Extract and launch the official Agenoras payload
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $url = "https://github.com/ciegolink/agenoras/releases/download/v0.1.9/Agenoras-Setup.exe"
+          $expected = "6825846c798f236c9c029442c66e7633c0c48d1788b8916f2cd46fb07036170a"
+          $root = Join-Path $env:RUNNER_TEMP "agenoras-launch-test"
+          $installer = Join-Path $root "Agenoras-Setup.exe"
+          $outer = Join-Path $root "outer"
+          $appDir = Join-Path $root "app"
+          New-Item -ItemType Directory -Path $outer,$appDir -Force | Out-Null
+
+          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+            if (-not $command) { throw "7-Zip was not found." }
+            $sevenZip = $command.Source
+          }
+
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 900
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SHA-256 mismatch: $actual" }
+
+          & $sevenZip x $installer "-o$outer" -y -bd | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw "Outer NSIS extraction failed: $LASTEXITCODE" }
+          $payload = Join-Path $outer '$PLUGINSDIR\app-64.7z'
+          if (-not (Test-Path -LiteralPath $payload -PathType Leaf)) { throw "Nested app-64.7z was not found." }
+
+          & $sevenZip x $payload "-o$appDir" -y -bd | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw "Nested app extraction failed: $LASTEXITCODE" }
+          $exe = Join-Path $appDir "Agenoras.exe"
+          if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Agenoras.exe is missing." }
+
+          $process = Start-Process -FilePath $exe -WorkingDirectory $appDir -PassThru
+          try {
+            Start-Sleep -Seconds 15
+            $process.Refresh()
+            if ($process.HasExited) {
+              throw "Agenoras exited during the 15-second launch smoke test with exit code $($process.ExitCode)."
+            }
+            Write-Host "PASS: Agenoras.exe started and remained running for 15 seconds (PID $($process.Id))."
+            @(
+              "## Agenoras launch smoke test"
+              ""
+              "- Official v0.1.9 SHA-256: verified"
+              "- NSIS outer and nested 7-Zip extraction: passed"
+              "- Agenoras.exe: started and remained running for 15 seconds"
+              "- GUI interaction, account setup, mail/calendar sync, updates, and uninstall cleanup: not tested"
+            ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          }
+          finally {
+            if (-not $process.HasExited) {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            }
+          }
