@@ -19,7 +19,7 @@
 | Games & Game Utilities | 20 | [View](#games-game-utilities) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 57 | [View](#media-audio-video) |
+| Media & Audio/Video | 58 | [View](#media-audio-video) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
@@ -42,7 +42,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1224**
+**Total unique categorized manifests: 1225**
 
 
 ## Android & Device Tools
@@ -548,6 +548,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [funk-ssd](../bucket/funk-ssd.json) | 4 | 535.3 KiB | 2025-06-25 | Changes the default Windows playback, recording, and communication sound devices through shortcuts or command-line options. | [Homepage](https://funk.eu/ssd/) |
 | [fxsound](../bucket/fxsound.json) | 1.2.17.0 | 64bit: 75.6 MiB / arm64: 67.1 MiB | 2026-10-12 | Audio enhancer and sound equalizer for Windows (latest Beta). | [Homepage](https://github.com/fxsound2/fxsound-app) |
 | [haruna](../bucket/haruna.json) | 1944 | 64bit: 108.1 MiB | 2026-05-19 | An open source media player built with Qt/QML and libmpv | [Homepage](https://haruna.kde.org/) |
+| [kairos](../bucket/kairos.json) | 1.1.2 | 64bit: 103.8 MiB | 2026-10-24 | Instant replay, game recording and clip editing for Windows games. | [Homepage](https://github.com/BasilForge/Kairos) |
 
 | [kando](../bucket/kando.json) | 0.12.0 | 64bit: 12.2 MiB / arm64: 10.9 MiB | 2026-11-11 | Learn languages from videos with local speech transcription and bilingual subtitles. | [Homepage](https://github.com/yldm-tech/Kando) |
 | [llplayer](../bucket/llplayer.json) | 0.3.0 | 64bit: 202.9 MiB | 2026-04-19 | Media player for language learning with dual subtitles, AI-generated subtitles, and real-time translation. | [Homepage](https://llplayer.com) |

@@ -1136,3 +1136,11 @@ The repository CI remains responsible for validating manifest syntax and schema 
 - **Workflow results:** Multi-Engine Installer Type Inspector completed successfully; Review Manifest Installer and Archive Inspector completed successfully with SHA-256 PASS, INNO LIST + EXTRACT PASS, and zero blocking errors; actionlint and PR-title lint passed. No app installation or launch test was performed.
 - **Classification:** Keep Anton as Review until launch, updater behavior, and user-data paths are checked. Extraction alone does not establish full runtime portability.
 - **Follow-up:** Run a controlled Windows smoke test for anton-studio.exe from the extracted Scoop directory, inspect first-run writes, and confirm whether the updater can be disabled or redirected so Scoop remains the update source.
+
+## 2026-11-17 — Normalize the problem-resolution knowledge base line endings
+
+- **Status:** Corrected; final CI verification is tracked by the Kairos manifest change.
+- **Affected file:** `docs/log-problem-resolution-knowledge-base.md`.
+- **Problem:** The Scoop Pester CI check `file newlines are CRLF` failed because this Markdown file contained mixed CRLF and LF line endings. The check reported the checked-out file under `my_bucket/docs/`.
+- **Resolution:** Normalize every line separator to a single CRLF and retain one final CRLF. No Markdown text or repository records were intentionally changed. The repository `.gitattributes` already declares `* text=auto eol=crlf`.
+- **Prevention:** Keep this knowledge base consistently CRLF; after editing it, verify it contains no lone LF or CR characters before committing.
