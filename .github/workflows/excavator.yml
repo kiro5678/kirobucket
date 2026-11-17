@@ -25,6 +25,9 @@ jobs:
         uses: ScoopInstaller/GithubActions@5bceeda181721d9d10a18fdcc3ddca6f33467ae6 # v3.0.0
         env:
           SKIP_UPDATED: 1
+          # Optional dedicated token: Actions read/write + Contents read/write.
+          # Keep this separate from CHECKVER_GITHUB_TOKEN to avoid sharing the Checkver quota.
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN || github.token }}
           SCOOP_GH_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
 
   verify:
@@ -38,7 +41,8 @@ jobs:
       - name: Download and classify the completed Excavator job log
         shell: pwsh
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          # Optional dedicated token with Actions read permission; falls back to the workflow token.
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN || github.token }}
           EXCAVATE_RESULT: ${{ needs.excavate.result }}
         run: |
           $ErrorActionPreference = 'Stop'
