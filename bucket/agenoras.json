@@ -19,7 +19,7 @@
         "$data = Join-Path $dir 'data'",
         "New-Item -ItemType Directory -Path $data -Force | Out-Null",
         "$launcher = Join-Path $dir 'Agenoras-portable.cmd'",
-        "$launcherContent = '@echo off`r`nsetlocal`r`nstart \"\" \"%~dp0Agenoras.exe\" --user-data-dir=\"%~dp0data\" %*`r`n'",
+        "$launcherContent = [string]::Join([Environment]::NewLine, @('@echo off', 'setlocal', 'set \"APPDATA=%~dp0data\\Roaming\"', 'set \"LOCALAPPDATA=%~dp0data\\Local\"', 'if not exist \"%APPDATA%\" mkdir \"%APPDATA%\"', 'if not exist \"%LOCALAPPDATA%\" mkdir \"%LOCALAPPDATA%\"', 'start \"\" /D \"%~dp0\" \"%~dp0Agenoras.exe\" %*', ''))",
         "[System.IO.File]::WriteAllText($launcher, $launcherContent, [System.Text.Encoding]::ASCII)",
         "Remove-Item -LiteralPath (Join-Path $dir '$PLUGINSDIR') -Recurse -Force",
         "Remove-Item -LiteralPath (Join-Path $dir '$R0') -Recurse -Force -ErrorAction SilentlyContinue",
