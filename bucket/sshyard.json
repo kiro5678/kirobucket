@@ -1,16 +1,16 @@
 {
-    "version": "1.3.1",
+    "version": "1.4.2",
     "description": "Native SSH and SFTP client with terminal tabs, split panes, host management and AI assistance.",
     "homepage": "https://github.com/Licoy/sshyard",
     "license": "AGPL-3.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Licoy/sshyard/releases/download/v1.3.1/sshyard-1.3.1-windows-amd64-portable.zip",
-            "hash": "067be5dd259c93424ebc7dd868fcdd5a15a27c9b6e502982f388147aa583e021"
+            "url": "https://github.com/Licoy/sshyard/releases/download/v1.4.2/sshyard-1.4.2-windows-amd64-portable.zip",
+            "hash": "926ae9962dd96add35a038118107cda39dcb71eeb2893321bef4b4d7b2281b88"
         },
         "arm64": {
-            "url": "https://github.com/Licoy/sshyard/releases/download/v1.3.1/sshyard-1.3.1-windows-arm64-portable.zip",
-            "hash": "5120a017027fbaac9edc0649c5c936fb7f03f37bc0f871fd592022ba6b0ef8ca"
+            "url": "https://github.com/Licoy/sshyard/releases/download/v1.4.2/sshyard-1.4.2-windows-arm64-portable.zip",
+            "hash": "3648da083a36032b96ef9caf689c7475faf6071dd9818a448ab2cf554123201a"
         }
     },
     "bin": "SSHYard.exe",
