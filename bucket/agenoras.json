@@ -1,0 +1,52 @@
+{
+    "version": "0.1.9",
+    "description": "Desktop email, calendar, contacts and task manager",
+    "homepage": "https://github.com/ciegolink/agenoras",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ciegolink/agenoras/releases/download/v0.1.9/Agenoras-Setup.exe#/dl.7z",
+            "hash": "6825846c798f236c9c029442c66e7633c0c48d1788b8916f2cd46fb07036170a"
+        }
+    },
+    "depends": "7zip",
+    "pre_install": [
+        "$payload = Join-Path $dir '$PLUGINSDIR\\app-64.7z'",
+        "if (-not (Test-Path -LiteralPath $payload -PathType Leaf)) { throw 'Agenoras nested app-64.7z payload was not found in the NSIS extraction.' }",
+        "$sevenZip = Join-Path $env:SCOOP 'apps\\7zip\\current\\7z.exe'",
+        "if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }",
+        "& $sevenZip x $payload \"-o$dir\" -y -bd",
+        "if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $dir 'Agenoras.exe') -PathType Leaf)) { throw 'Could not extract the Agenoras application payload.' }",
+        "Remove-Item -LiteralPath (Join-Path $dir '$PLUGINSDIR') -Recurse -Force",
+        "Remove-Item -LiteralPath (Join-Path $dir '$R0') -Recurse -Force -ErrorAction SilentlyContinue",
+        "Remove-Item -LiteralPath (Join-Path $dir 'dl.7z') -Force -ErrorAction SilentlyContinue"
+    ],
+    "bin": "Agenoras.exe",
+    "shortcuts": [
+        [
+            "Agenoras.exe",
+            "Agenoras",
+            "--user-data-dir=$dir\\data"
+        ]
+    ],
+    "persist": [
+        "data"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/ciegolink/agenoras/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ciegolink/agenoras/releases/download/v$version/Agenoras-Setup.exe#/dl.7z"
+            }
+        }
+    },
+    "notes": [
+        "The official Windows release is an NSIS installer containing a nested app-64.7z archive. Scoop extracts both layers with 7-Zip; the installer is not executed.",
+        "The Electron user-data directory is redirected to the persisted data folder inside Scoop.",
+        "The original NSIS installer registers Agenoras as a Windows mail app and mailto protocol handler. This portable manifest intentionally does not write those registry associations."
+    ]
+}
