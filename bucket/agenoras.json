@@ -16,16 +16,27 @@
         "if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }",
         "& $sevenZip x $payload \"-o$dir\" -y -bd",
         "if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $dir 'Agenoras.exe') -PathType Leaf)) { throw 'Could not extract the Agenoras application payload.' }",
+        "$data = Join-Path $dir 'data'",
+        "New-Item -ItemType Directory -Path $data -Force | Out-Null",
+        "$launcher = Join-Path $dir 'Agenoras-portable.cmd'",
+        "$launcherContent = '@echo off`r`nsetlocal`r`nstart \"\" \"%~dp0Agenoras.exe\" --user-data-dir=\"%~dp0data\" %*`r`n'",
+        "[System.IO.File]::WriteAllText($launcher, $launcherContent, [System.Text.Encoding]::ASCII)",
         "Remove-Item -LiteralPath (Join-Path $dir '$PLUGINSDIR') -Recurse -Force",
         "Remove-Item -LiteralPath (Join-Path $dir '$R0') -Recurse -Force -ErrorAction SilentlyContinue",
         "Remove-Item -LiteralPath (Join-Path $dir 'dl.7z') -Force -ErrorAction SilentlyContinue"
     ],
-    "bin": "Agenoras.exe",
+    "bin": [
+        [
+            "Agenoras-portable.cmd",
+            "agenoras"
+        ]
+    ],
     "shortcuts": [
         [
-            "Agenoras.exe",
+            "Agenoras-portable.cmd",
             "Agenoras",
-            "--user-data-dir=$dir\\data"
+            "",
+            "Agenoras.exe"
         ]
     ],
     "persist": [
