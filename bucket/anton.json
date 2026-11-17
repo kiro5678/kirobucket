@@ -12,5 +12,12 @@
         "url": "https://api.antonvideo.app/v1/releases/download/windows"
     },
     "hash": "848f191a25fa75a073fd257b18793a77ed11c146b9f496d791aa5c3e66bf62fb",
-    "innosetup": true
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "anton-studio.exe",
+            "Anton"
+        ]
+    ],
+    "notes": "Scoop extracts the Inno Setup {app} payload; the vendor installer and its install-time actions are not run."
 }
