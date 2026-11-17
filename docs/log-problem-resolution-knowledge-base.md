@@ -49,6 +49,15 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - When a new incident exposes a general repository rule, update the relevant permanent guide (for example, `docs/manifest-authoring.md`) as well as adding the incident entry here.
 
 ## Resolved incidents
+### 2026-11-17 — Correct LLPlayer GitHub checkver repository URL
+
+- **Status:** Resolved and verified.
+- **Affected area:** `bucket/llplayer.json`; PR [#212](https://github.com/kiro5678/kirobucket/pull/212).
+- **Problem:** The initial `checkver.github` value used the shorthand `umlx5h/LLPlayer`. Scoop's Pull Requests workflow reported `Checkver: False`, which also caused `Autoupdate` and `Autoupdate Hash Extraction` to fail.
+- **Root cause:** The Scoop `checkver.github` setting requires the repository URL, not the bare `owner/repository` identifier.
+- **Resolution:** Changed the value to `https://github.com/umlx5h/LLPlayer` while keeping the release asset URL and version format unchanged.
+- **Verification:** The rerun of the repository Pull Requests workflow [44029387218](https://github.com/kiro5678/kirobucket/actions/runs/44029387218) reported `Lint`, `Description`, `License`, `Hashes`, `Checkver`, `Autoupdate`, and `Autoupdate Hash Extraction` all `True`. The archive validation [44029370933](https://github.com/kiro5678/kirobucket/actions/runs/44029370933), workflow validation [44029370954](https://github.com/kiro5678/kirobucket/actions/runs/44029370954), and PR-title lint [44029370984](https://github.com/kiro5678/kirobucket/actions/runs/44029370984) also passed. This verifies manifest checks and archive path inspection; it does not claim a live GUI launch or install/uninstall test.
+- **Prevention:** Use the full `https://github.com/OWNER/REPO` URL with `checkver.github`; do not pass the abbreviated `OWNER/REPO` string.
 ### 2026-11-13 — Restore CRLF compliance for manifest review documentation
 
 - **Status:** Resolved and verified.
