@@ -20,9 +20,10 @@
         "url": "https://github.com/Multron-Community/Multron-Download-Manager/releases/download/v$version/Multron-Download-Manager-$version-x64-portable.zip"
     },
     "notes": [
-        "The portable Windows ZIP keeps settings and the download list in its data directory beside the executable; Scoop persists that directory.",
+        "The ZIP stores the application under a top-level Multron-Download-Manager directory; extract_dir flattens it into the Scoop version directory. Settings and the download list stay in the data folder beside the executable, and Scoop persists that folder.",
         "The upstream repository uses a custom source-available EULA, not an OSI-approved open-source license. Its EULA permits sharing unchanged official packages free of charge.",
         "The portable build updates itself in place. Its built-in updater may change files in the Scoop-managed version directory independently of scoop update.",
         "WebView2 is required; the upstream documentation says it is normally present on Windows 10 and 11."
-    ]
+    ],
+    "extract_dir": "Multron-Download-Manager"
 }
