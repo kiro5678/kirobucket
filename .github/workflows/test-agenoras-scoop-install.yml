@@ -1,7 +1,13 @@
-name: Temporary Agenoras Scoop Install Test
+name: Agenoras Scoop Install Test
 
 on:
   push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/test-agenoras-scoop-install.yml"
+      - "bucket/agenoras.json"
+  pull_request:
     branches:
       - master
     paths:
@@ -86,6 +92,9 @@ jobs:
           if (-not (Test-Path -LiteralPath $shortcut.TargetPath -PathType Leaf)) {
             throw "The Agenoras shortcut target is missing: $($shortcut.TargetPath)"
           }
+          if ($shortcut.TargetPath -notlike '*.cmd') {
+            throw "Agenoras shortcut must invoke its portable launcher, not the raw executable: $($shortcut.TargetPath)"
+          }
           Write-Host "Start Menu shortcut: $($shortcuts[0].FullName)"
           Write-Host "Shortcut target: $($shortcut.TargetPath)"
 
@@ -100,9 +109,9 @@ jobs:
             '- Scoop installed the manifest successfully.'
             '- The NSIS installer was extracted; it was not executed.'
             '- The nested app-64.7z payload was extracted by the manifest pre_install hook.'
-            '- Agenoras.exe and its portable CMD launcher are present.'
+            '- APPDATA and LOCALAPPDATA are redirected into the persisted data folder.'
             '- Scoop created the persisted data directory.'
-            '- The Agenoras command shim and Start Menu shortcut exist.'
+            '- The Agenoras command shim and portable Start Menu shortcut exist.'
             '- No mailto registry association was created.'
             '- The application itself was not launched.'
           ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
