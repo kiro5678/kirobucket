@@ -105,3 +105,48 @@ jobs:
           }
 
           Write-Host 'No extracted executable was launched.'
+
+      - name: Test Scoop install, launcher, shortcut, and uninstall
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-root'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            throw 'Scoop command was not available after installation.'
+          }
+
+          scoop bucket add kirobucket 'https://github.com/kiro5678/kirobucket'
+          if ($LASTEXITCODE -ne 0) { throw 'Could not add kirobucket.' }
+
+          scoop install framecapt
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop could not install FrameCapt.' }
+
+          $appDir = Join-Path $env:SCOOP 'apps\framecapt\current'
+          $appExe = Join-Path $appDir 'FrameCapt.exe'
+          $shim = Join-Path $env:SCOOP 'shims\framecapt.exe'
+          $startMenu = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) {
+            throw "Installed application executable is missing: $appExe"
+          }
+          if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+            throw "Scoop executable shim is missing: $shim"
+          }
+          $shortcut = Get-ChildItem -LiteralPath $startMenu -Filter 'FrameCapt.lnk' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($null -eq $shortcut) { throw 'FrameCapt Start Menu shortcut was not created.' }
+
+          Write-Host "Installed executable: $appExe"
+          Write-Host "Scoop shim: $shim"
+          Write-Host "Start Menu shortcut: $($shortcut.FullName)"
+
+          scoop uninstall framecapt
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop could not uninstall FrameCapt.' }
+          if (Test-Path -LiteralPath (Join-Path $env:SCOOP 'apps\framecapt')) {
+            throw 'FrameCapt application directory remained after uninstall.'
+          }
+          if (Test-Path -LiteralPath $shim) { throw 'FrameCapt shim remained after uninstall.' }
+          if (Test-Path -LiteralPath $shortcut.FullName) { throw 'FrameCapt Start Menu shortcut remained after uninstall.' }
+          Write-Host 'Scoop install and uninstall checks passed.'
