@@ -1,0 +1,97 @@
+name: Inspect FrameCapt installer
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/framecapt.json'
+      - '.github/workflows/framecapt-installer-inspection.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Inspect official FrameCapt installer without executing it
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $url = 'https://www.framecapt.com/api/download'
+          $expectedHash = 'ad10b8ac2638ae337f1950f87736fd6e7337a5611f329988ac6e9d017c3f7865'
+          $work = Join-Path $env:RUNNER_TEMP 'framecapt-inspection'
+          $installer = Join-Path $work 'FrameCapt-Setup.exe'
+          $helperZip = Join-Path $work 'innounp.zip'
+          $helperRoot = Join-Path $work 'innounp'
+          $extractRoot = Join-Path $work 'app'
+
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 180
+
+          $actualHash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "Downloaded file size: $((Get-Item -LiteralPath $installer).Length) bytes"
+          Write-Host "Actual SHA-256: $actualHash"
+          if ($actualHash -ne $expectedHash) {
+            throw "Official SHA-256 mismatch. Expected $expectedHash, received $actualHash."
+          }
+
+          $signature = Get-AuthenticodeSignature -FilePath $installer
+          Write-Host "Authenticode status: $($signature.Status)"
+          Write-Host "Signer: $($signature.SignerCertificate.Subject)"
+
+          $bytes = [System.IO.File]::ReadAllBytes($installer)
+          $text = [System.Text.Encoding]::ASCII.GetString($bytes)
+          $markers = @('Inno Setup Setup Data', 'Nullsoft Install System', 'WixBundle', 'InstallShield')
+          foreach ($marker in $markers) {
+            Write-Host ("Signature marker '{0}': {1}" -f $marker, $text.Contains($marker))
+          }
+
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip' -OutFile $helperZip -MaximumRedirection 10 -TimeoutSec 120
+          $helperHash = (Get-FileHash -LiteralPath $helperZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($helperHash -ne '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd') {
+            throw "innounp helper SHA-256 mismatch: $helperHash"
+          }
+
+          Expand-Archive -LiteralPath $helperZip -DestinationPath $helperRoot -Force
+          $innounp = Get-ChildItem -LiteralPath $helperRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+          if ($null -eq $innounp) {
+            throw 'The verified innounp helper archive did not contain innounp.exe.'
+          }
+
+          New-Item -ItemType Directory -Path $extractRoot -Force | Out-Null
+          $output = & $innounp.FullName '-x' "-d$extractRoot" $installer '-y' '-c{app}' 2>&1
+          $exitCode = $LASTEXITCODE
+          $output | ForEach-Object { Write-Host $_ }
+          Write-Host "innounp exit code: $exitCode"
+          if ($exitCode -ne 0) {
+            throw "Inno Setup extraction failed with exit code $exitCode."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $extractRoot -File -Recurse)
+          if ($files.Count -eq 0) {
+            throw 'Inno Setup extraction returned no application files.'
+          }
+
+          Write-Host '--- Extracted application files ---'
+          foreach ($file in $files) {
+            $relative = [System.IO.Path]::GetRelativePath($extractRoot, $file.FullName).Replace('\', '/')
+            Write-Host ("{0} | {1} bytes" -f $relative, $file.Length)
+          }
+
+          Write-Host '--- Executable candidates (static metadata only) ---'
+          foreach ($file in ($files | Where-Object { $_.Extension -ieq '.exe' })) {
+            $version = $file.VersionInfo
+            Write-Host ("{0} | Product='{1}' | Description='{2}' | Original='{3}' | Version='{4}'" -f
+              [System.IO.Path]::GetRelativePath($extractRoot, $file.FullName),
+              $version.ProductName,
+              $version.FileDescription,
+              $version.OriginalFilename,
+              $version.ProductVersion)
+          }
+
+          Write-Host 'No extracted executable was launched.'
