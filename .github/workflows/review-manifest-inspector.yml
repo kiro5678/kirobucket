@@ -7,6 +7,7 @@ on:
       - master
     paths:
       - 'under review scoop bucket/*.json'
+      - 'bucket/anton.json'
       - '.github/workflows/review-manifest-inspector.yml'
 
 permissions:
@@ -51,9 +52,11 @@ jobs:
           }
 
           $allChanged = @(git diff --name-only "$env:BASE_SHA...$env:HEAD_SHA")
-          $changed = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'under review scoop bucket' |
-            Where-Object { $_.StartsWith('under review scoop bucket/') -and $_.EndsWith('.json') } |
-            Sort-Object -Unique)
+          $reviewChanged = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'under review scoop bucket' |
+            Where-Object { $_.StartsWith('under review scoop bucket/') -and $_.EndsWith('.json') })
+          $activeChanged = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'bucket/anton.json' |
+            Where-Object { $_ -eq 'bucket/anton.json' })
+          $changed = @($reviewChanged + $activeChanged | Sort-Object -Unique)
           if ($changed.Count -eq 0) {
             $deletedReviewManifests = @($allChanged | Where-Object {
               $_.StartsWith('under review scoop bucket/') -and
