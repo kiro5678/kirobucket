@@ -266,6 +266,8 @@ jobs:
           $report | Set-Content -LiteralPath (Join-Path $workDir '7zip-extraction-report.txt') -Encoding utf8
           $report | ForEach-Object { Write-Host $_ }
           $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          # A 7-Zip exit code of 2 is expected when the downloaded file is not an archive.
+          $global:LASTEXITCODE = 0
 
       - name: Upload inspection report
         if: always()
@@ -274,5 +276,5 @@ jobs:
           name: launcher-companion-static-inspection
           path: |
             ${{ runner.temp }}/launcher-companion-inspection/*.txt
-            @RUNNER_TEMP@/launcher-companion-inspection/extracted-payload/**
+            ${{ runner.temp }}/launcher-companion-inspection/extracted-payload/**
           if-no-files-found: ignore
