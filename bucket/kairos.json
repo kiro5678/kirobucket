@@ -28,8 +28,7 @@
         ]
     ],
     "checkver": {
-        "github": "https://github.com/BasilForge/Kairos",
-        "regex": "/tag/v([\\d.]+)"
+        "github": "https://github.com/BasilForge/Kairos"
     },
     "autoupdate": {
         "architecture": {
