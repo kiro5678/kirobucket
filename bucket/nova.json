@@ -3,7 +3,7 @@
     "description": "Native Windows game launcher that finds installed games, displays Steam artwork and starts games.",
     "homepage": "https://github.com/yaffalhakim1/nova",
     "url": "https://github.com/kiro5678/kirobucket/releases/download/awesome-mygo-games/nova-0.1.0-x64.zip",
-    "hash": "842ef038cc98ffd601424c775ba284fb16ec29a023938d887cbc4eec20ad2840",
+    "hash": "e6d489d70f48fb2459eeecb22e694ac1e5cca994c3a5e9ad85413a837053b08e",
     "shortcuts": [
         [
             "Nova.exe",
