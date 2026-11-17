@@ -100,6 +100,8 @@
 
 ### Inno Setup
 
+**Extensionless EXE endpoints:** When the official download URL returns an EXE but its path has no `.exe` extension, append a filename fragment such as `#/setup.exe` to the manifest URL. Scoop uses the fragment as the local filename; it is not sent to the web server. The manifest pipeline also reads this fragment to pass the correct filename to static installer inspection. Do not invent a server-side URL suffix or alter the endpoint.
+
 - استخدم `"innosetup": true` لاستخراج محتويات المثبّت فقط؛ هذا لا يشغّل أقسام التثبيت أو التسجيل الخاصة بالناشر. لا تستخدم هذا الحقل عندما يكون المطلوب تنفيذ التثبيت الفعلي.
 - عندما يثبت فحص الملف أن المحرك هو Inno Setup، لا تربط مسار `innounp` بامتداد رابط التنزيل. قد يكون الرابط المباشر مثل `/download` بلا امتداد مع أن الاستجابة هي ملف EXE فعلي؛ استخدم نوع المثبّت المؤكد و`innosetup: true`، ثم تحقق من `innounp` exit code ومحتويات `{app}`. فشل 7-Zip وحده لا يعني أن حمولة Inno غير قابلة للاستخراج.
 - يجب أن يتعامل فاحص الحزم مع قيمة `innosetup: true` كإشارة مستقلة عن امتداد URL. لا تستخدم شرطاً إضافياً مثل `.exe` بعد اكتشاف النوع من بيانات المانيفست.
