@@ -4,7 +4,7 @@
     "homepage": "https://github.com/donislawdev/certdoctor",
     "license": "GPL-3.0-only",
     "url": "https://github.com/donislawdev/certdoctor/releases/download/v0.2.0/certdoctor-gui_0.2.0_windows_amd64.zip",
-    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "hash": "33b2a46e06eb1986dfc7f90fed03cb02a0b732f08f792b6d00c617c88092e56d",
     "shortcuts": [
         [
             "certdoctor-gui.exe",

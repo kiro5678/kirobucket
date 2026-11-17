@@ -4,7 +4,7 @@
     "homepage": "https://github.com/donislawdev/TestingFilesGenerator",
     "license": "GPL-3.0-only",
     "url": "https://github.com/donislawdev/TestingFilesGenerator/releases/download/v0.5.0/tfg-gui_0.5.0_windows_amd64.zip",
-    "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "hash": "a0e30323ff0bb4f492051bac2d6448d530ebd9b6faa62a272936d03920eea6cc",
     "shortcuts": [
         [
             "tfg-gui.exe",
