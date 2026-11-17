@@ -1,0 +1,136 @@
+name: Launcher Companion Scoop Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/launcher-companion.json"
+      - ".github/workflows/test-launcher-companion-scoop-install.yml"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "bucket/launcher-companion.json"
+      - ".github/workflows/test-launcher-companion-scoop-install.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-test:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+          }
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
+          $env:SCOOP = $scoopRoot
+          $env:Path = (Join-Path $scoopRoot 'shims') + ';' + $env:Path
+          (Join-Path $scoopRoot 'shims') | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          scoop --version
+
+      - name: Validate companion version with official Scoop checkver
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
+          $checkver = Join-Path $scoopRoot 'apps\scoop\current\bin\checkver.ps1'
+          $bucketPath = Join-Path $env:GITHUB_WORKSPACE 'bucket'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Official Scoop checkver script was not found: $checkver"
+          }
+          & $checkver -App 'launcher-companion' -Dir $bucketPath -ThrowError
+          if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed with exit code $LASTEXITCODE." }
+
+      - name: Install Launcher Companion and verify portable persistence
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\launcher-companion.json'
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            throw "Launcher Companion manifest was not found: $manifestPath"
+          }
+
+          scoop install $manifestPath
+          if ($LASTEXITCODE -ne 0) { throw "Scoop install failed with exit code $LASTEXITCODE." }
+
+          $prefix = (& scoop prefix launcher-companion | Select-Object -Last 1).Trim()
+          if (-not (Test-Path -LiteralPath (Join-Path $prefix 'LauncherCompanion.exe') -PathType Leaf)) {
+            throw 'The self-contained LauncherCompanion.exe was not installed.'
+          }
+          $launcher = Join-Path $prefix 'LauncherCompanion-portable.cmd'
+          if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+            throw 'The portable command launcher was not created.'
+          }
+
+          $launcherText = Get-Content -LiteralPath $launcher -Raw
+          foreach ($expected in @(
+            'LOCALAPPDATA=%~dp0data\Local',
+            'APPDATA=%~dp0data\Roaming',
+            'DOTNET_BUNDLE_EXTRACT_BASE_DIR=%~dp0data\dotnet',
+            'LauncherCompanion.exe'
+          )) {
+            if ($launcherText -notmatch [regex]::Escape($expected)) {
+              throw "Portable launcher is missing expected setting: $expected"
+            }
+          }
+
+          $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
+          $persistData = Join-Path $scoopRoot 'persist\launcher-companion\data'
+          if (-not (Test-Path -LiteralPath $persistData -PathType Container)) {
+            throw "Scoop did not create the persistent data directory: $persistData"
+          }
+
+          $shim = Get-Command launcher-companion -ErrorAction Stop
+          Write-Host "Scoop prefix: $prefix"
+          Write-Host "Scoop shim: $($shim.Source)"
+          Write-Host "Persistent data: $persistData"
+
+          $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          $shortcuts = @(Get-ChildItem -LiteralPath $shortcutRoot -Filter 'Launcher Companion.lnk' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($shortcuts.Count -eq 0) { throw 'The Launcher Companion Start Menu shortcut was not created.' }
+          $shell = New-Object -ComObject WScript.Shell
+          $shortcut = $shell.CreateShortcut($shortcuts[0].FullName)
+          if (-not (Test-Path -LiteralPath $shortcut.TargetPath -PathType Leaf)) {
+            throw "The Launcher Companion shortcut target is missing: $($shortcut.TargetPath)"
+          }
+          if ($shortcut.TargetPath -notlike '*.cmd') {
+            throw "The shortcut must invoke the portable launcher: $($shortcut.TargetPath)"
+          }
+
+          $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $prefix 'LauncherCompanion.exe'))
+          if ($fileVersion.FileVersion -ne '1.2.0.0') {
+            throw "Unexpected companion file version: $($fileVersion.FileVersion)"
+          }
+
+          @(
+            '## Launcher Companion Scoop install test'
+            ''
+            '- Scoop installed the official self-contained x64 executable and verified its SHA-256.'
+            '- The app executable was not launched.'
+            '- A CMD launcher redirects LOCALAPPDATA, APPDATA and .NET bundle extraction into data.'
+            '- Scoop created the persistent data directory.'
+            '- The launcher shim and Start Menu shortcut were created.'
+            '- The Start Menu shortcut targets the portable CMD launcher.'
+            '- Upstream file version 1.2.0.0 was verified.'
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Uninstall test package
+        if: always()
+        shell: pwsh
+        run: |
+          if (Get-Command scoop -ErrorAction SilentlyContinue) {
+            scoop uninstall launcher-companion
+            if ($LASTEXITCODE -ne 0) { Write-Warning "Scoop uninstall returned exit code $LASTEXITCODE." }
+          }
