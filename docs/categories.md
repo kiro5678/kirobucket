@@ -598,6 +598,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [amule](../bucket/amule.json) | 3.0.0 | 64bit: 31.3 MiB / arm64: 29.9 MiB | 2026-10-28 | A free and open-source peer-to-peer file sharing client. | [Homepage](https://www.amule-project.net/) |
 | [babyshark](../bucket/babyshark.json) | 0.3.0 | 811.2 KiB | 2026-02-25 | Wireshark made easy in your terminal. | [Homepage](https://github.com/vignesh07/babyshark) |
 | [bargozin](../bucket/bargozin.json) | 0.2.0 | 6.1 MiB | 2026-08-30 | DNS and network testing tool - Test URL accessibility, download speeds, and Docker registries across multiple DNS servers | [Homepage](https://github.com/403unlocker/bargozin-desktop) |
+| [bean-network-tester](../bucket/bean-network-tester.json) | 1.0.0 | 13.3 MiB | 2026-11-03 | Simulate latency, jitter, packet loss, and bandwidth limits to test applications on degraded networks. | [Homepage](https://github.com/donislawdev/BeanNetworkTester) |
 | [complete-internet-repair](../bucket/complete-internet-repair.json) | 11.1.3.6518 | 4.4 MiB | 2024-12-09 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
 | [cstatus](../bucket/cstatus.json) | 1.2.7.1 | — | — | Free network monitoring and scanning tool for Windows | [Homepage](https://www.hnsoft.pt/cstatus) |
 | [dnschanger](../bucket/dnschanger.json) | 2.3.14 | 162.8 MiB | 2026-08-25 | Open-source DNS changer for Windows, macOS, and Linux. | [Homepage](https://github.com/DnsChanger/dnsChanger-desktop) |
