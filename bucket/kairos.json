@@ -10,12 +10,8 @@
             "extract_dir": "lib/app"
         }
     },
-    "depends": [
-        "extras/vcredist2022"
-    ],
-    "pre_install": [
-        "New-Item -ItemType Directory -Force -Path \"$dir\\data\" | Out-Null"
-    ],
+    "depends": "extras/vcredist2022",
+    "pre_install": "New-Item -ItemType Directory -Force -Path \"$dir\\data\" | Out-Null",
     "persist": "data",
     "env_set": {
         "KAIROS_DATA": "$persist_dir\\data"
@@ -42,5 +38,10 @@
             }
         }
     },
-    "notes": "The official Kairos-Setup.exe is an Inno Setup 6 wrapper that launches Velopack Setup. This manifest does not run either installer: it extracts the official full.nupkg application payload from lib/app.\nThe payload is self-contained for .NET but requires the Microsoft Visual C++ 2015-2022 x64 runtime (14.50 or newer). The extras/vcredist2022 dependency supplies the x64 runtime; add the Extras bucket if it is not already configured.\nKAIROS_DATA redirects settings, logs, voice data, and replay working files into Scoop's persistent data directory. User-created clips remain in the configured clips folder (Videos/Kairos by default), outside the Scoop app directory.\nBecause this extracted copy is not registered as a Velopack installation, Kairos disables its in-app updater. Use 'scoop update kairos' to update it. Exit Kairos before updating or uninstalling."
+    "notes": [
+        "The official Kairos-Setup.exe is an Inno Setup 6 wrapper that launches Velopack Setup. This manifest does not run either installer: it extracts the official full.nupkg application payload from lib/app.",
+        "The payload is self-contained for .NET but requires the Microsoft Visual C++ 2015-2022 x64 runtime (14.50 or newer). The extras/vcredist2022 dependency supplies the x64 runtime; add the Extras bucket if it is not already configured.",
+        "KAIROS_DATA redirects settings, logs, voice data, and replay working files into Scoop's persistent data directory. User-created clips remain in the configured clips folder (Videos/Kairos by default), outside the Scoop app directory.",
+        "Because this extracted copy is not registered as a Velopack installation, Kairos disables its in-app updater. Use 'scoop update kairos' to update it. Exit Kairos before updating or uninstalling."
+    ]
 }
