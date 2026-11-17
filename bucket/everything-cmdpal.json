@@ -1,12 +1,12 @@
 {
-    "version": "0.9.26030.0",
+    "version": "0.12.26081.0",
     "description": "Everything search extension for PowerToys Command Palette",
     "homepage": "https://github.com/lin-ycv/EverythingCommandPalette",
     "license": "EPL-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/lin-ycv/EverythingCommandPalette/releases/download/v0.9.26030.0/VictorLin.EverythingCP_0.9.26030.0_x64__yazqh14evg2ve.Msix#/ecp.msix",
-            "hash": "3cf07ea226e66e84a6f38f9dd5f3489b4e71cde8502750efb85026561285fa18"
+            "url": "https://github.com/lin-ycv/EverythingCommandPalette/releases/download/v0.12.26081.0/VictorLin.EverythingCP_0.12.26081.0_x64__yazqh14evg2ve.Msix#/ecp.msix",
+            "hash": "f27fe6994488beca873a86a8a2ae895a5a8d2be1909766c09d66d9c8434bf470"
         }
     },
     "suggest": {
