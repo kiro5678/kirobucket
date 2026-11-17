@@ -107,7 +107,8 @@ jobs:
       - name: Run required workflows sequentially
         shell: pwsh
         env:
-          GH_TOKEN: ${{ github.token }}
+          # Optional dedicated token: Actions read/write. Avoids the per-repository GITHUB_TOKEN quota.
+          GH_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN || github.token }}
           GH_REPOSITORY: ${{ github.repository }}
           EVENT_NAME: ${{ github.event_name }}
           PIPELINE_SHA: ${{ github.sha }}
