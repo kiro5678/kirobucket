@@ -562,6 +562,7 @@ jobs:
             if ($changedPaths -contains '.github/workflows/validate-manifest-archives.yml') {
               # Include the regression set without dropping manifests changed in the same push.
               $manifestPaths += $pakeRegressionManifests
+              $manifestPaths += 'bucket/killerpdf.json'
               $manifestPaths = @($manifestPaths | Sort-Object -Unique)
             }
           }
