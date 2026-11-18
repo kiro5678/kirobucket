@@ -66,6 +66,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-droptidy'
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
           $appDir = Join-Path $env:SCOOP 'apps\droptidy\current'
           if (-not (Test-Path -LiteralPath $appDir -PathType Container)) {
             throw "Scoop application directory was not created: $appDir"
@@ -75,7 +76,7 @@ jobs:
           Write-Host 'Extracted MSI payload:'
           $files | ForEach-Object { Write-Host $_.FullName }
 
-          $launcher = $files | Where-Object { $_.Name -ieq 'DropTidy.exe' } | Select-Object -First 1
+          $launcher = $files | Where-Object { $_.Name -ieq 'droptidy.exe' } | Select-Object -First 1
           if ($null -eq $launcher) {
             throw 'DropTidy.exe was not found in the extracted MSI payload.'
           }
