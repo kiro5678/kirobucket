@@ -1409,6 +1409,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [better-windows-services](../bucket/better-windows-services.json) | 0.5.0 | 66.9 MiB | 2026-11-03 | GUI Windows service manager with searchable inventory, previewed changes, service history, and configuration-drift snapshots. | [Homepage](https://betterwindowsservices.donislawdev.com/) |
 | [dism-tools](../bucket/dism-tools.json) | v0.8.1_upd1 | 99.7 MiB | 2026-10-29 | DISMTools is a front-end for DISM that lets you manage your Windows Imaging (WIM) files and a whole lot more. | [Homepage](https://github.com/CodingWonders/DISMTools) |
 | [patchlight](../bucket/patchlight.json) | 0.5.2 | 64bit: 70.1 MiB | 2026-10-20 | Windows 11 update monitor that checks pending updates against Microsoft's known issues and pauses affected updates. | [Homepage](https://github.com/G4SBO/PatchLight) |
 | [sordum-fix-print-spooler](../bucket/sordum-fix-print-spooler.json) | 1.3 | 921.1 KiB | 2026-08-22 | A small tool for fixing or disabling the Print Spooler service in Windows. | [Homepage](https://www.sordum.org/fix-print-spooler) |
