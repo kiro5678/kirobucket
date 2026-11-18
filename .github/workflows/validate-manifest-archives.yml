@@ -219,6 +219,7 @@ on:
       - 'bucket/xdman.json'
       - 'bucket/winmac-dock.json'
       - 'bucket/llplayer.json'
+      - 'bucket/fort.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -454,6 +455,7 @@ on:
       - 'bucket/xdman.json'
       - 'bucket/winmac-dock.json'
       - 'bucket/llplayer.json'
+      - 'bucket/fort.json'
   workflow_dispatch:
     inputs:
       manifest:
@@ -854,8 +856,8 @@ jobs:
                     if ([string]::IsNullOrWhiteSpace($innounpPath)) {
                       $innounpZip = Join-Path $env:RUNNER_TEMP 'innounp-2.zip'
                       $innounpRoot = Join-Path $env:RUNNER_TEMP 'innounp-helper'
-                      Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 120
-                      Test-StaticHash -ArchivePath $innounpZip -HashValue '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd' -Context 'innounp helper'
+                      Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/refs/heads/master/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 120
+                      Test-StaticHash -ArchivePath $innounpZip -HashValue 'f8e45c9676bebc7d7570108ab572673b541fcf7a7d3d24a04319ac6b5315b4e8' -Context 'innounp helper'
                       New-Item -ItemType Directory -Path $innounpRoot -Force | Out-Null
                       Add-Content -LiteralPath $sevenZipLog -Value "`n[innounp helper extraction] $innounpZip"
                       & $sevenZipPath x $innounpZip "-o$innounpRoot" '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
