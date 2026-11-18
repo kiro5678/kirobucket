@@ -1,6 +1,12 @@
 name: Excavator
 
 on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/excavator.yml'
+      - '.github/scripts/excavator-sequential.ps1'
   workflow_dispatch:
     inputs:
       manifests:
@@ -12,12 +18,18 @@ on:
     - cron: '20 */4 * * *'
 
 permissions:
+  actions: write
   contents: write
+
+concurrency:
+  group: excavator-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   excavate:
     name: Excavate
     runs-on: windows-latest
+    timeout-minutes: 360
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -26,8 +38,9 @@ jobs:
       - name: Run sequential official Scoop Checkver
         shell: pwsh
         env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_GITHUB_TOKEN || github.token }}
           SCOOP_GH_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN || secrets.ACTIONS_GITHUB_TOKEN || github.token }}
-          MANIFEST_FILTER: ${{ inputs.manifests }}
+          MANIFEST_FILTER: ${{ github.event_name == 'push' && 'arcmd' || inputs.manifests }}
         run: |
           & ./.github/scripts/excavator-sequential.ps1
 
@@ -58,8 +71,8 @@ jobs:
           }
 
           try {
-            if ($env:EVENT_NAME -notin @('schedule', 'workflow_dispatch', 'repository_dispatch')) {
-              throw "Unsupported Excavator trigger '$env:EVENT_NAME'. Use schedule or workflow_dispatch."
+            if ($env:EVENT_NAME -notin @('schedule', 'workflow_dispatch', 'repository_dispatch', 'push')) {
+              throw "Unsupported Excavator trigger '$env:EVENT_NAME'. Use schedule, workflow_dispatch, or the guarded workflow/script push trigger."
             }
 
             $jobsUri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID/jobs?per_page=100"
