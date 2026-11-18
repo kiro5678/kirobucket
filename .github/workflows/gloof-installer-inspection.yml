@@ -258,6 +258,50 @@ jobs:
             Write-Host ("EXE {0} | {1} bytes | {2} | {3}" -f $exe.Path, $exe.Bytes, $exe.FileVersion, $exe.Product)
           }
 
+          # Verify the documented Velopack installto route in an isolated runner directory.
+          # This executes the vendor-signed setup only on the ephemeral GitHub Actions runner.
+          $probeInstall = Join-Path $root 'setup-installto-probe'
+          $probeArgs = @('--silent', '--installto', $probeInstall)
+          Write-Host "Testing Velopack Setup.exe --installto in: $probeInstall"
+          $setupProcess = Start-Process -FilePath $installer -ArgumentList $probeArgs -Wait -PassThru
+          Write-Host "Setup exit code: $($setupProcess.ExitCode)"
+          if ($setupProcess.ExitCode -ne 0) {
+            throw "Velopack Setup.exe --installto failed with exit code $($setupProcess.ExitCode)."
+          }
+
+          $probeFiles = @(Get-ChildItem -LiteralPath $probeInstall -File -Recurse -Force -ErrorAction SilentlyContinue)
+          $probeDirectories = @(Get-ChildItem -LiteralPath $probeInstall -Directory -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
+          Write-Host "Installed files: $($probeFiles.Count)"
+          Write-Host "Installed root directories: $($probeDirectories -join ', ')"
+          foreach ($probeFile in $probeFiles) {
+            $relative = [System.IO.Path]::GetRelativePath($probeInstall, $probeFile.FullName).Replace('\', '/')
+            Write-Host "INSTALLTO FILE $relative [$($probeFile.Length) bytes]"
+          }
+
+          $updateExe = Join-Path $probeInstall 'Update.exe'
+          $installedMain = Join-Path $probeInstall 'current/gloof-core.exe'
+          $installedStub = Join-Path $probeInstall 'gloof.exe'
+          if (-not (Test-Path -LiteralPath $updateExe -PathType Leaf)) {
+            throw 'Setup.exe --installto completed but Update.exe is missing from the requested Scoop directory.'
+          }
+          if (-not (Test-Path -LiteralPath $installedMain -PathType Leaf)) {
+            throw 'Setup.exe --installto completed but current/gloof-core.exe is missing.'
+          }
+          if (-not (Test-Path -LiteralPath $installedStub -PathType Leaf)) {
+            throw 'Setup.exe --installto completed but the root gloof.exe launcher stub is missing.'
+          }
+
+          $probeVersion = Get-Content -LiteralPath (Join-Path $probeInstall 'current/sq.version') -Raw -ErrorAction Stop
+          Write-Host "Installed Velopack package version: $($probeVersion.Trim())"
+          Write-Host 'Velopack installto layout verification: PASS'
+
+          # Remove the temporary per-user install before this ephemeral job ends.
+          $uninstall = Start-Process -FilePath $updateExe -ArgumentList @('uninstall', '--silent') -Wait -PassThru
+          Write-Host "Velopack uninstall exit code: $($uninstall.ExitCode)"
+          if ($uninstall.ExitCode -ne 0) {
+            throw "Velopack Update.exe uninstall failed with exit code $($uninstall.ExitCode)."
+          }
+
           $report = [System.Collections.Generic.List[string]]::new()
           $report.Add('# Gloof installer inspection')
           $report.Add('')
@@ -275,7 +319,8 @@ jobs:
           $report.Add("- Velopack main executable: $mainExe")
           $report.Add("- Download page version strings: $($pageVersionHits -join ', ')")
           $report.Add("- Download page installer/portable links: $($pageLinks -join ', ')")
-          $report.Add("- Official release feed files checked: releases.beta.json, assets.beta.json, RELEASES")
+          $report.Add("- Official release feed files checked: releases.beta.json, assets.beta.json, RELEASES (all returned 404)")
+          $report.Add("- Velopack Setup.exe --installto test: PASS (files installed under the requested local directory; not a portable build)")
           $report.Add("- Outer extracted files: $($outerFiles.Count)")
           $report.Add("- Nested archives extracted: $($nestedArchives.Count)")
           $report.Add("- Application payload files: $($inventory.Count)")
