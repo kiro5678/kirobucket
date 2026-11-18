@@ -220,6 +220,7 @@ on:
       - 'bucket/winmac-dock.json'
       - 'bucket/llplayer.json'
       - 'bucket/fort.json'
+      - 'bucket/gloof.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -456,6 +457,7 @@ on:
       - 'bucket/winmac-dock.json'
       - 'bucket/llplayer.json'
       - 'bucket/fort.json'
+      - 'bucket/gloof.json'
   workflow_dispatch:
     inputs:
       manifest:
