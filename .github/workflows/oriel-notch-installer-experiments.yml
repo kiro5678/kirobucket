@@ -201,6 +201,23 @@ jobs:
           if (-not (Test-Path -LiteralPath $scoopScript -PathType Leaf)) { throw "Missing Scoop shim: $scoopScript" }
           $pwshExe = Join-Path $PSHOME 'pwsh.exe'
 
+          # Use a real temporary Git bucket so install/update follow the same path as a normal bucket package.
+          $bucketName = 'oriel-exp'
+          $bucketRoot = Join-Path $env:RUNNER_TEMP 'oriel-experiment-bucket'
+          $bucketDir = Join-Path $bucketRoot 'bucket'
+          New-Item -ItemType Directory -Path $bucketDir -Force | Out-Null
+          Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $bucketDir "$appName.json") -Force
+          Push-Location $bucketRoot
+          try {
+            git init --initial-branch=master | Out-Null
+            git config user.name 'Oriel Scoop Experiment'
+            git config user.email 'oriel-experiment@localhost'
+            git add bucket
+            git commit -m 'Add temporary Oriel experiment manifest' | Out-Null
+          } finally {
+            Pop-Location
+          }
+
           function Invoke-ScoopBounded {
             param([string[]]$ScoopArguments, [string]$Label, [int]$TimeoutMilliseconds = 90000)
             $stdout = Join-Path $reportRoot "$Label.stdout.txt"
@@ -222,11 +239,33 @@ jobs:
           $report.Add("Method: $env:TEST_METHOD")
           $report.Add("Manifest: $env:MANIFEST_FILE")
           $report.Add("Scoop app name: $appName")
-          $install = Invoke-ScoopBounded -ScoopArguments @('install', $manifestPath) -Label 'scoop-install'
+          $bucketAdd = Invoke-ScoopBounded -ScoopArguments @('bucket', 'add', $bucketName, $bucketRoot) -Label 'scoop-bucket-add' -TimeoutMilliseconds 60000
+          $report.Add("Temporary bucket add exit code: $($bucketAdd.ExitCode)")
+          if ($bucketAdd.ExitCode -ne 0 -or $bucketAdd.TimedOut) {
+            if (Test-Path -LiteralPath $bucketAdd.StdOut) { $report.AddRange([string[]](Get-Content -LiteralPath $bucketAdd.StdOut)) }
+            if (Test-Path -LiteralPath $bucketAdd.StdErr) { $report.AddRange([string[]](Get-Content -LiteralPath $bucketAdd.StdErr)) }
+            throw 'Could not add the temporary Oriel test bucket.'
+          }
+          $appRef = "$bucketName/$appName"
+          $install = Invoke-ScoopBounded -ScoopArguments @('install', $appRef) -Label 'scoop-install' -TimeoutMilliseconds 90000
           $report.Add("Scoop install exit code: $($install.ExitCode)")
           $report.Add("Scoop install timed out: $($install.TimedOut)")
           if (Test-Path -LiteralPath $install.StdOut) { $report.Add('Install stdout:'); $report.AddRange([string[]](Get-Content -LiteralPath $install.StdOut)) }
           if (Test-Path -LiteralPath $install.StdErr) { $report.Add('Install stderr:'); $report.AddRange([string[]](Get-Content -LiteralPath $install.StdErr)) }
+
+          $isUpdateLifecycleCandidate = $env:MANIFEST_FILE -like '*oriel-notch-exp-managed-external-cleanup.json'
+          $updateExit = 0
+          $updateTimedOut = $false
+          if ($isUpdateLifecycleCandidate -and $install.ExitCode -eq 0 -and -not $install.TimedOut) {
+            $report.Add('Running forced same-version Scoop update to exercise old-uninstall then new-install lifecycle.')
+            $update = Invoke-ScoopBounded -ScoopArguments @('update', '-f', $appName) -Label 'scoop-update' -TimeoutMilliseconds 120000
+            $updateExit = $update.ExitCode
+            $updateTimedOut = $update.TimedOut
+            $report.Add("Scoop forced update exit code: $updateExit")
+            $report.Add("Scoop forced update timed out: $updateTimedOut")
+            if (Test-Path -LiteralPath $update.StdOut) { $report.Add('Update stdout:'); $report.AddRange([string[]](Get-Content -LiteralPath $update.StdOut)) }
+            if (Test-Path -LiteralPath $update.StdErr) { $report.Add('Update stderr:'); $report.AddRange([string[]](Get-Content -LiteralPath $update.StdErr)) }
+          }
 
           $insideExecutables = @()
           if (Test-Path -LiteralPath $versionPath -PathType Container) {
@@ -345,9 +384,12 @@ jobs:
               ($externalExecutables -contains (Join-Path $env:LOCALAPPDATA 'Programs\Oriel\oriel.exe')) -and
               $registeredUninstallerValid
             $postUninstallStateValid = ($externalAfterUninstall.Count -eq 0) -and ($registryAfterUninstall.Count -eq 0)
+            $updateLifecycleValid = (-not $isUpdateLifecycleCandidate) -or
+              (($updateExit -eq 0) -and (-not $updateTimedOut))
             $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
-              $preUninstallStateValid -and ($uninstallExit -eq 0) -and
-              (-not $uninstallTimedOut) -and $postUninstallStateValid -and $versionDirectoryRemoved
+              $preUninstallStateValid -and $updateLifecycleValid -and
+              ($uninstallExit -eq 0) -and (-not $uninstallTimedOut) -and
+              $postUninstallStateValid -and $versionDirectoryRemoved
           } else {
             $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
               ($insideExecutables.Count -gt 0) -and ($externalExecutables.Count -eq 0) -and
