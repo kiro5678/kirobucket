@@ -15,7 +15,7 @@ The installer also stores absolute install paths in `configs` and VM configurati
 - Read the previous product version and installation directory from persisted `configs\main\install_config.json`. Migrate old absolute paths in known text configuration formats before and after the installer phases, and update `install_config.json` to the new Scoop version path.
 - Pass a quoted `/D=` argument so a Scoop root containing spaces is supported.
 - Wait for `Start-Process -Wait` to complete, then poll the installer output tree until its metadata remains stable. Enforce a timeout and verify `nx_main\MuMuNxMain.exe` after commit; do not use a fixed 12-second sleep.
-- Handle MuMu error `80002` once using the recorded product version when it is older than the requested version. Refuse a downgrade or ambiguous version state. Never delete or rename `%PUBLIC%\.MUMUVMM` automatically because that directory may belong to another MuMu installation.
+- Handle MuMu error `80002` once in `install_prepare` using the persisted version, and once in `commit` using the version actually written by the prepare phase. Refuse a downgrade or ambiguous version state. Never delete or rename `%PUBLIC%\.MUMUVMM` automatically because that directory may belong to another MuMu installation.
 
 ## Regression coverage
 
