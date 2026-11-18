@@ -1,0 +1,184 @@
+name: Netrix NSIS Extraction Diagnostic
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'bucket/netrix-desktop.json'
+      - '.github/workflows/netrix-nsis-extraction-test.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'bucket/netrix-desktop.json'
+      - '.github/workflows/netrix-nsis-extraction-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify Netrix Scoop extraction
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download and verify the manifest source
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/netrix-desktop.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $source = $manifest.architecture.'64bit'
+          $manifestUrl = [string]$source.url
+          if ($manifestUrl -notmatch '#/dl\.7z$') { throw 'Netrix URL must use Scoop 7-Zip extraction mode.' }
+          $url = $manifestUrl -replace '#/dl\.7z$', ''
+          $expected = [string]$source.hash
+          if ($expected -notmatch '^[0-9a-fA-F]{64}$') { throw 'Manifest must pin a 64-character SHA-256 hash.' }
+          $installer = Join-Path $env:RUNNER_TEMP ("Netrix-" + $manifest.version + "-setup.exe")
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected.ToLowerInvariant()) { throw "SHA256 mismatch: expected $expected, got $actual" }
+          "installer=$installer" >> $env:GITHUB_ENV
+          "manifest=$manifestPath" >> $env:GITHUB_ENV
+          "SHA-256 verified: $actual"
+          "Size: $((Get-Item -LiteralPath $installer).Length) bytes"
+
+      - name: Extract NSIS payload and test Scoop post_install
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifest = Get-Content -LiteralPath $env:manifest -Raw | ConvertFrom-Json -ErrorAction Stop
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not (Test-Path -LiteralPath $sevenZip)) { throw '7-Zip is unavailable on this runner.' }
+
+          $work = Join-Path $env:RUNNER_TEMP 'netrix-nsis-diagnostic'
+          $output = Join-Path $work 'extracted'
+          $listingPath = Join-Path $work 'archive-listing.txt'
+          $logPath = Join-Path $work '7zip-extract.log'
+          New-Item -ItemType Directory -Path $output -Force | Out-Null
+
+          & $sevenZip l -slt $env:installer 2>&1 | Tee-Object -FilePath $listingPath
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip cannot inspect the NSIS installer (exit $LASTEXITCODE)." }
+
+          & $sevenZip x $env:installer "-o$output" '-xr!*.nsis' '-y' 2>&1 | Tee-Object -FilePath $logPath
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content -LiteralPath $logPath -Tail 80
+            throw "7-Zip extraction failed (exit $LASTEXITCODE)."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $output -File -Recurse)
+          if ($files.Count -eq 0) { throw 'The NSIS extraction completed but produced no files.' }
+          $beforeBytes = ($files | Measure-Object -Property Length -Sum).Sum
+
+          $launchPaths = @()
+          foreach ($shortcut in @($manifest.shortcuts)) {
+            if ($shortcut -is [string]) { $launchPaths += $shortcut }
+            elseif ($shortcut -is [System.Array] -and $shortcut.Count -gt 0) { $launchPaths += [string]$shortcut[0] }
+          }
+          if ($launchPaths.Count -eq 0) { throw 'The Scoop manifest has no shortcut target to validate.' }
+          foreach ($launchPath in $launchPaths) {
+            if (-not (Test-Path -LiteralPath (Join-Path $output $launchPath) -PathType Leaf)) {
+              throw "Manifest shortcut target is missing after 7-Zip extraction: $launchPath"
+            }
+          }
+
+          $rows = foreach ($file in $files) {
+            $relative = [System.IO.Path]::GetRelativePath($output, $file.FullName).Replace('\', '/')
+            [PSCustomObject]@{
+              Path = $relative
+              Bytes = $file.Length
+              Product = $file.VersionInfo.ProductName
+              Description = $file.VersionInfo.FileDescription
+              FileVersion = $file.VersionInfo.FileVersion
+            }
+          }
+          $rows | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path $work 'extracted-files.csv')
+
+          $dir = $output
+          $postInstall = @($manifest.post_install) -join "`n"
+          if (-not [string]::IsNullOrWhiteSpace($postInstall)) {
+            Invoke-Expression $postInstall
+          }
+
+          foreach ($required in @('netrix.exe', 'netrix_backend.exe', 'LICENSE')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $output $required) -PathType Leaf)) {
+              throw "The post_install script removed a required application file: $required"
+            }
+          }
+          foreach ($removed in @('$PLUGINSDIR', '$TEMP')) {
+            if (Test-Path -LiteralPath (Join-Path $output $removed)) {
+              throw "post_install did not remove the redundant NSIS payload directory: $removed"
+            }
+          }
+
+          $finalFiles = @(Get-ChildItem -LiteralPath $output -File -Recurse)
+          $afterBytes = ($finalFiles | Measure-Object -Property Length -Sum).Sum
+          $finalRows = foreach ($file in $finalFiles) {
+            $relative = [System.IO.Path]::GetRelativePath($output, $file.FullName).Replace('\', '/')
+            [PSCustomObject]@{
+              Path = $relative
+              Bytes = $file.Length
+              Product = $file.VersionInfo.ProductName
+              Description = $file.VersionInfo.FileDescription
+              FileVersion = $file.VersionInfo.FileVersion
+            }
+          }
+          $finalRows | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path $work 'final-files.csv')
+          $finalRows | Where-Object { $_.Path -match '(?i)(netrix|backend|\.exe$|\.dll$)' } |
+            Format-Table -AutoSize | Out-String -Width 300 |
+            Set-Content -LiteralPath (Join-Path $work 'relevant-files.txt') -Encoding UTF8
+
+          @(
+            "Before post_install: $beforeBytes bytes",
+            "After post_install: $afterBytes bytes",
+            "Removed: $($beforeBytes - $afterBytes) bytes",
+            'The manifest shortcut and post_install script were verified.'
+          ) | Set-Content -LiteralPath (Join-Path $work 'post-install-cleanup.txt') -Encoding UTF8
+
+          $summary = @(
+            '## Netrix NSIS extraction',
+            '',
+            "- Extracted files before cleanup: $($files.Count)",
+            "- Files left in Scoop version directory: $($finalFiles.Count)",
+            "- Size before cleanup: $beforeBytes bytes",
+            "- Size after cleanup: $afterBytes bytes",
+            "- Extract root: $output",
+            '- Installer was not executed.',
+            '- NSIS install hooks were not run by archive extraction.',
+            '- Manifest shortcut and post_install cleanup were verified.',
+            '',
+            '### Files left in the Scoop version directory',
+            '',
+            '| Path | Bytes | Product | Version |',
+            '| --- | ---: | --- | --- |'
+          )
+          foreach ($item in $finalRows) {
+            $summary += "| $($item.Path) | $($item.Bytes) | $($item.Product) | $($item.FileVersion) |"
+          }
+          $summary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding UTF8
+          Write-Host "Extracted $($files.Count) files; $($finalFiles.Count) remain after manifest cleanup."
+
+      - name: Upload extraction diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: netrix-nsis-extraction-diagnostic
+          path: |
+            ${{ runner.temp }}/netrix-nsis-diagnostic/archive-listing.txt
+            ${{ runner.temp }}/netrix-nsis-diagnostic/7zip-extract.log
+            ${{ runner.temp }}/netrix-nsis-diagnostic/extracted-files.csv
+            ${{ runner.temp }}/netrix-nsis-diagnostic/final-files.csv
+            ${{ runner.temp }}/netrix-nsis-diagnostic/relevant-files.txt
+            ${{ runner.temp }}/netrix-nsis-diagnostic/post-install-cleanup.txt
+          if-no-files-found: warn
+          retention-days: 7
