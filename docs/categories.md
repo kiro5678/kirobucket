@@ -13,7 +13,7 @@
 | Disk Monitor | 9 | [View](#disk-monitor) |
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 87 | [View](#file-management) |
+| File Management | 88 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
@@ -45,7 +45,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1234**
+**Total unique categorized manifests: 1235**
 
 
 ## Android & Device Tools
@@ -314,6 +314,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [softwareok-dirprintok](../bucket/softwareok-dirprintok.json) | 7.69 | 64bit: 852.5 KiB | 2026-10-20 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
 | [doublecmd](../bucket/doublecmd.json) | 1.2.9 | 64bit: — / 32bit: — | — | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
 | [easy-link-file-viewer](../bucket/easy-link-file-viewer.json) | 1.9.2 | 0.7 MiB | 2026-11-10 | Portable Windows utility to view, edit, and write shortcut files (.lnk), with a hex viewer and icon editor. | [Homepage](https://github.com/ElektroStudios/Easy-Link-File-Viewer) |
+| [droptidy](../bucket/droptidy.json) | 0.1.0 | 4.3 MiB | 2026-11-17 | Organizes Downloads with dry-run previews, duplicate detection, undo history, and optional automatic sorting. | [Homepage](https://github.com/ahmeto55/DropTidy) |
 | [downloadorganizer](../bucket/downloadorganizer.json) | 0.1.0 | 2.7 MiB | 2026-11-01 | Organize downloads by file type with change previews, undo history and optional automatic sorting. | [Homepage](https://github.com/thonyydev/DownloadOrganizer) |
 | [dude](../bucket/dude.json) | 2.0763.579 | 73.4 MiB | 2026-06-24 | Disk usage analyzer and file browser for Windows. | [Homepage](https://github.com/PJDude/dude) |
 | [ef-commander](../bucket/ef-commander.json) | 26.10 | 64bit: 7.5 MiB | 2026-08-24 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
