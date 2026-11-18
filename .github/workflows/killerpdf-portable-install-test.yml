@@ -1,0 +1,114 @@
+name: KillerPDF Portable Scoop Install Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/killerpdf.json'
+      - '.github/workflows/killerpdf-portable-install-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install and persist test (${{ matrix.shell }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install, launch, and verify persistence
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-killerpdf'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+
+          scoop bucket add kirobucket $env:GITHUB_WORKSPACE
+          scoop install killerpdf
+
+          $appDir = Join-Path $env:SCOOP 'apps\killerpdf\current'
+          $launcher = Join-Path $appDir 'KillerPDF-Portable.exe'
+          if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+            throw 'Scoop did not install the official portable launcher.'
+          }
+
+          $persistRoot = Join-Path $env:SCOOP 'persist\killerpdf'
+          $persistData = Join-Path $persistRoot 'KillerPDF-Data'
+          $persistedMarker = Join-Path $persistData 'kirobucket-persist-test.txt'
+          if (-not (Test-Path -LiteralPath $persistData -PathType Container)) {
+            throw 'Scoop did not create the persisted KillerPDF-Data directory.'
+          }
+
+          $runtimeRoot = Join-Path $env:LOCALAPPDATA 'KillerPDF\Portable'
+          $launcherProcess = $null
+          $childProcess = $null
+          try {
+            $launcherProcess = Start-Process -FilePath $launcher -PassThru
+            $deadline = (Get-Date).AddSeconds(60)
+            do {
+              $childProcess = Get-CimInstance -ClassName Win32_Process -Filter "Name = 'KillerPDF.App.exe'" |
+                Where-Object {
+                  $_.ExecutablePath -and
+                  $_.ExecutablePath.StartsWith($runtimeRoot + '\\', [System.StringComparison]::OrdinalIgnoreCase)
+                } |
+                Select-Object -First 1
+
+              if ($null -ne $childProcess) { break }
+              if ($launcherProcess.HasExited) {
+                throw "Portable launcher exited before its application process appeared (exit code $($launcherProcess.ExitCode))."
+              }
+              Start-Sleep -Milliseconds 500
+            } while ((Get-Date) -lt $deadline)
+
+            if ($null -eq $childProcess) {
+              throw 'Portable launcher did not start KillerPDF.App.exe from its runtime extraction directory.'
+            }
+            if (-not (Test-Path -LiteralPath $childProcess.ExecutablePath -PathType Leaf)) {
+              throw 'Extracted application executable is missing.'
+            }
+
+            Write-Host "Portable runtime extracted successfully: $($childProcess.ExecutablePath)"
+            Set-Content -LiteralPath $persistedMarker -Value 'persisted' -Encoding utf8
+
+            Stop-Process -Id ([int]$childProcess.ProcessId) -Force -ErrorAction SilentlyContinue
+            if (-not $launcherProcess.WaitForExit(30000)) {
+              throw 'Portable launcher did not exit after its application process was stopped.'
+            }
+            if ($launcherProcess.ExitCode -ne 0) {
+              throw "Portable launcher returned exit code $($launcherProcess.ExitCode)."
+            }
+          }
+          finally {
+            if ($null -ne $childProcess) {
+              Stop-Process -Id ([int]$childProcess.ProcessId) -Force -ErrorAction SilentlyContinue
+            }
+            if ($null -ne $launcherProcess -and -not $launcherProcess.HasExited) {
+              Stop-Process -Id $launcherProcess.Id -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          scoop uninstall killerpdf
+
+          if (-not (Test-Path -LiteralPath $persistedMarker -PathType Leaf)) {
+            throw 'Scoop uninstall removed KillerPDF-Data; persistent user data would be lost.'
+          }
+
+          Write-Host 'PASS: portable launch, Scoop installation, and persisted-data retention.'
