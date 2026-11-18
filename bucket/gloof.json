@@ -1,6 +1,6 @@
 {
     "version": "0.1.0-beta.10",
-    "description": "Windows 11 desktop dock, status bar, modules and customizable themes.",
+    "description": "Desktop dock and status bar for Windows 11, with modular widgets and customizable themes.",
     "homepage": "https://gloof.app/",
     "license": "Freeware",
     "architecture": {
