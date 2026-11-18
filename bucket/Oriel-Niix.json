@@ -1,18 +1,30 @@
 {
     "version": "1.1.1",
-    "description": "EXPERIMENTAL ONLY: Oriel per-user setup managed through Scoop scripts and a junction, with native registry-query synchronization.",
+    "description": "Oriel Notch desktop overlay, managed through the official per-user installer.",
     "homepage": "https://github.com/Niix-x/Oriel-Releases",
     "license": "Proprietary",
     "url": "https://github.com/Niix-x/Oriel-Releases/releases/download/v1.1.1/OrielSetup-1.1.1.exe",
     "hash": "808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954",
     "installer": {
         "script": [
+            "$installDir = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel'",
+            "if (Test-Path -LiteralPath $installDir -PathType Container) { throw \"An existing Oriel installation was found at $installDir. Uninstall it manually before installing this Scoop package.\" }",
+            "$existingRegistryRoots = @('HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', 'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall', 'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall')",
+            "$registeredOriel = @()",
+            "foreach ($registryRoot in $existingRegistryRoots) {",
+            "  if (Test-Path -LiteralPath $registryRoot) {",
+            "    foreach ($key in (Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue)) {",
+            "      $entry = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue",
+            "      if ([string]$entry.DisplayName -match '(?i)^Oriel(?:\\s|$)') { $registeredOriel += $key.Name }",
+            "    }",
+            "  }",
+            "}",
+            "if ($registeredOriel.Count -gt 0) { throw \"An existing Oriel uninstall registration was found: $($registeredOriel -join '; '). Uninstall it manually before using this Scoop package.\" }",
             "$setup = Join-Path -Path $dir -ChildPath 'OrielSetup-1.1.1.exe'",
             "if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) { throw 'Oriel setup executable was not found in the Scoop version directory.' }",
             "$process = Start-Process -FilePath $setup -ArgumentList @('--silent') -PassThru -WindowStyle Hidden",
             "if (-not $process.WaitForExit(45000)) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue; throw 'Oriel setup timed out after 45 seconds.' }",
             "if ($process.ExitCode -ne 0) { throw \"Oriel setup exited with code $($process.ExitCode).\" }",
-            "$installDir = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel'",
             "$appExe = Join-Path $installDir 'oriel.exe'",
             "$uninstaller = Join-Path $installDir 'uninstall.exe'",
             "if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) { throw \"Oriel executable was not found at $appExe.\" }",
@@ -72,5 +84,11 @@
             "if (Test-Path -LiteralPath $installDir) { throw \"Oriel install directory remains after cleanup: $installDir\" }"
         ]
     },
-    "notes": "EXPERIMENTAL ONLY. Uses reg.exe to query uninstall registry data for the Oriel install directory and requires the app executable and registry references to remain absent continuously for five seconds. Fails closed after 30 seconds. This remains a non-portable external install and may conflict with Oriel's built-in self-updater."
+    "notes": "Non-portable package: the official setup installs Oriel into %LOCALAPPDATA%\\Programs\\Oriel. Scoop manages that per-user installation through a junction and the registered uninstaller. Existing Oriel installations are detected and must be uninstalled before installing this package. Use Scoop as the update authority if Oriel's built-in updater is enabled.",
+    "checkver": {
+        "github": "https://github.com/Niix-x/Oriel-Releases"
+    },
+    "autoupdate": {
+        "url": "https://github.com/Niix-x/Oriel-Releases/releases/download/v$version/OrielSetup-$version.exe"
+    }
 }

@@ -1,37 +1,38 @@
-# Oriel Notch installer experiments
+# Oriel Notch Scoop manifest
 
-These files are **temporary test manifests**, not production Scoop packages. They are intentionally stored outside `bucket/` and must not be promoted unless a method passes installation and uninstall checks.
+Production manifest: `bucket/Oriel-Niix.json`
 
-Target: [Niix-x/Oriel-Releases](https://github.com/Niix-x/Oriel-Releases), official Windows setup `OrielSetup-1.1.1.exe`.
+Source: [Niix-x/Oriel-Releases](https://github.com/Niix-x/Oriel-Releases)  
+Current tested release: `1.1.1`  
+Official installer: `OrielSetup-1.1.1.exe`  
+SHA-256: `808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954`
 
-Pinned SHA-256:
+This is the Oriel Notch desktop overlay. It is separate from the existing `bucket/oriel.json` package (Yangflow RSS reader) and `bucket/oriel-highercomve.json` package (Highercomve Zig framework CLI).
 
-```text
-808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954
-```
+## Installation model
 
-| Candidate | Scoop mechanism | Hypothesis |
-| --- | --- | --- |
-| `oriel-notch-exp-s` | `installer.args` | `/S` |
-| `oriel-notch-exp-silent` | `installer.args` | `/silent` |
-| `oriel-notch-exp-quiet` | `installer.args` | `/quiet` |
-| `oriel-notch-exp-script` | `installer.script` | PowerShell invokes `--silent --install-dir $dir` with a timeout |
-| `oriel-notch-exp-7zip` | URL fragment extraction | `#/dl.7z` |
-| `oriel-notch-exp-managed-external` | `installer.script` + `post_install` junction + `uninstaller.script` | Installs to the publisher's per-user path and attempts to manage the registered uninstall command |
-| `oriel-notch-exp-managed-external-sync` | `installer.script` + junction + registry-aware uninstaller | Waits for Oriel's uninstall registry entry to disappear before Scoop proceeds with a forced update |
-| `Oriel-Niix` | `installer.script` + junction + `reg.exe` query + five-second stable absence | Oriel Notch manifest named with its developer suffix; verifies the registry no longer references the external install path before proceeding with update |
+The publisher supplies a per-user setup executable, not a usable portable archive. The installer places the application in `%LOCALAPPDATA%\\Programs\\Oriel`; the Scoop manifest creates a junction inside its version directory and points the Scoop shim/shortcut through that junction.
 
-All command-line switches are unverified hypotheses. Each candidate runs on its own disposable Windows runner. The workflow checks installation exit status, application EXEs inside Scoop's version directory, common external install locations, uninstall registry entries, and whether `scoop uninstall` removes the version directory.
+This package is **not portable**. Before launching the official setup, it checks for an existing Oriel installation folder or uninstall registration and refuses to take ownership of an installation that was not created by this manifest. Uninstall invokes Oriel's registered `uninstall.exe --uninstall --silent`, checks that the application executable and registry references stay absent for five continuous seconds (maximum wait 30 seconds), and removes only the verified residual uninstaller.
 
-The static inspection job verifies the download hash, scans embedded strings, probes common help switches with timeouts, and records the 7-Zip extraction contents. The managed-external candidate is intentionally separate: the earlier `--silent --install-dir` probe installed to `%LOCALAPPDATA%\\Programs\\Oriel` and registered an uninstall command, so this candidate tests whether a junction and that registered uninstaller can make this external install controllable by Scoop.
+Use Scoop as the update authority if Oriel's built-in updater is enabled.
 
-## Promotion rule
+## Automated validation
 
-Do not promote a candidate into `bucket/` unless it exits without interactive UI, provides a working Scoop launch path, and is removed cleanly by `scoop uninstall`. The managed-external candidate has a stricter alternate check: it must create the expected junction, use the exact uninstall command recorded by Oriel, and remove both the external app folder and Windows uninstall registration. Even if it passes, it remains a non-portable option and must be assessed against Oriel's built-in self-updater before production use.
+The active Windows workflow tests the production manifest itself. It:
 
-The managed-external candidate uses `uninstall.exe --uninstall` only because that exact command was observed in the installer's Windows uninstall registry entry. A successful setup launch alone is not sufficient.
+1. Runs Scoop `checkver.ps1 -Update` against a temporary copy with a deliberately old version, then verifies the latest GitHub release version, generated download URL, and SHA-256.
+2. Installs the package through a temporary Git bucket.
+3. Runs two consecutive forced same-version `scoop update -f` cycles and checks after each that `oriel.exe`, the registered uninstaller, and the Scoop launch junction are present.
+4. Runs `scoop uninstall` and verifies removal of the Scoop version directory, external Oriel executables, and Oriel uninstall registry entry.
+5. Separately inspects the official installer, pinned hash, and extraction behavior.
 
+The other files in `tests/oriel/manifests/` preserve the unsuccessful installation-method probes for reference; they are no longer part of the active CI matrix.
 
-A forced same-version `scoop update -f` test exposed a race in the original managed-external candidate: Oriel's files disappeared but its uninstall registry entry was still present when Scoop started the replacement install. The synchronized candidate waits up to 30 seconds for both states to clear and fails closed if they do not.
+## Checkver and autoupdate
 
-The registry-provider synchronization candidate also failed: during forced update, Oriel's launcher returned before the new app executable was present, while the uninstall registration remained. The `Oriel-Niix` candidate uses native `reg.exe` queries and requires five continuous seconds with no app executable or matching uninstall registry data before allowing Scoop to continue.
+`checkver.github` reads the latest release tag from the official repository. `autoupdate.url` follows the published `v$version/OrielSetup-$version.exe` asset naming pattern. The workflow actively validates these fields using Scoop's own `checkver.ps1`.
+
+## Important distinction
+
+This manifest does not provide a portable installation and does not move Oriel's program files into the Scoop version directory. Scoop manages the publisher's per-user installation lifecycle through the junction and official uninstaller.

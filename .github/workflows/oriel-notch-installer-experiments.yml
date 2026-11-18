@@ -134,36 +134,9 @@ jobs:
       max-parallel: 8
       matrix:
         include:
-          - id: args-s
-            method: "installer.args /S"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-s.json"
-          - id: args-silent
-            method: "installer.args /silent"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-silent.json"
-          - id: args-quiet
-            method: "installer.args /quiet"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-quiet.json"
-          - id: script-silent-dir
-            method: "installer.script --silent --install-dir"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-script.json"
-          - id: sevenzip-extraction
-            method: "Scoop 7-Zip extraction"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-7zip.json"
-          - id: script-managed-external
-            method: "installer.script + junction + registered uninstaller"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external.json"
-          - id: script-managed-external-silent-uninstall
-            method: "installer.script + junction + --uninstall --silent"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-silent-uninstall.json"
-          - id: script-managed-external-cleanup
-            method: "installer.script + junction + silent uninstall + verified residue cleanup"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-cleanup.json"
-          - id: script-managed-external-sync
-            method: "installer.script + junction + uninstall registry synchronization"
-            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-sync.json"
           - id: script-managed-external-stable
-            method: "installer.script + junction + native registry query + stable absence"
-            manifest: "tests/oriel/manifests/Oriel-Niix.json"
+            method: "Scoop install + checkver/autoupdate + two forced updates + verified uninstall"
+            manifest: "bucket/Oriel-Niix.json"
 
     steps:
       - name: Checkout repository
@@ -213,6 +186,22 @@ jobs:
           $bucketDir = Join-Path $bucketRoot 'bucket'
           New-Item -ItemType Directory -Path $bucketDir -Force | Out-Null
           Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $bucketDir "$appName.json") -Force
+          $temporaryManifestPath = Join-Path $bucketDir "$appName.json"
+          $checkverScript = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkverScript -PathType Leaf)) { throw "Scoop checkver script was not found: $checkverScript" }
+          $checkverManifest = Get-Content -LiteralPath $temporaryManifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $checkverManifest.version = '0.0.0'
+          $checkverManifest.hash = ''
+          $checkverManifest | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $temporaryManifestPath -Encoding utf8
+          & $checkverScript -App $appName -Dir $bucketRoot -Update
+          $updatedManifest = Get-Content -LiteralPath $temporaryManifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $expectedVersion = '1.1.1'
+          $expectedUrl = "https://github.com/Niix-x/Oriel-Releases/releases/download/v$expectedVersion/OrielSetup-$expectedVersion.exe"
+          $expectedHash = '808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954'
+          if ([string]$updatedManifest.version -ne $expectedVersion) { throw "checkver returned version $($updatedManifest.version), expected $expectedVersion." }
+          if ([string]$updatedManifest.url -ne $expectedUrl) { throw "autoupdate generated an unexpected URL: $($updatedManifest.url)" }
+          if ([string]$updatedManifest.hash -ne $expectedHash) { throw "autoupdate generated an unexpected SHA-256: $($updatedManifest.hash)" }
+          Write-Host "Scoop checkver/autoupdate validation: PASS ($($updatedManifest.version))"
           Push-Location $bucketRoot
           try {
             git init --initial-branch=master | Out-Null
