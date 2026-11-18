@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   install:
-    name: Extract, launch, and persist test (${ matrix.shell }})
+    name: Extract, launch, and persist test (${{ matrix.shell }})
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -23,13 +23,13 @@ jobs:
         shell: [powershell, pwsh]
     defaults:
       run:
-        shell: ${ matrix.shell }
+        shell: ${{ matrix.shell }}
 
     steps:
       - name: Checkout manifest
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Install Scoop and create a local test bucket
         run: |
@@ -58,7 +58,7 @@ jobs:
             Pop-Location
           }
 
-          $bucketUrl = 'file:///' + $localBucket.Replace('\\', '/')
+          $bucketUrl = 'file:///' + $localBucket.Replace([char]92, '/')
           scoop bucket add kirobucket $bucketUrl
           scoop install droptidy
 
