@@ -159,4 +159,23 @@ if ($LASTEXITCODE -ne 0) {
     throw 'Could not push Excavator manifest updates to master.'
 }
 
-Write-Host "Pushed $updatedCount updated manifest(s) to master."
+# GITHUB_TOKEN pushes do not automatically start other workflows. Explicitly dispatch
+# the normal manifest validation pipeline for the exact manifests updated by Checkver.
+$apiRoot = "https://api.github.com/repos/$env:GITHUB_REPOSITORY"
+$apiHeaders = @{
+    Accept = 'application/vnd.github+json'
+    Authorization = "Bearer $env:GITHUB_TOKEN"
+    'X-GitHub-Api-Version' = '2022-11-28'
+    'User-Agent' = 'kirobucket-excavator'
+}
+$dispatchPayload = @{
+    ref = 'master'
+    inputs = @{
+        manifest = ($updatedFiles -join ',')
+        force_update = 'true'
+    }
+} | ConvertTo-Json -Depth 5 -Compress
+
+Invoke-RestMethod -Method Post -Uri "$apiRoot/actions/workflows/manifest-pipeline.yml/dispatches" -Headers $apiHeaders -ContentType 'application/json' -Body $dispatchPayload -TimeoutSec 30 -ErrorAction Stop | Out-Null
+
+Write-Host "Pushed $updatedCount updated manifest(s) to master and dispatched Manifest Pipeline."
