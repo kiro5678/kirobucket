@@ -1,10 +1,10 @@
-name: Launcher Companion Installer Inspection
+name: Launcher Download Inspection
 
 on:
   workflow_dispatch:
     inputs:
       installer_url:
-        description: "Direct HTTPS URL to inspect; defaults to the supplied Launcher Companion download"
+        description: "Direct HTTPS URL to inspect; defaults to the supplied Launcher download"
         required: false
         default: "https://kevlog.co.za/downloads/projects/launcher/fa6c65d9a9766430c921705d877be2ff/"
         type: string
@@ -12,7 +12,7 @@ on:
     branches:
       - master
     paths:
-      - ".github/workflows/launcher-companion-installer-inspection.yml"
+      - ".github/workflows/launcher-download-inspection.yml"
 
 permissions:
   contents: read
@@ -52,7 +52,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $workDir = Join-Path $env:RUNNER_TEMP 'launcher-companion-inspection'
+          $workDir = Join-Path $env:RUNNER_TEMP 'launcher-download-inspection'
           New-Item -ItemType Directory -Path $workDir -Force | Out-Null
           $file = Join-Path $workDir 'LauncherCompanion.exe'
           Invoke-WebRequest -Uri $env:INSTALLER_URL -OutFile $file -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
@@ -70,7 +70,7 @@ jobs:
           $signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { '(no signer certificate)' }
 
           $metadata = @(
-            'Launcher Companion download metadata'
+            'Launcher download metadata'
             '===================================='
             "Requested URL: $env:INSTALLER_URL"
             "Downloaded size: $($item.Length) bytes"
@@ -98,7 +98,7 @@ jobs:
       - name: Inspect PE architecture, .NET header and installer signatures
         shell: pwsh
         env:
-          INSTALLER_PATH: ${{ runner.temp }}/launcher-companion-inspection/LauncherCompanion.exe
+          INSTALLER_PATH: ${{ runner.temp }}/launcher-download-inspection/LauncherCompanion.exe
         run: |
           $ErrorActionPreference = 'Stop'
           $file = $env:INSTALLER_PATH
@@ -185,17 +185,17 @@ jobs:
             '- Installer string matches are heuristic and must be combined with the archive results.'
             '- The downloaded file was not executed.'
           )
-          $report | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'launcher-companion-inspection\static-identification.txt') -Encoding utf8
+          $report | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'launcher-download-inspection\static-identification.txt') -Encoding utf8
           $report | ForEach-Object { Write-Host $_ }
           $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
       - name: Inspect and safely extract archive payload with 7-Zip
         shell: pwsh
         env:
-          INSTALLER_PATH: ${{ runner.temp }}/launcher-companion-inspection/LauncherCompanion.exe
+          INSTALLER_PATH: ${{ runner.temp }}/launcher-download-inspection/LauncherCompanion.exe
         run: |
           $ErrorActionPreference = 'Stop'
-          $workDir = Join-Path $env:RUNNER_TEMP 'launcher-companion-inspection'
+          $workDir = Join-Path $env:RUNNER_TEMP 'launcher-download-inspection'
           $file = $env:INSTALLER_PATH
           $extractDir = Join-Path $workDir 'extracted-payload'
           New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
@@ -245,7 +245,7 @@ jobs:
 
           $interesting = @($files | Where-Object {
             $_.Extension -in @('.exe','.dll','.msi','.msix','.json','.config') -or
-            $_.Name -match '(?i)launcher|companion|setup|install|uninstall|hostfxr|hostpolicy'
+            $_.Name -match '(?i)launcher|setup|install|uninstall|hostfxr|hostpolicy'
           } | Sort-Object FullName | ForEach-Object {
             $_.FullName.Substring($extractDir.Length).TrimStart('\') + [char]9 + "$($_.Length) bytes"
           })
@@ -273,8 +273,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: launcher-companion-static-inspection
+          name: launcher-static-inspection
           path: |
-            ${{ runner.temp }}/launcher-companion-inspection/*.txt
-            ${{ runner.temp }}/launcher-companion-inspection/extracted-payload/**
+            ${{ runner.temp }}/launcher-download-inspection/*.txt
+            ${{ runner.temp }}/launcher-download-inspection/extracted-payload/**
           if-no-files-found: ignore

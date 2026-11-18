@@ -1,6 +1,6 @@
 {
     "version": "1.2.0",
-    "description": "Windows companion for the Launcher Android app with local-network notes and shared-file access",
+    "description": "Windows desktop component for the Launcher Android app, providing local-network notes and shared-file access (Kevin Loggenberg)",
     "homepage": "https://kevlog.co.za/projects/launcher/",
     "license": "Unknown",
     "architecture": {
@@ -10,7 +10,7 @@
         }
     },
     "pre_install": [
-        "$launcher = Join-Path $dir 'LauncherCompanion-portable.cmd'",
+        "$launcher = Join-Path $dir 'Launcher-portable.cmd'",
         "$launcherLines = @(",
         "    '@echo off',",
         "    'setlocal',",
@@ -28,14 +28,14 @@
     ],
     "bin": [
         [
-            "LauncherCompanion-portable.cmd",
-            "launcher-companion"
+            "Launcher-portable.cmd",
+            "launcher-kevin"
         ]
     ],
     "shortcuts": [
         [
-            "LauncherCompanion-portable.cmd",
-            "Launcher Companion"
+            "Launcher-portable.cmd",
+            "Launcher - Kevin Loggenberg"
         ]
     ],
     "persist": "data",
@@ -44,10 +44,10 @@
         "regex": "<Version>(?<version>[\\d.]+)</Version>"
     },
     "notes": [
-        "The official Windows companion is published as a self-contained win-x64 single-file executable; it is not an MSI, Inno Setup, NSIS, or 7-Zip installer. Scoop downloads the executable directly without running an installer.",
-        "The launcher redirects LOCALAPPDATA to data\\Local and DOTNET_BUNDLE_EXTRACT_BASE_DIR to data\\dotnet. The server certificate created by the application under %LOCALAPPDATA%\\LauncherCompanion is therefore stored in Scoop's persistent data directory.",
-        "Keep the Launcher Companion console window open while the phone is connected. Close the window to stop the local companion server.",
-        "The downloaded executable is not Authenticode-signed. No LICENSE file or license declaration was found in the upstream repository; the manifest therefore marks the license as Unknown.",
-        "The upstream download uses an opaque, per-upload file identifier rather than a version-derived URL. checkver reads the companion version from the upstream project file, but autoupdate is intentionally omitted because a future download URL cannot be derived safely."
+        "The official Windows executable is published as a self-contained win-x64 single-file .NET application. Scoop downloads the executable directly and does not run an installer.",
+        "The launcher redirects LOCALAPPDATA to data\\Local and DOTNET_BUNDLE_EXTRACT_BASE_DIR to data\\dotnet. The application's server certificate, stored under %LOCALAPPDATA%\\LauncherCompanion, is therefore kept in Scoop's persistent data directory.",
+        "Keep the Launcher console window open while the phone is connected. Closing the window stops the local server.",
+        "The downloaded LauncherCompanion.exe is not Authenticode-signed. No LICENSE file or license declaration was found in the upstream repository; the manifest therefore marks the license as Unknown.",
+        "The upstream download uses an opaque, per-upload file identifier rather than a version-derived URL. checkver reads the application version from the upstream project file, but autoupdate is intentionally omitted because a future download URL cannot be derived safely."
     ]
 }
