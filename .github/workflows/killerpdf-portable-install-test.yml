@@ -58,6 +58,7 @@ jobs:
           }
 
           $runtimeRoot = Join-Path $env:LOCALAPPDATA 'KillerPDF\Portable'
+          $runtimePrefix = $runtimeRoot + [System.IO.Path]::DirectorySeparatorChar
           $launcherProcess = $null
           $childProcess = $null
           try {
@@ -67,7 +68,7 @@ jobs:
               $childProcess = Get-CimInstance -ClassName Win32_Process -Filter "Name = 'KillerPDF.App.exe'" |
                 Where-Object {
                   $_.ExecutablePath -and
-                  $_.ExecutablePath.StartsWith($runtimeRoot + '\\', [System.StringComparison]::OrdinalIgnoreCase)
+                  $_.ExecutablePath.StartsWith($runtimePrefix, [System.StringComparison]::OrdinalIgnoreCase)
                 } |
                 Select-Object -First 1
 
