@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'bucket/diskmonitor.json'
+      - 'bucket/desktopframesplus.json'
       - 'bucket/axonhub.json'
       - 'bucket/huedra-apixelsnet.json'
       - 'bucket/goshell.json'
