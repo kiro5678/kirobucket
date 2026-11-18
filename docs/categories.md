@@ -16,7 +16,8 @@
 | File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
-| Games & Game Utilities | 20 | [View](#games-game-utilities) |
+| Games & Game Utilities | 9 | [View](#games-game-utilities) |
+| Games Tools | 14 | [View](#games-tools) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 57 | [View](#media-audio-video) |
@@ -25,7 +26,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
-| Other Utilities | 135 | [View](#other-utilities) |
+| Other Utilities | 134 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 32 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
@@ -33,7 +34,7 @@
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
 | Sync & Backup | 12 | [View](#sync-backup) |
-| System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 78 | [View](#system-monitoring-hardware) |
 | Sysinternals Utilities | 75 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
@@ -43,7 +44,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1225**
+**Total unique categorized manifests: 1226**
 
 
 ## Android & Device Tools
@@ -426,22 +427,30 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [softwareok-bitte-wenden](../bucket/softwareok-bitte-wenden.json) | 1.15 | 64bit: 181.7 KiB | 2024-11-28 | Small portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=Bitte.Wenden) |
 | [softwareok-corona-ko](../bucket/softwareok-corona-ko.json) | 3.11 | 64bit: 1.5 MiB | 2026-05-16 | Small desktop game from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=CoronaKO) |
 | [cuttherope-dx](../bucket/cuttherope-dx.json) | 2.50.1 | 307.5 MiB | 2026-10-10 | Open-source remake of Cut the Rope for Windows and other platforms. | [Homepage](https://github.com/yell0wsuit/cuttherope-dx) |
+| [softwareok-freecell-ok](../bucket/softwareok-freecell-ok.json) | 1.07 | 64bit: 616.8 KiB | 2026-10-16 | Play FreeCell solitaire. | [Homepage](https://www.softwareok.com/?Download=FreeCellOK) |
+| [softwareok-matrix-coronako](../bucket/softwareok-matrix-coronako.json) | 2.41 | 64bit: 1.0 MiB | 2026-05-13 | Small 3D game from SoftwareOK. | [Homepage](https://www.softwareok.com/?seite=Microsoft/MatriX.CoronaKO) |
+| [softwareok-minesweeper-ok](../bucket/softwareok-minesweeper-ok.json) | 1.21 | 64bit: 243.0 KiB | 2026-10-18 | Play Minesweeper on Windows. | [Homepage](https://www.softwareok.com/?Download=MineSweeperOK) |
+| [softwareok-solitaire-ok](../bucket/softwareok-solitaire-ok.json) | 1.26 | 64bit: 568.2 KiB | 2026-05-11 | Play Solitaire on Windows. | [Homepage](https://www.softwareok.com/?Download=SolitaireOK) |
+| [sordum-bpuzzle](../bucket/sordum-bpuzzle.json) | 1.2 | 2.3 MiB | 2023-06-20 | Portable sliding-tile puzzle game with multiple difficulty levels. | [Homepage](https://www.sordum.org/8058/bpuzzle-v1-2/) |
+| [tonkatsu-box](../bucket/tonkatsu-box.json) | 0.45.0 | 24.0 MiB | 2026-10-03 | Personal collection manager for games, movies, TV shows, anime, visual novels, manga, books, music and podcasts. | [Homepage](https://github.com/hacan359/tonkatsu_box) |
+
+## Games Tools
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [boilr](../bucket/boilr.json) | 1.11.0 | — | — | Imports games from other launchers into the Steam library. | [Homepage](https://github.com/PhilipK/BoilR) |
 | [ds4windows](../bucket/ds4windows.json) | 4.0.2.3 | 64bit: 4.1 MiB / 32bit: 4.0 MiB | 2025-01-06 | DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable) | [Homepage](https://github.com/hbashton/DS4Windows) |
 | [ds4windows-prerelease](../bucket/ds4windows-prerelease.json) | 4.6.7 | 64bit: 128.4 MiB | 2026-10-09 | DualShock 4, DualSense, and other controller remapping tool for Windows (pre-release portable) | [Homepage](https://github.com/hbashton/DS4Windows) |
 | [endfield-gacha](../bucket/endfield-gacha.json) | 0.7.1 | 18.3 MiB | 2026-10-20 | 一个《明日方舟：终末地》寻访记录统计与分析工具 | [Homepage](https://github.com/bhaoo/endfield-gacha) |
 | [endfield-logs](../bucket/endfield-logs.json) | 1.2.1 | 226.2 MiB | 2026-04-22 | "Arknights: Endfield" combat analysis tool based on NpCup packet capture analysis | [Homepage](https://github.com/deepdarkssj/ZMDLogs) |
-| [softwareok-freecell-ok](../bucket/softwareok-freecell-ok.json) | 1.07 | 64bit: 616.8 KiB | 2026-10-16 | Play FreeCell solitaire. | [Homepage](https://www.softwareok.com/?Download=FreeCellOK) |
-| [game-cheats-manager](../bucket/game-cheats-manager.json) | 2.5.4 | 51.3 MiB | 2026-10-11 | Game cheats manager for Windows. | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) |
 | [full-screen-dlss5-wrapper-thiojoe](../bucket/full-screen-dlss5-wrapper-thiojoe.json) | 1.1.0 | 1.2 MiB | 2026-09-12 | Full-screen DLSS 5 graphics wrapper for the Windows desktop or a selected window. | [Homepage](https://github.com/ThioJoe/Full-Screen-DLSS5-Wrapper) |
-| [softwareok-matrix-coronako](../bucket/softwareok-matrix-coronako.json) | 2.41 | 64bit: 1.0 MiB | 2026-05-13 | Small 3D game from SoftwareOK. | [Homepage](https://www.softwareok.com/?seite=Microsoft/MatriX.CoronaKO) |
-| [softwareok-minesweeper-ok](../bucket/softwareok-minesweeper-ok.json) | 1.21 | 64bit: 243.0 KiB | 2026-10-18 | Play Minesweeper on Windows. | [Homepage](https://www.softwareok.com/?Download=MineSweeperOK) |
+| [game-cheats-manager](../bucket/game-cheats-manager.json) | 2.5.4 | 51.3 MiB | 2026-10-11 | Game cheats manager for Windows. | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) |
+| [game-overlay](../bucket/game-overlay.json) | 1.0.20 | 64bit: 13.6 MiB | 2026-08-11 | Customizable in-game overlay for FPS, frame-time lows, CPU/GPU usage and temperatures, ping, and packet loss. | [Homepage](https://github.com/kynemyers/game-overlay) |
 | [nightlight-launcher](../bucket/nightlight-launcher.json) | 5.3.0 | 64bit: 110.7 MiB | 2026-10-21 | Electron game launcher for managing a Steam library and launching games. | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) |
+| [nova](../bucket/nova.json) | 0.1.0 | 6.0 MiB | 2026-11-17 | Native Windows game launcher that finds installed games, displays Steam artwork and starts games. | [Homepage](https://github.com/yaffalhakim1/nova) |
 | [openspeedy](../bucket/openspeedy.json) | 3.3.17 | 5.2 MiB | 2026-10-18 | A Windows utility that speeds up games and applications by modifying process timing. | [Homepage](https://github.com/game1024/OpenSpeedy) |
 | [savestate](../bucket/savestate.json) | 3.1 | 88.7 MiB | 2026-10-29 | Back up and restore video game saves, with Steam detection and emulator support. | [Homepage](https://github.com/Matteo842/SaveState) |
-| [softwareok-solitaire-ok](../bucket/softwareok-solitaire-ok.json) | 1.26 | 64bit: 568.2 KiB | 2026-05-11 | Play Solitaire on Windows. | [Homepage](https://www.softwareok.com/?Download=SolitaireOK) |
-| [sordum-bpuzzle](../bucket/sordum-bpuzzle.json) | 1.2 | 2.3 MiB | 2023-06-20 | Portable sliding-tile puzzle game with multiple difficulty levels. | [Homepage](https://www.sordum.org/8058/bpuzzle-v1-2/) |
 | [tcno-acc-switcher](../bucket/tcno-acc-switcher.json) | 4.0.8 | 64bit: 43.7 MiB | 2025-11-21 | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) |
-| [tonkatsu-box](../bucket/tonkatsu-box.json) | 0.45.0 | 24.0 MiB | 2026-10-03 | Personal collection manager for games, movies, TV shows, anime, visual novels, manga, books, music and podcasts. | [Homepage](https://github.com/hacan359/tonkatsu_box) |
 | [uesave](../bucket/uesave.json) | 0.7.1 | 839.1 KiB | 2026-03-23 | A library for reading and writing Unreal Engine save files | [Homepage](https://github.com/trumank/uesave-rs) |
 
 ## Images & Photos
@@ -747,7 +756,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | --- | --- | --- | --- | --- | --- |
 | [ahk-tts](../bucket/ahk-tts.json) | 1.8 | — | — | AutoHotkey-based text-to-speech utility for Windows. | [Homepage](https://github.com/altbdoor/ahk-tts) |
 | [aula](../bucket/aula.json) | 0.1.3 | — | — | Study companion that turns notes, slides, and past exams into interactive courses. | [Homepage](https://github.com/luumlabs/aula) |
-| [boilr](../bucket/boilr.json) | 1.11.0 | — | — | Imports games from other launchers into the Steam library. | [Homepage](https://github.com/PhilipK/BoilR) |
 | [bootease](../bucket/bootease.json) | 3.0.0 | 64bit: 5.0 MiB | 2026-10-31 | Windows utility for BIOS/UEFI, recovery, restart options, and system information. | [Homepage](https://github.com/voidksa/BootEase) |
 | [codex-monitor](../bucket/codex-monitor.json) | 0.7.67 | — | — | Desktop application for monitoring Codex agent sessions. | [Homepage](https://github.com/Dimillian/CodexMonitor) |
 | [codex-plus-plus](../bucket/codex-plus-plus.json) | 2.6.0 | — | — | Enhanced Windows desktop client for Codex and other AI agents. | [Homepage](https://github.com/BigPizzaV3/CodexPlusPlus) |
@@ -1118,7 +1126,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [firemin](../bucket/firemin.json) | 11.8.3.8520 | 3.9 MiB | 2024-12-09 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [fluent-sensors](../bucket/fluent-sensors.json) | 1.7.0 | 101.9 MiB | 2026-10-28 | Native Windows hardware monitoring app. | [Homepage](https://github.com/cechout/fluent-sensors) |
 | [freetoken-desktop.beta](../bucket/freetoken-desktop.beta.json) | 0.2.0-beta.25 | 6.7 MiB | 2026-10-24 | Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds. | [Homepage](https://www.flashml.ai) |
-| [game-overlay](../bucket/game-overlay.json) | 1.0.20 | 64bit: 13.6 MiB | 2026-08-11 | Customizable in-game overlay for FPS, frame-time lows, CPU/GPU usage and temperatures, ping, and packet loss. | [Homepage](https://github.com/kynemyers/game-overlay) |
 | [grc-clickey](../bucket/grc-clickey.json) | 2005.10.29 | 46.4 KiB | 2005-10-29 | GRC ClicKey: Adds configurable keyboard typing sounds and supports command-line sound and volume options. | [Homepage](https://www.grc.com/freeware/clickey.htm) |
 | [grc-dcombobulator](../bucket/grc-dcombobulator.json) | 2004.05.24 | 39.4 KiB | 2004-05-24 | GRC DCOMbobulator: Legacy utility for checking and enabling/disabling the historical Windows DCOM vulnerability mitigation. | [Homepage](https://www.grc.com/freeware/dcom.htm) |
 | [grc-id-serve](../bucket/grc-id-serve.json) | 2003.08.26 | 36.4 KiB | 2003-08-27 | GRC ID Serve: Identifies web-server software and version information exposed by an Internet server. | [Homepage](https://www.grc.com/id/idserve.htm) |
