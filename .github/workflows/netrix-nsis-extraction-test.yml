@@ -1,0 +1,118 @@
+name: Netrix NSIS Extraction Diagnostic
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/netrix-nsis-extraction-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Inspect official Netrix NSIS payload
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download and verify official release installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://github.com/chighladze/netrix-releases/releases/download/v0.3.0-beta.8/Netrix_0.3.0-beta.8_x64-setup.exe'
+          $expected = '58f92df91599640f90e8ef9e7713f00eb346bebbb3732a9738d8879b2f7004dc'
+          $installer = Join-Path $env:RUNNER_TEMP 'Netrix_0.3.0-beta.8_x64-setup.exe'
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SHA256 mismatch: expected $expected, got $actual" }
+          "installer=$installer" >> $env:GITHUB_ENV
+          "SHA-256 verified: $actual"
+          "Size: $((Get-Item -LiteralPath $installer).Length) bytes"
+
+      - name: Extract NSIS payload with 7-Zip (no execution)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not (Test-Path -LiteralPath $sevenZip)) { throw '7-Zip is unavailable on this runner.' }
+
+          $work = Join-Path $env:RUNNER_TEMP 'netrix-nsis-diagnostic'
+          $output = Join-Path $work 'extracted'
+          $listingPath = Join-Path $work 'archive-listing.txt'
+          $logPath = Join-Path $work '7zip-extract.log'
+          New-Item -ItemType Directory -Path $output -Force | Out-Null
+
+          & $sevenZip l -slt $env:installer 2>&1 | Tee-Object -FilePath $listingPath
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip cannot inspect the NSIS installer (exit $LASTEXITCODE)." }
+
+          & $sevenZip x $env:installer "-o$output" '-xr!*.nsis' '-y' 2>&1 | Tee-Object -FilePath $logPath
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content -LiteralPath $logPath -Tail 80
+            throw "7-Zip extraction failed (exit $LASTEXITCODE)."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $output -File -Recurse)
+          if ($files.Count -eq 0) { throw 'The NSIS extraction completed but produced no files.' }
+
+          $rows = foreach ($file in $files) {
+            $relative = [System.IO.Path]::GetRelativePath($output, $file.FullName).Replace('\', '/')
+            [PSCustomObject]@{
+              Path = $relative
+              Bytes = $file.Length
+              Product = $file.VersionInfo.ProductName
+              Description = $file.VersionInfo.FileDescription
+              FileVersion = $file.VersionInfo.FileVersion
+            }
+          }
+          $rows | Export-Csv -NoTypeInformation -Encoding UTF8 -Path (Join-Path $work 'extracted-files.csv')
+          $rows | Where-Object { $_.Path -match '(?i)(netrix|webview|backend|\.exe$|\.dll$)' } |
+            Format-Table -AutoSize | Out-String -Width 300 |
+            Set-Content -LiteralPath (Join-Path $work 'relevant-files.txt') -Encoding UTF8
+
+          $summary = @(
+            '## Netrix NSIS extraction',
+            '',
+            "- Extracted files: $($files.Count)",
+            "- Extract root: $output",
+            '- Installer was not executed.',
+            '- NSIS install hooks were not run by archive extraction.',
+            '',
+            '### Relevant payload files',
+            ''
+          )
+          $relevant = @($rows | Where-Object { $_.Path -match '(?i)(netrix|webview|backend|\.exe$|\.dll$)' } | Select-Object -First 100)
+          if ($relevant.Count -eq 0) {
+            $summary += 'No likely application executables or runtime files were identified.'
+          } else {
+            $summary += '| Path | Bytes | Product | Version |'
+            $summary += '| --- | ---: | --- | --- |'
+            foreach ($item in $relevant) {
+              $summary += "| $($item.Path) | $($item.Bytes) | $($item.Product) | $($item.FileVersion) |"
+            }
+          }
+          $summary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding UTF8
+          Write-Host "Extracted $($files.Count) files. Detailed listing saved as artifact."
+
+      - name: Upload extraction diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: netrix-nsis-extraction-diagnostic
+          path: |
+            ${{ runner.temp }}/netrix-nsis-diagnostic/archive-listing.txt
+            ${{ runner.temp }}/netrix-nsis-diagnostic/7zip-extract.log
+            ${{ runner.temp }}/netrix-nsis-diagnostic/extracted-files.csv
+            ${{ runner.temp }}/netrix-nsis-diagnostic/relevant-files.txt
+          if-no-files-found: warn
+          retention-days: 7
