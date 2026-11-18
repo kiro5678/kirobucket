@@ -1274,7 +1274,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Windows 11 desktop dock, status bar, modules and customizable themes. | [Homepage](https://gloof.app/) |
+| [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
 | [meridian-shell](../bucket/meridian-shell.json) | 1.0-beta-1 | 3.5 MiB | 2026-11-16 | Windows 11 shell replacement with an alternative taskbar, Start menu, and file manager. | [Homepage](https://github.com/meridiandrive/Meridian-Shell) |
 | [softwareok-12-ants](../bucket/softwareok-12-ants.json) | 6.91 | 64bit: 290.1 KiB | 2026-04-24 | Display animated ants on the Windows desktop. | [Homepage](https://www.softwareok.com/?Download=12-Ants) |
 | [softwareok-4ur-windows-8-mouse-balls](../bucket/softwareok-4ur-windows-8-mouse-balls.json) | 4.91 | 64bit: 112.3 KiB | 2026-04-21 | Show animated mouse-ball effects on the desktop. | [Homepage](https://www.softwareok.com/?Download=4ur-Windows-8-Mouse-Balls) |
