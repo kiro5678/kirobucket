@@ -1,0 +1,280 @@
+name: Launcher Download Inspection
+
+on:
+  workflow_dispatch:
+    inputs:
+      installer_url:
+        description: "Direct HTTPS URL to inspect; defaults to the supplied Launcher download"
+        required: false
+        default: "https://kevlog.co.za/downloads/projects/launcher/fa6c65d9a9766430c921705d877be2ff/"
+        type: string
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/launcher-download-inspection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download, identify and safely extract
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Resolve and validate download URL
+        id: source
+        shell: pwsh
+        env:
+          INPUT_URL: ${{ inputs.installer_url }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $url = $env:INPUT_URL.Trim()
+          if ([string]::IsNullOrWhiteSpace($url)) {
+            $url = 'https://kevlog.co.za/downloads/projects/launcher/fa6c65d9a9766430c921705d877be2ff/'
+          }
+          $uri = [System.Uri]::new($url)
+          if (-not $uri.IsAbsoluteUri -or $uri.Scheme -ne 'https') {
+            throw 'Only absolute HTTPS URLs are accepted.'
+          }
+          if ($uri.DnsSafeHost -ine 'kevlog.co.za') {
+            throw "Only the official kevlog.co.za download host is accepted. Received: $($uri.DnsSafeHost)"
+          }
+          "installer_url=$($uri.AbsoluteUri)" >> $env:GITHUB_OUTPUT
+          Write-Host "Validated official download host: $($uri.DnsSafeHost)"
+
+      - name: Download file and calculate cryptographic metadata
+        id: target
+        shell: pwsh
+        env:
+          INSTALLER_URL: ${{ steps.source.outputs.installer_url }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $workDir = Join-Path $env:RUNNER_TEMP 'launcher-download-inspection'
+          New-Item -ItemType Directory -Path $workDir -Force | Out-Null
+          $file = Join-Path $workDir 'LauncherCompanion.exe'
+          Invoke-WebRequest -Uri $env:INSTALLER_URL -OutFile $file -MaximumRedirection 10 -TimeoutSec 600 -ErrorAction Stop
+
+          $item = Get-Item -LiteralPath $file
+          if ($item.Length -le 0) { throw 'The download is empty.' }
+          if ($item.Length -gt 1610612736) { throw 'The download exceeds the 1.5 GiB inspection safety limit.' }
+
+          $hash = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+          $signature = Get-AuthenticodeSignature -LiteralPath $file
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($file)
+          $firstBytes = [System.IO.File]::ReadAllBytes($file)
+          $headerHex = [System.BitConverter]::ToString($firstBytes, 0, [Math]::Min(16, $firstBytes.Length)).Replace('-', '')
+          $format = if ($firstBytes.Length -ge 2 -and $firstBytes[0] -eq 0x4D -and $firstBytes[1] -eq 0x5A) { 'Windows PE executable (MZ)' } elseif ($firstBytes.Length -ge 4 -and $firstBytes[0] -eq 0x50 -and $firstBytes[1] -eq 0x4B) { 'ZIP archive' } elseif ($firstBytes.Length -ge 8 -and [BitConverter]::ToString($firstBytes,0,8) -eq 'D0-CF-11-E0-A1-B1-1A-E1') { 'OLE compound file (possible MSI)' } else { 'Unknown or non-standard file format' }
+          $signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { '(no signer certificate)' }
+
+          $metadata = @(
+            'Launcher download metadata'
+            '===================================='
+            "Requested URL: $env:INSTALLER_URL"
+            "Downloaded size: $($item.Length) bytes"
+            "SHA-256: $hash"
+            "First 16 bytes: $headerHex"
+            "Detected header format: $format"
+            "Authenticode status: $($signature.Status)"
+            "Signer: $signer"
+            "Product name: $($versionInfo.ProductName)"
+            "File description: $($versionInfo.FileDescription)"
+            "File version: $($versionInfo.FileVersion)"
+            ''
+            'The executable was downloaded for static inspection only and was not launched.'
+          )
+          $metadata | Set-Content -LiteralPath (Join-Path $workDir 'download-metadata.txt') -Encoding utf8
+          $metadata | ForEach-Object { Write-Host $_ }
+
+          "installer_path=$file" >> $env:GITHUB_OUTPUT
+          "sha256=$hash" >> $env:GITHUB_OUTPUT
+          "file_format=$format" >> $env:GITHUB_OUTPUT
+          "file_size=$($item.Length)" >> $env:GITHUB_OUTPUT
+
+          $metadata | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Inspect PE architecture, .NET header and installer signatures
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ runner.temp }}/launcher-download-inspection/LauncherCompanion.exe
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $file = $env:INSTALLER_PATH
+          $machine = 'Not a PE file'
+          $managedClrDirectory = $false
+          $peValid = $false
+
+          $stream = [System.IO.File]::OpenRead($file)
+          $reader = [System.IO.BinaryReader]::new($stream)
+          try {
+            if ($stream.Length -ge 256 -and $reader.ReadUInt16() -eq 0x5A4D) {
+              $stream.Position = 0x3C
+              $peOffset = $reader.ReadInt32()
+              if ($peOffset -gt 0 -and $peOffset -lt ($stream.Length - 256)) {
+                $stream.Position = $peOffset
+                $peValid = $reader.ReadUInt32() -eq 0x00004550
+                if ($peValid) {
+                  $machineValue = $reader.ReadUInt16()
+                  $machine = switch ($machineValue) {
+                    0x014c { 'x86' }
+                    0x8664 { 'x64' }
+                    0xAA64 { 'ARM64' }
+                    default { 'Unknown (0x{0:X4})' -f $machineValue }
+                  }
+                  $stream.Position = $peOffset + 24
+                  $optionalMagic = $reader.ReadUInt16()
+                  $directoryBase = if ($optionalMagic -eq 0x20B) { $peOffset + 24 + 112 } elseif ($optionalMagic -eq 0x10B) { $peOffset + 24 + 96 } else { -1 }
+                  if ($directoryBase -gt 0) {
+                    $stream.Position = $directoryBase + (14 * 8)
+                    $clrRva = $reader.ReadUInt32()
+                    $clrSize = $reader.ReadUInt32()
+                    $managedClrDirectory = ($clrRva -ne 0 -and $clrSize -ne 0)
+                  }
+                }
+              }
+            }
+          } finally {
+            $reader.Dispose()
+            $stream.Dispose()
+          }
+
+          $item = Get-Item -LiteralPath $file
+          if ($item.Length -gt 536870912) {
+            Write-Warning 'The file is larger than 512 MiB; string-marker scanning is skipped to limit memory use.'
+            $ascii = ''
+            $unicode = ''
+          } else {
+            $bytes = [System.IO.File]::ReadAllBytes($file)
+            $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+            $unicode = [System.Text.Encoding]::Unicode.GetString($bytes)
+          }
+
+          $markers = [ordered]@{
+            'Inno Setup' = 'Inno Setup'
+            'NSIS' = 'Nullsoft.NSIS'
+            'InstallShield' = 'InstallShield'
+            'WiX Burn' = 'WixBundle'
+            'Squirrel' = 'SquirrelSetup'
+            'Velopack' = 'Velopack'
+            '.NET single-file bundle' = 'DOTNETBUNDLE'
+            'Electron' = 'Electron'
+            'MSIX/AppX' = 'AppxBundle'
+          }
+          $hits = [System.Collections.Generic.List[string]]::new()
+          foreach ($entry in $markers.GetEnumerator()) {
+            if ($ascii.IndexOf($entry.Value, [System.StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+                $unicode.IndexOf($entry.Value, [System.StringComparison]::OrdinalIgnoreCase) -ge 0) {
+              $hits.Add($entry.Key)
+            }
+          }
+
+          $report = @(
+            'Static executable identification'
+            '================================'
+            "Valid PE signature: $peValid"
+            "PE architecture: $machine"
+            ".NET CLR data directory present: $managedClrDirectory"
+            ''
+            'Installer/container string markers (heuristic only):'
+            $(if ($hits.Count) { $hits } else { 'No known installer-family strings found.' })
+            ''
+            'Interpretation:'
+            '- A CLR header or single-file marker is evidence of .NET packaging, not proof of an installer.'
+            '- Installer string matches are heuristic and must be combined with the archive results.'
+            '- The downloaded file was not executed.'
+          )
+          $report | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'launcher-download-inspection\static-identification.txt') -Encoding utf8
+          $report | ForEach-Object { Write-Host $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Inspect and safely extract archive payload with 7-Zip
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ runner.temp }}/launcher-download-inspection/LauncherCompanion.exe
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $workDir = Join-Path $env:RUNNER_TEMP 'launcher-download-inspection'
+          $file = $env:INSTALLER_PATH
+          $extractDir = Join-Path $workDir 'extracted-payload'
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+
+          $programFilesX86 = [Environment]::GetEnvironmentVariable('ProgramFiles(x86)')
+          $sevenZip = @(
+            (Join-Path $env:ProgramFiles '7-Zip\7z.exe'),
+            (Join-Path $programFilesX86 '7-Zip\7z.exe')
+          ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) } | Select-Object -First 1
+          if (-not $sevenZip) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not $sevenZip) {
+            choco install 7zip --no-progress -y
+            $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source
+          }
+
+          $listing = @(& $sevenZip l -slt $file 2>&1 | ForEach-Object { "$_" })
+          $listExitCode = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $workDir '7zip-listing.txt') -Encoding utf8
+          $entryPaths = @($listing | Where-Object { $_ -match '^Path = ' } | Select-Object -Skip 1)
+          $totalUnpackedBytes = 0L
+          foreach ($line in $listing) {
+            if ($line -match '^Size = (\d+)$') { $totalUnpackedBytes += [int64]$Matches[1] }
+          }
+
+          $status = '7-Zip did not recognize an extractable archive; no payload extraction was attempted.'
+          $files = @()
+          if ($listExitCode -le 1 -and $entryPaths.Count -gt 0) {
+            if ($entryPaths.Count -gt 5000) { throw "Archive entry count exceeds the 5000-file safety limit: $($entryPaths.Count)" }
+            if ($totalUnpackedBytes -gt 3221225472) { throw 'Archive expansion exceeds the 3 GiB safety limit.' }
+            foreach ($entry in $entryPaths) {
+              $relativePath = ($entry -replace '^Path = ', '')
+              if ([System.IO.Path]::IsPathRooted($relativePath) -or $relativePath -match '(^|[\\/])\.\.([\\/]|$)') {
+                throw "Archive contains an unsafe path: $relativePath"
+              }
+            }
+            $extractOutput = @(& $sevenZip x -y "-o$extractDir" $file 2>&1 | ForEach-Object { "$_" })
+            $extractExitCode = $LASTEXITCODE
+            $extractOutput | Set-Content -LiteralPath (Join-Path $workDir '7zip-extraction.txt') -Encoding utf8
+            if ($extractExitCode -gt 1) { throw "7-Zip extraction failed with exit code $extractExitCode." }
+            $files = @(Get-ChildItem -LiteralPath $extractDir -Recurse -File -Force)
+            if (-not $files.Count) { throw '7-Zip reported success but extracted no files.' }
+            $status = "Extracted $($files.Count) files for static inventory; no file was launched."
+          }
+
+          $interesting = @($files | Where-Object {
+            $_.Extension -in @('.exe','.dll','.msi','.msix','.json','.config') -or
+            $_.Name -match '(?i)launcher|setup|install|uninstall|hostfxr|hostpolicy'
+          } | Sort-Object FullName | ForEach-Object {
+            $_.FullName.Substring($extractDir.Length).TrimStart('\') + [char]9 + "$($_.Length) bytes"
+          })
+
+          $report = @(
+            '7-Zip archive inspection'
+            '========================'
+            "Listing exit code: $listExitCode"
+            "Archive entries: $($entryPaths.Count)"
+            "Reported expanded size: $totalUnpackedBytes bytes"
+            "Extraction status: $status"
+            ''
+            'Executables, libraries and installer metadata:'
+            $interesting
+            ''
+            'The downloaded file and any extracted payload were never executed.'
+          )
+          $report | Set-Content -LiteralPath (Join-Path $workDir '7zip-extraction-report.txt') -Encoding utf8
+          $report | ForEach-Object { Write-Host $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          # A 7-Zip exit code of 2 is expected when the downloaded file is not an archive.
+          $global:LASTEXITCODE = 0
+
+      - name: Upload inspection report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: launcher-static-inspection
+          path: |
+            ${{ runner.temp }}/launcher-download-inspection/*.txt
+            ${{ runner.temp }}/launcher-download-inspection/extracted-payload/**
+          if-no-files-found: ignore
