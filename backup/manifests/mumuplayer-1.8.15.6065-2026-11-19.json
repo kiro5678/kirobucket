@@ -1,0 +1,117 @@
+{
+    "version": "1.8.15.6065",
+    "description": "Android emulator for Windows (NX main engine)",
+    "homepage": "https://www.mumuplayer.com/",
+    "license": "Freeware",
+    "architecture": {
+        "64bit": {
+            "url": "https://a11.gdl.easebar.com/MuMu-setup-nxmain-V1.8.15.6065-overseas-1113212110.exe",
+            "hash": "89cada777999e995ae48ca99b59aa214b0386a6de693ed9f4c6a55be43af0d95"
+        }
+    },
+    "pre_install": [
+        "if (!(is_admin)) { throw \"$app requires admin rights to $cmd\" }",
+        "",
+        "$sourceInstaller = Join-Path $dir $fname",
+        "$downloadUrl = \"https://a11.gdl.easebar.com/$fname\"",
+        "$cachedInstaller = cache_path $app $version $downloadUrl",
+        "$transactionId = [guid]::NewGuid().ToString()",
+        "$stagingDir = $null",
+        "",
+        "try {",
+        "    if (Test-Path -LiteralPath $cachedInstaller) {",
+        "        $installerPath = $cachedInstaller",
+        "        Remove-Item -LiteralPath $sourceInstaller -Force",
+        "    } else {",
+        "        $scoopRoot = Split-Path (Split-Path (Split-Path $dir -Parent) -Parent) -Parent",
+        "        $stagingDir = Join-Path $scoopRoot \"cache\\mumuplayer-installer-$transactionId\"",
+        "        New-Item -ItemType Directory -Path $stagingDir -Force | Out-Null",
+        "        $installerPath = Join-Path $stagingDir $fname",
+        "        Copy-Item -LiteralPath $sourceInstaller -Destination $installerPath -Force",
+        "        Remove-Item -LiteralPath $sourceInstaller -Force",
+        "    }",
+        "",
+        "    $remainingFiles = @(Get-ChildItem -LiteralPath $dir -Force)",
+        "    if ($remainingFiles.Count -gt 0) {",
+        "        throw \"MuMuPlayer target directory must be empty before setup. Unexpected item: $($remainingFiles[0].FullName)\"",
+        "    }",
+        "",
+        "    $versionParts = $version -split \"\\.\"",
+        "    if ($versionParts.Count -lt 3) {",
+        "        throw \"Cannot derive MuMuPlayer product version from NXMAIN version $version.\"",
+        "    }",
+        "    $productVersion = \"6.$($versionParts[1]).$($versionParts[2]).0\"",
+        "    $commonArguments = @(",
+        "        \"/from_orchestrator=1\",",
+        "        \"/txn_id=$transactionId\",",
+        "        \"/silent=1\",",
+        "        \"/product_version=$productVersion\",",
+        "        \"/auto_start=false\",",
+        "        \"/fchannel=gw-win-download\",",
+        "        \"/auto_run=false\",",
+        "        \"/D=$dir\"",
+        "    )",
+        "",
+        "    $prepareArguments = @(\"/from_orchestrator=1\", \"/action=install_prepare\") + $commonArguments[1..($commonArguments.Count - 1)]",
+        "    $prepare = Start-Process -FilePath $installerPath -ArgumentList $prepareArguments -Wait -PassThru",
+        "    if ($prepare.ExitCode -ne 0) {",
+        "        throw \"MuMuPlayer NX-main install_prepare failed with exit code $($prepare.ExitCode).\"",
+        "    }",
+        "",
+        "    Start-Sleep -Seconds 12",
+        "",
+        "    $commitArguments = @(\"/from_orchestrator=1\", \"/action=commit\") + $commonArguments[1..($commonArguments.Count - 1)]",
+        "    $commit = Start-Process -FilePath $installerPath -ArgumentList $commitArguments -Wait -PassThru",
+        "    if ($commit.ExitCode -ne 0) {",
+        "        throw \"MuMuPlayer NX-main commit failed with exit code $($commit.ExitCode).\"",
+        "    }",
+        "",
+        "    $mainExe = Join-Path $dir \"nx_main\\MuMuNxMain.exe\"",
+        "    if (-not (Test-Path $mainExe)) {",
+        "        throw \"MuMuPlayer setup returned successfully but did not create the expected executable: $mainExe\"",
+        "    }",
+        "}",
+        "finally {",
+        "    if ($stagingDir -and (Test-Path -LiteralPath $stagingDir)) {",
+        "        Remove-Item -LiteralPath $stagingDir -Recurse -Force -ErrorAction SilentlyContinue",
+        "    }",
+        "}"
+    ],
+    "shortcuts": [
+        [
+            "nx_main\\MuMuNxMain.exe",
+            "MuMuPlayer"
+        ]
+    ],
+    "persist": [
+        "configs",
+        "vms",
+        "nx_device"
+    ],
+    "post_uninstall": [
+        "Remove-Item \"$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs\\MuMuPlayer\" -Recurse -Force -ErrorAction SilentlyContinue",
+        "Remove-Item \"$env:USERPROFILE\\Desktop\\MuMuPlayer.lnk\" -ErrorAction SilentlyContinue"
+    ],
+    "checkver": {
+        "script": [
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers['Authorization'] = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/LOVECHEN/mumu-release/releases?per_page=100' -Headers $headers",
+            "$asset = $null",
+            "foreach ($release in $releases) {",
+            "    $asset = $release.assets | Where-Object { $_.name -match '^MuMu-setup-nxmain-V[\\d.]+-overseas-[\\d]+\\.exe$' } | Select-Object -First 1",
+            "    if ($asset) { break }",
+            "}",
+            "if (-not $asset) { throw 'No MuMuPlayer international NX-main installer asset was found in the GitHub releases API response.' }",
+            "Write-Output $asset.name"
+        ],
+        "regex": "nxmain-V(?<version>[\\d.]+)-overseas-(?<build>[\\d]+)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://a11.gdl.easebar.com/MuMu-setup-nxmain-V$matchVersion-overseas-$matchBuild.exe"
+            }
+        }
+    }
+}
