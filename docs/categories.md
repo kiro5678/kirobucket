@@ -19,7 +19,8 @@
 | Games & Game Utilities | 20 | [View](#games-game-utilities) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 58 | [View](#media-audio-video) |
+| Media & Audio/Video | 57 | [View](#media-audio-video) |
+| Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
@@ -561,7 +562,6 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [open-aria-exporter](../bucket/open-aria-exporter.json) | 0.1.11 | 64bit: 130.1 MiB | 2026-11-09 | Export Open Aria recordings from memory cards to side-by-side MP4 while preserving the original recording data. | [Homepage](https://github.com/Alpenl/openaria-bridge-sdk/tree/main/desktop/exporter) |
 | [opennow](../bucket/opennow.json) | 1.0.3 | 95.3 MiB | 2026-10-16 | An open-source GeForce NOW desktop client. | [Homepage](https://github.com/OpenCloudGaming/OpenNOW) |
 | [openscreen](../bucket/openscreen.json) | 2.1.2 | 64bit: 170.6 MiB | 2026-10-19 | Open-source screen recording and video editing tool for creating polished demos. | [Homepage](https://getopenscreen.com/) |
-| [orfeo](../bucket/orfeo.json) | 1.6.0 | 137.1 MiB | 2026-10-31 | Piano-learning and MIDI visualization desktop app with interactive chord tools, note editing, and audio export. | [Homepage](https://orfeo.cc) |
 | [pake-programmusic](../bucket/pake-programmusic.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for ProgramMusic. | [Homepage](https://musicforprogramming.net/) |
 | [pudmusic](../bucket/pudmusic.json) | 1.2.1 | 64bit: 11.9 MiB / arm64: 10.8 MiB | 2026-11-11 | Native desktop player for Bilibili music and local audio files. | [Homepage](https://github.com/ShellMonster/PudMusic) |
 | [quick-audio-recorder](../bucket/quick-audio-recorder.json) | 1.3.0 | 50.8 MiB | 2026-10-17 | A minimalist Windows audio recorder for microphone, system audio, or both. | [Homepage](https://github.com/lukmay/QuickAudioRecorder) |
@@ -596,6 +596,14 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [vynody](../bucket/vynody.json) | 2.23.5 | 28.0 MiB | 2026-10-27 | A visually appealing and feature-rich Flutter music player | [Homepage](https://axel10.github.io/vynody_site/) |
 | [pake-youtube](../bucket/pake-youtube.json) | 3.18.0 | 64bit: 3.4 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube. | [Homepage](https://www.youtube.com/) |
 | [pake-youtubemusic](../bucket/pake-youtubemusic.json) | 3.18.0 | 64bit: 3.8 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube Music. | [Homepage](https://music.youtube.com/) |
+
+## Music Education & Piano Learning
+
+Desktop software focused on piano learning, music reading, music theory, and instrumental practice.
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [orfeo](../bucket/orfeo.json) | 1.7.3 | 137.1 MiB | 2026-11-13 | Piano-learning and MIDI visualization desktop app with interactive chord tools, note editing, and audio export. | [Homepage](https://orfeo.cc) |
 
 ## Network & DNS
 
