@@ -131,7 +131,7 @@ jobs:
     timeout-minutes: 12
     strategy:
       fail-fast: false
-      max-parallel: 6
+      max-parallel: 7
       matrix:
         include:
           - id: args-s
@@ -152,6 +152,9 @@ jobs:
           - id: script-managed-external
             method: "installer.script + junction + registered uninstaller"
             manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external.json"
+          - id: script-managed-external-silent-uninstall
+            method: "installer.script + junction + --uninstall --silent"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-silent-uninstall.json"
 
     steps:
       - name: Checkout repository
@@ -243,7 +246,7 @@ jobs:
           if ($managedLinkValid) {
             $report.Add("Managed link resolves to: $((Resolve-Path -LiteralPath $managedLink).Path)")
           }
-          $isManagedExternal = $env:MANIFEST_FILE -like '*oriel-notch-exp-managed-external.json'
+          $isManagedExternal = $env:MANIFEST_FILE -like '*oriel-notch-exp-managed-external*.json'
 
           $externalExecutables = @()
           $externalRoots = @(
