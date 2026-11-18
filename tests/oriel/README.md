@@ -19,6 +19,7 @@ Pinned SHA-256:
 | `oriel-notch-exp-7zip` | URL fragment extraction | `#/dl.7z` |
 | `oriel-notch-exp-managed-external` | `installer.script` + `post_install` junction + `uninstaller.script` | Installs to the publisher's per-user path and attempts to manage the registered uninstall command |
 | `oriel-notch-exp-managed-external-sync` | `installer.script` + junction + registry-aware uninstaller | Waits for Oriel's uninstall registry entry to disappear before Scoop proceeds with a forced update |
+| `oriel-notch-exp-managed-external-stable` | `installer.script` + junction + `reg.exe` query + five-second stable absence | Verifies the registry no longer references the external install path before proceeding with update |
 
 All command-line switches are unverified hypotheses. Each candidate runs on its own disposable Windows runner. The workflow checks installation exit status, application EXEs inside Scoop's version directory, common external install locations, uninstall registry entries, and whether `scoop uninstall` removes the version directory.
 
@@ -32,3 +33,5 @@ The managed-external candidate uses `uninstall.exe --uninstall` only because tha
 
 
 A forced same-version `scoop update -f` test exposed a race in the original managed-external candidate: Oriel's files disappeared but its uninstall registry entry was still present when Scoop started the replacement install. The synchronized candidate waits up to 30 seconds for both states to clear and fails closed if they do not.
+
+The registry-provider synchronization candidate also failed: during forced update, Oriel's launcher returned before the new app executable was present, while the uninstall registration remained. The stable candidate uses native `reg.exe` queries and requires five continuous seconds with no app executable or matching uninstall registry data before allowing Scoop to continue.
