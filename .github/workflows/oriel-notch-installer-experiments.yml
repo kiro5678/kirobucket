@@ -237,7 +237,7 @@ jobs:
           }
           $report.Add("Application EXE files inside Scoop version directory: $($insideExecutables.Count)")
           foreach ($exe in $insideExecutables) { $report.Add(" - $($exe.Path) | $($exe.Size) bytes | $($exe.Product) | $($exe.Description)") }
-          $managedLink = Join-Path $versionPath 'oriel-managed\\oriel.exe'
+          $managedLink = Join-Path $versionPath 'oriel-managed\oriel.exe'
           $managedLinkValid = Test-Path -LiteralPath $managedLink -PathType Leaf
           $report.Add("Managed external application link exists: $managedLinkValid")
           if ($managedLinkValid) {
@@ -288,7 +288,7 @@ jobs:
           $report.Add("Oriel uninstall registry entries: $($uninstallEntries.Count)")
           foreach ($entry in $uninstallEntries) { $report.Add(" - $($entry.DisplayName) | $($entry.InstallLocation) | $($entry.UninstallString)") }
           $registeredUninstallerValid = ($uninstallEntries.Count -eq 1) -and
-            ($uninstallEntries[0].UninstallString -match '(?i)\\\\uninstall[.]exe[" ]+--uninstall')
+            ($uninstallEntries[0].UninstallString -match '(?i)\\uninstall[.]exe[" ]+--uninstall')
           $report.Add("Registered uninstall command matches tested Oriel command: $registeredUninstallerValid")
 
           $uninstallExit = 125
@@ -317,9 +317,9 @@ jobs:
           $externalAfterUninstall = @($externalAfterUninstall | Sort-Object -Unique)
           $registryAfterUninstall = @()
           foreach ($registryRoot in @(
-            'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-            'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-            'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+            'HKCU:\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+            'HKLM:\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+            'HKLM:\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
           )) {
             if (Test-Path -LiteralPath $registryRoot) {
               foreach ($key in (Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue)) {
@@ -336,7 +336,7 @@ jobs:
 
           if ($isManagedExternal) {
             $preUninstallStateValid = $managedLinkValid -and
-              ($externalExecutables -contains (Join-Path $env:LOCALAPPDATA 'Programs\\Oriel\\oriel.exe')) -and
+              ($externalExecutables -contains (Join-Path $env:LOCALAPPDATA 'Programs\Oriel\oriel.exe')) -and
               $registeredUninstallerValid
             $postUninstallStateValid = ($externalAfterUninstall.Count -eq 0) -and ($registryAfterUninstall.Count -eq 0)
             $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
