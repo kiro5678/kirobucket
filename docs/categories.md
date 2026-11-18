@@ -688,7 +688,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [ai-security-monitor](../bucket/ai-security-monitor.json) | 0.8.5 | 64bit: 8.4 MiB | 2026-10-19 | Open-source desktop security monitor for Windows with network connection analysis, threat-intelligence feeds, and firewall management. | [Homepage](https://github.com/markku636/ai-security-monitor) |
-| [fort](../bucket/fort.json) | 3.20.8 | 7.9 MiB | 2026-10-24 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
+| [fort-firewall](../bucket/fort-firewall.json) | 3.21.0 | 7.9 MiB | 2026-11-17 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
 | [minimal-firewall](../bucket/minimal-firewall.json) | 2.8.6 | 1.8 MiB | 2026-10-11 | A lightweight frontend for Windows Firewall. | [Homepage](https://github.com/deminimis/minimalfirewall) |
 | [peerblock](../bucket/peerblock.json) | 1.2.0.693 | 2.3 MiB | 2020-01-19 | An IP filter for Windows 7/10, forked from PeerGuardian 2 | [Homepage](https://forums.peerblock.com/) |
 | [sordum-bluelife-hosts-editor](../bucket/sordum-bluelife-hosts-editor.json) | 1.6 | 1.1 MiB | 2026-06-17 | A simple app that allows for easy changes to the hosts file. | [Homepage](https://www.sordum.org/bluelifehosts-editor) |
