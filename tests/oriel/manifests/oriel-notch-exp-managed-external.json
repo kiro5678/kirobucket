@@ -11,19 +11,18 @@
             "if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) { throw 'Oriel setup executable was not found in the Scoop version directory.' }",
             "$process = Start-Process -FilePath $setup -ArgumentList @('--silent') -PassThru -WindowStyle Hidden",
             "if (-not $process.WaitForExit(45000)) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue; throw 'Oriel setup timed out after 45 seconds.' }",
-            "if ($process.ExitCode -ne 0) { throw \"Oriel setup exited with code $($process.ExitCode).\" }"
+            "if ($process.ExitCode -ne 0) { throw \"Oriel setup exited with code $($process.ExitCode).\" }",
+            "$installDir = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel'",
+            "$appExe = Join-Path $installDir 'oriel.exe'",
+            "$uninstaller = Join-Path $installDir 'uninstall.exe'",
+            "if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) { throw \"Oriel executable was not found at $appExe.\" }",
+            "if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw \"Oriel uninstaller was not found at $uninstaller.\" }",
+            "$linkPath = Join-Path $dir 'oriel-managed'",
+            "if (Test-Path -LiteralPath $linkPath) { throw \"Refusing to overwrite existing managed link: $linkPath\" }",
+            "New-Item -ItemType Junction -Path $linkPath -Target $installDir | Out-Null",
+            "if (-not (Test-Path -LiteralPath (Join-Path $linkPath 'oriel.exe') -PathType Leaf)) { throw 'The managed Oriel junction does not resolve to oriel.exe.' }"
         ]
     },
-    "post_install": [
-        "$installDir = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel'",
-        "$appExe = Join-Path $installDir 'oriel.exe'",
-        "$uninstaller = Join-Path $installDir 'uninstall.exe'",
-        "if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) { throw \"Oriel executable was not found at $appExe.\" }",
-        "if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw \"Oriel uninstaller was not found at $uninstaller.\" }",
-        "$linkPath = Join-Path $dir 'oriel-managed'",
-        "if (Test-Path -LiteralPath $linkPath) { throw \"Refusing to overwrite existing managed link: $linkPath\" }",
-        "New-Item -ItemType Junction -Path $linkPath -Target $installDir | Out-Null"
-    ],
     "bin": "oriel-managed\\oriel.exe",
     "shortcuts": [
         [
