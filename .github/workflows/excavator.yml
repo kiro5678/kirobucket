@@ -18,8 +18,8 @@ on:
     - cron: '20 */4 * * *'
 
 permissions:
-  actions: write
   contents: write
+  actions: write
 
 concurrency:
   group: excavator-${{ github.ref }}
@@ -71,8 +71,8 @@ jobs:
           }
 
           try {
-            if ($env:EVENT_NAME -notin @('schedule', 'workflow_dispatch', 'repository_dispatch')) {
-              throw "Unsupported Excavator trigger '$env:EVENT_NAME'. Use schedule or workflow_dispatch."
+            if ($env:EVENT_NAME -notin @('schedule', 'workflow_dispatch', 'repository_dispatch', 'push')) {
+              throw "Unsupported Excavator trigger '$env:EVENT_NAME'. Use schedule, workflow_dispatch, or the guarded workflow/script push trigger."
             }
 
             $jobsUri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID/jobs?per_page=100"
@@ -142,7 +142,16 @@ jobs:
                   $manifestFailures[$name] = [System.Collections.Generic.List[string]]::new()
                 }
                 $manifestFailures[$name].Add($line.Trim())
-              } elseif ($line -match '(?i)^\s*ERROR\s+(?<message>.+)
+              } elseif ($line -match '(?i)^\s*ERROR\s+(?<message>.+)$') {
+                if (-not [string]::IsNullOrWhiteSpace($currentManifest)) {
+                  if (-not $manifestFailures.ContainsKey($currentManifest)) {
+                    $manifestFailures[$currentManifest] = [System.Collections.Generic.List[string]]::new()
+                  }
+                  $manifestFailures[$currentManifest].Add($line.Trim())
+                } else {
+                  $globalFailures.Add($line.Trim())
+                }
+              }
             }
 
             $failedNames = @($manifestFailures.Keys | Sort-Object)
@@ -221,7 +230,7 @@ jobs:
               foreach ($warning in $transientNetworkFailures) { $summary += "- $warning" }
             }
             $summary += ''
-            $summary += 'Manifest-specific errors and transient network responses are recorded as warnings; the run fails only for an Excavator engine error or unscoped global diagnostic.'
+            $summary += 'Manifest-specific errors and transient network responses are recorded as warnings; the run fails only for an Excavator engine error or an unscoped global diagnostic.'
             Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($summary -join [Environment]::NewLine)
 
             if ($env:EXCAVATE_RESULT -ne 'success') {
@@ -231,116 +240,7 @@ jobs:
               throw "Excavator encountered $($globalFailures.Count) unscoped engine-level ERROR line(s). See the verification report artifact."
             }
             if ($failedNames.Count -gt 0 -or $transientNetworkFailures.Count -gt 0) {
-              Write-Warning "The sequential scan completed with $($failedNames.Count) manifest-specific error(s) and $($transientNetworkFailures.Count) transient network warning(s). These are reported in the artifact and do not hide the overall scan result."
-            }
-          } catch {
-            if (-not (Test-Path -LiteralPath $reportPath)) {
-              [System.IO.File]::WriteAllText($reportPath, "Verification failed: $($_.Exception.Message)", [System.Text.UTF8Encoding]::new($false))
-            }
-            throw
-          }
-
-      - name: Upload Excavator verification report
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: excavator-verification-report
-          path: ${{ runner.temp }}/excavator-verification-report.txt
-          if-no-files-found: warn
-) {
-                if (-not [string]::IsNullOrWhiteSpace($currentManifest)) {
-                  if (-not $manifestFailures.ContainsKey($currentManifest)) {
-                    $manifestFailures[$currentManifest] = [System.Collections.Generic.List[string]]::new()
-                  }
-                  $manifestFailures[$currentManifest].Add($line.Trim())
-                } else {
-                  $globalFailures.Add($line.Trim())
-                }
-              }
-            }
-
-            $failedNames = @($manifestFailures.Keys | Sort-Object)
-            $rateLimitedNames = @($rateLimitFailures.Keys | Sort-Object)
-            $reportLines = [System.Collections.Generic.List[string]]::new()
-            $reportLines.Add('Excavator verification report')
-            $reportLines.Add("Excavate job result: $env:EXCAVATE_RESULT")
-            $reportLines.Add("Unique manifests with checkver/autoupdate errors: $($failedNames.Count)")
-            $reportLines.Add("Manifests with HTTP 403/429 or rate-limit responses: $($rateLimitedNames.Count)")
-            $reportLines.Add("Transient DNS/network warnings: $($transientNetworkFailures.Count)")
-            $reportLines.Add("Additional global ERROR lines: $($globalFailures.Count)")
-            $reportLines.Add('')
-
-            if ($failedNames.Count -gt 0) {
-              $reportLines.Add('Failed manifests:')
-              foreach ($name in $failedNames) {
-                $reportLines.Add("- $name")
-                foreach ($message in $manifestFailures[$name]) {
-                  $reportLines.Add("  - $message")
-                }
-              }
-            }
-            if ($globalFailures.Count -gt 0) {
-              $reportLines.Add('')
-              $reportLines.Add('Global errors:')
-              foreach ($failure in $globalFailures) { $reportLines.Add("- $failure") }
-            }
-            if ($transientNetworkFailures.Count -gt 0) {
-              $reportLines.Add('')
-              $reportLines.Add('Transient DNS/network warnings:')
-              foreach ($warning in $transientNetworkFailures) { $reportLines.Add("- $warning") }
-            }
-            if ($failedNames.Count -eq 0 -and $globalFailures.Count -eq 0) {
-              $reportLines.Add('No manifest checkver/autoupdate errors were found in the completed job log.')
-            }
-
-            [System.IO.File]::WriteAllLines($reportPath, $reportLines, [System.Text.UTF8Encoding]::new($false))
-
-            foreach ($name in $failedNames) {
-              foreach ($failure in $manifestFailures[$name]) {
-                $annotationMessage = ($name + ': ' + $failure)
-                $annotationMessage = $annotationMessage.Replace('%', '%25').Replace([string][char]13, '%0D').Replace([string][char]10, '%0A')
-                Write-Output "::warning title=Manifest check failed::$annotationMessage"
-              }
-            }
-            foreach ($warning in $transientNetworkFailures) {
-              $annotationMessage = $warning.Replace('%', '%25').Replace([string][char]13, '%0D').Replace([string][char]10, '%0A')
-              Write-Output "::warning title=Transient network issue::$annotationMessage"
-            }
-            foreach ($failure in $globalFailures) {
-              $annotationMessage = $failure.Replace('%', '%25').Replace([string][char]13, '%0D').Replace([string][char]10, '%0A')
-              Write-Output "::error title=Excavator global error::$annotationMessage"
-            }
-
-            $summary = @(
-              '## Excavator verification',
-              "- Excavate job result: $env:EXCAVATE_RESULT",
-              "- Unique manifests with errors: $($failedNames.Count)",
-              "- Manifests with HTTP 403/429 or rate-limit responses: $($rateLimitedNames.Count)",
-              "- Transient DNS/network warnings: $($transientNetworkFailures.Count)",
-              "- Additional global errors: $($globalFailures.Count)"
-            )
-            if ($failedNames.Count -gt 0) {
-              $summary += ''
-              $summary += '### Manifests with errors'
-              foreach ($name in $failedNames) { $summary += "- $name" }
-            }
-            if ($globalFailures.Count -gt 0) {
-              $summary += ''
-              $summary += '### Global errors'
-              foreach ($failure in $globalFailures) { $summary += "- $failure" }
-            }
-            if ($transientNetworkFailures.Count -gt 0) {
-              $summary += ''
-              $summary += '### Transient DNS/network warnings'
-              foreach ($warning in $transientNetworkFailures) { $summary += "- $warning" }
-            }
-            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ($summary -join [Environment]::NewLine)
-
-            if ($env:EXCAVATE_RESULT -ne 'success') {
-              throw "The official Scoop Excavator job ended with result '$env:EXCAVATE_RESULT'."
-            }
-            if ($failedNames.Count -gt 0 -or $globalFailures.Count -gt 0) {
-              throw "Excavator completed its manifest queue but found errors in $($failedNames.Count) manifest(s) and $($globalFailures.Count) global diagnostic line(s). See the verification report artifact."
+              Write-Warning "The sequential scan completed with $($failedNames.Count) manifest-specific error(s) and $($transientNetworkFailures.Count) transient network warning(s). These are recorded in the artifact and do not hide the overall scan result."
             }
           } catch {
             if (-not (Test-Path -LiteralPath $reportPath)) {
