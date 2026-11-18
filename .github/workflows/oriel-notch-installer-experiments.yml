@@ -239,12 +239,13 @@ jobs:
           $report.Add("Method: $env:TEST_METHOD")
           $report.Add("Manifest: $env:MANIFEST_FILE")
           $report.Add("Scoop app name: $appName")
-          $bucketAdd = Invoke-ScoopBounded -ScoopArguments @('bucket', 'add', $bucketName, $bucketRoot) -Label 'scoop-bucket-add' -TimeoutMilliseconds 60000
-          $report.Add("Temporary bucket add exit code: $($bucketAdd.ExitCode)")
-          if ($bucketAdd.ExitCode -ne 0 -or $bucketAdd.TimedOut) {
-            if (Test-Path -LiteralPath $bucketAdd.StdOut) { $report.AddRange([string[]](Get-Content -LiteralPath $bucketAdd.StdOut)) }
-            if (Test-Path -LiteralPath $bucketAdd.StdErr) { $report.AddRange([string[]](Get-Content -LiteralPath $bucketAdd.StdErr)) }
-            throw 'Could not add the temporary Oriel test bucket.'
+          $bucketDestination = Join-Path $env:SCOOP "buckets\$bucketName"
+          $gitCloneOutput = @(& git clone --quiet $bucketRoot $bucketDestination 2>&1 | ForEach-Object { "$_" })
+          $bucketCloneExit = $LASTEXITCODE
+          $report.Add("Temporary bucket git clone exit code: $bucketCloneExit")
+          if ($gitCloneOutput.Count -gt 0) { $report.AddRange([string[]]$gitCloneOutput) }
+          if ($bucketCloneExit -ne 0 -or -not (Test-Path -LiteralPath (Join-Path $bucketDestination '.git') -PathType Container)) {
+            throw 'Could not clone the temporary Oriel test bucket into the isolated Scoop buckets directory.'
           }
           $appRef = "$bucketName/$appName"
           $install = Invoke-ScoopBounded -ScoopArguments @('install', $appRef) -Label 'scoop-install' -TimeoutMilliseconds 90000
