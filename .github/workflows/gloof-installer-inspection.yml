@@ -64,7 +64,7 @@ jobs:
           }
 
           # Scoop archive markers are fragments and are not sent to the web server.
-          $downloadUrl = $url -replace '#/dl\\.7z$', ''
+          $downloadUrl = $url -replace '#/dl\.7z$', ''
           $fileName = [System.IO.Path]::GetFileName(([System.Uri]$downloadUrl).AbsolutePath)
           if ([string]::IsNullOrWhiteSpace($fileName)) { $fileName = 'gloof-beta-Setup.exe' }
           $installer = Join-Path $downloadDir $fileName
@@ -125,15 +125,15 @@ jobs:
           }
 
           $installerType = 'Unknown PE installer/archive'
-          if ($listingText -match '(?im)^Type = Inno Setup\\s*$') {
+          if ($listingText -match '(?im)^Type = Inno Setup\s*$') {
             $installerType = 'Inno Setup'
-          } elseif ($listingText -match '(?im)^Type = NSIS\\s*$') {
+          } elseif ($listingText -match '(?im)^Type = NSIS\s*$') {
             $installerType = 'NSIS'
-          } elseif ($listingText -match '(?im)^Type = MSI\\s*$') {
+          } elseif ($listingText -match '(?im)^Type = MSI\s*$') {
             $installerType = 'MSI'
-          } elseif ($listingText -match '(?im)^Type = 7z\\s*$') {
+          } elseif ($listingText -match '(?im)^Type = 7z\s*$') {
             $installerType = '7-Zip archive'
-          } elseif ($listingText -match '(?im)^Type = PE\\s*$') {
+          } elseif ($listingText -match '(?im)^Type = PE\s*$') {
             $installerType = 'PE executable (installer type not identified by 7-Zip)'
           }
           Write-Host "Detected installer type: $installerType"
@@ -179,7 +179,7 @@ jobs:
             param([string]$Directory)
             $files = @(Get-ChildItem -LiteralPath $Directory -File -Recurse -Force)
             foreach ($item in $files) {
-              $relative = [System.IO.Path]::GetRelativePath($Directory, $item.FullName).Replace('\\', '/')
+              $relative = [System.IO.Path]::GetRelativePath($Directory, $item.FullName).Replace('\', '/')
               $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($item.FullName)
               [PSCustomObject]@{
                 Path = $relative
