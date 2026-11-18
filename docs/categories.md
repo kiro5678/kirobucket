@@ -428,7 +428,7 @@ Utilities and launchers designed for a particular game or game series. General-p
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [apex-runner](../bucket/apex-runner.json) | 0.1.0 | 4.7 MiB | 2026-11-17 | Windows game environment switcher for keyboard, IME and audio settings. | [Homepage](https://github.com/wan-kong/apex-helper) |
-| [endfield-gacha](../bucket/endfield-gacha.json) | 0.7.1 | 18.3 MiB | 2026-10-20 | 一个《明日方舟：终末地》寻访记录统计与分析工具 | [Homepage](https://github.com/bhaoo/endfield-gacha) |
+| [endfield-gacha](../bucket/endfield-gacha.json) | 0.7.2 | 18.4 MiB | 2026-11-06 | 一个《明日方舟：终末地》寻访记录统计与分析工具 | [Homepage](https://github.com/bhaoo/endfield-gacha) |
 | [endfield-logs](../bucket/endfield-logs.json) | 1.2.1 | 226.2 MiB | 2026-04-22 | "Arknights: Endfield" combat analysis tool based on NpCup packet capture analysis | [Homepage](https://github.com/deepdarkssj/ZMDLogs) |
 | [hoyo-gacha](../bucket/hoyo-gacha.json) | 0.6.0 | 64bit: 7.2 MiB / arm64: 6.5 MiB | 2026-11-14 | Native desktop app for managing Genshin Impact, Honkai: Star Rail and Zenless Zone Zero gacha records. | [Homepage](https://github.com/quantulr/hoyo-gacha) |
 | [mcl](../bucket/mcl.json) | 0.0.12 | 64bit: 23.7 MiB / arm64: 21.4 MiB | 2026-11-16 | Native Minecraft Java Edition launcher with isolated instances, mods, resource packs and Java runtime management. | [Homepage](https://github.com/Lingwcy/mcl) |
