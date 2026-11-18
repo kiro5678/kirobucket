@@ -200,6 +200,8 @@ on:
       - 'bucket/hop-mygo.json'
       - 'bucket/sakamoto.json'
       - '.github/workflows/validate-manifest-archives.yml'
+      - 'bucket/cooldesk.json'
+      - 'bucket/cooldesk-msi.json'
       - 'bucket/kando.json'
       - 'bucket/yt-music-player.json'
       - 'bucket/pudmusic.json'
@@ -356,6 +358,8 @@ on:
       - 'bucket/hop-mygo.json'
       - 'bucket/sakamoto.json'
       - '.github/workflows/validate-manifest-archives.yml'
+      - 'bucket/cooldesk.json'
+      - 'bucket/cooldesk-msi.json'
       - 'bucket/filebrowser.json'
       - 'bucket/arbora.json'
       - 'bucket/voicestudio.json'
@@ -814,7 +818,18 @@ jobs:
 
                     $msiRelativePaths = @($msiFiles | ForEach-Object {
                       $relative = [System.IO.Path]::GetRelativePath($sourceRoot, $_.FullName).Replace('\', '/')
-                      if ($extractTo) { "$extractTo/$relative" } else { $relative }
+                      if ([string]::IsNullOrWhiteSpace($extractDir)) {
+                        if ($extractTo) { "$extractTo/$relative" } else { $relative }
+                      } else {
+                        # Scoop's Expand-MsiArchive -ExtractDir moves only SourceDir/<extract_dir>
+                        # into the app directory and removes the temporary MSI extraction tree.
+                        $prefix = ConvertTo-ArchivePath $extractDir
+                        $prefixWithSlash = "$prefix/"
+                        if ($relative.StartsWith($prefixWithSlash, [System.StringComparison]::OrdinalIgnoreCase)) {
+                          $relative = $relative.Substring($prefixWithSlash.Length)
+                          if ($extractTo) { "$extractTo/$relative" } else { $relative }
+                        }
+                      }
                     })
                     $archiveFiles += $msiRelativePaths
                     $exeDetails = @($msiFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
