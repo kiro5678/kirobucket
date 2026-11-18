@@ -89,6 +89,9 @@
         "github": "https://github.com/Niix-x/Oriel-Releases"
     },
     "autoupdate": {
-        "url": "https://github.com/Niix-x/Oriel-Releases/releases/download/v$version/OrielSetup-$version.exe"
+        "url": "https://github.com/Niix-x/Oriel-Releases/releases/download/v$version/OrielSetup-$version.exe",
+        "hash": {
+            "mode": "github"
+        }
     }
 }
