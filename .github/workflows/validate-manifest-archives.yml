@@ -219,7 +219,7 @@ on:
       - 'bucket/xdman.json'
       - 'bucket/winmac-dock.json'
       - 'bucket/llplayer.json'
-      - 'bucket/fort.json'
+      - 'bucket/fort-firewall.json'
       - 'bucket/gloof.json'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -456,7 +456,7 @@ on:
       - 'bucket/xdman.json'
       - 'bucket/winmac-dock.json'
       - 'bucket/llplayer.json'
-      - 'bucket/fort.json'
+      - 'bucket/fort-firewall.json'
       - 'bucket/gloof.json'
   workflow_dispatch:
     inputs:
