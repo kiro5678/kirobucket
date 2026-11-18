@@ -5,6 +5,7 @@ on:
     branches:
       - master
     paths:
+      - "README.md"
       - "scripts/*.ps1"
       - "scripts/**/*.ps1"
       - ".github/workflows/ci.yml"

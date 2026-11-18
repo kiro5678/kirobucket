@@ -1,6 +1,6 @@
 {
     "version": "0.2.1",
-    "description": "Native Markdown editor with workspaces and document management.",
+    "description": "Native Markdown rich-text editor with colorful spaces, split views, and local-first notes.",
     "homepage": "https://github.com/Ciao1019/ArcMD",
     "license": "MIT",
     "architecture": {
