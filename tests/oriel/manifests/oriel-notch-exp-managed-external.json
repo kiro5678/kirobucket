@@ -1,0 +1,45 @@
+{
+    "version": "1.1.1",
+    "description": "EXPERIMENTAL ONLY: Oriel per-user setup managed through Scoop scripts and a junction to its external install location.",
+    "homepage": "https://github.com/Niix-x/Oriel-Releases",
+    "license": "Proprietary",
+    "url": "https://github.com/Niix-x/Oriel-Releases/releases/download/v1.1.1/OrielSetup-1.1.1.exe",
+    "hash": "808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954",
+    "installer": {
+        "script": [
+            "$setup = Join-Path -Path $dir -ChildPath 'OrielSetup-1.1.1.exe'",
+            "if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) { throw 'Oriel setup executable was not found in the Scoop version directory.' }",
+            "$process = Start-Process -FilePath $setup -ArgumentList @('--silent') -PassThru -WindowStyle Hidden",
+            "if (-not $process.WaitForExit(45000)) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue; throw 'Oriel setup timed out after 45 seconds.' }",
+            "if ($process.ExitCode -ne 0) { throw \"Oriel setup exited with code $($process.ExitCode).\" }",
+            "$installDir = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel'",
+            "$appExe = Join-Path $installDir 'oriel.exe'",
+            "$uninstaller = Join-Path $installDir 'uninstall.exe'",
+            "if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) { throw \"Oriel executable was not found at $appExe.\" }",
+            "if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw \"Oriel uninstaller was not found at $uninstaller.\" }",
+            "$linkPath = Join-Path $dir 'oriel-managed'",
+            "if (Test-Path -LiteralPath $linkPath) { throw \"Refusing to overwrite existing managed link: $linkPath\" }",
+            "New-Item -ItemType Junction -Path $linkPath -Target $installDir | Out-Null",
+            "if (-not (Test-Path -LiteralPath (Join-Path $linkPath 'oriel.exe') -PathType Leaf)) { throw 'The managed Oriel junction does not resolve to oriel.exe.' }"
+        ]
+    },
+    "bin": "oriel-managed\\oriel.exe",
+    "shortcuts": [
+        [
+            "oriel-managed\\oriel.exe",
+            "Oriel"
+        ]
+    ],
+    "uninstaller": {
+        "script": [
+            "$installDir = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel'",
+            "$uninstaller = Join-Path $installDir 'uninstall.exe'",
+            "if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) { throw \"Registered Oriel uninstaller not found: $uninstaller\" }",
+            "$process = Start-Process -FilePath $uninstaller -ArgumentList @('--uninstall') -PassThru -WindowStyle Hidden",
+            "if (-not $process.WaitForExit(45000)) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue; throw 'Oriel uninstaller timed out after 45 seconds.' }",
+            "if ($process.ExitCode -ne 0) { throw \"Oriel uninstaller exited with code $($process.ExitCode).\" }",
+            "if (Test-Path -LiteralPath $installDir) { throw \"Oriel install folder remains after uninstall: $installDir\" }"
+        ]
+    },
+    "notes": "EXPERIMENTAL ONLY. Oriel installs into %LOCALAPPDATA%\\Programs\\Oriel instead of the Scoop version folder. The post_install script creates a junction for Scoop shims; the uninstaller uses the command recorded in the Oriel Windows uninstall registry entry. This is a non-portable experiment and may conflict with Oriel's built-in self-updater."
+}

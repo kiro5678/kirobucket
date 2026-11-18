@@ -1,0 +1,15 @@
+{
+    "version": "1.1.1",
+    "description": "EXPERIMENTAL ONLY: Oriel Notch setup with /silent.",
+    "homepage": "https://github.com/Niix-x/Oriel-Releases",
+    "license": "Proprietary",
+    "url": "https://github.com/Niix-x/Oriel-Releases/releases/download/v1.1.1/OrielSetup-1.1.1.exe",
+    "hash": "808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954",
+    "installer": {
+        "args": [
+            "/silent"
+        ],
+        "keep": true
+    },
+    "notes": "Experimental only. /silent is unverified."
+}
