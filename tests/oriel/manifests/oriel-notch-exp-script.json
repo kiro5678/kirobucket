@@ -1,0 +1,18 @@
+{
+    "version": "1.1.1",
+    "description": "EXPERIMENTAL ONLY: Oriel Notch setup via a bounded installer script.",
+    "homepage": "https://github.com/Niix-x/Oriel-Releases",
+    "license": "Proprietary",
+    "url": "https://github.com/Niix-x/Oriel-Releases/releases/download/v1.1.1/OrielSetup-1.1.1.exe",
+    "hash": "808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954",
+    "installer": {
+        "script": [
+            "$setup = Join-Path -Path $dir -ChildPath 'OrielSetup-1.1.1.exe'",
+            "if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) { throw 'Oriel setup executable was not found in the Scoop version directory.' }",
+            "$process = Start-Process -FilePath $setup -ArgumentList @('--silent', '--install-dir', $dir) -PassThru -WindowStyle Hidden",
+            "if (-not $process.WaitForExit(45000)) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue; throw 'Setup timed out after 45 seconds; arguments may be unsupported or require UI.' }",
+            "if ($process.ExitCode -ne 0) { throw \"Oriel setup exited with code $($process.ExitCode).\" }"
+        ]
+    },
+    "notes": "Experimental only. --silent and --install-dir are unverified. Process timeout is 45 seconds."
+}
