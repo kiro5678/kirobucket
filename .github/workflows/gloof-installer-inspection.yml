@@ -56,6 +56,34 @@ jobs:
           Write-Host "Download page version strings: $($pageVersionHits -join ', ')"
           Write-Host "Download page installer/portable links:"
           foreach ($link in $pageLinks) { Write-Host "  $link" }
+          $pageHtml | Set-Content -LiteralPath (Join-Path $root 'download-page.html') -Encoding utf8
+          $feedResults = [System.Collections.Generic.List[string]]::new()
+          foreach ($feedName in @('releases.beta.json', 'assets.beta.json', 'RELEASES')) {
+            $feedUrl = "https://gloof.app/downloads/$feedName"
+            try {
+              $response = Invoke-WebRequest -Uri $feedUrl -TimeoutSec 60 -MaximumRedirection 10
+              $feedResults.Add("$feedName : HTTP $([int]$response.StatusCode)")
+              $feedResults.Add($response.Content)
+              Write-Host "$feedName : HTTP $([int]$response.StatusCode)"
+              if ($feedName -like '*.json') {
+                try {
+                  $feedJson = $response.Content | ConvertFrom-Json -ErrorAction Stop
+                  if ($feedJson.Assets) {
+                    foreach ($asset in $feedJson.Assets) {
+                      Write-Host ("FEED ASSET {0} | {1} | {2}" -f $asset.Version, $asset.Type, $asset.FileName)
+                    }
+                  }
+                } catch { Write-Host "$feedName returned non-JSON content." }
+              } else {
+                Write-Host ($response.Content.Substring(0, [Math]::Min(1000, $response.Content.Length)))
+              }
+            } catch {
+              $status = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 'network-error' }
+              $feedResults.Add("$feedName : $status - $($_.Exception.Message)")
+              Write-Host "$feedName : $status - $($_.Exception.Message)"
+            }
+          }
+          $feedResults | Set-Content -LiteralPath (Join-Path $root 'release-feed-inspection.txt') -Encoding utf8
 
           if ($env:EVENT_NAME -eq 'pull_request' -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
@@ -247,6 +275,7 @@ jobs:
           $report.Add("- Velopack main executable: $mainExe")
           $report.Add("- Download page version strings: $($pageVersionHits -join ', ')")
           $report.Add("- Download page installer/portable links: $($pageLinks -join ', ')")
+          $report.Add("- Official release feed files checked: releases.beta.json, assets.beta.json, RELEASES")
           $report.Add("- Outer extracted files: $($outerFiles.Count)")
           $report.Add("- Nested archives extracted: $($nestedArchives.Count)")
           $report.Add("- Application payload files: $($inventory.Count)")
