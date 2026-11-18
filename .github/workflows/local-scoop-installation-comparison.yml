@@ -1,0 +1,44 @@
+name: Local Scoop Installation Comparison
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-scoop-installation-comparison
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    if: github.ref == 'refs/heads/master'
+    name: Compare local Scoop installation
+    runs-on: [self-hosted, windows, x64]
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Create local comparison report
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $scoopRoot = 'D:\Scoop'
+          if (-not (Test-Path -LiteralPath $scoopRoot -PathType Container)) {
+            throw 'The configured Scoop root is not available on this self-hosted runner.'
+          }
+
+          $scriptPath = Join-Path $env:GITHUB_WORKSPACE 'bin\compare-scoopbucket-installation.ps1'
+          $bucketPath = Join-Path $env:GITHUB_WORKSPACE 'bucket'
+          $reportPath = Join-Path $scoopRoot 'reports\kirobucket-installation-report.html'
+
+          & $scriptPath -BucketPath $bucketPath -BucketName 'kirobucket' -ScoopRoot $scoopRoot -ReportPath $reportPath
+
+          Write-Host 'The detailed comparison was saved on this machine only. No installed-app inventory or report was uploaded to GitHub.'
