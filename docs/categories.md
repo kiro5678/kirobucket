@@ -16,8 +16,9 @@
 | File Management | 87 | [View](#file-management) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
+| Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
-| Games Tools | 19 | [View](#games-tools) |
+| Games Tools | 15 | [View](#games-tools) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 57 | [View](#media-audio-video) |
@@ -44,7 +45,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1229**
+**Total unique categorized manifests: 1231**
 
 
 ## Android & Device Tools
@@ -420,6 +421,19 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [sak-utility](../bucket/sak-utility.json) | 0.9.3 | 90.0 MiB | 2026-11-16 | Portable Windows technician toolkit for profile migration, diagnostics, application management, disk and USB imaging, network and email tools. | [Homepage](https://github.com/RandyNorthrup/S.A.K.-Utility) |
 | [triagesuite](../bucket/triagesuite.json) | 0.3.0 | 64bit: 56.5 MiB / arm64: 34.9 MiB | 2026-09-20 | Rust-based forensic parsers and orchestrator for offline Velociraptor Windows triage captures. | [Homepage](https://github.com/darkoperator/TriageSuite) |
 
+## Game-Specific Tools
+
+Utilities and launchers designed for a particular game or game series. General-purpose gaming utilities remain under Games Tools.
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [apex-runner](../bucket/apex-runner.json) | 0.1.0 | 4.7 MiB | 2026-11-17 | Windows game environment switcher for keyboard, IME and audio settings. | [Homepage](https://github.com/wan-kong/apex-helper) |
+| [endfield-gacha](../bucket/endfield-gacha.json) | 0.7.2 | 18.4 MiB | 2026-11-06 | 一个《明日方舟：终末地》寻访记录统计与分析工具 | [Homepage](https://github.com/bhaoo/endfield-gacha) |
+| [endfield-logs](../bucket/endfield-logs.json) | 1.2.1 | 226.2 MiB | 2026-04-22 | "Arknights: Endfield" combat analysis tool based on NpCup packet capture analysis | [Homepage](https://github.com/deepdarkssj/ZMDLogs) |
+| [hoyo-gacha](../bucket/hoyo-gacha.json) | 0.6.0 | 64bit: 7.2 MiB / arm64: 6.5 MiB | 2026-11-14 | Native desktop app for managing Genshin Impact, Honkai: Star Rail and Zenless Zone Zero gacha records. | [Homepage](https://github.com/quantulr/hoyo-gacha) |
+| [mcl](../bucket/mcl.json) | 0.0.12 | 64bit: 23.7 MiB / arm64: 21.4 MiB | 2026-11-16 | Native Minecraft Java Edition launcher with isolated instances, mods, resource packs and Java runtime management. | [Homepage](https://github.com/Lingwcy/mcl) |
+| [yolomcl](../bucket/yolomcl.json) | 1.3.1 | 64bit: 10.0 MiB / arm64: 9.0 MiB | 2026-11-06 | Native Minecraft Java Edition launcher with instance and modpack management. | [Homepage](https://github.com/Viking602/YoloMCL) |
+
 ## Games & Game Utilities
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
@@ -438,17 +452,13 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [apex-runner](../bucket/apex-runner.json) | 0.1.0 | 4.7 MiB | 2026-11-17 | Windows game environment switcher for keyboard, IME and audio settings. | [Homepage](https://github.com/wan-kong/apex-helper) |
 | [boilr](../bucket/boilr.json) | 1.11.0 | — | — | Imports games from other launchers into the Steam library. | [Homepage](https://github.com/PhilipK/BoilR) |
 | [ds4windows](../bucket/ds4windows.json) | 4.0.2.3 | 64bit: 4.1 MiB / 32bit: 4.0 MiB | 2025-01-06 | DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable) | [Homepage](https://github.com/hbashton/DS4Windows) |
 | [ds4windows-prerelease](../bucket/ds4windows-prerelease.json) | 4.6.7 | 64bit: 128.4 MiB | 2026-10-09 | DualShock 4, DualSense, and other controller remapping tool for Windows (pre-release portable) | [Homepage](https://github.com/hbashton/DS4Windows) |
-| [endfield-gacha](../bucket/endfield-gacha.json) | 0.7.1 | 18.3 MiB | 2026-10-20 | 一个《明日方舟：终末地》寻访记录统计与分析工具 | [Homepage](https://github.com/bhaoo/endfield-gacha) |
-| [endfield-logs](../bucket/endfield-logs.json) | 1.2.1 | 226.2 MiB | 2026-04-22 | "Arknights: Endfield" combat analysis tool based on NpCup packet capture analysis | [Homepage](https://github.com/deepdarkssj/ZMDLogs) |
 | [full-screen-dlss5-wrapper-thiojoe](../bucket/full-screen-dlss5-wrapper-thiojoe.json) | 1.1.0 | 1.2 MiB | 2026-09-12 | Full-screen DLSS 5 graphics wrapper for the Windows desktop or a selected window. | [Homepage](https://github.com/ThioJoe/Full-Screen-DLSS5-Wrapper) |
 | [game-cheats-manager](../bucket/game-cheats-manager.json) | 2.5.4 | 51.3 MiB | 2026-10-11 | Game cheats manager for Windows. | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) |
 | [game-overlay](../bucket/game-overlay.json) | 1.0.20 | 64bit: 13.6 MiB | 2026-08-11 | Customizable in-game overlay for FPS, frame-time lows, CPU/GPU usage and temperatures, ping, and packet loss. | [Homepage](https://github.com/kynemyers/game-overlay) |
 | [game-presence](../bucket/game-presence.json) | 1.0.0 | 4.9 MiB | 2026-11-17 | Windows tray app that shows any running game on Discord with a custom name and cover. | [Homepage](https://github.com/JoaoVitorOli/gamepresence) |
-| [hoyo-gacha](../bucket/hoyo-gacha.json) | 0.6.0 | 64bit: 7.2 MiB / arm64: 6.5 MiB | 2026-11-14 | Native desktop app for managing Genshin Impact, Honkai: Star Rail and Zenless Zone Zero gacha records. | [Homepage](https://github.com/quantulr/hoyo-gacha) |
 | [nightlight-launcher](../bucket/nightlight-launcher.json) | 5.3.0 | 64bit: 110.7 MiB | 2026-10-21 | Electron game launcher for managing a Steam library and launching games. | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) |
 | [nova](../bucket/nova.json) | 0.1.0 | 6.0 MiB | 2026-11-17 | Native Windows game launcher that finds installed games, displays Steam artwork and starts games. | [Homepage](https://github.com/yaffalhakim1/nova) |
 | [openspeedy](../bucket/openspeedy.json) | 3.3.17 | 5.2 MiB | 2026-10-18 | A Windows utility that speeds up games and applications by modifying process timing. | [Homepage](https://github.com/game1024/OpenSpeedy) |
