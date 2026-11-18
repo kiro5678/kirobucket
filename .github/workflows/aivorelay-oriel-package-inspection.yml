@@ -121,7 +121,7 @@ jobs:
           }
 
           $dieUrl = 'https://github.com/horsicq/DIE-engine/releases/download/4.0.0/die_win64_4.0.0.zip'
-          $dieHash = '522a649e795123ab89bb7962ff8fc9b5615ce253a08175467318aa06761c0f8'
+          $dieHash = '522a649e795123ab89bb7963e3b7c0b492af5a1ece8052f1dee04f3d5cd58593'
           $dieZip = Join-Path $root 'die_win64_4.0.0.zip'
           $dieRoot = Join-Path $root 'die'
           Invoke-WebRequest -Uri $dieUrl -OutFile $dieZip -MaximumRedirection 10 -TimeoutSec 600
@@ -209,7 +209,11 @@ jobs:
         with:
           name: aivorelay-oriel-package-inspection
           path: |
-            ${{ runner.temp }}/aivorelay-portable-inspection/
-            ${{ runner.temp }}/oriel-package-inspection/
+            ${{ runner.temp }}/aivorelay-portable-inspection/inspection-report.txt
+            ${{ runner.temp }}/aivorelay-portable-inspection/7zip-extraction.log
+            ${{ runner.temp }}/oriel-package-inspection/inspection-report.txt
+            ${{ runner.temp }}/oriel-package-inspection/detect-it-easy.txt
+            ${{ runner.temp }}/oriel-package-inspection/extraction.log
+            ${{ runner.temp }}/oriel-package-inspection/7zip-listing.txt
           if-no-files-found: warn
           retention-days: 14
