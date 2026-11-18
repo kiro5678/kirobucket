@@ -191,9 +191,8 @@ jobs:
           if (-not (Test-Path -LiteralPath $checkverScript -PathType Leaf)) { throw "Scoop checkver script was not found: $checkverScript" }
           $checkverManifest = Get-Content -LiteralPath $temporaryManifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
           $checkverManifest.version = '0.0.0'
-          $checkverManifest.hash = ''
           $checkverManifest | ConvertTo-Json -Depth 100 | Set-Content -LiteralPath $temporaryManifestPath -Encoding utf8
-          & $checkverScript -App $appName -Dir $bucketRoot -Update
+          & $checkverScript -App $appName -Dir $bucketRoot -Update -ThrowError
           $updatedManifest = Get-Content -LiteralPath $temporaryManifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
           $expectedVersion = '1.1.1'
           $expectedUrl = "https://github.com/Niix-x/Oriel-Releases/releases/download/v$expectedVersion/OrielSetup-$expectedVersion.exe"
