@@ -817,7 +817,17 @@ jobs:
                     }
 
                     $msiRelativePaths = @($msiFiles | ForEach-Object {
-                      $relative = [System.IO.Path]::GetRelativePath($sourceRoot, $_.FullName).Replace('\', '/')
+                      $relative = [System.IO.Path]::GetRelativePath($sourceRoot, $_.FullName).Replace('\\', '/')
+                      # Match Scoop's Expand-MsiArchive -ExtractDir behavior:
+                      # move only SourceDir/<extract_dir> into the app directory and discard the rest.
+                      if (-not [string]::IsNullOrWhiteSpace($extractDir)) {
+                        $prefix = ConvertTo-ArchivePath $extractDir
+                        $prefixWithSlash = "$prefix/"
+                        if (-not $relative.StartsWith($prefixWithSlash, [System.StringComparison]::OrdinalIgnoreCase)) {
+                          return
+                        }
+                        $relative = $relative.Substring($prefixWithSlash.Length)
+                      }
                       if ($extractTo) { "$extractTo/$relative" } else { $relative }
                     })
                     $archiveFiles += $msiRelativePaths
