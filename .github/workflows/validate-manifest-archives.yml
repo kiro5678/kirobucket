@@ -222,6 +222,7 @@ on:
       - 'bucket/llplayer.json'
       - 'bucket/fort-firewall.json'
       - 'bucket/gloof.json'
+      - 'bucket/killerpdf.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -459,6 +460,7 @@ on:
       - 'bucket/llplayer.json'
       - 'bucket/fort-firewall.json'
       - 'bucket/gloof.json'
+      - 'bucket/killerpdf.json'
   workflow_dispatch:
     inputs:
       manifest:
@@ -529,8 +531,9 @@ jobs:
             }
             $manifestPaths = @($changedPaths | Where-Object { $_ -match '(?i)^bucket/.+\.json$' } | Sort-Object -Unique)
             if ($changedPaths -contains '.github/workflows/validate-manifest-archives.yml') {
-              # A change to this validator also runs the established Pake MSI regression set.
+              # A change to this validator also runs the existing regressions and the KillerPDF manifest.
               $manifestPaths += $pakeRegressionManifests
+              $manifestPaths += 'bucket/killerpdf.json'
             }
             $manifestPaths = @($manifestPaths | Sort-Object -Unique)
           } elseif (-not [string]::IsNullOrWhiteSpace($env:MANIFEST_INPUT)) {
@@ -555,10 +558,12 @@ jobs:
             if ($LASTEXITCODE -ne 0) {
               throw "Could not compare $baseSha with HEAD."
             }
+            $manifestPaths = @($changedPaths | Where-Object { $_ -match '(?i)^bucket/.+\.json$' } | Sort-Object -Unique)
             if ($changedPaths -contains '.github/workflows/validate-manifest-archives.yml') {
-              $manifestPaths = $pakeRegressionManifests
-            } else {
-              $manifestPaths = @($changedPaths | Where-Object { $_ -match '(?i)^bucket/.+\.json$' } | Sort-Object -Unique)
+              # Include the regression set without dropping manifests changed in the same push.
+              $manifestPaths += $pakeRegressionManifests
+              $manifestPaths += 'bucket/killerpdf.json'
+              $manifestPaths = @($manifestPaths | Sort-Object -Unique)
             }
           }
 

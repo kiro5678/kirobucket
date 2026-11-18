@@ -1,6 +1,6 @@
 {
     "version": "1.9.4",
-    "description": "Free and open-source Windows PDF editor with OCR, annotation, text editing, redaction, signing, forms, comparison and conversion.",
+    "description": "Free and open-source Windows PDF editor with a self-extracting portable launcher, OCR, annotation, text editing, redaction, signing, forms, comparison and conversion.",
     "homepage": "https://killerpdf.net/",
     "license": "GPL-3.0-only",
     "url": "https://github.com/SteveTheKiller/KillerPDF/releases/download/v1.9.4/KillerPDF-Portable.exe",
