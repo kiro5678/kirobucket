@@ -53,7 +53,7 @@ jobs:
           & $checkver -App 'launcher-kevin' -Dir $bucketPath -ThrowError
           if (-not $?) { throw 'Official Scoop checkver reported an unsuccessful result.' }
 
-      - name: Install Launcher - Kevin Loggenberg and verify portable persistence
+      - name: Install Launcher - Kevin Loggenberg and verify persisted user data
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -76,8 +76,6 @@ jobs:
 
           $launcherText = Get-Content -LiteralPath $launcher -Raw
           foreach ($expected in @(
-            'LOCALAPPDATA=%~dp0data\Local',
-            'APPDATA=%~dp0data\Roaming',
             'DOTNET_BUNDLE_EXTRACT_BASE_DIR=%~dp0data\dotnet',
             'LauncherCompanion.exe'
           )) {
@@ -87,9 +85,19 @@ jobs:
           }
 
           $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
-          $persistData = Join-Path $scoopRoot 'persist\launcher-kevin\data'
+          $persistData = Join-Path $scoopRoot 'persist\launcher-kevin\data\LauncherCompanion'
           if (-not (Test-Path -LiteralPath $persistData -PathType Container)) {
-            throw "Scoop did not create the persistent data directory: $persistData"
+            throw "Scoop did not create the persisted LauncherCompanion data directory: $persistData"
+          }
+
+          $appData = Join-Path $env:LOCALAPPDATA 'LauncherCompanion'
+          $appDataItem = Get-Item -LiteralPath $appData -Force -ErrorAction Stop
+          if (($appDataItem.Attributes -band [IO.FileAttributes]::ReparsePoint) -eq 0) {
+            throw "LauncherCompanion LocalAppData path is not a junction: $appData"
+          }
+          $actualTarget = [string]$appDataItem.Target
+          if ([string]::IsNullOrWhiteSpace($actualTarget) -or [IO.Path]::GetFullPath($actualTarget) -ine [IO.Path]::GetFullPath($persistData)) {
+            throw "LocalAppData junction target does not match Scoop persist. Actual: $actualTarget; expected: $persistData"
           }
 
           $shim = Get-Command launcher-kevin -ErrorAction Stop
@@ -114,23 +122,41 @@ jobs:
             throw "Unexpected Launcher file version: $($fileVersion.FileVersion)"
           }
 
+          $marker = Join-Path $appData 'kirobucket-persist-regression-test.txt'
+          Set-Content -LiteralPath $marker -Value 'persisted' -Encoding ASCII
+
+          scoop uninstall launcher-kevin
+          if ($LASTEXITCODE -ne 0) { throw "Scoop uninstall failed with exit code $LASTEXITCODE." }
+          if (Test-Path -LiteralPath $appData) {
+            throw "Scoop uninstall left the external LocalAppData junction behind: $appData"
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $persistData 'kirobucket-persist-regression-test.txt') -PathType Leaf)) {
+            throw 'Scoop uninstall did not preserve the test file in the persistent data directory.'
+          }
+
           @(
             '## Launcher - Kevin Loggenberg Scoop install test'
             ''
             '- Scoop installed the official self-contained x64 executable and verified its SHA-256.'
-            '- The app executable was not launched.'
-            '- A CMD launcher redirects LOCALAPPDATA, APPDATA and .NET bundle extraction into data.'
-            '- Scoop created the persistent data directory.'
-            '- The launcher shim and Start Menu shortcut were created.'
-            '- The Start Menu shortcut targets the portable CMD launcher.'
+            '- The application executable was not launched.'
+            '- The CMD launcher sets only .NET bundle extraction to data\dotnet.'
+            '- The actual %LOCALAPPDATA%\LauncherCompanion folder resolves through a junction to Scoop persist.'
+            '- The launcher shim and Start Menu shortcut were created and verified.'
+            '- The Start Menu shortcut targets the CMD launcher.'
+            '- A marker written through the LocalAppData junction survived Scoop uninstall in persist.'
+            '- Scoop uninstall removed the external junction while retaining persistent data.'
             '- Upstream file version 1.2.0.0 was verified.'
           ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
 
-      - name: Uninstall test package
+      - name: Cleanup if install test stopped early
         if: always()
         shell: pwsh
         run: |
           if (Get-Command scoop -ErrorAction SilentlyContinue) {
-            scoop uninstall launcher-kevin
-            if ($LASTEXITCODE -ne 0) { Write-Warning "Scoop uninstall returned exit code $LASTEXITCODE." }
+            $scoopRoot = if ($env:SCOOP) { $env:SCOOP } else { Join-Path $env:USERPROFILE 'scoop' }
+            $current = Join-Path $scoopRoot 'apps\launcher-kevin\current'
+            if (Test-Path -LiteralPath $current) {
+              scoop uninstall launcher-kevin
+              if ($LASTEXITCODE -ne 0) { Write-Warning "Scoop cleanup returned exit code $LASTEXITCODE." }
+            }
           }

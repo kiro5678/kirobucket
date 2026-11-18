@@ -17,6 +17,16 @@
 
 قد يحتوي برنامج Portable على ميزة اختيارية تتطلب Driver أو Service أو صلاحيات إدارية عند تشغيل تلك الميزة. وثّق ذلك بوضوح. أما إذا كان المكوّن النظامي ضرورياً لتشغيل الوظيفة الأساسية، فلا تصف البرنامج بأنه Portable بالكامل؛ استخدم Nonportable أو Review بحسب ما تثبته طريقة التثبيت الفعلية.
 
+### مسارات Known Folder وربطها بـ persist
+
+- لا تفترض أن تغيير متغير البيئة `LOCALAPPDATA` أو `APPDATA` داخل ملف تشغيل يعيد توجيه المسارات التي تحصل عليها التطبيقات عبر `.NET Environment.GetFolderPath()`. على Windows يمكن أن يستعلم .NET عن Known Folder عبر واجهات Windows؛ ومتغير البيئة ليس آلية إعادة توجيه مضمونة.
+- إذا كان التطبيق يكتب بياناته داخل مجلد خاص به تحت Known Folder وتريد حفظها في Scoop، اربط **مجلد التطبيق المحدد فقط** بمجلد داخل `$persist_dir` باستخدام Junction في `post_install`. لا تربط مجلد `LocalAppData` أو `AppData` بالكامل.
+- قبل إنشاء Junction، افحص المسار الحالي والهدف. انقل الملفات الموجودة فقط عندما يكون الهدف فارغاً، وارفض التثبيت إذا احتوى الموقعان على بيانات مختلفة بدلاً من استبدال أي منهما. إذا كان المسار Reparse Point مسبقاً، تحقق أن هدفه هو مجلد persist المتوقع.
+- في `pre_uninstall` احذف Junction فقط عندما يطابق هدفه مجلد persist الخاص بالمانيفست؛ اترك المجلد الهدف وبياناته محفوظة. اختبر النقل والإزالة على Windows، بما في ذلك بقاء ملف اختبار داخل persist بعد `scoop uninstall`.
+- تعامل مع `DOTNET_BUNDLE_EXTRACT_BASE_DIR` كمسار منفصل لاستخراج مكتبات .NET Native من تطبيقات Single-file؛ يمكن توجيهه إلى مجلد فرعي في persist، لكنه لا يغيّر نتيجة `Environment.GetFolderPath(SpecialFolder.LocalApplicationData)`.
+
+مرجع: [Microsoft Learn — Get-ChildItem (Windows PowerShell 5.1), Example 9: Get the link target for a junction point](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-childitem?view=powershell-5.1).
+
 ### قواعد لا يجوز تجاوزها
 - لا تخترع `extract_dir` أو أسماء ملفات التشغيل أو مسارات الاختصارات قبل فحص المحتويات الفعلية.
 - يجب أن يطابق `extract_dir` مجلداً أو مساراً داخلياً موجوداً فعلياً في الأرشيف الحالي. إذا كانت ملفات البرنامج موجودة في جذر الأرشيف، احذف `extract_dir` بدلاً من تخمين اسم مجلد أو الاحتفاظ بقيمة قديمة من إصدار سابق. افحص كل المعماريات، ثم تحقق من وجود جميع ملفات `bin` و`shortcuts` بعد تطبيق طريقة الاستخراج والنقل التي سيستخدمها Scoop.

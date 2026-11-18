@@ -51,6 +51,17 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 ## Resolved incidents
 ## Resolved incidents
 
+### 2026-11-18 — Persist Launcher Companion's actual LocalAppData folder
+
+- **Status:** Manifest correction and regression test committed; Windows install/uninstall verification pending.
+- **Affected area:** `bucket/launcher-kevin.json`; `.github/workflows/test-launcher-kevin-scoop-install.yml`; `docs/manifest-review.md`; `docs/manifest-authoring.md`.
+- **Problem:** The previous launcher set `LOCALAPPDATA` and `APPDATA` in a generated CMD file and claimed that the app's certificate would therefore be stored under Scoop persist. The upstream program actually obtains its path with `Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)` and writes `LauncherCompanion\\server.pfx` there.
+- **Root cause:** On Windows, .NET resolves this special folder using the Windows Known Folder API; changing the process environment variable is not a reliable way to redirect this API-backed path.
+- **Resolution:** The manifest now creates a guarded Junction from the exact `%LOCALAPPDATA%\\LauncherCompanion` directory to `$persist_dir\\data\\LauncherCompanion`. Existing content is moved only when the persistent target is empty; an unexpected existing Junction or two populated folders cause a safe failure rather than overwriting data. `pre_uninstall` removes only the Junction whose target exactly matches the expected persist path. The launcher still sets `DOTNET_BUNDLE_EXTRACT_BASE_DIR` separately to keep .NET single-file native extraction under Scoop persistence.
+- **Verification:** Official Scoop manifest and pre/post-install documentation plus the current Scoop install implementation were inspected. The official PowerShell 5.1 documentation confirms the `Target` property used to inspect Junction destinations. Existing Checkver validation for the current base commit passed in PowerShell and PowerShell 7 ([run 44373783885](https://github.com/kiro5678/kirobucket/actions/runs/44373783885)); this validates version detection only. The updated Windows Scoop workflow tests the Junction target and checks that a marker written through it survives uninstall; its result is pending at the time of this commit. The application is not launched and phone pairing/LAN behavior remain untested.
+- **Prevention:** For applications using `Environment.GetFolderPath` or Windows Known Folder APIs, do not rely on environment-variable overrides. Persist only the exact app-specific directory with a guarded Junction, migrate without overwriting existing data, and test removal plus data retention.
+
+
 ### 2026-11-18 — Reuse push-triggered manifest stages instead of dispatching duplicates
 
 - **Status:** Workflow change committed and YAML/actionlint validation passed in run [44209955438](https://github.com/kiro5678/kirobucket/actions/runs/44209955438). Its push-aware orchestration still requires runtime confirmation on a later bucket-manifest push.
