@@ -17,7 +17,7 @@
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
-| Games Tools | 14 | [View](#games-tools) |
+| Games Tools | 19 | [View](#games-tools) |
 | Images & Photos | 61 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 57 | [View](#media-audio-video) |
@@ -44,7 +44,7 @@
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1226**
+**Total unique categorized manifests: 1231**
 
 
 ## Android & Device Tools
@@ -438,6 +438,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [apex-runner](../bucket/apex-runner.json) | 0.1.0 | 4.7 MiB | 2026-11-17 | Windows game environment switcher for keyboard, IME and audio settings. | [Homepage](https://github.com/wan-kong/apex-helper) |
 | [boilr](../bucket/boilr.json) | 1.11.0 | — | — | Imports games from other launchers into the Steam library. | [Homepage](https://github.com/PhilipK/BoilR) |
 | [ds4windows](../bucket/ds4windows.json) | 4.0.2.3 | 64bit: 4.1 MiB / 32bit: 4.0 MiB | 2025-01-06 | DualShock 4, DualSense, and other controller remapping tool for Windows (stable portable) | [Homepage](https://github.com/hbashton/DS4Windows) |
 | [ds4windows-prerelease](../bucket/ds4windows-prerelease.json) | 4.6.7 | 64bit: 128.4 MiB | 2026-10-09 | DualShock 4, DualSense, and other controller remapping tool for Windows (pre-release portable) | [Homepage](https://github.com/hbashton/DS4Windows) |
@@ -446,10 +447,14 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [full-screen-dlss5-wrapper-thiojoe](../bucket/full-screen-dlss5-wrapper-thiojoe.json) | 1.1.0 | 1.2 MiB | 2026-09-12 | Full-screen DLSS 5 graphics wrapper for the Windows desktop or a selected window. | [Homepage](https://github.com/ThioJoe/Full-Screen-DLSS5-Wrapper) |
 | [game-cheats-manager](../bucket/game-cheats-manager.json) | 2.5.4 | 51.3 MiB | 2026-10-11 | Game cheats manager for Windows. | [Homepage](https://github.com/dyang886/Game-Cheats-Manager) |
 | [game-overlay](../bucket/game-overlay.json) | 1.0.20 | 64bit: 13.6 MiB | 2026-08-11 | Customizable in-game overlay for FPS, frame-time lows, CPU/GPU usage and temperatures, ping, and packet loss. | [Homepage](https://github.com/kynemyers/game-overlay) |
+| [game-presence](../bucket/game-presence.json) | 1.0.0 | 4.9 MiB | 2026-11-17 | Windows tray app that shows any running game on Discord with a custom name and cover. | [Homepage](https://github.com/JoaoVitorOli/gamepresence) |
+| [hoyo-gacha](../bucket/hoyo-gacha.json) | 0.6.0 | 64bit: 7.2 MiB / arm64: 6.5 MiB | 2026-11-14 | Native desktop app for managing Genshin Impact, Honkai: Star Rail and Zenless Zone Zero gacha records. | [Homepage](https://github.com/quantulr/hoyo-gacha) |
 | [nightlight-launcher](../bucket/nightlight-launcher.json) | 5.3.0 | 64bit: 110.7 MiB | 2026-10-21 | Electron game launcher for managing a Steam library and launching games. | [Homepage](https://github.com/onajlikezz/Nightlight-Launcher) |
 | [nova](../bucket/nova.json) | 0.1.0 | 6.0 MiB | 2026-11-17 | Native Windows game launcher that finds installed games, displays Steam artwork and starts games. | [Homepage](https://github.com/yaffalhakim1/nova) |
 | [openspeedy](../bucket/openspeedy.json) | 3.3.17 | 5.2 MiB | 2026-10-18 | A Windows utility that speeds up games and applications by modifying process timing. | [Homepage](https://github.com/game1024/OpenSpeedy) |
+| [rstgametranslation](../bucket/rstgametranslation.json) | 6.2 | 64bit: 309.9 MiB | 2026-11-05 | Real-time game screen OCR and translation tool. | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) |
 | [savestate](../bucket/savestate.json) | 3.1 | 88.7 MiB | 2026-10-29 | Back up and restore video game saves, with Steam detection and emulator support. | [Homepage](https://github.com/Matteo842/SaveState) |
+| [skwire-steam-url-converter](../bucket/skwire-steam-url-converter.json) | 1.0.2 | 437.5 KiB | 2026-09-11 | Convert Steam URL shortcuts into standard Windows shortcuts. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/steam-url-converter/) |
 | [tcno-acc-switcher](../bucket/tcno-acc-switcher.json) | 4.0.8 | 64bit: 43.7 MiB | 2025-11-21 | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) |
 | [uesave](../bucket/uesave.json) | 0.7.1 | 839.1 KiB | 2026-03-23 | A library for reading and writing Unreal Engine save files | [Homepage](https://github.com/trumank/uesave-rs) |
 
