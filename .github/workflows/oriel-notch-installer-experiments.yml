@@ -158,6 +158,9 @@ jobs:
           - id: script-managed-external-cleanup
             method: "installer.script + junction + silent uninstall + verified residue cleanup"
             manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-cleanup.json"
+          - id: script-managed-external-sync
+            method: "installer.script + junction + uninstall registry synchronization"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-sync.json"
 
     steps:
       - name: Checkout repository
@@ -254,7 +257,7 @@ jobs:
           if (Test-Path -LiteralPath $install.StdOut) { $report.Add('Install stdout:'); $report.AddRange([string[]](Get-Content -LiteralPath $install.StdOut)) }
           if (Test-Path -LiteralPath $install.StdErr) { $report.Add('Install stderr:'); $report.AddRange([string[]](Get-Content -LiteralPath $install.StdErr)) }
 
-          $isUpdateLifecycleCandidate = $env:MANIFEST_FILE -like '*oriel-notch-exp-managed-external-cleanup.json'
+          $isUpdateLifecycleCandidate = $env:MANIFEST_FILE -like '*oriel-notch-exp-managed-external-sync.json'
           $updateExit = 0
           $updateTimedOut = $false
           if ($isUpdateLifecycleCandidate -and $install.ExitCode -eq 0 -and -not $install.TimedOut) {
