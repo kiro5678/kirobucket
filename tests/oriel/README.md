@@ -11,7 +11,7 @@ This is the Oriel Notch desktop overlay. It is separate from the existing `bucke
 
 ## Installation model
 
-The publisher supplies a per-user setup executable, not a usable portable archive. The installer places the application in `%LOCALAPPDATA%\\Programs\\Oriel`; the Scoop manifest creates a junction inside its version directory and points the Scoop shim/shortcut through that junction.
+The publisher supplies a per-user setup executable, not a usable portable archive. The installer places the application in `%LOCALAPPDATA%\Programs\Oriel`; the Scoop manifest creates a junction inside its version directory and points the Scoop shim/shortcut through that junction.
 
 This package is **not portable**. Before launching the official setup, it checks for an existing Oriel installation folder or uninstall registration and refuses to take ownership of an installation that was not created by this manifest. Uninstall invokes Oriel's registered `uninstall.exe --uninstall --silent`, checks that the application executable and registry references stay absent for five continuous seconds (maximum wait 30 seconds), and removes only the verified residual uninstaller.
 
