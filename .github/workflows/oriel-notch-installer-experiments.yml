@@ -1,6 +1,12 @@
 name: Oriel Notch Installer Method Experiments
 
 on:
+  push:
+    branches:
+      - experiment/oriel-notch-install-methods-20261118
+    paths:
+      - ".github/workflows/oriel-notch-installer-experiments.yml"
+      - "tests/oriel/**"
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [master]
