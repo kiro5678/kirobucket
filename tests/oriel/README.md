@@ -2,10 +2,10 @@
 
 Production manifest: `bucket/Oriel-Niix.json`
 
-Source: [Niix-x/Oriel-Releases](https://github.com/Niix-x/Oriel-Releases)  
-Current tested release: `1.1.1`  
-Official installer: `OrielSetup-1.1.1.exe`  
-SHA-256: `808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954`
+- Source: [Niix-x/Oriel-Releases](https://github.com/Niix-x/Oriel-Releases)
+- Current tested release: `1.1.1`
+- Official installer: `OrielSetup-1.1.1.exe`
+- SHA-256: `808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954`
 
 This is the Oriel Notch desktop overlay. It is separate from the existing `bucket/oriel.json` package (Yangflow RSS reader) and `bucket/oriel-highercomve.json` package (Highercomve Zig framework CLI).
 
