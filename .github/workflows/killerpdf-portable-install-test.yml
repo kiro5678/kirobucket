@@ -8,6 +8,12 @@ on:
     paths:
       - 'bucket/killerpdf.json'
       - '.github/workflows/killerpdf-portable-install-test.yml'
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/killerpdf.json'
+      - '.github/workflows/killerpdf-portable-install-test.yml'
   workflow_dispatch:
 
 permissions:
@@ -41,7 +47,23 @@ jobs:
           Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
           $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
 
-          scoop bucket add kirobucket $env:GITHUB_WORKSPACE
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-test'
+          $localBucketManifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $localBucketManifestDir -Force | Out-Null
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\killerpdf.json') -Destination $localBucketManifestDir
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket/killerpdf.json
+            git commit -m 'Seed temporary KillerPDF test bucket'
+          }
+          finally {
+            Pop-Location
+          }
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket $bucketUrl
           scoop install killerpdf
 
           $appDir = Join-Path $env:SCOOP 'apps\killerpdf\current'
