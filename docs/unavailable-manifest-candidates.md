@@ -1,6 +1,6 @@
 # Software candidates without a current Scoop-ready Windows package
 
-**Last checked:** 2026-11-13
+**Last checked:** 2026-11-18
 
 This page records software from repository research that does not currently have a suitable, version-pinned Windows download for a maintainable Scoop manifest. These are documentation-only entries: they are not active manifests and are not kept as placeholder JSON files in `bucket/` or `under review scoop bucket/`.
 
@@ -106,7 +106,15 @@ Open Aria Exporter is now available as [`open-aria-exporter`](../bucket/open-ari
 No JSON placeholders were created. A candidate can move into `bucket/` only after a current official Windows artifact, version mapping, architecture, SHA-256, package type, executable paths and install/uninstall behavior are established. Record a missing or unclear license as `Unknown`; public availability does not make a package open source. Beta packages, where deliberately accepted, must be named and tracked as beta manifests rather than presented as stable releases.
 
 
-## Music players — Windows desktop package review (checked 2026-11-13)
+## Music software — Windows desktop package review (checked 2026-11-18)
+
+### Koog — realityinspector
+
+- **Source:** [realityinspector/koog](https://github.com/realityinspector/koog)
+- **Current distribution:** the upstream README presents Koog as a browser application for Chrome and Edge. Its hosted demo is [koog-demo.fly.dev](https://koog-demo.fly.dev); running the local web application requires the source project and Node.js.
+- **GitHub Releases:** the repository currently has no published GitHub Releases and no versioned Windows executable, installer, or archive.
+- **Desktop build inspection:** `package.json` contains a `build:app` script, but [desktop/pack.mjs](https://github.com/realityinspector/koog/blob/main/desktop/pack.mjs) hardcodes `platform: 'darwin'` and `arch: 'arm64'`, creates `Koog.app`, and calls macOS-only tools (`sips`, `iconutil`, and `codesign`). This is a macOS Apple Silicon packaging target, not a Windows build. The separate `build:web` target creates browser assets and is not a Windows desktop installer.
+- **Decision:** do not create a portable or nonportable Scoop manifest. There is no Windows package for Scoop to install, and a shortcut to the hosted demo or a manifest that installs a development server and runs npm during installation would misrepresent the app as a native Windows package. Revisit only after upstream adds a Windows desktop build and publishes a versioned Windows artifact with a stable download URL and a verifiable SHA-256 checksum.
 
 ### Dial — steeben
 
