@@ -1,0 +1,170 @@
+name: Orfeo Portable TEMP Runtime Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/orfeo-portable-temp-test.yml'
+      - 'bucket/orfeo.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Launch Orfeo Portable and inspect isolated TEMP
+    runs-on: windows-latest
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download, verify, launch, and inspect Orfeo Portable
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $logPath = Join-Path $env:RUNNER_TEMP 'orfeo-portable-temp-test.log'
+          Start-Transcript -LiteralPath $logPath -Force
+
+          $testRoot = Join-Path $env:RUNNER_TEMP 'orfeo-portable-runtime-test'
+          $isolatedTemp = Join-Path $testRoot 'isolated-temp'
+          $appRoot = Join-Path $testRoot 'app'
+          $exePath = Join-Path $appRoot 'Orfeo.exe'
+          $process = $null
+
+          try {
+            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\orfeo.json'
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+
+            if ([string]$manifest.version -ne '1.7.3') {
+              throw "This runtime test is pinned to manifest version 1.7.3; found $($manifest.version). Review the test before changing the version."
+            }
+
+            $downloadUrl = ([string]$manifest.url) -replace '#/.*$', ''
+            if ($downloadUrl -notmatch 'Orfeo-1\.7\.3-portable\.exe$') {
+              throw "The manifest does not point to the expected official portable asset: $downloadUrl"
+            }
+
+            New-Item -ItemType Directory -Path $appRoot, $isolatedTemp -Force | Out-Null
+            Write-Host "Manifest version: $($manifest.version)"
+            Write-Host "Download URL: $downloadUrl"
+            Invoke-WebRequest -Uri $downloadUrl -OutFile $exePath -MaximumRedirection 10 -TimeoutSec 600
+
+            $actualHash = (Get-FileHash -LiteralPath $exePath -Algorithm SHA256).Hash.ToLowerInvariant()
+            $expectedHash = ([string]$manifest.hash).ToLowerInvariant()
+            Write-Host "Downloaded size: $((Get-Item -LiteralPath $exePath).Length) bytes"
+            Write-Host "Manifest SHA-256: $expectedHash"
+            Write-Host "Downloaded SHA-256: $actualHash"
+            if ($actualHash -ne $expectedHash) {
+              throw 'Downloaded Portable executable SHA-256 does not match bucket/orfeo.json.'
+            }
+
+            # Isolate the environment inherited by Orfeo and its child processes.
+            $env:TEMP = $isolatedTemp
+            $env:TMP = $isolatedTemp
+
+            $observedDirectories = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+            $observedExecutables = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+            $observedRuntimeProcesses = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+            $startedAt = Get-Date
+
+            Write-Host "Launching: $exePath"
+            Write-Host "Isolated TEMP/TMP: $isolatedTemp"
+            $process = Start-Process -FilePath $exePath -WorkingDirectory $appRoot -PassThru
+            Write-Host "Portable launcher PID: $($process.Id)"
+
+            # Keep observing even if the outer portable launcher exits: the extracted
+            # Orfeo process may continue running as a child process.
+            $deadline = (Get-Date).AddSeconds(40)
+            while ((Get-Date) -lt $deadline) {
+              foreach ($directory in @(Get-ChildItem -LiteralPath $isolatedTemp -Directory -Force -ErrorAction SilentlyContinue)) {
+                [void]$observedDirectories.Add($directory.FullName)
+              }
+
+              foreach ($file in @(Get-ChildItem -LiteralPath $isolatedTemp -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Extension -ieq '.exe' })) {
+                [void]$observedExecutables.Add($file.FullName)
+              }
+
+              $runtimeProcesses = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+                $_.ExecutablePath -and $_.ExecutablePath.StartsWith($isolatedTemp, [System.StringComparison]::OrdinalIgnoreCase)
+              })
+              foreach ($runtimeProcess in $runtimeProcesses) {
+                [void]$observedRuntimeProcesses.Add(('{0} | PID={1} | {2}' -f $runtimeProcess.Name, $runtimeProcess.ProcessId, $runtimeProcess.ExecutablePath))
+              }
+
+              Start-Sleep -Milliseconds 250
+            }
+
+            foreach ($directory in @(Get-ChildItem -LiteralPath $isolatedTemp -Directory -Force -ErrorAction SilentlyContinue)) {
+              [void]$observedDirectories.Add($directory.FullName)
+            }
+            foreach ($file in @(Get-ChildItem -LiteralPath $isolatedTemp -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Extension -ieq '.exe' })) {
+              [void]$observedExecutables.Add($file.FullName)
+            }
+
+            Write-Host "Observed TEMP directories: $($observedDirectories.Count)"
+            foreach ($path in $observedDirectories) {
+              Write-Host "TEMP DIRECTORY: $path"
+            }
+
+            Write-Host "Observed extracted executables: $($observedExecutables.Count)"
+            foreach ($path in $observedExecutables) {
+              Write-Host "TEMP EXECUTABLE: $path"
+            }
+
+            Write-Host "Observed processes executing from isolated TEMP: $($observedRuntimeProcesses.Count)"
+            foreach ($entry in $observedRuntimeProcesses) {
+              Write-Host "TEMP PROCESS: $entry"
+            }
+
+            $allTempFiles = @(Get-ChildItem -LiteralPath $isolatedTemp -File -Recurse -Force -ErrorAction SilentlyContinue)
+            Write-Host "Files currently present in isolated TEMP: $($allTempFiles.Count)"
+
+            if ($observedRuntimeProcesses.Count -gt 0 -or $observedExecutables.Count -gt 0) {
+              Write-Host 'CONFIRMED: Orfeo Portable extracted and/or executed its application files from the isolated TEMP directory.'
+              Write-Host 'CLASSIFICATION: Single-file Portable launcher with runtime extraction under TEMP.'
+            } else {
+              throw 'No extracted executable or running process was observed under the isolated TEMP directory. Runtime extraction was not confirmed.'
+            }
+
+            $process.Refresh()
+            if ($process.HasExited) {
+              Write-Host "Portable launcher exit code: $($process.ExitCode)"
+            } else {
+              Write-Host 'Portable launcher remained running during the observation window.'
+            }
+          }
+          finally {
+            # Stop only processes whose executable path is inside this test's isolated TEMP,
+            # plus the exact launcher process started by this job.
+            $relatedProcesses = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+              $_.ExecutablePath -and $_.ExecutablePath.StartsWith($isolatedTemp, [System.StringComparison]::OrdinalIgnoreCase)
+            })
+            foreach ($relatedProcess in $relatedProcesses) {
+              Stop-Process -Id ([int]$relatedProcess.ProcessId) -Force -ErrorAction SilentlyContinue
+            }
+
+            if ($null -ne $process) {
+              $process.Refresh()
+              if (-not $process.HasExited) {
+                Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+              }
+            }
+
+            Start-Sleep -Seconds 2
+            Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue
+            Stop-Transcript
+          }
+
+      - name: Upload runtime diagnostic log
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: orfeo-portable-temp-runtime-log
+          path: ${{ runner.temp }}/orfeo-portable-temp-test.log
+          if-no-files-found: ignore
+          retention-days: 7
