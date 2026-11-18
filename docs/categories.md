@@ -26,7 +26,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
-| Other Utilities | 134 | [View](#other-utilities) |
+| Other Utilities | 133 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 32 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
@@ -39,12 +39,12 @@
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
-| Translation & OCR | 10 | [View](#translation-ocr) |
+| Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1231**
+**Total unique categorized manifests: 1229**
 
 
 ## Android & Device Tools
@@ -862,7 +862,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [skwire-squeaky-mouse](../bucket/skwire-squeaky-mouse.json) | 1.0.3 | 537.9 KiB | 2026-09-11 | Play sounds when mouse buttons are clicked. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/squeaky-mouse/) |
 | [skwire-sspeedtest](../bucket/skwire-sspeedtest.json) | 1.0.5 | 1.4 MiB | 2026-09-11 | GUI for running Ookla Speedtest measurements. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/sspeedtest/) |
 | [skwire-ssurfer](../bucket/skwire-ssurfer.json) | 0.0.1 | 5.1 MiB | 2026-09-11 | Generate web traffic for firewall logging and policy testing. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/ssurfer/) |
-| [skwire-steam-url-converter](../bucket/skwire-steam-url-converter.json) | 1.0.2 | 437.5 KiB | 2026-09-11 | Convert Steam URL shortcuts into standard Windows shortcuts. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/steam-url-converter/) |
 | [skwire-stray](../bucket/skwire-stray.json) | 1.0.2 | 407.5 KiB | 2026-09-11 | Tray utility for shutdown, restart, log off, lock, sleep, and hibernate. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/stray/) |
 | [skwire-subahk](../bucket/skwire-subahk.json) | 1.0.0 | 452.6 KiB | 2026-09-11 | Subsonic desktop client focused on playlist management. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/subahk/) |
 | [skwire-swavplayer](../bucket/skwire-swavplayer.json) | 1.0.2 | 383.4 KiB | 2026-09-11 | Command-line WAV file player. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/swavplayer/) |
@@ -1249,7 +1248,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [crow-translate](../bucket/crow-translate.json) | 4.1.0 | 64bit: 34.6 MiB | 2024-10-24 | A simple and lightweight translator that allows you to translate and speak text using multiple translation engines. | [Homepage](https://apps.kde.org/crowtranslate) |
 | [dpscreenocr](../bucket/dpscreenocr.json) | 1.5.1 | 10.8 MiB | 2026-10-29 | A free and open-source program to recognize text on the screen. | [Homepage](https://danpla.github.io/dpscreenocr/) |
 | [MORT](../bucket/MORT.json) | 1.320 | 64bit: 98.7 MiB | 2026-09-11 | Real-time game translator with OCR and machine translation. | [Homepage](https://github.com/kmonkeyhead/MORT) |
-| [rstgametranslation](../bucket/rstgametranslation.json) | 6.1 | 64bit: 309.9 MiB | 2026-10-22 | Real-time game screen OCR and translation tool. | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) |
 | [translumo](../bucket/translumo.json) | 1.1.0 | 410.1 MiB | 2026-09-22 | Advanced real-time screen translator. | [Homepage](https://github.com/ramjke/Translumo) |
 | [vovsoft-batch-translator](../bucket/vovsoft-batch-translator.json) | 5.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft Batch Translator. | [Homepage](https://vovsoft.com/software/batch-translator/) |
 | [vovsoft-ocr-reader](../bucket/vovsoft-ocr-reader.json) | 4.3 | 44.3 MiB | 2026-09-09 | Portable edition of Vovsoft OCR Reader. | [Homepage](https://vovsoft.com/software/ocr-reader/) |
