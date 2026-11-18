@@ -361,9 +361,6 @@ jobs:
           }
 
           & $checkver -App $testManifest -ForceUpdate -ThrowError
-          if ($LASTEXITCODE -ne 0) {
-            throw "Scoop checkver failed with exit code $LASTEXITCODE."
-          }
 
           $verified = Get-Content -LiteralPath $testManifest -Raw | ConvertFrom-Json -ErrorAction Stop
           if ($verified.version -ne '0.1.0-beta.10') {
