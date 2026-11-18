@@ -280,7 +280,7 @@ jobs:
               $cycleStateValid = (Test-Path -LiteralPath $cycleAppExe -PathType Leaf) -and
                 (Test-Path -LiteralPath $cycleUninstaller -PathType Leaf) -and
                 (Test-Path -LiteralPath $cycleManagedLink -PathType Leaf)
-              $report.Add("Oriel executable, registered uninstaller, and Scoop launch link after update cycle $updateAttempt: $cycleStateValid")
+              $report.Add("Oriel executable, registered uninstaller, and Scoop launch link after update cycle $($updateAttempt): $cycleStateValid")
               if ($updateExit -ne 0 -or $updateTimedOut -or -not $cycleStateValid) {
                 $updateStateValid = $false
                 break
@@ -405,7 +405,7 @@ jobs:
               $registeredUninstallerValid
             $postUninstallStateValid = ($externalAfterUninstall.Count -eq 0) -and ($registryAfterUninstall.Count -eq 0)
             $updateLifecycleValid = (-not $isUpdateLifecycleCandidate) -or
-              (($updateExit -eq 0) -and (-not $updateTimedOut))
+              ($updateStateValid -and ($updateExit -eq 0) -and (-not $updateTimedOut))
             $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
               $preUninstallStateValid -and $updateLifecycleValid -and
               ($uninstallExit -eq 0) -and (-not $uninstallTimedOut) -and
