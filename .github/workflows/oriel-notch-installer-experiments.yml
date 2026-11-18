@@ -1,0 +1,301 @@
+name: Oriel Notch Installer Method Experiments
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [master]
+    paths:
+      - ".github/workflows/oriel-notch-installer-experiments.yml"
+      - "tests/oriel/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-inspection:
+    name: Inspect official Oriel installer
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify, scan, and extract official setup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $version = '1.1.1'
+          $url = "https://github.com/Niix-x/Oriel-Releases/releases/download/v$version/OrielSetup-$version.exe"
+          $expectedHash = '808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954'
+          $root = Join-Path $env:RUNNER_TEMP 'oriel-static-inspection'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $setup = Join-Path $root "OrielSetup-$version.exe"
+          Invoke-WebRequest -Uri $url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 600
+          $actualHash = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) { throw "SHA-256 mismatch: $actualHash" }
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add("Oriel $version static installer inspection")
+          $report.Add("SHA-256: $actualHash")
+          $report.Add("File size: $((Get-Item -LiteralPath $setup).Length) bytes")
+          $signature = Get-AuthenticodeSignature -FilePath $setup
+          $report.Add("Authenticode status: $($signature.Status)")
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($setup)
+          $report.Add("Product name: $($versionInfo.ProductName)")
+          $report.Add("File description: $($versionInfo.FileDescription)")
+
+          $bytes = [System.IO.File]::ReadAllBytes($setup)
+          $allStrings = [System.Text.Encoding]::ASCII.GetString($bytes) + [Environment]::NewLine + [System.Text.Encoding]::Unicode.GetString($bytes)
+          $pattern = '(?i)(?:--[a-z][a-z0-9-]{1,48}|/[a-z][a-z0-9._-]{1,48}|[a-z0-9_-]*(?:silent|quiet|uninstall|install.?dir|directory|folder|target.?path|install.?path|help|usage)[a-z0-9_-]*)'
+          $hits = @([regex]::Matches($allStrings, $pattern) | ForEach-Object { $_.Value.Trim([char]0, [char]32) } |
+            Where-Object { $_ -match '(?i)silent|quiet|uninstall|install|directory|folder|path|help|usage|--' } | Sort-Object -Unique)
+          $report.Add('Likely command-line strings:')
+          if ($hits.Count) { $report.AddRange([string[]]$hits) } else { $report.Add('None found by the simple string scan.') }
+          $hits | Set-Content -LiteralPath (Join-Path $root 'candidate-strings.txt') -Encoding utf8
+
+          $probeRoot = Join-Path $root 'help-probes'
+          New-Item -ItemType Directory -Path $probeRoot -Force | Out-Null
+          foreach ($probe in @(
+            @{ Name = 'slash-question'; Argument = '/?' },
+            @{ Name = 'slash-help'; Argument = '/help' },
+            @{ Name = 'dash-help'; Argument = '--help' },
+            @{ Name = 'short-help'; Argument = '-h' }
+          )) {
+            $stdout = Join-Path $probeRoot "$($probe.Name).stdout.txt"
+            $stderr = Join-Path $probeRoot "$($probe.Name).stderr.txt"
+            try {
+              $process = Start-Process -FilePath $setup -ArgumentList $probe.Argument -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+              if ($process.WaitForExit(8000)) {
+                $report.Add("Help probe $($probe.Argument): exited with code $($process.ExitCode).")
+              } else {
+                & "$env:WINDIR\System32\taskkill.exe" /PID $process.Id /T /F 2>$null | Out-Null
+                $report.Add("Help probe $($probe.Argument): timed out; process tree terminated.")
+              }
+            } catch {
+              $report.Add("Help probe $($probe.Argument): launch error $($_.Exception.Message)")
+            }
+          }
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if (-not $command) { throw '7-Zip was not found on the runner.' }
+            $sevenZip = $command.Source
+          }
+          $extract = Join-Path $root '7zip-extracted'
+          New-Item -ItemType Directory -Path $extract -Force | Out-Null
+          $listing = @(& $sevenZip l -slt $setup 2>&1 | ForEach-Object { "$_" })
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $root '7zip-listing.txt') -Encoding utf8
+          $extractLog = @(& $sevenZip x $setup "-o$extract" -y -bd 2>&1 | ForEach-Object { "$_" })
+          $extractExit = $LASTEXITCODE
+          $extractLog | Set-Content -LiteralPath (Join-Path $root '7zip-extraction.log') -Encoding utf8
+          $payload = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+          $executables = @($payload | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object { [System.IO.Path]::GetRelativePath($extract, $_.FullName) })
+          $report.Add("7-Zip listing exit code: $listExit")
+          $report.Add("7-Zip extraction exit code: $extractExit")
+          $report.Add("Extracted file count: $($payload.Count)")
+          $report.Add("Extracted EXE count: $($executables.Count)")
+          if ($executables.Count) { $report.AddRange([string[]]$executables) } else { $report.Add('No EXE payload was extracted.') }
+          $report | Set-Content -LiteralPath (Join-Path $root 'inspection-report.txt') -Encoding utf8
+          $report | ForEach-Object { Write-Host $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload static inspection artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: oriel-static-inspection
+          path: |
+            ${{ runner.temp }}/oriel-static-inspection/inspection-report.txt
+            ${{ runner.temp }}/oriel-static-inspection/candidate-strings.txt
+            ${{ runner.temp }}/oriel-static-inspection/7zip-listing.txt
+            ${{ runner.temp }}/oriel-static-inspection/7zip-extraction.log
+            ${{ runner.temp }}/oriel-static-inspection/help-probes/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  scoop-manifest-probes:
+    name: Test ${{ matrix.method }}
+    runs-on: windows-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        include:
+          - method: "installer.args /S"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-s.json"
+          - method: "installer.args /silent"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-silent.json"
+          - method: "installer.args /quiet"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-quiet.json"
+          - method: "installer.script --silent --install-dir"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-script.json"
+          - method: "Scoop 7-Zip extraction"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-7zip.json"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install isolated Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopRoot = Join-Path $env:RUNNER_TEMP 'oriel-scoop-home'
+          $globalRoot = Join-Path $env:RUNNER_TEMP 'oriel-scoop-global'
+          "SCOOP=$scoopRoot" >> $env:GITHUB_ENV
+          "SCOOP_GLOBAL=$globalRoot" >> $env:GITHUB_ENV
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value (Join-Path $scoopRoot 'shims')
+          $env:SCOOP = $scoopRoot
+          $env:SCOOP_GLOBAL = $globalRoot
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) { throw 'Scoop command was not installed.' }
+          scoop config aria2-enabled false
+          scoop --version
+
+      - name: Run the selected experimental manifest through Scoop
+        id: probe
+        env:
+          MANIFEST_FILE: ${{ matrix.manifest }}
+          TEST_METHOD: ${{ matrix.method }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $reportRoot = Join-Path $env:RUNNER_TEMP 'oriel-scoop-probe'
+          New-Item -ItemType Directory -Path $reportRoot -Force | Out-Null
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE ($env:MANIFEST_FILE.Replace('/', '\'))
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Missing manifest: $manifestPath" }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $appName = [System.IO.Path]::GetFileNameWithoutExtension($manifestPath)
+          $versionPath = Join-Path $env:SCOOP "apps\$appName\$($manifest.version)"
+          $scoopScript = Join-Path $env:SCOOP 'shims\scoop.ps1'
+          if (-not (Test-Path -LiteralPath $scoopScript -PathType Leaf)) { throw "Missing Scoop shim: $scoopScript" }
+          $pwshExe = Join-Path $PSHOME 'pwsh.exe'
+
+          function Invoke-ScoopBounded {
+            param([string[]]$ScoopArguments, [string]$Label, [int]$TimeoutMilliseconds = 90000)
+            $stdout = Join-Path $reportRoot "$Label.stdout.txt"
+            $stderr = Join-Path $reportRoot "$Label.stderr.txt"
+            $quote = { param([string]$Value) "'" + $Value.Replace("'", "''") + "'" }
+            $quotedShim = & $quote $scoopScript
+            $quotedArgs = @($ScoopArguments | ForEach-Object { & $quote $_ }) -join ' '
+            $childScript = '& ' + $quotedShim + ' ' + $quotedArgs + '; exit $LASTEXITCODE'
+            $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($childScript))
+            $process = Start-Process -FilePath $pwshExe -ArgumentList @('-NoLogo', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-EncodedCommand', $encoded) -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -WorkingDirectory $env:GITHUB_WORKSPACE
+            if (-not $process.WaitForExit($TimeoutMilliseconds)) {
+              & "$env:WINDIR\System32\taskkill.exe" /PID $process.Id /T /F 2>$null | Out-Null
+              return [PSCustomObject]@{ ExitCode = 124; TimedOut = $true; StdOut = $stdout; StdErr = $stderr }
+            }
+            return [PSCustomObject]@{ ExitCode = [int]$process.ExitCode; TimedOut = $false; StdOut = $stdout; StdErr = $stderr }
+          }
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add("Method: $env:TEST_METHOD")
+          $report.Add("Manifest: $env:MANIFEST_FILE")
+          $report.Add("Scoop app name: $appName")
+          $install = Invoke-ScoopBounded -ScoopArguments @('install', $manifestPath) -Label 'scoop-install'
+          $report.Add("Scoop install exit code: $($install.ExitCode)")
+          $report.Add("Scoop install timed out: $($install.TimedOut)")
+          if (Test-Path -LiteralPath $install.StdOut) { $report.Add('Install stdout:'); $report.AddRange([string[]](Get-Content -LiteralPath $install.StdOut)) }
+          if (Test-Path -LiteralPath $install.StdErr) { $report.Add('Install stderr:'); $report.AddRange([string[]](Get-Content -LiteralPath $install.StdErr)) }
+
+          $insideExecutables = @()
+          if (Test-Path -LiteralPath $versionPath -PathType Container) {
+            $insideExecutables = @(Get-ChildItem -LiteralPath $versionPath -Filter '*.exe' -File -Recurse -Force |
+              Where-Object { $_.Name -notlike 'OrielSetup-*' } |
+              ForEach-Object {
+                [PSCustomObject]@{
+                  Path = [System.IO.Path]::GetRelativePath($versionPath, $_.FullName)
+                  Size = $_.Length
+                  Product = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).ProductName
+                  Description = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).FileDescription
+                }
+              })
+          }
+          $report.Add("Application EXE files inside Scoop version directory: $($insideExecutables.Count)")
+          foreach ($exe in $insideExecutables) { $report.Add(" - $($exe.Path) | $($exe.Size) bytes | $($exe.Product) | $($exe.Description)") }
+
+          $externalExecutables = @()
+          $externalRoots = @(
+            (Join-Path $env:LOCALAPPDATA 'Programs'),
+            (Join-Path $env:LOCALAPPDATA 'Oriel'),
+            (Join-Path $env:ProgramFiles 'Oriel'),
+            (Join-Path $env:APPDATA 'Oriel')
+          )
+          foreach ($root in $externalRoots) {
+            if (Test-Path -LiteralPath $root -PathType Container) {
+              $externalExecutables += @(Get-ChildItem -LiteralPath $root -Filter '*.exe' -File -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })
+            }
+          }
+          $externalExecutables = @($externalExecutables | Sort-Object -Unique)
+          $report.Add("Oriel EXE files in common external locations: $($externalExecutables.Count)")
+          foreach ($path in $externalExecutables) { $report.Add(" - $path") }
+
+          $uninstallEntries = @()
+          foreach ($registryRoot in @(
+            'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+            'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+            'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
+          )) {
+            if (Test-Path -LiteralPath $registryRoot) {
+              foreach ($key in (Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue)) {
+                $entry = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+                if ([string]$entry.DisplayName -match '(?i)Oriel') {
+                  $uninstallEntries += [PSCustomObject]@{
+                    DisplayName = [string]$entry.DisplayName
+                    InstallLocation = [string]$entry.InstallLocation
+                    UninstallString = [string]$entry.UninstallString
+                    RegistryKey = $key.Name
+                  }
+                }
+              }
+            }
+          }
+          $report.Add("Oriel uninstall registry entries: $($uninstallEntries.Count)")
+          foreach ($entry in $uninstallEntries) { $report.Add(" - $($entry.DisplayName) | $($entry.InstallLocation) | $($entry.UninstallString)") }
+
+          $uninstallExit = 125
+          $uninstallTimedOut = $false
+          if ($install.ExitCode -eq 0 -and -not $install.TimedOut) {
+            $uninstall = Invoke-ScoopBounded -ScoopArguments @('uninstall', $appName) -Label 'scoop-uninstall' -TimeoutMilliseconds 60000
+            $uninstallExit = $uninstall.ExitCode
+            $uninstallTimedOut = $uninstall.TimedOut
+            $report.Add("Scoop uninstall exit code: $uninstallExit")
+            $report.Add("Scoop uninstall timed out: $uninstallTimedOut")
+            if (Test-Path -LiteralPath $uninstall.StdOut) { $report.Add('Uninstall stdout:'); $report.AddRange([string[]](Get-Content -LiteralPath $uninstall.StdOut)) }
+            if (Test-Path -LiteralPath $uninstall.StdErr) { $report.Add('Uninstall stderr:'); $report.AddRange([string[]](Get-Content -LiteralPath $uninstall.StdErr)) }
+          } else {
+            $report.Add('Scoop uninstall skipped because install did not finish successfully.')
+          }
+
+          $versionDirectoryRemoved = -not (Test-Path -LiteralPath $versionPath)
+          $report.Add("Scoop version directory removed: $versionDirectoryRemoved")
+          $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
+            ($insideExecutables.Count -gt 0) -and ($externalExecutables.Count -eq 0) -and
+            ($uninstallEntries.Count -eq 0) -and ($uninstallExit -eq 0) -and
+            (-not $uninstallTimedOut) -and $versionDirectoryRemoved
+          $report.Add("Overall candidate result: $(if ($passed) { 'PASS' } else { 'FAIL - not suitable for production' })")
+          $reportPath = Join-Path $reportRoot 'candidate-report.txt'
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | ForEach-Object { Write-Host $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          "candidate_passed=$($passed.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
+          if (-not $passed) { exit 1 }
+
+      - name: Upload candidate logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: oriel-probe-${{ matrix.manifest }}
+          path: ${{ runner.temp }}/oriel-scoop-probe/**
+          if-no-files-found: warn
+          retention-days: 14
