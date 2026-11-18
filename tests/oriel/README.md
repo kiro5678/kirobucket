@@ -17,13 +17,14 @@ Pinned SHA-256:
 | `oriel-notch-exp-quiet` | `installer.args` | `/quiet` |
 | `oriel-notch-exp-script` | `installer.script` | PowerShell invokes `--silent --install-dir $dir` with a timeout |
 | `oriel-notch-exp-7zip` | URL fragment extraction | `#/dl.7z` |
+| `oriel-notch-exp-managed-external` | `installer.script` + `post_install` junction + `uninstaller.script` | Installs to the publisher's per-user path and attempts to manage the registered uninstall command |
 
 All command-line switches are unverified hypotheses. Each candidate runs on its own disposable Windows runner. The workflow checks installation exit status, application EXEs inside Scoop's version directory, common external install locations, uninstall registry entries, and whether `scoop uninstall` removes the version directory.
 
-The static inspection job verifies the download hash, scans embedded strings, probes common help switches with timeouts, and records the 7-Zip extraction contents.
+The static inspection job verifies the download hash, scans embedded strings, probes common help switches with timeouts, and records the 7-Zip extraction contents. The managed-external candidate is intentionally separate: the earlier `--silent --install-dir` probe installed to `%LOCALAPPDATA%\\Programs\\Oriel` and registered an uninstall command, so this candidate tests whether a junction and that registered uninstaller can make this external install controllable by Scoop.
 
 ## Promotion rule
 
-Do not promote a candidate into `bucket/` unless it exits without interactive UI, places the app inside Scoop's version directory, creates no external install or uninstall registration, and is removed cleanly by `scoop uninstall`.
+Do not promote a candidate into `bucket/` unless it exits without interactive UI, provides a working Scoop launch path, and is removed cleanly by `scoop uninstall`. The managed-external candidate has a stricter alternate check: it must create the expected junction, use the exact uninstall command recorded by Oriel, and remove both the external app folder and Windows uninstall registration. Even if it passes, it remains a non-portable option and must be assessed against Oriel's built-in self-updater before production use.
 
-No candidate declares an unverified uninstaller. A successful setup launch alone is not sufficient.
+The managed-external candidate uses `uninstall.exe --uninstall` only because that exact command was observed in the installer's Windows uninstall registry entry. A successful setup launch alone is not sufficient.
