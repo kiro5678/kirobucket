@@ -99,6 +99,20 @@ jobs:
           "has_manifests=true" >> $env:GITHUB_OUTPUT
           "needs_table=$($needsTable.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
           "manifests<<MANIFESTLIST" >> $env:GITHUB_OUTPUT
+          function Start-Or-WaitWorkflow {
+            param(
+              [Parameter(Mandatory)][string]$WorkflowFile,
+              [hashtable]$Inputs = @{}
+            )
+
+            if ($env:EVENT_NAME -eq 'push') {
+              Wait-ForExistingWorkflow -WorkflowFile $WorkflowFile -HeadSha $env:PIPELINE_SHA
+              return
+            }
+
+            Start-And-WaitWorkflow -WorkflowFile $WorkflowFile -Inputs $Inputs
+          }
+
           foreach ($manifestPath in $manifestPaths) {
             $manifestPath >> $env:GITHUB_OUTPUT
           }
@@ -290,9 +304,9 @@ jobs:
               }
             }
 
-            Start-And-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
+            Start-Or-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
             Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-            Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
+            Start-Or-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
 
             if ($env:MANIFEST_PATH -ieq 'bucket/fxsound.json') {
               if ($env:EVENT_NAME -eq 'push') {
@@ -313,7 +327,7 @@ jobs:
           }
 
           if ($needsTable) {
-            Start-And-WaitWorkflow -WorkflowFile 'manifest-table.yml'
+            Start-Or-WaitWorkflow -WorkflowFile 'manifest-table.yml'
           }
 
           $summary.Add("")
