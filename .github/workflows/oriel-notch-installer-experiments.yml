@@ -131,7 +131,7 @@ jobs:
     timeout-minutes: 12
     strategy:
       fail-fast: false
-      max-parallel: 7
+      max-parallel: 8
       matrix:
         include:
           - id: args-s
@@ -155,6 +155,9 @@ jobs:
           - id: script-managed-external-silent-uninstall
             method: "installer.script + junction + --uninstall --silent"
             manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-silent-uninstall.json"
+          - id: script-managed-external-cleanup
+            method: "installer.script + junction + silent uninstall + verified residue cleanup"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external-cleanup.json"
 
     steps:
       - name: Checkout repository
