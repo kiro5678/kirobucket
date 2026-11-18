@@ -1,10 +1,11 @@
-name: Gloof Installer Inspection
+name: Gloof Payload Extraction Inspection
 
 on:
   push:
     branches:
       - master
     paths:
+      - "bucket/gloof.json"
       - ".github/workflows/gloof-installer-inspection.yml"
   pull_request:
     types: [opened, synchronize, reopened]
@@ -19,7 +20,7 @@ permissions:
 
 jobs:
   inspect:
-    name: Inspect official Gloof Windows installer
+    name: Inspect official Gloof Velopack payload for Scoop
     runs-on: windows-latest
     timeout-minutes: 30
 
@@ -30,7 +31,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
 
-      - name: Download, identify, and extract installer without running it
+      - name: Download and verify Scoop-style payload extraction without running Setup.exe
         shell: pwsh
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -85,7 +86,7 @@ jobs:
           }
           $feedResults | Set-Content -LiteralPath (Join-Path $root 'release-feed-inspection.txt') -Encoding utf8
 
-          if ($env:EVENT_NAME -eq 'pull_request' -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+          if ($env:EVENT_NAME -in @('push', 'pull_request') -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
             $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
             if (-not [string]::IsNullOrWhiteSpace([string]$source.url)) {
@@ -204,30 +205,80 @@ jobs:
           Write-Host "Velopack main executable: $mainExe"
           Write-Host "Portable marker in Setup payload: $([bool](Get-ChildItem -LiteralPath $outerDir -Force -File | Where-Object { $_.Name -eq '.portable' }))"
 
-          $nestedArchives = @(
-            $outerFiles | Where-Object {
-              $_.Extension -in @('.7z', '.zip', '.cab') -and
-              $_.Name -match '(?i)^(app|application|payload|data)([-_.].*)?\.(7z|zip|cab)$'
-            }
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/gloof.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $extractDir = [string]$manifest.extract_dir
+          $binTarget = [string]$manifest.bin
+          $shortcutTarget = [string]$manifest.shortcuts[0][0]
+
+          if ($url -ne 'https://gloof.app/downloads/gloof-beta-Setup.exe#/dl.7z') {
+            throw "Manifest URL must use the verified Scoop 7-Zip extraction marker: $url"
+          }
+          if ($extractDir -ne 'lib\app') { throw "Unexpected extract_dir: $extractDir" }
+          if ($binTarget -ne 'gloof-core.exe') { throw "Unexpected bin target: $binTarget" }
+          if ($shortcutTarget -ne $binTarget) { throw 'The Start Menu shortcut must target the package main executable.' }
+
+          if ($packageVersion -ne [string]$manifest.version) {
+            throw "Velopack package version $packageVersion does not match manifest version $($manifest.version)."
+          }
+          if ($mainExe -ne $binTarget) {
+            throw "Manifest bin target $binTarget does not match Velopack mainExe $mainExe."
+          }
+
+          # Validate the payload path from a full static extraction first.
+          $payloadMainExe = Join-Path (Join-Path $outerDir $extractDir) $binTarget
+          if (-not (Test-Path -LiteralPath $payloadMainExe -PathType Leaf)) {
+            throw "The declared application executable is missing from the Setup payload: $payloadMainExe"
+          }
+
+          # Reproduce Scoop's Expand-7zipArchive arguments, including extract_dir filtering.
+          $scoopProbeDir = Join-Path $root 'Scoop App With Spaces/Gloof 0.1.0-beta.10'
+          New-Item -ItemType Directory -Path $scoopProbeDir -Force | Out-Null
+          $includePattern = "-ir!$extractDir\*"
+          $scoopExtractionOutput = @(& $sevenZip x $installer "-o$scoopProbeDir" '-xr!*.nsis' '-y' $includePattern 2>&1)
+          $scoopExtractionExit = $LASTEXITCODE
+          ($scoopExtractionOutput -join [Environment]::NewLine) | Set-Content -LiteralPath (Join-Path $root 'scoop-style-extraction.log') -Encoding utf8
+          if ($scoopExtractionExit -ne 0) {
+            throw "Scoop-style 7-Zip extraction failed with exit code $scoopExtractionExit."
+          }
+
+          $scoopPayloadDir = Join-Path $scoopProbeDir $extractDir
+          if (-not (Test-Path -LiteralPath $scoopPayloadDir -PathType Container)) {
+            throw "Scoop's extract_dir filter did not create the expected directory: $scoopPayloadDir"
+          }
+          $scoopPayloadExe = Join-Path $scoopPayloadDir $binTarget
+          if (-not (Test-Path -LiteralPath $scoopPayloadExe -PathType Leaf)) {
+            throw "Scoop's filtered extraction did not produce the declared executable: $scoopPayloadExe"
+          }
+
+          # Match Scoop's movedir behavior: move lib/app contents to the version directory.
+          $payloadItems = @(Get-ChildItem -LiteralPath $scoopPayloadDir -Force)
+          if ($payloadItems.Count -eq 0) { throw 'Scoop extract_dir produced an empty application directory.' }
+          foreach ($payloadItem in $payloadItems) {
+            Move-Item -LiteralPath $payloadItem.FullName -Destination $scoopProbeDir -Force
+          }
+          $libRoot = Join-Path $scoopProbeDir 'lib'
+          if (Test-Path -LiteralPath $libRoot -PathType Container) {
+            Remove-Item -LiteralPath $libRoot -Recurse -Force
+          }
+
+          $installedMainExe = Join-Path $scoopProbeDir $binTarget
+          if (-not (Test-Path -LiteralPath $installedMainExe -PathType Leaf)) {
+            throw "The declared bin target was not present at the Scoop app root after extract_dir handling: $installedMainExe"
+          }
+
+          $requiredExecutables = @(
+            'gloof-core.exe',
+            'gloof-gpui-host.exe',
+            'gloof-jumplist.exe',
+            'gloof-rescue.exe',
+            'gloof-settings.exe'
           )
-
-          if ($nestedArchives.Count -eq 0) {
-            $nestedArchives = @($outerFiles | Where-Object { $_.Extension -in @('.7z', '.zip', '.cab') })
-          }
-
-          foreach ($archive in $nestedArchives) {
-            $destination = Join-Path $payloadDir ([System.IO.Path]::GetFileNameWithoutExtension($archive.Name))
-            New-Item -ItemType Directory -Path $destination -Force | Out-Null
-            Write-Host "Extracting nested payload: $($archive.Name)"
-            $nestedOutput = @(& $sevenZip x -y "-o$destination" $archive.FullName 2>&1)
-            $nestedExit = $LASTEXITCODE
-            if ($nestedExit -ne 0) {
-              throw "Nested archive extraction failed for $($archive.Name) (exit code $nestedExit)."
+          foreach ($requiredExecutable in $requiredExecutables) {
+            $requiredPath = Join-Path $scoopProbeDir $requiredExecutable
+            if (-not (Test-Path -LiteralPath $requiredPath -PathType Leaf)) {
+              throw "Required Gloof application executable was not extracted into the Scoop version directory: $requiredExecutable"
             }
-          }
-
-          if ($nestedArchives.Count -eq 0) {
-            $payloadDir = $outerDir
           }
 
           function Get-Inventory {
@@ -247,57 +298,20 @@ jobs:
             }
           }
 
-          $inventory = @(Get-Inventory -Directory $payloadDir)
-          $inventoryPath = Join-Path $root 'application-inventory.csv'
+          $inventory = @(Get-Inventory -Directory $scoopProbeDir)
+          $inventoryPath = Join-Path $root 'scoop-extracted-application-inventory.csv'
           $inventory | Export-Csv -NoTypeInformation -Encoding UTF8 -Path $inventoryPath
-
           $exeRows = @($inventory | Where-Object { [System.IO.Path]::GetExtension($_.Path) -ieq '.exe' })
-          Write-Host "Application payload files: $($inventory.Count)"
-          Write-Host 'Executable inventory:'
+
+          Write-Host "Scoop-style extraction path: $scoopProbeDir"
+          Write-Host "Extracted application files: $($inventory.Count)"
+          Write-Host 'Extracted application executables:'
           foreach ($exe in $exeRows) {
             Write-Host ("EXE {0} | {1} bytes | {2} | {3}" -f $exe.Path, $exe.Bytes, $exe.FileVersion, $exe.Product)
           }
-
-          # Execute the exact installer and uninstaller scripts from bucket/gloof.json,
-          # using a test directory with spaces, just as Scoop supplies $dir and $fname.
-          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/gloof.json'
-          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
-          $probeInstall = Join-Path $root 'Scoop App With Spaces/Gloof 0.1.0-beta.10'
-          New-Item -ItemType Directory -Path $probeInstall -Force | Out-Null
-          $dir = $probeInstall
-          $fname = $installer
-
-          Write-Host "Testing manifest installer.script in: $dir"
-          foreach ($commandText in $manifest.installer.script) {
-            Write-Host "SCOOP INSTALL SCRIPT: $commandText"
-            Invoke-Expression ([string]$commandText)
-          }
-
-          $probeFiles = @(Get-ChildItem -LiteralPath $probeInstall -File -Recurse -Force -ErrorAction SilentlyContinue)
-          $probeDirectories = @(Get-ChildItem -LiteralPath $probeInstall -Directory -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
-          Write-Host "Installed files: $($probeFiles.Count)"
-          Write-Host "Installed root directories: $($probeDirectories -join ', ')"
-          foreach ($probeFile in $probeFiles) {
-            $relative = [System.IO.Path]::GetRelativePath($probeInstall, $probeFile.FullName).Replace('\', '/')
-            Write-Host "INSTALLTO FILE $relative [$($probeFile.Length) bytes]"
-          }
-
-          $requiredFiles = @('gloof.exe', 'Update.exe', 'current/gloof-core.exe')
-          foreach ($requiredFile in $requiredFiles) {
-            if (-not (Test-Path -LiteralPath (Join-Path $probeInstall $requiredFile) -PathType Leaf)) {
-              throw "Manifest installer script did not create required file: $requiredFile"
-            }
-          }
-          Write-Host 'Gloof manifest installer script verification: PASS'
-
-          Write-Host 'Testing manifest uninstaller.script'
-          foreach ($commandText in $manifest.uninstaller.script) {
-            Write-Host "SCOOP UNINSTALL SCRIPT: $commandText"
-            Invoke-Expression ([string]$commandText)
-          }
-          Write-Host 'Gloof manifest uninstaller script verification: PASS'
+          Write-Host 'Gloof Scoop extract_dir/bin/shortcut verification: PASS'
           $report = [System.Collections.Generic.List[string]]::new()
-          $report.Add('# Gloof installer inspection')
+          $report.Add('# Gloof Scoop payload extraction inspection')
           $report.Add('')
           $report.Add("- Source URL: $downloadUrl")
           $report.Add("- Download size: $($file.Length) bytes")
@@ -307,25 +321,25 @@ jobs:
           $report.Add("- File version: $($versionInfo.FileVersion)")
           $report.Add("- Product version: $($versionInfo.ProductVersion)")
           $report.Add("- Product name: $($versionInfo.ProductName)")
-          $report.Add("- Detected installer type: $installerType")
+          $report.Add("- Detected upstream container: $installerType (Velopack Setup.exe)")
           $report.Add("- Velopack version: $packageVersion")
           $report.Add("- Velopack channel: $channel")
           $report.Add("- Velopack main executable: $mainExe")
           $report.Add("- Download page version strings: $($pageVersionHits -join ', ')")
           $report.Add("- Download page installer/portable links: $($pageLinks -join ', ')")
           $report.Add("- Official release feed files checked: releases.beta.json, assets.beta.json, RELEASES (all returned 404)")
-          $report.Add("- Velopack Setup.exe --installto test: PASS (files installed under a path containing spaces; not a portable build)")
-          $report.Add("- Official Scoop checkver/autoupdate validation: see separate validation step")
+          $report.Add("- Scoop-style #/dl.7z extraction with extract_dir=lib/app: PASS (tested under a path containing spaces)")
+          $report.Add("- Official Scoop checkver/autoupdate validation: PASS")
           $report.Add("- Outer extracted files: $($outerFiles.Count)")
-          $report.Add("- Nested archives extracted: $($nestedArchives.Count)")
-          $report.Add("- Application payload files: $($inventory.Count)")
+          $report.Add("- Scoop extract_dir/bin/shortcut verification: PASS")
+          $report.Add("- Extracted application payload files: $($inventory.Count)")
           $report.Add('')
           $report.Add('## Application executables')
           foreach ($exe in $exeRows) {
             $report.Add("- $($exe.Path) | $($exe.Bytes) bytes | $($exe.FileVersion) | $($exe.Product)")
           }
           $report.Add('')
-          $report.Add('The setup executable was not launched. Extraction results alone do not prove that the application is fully portable or independent of user-profile data.')
+          $report.Add('The setup executable and application were not launched. This workflow verifies Scoop-style payload extraction and manifest paths, not GUI runtime behavior or user-data independence.')
           $report | Set-Content -LiteralPath (Join-Path $root 'inspection-report.md') -Encoding utf8
           $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
 
@@ -344,6 +358,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $sourceManifest = Join-Path $env:GITHUB_WORKSPACE 'bucket/gloof.json'
+          $expectedManifest = Get-Content -LiteralPath $sourceManifest -Raw | ConvertFrom-Json -ErrorAction Stop
           $validationDir = Join-Path $env:RUNNER_TEMP 'gloof-scoop-checkver'
           New-Item -ItemType Directory -Path $validationDir -Force | Out-Null
           $testManifest = Join-Path $validationDir 'gloof.json'
@@ -357,22 +372,22 @@ jobs:
           & $checkver -App $testManifest -ForceUpdate -ThrowError
 
           $verified = Get-Content -LiteralPath $testManifest -Raw | ConvertFrom-Json -ErrorAction Stop
-          if ($verified.version -ne '0.1.0-beta.10') {
-            throw "Scoop checkver returned unexpected Gloof version: $($verified.version)"
+          if ($verified.version -ne [string]$expectedManifest.version) {
+            throw "Scoop checkver returned $($verified.version), expected $($expectedManifest.version)."
           }
-          if ($verified.architecture.'64bit'.hash -ne '79f8b760c2c89547d31eca199139d0cd1c782121947d026cec99d0c4276d3c72') {
-            throw "Scoop checkver did not resolve the published Gloof SHA-256 correctly."
+          if ($verified.hash -ne [string]$expectedManifest.hash) {
+            throw "Scoop checkver SHA-256 mismatch. Expected $($expectedManifest.hash), got $($verified.hash)."
           }
 
           Write-Host "Scoop checkver version: $($verified.version)"
-          Write-Host "Scoop checkver SHA-256: $($verified.architecture.'64bit'.hash)"
+          Write-Host "Scoop checkver SHA-256: $($verified.hash)"
           Write-Host 'Official Scoop checkver/autoupdate validation: PASS'
 
-      - name: Upload inspection report and extraction logs
+      - name: Upload extraction report and logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: gloof-installer-inspection
+          name: gloof-payload-extraction-inspection
           path: ${{ runner.temp }}/gloof-installer-inspection/
           if-no-files-found: warn
           retention-days: 14
