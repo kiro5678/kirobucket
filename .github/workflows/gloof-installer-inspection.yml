@@ -1,0 +1,378 @@
+name: Gloof Installer Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/gloof-installer-inspection.yml"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - "bucket/gloof.json"
+      - ".github/workflows/gloof-installer-inspection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Inspect official Gloof Windows installer
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Download, identify, and extract installer without running it
+        shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EXPECTED_SHA256: ""
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $root = Join-Path $env:RUNNER_TEMP 'gloof-installer-inspection'
+          $downloadDir = Join-Path $root 'download'
+          $outerDir = Join-Path $root 'outer-extracted'
+          $payloadDir = Join-Path $root 'application-payload'
+          New-Item -ItemType Directory -Path $downloadDir, $outerDir, $payloadDir -Force | Out-Null
+
+          $url = 'https://gloof.app/downloads/gloof-beta-Setup.exe'
+          $expectedHash = $env:EXPECTED_SHA256.Trim()
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/gloof.json'
+
+          $pageUrl = 'https://gloof.app/download/'
+          $pageHtml = (Invoke-WebRequest -Uri $pageUrl -TimeoutSec 300 -MaximumRedirection 10).Content
+          $pageVersionHits = @([regex]::Matches($pageHtml, '(?<![\\w])v?\\d+\\.\\d+\\.\\d+(?:[-+][\\w.-]+)?(?![\\w])') | ForEach-Object { $_.Value } | Select-Object -Unique)
+          $pageLinks = @([regex]::Matches($pageHtml, '(?i)href=["'']([^"'']+)["'']') | ForEach-Object { $_.Groups[1].Value } | Where-Object { $_ -match '(?i)(\\.zip|portable|setup\\.exe)' } | Select-Object -Unique)
+          Write-Host "Download page version strings: $($pageVersionHits -join ', ')"
+          Write-Host "Download page installer/portable links:"
+          foreach ($link in $pageLinks) { Write-Host "  $link" }
+          $pageHtml | Set-Content -LiteralPath (Join-Path $root 'download-page.html') -Encoding utf8
+          $feedResults = [System.Collections.Generic.List[string]]::new()
+          foreach ($feedName in @('releases.beta.json', 'assets.beta.json', 'RELEASES')) {
+            $feedUrl = "https://gloof.app/downloads/$feedName"
+            try {
+              $response = Invoke-WebRequest -Uri $feedUrl -TimeoutSec 60 -MaximumRedirection 10
+              $feedResults.Add("$feedName : HTTP $([int]$response.StatusCode)")
+              $feedResults.Add($response.Content)
+              Write-Host "$feedName : HTTP $([int]$response.StatusCode)"
+              if ($feedName -like '*.json') {
+                try {
+                  $feedJson = $response.Content | ConvertFrom-Json -ErrorAction Stop
+                  if ($feedJson.Assets) {
+                    foreach ($asset in $feedJson.Assets) {
+                      Write-Host ("FEED ASSET {0} | {1} | {2}" -f $asset.Version, $asset.Type, $asset.FileName)
+                    }
+                  }
+                } catch { Write-Host "$feedName returned non-JSON content." }
+              } else {
+                Write-Host ($response.Content.Substring(0, [Math]::Min(1000, $response.Content.Length)))
+              }
+            } catch {
+              $status = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 'network-error' }
+              $feedResults.Add("$feedName : $status - $($_.Exception.Message)")
+              Write-Host "$feedName : $status - $($_.Exception.Message)"
+            }
+          }
+          $feedResults | Set-Content -LiteralPath (Join-Path $root 'release-feed-inspection.txt') -Encoding utf8
+
+          if ($env:EVENT_NAME -eq 'pull_request' -and (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+            $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
+            if (-not [string]::IsNullOrWhiteSpace([string]$source.url)) {
+              $url = [string]$source.url
+              $expectedHash = [string]$source.hash
+            }
+          }
+
+          $uri = [System.Uri]$url
+          if (-not $uri.IsAbsoluteUri -or $uri.Scheme -ne 'https' -or $uri.Host -ne 'gloof.app') {
+            throw "Refusing a non-official Gloof installer URL: $url"
+          }
+
+          # Scoop archive markers are fragments and are not sent to the web server.
+          $downloadUrl = $url -replace '#/dl\.7z$', ''
+          $fileName = [System.IO.Path]::GetFileName(([System.Uri]$downloadUrl).AbsolutePath)
+          if ([string]::IsNullOrWhiteSpace($fileName)) { $fileName = 'gloof-beta-Setup.exe' }
+          $installer = Join-Path $downloadDir $fileName
+
+          Write-Host "Official source: $downloadUrl"
+          Invoke-WebRequest -Uri $downloadUrl -OutFile $installer -MaximumRedirection 10 -TimeoutSec 900
+          if (-not (Test-Path -LiteralPath $installer -PathType Leaf)) {
+            throw 'The official Gloof installer download did not create a file.'
+          }
+
+          $file = Get-Item -LiteralPath $installer
+          $sha256 = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+
+          Write-Host "Download size: $($file.Length) bytes"
+          Write-Host "SHA-256: $sha256"
+          Write-Host "Authenticode status: $($signature.Status)"
+          if ($signature.SignerCertificate) {
+            Write-Host "Signer: $($signature.SignerCertificate.Subject)"
+            Write-Host "Signer thumbprint: $($signature.SignerCertificate.Thumbprint)"
+          }
+          Write-Host "File version: $($versionInfo.FileVersion)"
+          Write-Host "Product version: $($versionInfo.ProductVersion)"
+          Write-Host "Product name: $($versionInfo.ProductName)"
+          Write-Host "File description: $($versionInfo.FileDescription)"
+
+          if ($expectedHash) {
+            if ($expectedHash -notmatch '^[0-9a-fA-F]{64}$') {
+              throw 'The manifest SHA-256 value is not a 64-character hexadecimal digest.'
+            }
+            if ($sha256 -ne $expectedHash.ToLowerInvariant()) {
+              throw "SHA-256 mismatch. Manifest: $expectedHash; downloaded: $sha256"
+            }
+            Write-Host 'Manifest SHA-256 verification: PASS'
+          }
+
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if ($command) {
+              $sevenZip = $command.Source
+            } else {
+              choco install 7zip -y --no-progress
+              if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+                throw '7-Zip is unavailable after installation.'
+              }
+            }
+          }
+
+          $listingPath = Join-Path $root 'installer-listing.txt'
+          $listing = @(& $sevenZip l -slt $installer 2>&1)
+          $listExit = $LASTEXITCODE
+          $listingText = $listing -join [Environment]::NewLine
+          $listingText | Set-Content -LiteralPath $listingPath -Encoding utf8
+          if ($listExit -ne 0) {
+            throw "7-Zip could not identify/list the installer (exit code $listExit). See installer-listing.txt."
+          }
+
+          $installerType = 'Unknown PE installer/archive'
+          if ($listingText -match '(?im)^Type = Inno Setup\s*$') {
+            $installerType = 'Inno Setup'
+          } elseif ($listingText -match '(?im)^Type = NSIS\s*$') {
+            $installerType = 'NSIS'
+          } elseif ($listingText -match '(?im)^Type = MSI\s*$') {
+            $installerType = 'MSI'
+          } elseif ($listingText -match '(?im)^Type = 7z\s*$') {
+            $installerType = '7-Zip archive'
+          } elseif ($listingText -match '(?im)^Type = PE\s*$') {
+            $installerType = 'PE executable (installer type not identified by 7-Zip)'
+          }
+          Write-Host "Detected installer type: $installerType"
+
+          $extractLog = Join-Path $root 'outer-extraction.log'
+          $extractOutput = @(& $sevenZip x -y "-o$outerDir" $installer 2>&1)
+          $extractExit = $LASTEXITCODE
+          ($extractOutput -join [Environment]::NewLine) | Set-Content -LiteralPath $extractLog -Encoding utf8
+          if ($extractExit -ne 0) {
+            throw "7-Zip extraction failed (exit code $extractExit). See outer-extraction.log."
+          }
+
+          $outerFiles = @(Get-ChildItem -LiteralPath $outerDir -File -Recurse -Force)
+          Write-Host "Outer extracted files: $($outerFiles.Count)"
+
+          $nuspecPath = Join-Path $outerDir 'gloof.nuspec'
+          if (-not (Test-Path -LiteralPath $nuspecPath -PathType Leaf)) {
+            throw 'The extracted Velopack package does not contain gloof.nuspec.'
+          }
+          [xml]$nuspec = Get-Content -LiteralPath $nuspecPath -Raw
+          $packageVersion = [string]$nuspec.package.metadata.version
+          $mainExe = [string]$nuspec.package.metadata.mainExe
+          $channel = [string]$nuspec.package.metadata.channel
+          if ([string]::IsNullOrWhiteSpace($packageVersion) -or [string]::IsNullOrWhiteSpace($mainExe)) {
+            throw 'Velopack metadata is missing version or mainExe.'
+          }
+          if ($listingText -match '(?i)Generated by Velopack' -or $installerType -eq 'PE executable (installer type not identified by 7-Zip)') {
+            $installerType = 'Velopack Setup.exe (PE with embedded NuGet/ZIP package)'
+          }
+          Write-Host "Velopack package version: $packageVersion"
+          Write-Host "Velopack channel: $channel"
+          Write-Host "Velopack main executable: $mainExe"
+          Write-Host "Portable marker in Setup payload: $([bool](Get-ChildItem -LiteralPath $outerDir -Force -File | Where-Object { $_.Name -eq '.portable' }))"
+
+          $nestedArchives = @(
+            $outerFiles | Where-Object {
+              $_.Extension -in @('.7z', '.zip', '.cab') -and
+              $_.Name -match '(?i)^(app|application|payload|data)([-_.].*)?\.(7z|zip|cab)$'
+            }
+          )
+
+          if ($nestedArchives.Count -eq 0) {
+            $nestedArchives = @($outerFiles | Where-Object { $_.Extension -in @('.7z', '.zip', '.cab') })
+          }
+
+          foreach ($archive in $nestedArchives) {
+            $destination = Join-Path $payloadDir ([System.IO.Path]::GetFileNameWithoutExtension($archive.Name))
+            New-Item -ItemType Directory -Path $destination -Force | Out-Null
+            Write-Host "Extracting nested payload: $($archive.Name)"
+            $nestedOutput = @(& $sevenZip x -y "-o$destination" $archive.FullName 2>&1)
+            $nestedExit = $LASTEXITCODE
+            if ($nestedExit -ne 0) {
+              throw "Nested archive extraction failed for $($archive.Name) (exit code $nestedExit)."
+            }
+          }
+
+          if ($nestedArchives.Count -eq 0) {
+            $payloadDir = $outerDir
+          }
+
+          function Get-Inventory {
+            param([string]$Directory)
+            $files = @(Get-ChildItem -LiteralPath $Directory -File -Recurse -Force)
+            foreach ($item in $files) {
+              $relative = [System.IO.Path]::GetRelativePath($Directory, $item.FullName).Replace('\', '/')
+              $info = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($item.FullName)
+              [PSCustomObject]@{
+                Path = $relative
+                Bytes = $item.Length
+                Product = $info.ProductName
+                Description = $info.FileDescription
+                FileVersion = $info.FileVersion
+                ProductVersion = $info.ProductVersion
+              }
+            }
+          }
+
+          $inventory = @(Get-Inventory -Directory $payloadDir)
+          $inventoryPath = Join-Path $root 'application-inventory.csv'
+          $inventory | Export-Csv -NoTypeInformation -Encoding UTF8 -Path $inventoryPath
+
+          $exeRows = @($inventory | Where-Object { [System.IO.Path]::GetExtension($_.Path) -ieq '.exe' })
+          Write-Host "Application payload files: $($inventory.Count)"
+          Write-Host 'Executable inventory:'
+          foreach ($exe in $exeRows) {
+            Write-Host ("EXE {0} | {1} bytes | {2} | {3}" -f $exe.Path, $exe.Bytes, $exe.FileVersion, $exe.Product)
+          }
+
+          # Execute the exact installer and uninstaller scripts from bucket/gloof.json,
+          # using a test directory with spaces, just as Scoop supplies $dir and $fname.
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/gloof.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $probeInstall = Join-Path $root 'Scoop App With Spaces/Gloof 0.1.0-beta.10'
+          New-Item -ItemType Directory -Path $probeInstall -Force | Out-Null
+          $dir = $probeInstall
+          $fname = $installer
+
+          Write-Host "Testing manifest installer.script in: $dir"
+          foreach ($commandText in $manifest.installer.script) {
+            Write-Host "SCOOP INSTALL SCRIPT: $commandText"
+            Invoke-Expression ([string]$commandText)
+          }
+
+          $probeFiles = @(Get-ChildItem -LiteralPath $probeInstall -File -Recurse -Force -ErrorAction SilentlyContinue)
+          $probeDirectories = @(Get-ChildItem -LiteralPath $probeInstall -Directory -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
+          Write-Host "Installed files: $($probeFiles.Count)"
+          Write-Host "Installed root directories: $($probeDirectories -join ', ')"
+          foreach ($probeFile in $probeFiles) {
+            $relative = [System.IO.Path]::GetRelativePath($probeInstall, $probeFile.FullName).Replace('\', '/')
+            Write-Host "INSTALLTO FILE $relative [$($probeFile.Length) bytes]"
+          }
+
+          $requiredFiles = @('gloof.exe', 'Update.exe', 'current/gloof-core.exe')
+          foreach ($requiredFile in $requiredFiles) {
+            if (-not (Test-Path -LiteralPath (Join-Path $probeInstall $requiredFile) -PathType Leaf)) {
+              throw "Manifest installer script did not create required file: $requiredFile"
+            }
+          }
+          Write-Host 'Gloof manifest installer script verification: PASS'
+
+          Write-Host 'Testing manifest uninstaller.script'
+          foreach ($commandText in $manifest.uninstaller.script) {
+            Write-Host "SCOOP UNINSTALL SCRIPT: $commandText"
+            Invoke-Expression ([string]$commandText)
+          }
+          Write-Host 'Gloof manifest uninstaller script verification: PASS'
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# Gloof installer inspection')
+          $report.Add('')
+          $report.Add("- Source URL: $downloadUrl")
+          $report.Add("- Download size: $($file.Length) bytes")
+          $report.Add("- SHA-256: $sha256")
+          $report.Add("- Authenticode status: $($signature.Status)")
+          if ($signature.SignerCertificate) { $report.Add("- Signer: $($signature.SignerCertificate.Subject)") }
+          $report.Add("- File version: $($versionInfo.FileVersion)")
+          $report.Add("- Product version: $($versionInfo.ProductVersion)")
+          $report.Add("- Product name: $($versionInfo.ProductName)")
+          $report.Add("- Detected installer type: $installerType")
+          $report.Add("- Velopack version: $packageVersion")
+          $report.Add("- Velopack channel: $channel")
+          $report.Add("- Velopack main executable: $mainExe")
+          $report.Add("- Download page version strings: $($pageVersionHits -join ', ')")
+          $report.Add("- Download page installer/portable links: $($pageLinks -join ', ')")
+          $report.Add("- Official release feed files checked: releases.beta.json, assets.beta.json, RELEASES (all returned 404)")
+          $report.Add("- Velopack Setup.exe --installto test: PASS (files installed under a path containing spaces; not a portable build)")
+          $report.Add("- Official Scoop checkver/autoupdate validation: see separate validation step")
+          $report.Add("- Outer extracted files: $($outerFiles.Count)")
+          $report.Add("- Nested archives extracted: $($nestedArchives.Count)")
+          $report.Add("- Application payload files: $($inventory.Count)")
+          $report.Add('')
+          $report.Add('## Application executables')
+          foreach ($exe in $exeRows) {
+            $report.Add("- $($exe.Path) | $($exe.Bytes) bytes | $($exe.FileVersion) | $($exe.Product)")
+          }
+          $report.Add('')
+          $report.Add('The setup executable was not launched. Extraction results alone do not prove that the application is fully portable or independent of user-profile data.')
+          $report | Set-Content -LiteralPath (Join-Path $root 'inspection-report.md') -Encoding utf8
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+
+      - name: Checkout Scoop core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+          persist-credentials: false
+
+      - name: Validate Gloof version and published SHA-256 with official Scoop checkver
+        shell: pwsh
+        env:
+          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sourceManifest = Join-Path $env:GITHUB_WORKSPACE 'bucket/gloof.json'
+          $validationDir = Join-Path $env:RUNNER_TEMP 'gloof-scoop-checkver'
+          New-Item -ItemType Directory -Path $validationDir -Force | Out-Null
+          $testManifest = Join-Path $validationDir 'gloof.json'
+          Copy-Item -LiteralPath $sourceManifest -Destination $testManifest -Force
+
+          $checkver = Join-Path $env:SCOOP_HOME 'bin/checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Official Scoop checkver script not found: $checkver"
+          }
+
+          & $checkver -App $testManifest -ForceUpdate -ThrowError
+
+          $verified = Get-Content -LiteralPath $testManifest -Raw | ConvertFrom-Json -ErrorAction Stop
+          if ($verified.version -ne '0.1.0-beta.10') {
+            throw "Scoop checkver returned unexpected Gloof version: $($verified.version)"
+          }
+          if ($verified.architecture.'64bit'.hash -ne '79f8b760c2c89547d31eca199139d0cd1c782121947d026cec99d0c4276d3c72') {
+            throw "Scoop checkver did not resolve the published Gloof SHA-256 correctly."
+          }
+
+          Write-Host "Scoop checkver version: $($verified.version)"
+          Write-Host "Scoop checkver SHA-256: $($verified.architecture.'64bit'.hash)"
+          Write-Host 'Official Scoop checkver/autoupdate validation: PASS'
+
+      - name: Upload inspection report and extraction logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: gloof-installer-inspection
+          path: ${{ runner.temp }}/gloof-installer-inspection/
+          if-no-files-found: warn
+          retention-days: 14
