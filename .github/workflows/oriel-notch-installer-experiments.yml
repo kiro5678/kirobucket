@@ -131,7 +131,7 @@ jobs:
     timeout-minutes: 12
     strategy:
       fail-fast: false
-      max-parallel: 5
+      max-parallel: 6
       matrix:
         include:
           - id: args-s
@@ -149,6 +149,9 @@ jobs:
           - id: sevenzip-extraction
             method: "Scoop 7-Zip extraction"
             manifest: "tests/oriel/manifests/oriel-notch-exp-7zip.json"
+          - id: script-managed-external
+            method: "installer.script + junction + registered uninstaller"
+            manifest: "tests/oriel/manifests/oriel-notch-exp-managed-external.json"
 
     steps:
       - name: Checkout repository
@@ -234,6 +237,13 @@ jobs:
           }
           $report.Add("Application EXE files inside Scoop version directory: $($insideExecutables.Count)")
           foreach ($exe in $insideExecutables) { $report.Add(" - $($exe.Path) | $($exe.Size) bytes | $($exe.Product) | $($exe.Description)") }
+          $managedLink = Join-Path $versionPath 'oriel-managed\\oriel.exe'
+          $managedLinkValid = Test-Path -LiteralPath $managedLink -PathType Leaf
+          $report.Add("Managed external application link exists: $managedLinkValid")
+          if ($managedLinkValid) {
+            $report.Add("Managed link resolves to: $((Resolve-Path -LiteralPath $managedLink).Path)")
+          }
+          $isManagedExternal = $env:MANIFEST_FILE -like '*oriel-notch-exp-managed-external.json'
 
           $externalExecutables = @()
           $externalRoots = @(
@@ -277,6 +287,9 @@ jobs:
           }
           $report.Add("Oriel uninstall registry entries: $($uninstallEntries.Count)")
           foreach ($entry in $uninstallEntries) { $report.Add(" - $($entry.DisplayName) | $($entry.InstallLocation) | $($entry.UninstallString)") }
+          $registeredUninstallerValid = ($uninstallEntries.Count -eq 1) -and
+            ($uninstallEntries[0].UninstallString -match '(?i)\\\\uninstall[.]exe[" ]+--uninstall')
+          $report.Add("Registered uninstall command matches tested Oriel command: $registeredUninstallerValid")
 
           $uninstallExit = 125
           $uninstallTimedOut = $false
@@ -294,10 +307,47 @@ jobs:
 
           $versionDirectoryRemoved = -not (Test-Path -LiteralPath $versionPath)
           $report.Add("Scoop version directory removed: $versionDirectoryRemoved")
-          $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
-            ($insideExecutables.Count -gt 0) -and ($externalExecutables.Count -eq 0) -and
-            ($uninstallEntries.Count -eq 0) -and ($uninstallExit -eq 0) -and
-            (-not $uninstallTimedOut) -and $versionDirectoryRemoved
+
+          $externalAfterUninstall = @()
+          foreach ($root in $externalRoots) {
+            if (Test-Path -LiteralPath $root -PathType Container) {
+              $externalAfterUninstall += @(Get-ChildItem -LiteralPath $root -Filter '*.exe' -File -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })
+            }
+          }
+          $externalAfterUninstall = @($externalAfterUninstall | Sort-Object -Unique)
+          $registryAfterUninstall = @()
+          foreach ($registryRoot in @(
+            'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+            'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+            'HKLM:\\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+          )) {
+            if (Test-Path -LiteralPath $registryRoot) {
+              foreach ($key in (Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue)) {
+                $entry = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+                if ([string]$entry.DisplayName -match '(?i)Oriel') {
+                  $registryAfterUninstall += [string]$entry.DisplayName
+                }
+              }
+            }
+          }
+          $report.Add("Oriel EXEs after Scoop uninstall: $($externalAfterUninstall.Count)")
+          foreach ($path in $externalAfterUninstall) { $report.Add(" - $path") }
+          $report.Add("Oriel uninstall registry entries after Scoop uninstall: $($registryAfterUninstall.Count)")
+
+          if ($isManagedExternal) {
+            $preUninstallStateValid = $managedLinkValid -and
+              ($externalExecutables -contains (Join-Path $env:LOCALAPPDATA 'Programs\\Oriel\\oriel.exe')) -and
+              $registeredUninstallerValid
+            $postUninstallStateValid = ($externalAfterUninstall.Count -eq 0) -and ($registryAfterUninstall.Count -eq 0)
+            $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
+              $preUninstallStateValid -and ($uninstallExit -eq 0) -and
+              (-not $uninstallTimedOut) -and $postUninstallStateValid -and $versionDirectoryRemoved
+          } else {
+            $passed = ($install.ExitCode -eq 0) -and (-not $install.TimedOut) -and
+              ($insideExecutables.Count -gt 0) -and ($externalExecutables.Count -eq 0) -and
+              ($uninstallEntries.Count -eq 0) -and ($uninstallExit -eq 0) -and
+              (-not $uninstallTimedOut) -and $versionDirectoryRemoved
+          }
           $report.Add("Overall candidate result: $(if ($passed) { 'PASS' } else { 'FAIL - not suitable for production' })")
           $reportPath = Join-Path $reportRoot 'candidate-report.txt'
           $report | Set-Content -LiteralPath $reportPath -Encoding utf8
