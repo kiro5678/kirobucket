@@ -65,6 +65,7 @@ jobs:
       - name: Inspect extracted MSI files and verify persisted app data
         run: |
           $ErrorActionPreference = 'Stop'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-droptidy'
           $appDir = Join-Path $env:SCOOP 'apps\droptidy\current'
           if (-not (Test-Path -LiteralPath $appDir -PathType Container)) {
             throw "Scoop application directory was not created: $appDir"
