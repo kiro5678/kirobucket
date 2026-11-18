@@ -317,9 +317,9 @@ jobs:
           $externalAfterUninstall = @($externalAfterUninstall | Sort-Object -Unique)
           $registryAfterUninstall = @()
           foreach ($registryRoot in @(
-            'HKCU:\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-            'HKLM:\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-            'HKLM:\Software\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+            'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+            'HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall',
+            'HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall'
           )) {
             if (Test-Path -LiteralPath $registryRoot) {
               foreach ($key in (Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue)) {
