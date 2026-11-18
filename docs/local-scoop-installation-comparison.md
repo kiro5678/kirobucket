@@ -37,4 +37,7 @@ From the repository root in PowerShell 7:
 pwsh -NoProfile -File .\bin\compare-scoopbucket-installation.ps1 -BucketPath .\bucket -BucketName kirobucket -ScoopRoot D:\Scoop
 ~~~
 
+
+Each manual run regenerates and overwrites the same local HTML report.
+
 The same local report is generated. No installed-app list is sent anywhere.
