@@ -5,6 +5,7 @@ This file is the source of truth for manifests classified as Nonportable. The ge
 | Manifest | Reason |
 | --- | --- |
 | [bean-network-tester](../bucket/bean-network-tester.json) | The core network-impairment feature requires the bundled WinDivert kernel driver. The application loads it at runtime and elevates to Administrator; while loaded, Windows keeps WinDivert64.sys open in the app directory. |
+| [better-windows-services](../bucket/better-windows-services.json) | The official self-contained WPF single-file executable extracts required native runtime libraries outside Scoop-managed paths: under `%TEMP%` when unelevated and under `%ProgramData%\BetterWindowsServices` when elevated, where the application enforces a protected ACL. |
 | [disk-activity-monitor](../bucket/disk-activity-monitor.json) | The official installer registers a Windows service and installs application files under Program Files; it requires elevation. |
 | [diskdrift](../bucket/diskdrift.json) | The official Inno Setup registers a LocalSystem service and machine-wide startup entry, with binaries under protected Program Files; it requires elevation. |
 | [flowcat-windows](../bucket/flowcat-windows.json) | The official Inno Setup installer registers the FlowCat Collector Windows service and requires elevation. `/DIR=$dir` keeps program binaries in the Scoop version directory, but the required service lifecycle remains a system-level install. |
