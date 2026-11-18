@@ -9,6 +9,13 @@ on:
       - 'under review scoop bucket/*.json'
       - 'bucket/anton.json'
       - '.github/workflows/review-manifest-inspector.yml'
+  workflow_dispatch:
+    inputs:
+      full_scan:
+        description: "Inspect every staged review manifest, not only files changed in a pull request."
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -33,6 +40,8 @@ jobs:
       - name: Inspect staged manifests and package files
         shell: pwsh
         env:
+          EVENT_NAME: ${{ github.event_name }}
+          FULL_SCAN: ${{ inputs.full_scan }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
@@ -51,23 +60,28 @@ jobs:
             throw '7-Zip was not found on the Windows runner.'
           }
 
-          $allChanged = @(git diff --name-only "$env:BASE_SHA...$env:HEAD_SHA")
-          $reviewChanged = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'under review scoop bucket' |
-            Where-Object { $_.StartsWith('under review scoop bucket/') -and $_.EndsWith('.json') })
-          $activeChanged = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'bucket/anton.json' |
-            Where-Object { $_ -eq 'bucket/anton.json' })
-          $changed = @($reviewChanged + $activeChanged | Sort-Object -Unique)
-          if ($changed.Count -eq 0) {
-            $deletedReviewManifests = @($allChanged | Where-Object {
-              $_.StartsWith('under review scoop bucket/') -and
-              $_.EndsWith('.json') -and
-              -not (Test-Path -LiteralPath $_ -PathType Leaf)
-            })
-            $inspectorWorkflowChanged = $allChanged -contains '.github/workflows/review-manifest-inspector.yml'
-            if ($inspectorWorkflowChanged -and $deletedReviewManifests.Count -eq 0) {
+          if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+            if ($env:FULL_SCAN -eq 'true') {
               $changed = @(Get-ChildItem -LiteralPath 'under review scoop bucket' -Filter '*.json' -File |
                 ForEach-Object { $_.FullName.Substring((Get-Location).Path.Length + 1).Replace('\','/') })
+              Write-Host "Manual full scan selected: $($changed.Count) staged manifest(s)."
             } else {
+              Write-Host 'Manual full scan was disabled; package inspection was skipped.'
+              @(
+                '## Review manifest inspection',
+                '',
+                'Manual full scan was disabled; package inspection was skipped.'
+              ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+              exit 0
+            }
+          } else {
+            $reviewChanged = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'under review scoop bucket' |
+              Where-Object { $_.StartsWith('under review scoop bucket/') -and $_.EndsWith('.json') })
+            $activeChanged = @(git diff --diff-filter=ACMRT --name-only "$env:BASE_SHA...$env:HEAD_SHA" -- 'bucket/anton.json' |
+              Where-Object { $_ -eq 'bucket/anton.json' })
+            $changed = @($reviewChanged + $activeChanged | Sort-Object -Unique)
+
+            if ($changed.Count -eq 0) {
               Write-Host 'No added or modified review manifest JSON files changed; package inspection is not required.'
               @(
                 '## Review manifest inspection',
