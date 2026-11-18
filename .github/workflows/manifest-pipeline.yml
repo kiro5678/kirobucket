@@ -99,20 +99,6 @@ jobs:
           "has_manifests=true" >> $env:GITHUB_OUTPUT
           "needs_table=$($needsTable.ToString().ToLowerInvariant())" >> $env:GITHUB_OUTPUT
           "manifests<<MANIFESTLIST" >> $env:GITHUB_OUTPUT
-          function Start-Or-WaitWorkflow {
-            param(
-              [Parameter(Mandatory)][string]$WorkflowFile,
-              [hashtable]$Inputs = @{}
-            )
-
-            if ($env:EVENT_NAME -eq 'push') {
-              Wait-ForExistingWorkflow -WorkflowFile $WorkflowFile -HeadSha $env:PIPELINE_SHA
-              return
-            }
-
-            Start-And-WaitWorkflow -WorkflowFile $WorkflowFile -Inputs $Inputs
-          }
-
           foreach ($manifestPath in $manifestPaths) {
             $manifestPath >> $env:GITHUB_OUTPUT
           }
@@ -261,6 +247,22 @@ jobs:
             }
 
             throw "Timed out waiting for $WorkflowFile to complete within 45 minutes."
+          }
+
+          # Each GitHub Actions step runs in a separate PowerShell process.
+          # Define the wrapper in this execution step where its dependencies exist.
+          function Start-Or-WaitWorkflow {
+            param(
+              [Parameter(Mandatory)][string]$WorkflowFile,
+              [hashtable]$Inputs = @{}
+            )
+
+            if ($env:EVENT_NAME -eq 'push') {
+              Wait-ForExistingWorkflow -WorkflowFile $WorkflowFile -HeadSha $env:PIPELINE_SHA
+              return
+            }
+
+            Start-And-WaitWorkflow -WorkflowFile $WorkflowFile -Inputs $Inputs
           }
 
           foreach ($manifestPath in $manifestPaths) {
