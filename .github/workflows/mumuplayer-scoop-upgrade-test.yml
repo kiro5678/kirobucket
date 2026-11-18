@@ -1,0 +1,313 @@
+name: MuMuPlayer Scoop Safe Upgrade Regression
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/mumuplayer.json"
+      - ".github/workflows/mumuplayer-scoop-upgrade-test.yml"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "bucket/mumuplayer.json"
+      - ".github/workflows/mumuplayer-scoop-upgrade-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-upgrade-simulation:
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop and validate manifest with official checkver
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+
+          $scoopRoot = Join-Path $env:RUNNER_TEMP 'scoop-mumu-validation'
+          $env:SCOOP = $scoopRoot
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          }
+
+          $shims = Join-Path $scoopRoot 'shims'
+          if (-not (Test-Path -LiteralPath $shims)) {
+            throw "Scoop shims directory was not created: $shims"
+          }
+          $env:Path = "$shims;$env:Path"
+          $shims | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+          $checkver = Join-Path $scoopRoot 'apps\scoop\current\bin\checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Official Scoop checkver script was not found: $checkver"
+          }
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\mumuplayer.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+
+          if (@($manifest.persist) -notcontains 'vms' -or
+              @($manifest.persist) -notcontains 'configs' -or
+              @($manifest.persist) -notcontains 'nx_device') {
+            throw 'The MuMuPlayer manifest must persist configs, vms, and nx_device.'
+          }
+
+          $tokens = $null
+          $parseErrors = $null
+          $scriptText = @($manifest.pre_install) -join [Environment]::NewLine
+          [System.Management.Automation.Language.Parser]::ParseInput(
+            $scriptText,
+            [ref]$tokens,
+            [ref]$parseErrors
+          ) | Out-Null
+          if ($parseErrors.Count -gt 0) {
+            $parseErrors | ForEach-Object { Write-Error $_.Message }
+            throw 'The MuMuPlayer pre_install PowerShell script has syntax errors.'
+          }
+
+          foreach ($requiredText in @(
+            'install_prepare',
+            '80002',
+            'Wait-ForMuMuInstallStability',
+            'Update-MuMuStoredPaths',
+            'New-MuMuPersistJunction',
+            'nx_device'
+          )) {
+            if ($scriptText -notmatch [regex]::Escape($requiredText)) {
+              throw "The pre_install script is missing required upgrade handling: $requiredText"
+            }
+          }
+
+          & $checkver -App 'mumuplayer' -Dir (Join-Path $env:GITHUB_WORKSPACE 'bucket') -ThrowError
+          if (-not $?) { throw 'Official Scoop checkver returned an unsuccessful result.' }
+
+      - name: Simulate first install, upgrade, 80002 retry, and persisted VM data
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\mumuplayer.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $hookText = @($manifest.pre_install) -join [Environment]::NewLine
+
+          function is_admin { return $true }
+          function Get-Process {
+            param($Name, $ErrorAction)
+            return @()
+          }
+          function Start-Sleep {
+            param([int]$Seconds, [int]$Milliseconds)
+          }
+
+          $script:MockProductVersion = $null
+          $script:MockReturn80002 = $false
+          $script:Mock80002Returned = $false
+
+          function Start-Process {
+            param(
+              [string]$FilePath,
+              [string[]]$ArgumentList,
+              [switch]$Wait,
+              [switch]$PassThru,
+              [string]$WindowStyle
+            )
+
+            $actionArg = $ArgumentList | Where-Object { $_ -like '/action=*' } | Select-Object -First 1
+            $directoryArg = $ArgumentList | Where-Object { $_ -like '/D=*' } | Select-Object -First 1
+            if (-not $actionArg -or -not $directoryArg) {
+              throw "Mock MuMu installer received incomplete arguments: $($ArgumentList -join ' ')"
+            }
+
+            $action = $actionArg.Substring(8)
+            $target = $directoryArg.Substring(3).Trim('"')
+
+            if ($action -eq 'install_prepare' -and
+                $script:MockReturn80002 -and
+                -not $script:Mock80002Returned) {
+              $script:Mock80002Returned = $true
+              return [pscustomobject]@{ ExitCode = 80002 }
+            }
+
+            if ($action -eq 'install_prepare') {
+              $configRoot = Join-Path $target 'configs\main'
+              $vmRoot = Join-Path $target 'vms\test-vm'
+              $deviceRoot = Join-Path $target 'nx_device\15.0\shell'
+
+              New-Item -ItemType Directory -Path $configRoot,$vmRoot,$deviceRoot -Force | Out-Null
+
+              $cfg = [pscustomobject]@{
+                product = [pscustomobject]@{
+                  version = $script:MockProductVersion
+                  install_dir = $target
+                }
+                main = [pscustomobject]@{
+                  install_dir = (Join-Path $target 'nx_main')
+                }
+                engines = [pscustomobject]@{
+                  mumu15 = [pscustomobject]@{
+                    player = [pscustomobject]@{ install_dir = (Join-Path $target 'nx_device\15.0\shell') }
+                    vms = [pscustomobject]@{ install_dir = (Join-Path $target 'vms') }
+                    renderer = [pscustomobject]@{ install_dir = (Join-Path $target 'nx_device\15.0\device') }
+                  }
+                }
+              }
+              $cfg | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath (Join-Path $configRoot 'install_config.json') -Encoding utf8
+
+              $deviceExe = Join-Path $deviceRoot 'MuMuNxDevice.exe'
+              Set-Content -LiteralPath $deviceExe -Value "engine=$script:MockProductVersion" -Encoding ascii
+
+              $disk = Join-Path $vmRoot 'userdata.img'
+              if (-not (Test-Path -LiteralPath $disk)) {
+                Set-Content -LiteralPath $disk -Value 'user-vm-data-must-survive' -Encoding ascii
+              }
+              return [pscustomobject]@{ ExitCode = 0 }
+            }
+
+            if ($action -eq 'commit') {
+              $mainRoot = Join-Path $target 'nx_main'
+              New-Item -ItemType Directory -Path $mainRoot -Force | Out-Null
+              Set-Content -LiteralPath (Join-Path $mainRoot 'MuMuNxMain.exe') -Value "main=$script:MockProductVersion" -Encoding ascii
+              return [pscustomobject]@{ ExitCode = 0 }
+            }
+
+            throw "Mock MuMu installer received unknown action: $action"
+          }
+
+          function Invoke-MuMuPreInstallHook {
+            param(
+              [string]$ScoopRoot,
+              [string]$Version,
+              [string]$ProductVersion,
+              [string]$InstallerName,
+              [switch]$Return80002
+            )
+
+            $script:MockProductVersion = $ProductVersion
+            $script:MockReturn80002 = [bool]$Return80002
+            $script:Mock80002Returned = $false
+
+            $script:dir = Join-Path $ScoopRoot "apps\mumuplayer\$Version"
+            $script:fname = $InstallerName
+            $script:version = $Version
+            $script:app = 'mumuplayer'
+            New-Item -ItemType Directory -Path $script:dir -Force | Out-Null
+            Set-Content -LiteralPath (Join-Path $script:dir $InstallerName) -Value 'mock-installer' -Encoding ascii
+
+            . ([scriptblock]::Create($hookText))
+
+            if ($Return80002 -and -not $script:Mock80002Returned) {
+              throw 'The mock installer did not exercise the 80002 retry branch.'
+            }
+          }
+
+          function Invoke-ScoopPersistData {
+            param([string]$ScoopRoot, [string]$Version)
+            $appRoot = Join-Path $ScoopRoot "apps\mumuplayer\$Version"
+            $persistRoot = Join-Path $ScoopRoot 'persist\mumuplayer'
+
+            foreach ($name in @('configs', 'vms', 'nx_device')) {
+              $source = Join-Path $appRoot $name
+              $target = Join-Path $persistRoot $name
+
+              if (Test-Path -LiteralPath $source) {
+                throw "The pre_install hook left a source directory behind; Scoop would risk .original handling: $source"
+              }
+              if (-not (Test-Path -LiteralPath $target -PathType Container)) {
+                throw "Persist target is missing: $target"
+              }
+
+              New-Item -ItemType Junction -Path $source -Value $target | Out-Null
+              $link = Get-Item -LiteralPath $source -Force
+              if (-not ($link.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+                throw "Scoop persist junction was not created: $source"
+              }
+            }
+          }
+
+          $scoopRoot = Join-Path $env:RUNNER_TEMP 'MuMu Test Scoop Root With Spaces'
+          $persistRoot = Join-Path $scoopRoot 'persist\mumuplayer'
+          $oldVersion = '1.8.9.5949'
+          $newVersion = '1.8.15.6065'
+          $oldInstaller = 'MuMu-setup-nxmain-V1.8.9.5949-overseas-1027211357.exe'
+          $newInstaller = 'MuMu-setup-nxmain-V1.8.15.6065-overseas-1113212110.exe'
+          New-Item -ItemType Directory -Path $scoopRoot -Force | Out-Null
+
+          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $oldVersion -ProductVersion '6.8.9.0' -InstallerName $oldInstaller
+          Invoke-ScoopPersistData -ScoopRoot $scoopRoot -Version $oldVersion
+
+          $vmData = Join-Path $persistRoot 'vms\test-vm\userdata.img'
+          $configMarker = Join-Path $persistRoot 'configs\user-settings.json'
+          $vmConfig = Join-Path $persistRoot 'vms\test-vm\vm_config.json'
+          $deviceMarker = Join-Path $persistRoot 'nx_device\user-engine-marker.txt'
+
+          $oldDir = Join-Path $scoopRoot "apps\mumuplayer\$oldVersion"
+          $userConfig = [pscustomobject]@{ custom = 'keep'; old_path = $oldDir }
+          $userConfig | ConvertTo-Json -Compress | Set-Content -LiteralPath $configMarker -Encoding utf8
+          Set-Content -LiteralPath $vmConfig -Value ('vm_path=' + $oldDir) -Encoding utf8
+          Set-Content -LiteralPath $deviceMarker -Value 'custom-engine-data-must-survive' -Encoding ascii
+
+          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $newVersion -ProductVersion '6.8.15.0' -InstallerName $newInstaller -Return80002
+          Invoke-ScoopPersistData -ScoopRoot $scoopRoot -Version $newVersion
+
+          $newDir = Join-Path $scoopRoot "apps\mumuplayer\$newVersion"
+          $installedConfig = Get-Content -LiteralPath (Join-Path $persistRoot 'configs\main\install_config.json') -Raw | ConvertFrom-Json
+          if ($installedConfig.product.version -ne '6.8.15.0') {
+            throw "Persisted product version was not updated: $($installedConfig.product.version)"
+          }
+          if ([IO.Path]::GetFullPath($installedConfig.product.install_dir) -ine [IO.Path]::GetFullPath($newDir)) {
+            throw "Product install_dir was not migrated to the new Scoop version: $($installedConfig.product.install_dir)"
+          }
+
+          $updatedUserConfig = Get-Content -LiteralPath $configMarker -Raw | ConvertFrom-Json
+          if ($updatedUserConfig.custom -ne 'keep') { throw 'Custom user config data was lost.' }
+          if ($updatedUserConfig.old_path -ne $newDir) { throw 'Absolute path in custom config was not updated.' }
+
+          $updatedVmConfig = Get-Content -LiteralPath $vmConfig -Raw
+          if ($updatedVmConfig -notlike "*$newDir*") { throw 'Absolute path in VM config was not updated.' }
+          if ($updatedVmConfig -like "*$oldVersion*") { throw 'Old version path remains in VM config.' }
+
+          if ((Get-Content -LiteralPath $vmData -Raw).Trim() -ne 'user-vm-data-must-survive') {
+            throw 'Existing VM user data did not survive the upgrade.'
+          }
+          if ((Get-Content -LiteralPath $deviceMarker -Raw).Trim() -ne 'custom-engine-data-must-survive') {
+            throw 'Persisted nx_device user data did not survive the upgrade.'
+          }
+          if ((Get-Content -LiteralPath (Join-Path $persistRoot 'nx_device\15.0\shell\MuMuNxDevice.exe') -Raw).Trim() -ne 'engine=6.8.15.0') {
+            throw 'The persisted nx_device binaries were not updated by the new installer.'
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $newDir 'nx_main\MuMuNxMain.exe') -PathType Leaf)) {
+            throw 'The new NX main executable was not created.'
+          }
+
+          @(
+            '## MuMuPlayer Scoop upgrade regression'
+            ''
+            '- The first-install hook completed with a mock NX-main installer.'
+            '- The second install simulated an upgrade from 6.8.9.0 to 6.8.15.0.'
+            '- Error 80002 was injected once and the version-aware retry succeeded.'
+            '- The test Scoop root contained spaces; the quoted /D argument was parsed correctly.'
+            '- configs, vms, and nx_device were all kept in Scoop persist.'
+            '- VM user data and custom config/device markers survived the upgrade.'
+            '- The nx_device executable was updated through its persist junction.'
+            '- Product install_dir and VM/config absolute paths were updated to the new version directory.'
+            '- Scoop-style persist junctions were recreated without leaving .original source folders.'
+            ''
+            'This is a deterministic installer/persistence simulation. It does not boot Android or validate Windows hypervisor drivers.'
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Cleanup mock test root
+        if: always()
+        shell: pwsh
+        run: |
+          $testRoot = Join-Path $env:RUNNER_TEMP 'MuMu Test Scoop Root With Spaces'
+          if (Test-Path -LiteralPath $testRoot) {
+            Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue
+          }
