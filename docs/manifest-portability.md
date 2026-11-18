@@ -193,3 +193,9 @@ KeyDepot and Repo Hopper remain under Review in [Manifest Review](manifest-revie
 
 - [`fort-firewall`](../bucket/fort-firewall.json) — **Portable (Inno Setup payload extraction)**: Scoop extracts the `{app}` payload without running the vendor setup, creates the upstream-required `README.portable` marker, persists `Data`, and adds a shortcut to `FortFirewall.exe`. Fort's portable mode requires Administrator rights when the optional Windows Service is not installed; installing that service also registers the driver. This manifest does not install the service.
 - The archive-validation workflow now uses the same `innounp` 2.71.3 package and SHA-256 as Scoop Main. It validates the Inno payload, release checksums, and the declared executable path.
+
+### Universal Android Debloater — legacy and Next Generation (2026-11-19)
+
+- [`universal-android-debloater`](../bucket/universal-android-debloater.json) — **Portable (standalone Windows EXE)**: downloads the original project's `uad_gui-windows.exe` directly into the Scoop app directory; it does not run a vendor installer. The current upstream release is `0.5.1`, marked as a pre-release and published on 2022-07-03. GitHub does not publish an asset digest for this old release; the manifest SHA-256 is the same value used by the existing ScoopInstaller/Extras manifest.
+- [`uad-ng`](../bucket/uad-ng.json) — **Portable (standalone Windows EXE)**: downloads the Next Generation project's `uad-ng-windows.exe` directly into the Scoop app directory; it does not run a vendor installer. Version `1.3.1` was published on 2026-11-02, and its SHA-256 matches the GitHub release asset digest.
+- Both manifests declare `adb` from Scoop Main as a dependency. The applications are separate projects with separate release feeds and executables; the legacy manifest is not an alias for UAD-NG.
