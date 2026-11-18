@@ -260,8 +260,8 @@ jobs:
 
           # Verify the documented Velopack installto route in an isolated runner directory.
           # This executes the vendor-signed setup only on the ephemeral GitHub Actions runner.
-          $probeInstall = Join-Path $root 'setup-installto-probe'
-          $probeArgs = @('--silent', '--installto', $probeInstall)
+          $probeInstall = Join-Path $root 'Scoop App With Spaces/Gloof 0.1.0-beta.10'
+          $probeArgs = @('--silent', '--installto', ('"' + $probeInstall + '"'))
           Write-Host "Testing Velopack Setup.exe --installto in: $probeInstall"
           $setupProcess = Start-Process -FilePath $installer -ArgumentList $probeArgs -Wait -PassThru
           Write-Host "Setup exit code: $($setupProcess.ExitCode)"
@@ -320,7 +320,8 @@ jobs:
           $report.Add("- Download page version strings: $($pageVersionHits -join ', ')")
           $report.Add("- Download page installer/portable links: $($pageLinks -join ', ')")
           $report.Add("- Official release feed files checked: releases.beta.json, assets.beta.json, RELEASES (all returned 404)")
-          $report.Add("- Velopack Setup.exe --installto test: PASS (files installed under the requested local directory; not a portable build)")
+          $report.Add("- Velopack Setup.exe --installto test: PASS (files installed under a path containing spaces; not a portable build)")
+          $report.Add("- Official Scoop checkver/autoupdate validation: see separate validation step")
           $report.Add("- Outer extracted files: $($outerFiles.Count)")
           $report.Add("- Nested archives extracted: $($nestedArchives.Count)")
           $report.Add("- Application payload files: $($inventory.Count)")
@@ -333,6 +334,48 @@ jobs:
           $report.Add('The setup executable was not launched. Extraction results alone do not prove that the application is fully portable or independent of user-profile data.')
           $report | Set-Content -LiteralPath (Join-Path $root 'inspection-report.md') -Encoding utf8
           $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+
+      - name: Checkout Scoop core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          path: scoop_core
+          persist-credentials: false
+
+      - name: Validate Gloof version and published SHA-256 with official Scoop checkver
+        shell: pwsh
+        env:
+          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $sourceManifest = Join-Path $env:GITHUB_WORKSPACE 'bucket/gloof.json'
+          $validationDir = Join-Path $env:RUNNER_TEMP 'gloof-scoop-checkver'
+          New-Item -ItemType Directory -Path $validationDir -Force | Out-Null
+          $testManifest = Join-Path $validationDir 'gloof.json'
+          Copy-Item -LiteralPath $sourceManifest -Destination $testManifest -Force
+
+          $checkver = Join-Path $env:SCOOP_HOME 'bin/checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Official Scoop checkver script not found: $checkver"
+          }
+
+          & $checkver -App $testManifest -ForceUpdate -ThrowError
+          if ($LASTEXITCODE -ne 0) {
+            throw "Scoop checkver failed with exit code $LASTEXITCODE."
+          }
+
+          $verified = Get-Content -LiteralPath $testManifest -Raw | ConvertFrom-Json -ErrorAction Stop
+          if ($verified.version -ne '0.1.0-beta.10') {
+            throw "Scoop checkver returned unexpected Gloof version: $($verified.version)"
+          }
+          if ($verified.architecture.'64bit'.hash -ne '79f8b760c2c89547d31eca199139d0cd1c782121947d026cec99d0c4276d3c72') {
+            throw "Scoop checkver did not resolve the published Gloof SHA-256 correctly."
+          }
+
+          Write-Host "Scoop checkver version: $($verified.version)"
+          Write-Host "Scoop checkver SHA-256: $($verified.architecture.'64bit'.hash)"
+          Write-Host 'Official Scoop checkver/autoupdate validation: PASS'
 
       - name: Upload inspection report and extraction logs
         if: always()
