@@ -11,6 +11,7 @@ on:
   pull_request:
     branches:
       - master
+      - fix/mumuplayer-global-persistdir-20261119
     paths:
       - "bucket/mumuplayer.json"
       - ".github/workflows/mumuplayer-scoop-upgrade-test.yml"
@@ -111,6 +112,8 @@ jobs:
           $script:MockProductVersion = $null
           $script:MockReturn80002 = $false
           $script:Mock80002Returned = $false
+          $script:MockCommitReturn80002 = $false
+          $script:MockCommit80002Returned = $false
 
           function Start-Process {
             param(
@@ -134,6 +137,13 @@ jobs:
                 $script:MockReturn80002 -and
                 -not $script:Mock80002Returned) {
               $script:Mock80002Returned = $true
+              return [pscustomobject]@{ ExitCode = 80002 }
+            }
+
+            if ($action -eq 'commit' -and
+                $script:MockCommitReturn80002 -and
+                -not $script:MockCommit80002Returned) {
+              $script:MockCommit80002Returned = $true
               return [pscustomobject]@{ ExitCode = 80002 }
             }
 
@@ -188,35 +198,42 @@ jobs:
               [string]$Version,
               [string]$ProductVersion,
               [string]$InstallerName,
-              [switch]$Return80002
+              [string]$PersistRoot,
+              [switch]$Return80002,
+              [switch]$ReturnCommit80002
             )
 
             $script:MockProductVersion = $ProductVersion
             $script:MockReturn80002 = [bool]$Return80002
             $script:Mock80002Returned = $false
+            $script:MockCommitReturn80002 = [bool]$ReturnCommit80002
+            $script:MockCommit80002Returned = $false
 
             $script:dir = Join-Path $ScoopRoot "apps\mumuplayer\$Version"
             $script:fname = $InstallerName
             $script:version = $Version
             $script:app = 'mumuplayer'
+            $script:persist_dir = $PersistRoot
             New-Item -ItemType Directory -Path $script:dir -Force | Out-Null
             Set-Content -LiteralPath (Join-Path $script:dir $InstallerName) -Value 'mock-installer' -Encoding ascii
 
             . ([scriptblock]::Create($hookText))
 
             if ($Return80002 -and -not $script:Mock80002Returned) {
-              throw 'The mock installer did not exercise the 80002 retry branch.'
+              throw 'The mock installer did not exercise the install_prepare 80002 retry branch.'
+            }
+            if ($ReturnCommit80002 -and -not $script:MockCommit80002Returned) {
+              throw 'The mock installer did not exercise the commit 80002 retry branch.'
             }
           }
 
           function Invoke-ScoopPersistData {
-            param([string]$ScoopRoot, [string]$Version)
+            param([string]$ScoopRoot, [string]$Version, [string]$PersistRoot)
             $appRoot = Join-Path $ScoopRoot "apps\mumuplayer\$Version"
-            $persistRoot = Join-Path $ScoopRoot 'persist\mumuplayer'
 
             foreach ($name in @('configs', 'vms', 'nx_device')) {
               $source = Join-Path $appRoot $name
-              $target = Join-Path $persistRoot $name
+              $target = Join-Path $PersistRoot $name
 
               if (Test-Path -LiteralPath $source) {
                 throw "The pre_install hook left a source directory behind; Scoop would risk .original handling: $source"
@@ -234,15 +251,17 @@ jobs:
           }
 
           $scoopRoot = Join-Path $env:RUNNER_TEMP 'MuMu Test Scoop Root With Spaces'
-          $persistRoot = Join-Path $scoopRoot 'persist\mumuplayer'
+          # A global Scoop installation may place persist outside the app root.
+          # The hook must use Scoop's $persist_dir variable, not infer it from $dir.
+          $persistRoot = Join-Path $env:RUNNER_TEMP 'MuMu Global Persist Root With Spaces\mumuplayer'
           $oldVersion = '1.8.9.5949'
           $newVersion = '1.8.15.6065'
           $oldInstaller = 'MuMu-setup-nxmain-V1.8.9.5949-overseas-1027211357.exe'
           $newInstaller = 'MuMu-setup-nxmain-V1.8.15.6065-overseas-1113212110.exe'
           New-Item -ItemType Directory -Path $scoopRoot -Force | Out-Null
 
-          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $oldVersion -ProductVersion '6.8.9.0' -InstallerName $oldInstaller
-          Invoke-ScoopPersistData -ScoopRoot $scoopRoot -Version $oldVersion
+          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $oldVersion -ProductVersion '6.8.9.0' -InstallerName $oldInstaller -PersistRoot $persistRoot
+          Invoke-ScoopPersistData -ScoopRoot $scoopRoot -Version $oldVersion -PersistRoot $persistRoot
 
           $vmData = Join-Path $persistRoot 'vms\test-vm\userdata.img'
           $configMarker = Join-Path $persistRoot 'configs\user-settings.json'
@@ -255,8 +274,8 @@ jobs:
           Set-Content -LiteralPath $vmConfig -Value ('vm_path=' + $oldDir) -Encoding utf8
           Set-Content -LiteralPath $deviceMarker -Value 'custom-engine-data-must-survive' -Encoding ascii
 
-          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $newVersion -ProductVersion '6.8.15.0' -InstallerName $newInstaller -Return80002
-          Invoke-ScoopPersistData -ScoopRoot $scoopRoot -Version $newVersion
+          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $newVersion -ProductVersion '6.8.15.0' -InstallerName $newInstaller -PersistRoot $persistRoot -Return80002 -ReturnCommit80002
+          Invoke-ScoopPersistData -ScoopRoot $scoopRoot -Version $newVersion -PersistRoot $persistRoot
 
           $newDir = Join-Path $scoopRoot "apps\mumuplayer\$newVersion"
           $installedConfig = Get-Content -LiteralPath (Join-Path $persistRoot 'configs\main\install_config.json') -Raw | ConvertFrom-Json
@@ -275,6 +294,9 @@ jobs:
           if ($updatedVmConfig -notlike "*$newDir*") { throw 'Absolute path in VM config was not updated.' }
           if ($updatedVmConfig -like "*$oldVersion*") { throw 'Old version path remains in VM config.' }
 
+          if ($persistRoot.StartsWith($scoopRoot, [StringComparison]::OrdinalIgnoreCase)) {
+            throw 'The global persist test root must be outside the app installation root.'
+          }
           if ((Get-Content -LiteralPath $vmData -Raw).Trim() -ne 'user-vm-data-must-survive') {
             throw 'Existing VM user data did not survive the upgrade.'
           }
@@ -293,8 +315,10 @@ jobs:
             ''
             '- The first-install hook completed with a mock NX-main installer.'
             '- The second install simulated an upgrade from 6.8.9.0 to 6.8.15.0.'
-            '- Error 80002 was injected once and the version-aware retry succeeded.'
-            '- The test Scoop root contained spaces; the quoted /D argument was parsed correctly.'
+            '- Error 80002 was injected once in install_prepare and the version-aware retry succeeded.'
+            '- Error 80002 was also injected once in commit; commit retried with the version written by install_prepare.'
+            '- The test Scoop app root and persist root were separate, simulating a custom/global persist location.'
+            '- Both paths contained spaces; the quoted /D argument was parsed correctly.'
             '- configs, vms, and nx_device were all kept in Scoop persist.'
             '- VM user data and custom config/device markers survived the upgrade.'
             '- The nx_device executable was updated through its persist junction.'
@@ -308,7 +332,12 @@ jobs:
         if: always()
         shell: pwsh
         run: |
-          $testRoot = Join-Path $env:RUNNER_TEMP 'MuMu Test Scoop Root With Spaces'
-          if (Test-Path -LiteralPath $testRoot) {
-            Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue
+          $testRoots = @(
+            (Join-Path $env:RUNNER_TEMP 'MuMu Test Scoop Root With Spaces'),
+            (Join-Path $env:RUNNER_TEMP 'MuMu Global Persist Root With Spaces')
+          )
+          foreach ($testRoot in $testRoots) {
+            if (Test-Path -LiteralPath $testRoot) {
+              Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue
+            }
           }
