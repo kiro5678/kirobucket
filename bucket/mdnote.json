@@ -1,13 +1,13 @@
 {
-    "version": "2.4.0",
+    "version": "2.5.1",
     "description": "Lightweight Markdown and plain-text editor with formatted editing, live preview, tables, tabs, and multi-encoding support.",
     "homepage": "https://github.com/Lahai-Roi/MDNote",
     "license": "GPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Lahai-Roi/MDNote/releases/download/v2.4.0/MDNote-2.4.0-portable.zip",
-            "hash": "185c1f70cf18c72c247bfb6b4ae69ed50df9d930d06de9f2ef87a6c16545fcc6",
-            "extract_dir": "MDNote-2.4.0"
+            "url": "https://github.com/Lahai-Roi/MDNote/releases/download/v2.5.1/MDNote-2.5.1-portable.zip",
+            "hash": "ce3ac960090b7756c56a235d5265aaf25918c80ae2ac34ae145ccc5b7cb4f816",
+            "extract_dir": "MDNote-2.5.1"
         }
     },
     "bin": "MDNote.exe",
