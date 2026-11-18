@@ -162,7 +162,7 @@ foreach ($manifest in $manifests) {
 
         foreach ($candidate in $matches) {
             $candidateSource = [string](Get-ObjectProperty -InputObject $candidate -PropertyName 'Source')
-            $sourceLeaf = $candidateSource.TrimEnd('\', '/')
+            $sourceLeaf = $candidateSource.TrimEnd([char[]]@('\', '/'))
             if (
                 $candidateSource -ieq $BucketName -or
                 [System.IO.Path]::GetFileName($sourceLeaf) -ieq $BucketName
