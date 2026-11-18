@@ -112,6 +112,8 @@ jobs:
           $script:MockProductVersion = $null
           $script:MockReturn80002 = $false
           $script:Mock80002Returned = $false
+          $script:MockCommitReturn80002 = $false
+          $script:MockCommit80002Returned = $false
 
           function Start-Process {
             param(
@@ -135,6 +137,13 @@ jobs:
                 $script:MockReturn80002 -and
                 -not $script:Mock80002Returned) {
               $script:Mock80002Returned = $true
+              return [pscustomobject]@{ ExitCode = 80002 }
+            }
+
+            if ($action -eq 'commit' -and
+                $script:MockCommitReturn80002 -and
+                -not $script:MockCommit80002Returned) {
+              $script:MockCommit80002Returned = $true
               return [pscustomobject]@{ ExitCode = 80002 }
             }
 
@@ -190,12 +199,15 @@ jobs:
               [string]$ProductVersion,
               [string]$InstallerName,
               [string]$PersistRoot,
-              [switch]$Return80002
+              [switch]$Return80002,
+              [switch]$ReturnCommit80002
             )
 
             $script:MockProductVersion = $ProductVersion
             $script:MockReturn80002 = [bool]$Return80002
             $script:Mock80002Returned = $false
+            $script:MockCommitReturn80002 = [bool]$ReturnCommit80002
+            $script:MockCommit80002Returned = $false
 
             $script:dir = Join-Path $ScoopRoot "apps\mumuplayer\$Version"
             $script:fname = $InstallerName
@@ -208,7 +220,10 @@ jobs:
             . ([scriptblock]::Create($hookText))
 
             if ($Return80002 -and -not $script:Mock80002Returned) {
-              throw 'The mock installer did not exercise the 80002 retry branch.'
+              throw 'The mock installer did not exercise the install_prepare 80002 retry branch.'
+            }
+            if ($ReturnCommit80002 -and -not $script:MockCommit80002Returned) {
+              throw 'The mock installer did not exercise the commit 80002 retry branch.'
             }
           }
 
@@ -259,7 +274,7 @@ jobs:
           Set-Content -LiteralPath $vmConfig -Value ('vm_path=' + $oldDir) -Encoding utf8
           Set-Content -LiteralPath $deviceMarker -Value 'custom-engine-data-must-survive' -Encoding ascii
 
-          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $newVersion -ProductVersion '6.8.15.0' -InstallerName $newInstaller -PersistRoot $persistRoot -Return80002
+          Invoke-MuMuPreInstallHook -ScoopRoot $scoopRoot -Version $newVersion -ProductVersion '6.8.15.0' -InstallerName $newInstaller -PersistRoot $persistRoot -Return80002 -ReturnCommit80002
           Invoke-ScoopPersistData -ScoopRoot $scoopRoot -Version $newVersion -PersistRoot $persistRoot
 
           $newDir = Join-Path $scoopRoot "apps\mumuplayer\$newVersion"
@@ -300,7 +315,8 @@ jobs:
             ''
             '- The first-install hook completed with a mock NX-main installer.'
             '- The second install simulated an upgrade from 6.8.9.0 to 6.8.15.0.'
-            '- Error 80002 was injected once and the version-aware retry succeeded.'
+            '- Error 80002 was injected once in install_prepare and the version-aware retry succeeded.'
+            '- Error 80002 was also injected once in commit; commit retried with the version written by install_prepare.'
             '- The test Scoop app root and persist root were separate, simulating a custom/global persist location.'
             '- Both paths contained spaces; the quoted /D argument was parsed correctly.'
             '- configs, vms, and nx_device were all kept in Scoop persist.'
