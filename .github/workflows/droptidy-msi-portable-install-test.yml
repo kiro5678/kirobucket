@@ -1,0 +1,135 @@
+name: DropTidy MSI Portable Scoop Install Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/droptidy.json'
+      - '.github/workflows/droptidy-msi-portable-install-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Extract, launch, and persist test (${ matrix.shell }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${ matrix.shell }
+
+    steps:
+      - name: Checkout manifest
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install Scoop and create a local test bucket
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-droptidy'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-droptidy-test'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\droptidy.json') -Destination $manifestDir
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket/droptidy.json
+            git commit -m 'Seed temporary DropTidy test bucket'
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\\', '/')
+          scoop bucket add kirobucket $bucketUrl
+          scoop install droptidy
+
+      - name: Inspect extracted MSI files and verify persisted app data
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $appDir = Join-Path $env:SCOOP 'apps\droptidy\current'
+          if (-not (Test-Path -LiteralPath $appDir -PathType Container)) {
+            throw "Scoop application directory was not created: $appDir"
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $appDir -File -Recurse)
+          Write-Host 'Extracted MSI payload:'
+          $files | ForEach-Object { Write-Host $_.FullName }
+
+          $launcher = $files | Where-Object { $_.Name -ieq 'DropTidy.exe' } | Select-Object -First 1
+          if ($null -eq $launcher) {
+            throw 'DropTidy.exe was not found in the extracted MSI payload.'
+          }
+
+          $appDataPath = Join-Path $env:APPDATA 'com.droptidy.app'
+          $persistDataPath = Join-Path $env:SCOOP 'persist\droptidy\data'
+          if (-not (Test-Path -LiteralPath $appDataPath -PathType Container)) {
+            throw "DropTidy AppData directory is missing: $appDataPath"
+          }
+          $appDataItem = Get-Item -LiteralPath $appDataPath -Force
+          if ($appDataItem.LinkType -ne 'Junction') {
+            throw "DropTidy AppData is not redirected through a junction (LinkType=$($appDataItem.LinkType))."
+          }
+          if ([IO.Path]::GetFullPath([string]$appDataItem.Target) -ine [IO.Path]::GetFullPath($persistDataPath)) {
+            throw "DropTidy AppData junction points to the wrong target: $($appDataItem.Target)"
+          }
+
+          $launcherPath = $launcher.FullName
+          Write-Host "Launching extracted executable: $launcherPath"
+          $process = Start-Process -FilePath $launcherPath -PassThru
+          try {
+            $deadline = (Get-Date).AddSeconds(30)
+            do {
+              Start-Sleep -Milliseconds 500
+              $process.Refresh()
+              if ($process.HasExited) {
+                throw "DropTidy exited during startup (exit code $($process.ExitCode))."
+              }
+            } while ((Get-Date) -lt $deadline)
+
+            $databasePath = Join-Path $persistDataPath 'droptidy.db'
+            $dbDeadline = (Get-Date).AddSeconds(15)
+            while (-not (Test-Path -LiteralPath $databasePath -PathType Leaf) -and (Get-Date) -lt $dbDeadline) {
+              Start-Sleep -Milliseconds 500
+            }
+            if (-not (Test-Path -LiteralPath $databasePath -PathType Leaf)) {
+              throw 'DropTidy did not create its SQLite database inside the Scoop persist directory.'
+            }
+          }
+          finally {
+            if (-not $process.HasExited) {
+              Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          $persistedMarker = Join-Path $persistDataPath 'kirobucket-persist-test.txt'
+          Set-Content -LiteralPath $persistedMarker -Value 'persisted' -Encoding utf8
+
+          scoop uninstall droptidy
+
+          if (-not (Test-Path -LiteralPath $persistedMarker -PathType Leaf)) {
+            throw 'Scoop uninstall removed DropTidy persisted data.'
+          }
+          if (Test-Path -LiteralPath $appDataPath) {
+            throw 'DropTidy AppData junction was not removed during uninstall.'
+          }
+
+          Write-Host 'PASS: MSI extraction, app launch, AppData redirection, database creation, and persist retention.'
