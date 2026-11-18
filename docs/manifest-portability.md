@@ -1,5 +1,15 @@
 # Manifest Portability Inventory
 
+## Runtime behaviour checks
+
+### Orfeo 1.7.3 — Windows Portable
+
+- The Scoop manifest downloads the official single-file `Orfeo-1.7.3-portable.exe`; Scoop stores this EXE in its managed app directory and does not unpack it as an archive during installation.
+- A Windows GitHub Actions runtime test launched the exact manifest binary with `TEMP` and `TMP` redirected to an isolated directory. The launcher created temporary extraction directories, placed six executables and 197 files under that isolated TEMP during observation, and four `Orfeo.exe` processes were observed executing from the extracted TEMP path.
+- The downloaded 143,806,967-byte asset matched the manifest SHA-256: `39b7a44b730cab44033defe82d63a05b0b3b087543f5e05e5e448d1313a7125f`.
+- This confirms **runtime extraction to TEMP**, not Scoop install-time extraction. The test terminated the app and removed its isolated test directory; automatic cleanup by Orfeo itself was not measured.
+- Evidence: [GitHub Actions run 44318206990](https://github.com/kiro5678/kirobucket/actions/runs/44318206990) and [runtime test workflow](../.github/workflows/orfeo-portable-temp-test.yml).
+
 ## Summary
 
 <!-- KIROBUCKET-PORTABILITY-SUMMARY-START -->
