@@ -288,5 +288,4 @@ if (-not [string]::IsNullOrWhiteSpace($reportDirectory)) {
 
 Set-Content -LiteralPath $ReportPath -Value $html -Encoding utf8NoBOM
 
-Write-Output 'Local comparison completed. The detailed inventory and report remain on this machine.'
-Write-Output "Local report: $ReportPath"
+Write-Output 'Local comparison completed. The detailed report remains on this machine and was not uploaded.'
