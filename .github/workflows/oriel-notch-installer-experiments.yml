@@ -263,17 +263,30 @@ jobs:
           $isUpdateLifecycleCandidate = $env:MANIFEST_FILE -like '*Oriel-Niix.json'
           $updateExit = 0
           $updateTimedOut = $false
+          $updateStateValid = $true
           if ($isUpdateLifecycleCandidate -and $install.ExitCode -eq 0 -and -not $install.TimedOut) {
-            $report.Add('Running forced same-version Scoop update to exercise old-uninstall then new-install lifecycle.')
-            $update = Invoke-ScoopBounded -ScoopArguments @('update', '-f', $appName) -Label 'scoop-update' -TimeoutMilliseconds 120000
-            $updateExit = $update.ExitCode
-            $updateTimedOut = $update.TimedOut
-            $report.Add("Scoop forced update exit code: $updateExit")
-            $report.Add("Scoop forced update timed out: $updateTimedOut")
-            if (Test-Path -LiteralPath $update.StdOut) { $report.Add('Update stdout:'); $report.AddRange([string[]](Get-Content -LiteralPath $update.StdOut)) }
-            if (Test-Path -LiteralPath $update.StdErr) { $report.Add('Update stderr:'); $report.AddRange([string[]](Get-Content -LiteralPath $update.StdErr)) }
+            for ($updateAttempt = 1; $updateAttempt -le 2; $updateAttempt++) {
+              $report.Add("Running forced same-version Scoop update cycle $updateAttempt of 2.")
+              $update = Invoke-ScoopBounded -ScoopArguments @('update', '-f', $appName) -Label "scoop-update-$updateAttempt" -TimeoutMilliseconds 120000
+              $updateExit = $update.ExitCode
+              $updateTimedOut = $update.TimedOut
+              $report.Add("Scoop forced update cycle $updateAttempt exit code: $updateExit")
+              $report.Add("Scoop forced update cycle $updateAttempt timed out: $updateTimedOut")
+              if (Test-Path -LiteralPath $update.StdOut) { $report.Add("Update cycle $updateAttempt stdout:"); $report.AddRange([string[]](Get-Content -LiteralPath $update.StdOut)) }
+              if (Test-Path -LiteralPath $update.StdErr) { $report.Add("Update cycle $updateAttempt stderr:"); $report.AddRange([string[]](Get-Content -LiteralPath $update.StdErr)) }
+              $cycleAppExe = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel\\oriel.exe'
+              $cycleUninstaller = Join-Path $env:LOCALAPPDATA 'Programs\\Oriel\\uninstall.exe'
+              $cycleManagedLink = Join-Path $versionPath 'oriel-managed\\oriel.exe'
+              $cycleStateValid = (Test-Path -LiteralPath $cycleAppExe -PathType Leaf) -and
+                (Test-Path -LiteralPath $cycleUninstaller -PathType Leaf) -and
+                (Test-Path -LiteralPath $cycleManagedLink -PathType Leaf)
+              $report.Add("Oriel executable, registered uninstaller, and Scoop launch link after update cycle $updateAttempt: $cycleStateValid")
+              if ($updateExit -ne 0 -or $updateTimedOut -or -not $cycleStateValid) {
+                $updateStateValid = $false
+                break
+              }
+            }
           }
-
           $insideExecutables = @()
           if (Test-Path -LiteralPath $versionPath -PathType Container) {
             $insideExecutables = @(Get-ChildItem -LiteralPath $versionPath -Filter '*.exe' -File -Recurse -Force |
