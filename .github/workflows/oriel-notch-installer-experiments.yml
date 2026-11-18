@@ -128,15 +128,20 @@ jobs:
       max-parallel: 5
       matrix:
         include:
-          - method: "installer.args /S"
+          - id: args-s
+            method: "installer.args /S"
             manifest: "tests/oriel/manifests/oriel-notch-exp-s.json"
-          - method: "installer.args /silent"
+          - id: args-silent
+            method: "installer.args /silent"
             manifest: "tests/oriel/manifests/oriel-notch-exp-silent.json"
-          - method: "installer.args /quiet"
+          - id: args-quiet
+            method: "installer.args /quiet"
             manifest: "tests/oriel/manifests/oriel-notch-exp-quiet.json"
-          - method: "installer.script --silent --install-dir"
+          - id: script-silent-dir
+            method: "installer.script --silent --install-dir"
             manifest: "tests/oriel/manifests/oriel-notch-exp-script.json"
-          - method: "Scoop 7-Zip extraction"
+          - id: sevenzip-extraction
+            method: "Scoop 7-Zip extraction"
             manifest: "tests/oriel/manifests/oriel-notch-exp-7zip.json"
 
     steps:
@@ -226,11 +231,15 @@ jobs:
 
           $externalExecutables = @()
           $externalRoots = @(
-            (Join-Path $env:LOCALAPPDATA 'Programs'),
             (Join-Path $env:LOCALAPPDATA 'Oriel'),
             (Join-Path $env:ProgramFiles 'Oriel'),
             (Join-Path $env:APPDATA 'Oriel')
           )
+          $programsRoot = Join-Path $env:LOCALAPPDATA 'Programs'
+          if (Test-Path -LiteralPath $programsRoot -PathType Container) {
+            $externalRoots += @(Get-ChildItem -LiteralPath $programsRoot -Directory -Force -ErrorAction SilentlyContinue |
+              Where-Object { $_.Name -match '(?i)Oriel' } | ForEach-Object { $_.FullName })
+          }
           foreach ($root in $externalRoots) {
             if (Test-Path -LiteralPath $root -PathType Container) {
               $externalExecutables += @(Get-ChildItem -LiteralPath $root -Filter '*.exe' -File -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })
@@ -295,7 +304,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: oriel-probe-${{ matrix.manifest }}
+          name: oriel-probe-${{ matrix.id }}
           path: ${{ runner.temp }}/oriel-scoop-probe/**
           if-no-files-found: warn
           retention-days: 14
