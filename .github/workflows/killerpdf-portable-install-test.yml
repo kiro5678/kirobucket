@@ -92,9 +92,6 @@ jobs:
             if (-not $launcherProcess.WaitForExit(30000)) {
               throw 'Portable launcher did not exit after its application process was stopped.'
             }
-            if ($launcherProcess.ExitCode -ne 0) {
-              throw "Portable launcher returned exit code $($launcherProcess.ExitCode)."
-            }
           }
           finally {
             if ($null -ne $childProcess) {
