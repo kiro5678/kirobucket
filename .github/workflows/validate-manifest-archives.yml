@@ -7,6 +7,7 @@ on:
     paths:
       - 'bucket/diskmonitor.json'
       - 'bucket/axonhub.json'
+      - 'bucket/huedra-apixelsnet.json'
       - 'bucket/goshell.json'
       - 'bucket/mypack.json'
       - 'bucket/nekossh.json'
@@ -225,6 +226,7 @@ on:
     paths:
       - 'bucket/diskmonitor.json'
       - 'bucket/axonhub.json'
+      - 'bucket/huedra-apixelsnet.json'
       - 'bucket/goshell.json'
       - 'bucket/mypack.json'
       - 'bucket/nekossh.json'
