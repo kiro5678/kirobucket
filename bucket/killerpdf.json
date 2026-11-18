@@ -1,0 +1,30 @@
+{
+    "version": "1.9.4",
+    "description": "Free and open-source Windows PDF editor with OCR, annotation, text editing, redaction, signing, forms, comparison and conversion.",
+    "homepage": "https://killerpdf.net/",
+    "license": "GPL-3.0-only",
+    "url": "https://github.com/SteveTheKiller/KillerPDF/releases/download/v1.9.4/KillerPDF-Portable.exe",
+    "hash": "2509926c4f01d51d116ff4e1c2c2838aeb1479bb327be71e4e6ab186c69b898d",
+    "persist": "KillerPDF-Data",
+    "shortcuts": [
+        [
+            "KillerPDF-Portable.exe",
+            "KillerPDF"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/SteveTheKiller/KillerPDF",
+        "regex": "v([\\d.]+)"
+    },
+    "autoupdate": {
+        "url": "https://github.com/SteveTheKiller/KillerPDF/releases/download/v$version/KillerPDF-Portable.exe",
+        "hash": {
+            "url": "https://github.com/SteveTheKiller/KillerPDF/releases/download/v$version/SHA256SUMS.txt",
+            "find": "(?im)^KillerPDF-Portable\\.exe\\s+($sha256)\\s*$"
+        }
+    },
+    "notes": [
+        "The official portable launcher extracts its runtime to %LOCALAPPDATA%\\KillerPDF\\Portable while running and removes it after exit.",
+        "User settings and data are persisted in KillerPDF-Data. Prefer 'scoop update killerpdf' to keep the installed version synchronized with the bucket."
+    ]
+}
