@@ -1,0 +1,209 @@
+name: Inspect AivoRelay and Oriel packages
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - "bucket/aivorelay.json"
+      - "bucket/oriel-notch.json"
+      - ".github/workflows/aivorelay-oriel-package-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify and inspect official Windows packages
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Locate 7-Zip
+        id: sevenzip
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $candidates = @(
+            (Join-Path $env:ProgramFiles '7-Zip\7z.exe'),
+            (Join-Path ${env:ProgramFiles(x86)} '7-Zip\7z.exe')
+          )
+          $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+          if (-not $sevenZip) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not $sevenZip) { throw '7-Zip is not available on the Windows runner.' }
+          "path=$sevenZip" >> $env:GITHUB_OUTPUT
+          Write-Host "7-Zip: $sevenZip"
+
+      - name: Verify and extract the official AivoRelay portable ZIP
+        shell: pwsh
+        env:
+          SEVEN_ZIP: ${{ steps.sevenzip.outputs.path }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://github.com/MaxITService/AIVORelay/releases/download/v1.0.55/aivorelay_1.0.55_x64_portable.zip'
+          $expected = '001100ff6250729b24b86e9ca63289509e3ee0e7fd20ebe42d01da8c8c8b7f20'
+          $root = Join-Path $env:RUNNER_TEMP 'aivorelay-portable-inspection'
+          $archive = Join-Path $root 'aivorelay_1.0.55_x64_portable.zip'
+          $extract = Join-Path $root 'extracted'
+          New-Item -ItemType Directory -Path $extract -Force | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile $archive -MaximumRedirection 10 -TimeoutSec 900
+          $actual = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "AivoRelay ZIP SHA-256 mismatch. Expected $expected; received $actual." }
+          & $env:SEVEN_ZIP x $archive "-o$extract" -y -bd | Out-File (Join-Path $root '7zip-extraction.log') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip extraction failed with exit code $LASTEXITCODE." }
+          $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+          if ($files.Count -eq 0) { throw 'AivoRelay ZIP extracted no files.' }
+          $executables = @($files | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+            [PSCustomObject]@{
+              Path = [System.IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\', '/')
+              Size = $_.Length
+              Product = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).ProductName
+              Description = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).FileDescription
+            }
+          })
+          $main = @($executables | Where-Object { $_.Path -ieq 'AivoRelay.exe' })
+          if ($main.Count -ne 1) {
+            $paths = ($executables | ForEach-Object { $_.Path }) -join '; '
+            throw "Expected exactly one root AivoRelay.exe for the manifest shortcut. Found: $paths"
+          }
+          $report = @(
+            'AivoRelay 1.0.55 portable ZIP inspection',
+            "Archive SHA-256: $actual",
+            "Archive size: $((Get-Item -LiteralPath $archive).Length) bytes",
+            "Extracted files: $($files.Count)",
+            '',
+            'Executables:',
+            ($executables | Format-Table -AutoSize | Out-String),
+            '',
+            'Result: official ZIP checksum verified and AivoRelay.exe found at the archive root.',
+            'No application executable was run.'
+          )
+          $report | Set-Content -LiteralPath (Join-Path $root 'inspection-report.txt') -Encoding utf8
+          $report | ForEach-Object { Write-Host $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Verify and identify Oriel Setup without running it
+        shell: pwsh
+        env:
+          SEVEN_ZIP: ${{ steps.sevenzip.outputs.path }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://github.com/Niix-x/Oriel-Releases/releases/download/v1.1.1/OrielSetup-1.1.1.exe'
+          $expected = '808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954'
+          $root = Join-Path $env:RUNNER_TEMP 'oriel-package-inspection'
+          $setup = Join-Path $root 'OrielSetup-1.1.1.exe'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 600
+          $actual = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "Oriel Setup SHA-256 mismatch. Expected $expected; received $actual." }
+
+          $dieUrl = 'https://github.com/horsicq/DIE-engine/releases/download/4.0.0/die_win64_4.0.0.zip'
+          $dieHash = '522a649e795123ab89bb7962ff8fc9b5615ce253a08175467318aa06761c0f8'
+          $dieZip = Join-Path $root 'die_win64_4.0.0.zip'
+          $dieRoot = Join-Path $root 'die'
+          Invoke-WebRequest -Uri $dieUrl -OutFile $dieZip -MaximumRedirection 10 -TimeoutSec 600
+          $dieActual = (Get-FileHash -LiteralPath $dieZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($dieActual -ne $dieHash) { throw "Detect It Easy ZIP SHA-256 mismatch. Expected $dieHash; received $dieActual." }
+          Expand-Archive -LiteralPath $dieZip -DestinationPath $dieRoot -Force
+          $diec = Get-ChildItem -LiteralPath $dieRoot -Filter 'diec.exe' -File -Recurse | Select-Object -First 1
+          if (-not $diec) { throw 'diec.exe was not found in the verified Detect It Easy archive.' }
+
+          $scan = @(& $diec.FullName -d -u -b -a $setup 2>&1 | ForEach-Object { "$_" })
+          $scanExit = $LASTEXITCODE
+          $scan | Set-Content -LiteralPath (Join-Path $root 'detect-it-easy.txt') -Encoding utf8
+          if ($scan.Count -eq 0 -or $scanExit -ne 0) { throw "Detect It Easy returned no usable result (exit code $scanExit)." }
+          $scanText = $scan -join [Environment]::NewLine
+          $engine = if ($scanText -match '(?i)Inno Setup') {
+            'Inno Setup'
+          } elseif ($scanText -match '(?i)Nullsoft|NSIS') {
+            'NSIS'
+          } elseif ($scanText -match '(?i)WiX|WixBundle') {
+            'WiX Burn'
+          } else {
+            'Other/undetermined (see Detect It Easy output)'
+          }
+
+          $extract = Join-Path $root 'extracted'
+          New-Item -ItemType Directory -Path $extract -Force | Out-Null
+          $extractionMethod = 'Not attempted'
+          $extractionResult = 'No extraction result'
+          $innounpLog = Join-Path $root 'innounp-extraction.log'
+          if ($engine -eq 'Inno Setup') {
+            $helperUrl = 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/032d64c782efc6b36766d8f9c3b1b2f042144a58/innounp-2/bin/innounp-2.zip'
+            $helperHash = '10fce27b6344b7674d5625cc34afca1c88c12183d957c6d93e401097fa2556cd'
+            $helperZip = Join-Path $root 'innounp-2.zip'
+            $helperRoot = Join-Path $root 'innounp-helper'
+            Invoke-WebRequest -Uri $helperUrl -OutFile $helperZip -MaximumRedirection 5 -TimeoutSec 300
+            $helperActual = (Get-FileHash -LiteralPath $helperZip -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($helperActual -ne $helperHash) { throw "Pinned innounp helper SHA-256 mismatch: $helperActual" }
+            Expand-Archive -LiteralPath $helperZip -DestinationPath $helperRoot -Force
+            $innounp = Get-ChildItem -LiteralPath $helperRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+            if (-not $innounp) { throw 'Verified innounp helper did not contain innounp.exe.' }
+            $output = @(& $innounp.FullName '-x' "-d$extract" $setup '-y' '-c{app}' 2>&1 | ForEach-Object { "$_" })
+            $exitCode = $LASTEXITCODE
+            $output | Set-Content -LiteralPath $innounpLog -Encoding utf8
+            $extractionMethod = 'innounp (Inno Setup app payload)'
+            $extractionResult = "innounp exit code: $exitCode"
+          } else {
+            $list = @(& $env:SEVEN_ZIP l -slt $setup 2>&1 | ForEach-Object { "$_" })
+            $listExit = $LASTEXITCODE
+            $list | Set-Content -LiteralPath (Join-Path $root '7zip-listing.txt') -Encoding utf8
+            $output = @(& $env:SEVEN_ZIP x $setup "-o$extract" -y -bd 2>&1 | ForEach-Object { "$_" })
+            $exitCode = $LASTEXITCODE
+            $output | Set-Content -LiteralPath (Join-Path $root '7zip-extraction.log') -Encoding utf8
+            $extractionMethod = '7-Zip fallback'
+            $extractionResult = "7-Zip listing exit code: $listExit; extraction exit code: $exitCode"
+          }
+
+          $payload = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+          $executables = @($payload | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+            [PSCustomObject]@{
+              Path = [System.IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\', '/')
+              Size = $_.Length
+              Product = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).ProductName
+              Description = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).FileDescription
+            }
+          })
+          $report = @(
+            'Oriel 1.1.1 setup inspection',
+            "Setup SHA-256: $actual",
+            "Setup size: $((Get-Item -LiteralPath $setup).Length) bytes",
+            "Detect It Easy SHA-256: $dieActual",
+            "Installer family: $engine",
+            "Extraction method: $extractionMethod",
+            "Extraction: $extractionResult",
+            '',
+            'Detect It Easy output:',
+            $scan,
+            '',
+            'Extracted executables:',
+            ($executables | Format-Table -AutoSize | Out-String),
+            '',
+            "Extracted payload files: $($payload.Count)",
+            'No setup or application executable was run.'
+          )
+          $report | Set-Content -LiteralPath (Join-Path $root 'inspection-report.txt') -Encoding utf8
+          $report | ForEach-Object { Write-Host $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload inspection reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: aivorelay-oriel-package-inspection
+          path: |
+            ${{ runner.temp }}/aivorelay-portable-inspection/
+            ${{ runner.temp }}/oriel-package-inspection/
+          if-no-files-found: warn
+          retention-days: 14
