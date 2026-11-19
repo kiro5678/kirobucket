@@ -39,6 +39,16 @@
 - The existing review manifest was promoted to `bucket/mole.json` and updated to the Windows-specific `V1.46.0-windows` release (ZIP SHA-256 `81a3633957cbf9258d4cc362ef79f89e059e8c37b2718a2ef39205b1c6782bcc`).
 - The Windows ZIP was integrity-tested and extracted. The Scoop lifecycle workflow ran `mo.exe --help` successfully. Scoop does not execute the ZIP's optional `install.ps1`.
 
+### Stellaria 1.1.0
+
+- The manifest uses the official `Stellaria-1.1.0-portable.zip` release asset (SHA-256 `1efb9ec379182f61fbc89d4ca6ba2c279c9a34e2c0f90eb8013506d054c66b2b`) and installs the application payload into Scoop rather than running the vendor's Inno Setup installer.
+- Stellaria and its helper expect fixed per-user locations for the Zebar pack, helper executables, and registry catalogue. The manifest creates guarded Junctions to Scoop's stable `apps\\stellaria\\current` path, plus a compatibility Junction for Zebar when Scoop uses a non-default root. It records the Junction targets and removes only links that still match the recorded targets.
+- The required `extras/zebar` dependency is installed through Scoop. Installation does not start Stellaria, register its logon tasks, or change the Windows taskbar. The user can activate the shell from Stellaria's Installation page.
+- The application's own configuration and logs remain under `%APPDATA%\\Stellaria` and `%LOCALAPPDATA%\\Stellaria`; these data directories are not redirected into Scoop. The payload is Scoop-managed, but user-data storage is not fully portable.
+- Official ZIP integrity and extraction were verified in [portable candidate inspection run 44594940091](https://github.com/kiro5678/kirobucket/actions/runs/44594940091): SHA-256 matched and 113 files were extracted, including `stellaria-helper.exe`, `stellaria-launcher.exe`, and `StellariaSwitcher.exe`.
+- The dedicated Windows Scoop lifecycle test [run 44640680454](https://github.com/kiro5678/kirobucket/actions/runs/44640680454) passed: forced checkver, Zebar dependency installation, Stellaria ZIP hash and extraction, expected files and shortcut, the four junction targets, no automatic shell activation, Scoop uninstall, cleanup of owned junctions, and preservation of Zebar. The workflow did not launch the GUI or test interactive shell features.
+- Evidence: [manifest](../bucket/stellaria.json), [lifecycle workflow](../.github/workflows/stellaria-manifest-test.yml), and [portable package inspection workflow](../.github/workflows/portable-candidate-inspection.yml).
+
 ### Test scope
 
 - GitHub Actions run [44594437531](https://github.com/kiro5678/kirobucket/actions/runs/44594437531) passed on Windows Server 2025 with both Windows PowerShell 5.1 and PowerShell 7. It covered forced `checkver`/autoupdate resolution, Scoop install, executable and shortcut paths, GUI/CLI smoke tests, Scoop uninstall, and Tasket++ persisted-data retention.
