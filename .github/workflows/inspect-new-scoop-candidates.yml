@@ -143,7 +143,7 @@ jobs:
             Get-ChildItem -LiteralPath $extract -Force | Sort-Object Name | ForEach-Object {
               $kind = if ($_.PSIsContainer) { 'DIR' } else { 'FILE' }
               Write-Host "  [$kind] $($_.Name)"
-              $summary.Add("- $kind: $($_.Name)")
+              $summary.Add("- ${kind}: $($_.Name)")
             }
             $summary.Add('')
           }
