@@ -1,6 +1,6 @@
 # Software candidates without a current Scoop-ready Windows package
 
-**Last checked:** 2026-11-19
+**Last checked:** 2026-11-20
 
 This page records software from repository research that does not currently have a suitable, version-pinned Windows download for a maintainable Scoop manifest. These are documentation-only entries: they are not active manifests and are not kept as placeholder JSON files in `bucket/` or `under review scoop bucket/`.
 
@@ -49,7 +49,6 @@ This page records software from repository research that does not currently have
 Before adding a candidate to `bucket/`, verify the current official Windows artifact, version mapping, architecture, installer/package type, SHA-256, extracted application files, and real launch executable. Use an installer-inspection workflow when the package type cannot be established from upstream documentation. A successful HTTP download alone does not establish that a valid Scoop manifest can be created.
 
 These entries describe why no manifest was created; they do not represent failed or installable manifests.
-
 
 ## Awesome MyGo System category (checked 2026-11-13)
 
@@ -105,7 +104,6 @@ Open Aria Exporter is now available as [`open-aria-exporter`](../bucket/open-ari
 
 No JSON placeholders were created. A candidate can move into `bucket/` only after a current official Windows artifact, version mapping, architecture, SHA-256, package type, executable paths and install/uninstall behavior are established. Record a missing or unclear license as `Unknown`; public availability does not make a package open source. Beta packages, where deliberately accepted, must be named and tracked as beta manifests rather than presented as stable releases.
 
-
 ## Music software — Windows desktop package review (checked 2026-11-18)
 
 ### Koog — realityinspector
@@ -132,7 +130,6 @@ No JSON placeholders were created. A candidate can move into `bucket/` only afte
 
 These projects are Android-first releases for Scoop purposes unless their upstreams resume publishing current Windows desktop artifacts. Android APK files are not Windows packages and must not be added as Scoop manifests.
 
-
 ## Windows Scoop candidate batch — checked 2026-11-19
 
 ### Candidates already represented by an existing manifest or bucket
@@ -143,6 +140,7 @@ These projects are Android-first releases for Scoop purposes unless their upstre
 - [Wireless Device Battery Monitor](https://github.com/krisgfx9/Wireless-Device-Battery-Monitor): already represented by [wireless-battery.json](../bucket/wireless-battery.json).
 - [Stream Goat](https://github.com/sherazi5110/stream-goat): already represented by [stream-goat.json](../bucket/stream-goat.json).
 - [Huedra](https://github.com/apixelsnet/huedra): already represented by [huedra-apixelsnet.json](../bucket/huedra-apixelsnet.json).
+- [NixanDeck](https://github.com/nurikhsanuddin/nixandeck): now represented by [nixandeck.json](../bucket/nixandeck.json) as Nonportable; its release ZIP wraps a signed MSIX and self-signed publisher certificate.
 - [DiskWatch](https://github.com/matthart1983/diskwatch): already represented by [diskwatch.json](../bucket/diskwatch.json).
 - [DropTidy](https://github.com/ahmeto55/DropTidy): already represented by [droptidy.json](../bucket/droptidy.json).
 - [Parabolic](https://github.com/NickvisionApps/Parabolic): already present in the official Scoop Extras bucket as `parabolic.json`.
@@ -150,7 +148,7 @@ These projects are Android-first releases for Scoop purposes unless their upstre
 ### Candidates withheld because no suitable portable Windows package was confirmed
 
 - [alter-zero](https://github.com/linuztx/alter-zero): the checked release publishes macOS and Linux archives, with no Windows asset.
-- [NixanDeck](https://github.com/nurikhsanuddin/nixandeck): the documented Windows package imports a publisher certificate into the Windows certificate store and registers an MSIX package. It is Nonportable and was not added because this requires explicit approval.
+
 - [Magpie Search](https://magpiesearch.app/): this candidate is now represented by [magpie-search.json](../bucket/magpie-search.json). The supplied 3.3.1 MSI was downloadable and its ProductVersion was verified from MSI metadata; see the successful [package inspection run](https://github.com/kiro5678/kirobucket/actions/runs/44442611954). The public download page still reports 3.2.4, so the manifest's checkver uses a no-downgrade floor until the upstream page catches up.
 - [BentoPDF](https://github.com/alam00000/bentopdf): the main project is a web toolkit, not a native Windows desktop application. The PDFium viewer repository is an engine component.
 - [BentoPDF Hyper Compress](https://github.com/alam00000/bentopdf-hyper-compress): the Windows archive provides worker/render executables, qpdf and a Node add-on, but no standalone `hyper.exe` CLI entry point suitable for a Scoop app manifest.
