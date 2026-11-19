@@ -1,0 +1,359 @@
+name: Orfeo Full Scoop Install-Uninstall Lifecycle Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/orfeo.json'
+      - '.github/workflows/orfeo-scoop-lifecycle-test.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/orfeo.json'
+      - '.github/workflows/orfeo-scoop-lifecycle-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lifecycle:
+    name: Real Scoop lifecycle (${{ matrix.shell }})
+    runs-on: windows-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Install Orfeo through Scoop, launch, uninstall, reinstall, and verify persist
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $logPath = Join-Path $env:RUNNER_TEMP 'orfeo-scoop-lifecycle.log'
+          Start-Transcript -LiteralPath $logPath -Force
+
+          $testRoot = Join-Path $env:RUNNER_TEMP 'orfeo-scoop-lifecycle'
+          $env:SCOOP = Join-Path $testRoot 'scoop'
+          $env:SCOOP_CACHE = Join-Path $testRoot 'cache'
+          $isolatedTemp = Join-Path $testRoot 'isolated-temp'
+          $isolatedAppData = Join-Path $testRoot 'isolated-appdata'
+          $isolatedLocalAppData = Join-Path $testRoot 'isolated-localappdata'
+          New-Item -ItemType Directory -Path $testRoot, $isolatedTemp, $isolatedAppData, $isolatedLocalAppData, $env:SCOOP_CACHE -Force | Out-Null
+
+          $oldTemp = $env:TEMP
+          $oldTmp = $env:TMP
+          $oldAppData = $env:APPDATA
+          $oldLocalAppData = $env:LOCALAPPDATA
+
+          function Stop-OrfeoProcesses([string[]]$Roots) {
+            $matches = @(Get-CimInstance -ClassName Win32_Process -Filter "Name = 'Orfeo.exe'" -ErrorAction SilentlyContinue | Where-Object {
+              $exePath = $_.ExecutablePath
+              if ([string]::IsNullOrWhiteSpace($exePath)) { return $false }
+              foreach ($root in $Roots) {
+                if (-not [string]::IsNullOrWhiteSpace($root)) {
+                  $normalizedRoot = [System.IO.Path]::GetFullPath($root).TrimEnd([char]92) + [char]92
+                  if ($exePath.StartsWith($normalizedRoot, [System.StringComparison]::OrdinalIgnoreCase)) { return $true }
+                }
+              }
+              return $false
+            })
+            foreach ($item in $matches) {
+              Write-Host "Stopping Orfeo PID=$($item.ProcessId) Path=$($item.ExecutablePath)"
+              Stop-Process -Id ([int]$item.ProcessId) -Force -ErrorAction SilentlyContinue
+            }
+            Start-Sleep -Seconds 2
+            $remaining = @(Get-CimInstance -ClassName Win32_Process -Filter "Name = 'Orfeo.exe'" -ErrorAction SilentlyContinue | Where-Object {
+              $exePath = $_.ExecutablePath
+              if ([string]::IsNullOrWhiteSpace($exePath)) { return $false }
+              foreach ($root in $Roots) {
+                if (-not [string]::IsNullOrWhiteSpace($root)) {
+                  $normalizedRoot = [System.IO.Path]::GetFullPath($root).TrimEnd([char]92) + [char]92
+                  if ($exePath.StartsWith($normalizedRoot, [System.StringComparison]::OrdinalIgnoreCase)) { return $true }
+                }
+              }
+              return $false
+            })
+            if ($remaining.Count -gt 0) {
+              throw "Orfeo processes remain after cleanup: $($remaining.ProcessId -join ', ')"
+            }
+          }
+
+          function Get-OrfeoInstallPaths {
+            $appLink = Join-Path $env:SCOOP 'apps\orfeo\current'
+            if (-not (Test-Path -LiteralPath $appLink -PathType Container)) {
+              throw "Scoop did not create the app current directory: $appLink"
+            }
+            $resolved = (Resolve-Path -LiteralPath $appLink).Path
+            $persistRoot = Join-Path $env:SCOOP 'persist\orfeo'
+            $persistData = Join-Path $persistRoot 'Orfeo-Data'
+            $appData = Join-Path $resolved 'Orfeo-Data'
+            return @{
+              AppLink = $appLink
+              AppDir = $resolved
+              PersistRoot = $persistRoot
+              PersistData = $persistData
+              AppData = $appData
+            }
+          }
+
+          function Assert-OrfeoInstall {
+            $paths = Get-OrfeoInstallPaths
+            foreach ($relative in @(
+              'Orfeo.exe',
+              'Orfeo.cmd',
+              'resources\app.asar',
+              'resources\elevate.exe',
+              'resources\native\orfeo-review.exe',
+              'resources\native\orfeo_audio.node'
+            )) {
+              $file = Join-Path $paths.AppDir $relative
+              if (-not (Test-Path -LiteralPath $file -PathType Leaf)) {
+                throw "Required file is missing from Scoop's installed version: $relative"
+              }
+              Write-Host "INSTALLED FILE: $relative"
+            }
+
+            $shim = Join-Path $env:SCOOP 'shims\orfeo.exe'
+            if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+              throw "Scoop did not create its executable shim: $shim"
+            }
+            $shimMetadata = Join-Path $env:SCOOP 'shims\orfeo.shim'
+            if (-not (Test-Path -LiteralPath $shimMetadata -PathType Leaf)) {
+              throw "Scoop did not create shim metadata: $shimMetadata"
+            }
+
+            $startMenu = [Environment]::GetFolderPath([Environment+SpecialFolder]::StartMenu)
+            $shortcut = Join-Path $startMenu 'Programs\Scoop Apps\Orfeo.lnk'
+            if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
+              throw "Scoop did not create the Start Menu shortcut: $shortcut"
+            }
+
+            if (-not (Test-Path -LiteralPath $paths.AppData -PathType Container)) {
+              throw 'Scoop did not link Orfeo-Data into the installed version directory.'
+            }
+            if (-not (Test-Path -LiteralPath $paths.PersistData -PathType Container)) {
+              throw 'Scoop did not create the persistent Orfeo-Data directory.'
+            }
+
+            $link = Get-Item -LiteralPath $paths.AppData -Force
+            if ($link.LinkType -ne 'Junction') {
+              throw "Orfeo-Data is expected to be a Scoop Junction, but LinkType is '$($link.LinkType)'."
+            }
+            $target = [string]$link.Target
+            if ([string]::IsNullOrWhiteSpace($target)) {
+              throw 'The Orfeo-Data Junction does not expose a target path.'
+            }
+            if ([System.IO.Path]::GetFullPath($target).TrimEnd([char]92) -ine [System.IO.Path]::GetFullPath($paths.PersistData).TrimEnd([char]92)) {
+              throw "Orfeo-Data points to '$target' instead of '$($paths.PersistData)'."
+            }
+
+            $command = Get-Command orfeo -CommandType Application -ErrorAction Stop
+            if ([System.IO.Path]::GetFullPath($command.Source) -ine [System.IO.Path]::GetFullPath($shim)) {
+              throw "PowerShell resolves 'orfeo' to '$($command.Source)' instead of Scoop's shim '$shim'."
+            }
+
+            Write-Host "APP DIRECTORY: $($paths.AppDir)"
+            Write-Host "PERSIST DIRECTORY: $($paths.PersistData)"
+            Write-Host "PERSIST LINK: $($link.LinkType) -> $target"
+            Write-Host "SCOOP SHIM: $($command.Source)"
+            Write-Host "START MENU: $shortcut"
+            return $paths
+          }
+
+          function Start-OrfeoFromScoopShim {
+            param([hashtable]$Paths, [string]$Label)
+            $shim = Join-Path $env:SCOOP 'shims\orfeo.exe'
+            $env:TEMP = $isolatedTemp
+            $env:TMP = $isolatedTemp
+            $env:APPDATA = $isolatedAppData
+            $env:LOCALAPPDATA = $isolatedLocalAppData
+
+            Write-Host "=== $Label : launch through Scoop's generated orfeo.exe shim ==="
+            $launcher = Start-Process -FilePath $shim -WorkingDirectory $Paths.AppDir -PassThru
+            Write-Host "Scoop shim PID: $($launcher.Id)"
+
+            $observed = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+            $deadline = (Get-Date).AddSeconds(25)
+            while ((Get-Date) -lt $deadline) {
+              $running = @(Get-CimInstance -ClassName Win32_Process -Filter "Name = 'Orfeo.exe'" -ErrorAction SilentlyContinue)
+              foreach ($process in $running) {
+                if ($process.ExecutablePath) {
+                  [void]$observed.Add(('{0} | PID={1} | {2}' -f $process.Name, $process.ProcessId, $process.ExecutablePath))
+                }
+              }
+              Start-Sleep -Milliseconds 250
+            }
+
+            foreach ($entry in $observed) { Write-Host "OBSERVED PROCESS: $entry" }
+            $appRoot = [System.IO.Path]::GetFullPath($Paths.AppDir).TrimEnd([char]92) + [char]92
+            $fromApp = @($observed | Where-Object {
+              $parts = $_ -split ' \| ', 3
+              $parts.Count -eq 3 -and $parts[2].StartsWith($appRoot, [System.StringComparison]::OrdinalIgnoreCase)
+            })
+            $fromTemp = @($observed | Where-Object {
+              $parts = $_ -split ' \| ', 3
+              $parts.Count -eq 3 -and $parts[2].StartsWith($isolatedTemp, [System.StringComparison]::OrdinalIgnoreCase)
+            })
+
+            if ($fromApp.Count -eq 0) {
+              throw "Orfeo.exe was not observed running from the Scoop-managed version directory after launching its generated shim ($Label)."
+            }
+            if ($fromTemp.Count -gt 0) {
+              throw 'Orfeo.exe executed from isolated TEMP instead of Scoop’s extracted application directory.'
+            }
+
+            $launcher.Refresh()
+            if (-not $launcher.HasExited) {
+              Stop-Process -Id $launcher.Id -Force -ErrorAction SilentlyContinue
+            }
+            Stop-OrfeoProcesses -Roots @($Paths.AppDir, $isolatedTemp)
+
+            $dataFiles = @(Get-ChildItem -LiteralPath $Paths.PersistData -File -Recurse -Force -ErrorAction SilentlyContinue)
+            Write-Host "PERSISTED FILES AFTER ${Label}: $($dataFiles.Count)"
+            Write-Host "PASS: $Label launched Orfeo.exe from Scoop's version directory, not TEMP."
+            return $dataFiles.Count
+          }
+
+          try {
+            Write-Host '=== Install the official Scoop command-line package manager ==='
+            Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+            Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+            $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+            if (-not (Test-Path -LiteralPath (Join-Path $env:SCOOP 'shims\scoop.ps1') -PathType Leaf)) {
+              throw 'Scoop installation did not create its PowerShell shim.'
+            }
+            scoop --version
+
+            Write-Host '=== Create a local temporary bucket containing the exact repository manifest ==='
+            $localBucket = Join-Path $testRoot 'kirobucket-local'
+            $manifestDirectory = Join-Path $localBucket 'bucket'
+            New-Item -ItemType Directory -Path $manifestDirectory -Force | Out-Null
+            Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\orfeo.json') -Destination $manifestDirectory
+
+            Push-Location $localBucket
+            try {
+              git init --initial-branch=master
+              git config user.name 'GitHub Actions'
+              git config user.email 'actions@github.com'
+              git add bucket/orfeo.json
+              git commit -m 'Seed temporary Orfeo Scoop test bucket'
+            }
+            finally {
+              Pop-Location
+            }
+
+            $bucketUrl = 'file:///' + $localBucket.Replace([char]92, '/')
+            scoop bucket add kirobucket $bucketUrl
+            scoop bucket list
+
+            $manifest = Get-Content -LiteralPath (Join-Path $manifestDirectory 'orfeo.json') -Raw | ConvertFrom-Json
+            $version = [string]$manifest.version
+            if ($version -ne '1.7.3') {
+              throw "This full lifecycle test is currently reviewed for Orfeo 1.7.3; update its assertions when the manifest version changes. Found $version."
+            }
+
+            Write-Host '=== FIRST REAL SCOOP INSTALL ==='
+            scoop install orfeo
+            if ($LASTEXITCODE -ne 0) { throw "scoop install orfeo failed with exit code $LASTEXITCODE." }
+            $firstInstall = Assert-OrfeoInstall
+            $firstFileCount = Start-OrfeoFromScoopShim -Paths $firstInstall -Label 'FIRST INSTALL'
+            $marker = Join-Path $firstInstall.PersistData 'kirobucket-persist-lifecycle-marker.txt'
+            Set-Content -LiteralPath $marker -Value "persisted-from-first-install-$version" -Encoding utf8
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+              throw 'Could not write the persistence lifecycle marker.'
+            }
+
+            Write-Host '=== FIRST REAL SCOOP UNINSTALL ==='
+            scoop uninstall orfeo
+            if ($LASTEXITCODE -ne 0) { throw "scoop uninstall orfeo failed with exit code $LASTEXITCODE." }
+            $currentApp = Join-Path $env:SCOOP 'apps\orfeo\current'
+            if (Test-Path -LiteralPath $currentApp) {
+              throw "Scoop uninstall left the current app link behind: $currentApp"
+            }
+            if (Test-Path -LiteralPath (Join-Path $env:SCOOP 'shims\orfeo.exe')) {
+              throw 'Scoop uninstall did not remove the generated orfeo.exe shim.'
+            }
+            if (Test-Path -LiteralPath (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::StartMenu)) 'Programs\Scoop Apps\Orfeo.lnk')) {
+              throw 'Scoop uninstall did not remove the Start Menu shortcut.'
+            }
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+              throw 'Scoop uninstall removed persisted Orfeo user data.'
+            }
+            Write-Host 'PASS: First Scoop uninstall removed the app, shim, and shortcut while preserving Orfeo-Data.'
+
+            Write-Host '=== SECOND REAL SCOOP INSTALL — VERIFY PERSISTENT DATA REUSE ==='
+            scoop install orfeo
+            if ($LASTEXITCODE -ne 0) { throw "Second scoop install orfeo failed with exit code $LASTEXITCODE." }
+            $secondInstall = Assert-OrfeoInstall
+            $secondMarker = Join-Path $secondInstall.AppData 'kirobucket-persist-lifecycle-marker.txt'
+            if (-not (Test-Path -LiteralPath $secondMarker -PathType Leaf)) {
+              throw 'The first installation persistence marker is not visible through the second installation Junction.'
+            }
+            $markerValue = Get-Content -LiteralPath $secondMarker -Raw
+            if ($markerValue.Trim() -ne "persisted-from-first-install-$version") {
+              throw "The persisted marker content changed unexpectedly: $markerValue"
+            }
+            Write-Host 'PASS: Reinstallation reconnected the original persist directory and retained its data.'
+
+            $secondFileCount = Start-OrfeoFromScoopShim -Paths $secondInstall -Label 'SECOND INSTALL'
+            if ($secondFileCount -lt $firstFileCount) {
+              Write-Warning "The app produced fewer persisted files on the second run ($secondFileCount) than the first run ($firstFileCount); the marker and persist link are the authoritative lifecycle checks."
+            }
+
+            Write-Host '=== FINAL REAL SCOOP UNINSTALL — ENSURE PERSIST STILL SURVIVES ==='
+            scoop uninstall orfeo
+            if ($LASTEXITCODE -ne 0) { throw "Final scoop uninstall orfeo failed with exit code $LASTEXITCODE." }
+            if (Test-Path -LiteralPath $currentApp) {
+              throw 'Final Scoop uninstall left the Orfeo current app link behind.'
+            }
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+              throw 'Final Scoop uninstall removed the persisted lifecycle marker.'
+            }
+
+            Write-Host ''
+            Write-Host 'PASS: Real Scoop install → launch via generated shim → uninstall → reinstall → launch → uninstall completed successfully.'
+            Write-Host "Persist marker retained at: $marker"
+          }
+          catch {
+            Write-Host "LIFECYCLE FAILURE: $($_.Exception.Message)" -ForegroundColor Red
+            throw
+          }
+          finally {
+            try {
+              Stop-OrfeoProcesses -Roots @(
+                (Join-Path $env:SCOOP 'apps\orfeo'),
+                $isolatedTemp
+              )
+            }
+            catch {
+              Write-Warning "Final Orfeo process cleanup: $($_.Exception.Message)"
+            }
+            $env:TEMP = $oldTemp
+            $env:TMP = $oldTmp
+            $env:APPDATA = $oldAppData
+            $env:LOCALAPPDATA = $oldLocalAppData
+            Stop-Transcript
+          }
+
+      - name: Upload lifecycle transcript
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: orfeo-full-scoop-lifecycle-${{ matrix.shell }}
+          path: ${{ runner.temp }}/orfeo-scoop-lifecycle.log
+          if-no-files-found: ignore
+          retention-days: 7
