@@ -103,7 +103,16 @@ jobs:
             $summary.Add("- Package type: $($target.Kind)")
 
             if ($target.Kind -eq 'zip') {
-              Expand-Archive -LiteralPath $download -DestinationPath $extract -Force
+              $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+              if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+                $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+                if (-not $command) { throw '7-Zip executable was not found on the runner.' }
+                $sevenZip = $command.Source
+              }
+              & $sevenZip x -y "-o$extract" $download
+              if ($LASTEXITCODE -gt 1) {
+                throw "7-Zip could not extract $($target.Name), exit code $LASTEXITCODE"
+              }
             } elseif ($target.Kind -eq 'msi') {
               $log = Join-Path $work 'administrative-extraction.log'
               $quote = [char]34
