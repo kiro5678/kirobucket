@@ -2,13 +2,15 @@
 
 ## Runtime behaviour checks
 
-### Orfeo 1.7.3 — Windows Portable
+### Orfeo 1.7.3 — Scoop-managed Setup payload extraction
 
-- The Scoop manifest downloads the official single-file `Orfeo-1.7.3-portable.exe`; Scoop stores this EXE in its managed app directory and does not unpack it as an archive during installation.
-- A Windows GitHub Actions runtime test launched the exact manifest binary with `TEMP` and `TMP` redirected to an isolated directory. The launcher created temporary extraction directories, placed six executables and 197 files under that isolated TEMP during observation, and four `Orfeo.exe` processes were observed executing from the extracted TEMP path.
-- The downloaded 143,806,967-byte asset matched the manifest SHA-256: `39b7a44b730cab44033defe82d63a05b0b3b087543f5e05e5e448d1313a7125f`.
-- This confirms **runtime extraction to TEMP**, not Scoop install-time extraction. The test terminated the app and removed its isolated test directory; automatic cleanup by Orfeo itself was not measured.
-- Evidence: [GitHub Actions run 44318206990](https://github.com/kiro5678/kirobucket/actions/runs/44318206990) and [runtime test workflow](../.github/workflows/orfeo-portable-temp-test.yml).
+- The official Windows Portable asset (`Orfeo-1.7.3-portable.exe`) is an NSIS self-extracting launcher, not a complete app archive. 7-Zip can extract its outer container, but it exposes only four bootstrap files and does not produce the required `Orfeo.exe` plus `resources/app.asar` application tree. When launched normally, it extracts and runs the application from `%TEMP%`.
+- The official Setup asset (`Orfeo-Setup-1.7.3.exe`) contains the complete application in `$PLUGINSDIR/app-64.7z`. The manifest now downloads this Setup container as `#/dl.7z`; Scoop extracts the outer NSIS layer into its version directory, then `pre_install` expands the nested 7z payload into the same directory before Scoop creates shims and shortcuts.
+- The manifest verifies `Orfeo.exe`, `resources/app.asar`, `resources/native/orfeo_audio.node`, and `resources/native/orfeo-review.exe`. It creates `Orfeo.cmd`, which sets `PORTABLE_EXECUTABLE_DIR` to the app directory so Orfeo stores `Orfeo-Data` in Scoop's persisted data location. The transient `$PLUGINSDIR` and uninstaller files are removed after extraction.
+- Windows GitHub Actions run [44442604728](https://github.com/kiro5678/kirobucket/actions/runs/44442604728) passed the manifest's actual `pre_install` script after reproducing Scoop's outer extraction order. It verified the Setup SHA-256 (`4219b3e689ac5bb29949c1f378f665082f7379ab0ebe56a24bed94c506848728`), all required app files, and direct execution of four `Orfeo.exe` processes from the Scoop version directory rather than TEMP. The test observed 56 files in the persisted `Orfeo-Data` directory after launch.
+- The separate Portable diagnostic [run 44318206990](https://github.com/kiro5678/kirobucket/actions/runs/44318206990) confirmed runtime extraction under TEMP. The diagnostic workflow was later decoupled from the Scoop manifest and its current upstream-asset check passed in [run 44443082506](https://github.com/kiro5678/kirobucket/actions/runs/44443082506).
+- Scope: these workflows validate the download, hash, Scoop extraction order, actual manifest `pre_install`, launcher execution, and persistence layout. They do not claim a full `scoop install` / `scoop uninstall` CLI lifecycle test on a user's machine.
+- Evidence: [manifest](../bucket/orfeo.json), [Scoop extraction workflow](../.github/workflows/orfeo-scoop-extraction-experiments.yml), and [Portable TEMP diagnostic](../.github/workflows/orfeo-portable-temp-test.yml).
 
 ## Summary
 
