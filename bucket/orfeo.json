@@ -1,4 +1,5 @@
 {
+    "$schema": "https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json",
     "version": "1.8.0",
     "description": "Piano-learning and MIDI visualization desktop app with interactive chord tools, note editing, and audio export.",
     "homepage": "https://orfeo.cc",
@@ -38,6 +39,7 @@
     "autoupdate": {
         "url": "https://github.com/Squarebow/Orfeo/releases/download/v$version/Orfeo-Setup-$version.exe#/dl.7z",
         "hash": {
+            "mode": "json",
             "url": "https://api.github.com/repos/Squarebow/Orfeo/releases/tags/v$version",
             "jsonpath": "$.assets[?(@.name == '$basename')].digest",
             "regex": "^sha256:([a-fA-F0-9]{64})$"
