@@ -75,19 +75,37 @@ jobs:
 
           $profilePath = [Environment]::GetFolderPath('UserProfile')
           $junctions = @(
-            (Join-Path $profilePath '.glzr\zebar\stellaria'),
-            (Join-Path $profilePath '.stellaria\bin'),
-            (Join-Path $profilePath '.stellaria\registry'),
-            (Join-Path $profilePath 'scoop\apps\zebar\current')
+            @{
+              Path = Join-Path $profilePath '.glzr\zebar\stellaria'
+              Target = Join-Path $app 'pack'
+            },
+            @{
+              Path = Join-Path $profilePath '.stellaria\bin'
+              Target = Join-Path $app 'bin'
+            },
+            @{
+              Path = Join-Path $profilePath '.stellaria\registry'
+              Target = Join-Path $app 'registry'
+            },
+            @{
+              Path = Join-Path $profilePath 'scoop\apps\zebar\current'
+              Target = Join-Path $env:SCOOP 'apps\zebar\current'
+            }
           )
 
-          foreach ($path in $junctions) {
+          foreach ($junction in $junctions) {
+            $path = $junction.Path
             if (-not (Test-Path -LiteralPath $path)) {
               throw "Expected junction is missing: $path"
             }
             $item = Get-Item -LiteralPath $path -Force
             if (-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
               throw "Expected a junction but found an ordinary directory: $path"
+            }
+            $actualTarget = [IO.Path]::GetFullPath([string]$item.Target).TrimEnd('\')
+            $expectedTarget = [IO.Path]::GetFullPath([string]$junction.Target).TrimEnd('\')
+            if ($actualTarget -ine $expectedTarget) {
+              throw "Junction target mismatch at $path. Expected $expectedTarget, received $actualTarget."
             }
           }
 
