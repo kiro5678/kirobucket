@@ -13,9 +13,9 @@ permissions:
 jobs:
   inspect:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - name: Download and statically inspect official installer
+      - name: Download and inspect the current official Hotpad installer
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -36,57 +36,73 @@ jobs:
           Write-Host "ProductVersion: $($version.ProductVersion)"
           Write-Host "CompanyName: $($version.CompanyName)"
           Write-Host "SignatureStatus: $($signature.Status)"
-          Write-Host "Signer: $($signature.SignerCertificate.Subject)"
 
-          $bytes = [System.IO.File]::ReadAllBytes($installer)
-          $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
-          $unicode = [System.Text.Encoding]::Unicode.GetString($bytes)
-          foreach ($marker in @('Inno Setup Setup Data','Nullsoft','NSIS','WiX','Burn','InstallShield','.NET Core','AppHost')) {
-            if ($ascii.Contains($marker) -or $unicode.Contains($marker)) { Write-Host "Detected marker: $marker" }
-          }
-          foreach ($switch in @('/VERYSILENT','/SILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-','/S','/D=','--silent','--quiet')) {
-            if ($ascii.Contains($switch) -or $unicode.Contains($switch)) { Write-Host "Detected installer string: $switch" }
+          $innoZip = Join-Path $env:RUNNER_TEMP 'innoextract.zip'
+          $innoUrl = 'https://github.com/dscharrer/innoextract/releases/download/1.9/innoextract-1.9-windows.zip'
+          Invoke-WebRequest -Uri $innoUrl -OutFile $innoZip -TimeoutSec 120
+          $innoRoot = Join-Path $env:RUNNER_TEMP 'innoextract'
+          Expand-Archive -LiteralPath $innoZip -DestinationPath $innoRoot -Force
+          $inno = Get-ChildItem -LiteralPath $innoRoot -Filter 'innoextract.exe' -Recurse -File | Select-Object -First 1 -ExpandProperty FullName
+          if (-not $inno) { throw 'innoextract.exe was not found in its official release archive.' }
+
+          Write-Host '=== Inno Setup package listing ==='
+          & $inno --list $installer 2>&1 | Select-Object -First 180 | ForEach-Object { Write-Host $_ }
+          if ($LASTEXITCODE -ne 0) { throw "innoextract --list failed with exit code $LASTEXITCODE." }
+
+          $extractDir = Join-Path $env:RUNNER_TEMP 'Hotpad-innoextract'
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+          & $inno --extract --output-dir $extractDir $installer 2>&1 | ForEach-Object { Write-Host $_ }
+          if ($LASTEXITCODE -ne 0) { throw "innoextract failed with exit code $LASTEXITCODE." }
+          Get-ChildItem -LiteralPath $extractDir -Recurse -File |
+            Select-Object -First 180 |
+            ForEach-Object {
+              $fi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName)
+              Write-Host ("EXTRACTED: {0} | {1} bytes | {2} | {3}" -f $_.FullName.Substring($extractDir.Length + 1),$_.Length,$fi.ProductName,$fi.FileVersion)
+            }
+
+          $response = Invoke-WebRequest -Uri $url -TimeoutSec 120 -Headers @{ 'User-Agent' = 'Scoop-checkver-validation' }
+          $body = [string]$response.Content
+          Write-Host "Checkver-style content type: $($response.Headers['Content-Type'])"
+          Write-Host "Checkver-style content length: $($body.Length)"
+          foreach ($pattern in @('1.0.1','1\x00\.\x001\x00')) {
+            if ([regex]::IsMatch($body,$pattern)) { Write-Host "Checkver regex matched: $pattern" }
           }
 
-          $sevenZip = (Get-Command 7z.exe -ErrorAction SilentlyContinue).Source
-          if (-not $sevenZip) {
-            $candidates = @('C:\Program Files\7-Zip\7z.exe','C:\Program Files (x86)\7-Zip\7z.exe')
-            $sevenZip = $candidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
-          }
-          if (-not $sevenZip) {
-            choco install 7zip --yes --no-progress
-            $sevenZip = (Get-Command 7z.exe -ErrorAction SilentlyContinue).Source
-            if (-not $sevenZip) { $sevenZip = 'C:\Program Files\7-Zip\7z.exe' }
-          }
+          $installRoot = Join-Path $env:RUNNER_TEMP 'Hotpad-Scoop-Install-Test'
+          $driversBefore = @(Get-CimInstance Win32_SystemDriver | ForEach-Object { $_.Name })
+          $process = Start-Process -FilePath $installer -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-',"/DIR=$installRoot") -Wait -PassThru
+          Write-Host "Silent install exit code: $($process.ExitCode)"
+          if ($process.ExitCode -ne 0) { throw "Hotpad silent install exited with code $($process.ExitCode)." }
 
-          $listing = & $sevenZip l -slt $installer 2>&1
-          $listExit = $LASTEXITCODE
-          Write-Host "7-Zip list exit code: $listExit"
-          $listing | Select-Object -First 160 | ForEach-Object { Write-Host $_ }
+          if (-not (Test-Path -LiteralPath $installRoot -PathType Container)) { throw "Installer did not honor the requested installation directory: $installRoot" }
+          Get-ChildItem -LiteralPath $installRoot -Recurse -File |
+            Select-Object -First 120 |
+            ForEach-Object {
+              $fi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName)
+              Write-Host ("INSTALLED: {0} | {1} bytes | {2} | {3}" -f $_.FullName.Substring($installRoot.Length + 1),$_.Length,$fi.ProductName,$fi.FileVersion)
+            }
 
-          if ($listExit -eq 0) {
-            $extractDir = Join-Path $env:RUNNER_TEMP 'Hotpad-extracted'
-            New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
-            & $sevenZip x -y "-o$extractDir" $installer | Out-Host
-            Write-Host "7-Zip extraction exit code: $LASTEXITCODE"
-            Get-ChildItem -LiteralPath $extractDir -Recurse -File |
-              Select-Object -First 160 |
-              ForEach-Object {
-                $fi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName)
-                Write-Host ("EXTRACTED: {0} | {1} bytes | {2} | {3}" -f $_.FullName.Substring($extractDir.Length + 1),$_.Length,$fi.ProductName,$fi.FileVersion)
-              }
+          $driversAfter = @(Get-CimInstance Win32_SystemDriver | ForEach-Object { $_.Name })
+          $newDrivers = @($driversAfter | Where-Object { $driversBefore -notcontains $_ })
+          Write-Host "New system-driver services after silent install: $($newDrivers -join ', ')"
+
+          $uninstaller = Get-ChildItem -LiteralPath $installRoot -Filter 'unins*.exe' -File -Recurse | Select-Object -First 1 -ExpandProperty FullName
+          if ($uninstaller) {
+            $uninstall = Start-Process -FilePath $uninstaller -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-') -Wait -PassThru
+            Write-Host "Silent uninstall exit code: $($uninstall.ExitCode)"
           } else {
-            throw 'The installer could not be listed by 7-Zip; package type needs further inspection.'
+            Write-Host 'No Inno Setup uninstaller was found under the selected installation directory.'
           }
 
           @(
             '## Hotpad package inspection'
             ''
-            "- Download: $url"
-            "- File size: $($item.Length) bytes"
-            "- SHA-256: $hash"
+            "- Download URL: $url"
             "- Product version: $($version.ProductVersion)"
+            "- Size: $($item.Length) bytes"
+            "- SHA-256: $hash"
             "- Authenticode: $($signature.Status)"
+            "- New driver services after silent install: $($newDrivers -join ', ')"
             ''
-            'The installer was downloaded and statically extracted/listed. No installer or extracted application executable was run.'
+            'The setup and uninstaller were run only on a disposable GitHub Actions Windows runner. No driver was intentionally requested.'
           ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
