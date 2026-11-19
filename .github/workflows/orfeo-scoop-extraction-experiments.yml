@@ -34,13 +34,11 @@ jobs:
           }
 
           $testRoot = Join-Path $env:RUNNER_TEMP 'orfeo-scoop-install-test'
-          $appDir = Join-Path $testRoot 'apps\orfeo\1.7.3'
           $persistDir = Join-Path $testRoot 'persist\orfeo'
-          $downloadPath = Join-Path $appDir 'dl.7z'
           $isolatedTemp = Join-Path $testRoot 'isolated-temp'
           $isolatedAppData = Join-Path $testRoot 'isolated-appdata'
           $isolatedLocalAppData = Join-Path $testRoot 'isolated-localappdata'
-          New-Item -ItemType Directory -Path $appDir, $persistDir, $isolatedTemp, $isolatedAppData, $isolatedLocalAppData -Force | Out-Null
+          New-Item -ItemType Directory -Path $persistDir, $isolatedTemp, $isolatedAppData, $isolatedLocalAppData -Force | Out-Null
 
           $sevenZip = (Get-Command 7z.exe -ErrorAction SilentlyContinue).Source
           if (-not $sevenZip) {
@@ -56,6 +54,12 @@ jobs:
           $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\orfeo.json'
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
           $version = [string]$manifest.version
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            throw 'The manifest version is empty.'
+          }
+          $appDir = Join-Path $testRoot "apps\orfeo\$version"
+          $downloadPath = Join-Path $appDir 'dl.7z'
+          New-Item -ItemType Directory -Path $appDir -Force | Out-Null
           if (-not $manifest.url.EndsWith('#/dl.7z')) {
             throw "The manifest must use the tested NSIS outer extraction fragment #/dl.7z. Actual URL: $($manifest.url)"
           }
