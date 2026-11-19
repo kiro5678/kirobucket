@@ -224,6 +224,7 @@ on:
       - 'bucket/fort-firewall.json'
       - 'bucket/gloof.json'
       - 'bucket/killerpdf.json'
+      - 'bucket/magpie-search.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
