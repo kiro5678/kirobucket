@@ -77,19 +77,24 @@ jobs:
 
             $manifestPath = Join-Path $manifestDirectory 'arke.json'
             $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-            if ([string]$manifest.version -ne '0.6.2') {
-              throw "Unexpected manifest version: $($manifest.version)"
+            $version = [string]$manifest.version
+            if ($version -notmatch '^\d+\.\d+\.\d+$') {
+              throw "Manifest version is missing or malformed: '$version'."
             }
-            if ([string]$manifest.architecture.'64bit'.url -notmatch 'arke-0\.6\.2\.exe#/arke\.exe$') {
-              throw 'The x64 manifest URL is not the expected standalone Arke executable.'
+            $expectedUrl = "https://github.com/Koimsurai/Arke/releases/download/v$version/arke-$version.exe#/arke.exe"
+            if ([string]$manifest.architecture.'64bit'.url -ne $expectedUrl) {
+              throw "The x64 URL is not the expected standalone Arke executable for version $version."
+            }
+            if ([string]$manifest.architecture.'64bit'.hash -notmatch '^[0-9a-fA-F]{64}$') {
+              throw 'The x64 SHA-256 value is missing or malformed.'
             }
 
-            Write-Host '=== Run a real Scoop install ==='
+            Write-Host "=== Run a real Scoop install of Arke $version ==="
             scoop install arke
             if ($LASTEXITCODE -ne 0) { throw "scoop install arke failed with exit code $LASTEXITCODE." }
 
             $appRoot = Join-Path $env:SCOOP 'apps\arke'
-            $versionDir = Join-Path $appRoot ([string]$manifest.version)
+            $versionDir = Join-Path $appRoot $version
             $currentLink = Join-Path $appRoot 'current'
             if (-not (Test-Path -LiteralPath $versionDir -PathType Container)) {
               throw "Scoop version directory was not created: $versionDir"
@@ -98,8 +103,17 @@ jobs:
               throw "Scoop current link was not created: $currentLink"
             }
 
-            $resolvedCurrent = (Resolve-Path -LiteralPath $currentLink).Path
-            $exePath = Join-Path $resolvedCurrent 'arke.exe'
+            $currentItem = Get-Item -LiteralPath $currentLink -Force
+            $junctionTarget = [string]$currentItem.Target
+            if ([string]::IsNullOrWhiteSpace($junctionTarget)) {
+              throw 'Scoop current link does not expose its Junction target.'
+            }
+            if ([System.IO.Path]::GetFullPath($junctionTarget).TrimEnd([char]92) -ine [System.IO.Path]::GetFullPath($versionDir).TrimEnd([char]92)) {
+              throw "Scoop current link points to '$junctionTarget' instead of '$versionDir'."
+            }
+
+            $exePath = Join-Path $versionDir 'arke.exe'
+            $currentExePath = Join-Path $currentLink 'arke.exe'
             if (-not (Test-Path -LiteralPath $exePath -PathType Leaf)) {
               throw "The expected executable was not found: $exePath"
             }
@@ -123,17 +137,17 @@ jobs:
 
             Write-Host "SCOOP ROOT: $env:SCOOP"
             Write-Host "SCOOP VERSION DIRECTORY: $versionDir"
-            Write-Host "SCOOP CURRENT LINK: $currentLink"
-            Write-Host "CURRENT LINK TARGET: $junctionTarget"
-Write-Host "CURRENT-LINK EXECUTABLE PATH: $currentExePath"
-            Write-Host "ACTUAL EXECUTABLE PATH: $exePath"
+            Write-Host "SCOOP CURRENT JUNCTION: $currentLink"
+            Write-Host "CURRENT JUNCTION TARGET: $junctionTarget"
+            Write-Host "VERSION EXECUTABLE PATH: $exePath"
+            Write-Host "CURRENT-LINK EXECUTABLE PATH: $currentExePath"
             Write-Host "SCOOP SHIM: $shim"
             Write-Host "START MENU SHORTCUT: $shortcut"
             Write-Host "INSTALLED SHA256: $actualHash"
             Write-Host 'FILES IN SCOOP VERSION DIRECTORY:'
             Get-ChildItem -LiteralPath $versionDir -Force | Format-Table Name, Length, Mode -AutoSize
 
-            Write-Host '=== Launch Arke with isolated user profile and inspect the process path ==='
+            Write-Host '=== Launch Arke with an isolated user profile and inspect the process path ==='
             $isolatedAppData = Join-Path $testRoot 'user-appdata'
             $isolatedLocalAppData = Join-Path $testRoot 'user-localappdata'
             $isolatedTemp = Join-Path $testRoot 'user-temp'
@@ -152,19 +166,23 @@ Write-Host "CURRENT-LINK EXECUTABLE PATH: $currentExePath"
             if ($arkeProcesses.Count -gt 0) {
               foreach ($process in $arkeProcesses) {
                 Write-Host "OBSERVED PROCESS: PID=$($process.ProcessId) PATH=$($process.ExecutablePath)"
-                if ($process.ExecutablePath -ine $exePath) {
+                $processPath = [System.IO.Path]::GetFullPath($process.ExecutablePath)
+                if ($processPath -ine [System.IO.Path]::GetFullPath($currentExePath) -and
+                    $processPath -ine [System.IO.Path]::GetFullPath($exePath)) {
                   throw "Arke is running from an unexpected path: $($process.ExecutablePath)"
                 }
               }
-              Write-Host 'PASS: The running Arke process is executing from the Scoop version directory.'
+              Write-Host 'PASS: The running Arke process is executing from the Scoop-managed version directory.'
             }
             else {
               Write-Warning 'Arke did not remain running long enough for process-path inspection on this hosted runner. The installed file path and SHA256 checks passed.'
             }
 
-            Write-Host "EXPECTED SETTINGS DIRECTORY: $(Join-Path $isolatedAppData 'Arke')"
-            Write-Host "EXPECTED LOG DIRECTORY: $(Join-Path $isolatedLocalAppData 'Arke')"
-            foreach ($dataRoot in @((Join-Path $isolatedAppData 'Arke'), (Join-Path $isolatedLocalAppData 'Arke'))) {
+            $settingsDir = Join-Path $isolatedAppData 'Arke'
+            $logDir = Join-Path $isolatedLocalAppData 'Arke'
+            Write-Host "EXPECTED SETTINGS DIRECTORY: $settingsDir"
+            Write-Host "EXPECTED LOG DIRECTORY: $logDir"
+            foreach ($dataRoot in @($settingsDir, $logDir)) {
               if (Test-Path -LiteralPath $dataRoot -PathType Container) {
                 Write-Host "CREATED USER-DATA DIRECTORY: $dataRoot"
                 Get-ChildItem -LiteralPath $dataRoot -Force -Recurse -ErrorAction SilentlyContinue |
@@ -186,16 +204,16 @@ Write-Host "CURRENT-LINK EXECUTABLE PATH: $currentExePath"
             $summary = @(
               '# Arke Scoop install-location test'
               ''
-              "- Manifest version: $($manifest.version)"
+              "- Manifest version: $version"
               "- Scoop version directory: $versionDir"
-              "- Current link target: $junctionTarget"
+              "- Current Junction target: $junctionTarget"
               "- Version executable: $exePath"
               "- Current-link executable: $currentExePath"
               "- SHA256: $actualHash"
               "- Scoop shim: $shim"
               "- Start Menu shortcut: $shortcut"
-              "- Settings directory (isolated APPDATA): $(Join-Path $isolatedAppData 'Arke')"
-              "- Log directory (isolated LOCALAPPDATA): $(Join-Path $isolatedLocalAppData 'Arke')"
+              "- Settings directory (isolated APPDATA): $settingsDir"
+              "- Log directory (isolated LOCALAPPDATA): $logDir"
               ''
               'The manifest installs the standalone EXE into the Scoop-managed version directory; user settings and logs are outside that directory.'
             )
