@@ -308,7 +308,7 @@ jobs:
 
             Start-Or-WaitWorkflow -WorkflowFile 'format-manifests.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
             Start-And-WaitWorkflow -WorkflowFile 'scoop-checkver-validation.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
-            Start-Or-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
+            Start-And-WaitWorkflow -WorkflowFile 'validate-manifest-archives.yml' -Inputs @{ manifest = $env:MANIFEST_PATH }
 
             if ($env:MANIFEST_PATH -ieq 'bucket/fxsound.json') {
               if ($env:EVENT_NAME -eq 'push') {

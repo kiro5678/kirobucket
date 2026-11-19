@@ -5,6 +5,7 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/droptidy.json'
       - 'bucket/diskmonitor.json'
       - 'bucket/desktopframesplus.json'
       - 'bucket/axonhub.json'
@@ -228,6 +229,7 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/droptidy.json'
       - 'bucket/diskmonitor.json'
       - 'bucket/axonhub.json'
       - 'bucket/huedra-apixelsnet.json'
