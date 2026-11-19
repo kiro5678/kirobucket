@@ -213,7 +213,7 @@ jobs:
               throw "Orfeo.exe was not observed running from the Scoop-managed version directory after launching its generated shim ($Label)."
             }
             if ($fromTemp.Count -gt 0) {
-              throw 'Orfeo.exe executed from isolated TEMP instead of Scoop's extracted application directory.'
+              throw 'Orfeo.exe executed from isolated TEMP instead of the extracted Scoop app directory.'
             }
 
             $launcher.Refresh()
