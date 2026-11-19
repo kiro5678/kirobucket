@@ -122,7 +122,7 @@ jobs:
             )) {
               $file = Join-Path $paths.AppDir $relative
               if (-not (Test-Path -LiteralPath $file -PathType Leaf)) {
-                throw "Required file is missing from Scoop's installed version: $relative"
+                throw "Required file is missing from the Scoop-managed app version: $relative"
               }
               Write-Host "INSTALLED FILE: $relative"
             }
@@ -158,7 +158,7 @@ jobs:
 
             $command = Get-Command orfeo -CommandType Application -ErrorAction Stop
             if ([System.IO.Path]::GetFullPath($command.Source) -ine [System.IO.Path]::GetFullPath($shim)) {
-              throw "PowerShell resolves 'orfeo' to '$($command.Source)' instead of Scoop's CMD shim '$shim'."
+              throw "PowerShell command resolution returned $($command.Source); the expected Scoop CMD shim is $shim."
             }
 
             Write-Host "APP DIRECTORY: $($paths.AppDir)"
@@ -177,7 +177,7 @@ jobs:
             $env:APPDATA = $isolatedAppData
             $env:LOCALAPPDATA = $isolatedLocalAppData
 
-            Write-Host "=== $Label : launch through Scoop's generated orfeo.cmd shim ==="
+            Write-Host "=== $Label : launch through the generated Scoop orfeo.cmd shim ==="
             $shimArgument = '"' + $shim + '"'
             $launcher = Start-Process -FilePath $env:ComSpec -ArgumentList @('/d', '/c', $shimArgument) -WorkingDirectory $Paths.AppDir -PassThru
             Write-Host "Scoop shim PID: $($launcher.Id)"
@@ -220,7 +220,7 @@ jobs:
 
             $dataFiles = @(Get-ChildItem -LiteralPath $Paths.PersistData -File -Recurse -Force -ErrorAction SilentlyContinue)
             Write-Host "PERSISTED FILES AFTER ${Label}: $($dataFiles.Count)"
-            Write-Host "PASS: $Label launched Orfeo.exe from Scoop's version directory, not TEMP."
+            Write-Host "PASS: $Label launched Orfeo.exe from the Scoop version directory, not TEMP."
             return $dataFiles.Count
           }
 
