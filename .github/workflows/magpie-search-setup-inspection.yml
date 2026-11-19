@@ -206,6 +206,80 @@ jobs:
             "The setup was not executed."
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+      - name: Inspect embedded Cabinet payload without execution
+        if: always()
+        shell: pwsh
+        env:
+          SETUP_PATH: ${{ runner.temp }}/magpie-search-setup-inspection/MagpieSearch-Setup-3.3.1.exe
+        run: |
+          $ErrorActionPreference = "Stop"
+          $root = Join-Path $env:RUNNER_TEMP "magpie-search-setup-inspection"
+          $setup = $env:SETUP_PATH
+          $payload = Join-Path $root "embedded-cabinet-payload"
+          New-Item -ItemType Directory -Path $payload -Force | Out-Null
+
+          $sevenZip = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+          if ($sevenZip) {
+            $sevenZipPath = $sevenZip.Source
+          } else {
+            choco install 7zip -y --no-progress
+            $candidate = Join-Path $env:ProgramFiles "7-Zip\7z.exe"
+            if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
+              throw "7-Zip was not available after installation."
+            }
+            $sevenZipPath = $candidate
+          }
+
+          $listing = @(& $sevenZipPath l -slt $setup 2>&1 | ForEach-Object { "$_" })
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $root "embedded-cabinet-listing.txt") -Encoding utf8
+          Write-Output "7-Zip listing exit code: $listExit"
+          $listing | ForEach-Object { Write-Output $_ }
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add("Embedded payload inspection")
+          $report.Add("===========================")
+          $report.Add("Setup: MagpieSearch-Setup-3.3.1.exe")
+          $report.Add("7-Zip listing exit code: $listExit")
+
+          if ($listExit -eq 0) {
+            $extractOutput = @(& $sevenZipPath x $setup "-o$payload" -y -bd 2>&1 | ForEach-Object { "$_" })
+            $extractExit = $LASTEXITCODE
+            $extractOutput | Set-Content -LiteralPath (Join-Path $root "embedded-cabinet-extraction.txt") -Encoding utf8
+            Write-Output "7-Zip extraction exit code: $extractExit"
+            $extractOutput | ForEach-Object { Write-Output $_ }
+            $report.Add("7-Zip extraction exit code: $extractExit")
+
+            if ($extractExit -eq 0) {
+              $files = @(Get-ChildItem -LiteralPath $payload -File -Recurse -Force)
+              $report.Add("Extracted file count: $($files.Count)")
+              foreach ($file in $files) {
+                $relative = [System.IO.Path]::GetRelativePath($payload, $file.FullName).Replace("\", "/")
+                $line = "$relative [$($file.Length) bytes]"
+                $report.Add($line)
+                Write-Output "PAYLOAD $line"
+              }
+
+              $msiFiles = @($files | Where-Object { $_.Extension -ieq ".msi" })
+              $report.Add("Embedded MSI count: $($msiFiles.Count)")
+              foreach ($msi in $msiFiles) {
+                $report.Add("Embedded MSI: $($msi.FullName)")
+                Write-Output "EMBEDDED MSI: $($msi.FullName)"
+              }
+              if ($msiFiles.Count -eq 0) {
+                $report.Add("No MSI file was found in the extracted EXE payload.")
+              }
+            } else {
+              $report.Add("7-Zip could list the setup but could not extract its payload.")
+            }
+          } else {
+            $report.Add("7-Zip could not parse the setup as an archive; no extraction was attempted.")
+          }
+
+          $reportPath = Join-Path $root "embedded-payload-report.txt"
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          @("", "## Embedded Cabinet payload", "") + $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
       - name: Upload inspection report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
