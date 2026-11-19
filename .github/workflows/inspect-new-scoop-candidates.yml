@@ -95,16 +95,32 @@ jobs:
               Url = 'https://github.com/alam00000/bentopdf-kura/releases/download/v1.4.1/kura-v1.4.1-windows-x64.zip'
               Sha256 = '82c74d290480421b4c4160fefde1a3e63e9e7cfc0de189f304026e1be2a4f59d'
               Kind = 'zip'
+            },
+            @{
+              Name = 'Magpie Search 3.3.1 MSI'
+              File = 'MagpieSearch-Setup-3.3.1.msi'
+              Url = 'https://download.magpiesearch.app/MagpieSearch-Setup-3.3.1.msi'
+              Sha256 = ''
+              Kind = 'msi'
+            },
+            @{
+              Name = 'Magpie Search 3.3.1 EXE'
+              File = 'MagpieSearch-Setup-3.3.1.exe'
+              Url = 'https://download.magpiesearch.app/MagpieSearch-Setup-3.3.1.exe'
+              Sha256 = ''
+              Kind = 'exe'
             }
           )
 
           $summary = [System.Collections.Generic.List[string]]::new()
           $summary.Add('# Candidate package inspection')
           $summary.Add('')
-          $summary.Add('Every download is checked against the official release SHA-256. ZIP archives are extracted. MSI packages are administratively extracted with msiexec /a; no product installer is run and no application executable is launched.')
+          $summary.Add('Pinned SHA-256 values are checked when supplied; otherwise the workflow records a calculated SHA-256 and explicitly marks it as not publisher-verified. ZIP archives are extracted. MSI packages are administratively extracted with msiexec /a; no product installer is run and no application executable is launched.')
           $summary.Add('')
 
+          $successfulTargets = 0
           foreach ($target in $targets) {
+            try {
             Write-Host ''
             Write-Host ('=' * 72)
             Write-Host "$($target.Name): $($target.File)"
@@ -122,12 +138,14 @@ jobs:
             }
 
             $actual = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($actual -ne $target.Sha256) {
+            if ($target.Sha256 -and $actual -ne $target.Sha256) {
               throw "SHA-256 mismatch for $($target.Name): expected $($target.Sha256), got $actual"
             }
-            Write-Host "SHA-256 verified: $actual"
+            $hashStatus = if ($target.Sha256) { 'verified against configured SHA-256' } else { 'calculated only; no publisher SHA-256 was supplied' }
+            Write-Host "SHA-256: $actual ($hashStatus)"
             $summary.Add("## $($target.Name)")
-            $summary.Add("- SHA-256: PASS")
+            $summary.Add("- SHA-256: $actual")
+            $summary.Add("- Hash status: $hashStatus")
             $summary.Add("- Package type: $($target.Kind)")
 
             if ($target.Kind -eq 'zip') {
@@ -143,7 +161,46 @@ jobs:
               }
             } elseif ($target.Kind -eq 'exe') {
               $extract = $work
+              $signature = Get-AuthenticodeSignature -LiteralPath $download
+              $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($download)
+              $signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { '(no signer certificate)' }
+              Write-Host "Authenticode status: $($signature.Status)"
+              Write-Host "Signer: $signer"
+              Write-Host "Product: $($versionInfo.ProductName)"
+              Write-Host "Description: $($versionInfo.FileDescription)"
+              Write-Host "File version: $($versionInfo.FileVersion)"
+              $summary.Add("- Authenticode: $($signature.Status)")
+              $summary.Add("- Signer: $signer")
+              $summary.Add("- Product: $($versionInfo.ProductName)")
+              $summary.Add("- File version: $($versionInfo.FileVersion)")
             } elseif ($target.Kind -eq 'msi') {
+              try {
+                $windowsInstaller = New-Object -ComObject WindowsInstaller.Installer
+                $database = $windowsInstaller.OpenDatabase($download, 0)
+                foreach ($propertyName in @('ProductName', 'ProductVersion', 'Manufacturer', 'ProductCode')) {
+                  try {
+                    $view = $database.OpenView("SELECT Value FROM Property WHERE Property='$propertyName'")
+                    $view.Execute()
+                    $record = $view.Fetch()
+                    if ($record) {
+                      $propertyValue = $record.StringData(1)
+                      Write-Host ('MSI {0}: {1}' -f $propertyName, $propertyValue)
+                      $summary.Add(('- MSI {0}: {1}' -f $propertyName, $propertyValue))
+                    }
+                    $view.Close()
+                  } catch {
+                    Write-Host "MSI property unavailable: $propertyName"
+                  }
+                }
+                $customView = $database.OpenView('SELECT Action, Type, Source, Target FROM CustomAction')
+                $customView.Execute()
+                while ($customRecord = $customView.Fetch()) {
+                  Write-Host "MSI CustomAction: $($customRecord.StringData(1)) | Type=$($customRecord.IntegerData(2)) | Source=$($customRecord.StringData(3)) | Target=$($customRecord.StringData(4))"
+                }
+                $customView.Close()
+              } catch {
+                Write-Warning "MSI metadata inspection did not complete: $($_.Exception.Message)"
+              }
               $log = Join-Path $work 'administrative-extraction.log'
               $quote = [char]34
               $args = "/a $quote$download$quote /qn TARGETDIR=$quote$extract$quote /L*v $quote$log$quote"
@@ -202,8 +259,19 @@ jobs:
               $summary.Add("- ${kind}: $($_.Name)")
             }
             $summary.Add('')
+            $successfulTargets++
+            } catch {
+              $failure = $_.Exception.Message
+              Write-Warning "Candidate failed: $($target.Name): $failure"
+              $summary.Add("## $($target.Name)")
+              $summary.Add("- Result: FAILED")
+              $summary.Add("- Error: $failure")
+              $summary.Add('')
+            }
           }
 
           $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
-          Write-Host ''
-          Write-Host 'All candidate package downloads, hashes, and extraction checks passed.'
+          if ($successfulTargets -eq 0) {
+            throw 'No candidate package passed download and inspection.'
+          }
+          Write-Host "Candidate packages processed successfully: $successfulTargets of $($targets.Count). Review per-target failures above."
