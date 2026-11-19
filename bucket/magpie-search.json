@@ -42,6 +42,7 @@
         "The MSI metadata reports ProductName Magpie Search and ProductVersion 3.3.1. Administrative extraction was verified; the main executable is PFiles64\\Magpie\\Magpie.exe.",
         "The application stores its index, settings, and downloaded models in %LOCALAPPDATA%\\Magpie, outside the Scoop version directory. No persist mapping is required.",
         "The official download page currently reports 3.2.4 while the supplied direct MSI reports 3.3.1. checkver uses the official page and retains the manifest's current version as a lower bound, preventing a downgrade until the page catches up.",
-        "The application is advertised as free, but no explicit application license was found; the manifest therefore records the license as Unknown."
+        "The application is advertised as free, but no explicit application license was found; the manifest therefore records the license as Unknown.",
+        "The SHA-256 value is calculated from the supplied official-host MSI; no publisher checksum was published."
     ]
 }
