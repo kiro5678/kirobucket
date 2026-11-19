@@ -61,7 +61,7 @@
 | [scrcpy-gui-kil0bit](../bucket/scrcpy-gui-kil0bit.json) | 4.1.0 | 6.1 MiB | 2026-08-24 | Modern desktop GUI for scrcpy with Android device control, mirroring, and OTG support. | [Homepage](https://github.com/kil0bit-kb/scrcpy-gui) |
 | [scrcpy-gui-simonaking](../bucket/scrcpy-gui-simonaking.json) | 2.5.0 | 64bit: 153.1 MiB / 32bit: 133.5 MiB | 2026-10-27 | Modern desktop GUI for scrcpy with bundled scrcpy and ADB. | [Homepage](https://github.com/SimonAKing/scrcpy-gui) |
 | [uad-ng](../bucket/uad-ng.json) | 1.3.1 | 64bit: 19.3 MiB | 2026-11-02 | Next-generation Rust GUI for debloating non-rooted Android devices using ADB. | [Homepage](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation) |
-| [universal-android-debloater](../bucket/universal-android-debloater.json) | 0.5.1 | 64bit: 7.3 MiB | 2022-07-03 | Original Rust GUI for debloating non-rooted Android devices using ADB (legacy pre-release). | [Homepage](https://github.com/0x192/universal-android-debloater) |
+| [uad](../bucket/uad.json) | 0.5.1 | 64bit: 7.3 MiB | 2022-07-03 | Original Rust GUI for debloating non-rooted Android devices using ADB (legacy pre-release). | [Homepage](https://github.com/0x192/universal-android-debloater) |
 
 ## Associations
 
