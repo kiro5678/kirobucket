@@ -25,7 +25,7 @@
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
-| Notch | 30 | [View](#notch) |
+| Notch | 31 | [View](#notch) |
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
 | Other Utilities | 138 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
@@ -717,6 +717,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [lumen](../bucket/lumen.json) | 0.2.1 | 64bit: 9.7 MiB | 2026-06-29 | Windows Dynamic Island with music visualization, synchronized notifications, privacy indicators, and fullscreen-aware behavior. | [Homepage](https://github.com/Risuleia/Lumen) |
 | [myisland](../bucket/myisland.json) | 1.0.0 | 64bit: 8.0 MiB | 2026-06-12 | Windows Dynamic Island for music playback, synchronized lyrics, audio visualization, water reminders, and plugins. | [Homepage](https://github.com/xiaoxiaobaijiangjun/MyIsland) |
 | [nectar](../bucket/nectar.json) | 1.7.0 | 64bit: 9.5 MiB | 2026-10-31 | Animated Windows notch and dock with media controls, widgets, quick settings, system tray integration, and taskbar replacement. | [Homepage](https://nectar.kua8.lol) |
+| [nixandeck](../bucket/nixandeck.json) | 1.0.0-beta.1 | 64bit: 78.3 MiB | 2026-11-19 | Windows 11 shell replacement with a macOS-inspired top menu bar, Dynamic Island, and floating dock. | [Homepage](https://github.com/nurikhsanuddin/nixandeck) |
 | [nock](../bucket/nock.json) | 0.12.10 | 64bit: 1.2 MiB | 2026-10-31 | Lightweight native Windows notch and top bar with media controls, quick settings, pinned apps, reminders, calendar, and system information. | [Homepage](https://nock.akhileshvarute.me) |
 | [nook](../bucket/nook.json) | 0.2.1 | 64bit: 9.0 MiB | 2026-10-30 | Floating Windows desktop notch with a customizable utility panel | [Homepage](https://github.com/Geguchh024/nook) |
 | [nook-agent](../bucket/nook-agent.json) | 0.2.2 | 64bit: 5.9 MiB | 2026-10-08 | Windows Dynamic Island for tracking Claude Code, Codex, and Cursor agent sessions, usage limits, permission requests, and replies. | [Homepage](https://github.com/zubairbinshaukat/nook) |
