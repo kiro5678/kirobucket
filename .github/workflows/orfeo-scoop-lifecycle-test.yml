@@ -129,7 +129,7 @@ jobs:
 
             $shim = Join-Path $env:SCOOP 'shims\orfeo.exe'
             if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
-              throw "Scoop did not create its executable shim: $shim"
+              throw "Scoop did not create its CMD shim: $shim"
             }
             $shimMetadata = Join-Path $env:SCOOP 'shims\orfeo.shim'
             if (-not (Test-Path -LiteralPath $shimMetadata -PathType Leaf)) {
@@ -163,7 +163,7 @@ jobs:
 
             $command = Get-Command orfeo -CommandType Application -ErrorAction Stop
             if ([System.IO.Path]::GetFullPath($command.Source) -ine [System.IO.Path]::GetFullPath($shim)) {
-              throw "PowerShell resolves 'orfeo' to '$($command.Source)' instead of Scoop's shim '$shim'."
+              throw "PowerShell resolves 'orfeo' to '$($command.Source)' instead of Scoop's CMD shim '$shim'."
             }
 
             Write-Host "APP DIRECTORY: $($paths.AppDir)"
@@ -182,8 +182,9 @@ jobs:
             $env:APPDATA = $isolatedAppData
             $env:LOCALAPPDATA = $isolatedLocalAppData
 
-            Write-Host "=== $Label : launch through Scoop's generated orfeo.exe shim ==="
-            $launcher = Start-Process -FilePath $shim -WorkingDirectory $Paths.AppDir -PassThru
+            Write-Host "=== $Label : launch through Scoop's generated orfeo.cmd shim ==="
+            $shimArgument = '"' + $shim + '"'
+            $launcher = Start-Process -FilePath $env:ComSpec -ArgumentList @('/d', '/c', $shimArgument) -WorkingDirectory $Paths.AppDir -PassThru
             Write-Host "Scoop shim PID: $($launcher.Id)"
 
             $observed = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -285,7 +286,7 @@ jobs:
               throw "Scoop uninstall left the current app link behind: $currentApp"
             }
             if (Test-Path -LiteralPath (Join-Path $env:SCOOP 'shims\orfeo.exe')) {
-              throw 'Scoop uninstall did not remove the generated orfeo.exe shim.'
+              throw 'Scoop uninstall did not remove the generated orfeo.cmd shim.'
             }
             if (Test-Path -LiteralPath (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::StartMenu)) 'Programs\Scoop Apps\Orfeo.lnk')) {
               throw 'Scoop uninstall did not remove the Start Menu shortcut.'
