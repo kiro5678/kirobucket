@@ -27,7 +27,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
-| Other Utilities | 137 | [View](#other-utilities) |
+| Other Utilities | 138 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
@@ -810,6 +810,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [ipban](../bucket/ipban.json) | 4.1.0 | 64bit: 13.8 MiB / 32bit: 13.2 MiB | 2026-09-28 | Windows intrusion-prevention service that detects failed logins and blocks abusive IP addresses using Windows Firewall. | [Homepage](https://github.com/DigitalRuby/IPBan) |
 | [jan](../bucket/jan.json) | 0.8.8 | 64bit: 545.2 MiB / arm64: 320.0 MiB | 2026-10-27 | Desktop AI assistant for running local language models and managing private, model-powered chats. | [Homepage](https://github.com/janhq/jan) |
 | [k-toolz](../bucket/k-toolz.json) | 4.0.2 | 64bit: 9.9 MiB | 2026-10-31 | Gaming suite with an FPS overlay, game streaming, stutter analysis, and virtual gamepad tools. | [Homepage](https://k-toolz.de/en/) |
+| [kitab](../bucket/kitab.json) | 1.0.1 | 64bit: 15.9 MiB | 2026-11-18 | Fast native reader for PDF, ebooks, comics, and Markdown. | [Homepage](https://github.com/t21dev/kitab) |
 | [layer](../bucket/layer.json) | 1.11.2 | 64bit: 13.0 MiB / arm64: 12.5 MiB | 2026-10-20 | Transparent, always-on-top desktop widget canvas with notes, clocks, links, media, system stats, and other widgets. | [Homepage](https://layer-desktop.vercel.app) |
 | [mcafee-software-removal](../bucket/mcafee-software-removal.json) | 10.5.374.0 | 12.1 MiB | 2024-11-14 | McAfee Consumer Product Removal tool for removing supported McAfee home security products. | [Homepage](https://www.mcafee.com/support/s/article/000001616?language=en_US) |
 | [mystify](../bucket/mystify.json) | 1.1 | 8.4 MiB | 2022-04-07 | Modern Windows Forms recreation of the classic Mystify Your Mind animation. | [Homepage](https://github.com/swharden/Mystify) |
