@@ -15,6 +15,36 @@
 - Evidence: [manifest](../bucket/orfeo.json), [Scoop extraction workflow](../.github/workflows/orfeo-scoop-extraction-experiments.yml), [full Scoop lifecycle workflow](../.github/workflows/orfeo-scoop-lifecycle-test.yml), and [Portable TEMP diagnostic](../.github/workflows/orfeo-portable-temp-test.yml).
 - Evidence: [manifest](../bucket/orfeo.json), [Scoop extraction workflow](../.github/workflows/orfeo-scoop-extraction-experiments.yml), and [Portable TEMP diagnostic](../.github/workflows/orfeo-portable-temp-test.yml).
 
+
+## Portable candidate lifecycle checks — November 19, 2026
+
+### Framecalm 0.5.3
+
+- The manifest uses the official `Framecalm-portable.zip` asset (SHA-256 `cdc2bdd5c597c486f6b002ac950c752dce528bbf4a9190763e398e7288059790`) rather than running the Inno Setup installer.
+- The ZIP extraction check found `Framecalm.exe`, `Framecalm.ElevatedHelper.exe`, and `PresentMon.exe` at the archive root. The Scoop lifecycle test verified the executable, Start Menu shortcut, and successful GUI launch.
+- Framecalm stores settings, history, captures and backups under `%LOCALAPPDATA%\Framecalm`; these are user data outside Scoop's version directory, so the manifest does not redirect them into `persist`.
+
+### Tasket++ 3.1
+
+- The manifest uses the official portable ZIP (SHA-256 `4f41da1d0a72352035c74a6068d39e83102ce9dc2f604c1c7d7b3b12a258e5d1`). The archive contains `Tasket++.exe` in its `Tasket++` folder; Scoop's `extract_dir` places that folder's contents at the version directory root.
+- The manifest persists `programSettings.ini`, `programData.ini`, `sentences`, `keyssequences`, `cursormovements`, and `saved_tasks`. The lifecycle workflow checked the linked paths, wrote a marker to `saved_tasks`, verified it through the app directory, uninstalled Tasket++, and confirmed the marker remained in `persist\tasketpp`.
+
+### BatteryHub 1.1.0
+
+- The manifest uses the official `BatteryHub-1.1.0-portable.zip` (SHA-256 `7a97a1ff0aefa895386077093b23a714df549a08fad3b1b9c37ccf2100a27026`), which contains both `BatteryHub.exe` and the bundled `headsetcontrol.exe`.
+- The lifecycle workflow launched BatteryHub in documented `--demo` mode. History, language and update data are kept in the application's AppData paths outside the Scoop version directory.
+
+### Mole for Windows 1.46.0
+
+- The existing review manifest was promoted to `bucket/mole.json` and updated to the Windows-specific `V1.46.0-windows` release (ZIP SHA-256 `81a3633957cbf9258d4cc362ef79f89e059e8c37b2718a2ef39205b1c6782bcc`).
+- The Windows ZIP was integrity-tested and extracted. The Scoop lifecycle workflow ran `mo.exe --help` successfully. Scoop does not execute the ZIP's optional `install.ps1`.
+
+### Test scope
+
+- GitHub Actions run [44594437531](https://github.com/kiro5678/kirobucket/actions/runs/44594437531) passed on Windows Server 2025 with both Windows PowerShell 5.1 and PowerShell 7. It covered forced `checkver`/autoupdate resolution, Scoop install, executable and shortcut paths, GUI/CLI smoke tests, Scoop uninstall, and Tasket++ persisted-data retention.
+- The separate archive inspection run [44594437529](https://github.com/kiro5678/kirobucket/actions/runs/44594437529) checked the official release digests, ZIP integrity and extracted file layouts. The tests ran on disposable GitHub-hosted Windows runners, not on the user's computer.
+- Evidence: [Framecalm](../bucket/framecalm.json), [Tasket++](../bucket/tasketpp.json), [BatteryHub](../bucket/batteryhub.json), [Mole](../bucket/mole.json), [lifecycle workflow](../.github/workflows/portable-scoop-lifecycle-test.yml), and [package inspection workflow](../.github/workflows/portable-candidate-inspection.yml).
+
 ## Summary
 
 <!-- KIROBUCKET-PORTABILITY-SUMMARY-START -->
