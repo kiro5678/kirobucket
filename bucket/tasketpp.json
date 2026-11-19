@@ -24,7 +24,16 @@
         }
     },
     "notes": [
-        "Uses the official portable ZIP rather than the Setup EXE.",
-        "The archive was extracted with 7-Zip in GitHub Actions; Tasket++.exe is inside the Tasket++ directory."
+        "Uses the official Tasket++ portable ZIP rather than the Setup EXE. The verified application entry point is Tasket++.exe inside the Tasket++ directory.",
+        "Tasket++ stores programSettings.ini, programData.ini, sentences, keyssequences, cursormovements, and saved_tasks beside its executable. Scoop persists these paths across updates and uninstall.",
+        "Tasket++ can register optional startup tasks and global hotkeys when configured inside the application. These are user-selected runtime features, not installed by this manifest."
+    ],
+    "persist": [
+        "programSettings.ini",
+        "programData.ini",
+        "sentences",
+        "keyssequences",
+        "cursormovements",
+        "saved_tasks"
     ]
 }
