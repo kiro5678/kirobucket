@@ -1,16 +1,16 @@
 {
-    "version": "3.8.10",
+    "version": "3.8.11",
     "description": "Personal knowledge management and note-taking software.",
     "homepage": "https://github.com/siyuan-note/siyuan",
     "license": "AGPL-3.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/siyuan-note/siyuan/releases/download/v3.8.10/siyuan-3.8.10-win.exe",
-            "hash": "5bbc108130226df5adc8babed36ff17144ee2c820209ba77224180687f281ccd"
+            "url": "https://github.com/siyuan-note/siyuan/releases/download/v3.8.11/siyuan-3.8.11-win.exe",
+            "hash": "cf41504ce45d676189d96ab9fee9c0ef9222c120241732f8db4e48d11fc8dd3a"
         },
         "arm64": {
-            "url": "https://github.com/siyuan-note/siyuan/releases/download/v3.8.10/siyuan-3.8.10-win-arm64.exe",
-            "hash": "5bbc108130226df5adc8babed36ff17144ee2c820209ba77224180687f281ccd"
+            "url": "https://github.com/siyuan-note/siyuan/releases/download/v3.8.11/siyuan-3.8.11-win-arm64.exe",
+            "hash": "cf41504ce45d676189d96ab9fee9c0ef9222c120241732f8db4e48d11fc8dd3a"
         }
     },
     "pre_install": "Rename-Item \"$dir\\siyuan-$version-win$(if ($architecture -eq 'arm64') { '-arm64' } else { '' }).exe\" \"siyuan.exe\"",
