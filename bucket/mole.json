@@ -1,0 +1,40 @@
+{
+    "version": "1.46.0",
+    "description": "Windows CLI for cleaning caches, uninstalling applications, optimizing the system, analyzing disk usage, and checking live status.",
+    "homepage": "https://github.com/tw93/Mole/tree/windows",
+    "license": "GPL-3.0-or-later",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/tw93/Mole/releases/download/V1.46.0-windows/mole-1.46.0-x64.zip",
+            "hash": "81a3633957cbf9258d4cc362ef79f89e059e8c37b2718a2ef39205b1c6782bcc"
+        }
+    },
+    "bin": [
+        "mo.exe",
+        [
+            "mo.exe",
+            "mole"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/tw93/Mole/releases?per_page=100",
+        "jsonpath": "$[?(@.prerelease == false)].tag_name",
+        "regex": "\"V(?<version>[\\d.]+)-windows\""
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/tw93/Mole/releases/download/V$version-windows/mole-$version-x64.zip",
+                "hash": {
+                    "url": "https://api.github.com/repos/tw93/Mole/releases/tags/V$version-windows",
+                    "jsonpath": "$.assets[?(@.name == 'mole-$version-x64.zip')].digest"
+                }
+            }
+        }
+    },
+    "notes": [
+        "Tracks the separate official Windows CLI release (V$version-windows), not the macOS release series.",
+        "Scoop extracts the ZIP directly and does not run the bundled install.ps1. The verified CLI entry point is mo.exe; analyze.exe and status.exe are included under bin as supporting tools.",
+        "Use Scoop to update this installation. Do not run the bundled installer script over the Scoop-managed copy."
+    ]
+}
