@@ -1,0 +1,162 @@
+name: Inspect Portable Candidate Packages
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - ".github/workflows/portable-candidate-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download, verify, and extract official assets
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Inspect portable ZIPs and the WinRust EXE without executing them
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command '7z.exe' -ErrorAction Stop
+            $sevenZip = $command.Source
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP 'portable-candidate-inspection'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+          $targets = @(
+            @{
+              Name = 'Stellaria'
+              Version = '1.1.0'
+              Kind = 'ZIP'
+              Url = 'https://github.com/SMIDR76/stellaria-windows/releases/download/v1.1.0/Stellaria-1.1.0-portable.zip'
+              Sha256 = '1efb9ec379182f61fbc89d4ca6ba2c279c9a34e2c0f90eb8013506d054c66b2b'
+            },
+            @{
+              Name = 'Framecalm'
+              Version = '0.5.3'
+              Kind = 'ZIP'
+              Url = 'https://github.com/krezio/framecalm/releases/download/v0.5.3/Framecalm-portable.zip'
+              Sha256 = 'cdc2bdd5c597c486f6b002ac950c752dce528bbf4a9190763e398e7288059790'
+            },
+            @{
+              Name = 'Tasket++'
+              Version = '3.1'
+              Kind = 'ZIP'
+              Url = 'https://github.com/AmirHammouteneEI/ScheduledPasteAndKeys/releases/download/v3.1-release/Tasket%2B%2B_v3.1.zip'
+              Sha256 = '4f41da1d0a72352035c74a6068d39e83102ce9dc2f604c1c7d7b3b12a258e5d1'
+            },
+            @{
+              Name = 'BatteryHub'
+              Version = '1.1.0'
+              Kind = 'ZIP'
+              Url = 'https://github.com/krisgfx9/Wireless-Device-Battery-Monitor/releases/download/v1.1.0/BatteryHub-1.1.0-portable.zip'
+              Sha256 = '7a97a1ff0aefa895386077093b23a714df549a08fad3b1b9c37ccf2100a27026'
+            },
+            @{
+              Name = 'Mole'
+              Version = '1.46.0'
+              Kind = 'ZIP'
+              Url = 'https://github.com/tw93/Mole/releases/download/V1.46.0-windows/mole-1.46.0-x64.zip'
+              Sha256 = '81a3633957cbf9258d4cc362ef79f89e059e8c37b2718a2ef39205b1c6782bcc'
+            }
+          )
+
+          foreach ($target in $targets) {
+            Write-Host ''
+            Write-Host ('=' * 78)
+            Write-Host "$($target.Name) $($target.Version)"
+            $packageDir = Join-Path $root $target.Name
+            $extractDir = Join-Path $packageDir 'extracted'
+            New-Item -ItemType Directory -Path $packageDir,$extractDir -Force | Out-Null
+            $archive = Join-Path $packageDir ([IO.Path]::GetFileName(([uri]$target.Url).AbsolutePath))
+
+            Invoke-WebRequest -Uri $target.Url -OutFile $archive -MaximumRedirection 10 -TimeoutSec 1200
+            $actual = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+            Write-Host "SHA256: $actual"
+            if ($actual -ne $target.Sha256) {
+              throw "$($target.Name): SHA-256 mismatch. Expected $($target.Sha256), received $actual."
+            }
+
+            & $sevenZip t $archive
+            if ($LASTEXITCODE -ne 0) {
+              throw "$($target.Name): 7-Zip archive integrity test failed with exit code $LASTEXITCODE."
+            }
+
+            & $sevenZip x -y "-o$extractDir" $archive
+            if ($LASTEXITCODE -ne 0) {
+              throw "$($target.Name): 7-Zip extraction failed with exit code $LASTEXITCODE."
+            }
+
+            $files = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force)
+            $executables = @($files | Where-Object { $_.Extension -ieq '.exe' })
+            if ($files.Count -eq 0 -or $executables.Count -eq 0) {
+              throw "$($target.Name): archive extracted no files or no executable."
+            }
+
+            Write-Host "Extracted files: $($files.Count)"
+            Write-Host 'Top-level entries:'
+            Get-ChildItem -LiteralPath $extractDir -Force |
+              Sort-Object Name |
+              ForEach-Object {
+                if ($_.PSIsContainer) { Write-Host "  [DIR]  $($_.Name)" }
+                else { Write-Host "  [FILE] $($_.Name) ($($_.Length) bytes)" }
+              }
+
+            Write-Host 'All executable paths and versions:'
+            foreach ($exe in $executables) {
+              $relative = [IO.Path]::GetRelativePath($extractDir, $exe.FullName).Replace('\','/')
+              $version = [Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName).FileVersion
+              Write-Host "  $relative | $($exe.Length) bytes | FileVersion=$version"
+            }
+
+            if ($target.Name -eq 'BatteryHub') {
+              $main = @($executables | Where-Object { $_.Name -ieq 'BatteryHub.exe' })
+              $helper = @($executables | Where-Object { $_.Name -ieq 'headsetcontrol.exe' })
+              if ($main.Count -ne 1) { throw 'BatteryHub.exe was not found exactly once in the portable ZIP.' }
+              if ($helper.Count -ne 1) { throw 'The portable ZIP is missing the bundled headsetcontrol.exe.' }
+            }
+
+            if ($target.Name -eq 'Framecalm') {
+              $main = @($executables | Where-Object { $_.Name -ieq 'Framecalm.exe' })
+              $helper = @($executables | Where-Object { $_.Name -ieq 'Framecalm.ElevatedHelper.exe' })
+              if ($main.Count -ne 1) { throw 'Framecalm.exe was not found exactly once.' }
+              if ($helper.Count -ne 1) { throw 'Framecalm.ElevatedHelper.exe was not found exactly once.' }
+            }
+
+            if ($target.Name -eq 'Mole') {
+              $main = @($executables | Where-Object { $_.Name -ieq 'mo.exe' })
+              if ($main.Count -ne 1) { throw 'mo.exe was not found exactly once in the Windows ZIP.' }
+            }
+          }
+
+          Write-Host ''
+          Write-Host 'WinRust is a setup application, not a portable ZIP. Verify its current official asset checksum and inspect PE metadata only; do not execute it.'
+          $winRustUrl = 'https://github.com/Lemxy/WinRust/releases/download/v0.4.1/WinRust.exe'
+          $winRustPath = Join-Path $root 'WinRust-0.4.1.exe'
+          Invoke-WebRequest -Uri $winRustUrl -OutFile $winRustPath -MaximumRedirection 10 -TimeoutSec 600
+          $winRustHash = (Get-FileHash -LiteralPath $winRustPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($winRustHash -ne '1b516d0247c74a53e0518c3bb70f77b1035582de20248ad1146f2bf02604cce8') {
+            throw "WinRust SHA-256 mismatch: $winRustHash"
+          }
+          $winRustVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo($winRustPath)
+          $winRustSignature = Get-AuthenticodeSignature -LiteralPath $winRustPath
+          Write-Host "WinRust SHA256: $winRustHash"
+          Write-Host "WinRust FileDescription: $($winRustVersion.FileDescription)"
+          Write-Host "WinRust ProductVersion: $($winRustVersion.ProductVersion)"
+          Write-Host "WinRust Authenticode: $($winRustSignature.Status)"
+          Write-Host 'PASS: official download hashes, archive integrity, and extraction completed. No application or installer was executed.'

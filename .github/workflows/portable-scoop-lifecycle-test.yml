@@ -1,0 +1,233 @@
+name: Portable Scoop Manifest Lifecycle Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - "bucket/framecalm.json"
+      - "bucket/tasketpp.json"
+      - "bucket/batteryhub.json"
+      - "bucket/mole.json"
+      - ".github/workflows/portable-scoop-lifecycle-test.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/framecalm.json"
+      - "bucket/tasketpp.json"
+      - "bucket/batteryhub.json"
+      - "bucket/mole.json"
+      - ".github/workflows/portable-scoop-lifecycle-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lifecycle:
+    name: Install, launch, persist, and uninstall (${{ matrix.shell }})
+    runs-on: windows-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install Scoop and create a local test bucket
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-portable-lifecycle'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          scoop config gh_token $env:GITHUB_TOKEN
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-portable-lifecycle'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+
+          $manifests = @('framecalm', 'tasketpp', 'batteryhub', 'mole')
+          foreach ($name in $manifests) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Required manifest is missing: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket
+            git commit -m 'Seed local portable manifest test bucket'
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket $bucketUrl
+
+      - name: Verify checkver and forced autoupdate templates
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-portable-lifecycle\bucket'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Scoop checkver.ps1 was not found: $checkver"
+          }
+
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole')) {
+            Write-Host "Checking $name version, autoupdate URL, and SHA-256 template"
+            & $checkver $name $manifestDir -ForceUpdate -ThrowError
+            Write-Host "PASS: checkver and forced autoupdate completed for $name."
+          }
+
+      - name: Install all portable manifests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole')) {
+            Write-Host "Installing $name with Scoop"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop install failed for $name (exit code $LASTEXITCODE)."
+            }
+          }
+
+      - name: Verify extracted files, shortcuts, and Tasket++ persistence
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checks = @(
+            @{ Name = 'Framecalm'; App = 'framecalm'; RelativeExe = 'Framecalm.exe'; Shortcut = 'Framecalm.lnk' },
+            @{ Name = 'Tasket++'; App = 'tasketpp'; RelativeExe = 'Tasket++.exe'; Shortcut = 'Tasket++.lnk' },
+            @{ Name = 'BatteryHub'; App = 'batteryhub'; RelativeExe = 'BatteryHub.exe'; Shortcut = 'BatteryHub.lnk' },
+            @{ Name = 'Mole'; App = 'mole'; RelativeExe = 'mo.exe'; Shortcut = $null }
+          )
+
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          foreach ($check in $checks) {
+            $appDir = Join-Path $env:SCOOP "apps\$($check.App)\current"
+            $exe = Join-Path $appDir $check.RelativeExe
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "$($check.Name) executable is missing after Scoop install: $exe"
+            }
+            Write-Host "PASS: $($check.Name) executable: $exe"
+
+            if ($check.Shortcut) {
+              $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue |
+                Select-Object -First 1
+              if ($null -eq $shortcut) {
+                throw "$($check.Name) Start Menu shortcut was not created: $($check.Shortcut)"
+              }
+              Write-Host "PASS: $($check.Name) shortcut: $($shortcut.FullName)"
+            }
+          }
+
+          $tasketApp = Join-Path $env:SCOOP 'apps\tasketpp\current'
+          $tasketPersist = Join-Path $env:SCOOP 'persist\tasketpp'
+          foreach ($relative in @('programSettings.ini', 'programData.ini', 'sentences', 'keyssequences', 'cursormovements', 'saved_tasks')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $tasketApp $relative))) {
+              throw "Tasket++ persist target was not linked into its app directory: $relative"
+            }
+          }
+          $savedTasks = Join-Path $tasketPersist 'saved_tasks'
+          New-Item -ItemType Directory -Path $savedTasks -Force | Out-Null
+          $marker = Join-Path $savedTasks 'kirobucket-persist-test.txt'
+          Set-Content -LiteralPath $marker -Value 'persisted' -Encoding utf8
+          if (-not (Test-Path -LiteralPath (Join-Path $tasketApp 'saved_tasks\kirobucket-persist-test.txt') -PathType Leaf)) {
+            throw 'Tasket++ cannot see its persisted saved_tasks directory.'
+          }
+          Write-Host 'PASS: all Tasket++ user-data paths are linked and writable.'
+
+      - name: Smoke-test Framecalm, Tasket++, and BatteryHub
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          function Test-GuiProcess {
+            param(
+              [Parameter(Mandatory)][string]$Name,
+              [Parameter(Mandatory)][string]$Path,
+              [string[]]$Arguments
+            )
+
+            $process = $null
+            try {
+              $startParams = @{
+                FilePath = $Path
+                WorkingDirectory = Split-Path -Parent $Path
+                PassThru = $true
+              }
+              if ($null -ne $Arguments -and $Arguments.Count -gt 0) {
+                $startParams.ArgumentList = $Arguments
+              }
+              $process = Start-Process @startParams
+              Start-Sleep -Seconds 6
+              $process.Refresh()
+              if ($process.HasExited) {
+                throw "$Name exited during the launch smoke test (exit code $($process.ExitCode))."
+              }
+              Write-Host "PASS: $Name stayed running after launch (PID $($process.Id))."
+            }
+            finally {
+              if ($null -ne $process -and -not $process.HasExited) {
+                Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+                $process.WaitForExit()
+              }
+            }
+          }
+
+          Test-GuiProcess -Name 'Framecalm' -Path (Join-Path $env:SCOOP 'apps\framecalm\current\Framecalm.exe')
+          Test-GuiProcess -Name 'Tasket++' -Path (Join-Path $env:SCOOP 'apps\tasketpp\current\Tasket++.exe')
+          Test-GuiProcess -Name 'BatteryHub demo' -Path (Join-Path $env:SCOOP 'apps\batteryhub\current\BatteryHub.exe') -Arguments @('--demo')
+
+      - name: Smoke-test Mole CLI
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $mole = Join-Path $env:SCOOP 'apps\mole\current\mo.exe'
+          $output = @(& $mole --help 2>&1)
+          $exitCode = $LASTEXITCODE
+          $output | ForEach-Object { Write-Host "$_" }
+          if ($exitCode -ne 0) {
+            throw "Mole --help failed with exit code $exitCode."
+          }
+          Write-Host 'PASS: Mole CLI help command.'
+
+      - name: Uninstall all apps and verify persisted Tasket++ data
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole')) {
+            Write-Host "Uninstalling $name"
+            scoop uninstall $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)."
+            }
+            $appDir = Join-Path $env:SCOOP "apps\$name"
+            if (Test-Path -LiteralPath $appDir) {
+              throw "$name application directory remains after Scoop uninstall: $appDir"
+            }
+          }
+
+          $marker = Join-Path $env:SCOOP 'persist\tasketpp\saved_tasks\kirobucket-persist-test.txt'
+          if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+            throw 'Scoop uninstall removed Tasket++ persistent user data.'
+          }
+          Write-Host 'PASS: all four apps uninstalled; Tasket++ saved_tasks data survived uninstall.'
