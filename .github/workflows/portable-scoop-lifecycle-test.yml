@@ -118,7 +118,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $checks = @(
             @{ Name = 'Framecalm'; App = 'framecalm'; RelativeExe = 'Framecalm.exe'; Shortcut = 'Framecalm.lnk' },
-            @{ Name = 'Tasket++'; App = 'tasketpp'; RelativeExe = 'Tasket++\Tasket++.exe'; Shortcut = 'Tasket++.lnk' },
+            @{ Name = 'Tasket++'; App = 'tasketpp'; RelativeExe = 'Tasket++.exe'; Shortcut = 'Tasket++.lnk' },
             @{ Name = 'BatteryHub'; App = 'batteryhub'; RelativeExe = 'BatteryHub.exe'; Shortcut = 'BatteryHub.lnk' },
             @{ Name = 'Mole'; App = 'mole'; RelativeExe = 'mo.exe'; Shortcut = $null }
           )
@@ -188,7 +188,7 @@ jobs:
           }
 
           Test-GuiProcess -Name 'Framecalm' -Path (Join-Path $env:SCOOP 'apps\framecalm\current\Framecalm.exe')
-          Test-GuiProcess -Name 'Tasket++' -Path (Join-Path $env:SCOOP 'apps\tasketpp\current\Tasket++\Tasket++.exe')
+          Test-GuiProcess -Name 'Tasket++' -Path (Join-Path $env:SCOOP 'apps\tasketpp\current\Tasket++.exe')
           Test-GuiProcess -Name 'BatteryHub demo' -Path (Join-Path $env:SCOOP 'apps\batteryhub\current\BatteryHub.exe') -Arguments @('--demo')
 
       - name: Smoke-test Mole CLI
