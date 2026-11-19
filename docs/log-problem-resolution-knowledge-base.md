@@ -49,6 +49,29 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 - When a new incident exposes a general repository rule, update the relevant permanent guide (for example, `docs/manifest-authoring.md`) as well as adding the incident entry here.
 
 ## Resolved incidents
+
+### 2026-11-20 — Persist custom Scoop paths across workflow steps
+
+- **Status:** Resolved and verified.
+- **Affected area:** `.github/workflows/stellaria-manifest-test.yml`.
+- **Problem:** The first Stellaria Scoop lifecycle job installed Scoop into a custom root, but later steps could not locate Scoop's `checkver.ps1` or shims because the workflow environment had returned to the runner defaults.
+- **Root cause:** Environment variables assigned inside a GitHub Actions step are scoped to that step. Setting `$env:SCOOP` and editing the process `PATH` did not make them available to subsequent steps.
+- **Resolution:** Persisted `SCOOP` through `$env:GITHUB_ENV` and the Scoop shims directory through `$env:GITHUB_PATH` in the installation step.
+- **Verification:** The final [Stellaria lifecycle run 44640680454](https://github.com/kiro5678/kirobucket/actions/runs/44640680454) successfully ran forced Checkver, installed the dependency and app, verified file and Junction paths, and completed uninstall cleanup on the custom Scoop root.
+- **Prevention:** When a workflow intentionally uses a custom Scoop installation, export its root and shims path through `GITHUB_ENV` and `GITHUB_PATH` before using them in later steps.
+
+### 2026-11-20 — Clear expected native-command exit status in Scoop lifecycle test
+
+- **Status:** Resolved and verified.
+- **Affected area:** `.github/workflows/stellaria-manifest-test.yml`.
+- **Problem:** The Stellaria install assertions all passed, but the PowerShell step still ended with exit code 1 after querying for the expected-absent scheduled task `Stellaria - Helper`.
+- **Root cause:** `schtasks.exe /Query` returns a non-zero native exit code when the task is absent. The test treated that result as success but left `$LASTEXITCODE` non-zero, which the GitHub Actions PowerShell runner propagated as the step result.
+- **Resolution:** Captured and asserted the query exit code, then reset `$global:LASTEXITCODE` to zero before the step ended.
+- **Verification:** The [Stellaria lifecycle run 44640680454](https://github.com/kiro5678/kirobucket/actions/runs/44640680454) completed all steps successfully, including install, non-activation assertions, `scoop uninstall stellaria`, cleanup of managed Junctions, and preservation of the Zebar dependency.
+- **Prevention:** For an expected non-zero native-command result in PowerShell, capture and validate `$LASTEXITCODE`, then explicitly clear it before returning success.
+
+- **Additional occurrence — 2026-11-20:** The Stellaria manifest in PR [#255](https://github.com/kiro5678/kirobucket/pull/255) still reported `Lint: False` after its CRLF ending was corrected. The cause was the same normalizer rule, but this time the single-string arrays were `depends` and `pre_install`, not `notes`. Scoop's `normalize_values` turns any one-element array of scalar strings into a scalar, regardless of property name. Both properties were changed to scalar strings; the nested `shortcuts` array was retained because it contains an inner array. The subsequent [PR verification run 44640702266](https://github.com/kiro5678/kirobucket/actions/runs/44640702266) passed with `Lint`, `Description`, `License`, `Hashes`, `Checkver`, `Autoupdate`, and `Autoupdate Hash Extraction` all `True`. The [Stellaria lifecycle run 44640680454](https://github.com/kiro5678/kirobucket/actions/runs/44640680454) also passed.
+
 ## Resolved incidents
 
 ### 2026-11-18 — Persist Launcher Companion's actual LocalAppData folder
