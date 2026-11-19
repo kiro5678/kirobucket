@@ -21,16 +21,12 @@ permissions:
 
 jobs:
   lifecycle:
-    name: Real Scoop lifecycle (${{ matrix.shell }})
+    name: Real Scoop lifecycle (PowerShell 7)
     runs-on: windows-latest
     timeout-minutes: 25
-    strategy:
-      fail-fast: false
-      matrix:
-        shell: [powershell, pwsh]
     defaults:
       run:
-        shell: ${{ matrix.shell }}
+        shell: pwsh
 
     steps:
       - name: Checkout bucket
@@ -352,7 +348,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: orfeo-full-scoop-lifecycle-${{ matrix.shell }}
+          name: orfeo-full-scoop-lifecycle-pwsh
           path: ${{ runner.temp }}/orfeo-scoop-lifecycle.log
           if-no-files-found: ignore
           retention-days: 7
