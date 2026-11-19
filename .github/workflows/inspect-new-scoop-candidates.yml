@@ -151,6 +151,23 @@ jobs:
               if ($process.ExitCode -ne 0) {
                 throw "MSI administrative extraction failed for $($target.Name), exit code $($process.ExitCode). Log: $log"
               }
+
+              $msi7zExtract = Join-Path $work 'scoop-msi-extracted'
+              New-Item -ItemType Directory -Path $msi7zExtract -Force | Out-Null
+              & $sevenZip x -y "-o$msi7zExtract" $download
+              if ($LASTEXITCODE -gt 1) {
+                throw "7-Zip MSI extraction failed for $($target.Name), exit code $LASTEXITCODE"
+              }
+              $msi7zFiles = @(Get-ChildItem -LiteralPath $msi7zExtract -File -Recurse -Force)
+              if ($msi7zFiles.Count -eq 0) {
+                throw "7-Zip extracted no files from MSI $($target.Name)"
+              }
+              Write-Host "7-Zip MSI extraction files: $($msi7zFiles.Count)"
+              Write-Host '7-Zip MSI EXE inventory:'
+              $msi7zFiles | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+                $relative = [System.IO.Path]::GetRelativePath($msi7zExtract, $_.FullName).Replace('\', '/')
+                Write-Host "  $relative [$($_.Length) bytes]"
+              }
             } else {
               throw "Unsupported inspection type: $($target.Kind)"
             }
