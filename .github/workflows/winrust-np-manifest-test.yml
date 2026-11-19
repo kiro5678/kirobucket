@@ -1,0 +1,122 @@
+name: WinRust Nonportable Manifest Hook Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/winrust-np.json'
+      - '.github/workflows/winrust-np-manifest-test.yml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'bucket/winrust-np.json'
+      - '.github/workflows/winrust-np-manifest-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-uninstall-hook:
+    name: Verify WinRust uninstall hook without running WinRust
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate manifest metadata and simulate Scoop hook calls
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/winrust-np.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -AsHashtable
+
+          if ($manifest.version -ne '0.4.1') { throw "Unexpected manifest version: $($manifest.version)" }
+          if ($manifest.architecture.'64bit'.url -ne 'https://github.com/Lemxy/WinRust/releases/download/v0.4.1/WinRust.exe') {
+            throw 'The 64-bit URL is not the pinned official WinRust release asset.'
+          }
+          if ($manifest.architecture.'64bit'.hash -ne '1b516d0247c74a53e0518c3bb70f77b1035582de20248ad1146f2bf02604cce8') {
+            throw 'The pinned WinRust SHA-256 does not match the inspected official release.'
+          }
+          if ($manifest.checkver.github -ne 'https://github.com/Lemxy/WinRust') { throw 'Unexpected checkver source.' }
+          if ($manifest.autoupdate.architecture.'64bit'.url -ne 'https://github.com/Lemxy/WinRust/releases/download/v$version/WinRust.exe') {
+            throw 'Unexpected autoupdate URL template.'
+          }
+          if ($manifest.shortcuts.Count -ne 1 -or $manifest.shortcuts[0][0] -ne 'WinRust.exe') {
+            throw 'The Start Menu shortcut does not target WinRust.exe.'
+          }
+
+          $hookText = @($manifest.pre_uninstall) -join [Environment]::NewLine
+          if (-not $hookText.Contains('$cmd -eq ''uninstall''')) {
+            throw 'The rollback hook must run only for scoop uninstall, not during upgrades.'
+          }
+          if ($hookText -notmatch 'rollback --yes') { throw 'The hook does not call the documented WinRust rollback command.' }
+          if ($hookText -notmatch '(?i)-Verb\s+RunAs') { throw 'The non-elevated path does not request UAC elevation.' }
+          if ($hookText -notmatch '(?i)ExitCode') { throw 'The hook does not check the rollback exit code.' }
+
+          $hook = [scriptblock]::Create($hookText)
+          $script:mockExitCode = 0
+          $script:mockCalls = [System.Collections.Generic.List[object]]::new()
+
+          function is_admin { return $false }
+
+          function Start-Process {
+            param(
+              [string]$FilePath,
+              [string]$ArgumentList,
+              [string]$Verb,
+              [switch]$Wait,
+              [switch]$PassThru
+            )
+            $script:mockCalls.Add([pscustomobject]@{
+              FilePath = $FilePath
+              ArgumentList = $ArgumentList
+              Verb = $Verb
+              Wait = [bool]$Wait
+              PassThru = [bool]$PassThru
+            })
+            return [pscustomobject]@{ ExitCode = $script:mockExitCode }
+          }
+
+          $dir = Join-Path $env:RUNNER_TEMP 'WinRust-Hook-Test'
+          New-Item -ItemType Directory -Path $dir -Force | Out-Null
+
+          # An upgrade must not invoke rollback.
+          $cmd = 'update'
+          & $hook
+          if ($script:mockCalls.Count -ne 0) { throw 'The hook invoked rollback during an update.' }
+
+          # An uninstall invokes the elevated rollback and waits for its exit code.
+          $cmd = 'uninstall'
+          & $hook
+          if ($script:mockCalls.Count -ne 1) { throw 'The uninstall hook did not invoke Start-Process exactly once.' }
+          $call = $script:mockCalls[0]
+          if ($call.FilePath -ne (Join-Path $dir 'WinRust.exe')) { throw "Unexpected rollback executable: $($call.FilePath)" }
+          if ($call.ArgumentList -ne 'rollback --yes') { throw "Unexpected rollback arguments: $($call.ArgumentList)" }
+          if ($call.Verb -ne 'RunAs' -or -not $call.Wait -or -not $call.PassThru) {
+            throw 'The rollback process must request elevation and wait for its exit code.'
+          }
+
+          # A failed rollback must abort Scoop removal.
+          $script:mockExitCode = 5
+          $blocked = $false
+          try {
+            & $hook
+          } catch {
+            $blocked = $true
+            Write-Host "Expected removal block after rollback failure: $($_.Exception.Message)"
+          }
+          if (-not $blocked) { throw 'The hook allowed Scoop removal after a failed rollback.' }
+          if ($script:mockCalls.Count -ne 2) { throw 'The failed rollback path was not exercised.' }
+
+          @(
+            '## WinRust Nonportable hook test'
+            ''
+            '- Manifest version, official URL, pinned SHA-256, checkver, autoupdate and shortcut metadata validated.'
+            '- scoop update simulation did not invoke rollback.'
+            '- scoop uninstall simulation invoked rollback --yes with RunAs, Wait, and PassThru.'
+            '- A nonzero rollback exit code correctly stopped the uninstall hook.'
+            '- WinRust.exe was not executed; rollback was mocked.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY

@@ -150,7 +150,6 @@ These projects are Android-first releases for Scoop purposes unless their upstre
 ### Candidates withheld because no suitable portable Windows package was confirmed
 
 - [alter-zero](https://github.com/linuztx/alter-zero): the checked release publishes macOS and Linux archives, with no Windows asset.
-- [WinRust](https://github.com/Lemxy/WinRust): its Windows EXE performs an administrator-level setup and changes the Windows shell, services and registry. It is Nonportable and was not added because this requires explicit approval.
 - [NixanDeck](https://github.com/nurikhsanuddin/nixandeck): the documented Windows package imports a publisher certificate into the Windows certificate store and registers an MSIX package. It is Nonportable and was not added because this requires explicit approval.
 - [Magpie Search](https://magpiesearch.app/): this candidate is now represented by [magpie-search.json](../bucket/magpie-search.json). The supplied 3.3.1 MSI was downloadable and its ProductVersion was verified from MSI metadata; see the successful [package inspection run](https://github.com/kiro5678/kirobucket/actions/runs/44442611954). The public download page still reports 3.2.4, so the manifest's checkver uses a no-downgrade floor until the upstream page catches up.
 - [BentoPDF](https://github.com/alam00000/bentopdf): the main project is a web toolkit, not a native Windows desktop application. The PDFium viewer repository is an engine component.
