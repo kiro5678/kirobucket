@@ -6,7 +6,6 @@ on:
       - master
     paths:
       - '.github/workflows/orfeo-portable-temp-test.yml'
-      - 'bucket/orfeo.json'
   workflow_dispatch:
 
 permissions:
@@ -37,25 +36,21 @@ jobs:
           $process = $null
 
           try {
-            $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\orfeo.json'
-            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-
-            if ([string]$manifest.version -ne '1.7.3') {
-              throw "This runtime test is pinned to manifest version 1.7.3; found $($manifest.version). Review the test before changing the version."
-            }
-
-            $downloadUrl = ([string]$manifest.url) -replace '#/.*$', ''
-            if ($downloadUrl -notmatch 'Orfeo-1\.7\.3-portable\.exe$') {
-              throw "The manifest does not point to the expected official portable asset: $downloadUrl"
-            }
+            $release = Invoke-RestMethod -Uri 'https://api.github.com/repos/Squarebow/Orfeo/releases/latest' -Headers @{ 'User-Agent' = 'kirobucket-orfeo-portable-temp-test' }
+            $version = ([string]$release.tag_name) -replace '^v', ''
+            $asset = @($release.assets | Where-Object { $_.name -eq "Orfeo-$version-portable.exe" }) | Select-Object -First 1
+            if ($null -eq $asset) { throw "The latest Orfeo release v$version does not include its Portable EXE." }
+            $downloadUrl = [string]$asset.browser_download_url
+            $assetDigest = ([string]$asset.digest).ToLowerInvariant()
+            if ($assetDigest -notmatch '^sha256:([a-f0-9]{64})$') { throw "The Portable release asset has no usable SHA-256 digest: $assetDigest" }
+            $expectedHash = $Matches[1]
 
             New-Item -ItemType Directory -Path $appRoot, $isolatedTemp -Force | Out-Null
-            Write-Host "Manifest version: $($manifest.version)"
+            Write-Host "Official release version: $version"
             Write-Host "Download URL: $downloadUrl"
             Invoke-WebRequest -Uri $downloadUrl -OutFile $exePath -MaximumRedirection 10 -TimeoutSec 600
 
             $actualHash = (Get-FileHash -LiteralPath $exePath -Algorithm SHA256).Hash.ToLowerInvariant()
-            $expectedHash = ([string]$manifest.hash).ToLowerInvariant()
             Write-Host "Downloaded size: $((Get-Item -LiteralPath $exePath).Length) bytes"
             Write-Host "Manifest SHA-256: $expectedHash"
             Write-Host "Downloaded SHA-256: $actualHash"
