@@ -9,12 +9,8 @@
             "hash": "1efb9ec379182f61fbc89d4ca6ba2c279c9a34e2c0f90eb8013506d054c66b2b"
         }
     },
-    "depends": [
-        "extras/zebar"
-    ],
-    "pre_install": [
-        "if ($global) { throw 'Stellaria uses per-user Windows integration and cannot be installed globally with Scoop.' }"
-    ],
+    "depends": "extras/zebar",
+    "pre_install": "if ($global) { throw 'Stellaria uses per-user Windows integration and cannot be installed globally with Scoop.' }",
     "post_install": [
         "$ErrorActionPreference = 'Stop'",
         "$profilePath = [Environment]::GetFolderPath('UserProfile')",
