@@ -52,6 +52,8 @@ jobs:
           $ProgressPreference = 'SilentlyContinue'
 
           $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-portable-lifecycle'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
           Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
           $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
