@@ -32,7 +32,8 @@
     "notes": [
         "Scoop extracts the official MSI payload instead of running the installer.",
         "DropTidy stores its SQLite database and settings under %APPDATA%\\com.droptidy.app; this manifest redirects that directory into Scoop's persisted data folder.",
-        "The upstream repository does not currently declare an SPDX license or include a recognized license file."
+        "The upstream repository does not currently declare an SPDX license or include a recognized license file.",
+        "The MSI archive workflow verifies the payload with msiexec /a and confirms that PFiles/DropTidy contains the shortcut target."
     ],
     "extract_dir": "PFiles/DropTidy"
 }
