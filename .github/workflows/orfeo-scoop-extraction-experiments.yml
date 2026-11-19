@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'bucket/orfeo.json'
+      - '.github/workflows/orfeo-scoop-extraction-experiments.yml'
   workflow_dispatch:
 
 permissions:
