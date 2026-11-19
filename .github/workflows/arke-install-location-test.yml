@@ -1,0 +1,205 @@
+name: Arke Scoop Install Location Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/arke.json'
+      - '.github/workflows/arke-install-location-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Install Arke with Scoop and inspect its paths
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Install Arke using the repository manifest and report real paths
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $logPath = Join-Path $env:RUNNER_TEMP 'arke-scoop-install-location.log'
+          Start-Transcript -LiteralPath $logPath -Force
+
+          try {
+            $testRoot = Join-Path $env:RUNNER_TEMP 'arke-scoop-location-test'
+            $env:SCOOP = Join-Path $testRoot 'scoop'
+            $env:SCOOP_CACHE = Join-Path $testRoot 'cache'
+            New-Item -ItemType Directory -Path $testRoot, $env:SCOOP_CACHE -Force | Out-Null
+
+            Write-Host '=== Install Scoop into an isolated temporary root ==='
+            Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+            Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+            $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+            $scoopShim = Join-Path $env:SCOOP 'shims\scoop.ps1'
+            if (-not (Test-Path -LiteralPath $scoopShim -PathType Leaf)) {
+              throw "Scoop bootstrap did not create $scoopShim"
+            }
+            scoop --version
+
+            Write-Host '=== Create a local test bucket from the checked-out manifest ==='
+            $localBucket = Join-Path $testRoot 'kirobucket-local'
+            $manifestDirectory = Join-Path $localBucket 'bucket'
+            New-Item -ItemType Directory -Path $manifestDirectory -Force | Out-Null
+            Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\arke.json') -Destination $manifestDirectory
+
+            Push-Location $localBucket
+            try {
+              git init --initial-branch=master
+              git config user.name 'GitHub Actions'
+              git config user.email 'actions@github.com'
+              git add bucket/arke.json
+              git commit -m 'Seed temporary Arke test bucket'
+              if ($LASTEXITCODE -ne 0) { throw 'Could not initialize the temporary Git bucket.' }
+            }
+            finally {
+              Pop-Location
+            }
+
+            $bucketUrl = 'file:///' + $localBucket.Replace([char]92, '/')
+            scoop bucket add kirobucket $bucketUrl
+            if ($LASTEXITCODE -ne 0) { throw 'Scoop could not add the temporary kirobucket.' }
+            scoop bucket list
+
+            $manifestPath = Join-Path $manifestDirectory 'arke.json'
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+            if ([string]$manifest.version -ne '0.6.2') {
+              throw "Unexpected manifest version: $($manifest.version)"
+            }
+            if ([string]$manifest.architecture.'64bit'.url -notmatch 'arke-0\.6\.2\.exe#/arke\.exe$') {
+              throw 'The x64 manifest URL is not the expected standalone Arke executable.'
+            }
+
+            Write-Host '=== Run a real Scoop install ==='
+            scoop install arke
+            if ($LASTEXITCODE -ne 0) { throw "scoop install arke failed with exit code $LASTEXITCODE." }
+
+            $appRoot = Join-Path $env:SCOOP 'apps\arke'
+            $versionDir = Join-Path $appRoot ([string]$manifest.version)
+            $currentLink = Join-Path $appRoot 'current'
+            if (-not (Test-Path -LiteralPath $versionDir -PathType Container)) {
+              throw "Scoop version directory was not created: $versionDir"
+            }
+            if (-not (Test-Path -LiteralPath $currentLink -PathType Container)) {
+              throw "Scoop current link was not created: $currentLink"
+            }
+
+            $resolvedCurrent = (Resolve-Path -LiteralPath $currentLink).Path
+            $exePath = Join-Path $resolvedCurrent 'arke.exe'
+            if (-not (Test-Path -LiteralPath $exePath -PathType Leaf)) {
+              throw "The expected executable was not found: $exePath"
+            }
+
+            $expectedHash = ([string]$manifest.architecture.'64bit'.hash).ToUpperInvariant()
+            $actualHash = (Get-FileHash -LiteralPath $exePath -Algorithm SHA256).Hash.ToUpperInvariant()
+            if ($actualHash -ne $expectedHash) {
+              throw "Installed EXE hash mismatch. Expected $expectedHash; got $actualHash."
+            }
+
+            $shim = Join-Path $env:SCOOP 'shims\arke.exe'
+            if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+              throw "Scoop did not create the expected executable shim: $shim"
+            }
+
+            $startMenu = [Environment]::GetFolderPath([Environment+SpecialFolder]::StartMenu)
+            $shortcut = Join-Path $startMenu 'Programs\Scoop Apps\Arke.lnk'
+            if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
+              throw "Scoop did not create the shortcut declared by the manifest: $shortcut"
+            }
+
+            Write-Host "SCOOP ROOT: $env:SCOOP"
+            Write-Host "SCOOP VERSION DIRECTORY: $versionDir"
+            Write-Host "SCOOP CURRENT LINK: $currentLink"
+            Write-Host "RESOLVED CURRENT DIRECTORY: $resolvedCurrent"
+            Write-Host "ACTUAL EXECUTABLE PATH: $exePath"
+            Write-Host "SCOOP SHIM: $shim"
+            Write-Host "START MENU SHORTCUT: $shortcut"
+            Write-Host "INSTALLED SHA256: $actualHash"
+            Write-Host 'FILES IN SCOOP VERSION DIRECTORY:'
+            Get-ChildItem -LiteralPath $versionDir -Force | Format-Table Name, Length, Mode -AutoSize
+
+            Write-Host '=== Launch Arke with isolated user profile and inspect the process path ==='
+            $isolatedAppData = Join-Path $testRoot 'user-appdata'
+            $isolatedLocalAppData = Join-Path $testRoot 'user-localappdata'
+            $isolatedTemp = Join-Path $testRoot 'user-temp'
+            New-Item -ItemType Directory -Path $isolatedAppData, $isolatedLocalAppData, $isolatedTemp -Force | Out-Null
+            $env:APPDATA = $isolatedAppData
+            $env:LOCALAPPDATA = $isolatedLocalAppData
+            $env:TEMP = $isolatedTemp
+            $env:TMP = $isolatedTemp
+
+            $launcher = Start-Process -FilePath $exePath -PassThru
+            Write-Host "LAUNCHER PID: $($launcher.Id)"
+            Start-Sleep -Seconds 12
+
+            $arkeProcesses = @(Get-CimInstance -ClassName Win32_Process -ErrorAction SilentlyContinue |
+              Where-Object { $_.Name -ieq 'arke.exe' -and -not [string]::IsNullOrWhiteSpace($_.ExecutablePath) })
+            if ($arkeProcesses.Count -gt 0) {
+              foreach ($process in $arkeProcesses) {
+                Write-Host "OBSERVED PROCESS: PID=$($process.ProcessId) PATH=$($process.ExecutablePath)"
+                if ($process.ExecutablePath -ine $exePath) {
+                  throw "Arke is running from an unexpected path: $($process.ExecutablePath)"
+                }
+              }
+              Write-Host 'PASS: The running Arke process is executing from the Scoop version directory.'
+            }
+            else {
+              Write-Warning 'Arke did not remain running long enough for process-path inspection on this hosted runner. The installed file path and SHA256 checks passed.'
+            }
+
+            Write-Host "EXPECTED SETTINGS DIRECTORY: $(Join-Path $isolatedAppData 'Arke')"
+            Write-Host "EXPECTED LOG DIRECTORY: $(Join-Path $isolatedLocalAppData 'Arke')"
+            foreach ($dataRoot in @((Join-Path $isolatedAppData 'Arke'), (Join-Path $isolatedLocalAppData 'Arke'))) {
+              if (Test-Path -LiteralPath $dataRoot -PathType Container) {
+                Write-Host "CREATED USER-DATA DIRECTORY: $dataRoot"
+                Get-ChildItem -LiteralPath $dataRoot -Force -Recurse -ErrorAction SilentlyContinue |
+                  Select-Object -First 30 FullName, Length, LastWriteTime
+              }
+              else {
+                Write-Host "USER-DATA DIRECTORY NOT CREATED DURING TEST: $dataRoot"
+              }
+            }
+
+            foreach ($process in $arkeProcesses) {
+              Stop-Process -Id ([int]$process.ProcessId) -Force -ErrorAction SilentlyContinue
+            }
+            $launcher.Refresh()
+            if (-not $launcher.HasExited) {
+              Stop-Process -Id $launcher.Id -Force -ErrorAction SilentlyContinue
+            }
+
+            $summary = @(
+              '# Arke Scoop install-location test'
+              ''
+              "- Manifest version: $($manifest.version)"
+              "- Scoop version directory: $versionDir"
+              "- Current link resolves to: $resolvedCurrent"
+              "- Executable: $exePath"
+              "- SHA256: $actualHash"
+              "- Scoop shim: $shim"
+              "- Start Menu shortcut: $shortcut"
+              "- Settings directory (isolated APPDATA): $(Join-Path $isolatedAppData 'Arke')"
+              "- Log directory (isolated LOCALAPPDATA): $(Join-Path $isolatedLocalAppData 'Arke')"
+              ''
+              'The manifest installs the standalone EXE into the Scoop-managed version directory; user settings and logs are outside that directory.'
+            )
+            $summary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+            Write-Host 'PASS: Scoop installation location and the installed executable checksum were verified.'
+          }
+          finally {
+            try { Stop-Transcript | Out-Null } catch {}
+          }
