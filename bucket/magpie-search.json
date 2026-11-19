@@ -43,7 +43,6 @@
         "The application stores its index, settings, and downloaded models in %LOCALAPPDATA%\\Magpie, outside the Scoop version directory. No persist mapping is required.",
         "The official download page currently reports 3.2.4 while the supplied direct MSI reports 3.3.1. checkver uses the official page and retains the manifest's current version as a lower bound, preventing a downgrade until the page catches up.",
         "The application is advertised as free, but no explicit application license was found; the manifest therefore records the license as Unknown.",
-        "The SHA-256 value is calculated from the supplied official-host MSI; no publisher checksum was published.",
-        "The 3.3.1 MSI was supplied as the official x64 download. checkver reads the publisher's download page and keeps the current manifest version as a floor, so an older web-page value cannot trigger a downgrade."
+        "The SHA-256 value is calculated from the supplied official-host MSI; no publisher checksum was published."
     ]
 }
