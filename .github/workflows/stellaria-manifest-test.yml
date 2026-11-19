@@ -98,9 +98,11 @@ jobs:
           }
 
           & schtasks.exe /Query /TN 'Stellaria - Helper' *> $null
-          if ($LASTEXITCODE -eq 0) {
+          $taskQueryExitCode = $LASTEXITCODE
+          if ($taskQueryExitCode -eq 0) {
             throw 'The manifest unexpectedly enabled the Stellaria logon task.'
           }
+          $global:LASTEXITCODE = 0
 
           if (Get-Process -Name 'stellaria-helper','stellaria-launcher' -ErrorAction SilentlyContinue) {
             throw 'The manifest unexpectedly launched Stellaria during installation.'
