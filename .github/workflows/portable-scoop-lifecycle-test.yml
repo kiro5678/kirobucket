@@ -10,6 +10,7 @@ on:
       - "bucket/tasketpp.json"
       - "bucket/batteryhub.json"
       - "bucket/mole.json"
+      - "bucket/kitab.json"
       - ".github/workflows/portable-scoop-lifecycle-test.yml"
   push:
     branches:
@@ -19,6 +20,7 @@ on:
       - "bucket/tasketpp.json"
       - "bucket/batteryhub.json"
       - "bucket/mole.json"
+      - "bucket/kitab.json"
       - ".github/workflows/portable-scoop-lifecycle-test.yml"
   workflow_dispatch:
 
@@ -63,7 +65,7 @@ jobs:
           $manifestDir = Join-Path $localBucket 'bucket'
           New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
 
-          $manifests = @('framecalm', 'tasketpp', 'batteryhub', 'mole')
+          $manifests = @('framecalm', 'tasketpp', 'batteryhub', 'mole', 'kitab')
           foreach ($name in $manifests) {
             $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
             if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
@@ -96,7 +98,7 @@ jobs:
             throw "Scoop checkver.ps1 was not found: $checkver"
           }
 
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole', 'kitab')) {
             Write-Host "Checking $name version, autoupdate URL, and SHA-256 template"
             & $checkver $name $manifestDir -ForceUpdate -ThrowError
             Write-Host "PASS: checkver and forced autoupdate completed for $name."
@@ -105,7 +107,7 @@ jobs:
       - name: Install all portable manifests
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole', 'kitab')) {
             Write-Host "Installing $name with Scoop"
             scoop install $name
             if ($LASTEXITCODE -ne 0) {
@@ -113,14 +115,15 @@ jobs:
             }
           }
 
-      - name: Verify extracted files, shortcuts, and Tasket++ persistence
+      - name: Verify extracted files, shortcuts, and persisted user data
         run: |
           $ErrorActionPreference = 'Stop'
           $checks = @(
             @{ Name = 'Framecalm'; App = 'framecalm'; RelativeExe = 'Framecalm.exe'; Shortcut = 'Framecalm.lnk' },
             @{ Name = 'Tasket++'; App = 'tasketpp'; RelativeExe = 'Tasket++.exe'; Shortcut = 'Tasket++.lnk' },
             @{ Name = 'BatteryHub'; App = 'batteryhub'; RelativeExe = 'BatteryHub.exe'; Shortcut = 'BatteryHub.lnk' },
-            @{ Name = 'Mole'; App = 'mole'; RelativeExe = 'mo.exe'; Shortcut = $null }
+            @{ Name = 'Mole'; App = 'mole'; RelativeExe = 'mo.exe'; Shortcut = $null },
+            @{ Name = 'Kitab'; App = 'kitab'; RelativeExe = 'kitab.exe'; Shortcut = 'Kitab Reader.lnk' }
           )
 
           $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
@@ -157,6 +160,20 @@ jobs:
             throw 'Tasket++ cannot see its persisted saved_tasks directory.'
           }
           Write-Host 'PASS: all Tasket++ user-data paths are linked and writable.'
+
+          $kitabApp = Join-Path $env:SCOOP 'apps\kitab\current'
+          $kitabData = Join-Path $kitabApp 'data'
+          $kitabPersistData = Join-Path $env:SCOOP 'persist\kitab\data'
+          if (-not (Test-Path -LiteralPath $kitabData -PathType Container)) {
+            throw "Kitab data directory was not linked into its Scoop app directory: $kitabData"
+          }
+          New-Item -ItemType Directory -Path $kitabPersistData -Force | Out-Null
+          $kitabMarker = Join-Path $kitabPersistData 'kirobucket-persist-test.txt'
+          Set-Content -LiteralPath $kitabMarker -Value 'persisted' -Encoding utf8
+          if (-not (Test-Path -LiteralPath (Join-Path $kitabData 'kirobucket-persist-test.txt') -PathType Leaf)) {
+            throw 'Kitab cannot see its persisted data directory.'
+          }
+          Write-Host 'PASS: Kitab data directory is linked and writable.'
 
       - name: Smoke-test Framecalm, Tasket++, and BatteryHub
         run: |
@@ -198,6 +215,7 @@ jobs:
           Test-GuiProcess -Name 'Framecalm' -Path (Join-Path $env:SCOOP 'apps\framecalm\current\Framecalm.exe')
           Test-GuiProcess -Name 'Tasket++' -Path (Join-Path $env:SCOOP 'apps\tasketpp\current\Tasket++.exe')
           Test-GuiProcess -Name 'BatteryHub demo' -Path (Join-Path $env:SCOOP 'apps\batteryhub\current\BatteryHub.exe') -Arguments @('--demo')
+          Test-GuiProcess -Name 'Kitab Reader' -Path (Join-Path $env:SCOOP 'apps\kitab\current\kitab.exe')
 
       - name: Smoke-test Mole CLI
         run: |
@@ -214,7 +232,7 @@ jobs:
       - name: Uninstall all apps and verify persisted Tasket++ data
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole', 'kitab')) {
             Write-Host "Uninstalling $name"
             scoop uninstall $name
             if ($LASTEXITCODE -ne 0) {
@@ -230,4 +248,8 @@ jobs:
           if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
             throw 'Scoop uninstall removed Tasket++ persistent user data.'
           }
-          Write-Host 'PASS: all four apps uninstalled; Tasket++ saved_tasks data survived uninstall.'
+          $kitabMarker = Join-Path $env:SCOOP 'persist\kitab\data\kirobucket-persist-test.txt'
+          if (-not (Test-Path -LiteralPath $kitabMarker -PathType Leaf)) {
+            throw 'Scoop uninstall removed Kitab persistent data.'
+          }
+          Write-Host 'PASS: all five apps uninstalled; Tasket++ and Kitab persistent data survived uninstall.'
