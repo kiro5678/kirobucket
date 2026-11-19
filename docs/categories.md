@@ -42,7 +42,7 @@
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 101 | [View](#windows-customization) |
+| Windows Customization | 102 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
 **Total unique categorized manifests: 1235**
@@ -1287,6 +1287,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | --- | --- | --- | --- | --- | --- |
 | [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
 | [meridian-shell](../bucket/meridian-shell.json) | 1.0-beta-1 | 3.5 MiB | 2026-11-16 | Windows 11 shell replacement with an alternative taskbar, Start menu, and file manager. | [Homepage](https://github.com/meridiandrive/Meridian-Shell) |
+| [stellaria](../bucket/stellaria.json) | 1.1.0 | 23.4 MiB | 2026-11-18 | Material You desktop shell for Windows 11 with a taskbar, widgets, launcher, and system panels. | [Homepage](https://github.com/SMIDR76/stellaria-windows) |
 | [winrust-np](../bucket/winrust-np.json) | 0.4.1 | 64bit: 6.0 MiB | 2026-11-19 | Administrator-level Windows shell replacement with a native taskbar, file manager, search, and system utilities. | [Homepage](https://github.com/Lemxy/WinRust) |
 | [softwareok-12-ants](../bucket/softwareok-12-ants.json) | 6.91 | 64bit: 290.1 KiB | 2026-04-24 | Display animated ants on the Windows desktop. | [Homepage](https://www.softwareok.com/?Download=12-Ants) |
 | [softwareok-4ur-windows-8-mouse-balls](../bucket/softwareok-4ur-windows-8-mouse-balls.json) | 4.91 | 64bit: 112.3 KiB | 2026-04-21 | Show animated mouse-ball effects on the desktop. | [Homepage](https://www.softwareok.com/?Download=4ur-Windows-8-Mouse-Balls) |
