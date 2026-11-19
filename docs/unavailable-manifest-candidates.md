@@ -1,6 +1,6 @@
 # Software candidates without a current Scoop-ready Windows package
 
-**Last checked:** 2026-11-18
+**Last checked:** 2026-11-19
 
 This page records software from repository research that does not currently have a suitable, version-pinned Windows download for a maintainable Scoop manifest. These are documentation-only entries: they are not active manifests and are not kept as placeholder JSON files in `bucket/` or `under review scoop bucket/`.
 
@@ -131,3 +131,31 @@ No JSON placeholders were created. A candidate can move into `bucket/` only afte
 - **Decision:** the Windows download is an old, one-off beta and is no longer updated by the current release line. Do not create a maintainable Scoop manifest from that obsolete beta. Revisit if upstream restores Windows desktop releases with current versioned packages and checksums.
 
 These projects are Android-first releases for Scoop purposes unless their upstreams resume publishing current Windows desktop artifacts. Android APK files are not Windows packages and must not be added as Scoop manifests.
+
+
+## Windows Scoop candidate batch — checked 2026-11-19
+
+### Candidates already represented by an existing manifest or bucket
+
+- [Skwir](https://github.com/skwir-org/skwir): already represented by [skwir.json](../bucket/skwir.json).
+- [S.A.K. Utility](https://sakutility.com/): the official site points to the same v0.9.3 project already represented by [sak-utility.json](../bucket/sak-utility.json).
+- [Nexonic Download Manager](https://shahrukhalid.github.io/nexonic-download-manager/): already represented by [nexonic-download-manager.json](../bucket/nexonic-download-manager.json).
+- [Wireless Device Battery Monitor](https://github.com/krisgfx9/Wireless-Device-Battery-Monitor): already represented by [wireless-battery.json](../bucket/wireless-battery.json).
+- [Stream Goat](https://github.com/sherazi5110/stream-goat): already represented by [stream-goat.json](../bucket/stream-goat.json).
+- [Huedra](https://github.com/apixelsnet/huedra): already represented by [huedra-apixelsnet.json](../bucket/huedra-apixelsnet.json).
+- [DiskWatch](https://github.com/matthart1983/diskwatch): already represented by [diskwatch.json](../bucket/diskwatch.json).
+- [DropTidy](https://github.com/ahmeto55/DropTidy): already represented by [droptidy.json](../bucket/droptidy.json).
+- [Parabolic](https://github.com/NickvisionApps/Parabolic): already present in the official Scoop Extras bucket as `parabolic.json`.
+
+### Candidates withheld because no suitable portable Windows package was confirmed
+
+- [alter-zero](https://github.com/linuztx/alter-zero): the checked release publishes macOS and Linux archives, with no Windows asset.
+- [WinRust](https://github.com/Lemxy/WinRust): its Windows EXE performs an administrator-level setup and changes the Windows shell, services and registry. It is Nonportable and was not added because this requires explicit approval.
+- [NixanDeck](https://github.com/nurikhsanuddin/nixandeck): the documented Windows package imports a publisher certificate into the Windows certificate store and registers an MSIX package. It is Nonportable and was not added because this requires explicit approval.
+- [Magpie Search](https://magpiesearch.app/): the official site lists Windows EXE/MSI packages, but the direct installer URLs returned 404 during this review. No stable downloadable asset or hash could be verified.
+- [BentoPDF](https://github.com/alam00000/bentopdf): the main project is a web toolkit, not a native Windows desktop application. The PDFium viewer repository is an engine component.
+- [BentoPDF Hyper Compress](https://github.com/alam00000/bentopdf-hyper-compress): the Windows archive provides worker/render executables, qpdf and a Node add-on, but no standalone `hyper.exe` CLI entry point suitable for a Scoop app manifest.
+
+### Package test evidence
+
+The Windows inspection workflow verified official release SHA-256 values and extracted ZIP, MSI and standalone EXE assets without running vendor installers or application binaries. MSI extraction was checked using both `msiexec /a` and 7-Zip. See [successful archive inspection run 44433299379](https://github.com/kiro5678/kirobucket/actions/runs/44433299379), [standalone EXE and ZIP inspection run 44434128597](https://github.com/kiro5678/kirobucket/actions/runs/44434128597), and [MSI 7-Zip verification run 44435159442](https://github.com/kiro5678/kirobucket/actions/runs/44435159442).

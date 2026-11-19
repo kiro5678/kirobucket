@@ -413,3 +413,17 @@ git diff -- .\bucket\taskexplorer.json
 - [Scoop Checkver Implementation](https://github.com/ScoopInstaller/Scoop/blob/master/bin/checkver.ps1) — آلية اكتشاف الإصدارات.
 - [Scoop Autoupdate Implementation](https://github.com/ScoopInstaller/Scoop/blob/master/lib/autoupdate.ps1) — تنفيذ التحديث التلقائي.
 - [ScoopInstaller/GithubActions and Excavator](https://github.com/ScoopInstaller/GithubActions) — إجراءات GitHub وExcavator.
+
+
+## Workflow فحص الحزم المرشحة
+
+استخدم `.github/workflows/inspect-new-scoop-candidates.yml` عند عدم وضوح نوع الحزمة أو المسار الداخلي للملف التنفيذي. أضف ملف الإصدار الرسمي وSHA-256 ونوعه إلى قائمة `$targets` في Workflow، ثم ادفع التغيير إلى `master` لتشغيل الفحص تلقائياً، أو شغّله يدوياً من GitHub Actions.
+
+- يتحقق Workflow من SHA-256 قبل الاستخراج.
+- يستخرج ZIP باستخدام 7-Zip. لا تستخدم `Expand-Archive` لهذا الفحص؛ فقد فشل مع بنية ZIP في Ghost Downloader بينما نجح 7-Zip.
+- يستخرج MSI إدارياً باستخدام `msiexec /a`، ثم يفحصه أيضاً باستخدام 7-Zip لمحاكاة طريقة Scoop مع `#/dl.msi`. لا يتم تشغيل مثبت المنتج أو التطبيق.
+- يفحص ملفات EXE المنفردة دون تشغيلها.
+- استخدم المسار الذي يظهر في استخراج 7-Zip عند تحديد `extract_dir` و`bin` و`shortcuts` لمانيفست MSI. لا تفترض أن مسار الاستخراج الإداري يطابق بالضرورة طريقة Scoop.
+- في PowerShell، إذا جاءت النقطتان مباشرة بعد اسم متغير داخل سلسلة نصية، استخدم `${kind}:` لتجنب خطأ تحليل المتغير.
+
+نتيجة هذا الفحص تثبت صحة التنزيل والـ hash ومسار الملفات فقط؛ لا تثبت أن التطبيق يعمل وظيفياً أو أن جميع ميزاته لا تحتاج إلى مكونات نظامية.
