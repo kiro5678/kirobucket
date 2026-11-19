@@ -1,0 +1,206 @@
+name: Magpie Search Setup EXE Inspection
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/magpie-search-setup-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Identify Magpie Search setup engine without execution
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Download and fingerprint official setup
+        id: target
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $url = "https://download.magpiesearch.app/MagpieSearch-Setup-3.3.1.exe"
+          $workDir = Join-Path $env:RUNNER_TEMP "magpie-search-setup-inspection"
+          New-Item -ItemType Directory -Path $workDir -Force | Out-Null
+          $setup = Join-Path $workDir "MagpieSearch-Setup-3.3.1.exe"
+
+          Invoke-WebRequest -Uri $url -OutFile $setup -MaximumRedirection 10 -TimeoutSec 600
+          if (-not (Test-Path -LiteralPath $setup -PathType Leaf)) {
+            throw "The official Magpie Search setup download did not create a file."
+          }
+
+          $item = Get-Item -LiteralPath $setup
+          if ($item.Length -le 0 -or $item.Length -gt 1610612736) {
+            throw "The downloaded setup has an invalid or unsafe size: $($item.Length) bytes."
+          }
+
+          $hash = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          $signature = Get-AuthenticodeSignature -LiteralPath $setup
+          $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($setup)
+          $signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { "(no signer certificate)" }
+
+          $metadata = @(
+            "Magpie Search setup static inspection"
+            "====================================="
+            "URL: $url"
+            "File: $($item.Name)"
+            "Size: $($item.Length) bytes"
+            "SHA-256: $hash"
+            "Authenticode: $($signature.Status)"
+            "Signer: $signer"
+            "Product name: $($version.ProductName)"
+            "File description: $($version.FileDescription)"
+            "File version: $($version.FileVersion)"
+            ""
+            "The setup was downloaded and inspected statically. It was not executed."
+          )
+          $metadata | Set-Content -LiteralPath (Join-Path $workDir "target-metadata.txt") -Encoding utf8
+          $metadata | ForEach-Object { Write-Output $_ }
+
+          "setup_path=$setup" >> $env:GITHUB_OUTPUT
+          "setup_sha256=$hash" >> $env:GITHUB_OUTPUT
+          "setup_size=$($item.Length)" >> $env:GITHUB_OUTPUT
+          "signature_status=$($signature.Status)" >> $env:GITHUB_OUTPUT
+          "product_name=$($version.ProductName)" >> $env:GITHUB_OUTPUT
+          "file_version=$($version.FileVersion)" >> $env:GITHUB_OUTPUT
+
+          @(
+            "## Magpie Search setup metadata"
+            ""
+            "- **File:** $($item.Name)"
+            "- **Size:** $($item.Length) bytes"
+            "- **SHA-256:** $hash"
+            "- **Authenticode:** $($signature.Status)"
+            "- **Signer:** $signer"
+            "- **Product:** $($version.ProductName)"
+            "- **Description:** $($version.FileDescription)"
+            "- **File version:** $($version.FileVersion)"
+            ""
+            "The setup was not executed."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Download latest Detect It Easy release
+        id: die
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $apiUrl = "https://api.github.com/repos/horsicq/DIE-engine/releases/latest"
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            "User-Agent" = "kirobucket-magpie-setup-inspection"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+          if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) {
+            $headers.Authorization = "Bearer $env:GITHUB_TOKEN"
+          }
+
+          $release = Invoke-RestMethod -Uri $apiUrl -Headers $headers -TimeoutSec 45
+          $asset = $release.assets |
+            Where-Object { $_.name -match '^die_win64_portable_[\d.]+_x64\.zip$' } |
+            Select-Object -First 1
+          if (-not $asset) {
+            throw "No Windows x64 portable Detect It Easy ZIP was found in release $($release.tag_name)."
+          }
+
+          $workDir = Join-Path $env:RUNNER_TEMP "magpie-search-setup-inspection"
+          $zip = Join-Path $workDir $asset.name
+          $toolDir = Join-Path $workDir "die-tool"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip -MaximumRedirection 10 -TimeoutSec 300
+
+          $archive = Get-Item -LiteralPath $zip
+          if ($archive.Length -lt 100000) {
+            throw "The Detect It Easy archive is unexpectedly small ($($archive.Length) bytes)."
+          }
+
+          if ($asset.digest -match '^sha256:(?<expected>[0-9a-fA-F]{64})$') {
+            $actualDigest = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash
+            if ($actualDigest -ine $Matches.expected) {
+              throw "Detect It Easy SHA-256 mismatch. Expected $($Matches.expected), received $actualDigest."
+            }
+            Write-Output "Detect It Easy archive SHA-256 verified: $actualDigest"
+          } else {
+            Write-Warning "No publisher SHA-256 digest was supplied for the Detect It Easy asset."
+          }
+
+          Expand-Archive -LiteralPath $zip -DestinationPath $toolDir -Force
+          $diec = Get-ChildItem -LiteralPath $toolDir -Filter "diec.exe" -Recurse -File | Select-Object -First 1
+          if (-not $diec) {
+            throw "diec.exe was not found in the Detect It Easy archive."
+          }
+
+          "die_release=$($release.tag_name)" >> $env:GITHUB_OUTPUT
+          "diec_path=$($diec.FullName)" >> $env:GITHUB_OUTPUT
+          Write-Output "Detect It Easy release: $($release.tag_name)"
+
+      - name: Identify installer format and engine
+        shell: pwsh
+        env:
+          SETUP_PATH: ${{ steps.target.outputs.setup_path }}
+          SETUP_SHA256: ${{ steps.target.outputs.setup_sha256 }}
+          DIE_RELEASE: ${{ steps.die.outputs.die_release }}
+          DIEC_PATH: ${{ steps.die.outputs.diec_path }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $workDir = Join-Path $env:RUNNER_TEMP "magpie-search-setup-inspection"
+          $reportPath = Join-Path $workDir "detect-it-easy-result.txt"
+
+          Write-Output "Detect It Easy release: $env:DIE_RELEASE"
+          Write-Output "Inspecting MagpieSearch-Setup-3.3.1.exe (SHA-256 $env:SETUP_SHA256)"
+          Write-Output "Static inspection only; the setup will not be executed."
+
+          $scanOutput = @(& $env:DIEC_PATH $env:SETUP_PATH 2>&1 | ForEach-Object { "$_" })
+          $exitCode = $LASTEXITCODE
+          $scanOutput | ForEach-Object { Write-Output $_ }
+
+          if ($scanOutput.Count -eq 0) {
+            throw "Detect It Easy returned no identification output."
+          }
+          if ($exitCode -ne 0) {
+            throw "Detect It Easy exited with code $exitCode."
+          }
+
+          $report = @(
+            "Magpie Search setup - Detect It Easy report"
+            "=========================================="
+            "Detect It Easy release: $env:DIE_RELEASE"
+            "Target: MagpieSearch-Setup-3.3.1.exe"
+            "SHA-256: $env:SETUP_SHA256"
+            "Exit code: $exitCode"
+            ""
+            "Identification output:"
+            $scanOutput
+            ""
+            "The setup was not executed."
+          )
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+
+          @(
+            ""
+            "## Detect It Easy identification"
+            ""
+            "- **Tool release:** $env:DIE_RELEASE"
+            "- **Target SHA-256:** $env:SETUP_SHA256"
+            "- **Scan exit code:** $exitCode"
+            ""
+            $scanOutput
+            ""
+            "The setup was not executed."
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload inspection report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: magpie-search-setup-inspection
+          path: ${{ runner.temp }}/magpie-search-setup-inspection/*.txt
+          if-no-files-found: ignore
+          retention-days: 14
