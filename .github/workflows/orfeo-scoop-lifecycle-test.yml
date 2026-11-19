@@ -60,7 +60,7 @@ jobs:
           $oldLocalAppData = $env:LOCALAPPDATA
 
           function Stop-OrfeoProcesses([string[]]$Roots) {
-            $matches = @(Get-CimInstance -ClassName Win32_Process -Filter "Name = 'Orfeo.exe'" -ErrorAction SilentlyContinue | Where-Object {
+            $processesToStop = @(Get-CimInstance -ClassName Win32_Process -Filter "Name = 'Orfeo.exe'" -ErrorAction SilentlyContinue | Where-Object {
               $exePath = $_.ExecutablePath
               if ([string]::IsNullOrWhiteSpace($exePath)) { return $false }
               foreach ($root in $Roots) {
@@ -71,7 +71,7 @@ jobs:
               }
               return $false
             })
-            foreach ($item in $matches) {
+            foreach ($item in $processesToStop) {
               Write-Host "Stopping Orfeo PID=$($item.ProcessId) Path=$($item.ExecutablePath)"
               Stop-Process -Id ([int]$item.ProcessId) -Force -ErrorAction SilentlyContinue
             }
@@ -213,7 +213,7 @@ jobs:
               throw "Orfeo.exe was not observed running from the Scoop-managed version directory after launching its generated shim ($Label)."
             }
             if ($fromTemp.Count -gt 0) {
-              throw 'Orfeo.exe executed from isolated TEMP instead of Scoop’s extracted application directory.'
+              throw 'Orfeo.exe executed from isolated TEMP instead of Scoop's extracted application directory.'
             }
 
             $launcher.Refresh()
