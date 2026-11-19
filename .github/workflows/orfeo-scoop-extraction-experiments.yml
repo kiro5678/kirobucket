@@ -55,35 +55,40 @@ jobs:
           $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\orfeo.json'
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
           $version = [string]$manifest.version
+          $sourceData = if ($manifest.architecture -and $manifest.architecture.'64bit') {
+            $manifest.architecture.'64bit'
+          } else {
+            $manifest
+          }
           if ([string]::IsNullOrWhiteSpace($version)) {
             throw 'The manifest version is empty.'
           }
           $appDir = Join-Path $testRoot "apps\orfeo\$version"
           $downloadPath = Join-Path $appDir 'dl.7z'
           New-Item -ItemType Directory -Path $appDir -Force | Out-Null
-          if (-not $manifest.url.EndsWith('#/dl.7z')) {
-            throw "The manifest must use the tested NSIS outer extraction fragment #/dl.7z. Actual URL: $($manifest.url)"
+          if (-not $sourceData.url.EndsWith('#/dl.7z')) {
+            throw "The manifest must use the tested NSIS outer extraction fragment #/dl.7z. Actual URL: $($sourceData.url)"
           }
-          if (-not $manifest.pre_install) {
+          if (-not $sourceData.pre_install) {
             throw 'The manifest has no pre_install script to extract the nested app-64.7z payload.'
           }
           if ([string]$manifest.persist -ne 'Orfeo-Data') {
             throw 'The manifest does not persist Orfeo-Data.'
           }
 
-          $binTarget = if ($manifest.bin -is [array] -and $manifest.bin[0] -is [array]) {
-            [string]$manifest.bin[0][0]
+          $binTarget = if ($sourceData.bin -is [array] -and $sourceData.bin[0] -is [array]) {
+            [string]$sourceData.bin[0][0]
           } else {
-            [string]$manifest.bin
+            [string]$sourceData.bin
           }
           if ($binTarget -ne 'Orfeo.cmd') {
             throw "Expected bin target Orfeo.cmd, found '$binTarget'."
           }
-          if ([string]$manifest.shortcuts[0][0] -ne 'Orfeo.cmd') {
+          if ([string]$sourceData.shortcuts[0][0] -ne 'Orfeo.cmd') {
             throw 'The Start Menu shortcut must target Orfeo.cmd so it sets PORTABLE_EXECUTABLE_DIR.'
           }
 
-          $downloadUrl = ([string]$manifest.url) -replace '#/.*$', ''
+          $downloadUrl = ([string]$sourceData.url) -replace '#/.*$', ''
           $release = Invoke-RestMethod -Uri "https://api.github.com/repos/Squarebow/Orfeo/releases/tags/v$version" -Headers @{ 'User-Agent' = 'kirobucket-orfeo-scoop-install-test' }
           $setupAsset = @($release.assets | Where-Object { $_.name -eq "Orfeo-Setup-$version.exe" }) | Select-Object -First 1
           if ($null -eq $setupAsset) { throw 'The official Setup release asset is missing.' }
@@ -97,7 +102,7 @@ jobs:
           Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath -MaximumRedirection 10 -TimeoutSec 900
 
           $actualHash = (Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInvariant()
-          $expectedHash = ([string]$manifest.hash).ToLowerInvariant()
+          $expectedHash = ([string]$sourceData.hash).ToLowerInvariant()
           $releaseDigest = ([string]$setupAsset.digest).ToLowerInvariant()
           if ($releaseDigest -notmatch '^sha256:([a-f0-9]{64})$') { throw "Invalid GitHub Setup digest: $releaseDigest" }
           $releaseHash = $Matches[1]
@@ -132,7 +137,7 @@ jobs:
           # Execute the actual pre_install script read from bucket/orfeo.json.
           # Scoop runs this after outer extraction and before creating shims/shortcuts.
           $dir = $appDir
-          $preInstallScript = @($manifest.pre_install) -join [Environment]::NewLine
+          $preInstallScript = @($sourceData.pre_install) -join [Environment]::NewLine
           Write-Host '=== Executing manifest pre_install ==='
           Write-Host $preInstallScript
           Invoke-Expression $preInstallScript
@@ -170,8 +175,8 @@ jobs:
           }
 
           Write-Host '=== Manifest launcher and Scoop entry points ==='
-          Write-Host "bin: $($manifest.bin | ConvertTo-Json -Compress)"
-          Write-Host "shortcuts: $($manifest.shortcuts | ConvertTo-Json -Compress)"
+          Write-Host "bin: $($sourceData.bin | ConvertTo-Json -Compress)"
+          Write-Host "shortcuts: $($sourceData.shortcuts | ConvertTo-Json -Compress)"
           Write-Host "Orfeo-Data junction target: $((Get-Item -LiteralPath $appDataPath).Target)"
 
           # Launch through the exact CMD wrapper that Scoop exposes as its shim/shortcut.
