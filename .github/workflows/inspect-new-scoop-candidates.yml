@@ -1,0 +1,153 @@
+name: Inspect new Scoop candidate packages
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/inspect-new-scoop-candidates.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify hashes and inspect package layouts
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Inspect official candidate packages without running applications
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $root = Join-Path $env:RUNNER_TEMP 'kirobucket-candidate-inspection'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+          $targets = @(
+            @{
+              Name = 'Win Stats'
+              File = 'WinStats-portable-x64.zip'
+              Url = 'https://github.com/VC067/win-stats/releases/download/v0.2.1/WinStats-portable-x64.zip'
+              Sha256 = '2aaa5133f616ae5e94113d59d59eac55ecb3e6ae02551beb000e706a035bf772'
+              Kind = 'zip'
+            },
+            @{
+              Name = 'Ghost Downloader 3'
+              File = 'Ghost-Downloader-v4.5.8-Windows-x86_64.zip'
+              Url = 'https://github.com/XiaoYouChR/Ghost-Downloader-3/releases/download/v4.5.8/Ghost-Downloader-v4.5.8-Windows-x86_64.zip'
+              Sha256 = 'c8dacdc4bd48ed80e0d8184b7f93e5ad4cb946dd8a098c485890e14ca59721d6'
+              Kind = 'zip'
+            },
+            @{
+              Name = 'Tasket Plus Plus'
+              File = 'Tasket++_v3.1.zip'
+              Url = 'https://github.com/AmirHammouteneEI/ScheduledPasteAndKeys/releases/download/v3.1-release/Tasket%2B%2B_v3.1.zip'
+              Sha256 = '4f41da1d0a72352035c74a6068d39e83102ce9dc2f604c1c7d7b3b12a258e5d1'
+              Kind = 'zip'
+            },
+            @{
+              Name = 'GitWriter'
+              File = 'GitWriter-1.2.2-windows-x86_64.msi'
+              Url = 'https://github.com/jotalac/git-writer/releases/download/1.2.2/GitWriter-1.2.2-windows-x86_64.msi'
+              Sha256 = '3814df8efb2e20096962f8d107ea24737b4a38b945d64768d79fb7e909ebc786'
+              Kind = 'msi'
+            },
+            @{
+              Name = 'PakePlus'
+              File = 'PakePlus_2.2.8_x64_en-US.msi'
+              Url = 'https://github.com/Sjj1024/PakePlus/releases/download/PakePlus-v2.2.8/PakePlus_2.2.8_x64_en-US.msi'
+              Sha256 = '92667480ca6c274bc1e6ea46bc473dc76779e2b6985d9553da55cfa554cec155'
+              Kind = 'msi'
+            },
+            @{
+              Name = 'BentoPDF Kura'
+              File = 'kura-v1.4.1-windows-x64.zip'
+              Url = 'https://github.com/alam00000/bentopdf-kura/releases/download/v1.4.1/kura-v1.4.1-windows-x64.zip'
+              Sha256 = '82c74d290480421b4c4160fefde1a3e63e9e7cfc0de189f304026e1be2a4f59d'
+              Kind = 'zip'
+            }
+          )
+
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('# Candidate package inspection')
+          $summary.Add('')
+          $summary.Add('Every download is checked against the official release SHA-256. ZIP archives are extracted. MSI packages are administratively extracted with msiexec /a; no product installer is run and no application executable is launched.')
+          $summary.Add('')
+
+          foreach ($target in $targets) {
+            Write-Host ''
+            Write-Host ('=' * 72)
+            Write-Host "$($target.Name): $($target.File)"
+            Write-Host ('=' * 72)
+
+            $slug = $target.Name -replace '[^A-Za-z0-9_-]', '-'
+            $work = Join-Path $root $slug
+            $download = Join-Path $work $target.File
+            $extract = Join-Path $work 'extracted'
+            New-Item -ItemType Directory -Path $work,$extract -Force | Out-Null
+
+            Invoke-WebRequest -Uri $target.Url -OutFile $download -MaximumRedirection 10 -TimeoutSec 900
+            if (-not (Test-Path -LiteralPath $download -PathType Leaf)) {
+              throw "Download missing: $($target.Url)"
+            }
+
+            $actual = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $target.Sha256) {
+              throw "SHA-256 mismatch for $($target.Name): expected $($target.Sha256), got $actual"
+            }
+            Write-Host "SHA-256 verified: $actual"
+            $summary.Add("## $($target.Name)")
+            $summary.Add("- SHA-256: PASS")
+            $summary.Add("- Package type: $($target.Kind)")
+
+            if ($target.Kind -eq 'zip') {
+              Expand-Archive -LiteralPath $download -DestinationPath $extract -Force
+            } elseif ($target.Kind -eq 'msi') {
+              $log = Join-Path $work 'administrative-extraction.log'
+              $quote = [char]34
+              $args = "/a $quote$download$quote /qn TARGETDIR=$quote$extract$quote /L*v $quote$log$quote"
+              $process = Start-Process -FilePath (Join-Path $env:WINDIR 'System32\msiexec.exe') -ArgumentList $args -Wait -PassThru
+              if ($process.ExitCode -ne 0) {
+                throw "MSI administrative extraction failed for $($target.Name), exit code $($process.ExitCode). Log: $log"
+              }
+            } else {
+              throw "Unsupported inspection type: $($target.Kind)"
+            }
+
+            $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+            if ($files.Count -eq 0) {
+              throw "No files were extracted for $($target.Name)"
+            }
+            $executables = @($files | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+              [PSCustomObject]@{
+                Path = [System.IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\', '/')
+                Bytes = $_.Length
+              }
+            })
+
+            Write-Host "Extracted files: $($files.Count)"
+            Write-Host 'Executable inventory:'
+            if ($executables.Count -eq 0) {
+              Write-Host '  (no EXE files)'
+              $summary.Add('- Executables: none')
+            } else {
+              foreach ($exe in $executables) {
+                Write-Host "  $($exe.Path) [$($exe.Bytes) bytes]"
+                $summary.Add("- EXE: $($exe.Path) ($($exe.Bytes) bytes)")
+              }
+            }
+
+            Write-Host 'Top-level files and directories:'
+            Get-ChildItem -LiteralPath $extract -Force | Sort-Object Name | ForEach-Object {
+              $kind = if ($_.PSIsContainer) { 'DIR' } else { 'FILE' }
+              Write-Host "  [$kind] $($_.Name)"
+              $summary.Add("- $kind: $($_.Name)")
+            }
+            $summary.Add('')
+          }
+
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          Write-Host ''
+          Write-Host 'All candidate package downloads, hashes, and extraction checks passed.'
