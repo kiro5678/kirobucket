@@ -27,6 +27,34 @@ jobs:
 
           $targets = @(
             @{
+              Name = 'SMD Win'
+              File = 'SMDWin.exe'
+              Url = 'https://github.com/paulchirila2026/SMDWin/releases/download/v0.4.1/SMDWin.exe'
+              Sha256 = 'a7a8e98eb8ce1b40f1f70ee9a91a401ec8389e1a9fdb73aa4d64d05ab095d88f'
+              Kind = 'exe'
+            },
+            @{
+              Name = 'Groundwork Habits'
+              File = 'Groundwork-Habits-1.7.11-Windows-portable.exe'
+              Url = 'https://github.com/English-Muffin/GroundworkHabits/releases/download/v1.7.11/Groundwork-Habits-1.7.11-Windows-portable.exe'
+              Sha256 = '46bf922318c00cd42cbae1dfb61dd7b4532d02dc4f88f21d131fc827bb530e24'
+              Kind = 'exe'
+            },
+            @{
+              Name = 'Notch Windows'
+              File = 'notch.exe'
+              Url = 'https://github.com/anshthakur0999/notch-windows/releases/download/v0.1.9/notch.exe'
+              Sha256 = '0b712117806ba069b72fcd4dc0eadb0ad70fe5012e333263004594413e1c8344'
+              Kind = 'exe'
+            },
+            @{
+              Name = 'Calculator'
+              File = 'Calculator.exe'
+              Url = 'https://github.com/gabrielmfern/Calculator/releases/download/v0.1.0/Calculator.exe'
+              Sha256 = 'b74bf17bf4d224ddec0ed19bba45165becdeeeba881bcbd7a68adc96026db0dc'
+              Kind = 'exe'
+            },
+            @{
               Name = 'Win Stats'
               File = 'WinStats-portable-x64.zip'
               Url = 'https://github.com/VC067/win-stats/releases/download/v0.2.1/WinStats-portable-x64.zip'
@@ -113,6 +141,8 @@ jobs:
               if ($LASTEXITCODE -gt 1) {
                 throw "7-Zip could not extract $($target.Name), exit code $LASTEXITCODE"
               }
+            } elseif ($target.Kind -eq 'exe') {
+              $extract = $work
             } elseif ($target.Kind -eq 'msi') {
               $log = Join-Path $work 'administrative-extraction.log'
               $quote = [char]34
