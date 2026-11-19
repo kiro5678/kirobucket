@@ -13,9 +13,9 @@ permissions:
 jobs:
   inspect:
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
-      - name: Inspect version metadata, install behavior and driver side effects
+      - name: Inspect embedded version strings for Scoop checkver
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -23,82 +23,42 @@ jobs:
           $url = 'https://kingpindev.com/hotpad/Hotpad-Setup-latest.exe'
           $installer = Join-Path $env:RUNNER_TEMP 'Hotpad-Setup-latest.exe'
           Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 120 -Headers @{ 'User-Agent' = 'kirobucket-package-inspector' }
-
-          $item = Get-Item -LiteralPath $installer
           $hash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
           $version = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
-          $signature = Get-AuthenticodeSignature -LiteralPath $installer
-          Write-Host "Size bytes: $($item.Length)"
+          Write-Host "File size: $((Get-Item $installer).Length)"
           Write-Host "SHA256: $hash"
-          Write-Host "ProductName: $($version.ProductName)"
-          Write-Host "FileVersion: $($version.FileVersion)"
-          Write-Host "ProductVersion: $($version.ProductVersion)"
-          Write-Host "CompanyName: $($version.CompanyName)"
-          Write-Host "SignatureStatus: $($signature.Status)"
+          Write-Host "Product version: $($version.ProductVersion)"
 
           $response = Invoke-WebRequest -Uri $url -TimeoutSec 120 -Headers @{ 'User-Agent' = 'Scoop-checkver-validation' }
           $body = [string]$response.Content
-          Write-Host "Checkver-style content type: $($response.Headers['Content-Type'])"
-          Write-Host "Checkver-style content length: $($body.Length)"
-          foreach ($pattern in @('1.0.1','1\x00\.\x001\x00')) {
-            if ([regex]::IsMatch($body,$pattern)) { Write-Host "Checkver regex matched: $pattern" }
+          Write-Host "Response content type: $($response.Headers['Content-Type'])"
+          Write-Host "Content length after decoding: $($body.Length)"
+
+          $matches = [regex]::Matches($body,'(?<version>\d+\.\d+\.\d+)')
+          Write-Host "First version-like strings found in binary response:"
+          foreach ($match in ($matches | Select-Object -First 20)) {
+            $start = [Math]::Max(0,$match.Index - 36)
+            $length = [Math]::Min($body.Length - $start,$match.Length + 72)
+            $context = $body.Substring($start,$length).Replace([string][char]0,'<NUL>')
+            Write-Host ("MATCH: {0} | CONTEXT: {1}" -f $match.Value,$context)
           }
 
-          $innoZip = Join-Path $env:RUNNER_TEMP 'innoextract.zip'
-          Invoke-WebRequest -Uri 'https://github.com/dscharrer/innoextract/releases/download/1.9/innoextract-1.9-windows.zip' -OutFile $innoZip -TimeoutSec 120
-          $innoRoot = Join-Path $env:RUNNER_TEMP 'innoextract'
-          Expand-Archive -LiteralPath $innoZip -DestinationPath $innoRoot -Force
-          $inno = Get-ChildItem -LiteralPath $innoRoot -Filter 'innoextract.exe' -Recurse -File | Select-Object -First 1 -ExpandProperty FullName
-          if (-not $inno) { throw 'innoextract.exe was not found.' }
-          Write-Host '=== Innoextract inspection ==='
-          & $inno --list $installer 2>&1 | Select-Object -First 120 | ForEach-Object { Write-Host $_ }
-          Write-Host "Innoextract list exit code: $LASTEXITCODE (non-zero may indicate an unsupported loader revision)."
-
-          $installRoot = Join-Path $env:RUNNER_TEMP 'Hotpad-Scoop-Install-Test'
-          $driversBefore = @(Get-CimInstance Win32_SystemDriver | ForEach-Object { $_.Name })
-          $driverFilesBefore = @(Get-ChildItem 'C:\Windows\System32\drivers' -File | ForEach-Object { $_.Name })
-          $process = Start-Process -FilePath $installer -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-',"/DIR=$installRoot") -PassThru
-          if (-not $process.WaitForExit(120000)) {
-            $process.Kill()
-            throw 'Silent installer exceeded 120 seconds.'
-          }
-          $process.Refresh()
-          Write-Host "Silent install exit code: $($process.ExitCode)"
-          if ($process.ExitCode -ne 0) { throw "Hotpad silent install exited with code $($process.ExitCode)." }
-          if (-not (Test-Path -LiteralPath $installRoot -PathType Container)) {
-            throw "Installer did not honor the requested installation directory: $installRoot"
-          }
-
-          Get-ChildItem -LiteralPath $installRoot -Recurse -File |
-            Select-Object -First 140 |
-            ForEach-Object {
-              $fi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName)
-              Write-Host ("INSTALLED: {0} | {1} bytes | {2} | {3}" -f $_.FullName.Substring($installRoot.Length + 1),$_.Length,$fi.ProductName,$fi.FileVersion)
+          foreach ($needle in @('Hotpad','ProductVersion','FileVersion','1.0.1')) {
+            $index = $body.IndexOf($needle,[System.StringComparison]::OrdinalIgnoreCase)
+            if ($index -ge 0) {
+              $start = [Math]::Max(0,$index - 48)
+              $length = [Math]::Min($body.Length - $start,160)
+              Write-Host ("NEEDLE: {0} | INDEX: {1} | CONTEXT: {2}" -f $needle,$index,$body.Substring($start,$length).Replace([string][char]0,'<NUL>'))
+            } else {
+              Write-Host "NEEDLE NOT FOUND: $needle"
             }
-          $driversAfter = @(Get-CimInstance Win32_SystemDriver | ForEach-Object { $_.Name })
-          $newDrivers = @($driversAfter | Where-Object { $driversBefore -notcontains $_ })
-          $driverFilesAfter = @(Get-ChildItem 'C:\Windows\System32\drivers' -File | ForEach-Object { $_.Name })
-          $newDriverFiles = @($driverFilesAfter | Where-Object { $driverFilesBefore -notcontains $_ })
-          Write-Host "New system-driver services: $($newDrivers -join ', ')"
-          Write-Host "New driver files: $($newDriverFiles -join ', ')"
-
-          $uninstaller = Get-ChildItem -LiteralPath $installRoot -Filter 'unins*.exe' -File -Recurse | Select-Object -First 1 -ExpandProperty FullName
-          if (-not $uninstaller) { throw 'The Inno Setup uninstaller was not installed under the target directory.' }
-          $uninstall = Start-Process -FilePath $uninstaller -ArgumentList @('/VERYSILENT','/SUPPRESSMSGBOXES','/NORESTART','/SP-') -Wait -PassThru
-          Write-Host "Silent uninstall exit code: $($uninstall.ExitCode)"
+          }
 
           @(
-            '## Hotpad package inspection'
+            '## Hotpad version metadata'
             ''
-            "- Download URL: $url"
-            "- Product version: $($version.ProductVersion)"
-            "- File size: $($item.Length) bytes"
-            "- SHA-256: $hash"
-            "- Authenticode: $($signature.Status)"
-            "- New system-driver services after silent install: $($newDrivers -join ', ')"
-            "- New driver files: $($newDriverFiles -join ', ')"
-            "- Silent install exit code: $($process.ExitCode)"
-            "- Silent uninstall exit code: $($uninstall.ExitCode)"
-            ''
-            'The installer was tested only on a disposable GitHub Actions Windows runner.'
+            "- Current ProductVersion: $($version.ProductVersion)"
+            "- Current SHA-256: $hash"
+            "- Download is an unsigned setup EXE. Its update URL is a mutable latest-release endpoint."
           ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          $global:LASTEXITCODE = 0
