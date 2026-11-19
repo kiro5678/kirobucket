@@ -127,15 +127,10 @@ jobs:
               Write-Host "INSTALLED FILE: $relative"
             }
 
-            $shim = Join-Path $env:SCOOP 'shims\orfeo.exe'
+            $shim = Join-Path $env:SCOOP 'shims\orfeo.cmd'
             if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
               throw "Scoop did not create its CMD shim: $shim"
             }
-            $shimMetadata = Join-Path $env:SCOOP 'shims\orfeo.shim'
-            if (-not (Test-Path -LiteralPath $shimMetadata -PathType Leaf)) {
-              throw "Scoop did not create shim metadata: $shimMetadata"
-            }
-
             $startMenu = [Environment]::GetFolderPath([Environment+SpecialFolder]::StartMenu)
             $shortcut = Join-Path $startMenu 'Programs\Scoop Apps\Orfeo.lnk'
             if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
@@ -176,7 +171,7 @@ jobs:
 
           function Start-OrfeoFromScoopShim {
             param([hashtable]$Paths, [string]$Label)
-            $shim = Join-Path $env:SCOOP 'shims\orfeo.exe'
+            $shim = Join-Path $env:SCOOP 'shims\orfeo.cmd'
             $env:TEMP = $isolatedTemp
             $env:TMP = $isolatedTemp
             $env:APPDATA = $isolatedAppData
@@ -285,7 +280,7 @@ jobs:
             if (Test-Path -LiteralPath $currentApp) {
               throw "Scoop uninstall left the current app link behind: $currentApp"
             }
-            if (Test-Path -LiteralPath (Join-Path $env:SCOOP 'shims\orfeo.exe')) {
+            if (Test-Path -LiteralPath (Join-Path $env:SCOOP 'shims\orfeo.cmd')) {
               throw 'Scoop uninstall did not remove the generated orfeo.cmd shim.'
             }
             if (Test-Path -LiteralPath (Join-Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::StartMenu)) 'Programs\Scoop Apps\Orfeo.lnk')) {
