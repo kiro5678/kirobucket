@@ -156,15 +156,18 @@ jobs:
               throw "Orfeo-Data points to '$target' instead of '$($paths.PersistData)'."
             }
 
-            $command = Get-Command orfeo -CommandType Application -ErrorAction Stop
-            if ([System.IO.Path]::GetFullPath($command.Source) -ine [System.IO.Path]::GetFullPath($shim)) {
-              throw "PowerShell command resolution returned $($command.Source); the expected Scoop CMD shim is $shim."
+            $commands = @(Get-Command orfeo -CommandType Application -All -ErrorAction Stop)
+            $matchingShim = @($commands | Where-Object {
+              [System.IO.Path]::GetFullPath($_.Source) -ieq [System.IO.Path]::GetFullPath($shim)
+            })
+            if ($matchingShim.Count -eq 0) {
+              throw "PowerShell command resolution did not include the expected Scoop CMD shim: $shim. Resolved: $($commands.Source -join '; ')"
             }
 
             Write-Host "APP DIRECTORY: $($paths.AppDir)"
             Write-Host "PERSIST DIRECTORY: $($paths.PersistData)"
             Write-Host "PERSIST LINK: $($link.LinkType) -> $target"
-            Write-Host "SCOOP SHIM: $($command.Source)"
+            Write-Host "SCOOP SHIM: $($matchingShim[0].Source)"
             Write-Host "START MENU: $shortcut"
             return $paths
           }
