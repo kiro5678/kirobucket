@@ -166,12 +166,20 @@ jobs:
             param(
               [Parameter(Mandatory)][string]$Name,
               [Parameter(Mandatory)][string]$Path,
-              [string[]]$Arguments = @()
+              [string[]]$Arguments
             )
 
             $process = $null
             try {
-              $process = Start-Process -FilePath $Path -ArgumentList $Arguments -WorkingDirectory (Split-Path -Parent $Path) -PassThru
+              $startParams = @{
+                FilePath = $Path
+                WorkingDirectory = Split-Path -Parent $Path
+                PassThru = $true
+              }
+              if ($null -ne $Arguments -and $Arguments.Count -gt 0) {
+                $startParams.ArgumentList = $Arguments
+              }
+              $process = Start-Process @startParams
               Start-Sleep -Seconds 6
               $process.Refresh()
               if ($process.HasExited) {
