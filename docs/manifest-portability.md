@@ -45,6 +45,13 @@
 - The separate archive inspection run [44594437529](https://github.com/kiro5678/kirobucket/actions/runs/44594437529) checked the official release digests, ZIP integrity and extracted file layouts. The tests ran on disposable GitHub-hosted Windows runners, not on the user's computer.
 - Evidence: [Framecalm](../bucket/framecalm.json), [Tasket++](../bucket/tasketpp.json), [BatteryHub](../bucket/batteryhub.json), [Mole](../bucket/mole.json), [lifecycle workflow](../.github/workflows/portable-scoop-lifecycle-test.yml), and [package inspection workflow](../.github/workflows/portable-candidate-inspection.yml).
 
+### NixanDeck 1.0.0-beta.1 — MSIX installation (2026-11-20)
+
+- The official Windows 11 x64 ZIP (82,115,714 bytes; SHA-256 `97c275417e4ee3355241ee015a5dde4753358b44f9f4e4b15bf101bb31fe5af8`) contains `Install.bat`, `NixanDeck.cer`, and `NixanDeck.msix`; it is a distribution wrapper, not a portable application archive.
+- The Scoop manifest checks the release feed and extracts the ZIP into the Scoop version directory. Its `pre_install` hook creates `NixanDeck.cmd`; `post_install` trusts the signing certificate in `LocalMachine\\TrustedPeople` when needed and registers the MSIX for the current Windows user. Scoop then provides a Start Menu shortcut to the AppsFolder application.
+- The application payload is installed and managed by Windows rather than executed from the Scoop directory. The manifest is therefore **Nonportable**. The `pre_uninstall` hook removes the current user's MSIX registration; the machine-wide publisher certificate is left trusted, matching the established MSIX bucket pattern.
+- The dedicated [NixanDeck MSIX package test workflow](../.github/workflows/nixandeck-msix-package-test.yml) validates the release digest, ZIP layout, MSIX identity and executable, certificate-to-publisher match, and the manifest install/uninstall hooks on a disposable Windows runner. It deliberately does not launch the shell application.
+
 ## Summary
 
 <!-- KIROBUCKET-PORTABILITY-SUMMARY-START -->
