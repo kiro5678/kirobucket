@@ -1,12 +1,12 @@
 {
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "Native desktop data workbench for querying and exploring CSV, TSV, Parquet, local folders and S3-compatible storage.",
     "homepage": "https://getbamboo.app/",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/OldPanda/bamboo/releases/download/v0.2.2/Bamboo-0.2.2-windows-x64.zip",
-            "hash": "72e51ac3a4c8828a27a58171d40e0668fa2ac27a8d3c4b723b4f497224b00362",
+            "url": "https://github.com/OldPanda/bamboo/releases/download/v0.2.3/Bamboo-0.2.3-windows-x64.zip",
+            "hash": "a3c95f755e50e530a206dc07c5cf6a0ac532b2178dd9776949bbc90fd3c8799b",
             "bin": "bamboo.exe",
             "shortcuts": [
                 [
