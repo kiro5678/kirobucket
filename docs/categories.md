@@ -27,7 +27,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 30 | [View](#notch) |
 | Notes & Knowledge | 26 | [View](#notes-knowledge) |
-| Other Utilities | 133 | [View](#other-utilities) |
+| Other Utilities | 137 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 35 | [View](#productivity-launchers) |
@@ -910,6 +910,10 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [vt-uploader-denis-anisimov](../bucket/vt-uploader-denis-anisimov.json) | 1.26.4.12 | 64bit: 8.3 MiB / 32bit: 5.6 MiB | 2026-04-12 | Portable VirusTotal client by Denis Anisimov for uploading files and running processes, checking hashes, and viewing analysis reports. | [Homepage](https://www.vtuploader.com/) |
 | [windows-super-god-mode-thiojoe](../bucket/windows-super-god-mode-thiojoe.json) | 1.2.4 | 233.7 KiB | 2026-11-08 | Creates shortcuts to Windows shell folders, Settings pages, task links, deep links, and URL protocols. | [Homepage](https://github.com/ThioJoe/Windows-Super-God-Mode) |
 
+| [batteryhub](../bucket/batteryhub.json) | 1.1.0 | 64bit: 1.4 MiB | 2026-11-19 | Windows system-tray utility showing battery levels for wireless mice, headsets, keyboards, and controllers. | [Homepage](https://github.com/krisgfx9/Wireless-Device-Battery-Monitor) |
+| [framecalm](../bucket/framecalm.json) | 0.5.3 | 64bit: 92.5 MiB | 2026-11-17 | Windows optimizer with reversible, documented tweaks, game profiles, startup management, and before/after benchmarks. | [Homepage](https://framecalm.krezio.xyz) |
+| [mole](../bucket/mole.json) | 1.46.0 | 64bit: 4.4 MiB | 2026-11-18 | Windows CLI for cleaning caches, uninstalling applications, optimizing the system, analyzing disk usage, and checking live status. | [Homepage](https://github.com/tw93/Mole/tree/windows) |
+| [tasketpp](../bucket/tasketpp.json) | 3.1 | 12.9 MiB | 2026-11-14 | Portable Windows automation for scheduled tasks, keystrokes, paste actions, cursor movements and system commands. | [Homepage](https://github.com/AmirHammouteneEI/ScheduledPasteAndKeys) |
 ## Package Management
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
