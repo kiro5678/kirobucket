@@ -119,8 +119,9 @@
         }
     },
     "notes": [
-        "Stellaria files remain inside Scoop. Zebar is installed from extras/zebar.",
+        "Stellaria's program files remain inside Scoop. Zebar is installed from extras/zebar.",
         "Scoop creates only the required junctions; it does not enable Stellaria, register logon tasks, or change the taskbar during installation.",
+        "The source application still stores its user settings and logs under %APPDATA% and %LOCALAPPDATA%; those data folders are not redirected into Scoop.",
         "Open Stellaria and use its Installation page when you are ready to activate the shell."
     ]
 }
