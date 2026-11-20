@@ -13,11 +13,6 @@
         ]
     ],
     "persist": "data",
-    "pre_install": [
-        "$exe = Get-ChildItem -LiteralPath $dir -Filter 'CedroModernDock.exe' -File -Recurse | Select-Object -First 1",
-        "if ($null -eq $exe) { throw 'CedroModernDock.exe was not found in the extracted MSI payload.' }",
-        "if ($exe.DirectoryName -ne $dir) { Get-ChildItem -LiteralPath $exe.DirectoryName -Force | ForEach-Object { Move-Item -LiteralPath $_.FullName -Destination $dir -Force } }"
-    ],
     "post_install": [
         "$appDataPath = Join-Path $env:APPDATA 'CedroModernDock'",
         "$persistDataPath = Join-Path $persist_dir 'data'",
@@ -52,5 +47,17 @@
     "notes": [
         "Scoop extracts the MSI payload with its built-in MSI extractor; the vendor installer is not executed.",
         "Configuration, custom themes, icon cache, and crash logs from %APPDATA%\\CedroModernDock are redirected to Scoop's persistent data directory."
+    ],
+    "post_uninstall": [
+        "$appDataPath = Join-Path $env:APPDATA 'CedroModernDock'",
+        "$persistDataPath = Join-Path $persist_dir 'data'",
+        "if (Test-Path -LiteralPath $appDataPath) {",
+        "    $existing = Get-Item -LiteralPath $appDataPath -Force",
+        "    if (($existing.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0 -and $existing.LinkType -eq 'Junction' -and [IO.Path]::GetFullPath([string]$existing.Target) -ieq [IO.Path]::GetFullPath($persistDataPath)) {",
+        "        $removeCommand = 'rmdir \"' + $appDataPath + '\"'",
+        "        & $env:ComSpec /d /c $removeCommand",
+        "        if ($LASTEXITCODE -ne 0) { throw ('Failed to remove the Cedro Modern Dock AppData junction; cmd exit code: ' + $LASTEXITCODE) }",
+        "    }",
+        "}"
     ]
 }
