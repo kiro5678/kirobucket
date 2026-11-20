@@ -165,6 +165,124 @@ jobs:
             }
           }
 
+          Add-Report ""
+          Add-Report "Direct execution test of the 7-Zip-extracted main executable:"
+          $extractedMain = Join-Path $extractDir "yoslion-download.exe"
+          if (Test-Path -LiteralPath $extractedMain -PathType Leaf) {
+            try {
+              $directProcess = Start-Process -FilePath $extractedMain -WorkingDirectory $extractDir -PassThru
+              Add-Report "  Process started: PID=$($directProcess.Id)"
+              $directExited = $directProcess.WaitForExit(12000)
+              $directProcess.Refresh()
+              if ($directExited -or $directProcess.HasExited) {
+                Add-Report "  Exited within 12 seconds. ExitCode=$($directProcess.ExitCode)"
+              } else {
+                Add-Report "  Stayed running for 12 seconds; terminated test process."
+                & taskkill.exe /PID $directProcess.Id /T /F | Out-Null
+              }
+            } catch {
+              Add-Report "  Direct launch failed: $($_.Exception.Message)"
+            }
+          } else {
+            Add-Report "  Main executable was not found at the extracted root."
+          }
+
+          Add-Report ""
+          Add-Report "Vendor silent-install experiment (isolated disposable GitHub-hosted runner):"
+          $installDir = Join-Path $root "installed"
+          New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+          $registryTargets = @(
+            "HKCU:\Software\Google\Chrome\NativeMessagingHosts",
+            "HKCU:\Software\Microsoft\Edge\NativeMessagingHosts",
+            "HKCU:\Software\Mozilla\NativeMessagingHosts",
+            "HKLM:\Software\Google\Chrome\NativeMessagingHosts",
+            "HKLM:\Software\Microsoft\Edge\NativeMessagingHosts",
+            "HKLM:\Software\Mozilla\NativeMessagingHosts",
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
+            "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
+            "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+          )
+          $registryBefore = @{}
+          foreach ($keyPath in $registryTargets) {
+            $registryBefore[$keyPath] = if (Test-Path -LiteralPath $keyPath) {
+              @(Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue | ForEach-Object { $_.PSChildName })
+            } else { @() }
+          }
+
+          $installerProcess = Start-Process -FilePath $installer -ArgumentList "/S /D=$installDir" -PassThru
+          Add-Report "  Silent setup PID: $($installerProcess.Id)"
+          $installExited = $installerProcess.WaitForExit(120000)
+          $installerProcess.Refresh()
+          if (-not $installExited -and -not $installerProcess.HasExited) {
+            Add-Report "  Silent setup did not exit within 120 seconds; terminating it."
+            & taskkill.exe /PID $installerProcess.Id /T /F | Out-Null
+            throw "Yoslion NSIS silent installation timed out."
+          }
+          Add-Report "  Silent setup exit code: $($installerProcess.ExitCode)"
+          Add-Report "  Requested install directory: $installDir"
+
+          $installedFiles = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+          Add-Report "  Installed file count in requested directory: $($installedFiles.Count)"
+          foreach ($installed in $installedFiles | Sort-Object FullName | Select-Object -First 250) {
+            $relative = [System.IO.Path]::GetRelativePath($installDir, $installed.FullName).Replace('\', '/')
+            Add-Report "  [FILE] $relative [$($installed.Length) bytes]"
+          }
+
+          Add-Report ""
+          Add-Report "Changed registry keys and values after install:"
+          foreach ($keyPath in $registryTargets) {
+            if (-not (Test-Path -LiteralPath $keyPath)) { continue }
+            foreach ($key in Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue) {
+              $wasPresent = $registryBefore[$keyPath] -contains $key.PSChildName
+              $properties = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+              $summary = ($properties.PSObject.Properties |
+                Where-Object { $_.Name -notmatch '^PS' } |
+                ForEach-Object { "$($_.Name)=$($_.Value)" }) -join "; "
+              if (-not $wasPresent -or $keyPath -match 'NativeMessagingHosts|Uninstall') {
+                Add-Report "  $keyPath\$($key.PSChildName) | $summary"
+                foreach ($child in Get-ChildItem -LiteralPath $key.PSPath -Recurse -ErrorAction SilentlyContinue) {
+                  $childProperties = Get-ItemProperty -LiteralPath $child.PSPath -ErrorAction SilentlyContinue
+                  $childSummary = ($childProperties.PSObject.Properties |
+                    Where-Object { $_.Name -notmatch '^PS' } |
+                    ForEach-Object { "$($_.Name)=$($_.Value)" }) -join "; "
+                  Add-Report "    $($child.Name) | $childSummary"
+                }
+              }
+            }
+          }
+
+          Add-Report ""
+          Add-Report "Potential Yoslion data/configuration directories:"
+          foreach ($baseDir in @($env:APPDATA, $env:LOCALAPPDATA, $env:PROGRAMDATA)) {
+            if (-not (Test-Path -LiteralPath $baseDir -PathType Container)) { continue }
+            foreach ($candidate in Get-ChildItem -LiteralPath $baseDir -Directory -Force -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -match 'Yoslion|Palacios' }) {
+              Add-Report "  $($candidate.FullName)"
+              foreach ($item in Get-ChildItem -LiteralPath $candidate.FullName -Force -Recurse -ErrorAction SilentlyContinue |
+                  Select-Object -First 100) {
+                Add-Report "    $($item.FullName)"
+              }
+            }
+          }
+
+          $installedMain = Join-Path $installDir "yoslion-download.exe"
+          if (Test-Path -LiteralPath $installedMain -PathType Leaf) {
+            Add-Report ""
+            Add-Report "Installed application launch smoke test:"
+            $appProcess = Start-Process -FilePath $installedMain -WorkingDirectory $installDir -PassThru
+            Add-Report "  Process started: PID=$($appProcess.Id)"
+            $appExited = $appProcess.WaitForExit(12000)
+            $appProcess.Refresh()
+            if ($appExited -or $appProcess.HasExited) {
+              Add-Report "  Exited within 12 seconds. ExitCode=$($appProcess.ExitCode)"
+            } else {
+              Add-Report "  Stayed running for 12 seconds; terminated test process."
+              & taskkill.exe /PID $appProcess.Id /T /F | Out-Null
+            }
+          } else {
+            Add-Report "Installed main executable was not found at the requested install directory root."
+          }
+
           $reportPath = Join-Path $root "yoslion-inspection-report.txt"
           $report | Set-Content -LiteralPath $reportPath -Encoding utf8
           $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
