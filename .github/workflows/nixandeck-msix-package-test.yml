@@ -132,7 +132,7 @@ jobs:
           Write-Host 'Scoop native Expand-ZipArchive MSIX extraction: PASS'
 
           $makeAppx = $null
-          $kitsRoot = Join-Path \${env:ProgramFiles(x86)} 'Windows Kits\10\bin'
+          $kitsRoot = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\bin'
           if (Test-Path -LiteralPath $kitsRoot -PathType Container) {
             $makeAppx = Get-ChildItem -LiteralPath $kitsRoot -Filter 'MakeAppx.exe' -File -Recurse -ErrorAction SilentlyContinue |
               Where-Object { $_.Directory.Name -eq 'x64' } |
@@ -140,7 +140,7 @@ jobs:
               Select-Object -First 1
           }
           if ($null -eq $makeAppx) {
-            $certKitMakeAppx = Join-Path \${env:ProgramFiles(x86)} 'Windows Kits\10\App Certification Kit\MakeAppx.exe'
+            $certKitMakeAppx = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\App Certification Kit\MakeAppx.exe'
             if (Test-Path -LiteralPath $certKitMakeAppx -PathType Leaf) {
               $makeAppx = Get-Item -LiteralPath $certKitMakeAppx
             }
@@ -161,6 +161,82 @@ jobs:
             Write-Host "Microsoft MakeAppx official MSIX unpack: PASS ($($makeAppx.FullName))"
           } else {
             Write-Warning 'MakeAppx.exe is not installed on this runner; Microsoft SDK unpack comparison was skipped.'
+          }
+
+          Write-Host "Unpackaged direct-launch smoke test"
+          $directExe = Join-Path $scoopExtractDir $appExecutable
+          $watchdogExe = Join-Path $scoopExtractDir 'NixanDeck.Watchdog.exe'
+          if (-not (Test-Path -LiteralPath $directExe -PathType Leaf)) {
+            throw "The extracted application executable is missing: $directExe"
+          }
+          if (-not (Test-Path -LiteralPath $watchdogExe -PathType Leaf)) {
+            throw 'The watchdog executable is missing; direct launch was skipped to avoid leaving the shell hidden on the test runner.'
+          }
+
+          $watchdogIdsBefore = @((Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue).Id)
+          $startupKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+          $startupKey = Get-Item -LiteralPath $startupKeyPath -ErrorAction Stop
+          $hadStartupValue = $startupKey.GetValueNames() -contains 'NixanDeck'
+          $oldStartupValue = if ($hadStartupValue) { $startupKey.GetValue('NixanDeck', $null, 'DoNotExpandEnvironmentNames') } else { $null }
+          $savedLocalAppData = $env:LOCALAPPDATA
+          $testLocalAppData = Join-Path $root 'unpackaged-localappdata'
+          New-Item -ItemType Directory -Path $testLocalAppData -Force | Out-Null
+          $env:LOCALAPPDATA = $testLocalAppData
+          $directProcess = $null
+          $directLaunchPassed = $false
+
+          try {
+            $directProcess = Start-Process -FilePath $directExe -WorkingDirectory $scoopExtractDir -PassThru
+            Write-Host "Unpackaged WinMacShell PID: $($directProcess.Id)"
+            $exited = $directProcess.WaitForExit(15000)
+            $directProcess.Refresh()
+            if ($exited -or $directProcess.HasExited) {
+              Write-Host "Unpackaged process exited before the 15-second smoke-test window. Exit code: $($directProcess.ExitCode)"
+            } else {
+              $directLaunchPassed = $true
+              Write-Host 'Unpackaged direct launch stayed running for 15 seconds: PASS'
+            }
+          } finally {
+            if ($null -ne $directProcess) {
+              $directProcess.Refresh()
+              if (-not $directProcess.HasExited) {
+                Stop-Process -Id $directProcess.Id -Force -ErrorAction SilentlyContinue
+                [void]$directProcess.WaitForExit(10000)
+              }
+            }
+
+            # Allow the bundled watchdog to restore the Windows taskbar/work area after the smoke test.
+            $deadline = [DateTime]::UtcNow.AddSeconds(15)
+            do {
+              $newWatchdogs = @(Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue |
+                Where-Object { $watchdogIdsBefore -notcontains $_.Id })
+              if ($newWatchdogs.Count -eq 0) { break }
+              Start-Sleep -Milliseconds 500
+            } while ([DateTime]::UtcNow -lt $deadline)
+
+            # The runner is disposable; stop only watchdog instances created by this test if one remains.
+            foreach ($watchdog in @(Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue |
+                Where-Object { $watchdogIdsBefore -notcontains $_.Id })) {
+              Stop-Process -Id $watchdog.Id -Force -ErrorAction SilentlyContinue
+            }
+
+            $env:LOCALAPPDATA = $savedLocalAppData
+            $currentStartupKey = Get-Item -LiteralPath $startupKeyPath -ErrorAction Stop
+            if ($hadStartupValue) {
+              $currentStartupKey.SetValue('NixanDeck', $oldStartupValue, [Microsoft.Win32.RegistryValueKind]::String)
+            } else {
+              $currentStartupKey.DeleteValue('NixanDeck', $false)
+            }
+            Remove-Item -LiteralPath $testLocalAppData -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+          if ($directLaunchPassed) {
+            'Unpackaged direct launch: PASS (process remained alive for 15 seconds)' |
+              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          } else {
+            'Unpackaged direct launch: FAIL (process exited before 15 seconds)' |
+              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+            throw 'NixanDeck could not remain running when launched directly from the extracted MSIX payload without Add-AppxPackage.'
           }
 
           $certPath = Join-Path $extractDir 'NixanDeck.cer'
