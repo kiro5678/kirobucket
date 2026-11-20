@@ -36,11 +36,27 @@ jobs:
           $ErrorActionPreference = "Stop"
           $ProgressPreference = "SilentlyContinue"
 
-          $url = "https://updates.yoslion.com/release/windows/x86_64/1.1.2/Yoslion%20Download_1.1.2_x64-setup.exe"
-          $expectedHash = "afafa745eabdfdd78a98d423036db74712ab120b252e60741f5ab29ce4873e18"
-          $expectedSize = 5607368
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE "bucket\yoslion.json"
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $version = [string]$manifest.version
+          if ($version -notmatch '^\d+(?:\.\d+){1,3}$') {
+            throw "Invalid Yoslion manifest version: $version"
+          }
+
+          $url = ([string]$manifest.url) -replace '#/dl\.7z$', ''
+          $expectedUrl = "https://updates.yoslion.com/release/windows/x86_64/$version/Yoslion%20Download_$version_x64-setup.exe"
+          if ($url -ne $expectedUrl) {
+            throw "Manifest installer URL does not match the official versioned Windows endpoint. Expected $expectedUrl; got $url."
+          }
+
+          $expectedHash = ([string]$manifest.hash).ToLowerInvariant()
+          if ($expectedHash -notmatch '^[a-f0-9]{64}$') {
+            throw "Manifest SHA-256 is missing or malformed."
+          }
+          $expectedFileName = "Yoslion Download_" + $version + "_x64-setup.exe"
+
           $root = Join-Path $env:RUNNER_TEMP "yoslion-package-inspection"
-          $installer = Join-Path $root "Yoslion Download_1.1.2_x64-setup.exe"
+          $installer = Join-Path $root $expectedFileName
           $extractDir = Join-Path $root "extracted"
           New-Item -ItemType Directory -Path $root -Force | Out-Null
           New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
@@ -52,25 +68,30 @@ jobs:
           }
 
           $downloadPagePath = Join-Path $root "official-download-page.html"
-          try {
-            $downloadPage = Invoke-WebRequest -Uri "https://download.yoslion.com/downloads" -MaximumRedirection 10 -TimeoutSec 90
-            $downloadPage.Content | Set-Content -LiteralPath $downloadPagePath -Encoding utf8
-            Add-Report "Official download page HTTP status: $([int]$downloadPage.StatusCode)"
-            Add-Report "Official download page title: $([regex]::Match($downloadPage.Content, '(?is)<title[^>]*>(.*?)</title>').Groups[1].Value)"
-            Add-Report "Official download page version/hash-related snippets:"
-            foreach ($pattern in @(
-              '(?is).{0,180}Yoslion Download.{0,180}',
-              '(?is).{0,120}SHA-?256.{0,180}',
-              '(?is).{0,120}1\.1\.2.{0,180}',
-              '(?is)href\s*=\s*["''][^"'']+\.(?:exe|json|ya?ml|txt)[^"'']*["'']'
-            )) {
-              foreach ($match in [regex]::Matches($downloadPage.Content, $pattern) | Select-Object -First 30) {
-                Add-Report "  $($match.Value -replace '\s+', ' ')"
-              }
-            }
-          } catch {
-            Add-Report "Official download page fetch failed: $($_.Exception.Message)"
+          $downloadPage = Invoke-WebRequest -Uri "https://download.yoslion.com/downloads" -MaximumRedirection 10 -TimeoutSec 90
+          if ([int]$downloadPage.StatusCode -ne 200) {
+            throw "Official download page returned HTTP $([int]$downloadPage.StatusCode)."
           }
+          $downloadPage.Content | Set-Content -LiteralPath $downloadPagePath -Encoding utf8
+          Add-Report "Official download page HTTP status: $([int]$downloadPage.StatusCode)"
+          Add-Report "Official download page title: $([regex]::Match($downloadPage.Content, '(?is)<title[^>]*>(.*?)</title>').Groups[1].Value)"
+
+          $escapedFileName = [regex]::Escape($expectedFileName)
+          $metadataPattern = "(?is)<dt[^>]*>\s*Installer\s*</dt>\s*<dd[^>]*>\s*$escapedFileName\s*</dd>.*?<dt[^>]*>\s*Size\s*</dt>\s*<dd[^>]*>[^<]*\((?<size>[\d,]+)\s+bytes\)</dd>.*?<p[^>]*>\s*SHA-256\s*</p>\s*<code[^>]*>\s*(?<hash>[a-f0-9]{64})\s*</code>"
+          $metadata = [regex]::Match($downloadPage.Content, $metadataPattern)
+          if (-not $metadata.Success) {
+            throw "Could not extract the official size and SHA-256 for $expectedFileName from the publisher's download page."
+          }
+
+          $expectedSize = [long]($metadata.Groups['size'].Value -replace ',', '')
+          $publishedHash = $metadata.Groups['hash'].Value.ToLowerInvariant()
+          if ($publishedHash -ne $expectedHash) {
+            throw "Manifest SHA-256 does not match the publisher's page. Manifest: $expectedHash; publisher: $publishedHash."
+          }
+          Add-Report "Manifest version: $version"
+          Add-Report "Official installer: $expectedFileName"
+          Add-Report "Publisher-published size: $expectedSize bytes"
+          Add-Report "Publisher-published SHA-256: $publishedHash"
 
           Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
           if (-not (Test-Path -LiteralPath $installer -PathType Leaf)) {
