@@ -11,11 +11,11 @@
         "regex": "\"tag_name\"\\s*:\\s*\"(?<version>[\\d.]+)\"[\\s\\S]*?\"name\"\\s*:\\s*\"SplashPlus_(?<fileVersion>[\\d_]+)\\.pext\""
     },
     "autoupdate": {
-        "url": "https://github.com/Ad1Bb/Splash-Plus/releases/download/$version/SplashPlus_$matchFileVersion.pext",
+        "url": "https://github.com/Ad1Bb/Splash-Plus/releases/download/$version/SplashPlus_$underscoreVersion.pext",
         "hash": {
             "mode": "json",
             "url": "https://api.github.com/repos/Ad1Bb/Splash-Plus/releases/tags/$version",
-            "jsonpath": "$.assets[?(@.name == 'SplashPlus_$matchFileVersion.pext')].digest",
+            "jsonpath": "$.assets[?(@.name == '$basename')].digest",
             "regex": "^sha256:([a-fA-F0-9]{64})$"
         }
     },
