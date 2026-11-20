@@ -231,3 +231,7 @@ try {
     Remove-Item Env:\MUMU_SCOOP_TEST_MODE -ErrorAction SilentlyContinue
     Remove-Item Env:\MUMU_SCOOP_TEST_REGISTRY_PATH -ErrorAction SilentlyContinue
 }
+
+# The mocked migration intentionally invokes robocopy; its non-error status codes are 0-7.
+# Do not leak robocopy's informational exit code into the GitHub Actions step result.
+$global:LASTEXITCODE = 0
