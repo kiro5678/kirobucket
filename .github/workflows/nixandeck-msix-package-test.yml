@@ -175,9 +175,14 @@ jobs:
 
           $watchdogIdsBefore = @((Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue).Id)
           $startupKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+          $hadStartupKey = Test-Path -LiteralPath $startupKeyPath
+          if (-not $hadStartupKey) {
+            New-Item -Path $startupKeyPath -Force | Out-Null
+          }
           $startupKey = Get-Item -LiteralPath $startupKeyPath -ErrorAction Stop
           $hadStartupValue = $startupKey.GetValueNames() -contains 'NixanDeck'
           $oldStartupValue = if ($hadStartupValue) { $startupKey.GetValue('NixanDeck', $null, 'DoNotExpandEnvironmentNames') } else { $null }
+          $oldStartupKind = if ($hadStartupValue) { $startupKey.GetValueKind('NixanDeck') } else { [Microsoft.Win32.RegistryValueKind]::String }
           $savedLocalAppData = $env:LOCALAPPDATA
           $testLocalAppData = Join-Path $root 'unpackaged-localappdata'
           New-Item -ItemType Directory -Path $testLocalAppData -Force | Out-Null
@@ -223,9 +228,12 @@ jobs:
             $env:LOCALAPPDATA = $savedLocalAppData
             $currentStartupKey = Get-Item -LiteralPath $startupKeyPath -ErrorAction Stop
             if ($hadStartupValue) {
-              $currentStartupKey.SetValue('NixanDeck', $oldStartupValue, [Microsoft.Win32.RegistryValueKind]::String)
+              $currentStartupKey.SetValue('NixanDeck', $oldStartupValue, $oldStartupKind)
             } else {
               $currentStartupKey.DeleteValue('NixanDeck', $false)
+            }
+            if (-not $hadStartupKey -and $currentStartupKey.GetValueNames().Count -eq 0 -and $currentStartupKey.GetSubKeyNames().Count -eq 0) {
+              Remove-Item -LiteralPath $startupKeyPath -Force -ErrorAction SilentlyContinue
             }
             Remove-Item -LiteralPath $testLocalAppData -Recurse -Force -ErrorAction SilentlyContinue
           }
