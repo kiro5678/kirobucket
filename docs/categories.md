@@ -26,7 +26,7 @@
 | Network & DNS | 48 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 31 | [View](#notch) |
-| Notes & Knowledge | 26 | [View](#notes-knowledge) |
+| Notes & Knowledge | 27 | [View](#notes-knowledge) |
 | Other Utilities | 138 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
@@ -39,13 +39,13 @@
 | Sysinternals Utilities | 75 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
-| Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
+| Time Tracking & Focus | 15 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 102 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1235**
+**Total unique categorized manifests: 1237**
 
 
 ## Android & Device Tools

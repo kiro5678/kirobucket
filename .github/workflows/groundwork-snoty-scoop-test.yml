@@ -1,0 +1,214 @@
+name: Groundwork and Snoty Scoop Lifecycle Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/groundwork-habits.json"
+      - "bucket/snoty.json"
+      - ".github/workflows/groundwork-snoty-scoop-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lifecycle:
+    name: Scoop install, persistence, and uninstall (${{ matrix.shell }})
+    runs-on: windows-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop and prepare the local bucket
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-groundwork-snoty'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          scoop config gh_token $env:GITHUB_TOKEN
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-groundwork-snoty'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          foreach ($name in @('groundwork-habits', 'snoty')) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Required manifest is missing: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          git -C $localBucket init --initial-branch=master
+          git -C $localBucket config user.name 'GitHub Actions'
+          git -C $localBucket config user.email 'actions@github.com'
+          git -C $localBucket add bucket
+          git -C $localBucket commit -m 'Seed local manifest test bucket'
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket $bucketUrl
+
+      - name: Verify checkver and forced autoupdate templates
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          foreach ($name in @('groundwork-habits', 'snoty')) {
+            $manifestPath = Join-Path $env:RUNNER_TEMP "kirobucket-groundwork-snoty\bucket\$name.json"
+            & $checkver -App $manifestPath -ForceUpdate -ThrowError
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop checkver/autoupdate failed for $name (exit code $LASTEXITCODE)."
+            }
+            Write-Host "PASS: $name checkver and forced autoupdate."
+          }
+
+      - name: Seed legacy user data and install both apps
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $groundworkRoaming = Join-Path $env:APPDATA 'Groundwork Habits'
+          $groundworkWebview = Join-Path $env:LOCALAPPDATA 'com.groundwork.habits'
+          $snotyData = Join-Path $env:APPDATA 'Snoty'
+          foreach ($path in @($groundworkRoaming, $groundworkWebview, $snotyData)) {
+            New-Item -ItemType Directory -Path $path -Force | Out-Null
+          }
+          Set-Content -LiteralPath (Join-Path $groundworkRoaming 'pre-existing-config.marker') -Value 'groundwork-roaming' -Encoding utf8
+          Set-Content -LiteralPath (Join-Path $groundworkWebview 'pre-existing-webview.marker') -Value 'groundwork-webview' -Encoding utf8
+          Set-Content -LiteralPath (Join-Path $snotyData 'pre-existing-notes.marker') -Value 'snoty-data' -Encoding utf8
+
+          foreach ($name in @('groundwork-habits', 'snoty')) {
+            scoop install "kirobucket/$name"
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop install failed for $name (exit code $LASTEXITCODE)."
+            }
+          }
+
+      - name: Verify payloads, shortcuts, migrated data, and owned Junctions
+        run: |
+          $ErrorActionPreference = 'Stop'
+          function Assert-Junction {
+            param([string]$Path, [string]$Target)
+            $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+            if ($item.LinkType -ne 'Junction') {
+              throw "Expected a Junction at '$Path'; found '$($item.LinkType)'."
+            }
+            $actual = [IO.Path]::GetFullPath([string]$item.Target)
+            $expected = [IO.Path]::GetFullPath($Target)
+            if ($actual -ine $expected) {
+              throw "Junction target mismatch at '$Path'. Expected '$expected'; found '$actual'."
+            }
+          }
+
+          $groundworkApp = Join-Path $env:SCOOP 'apps\groundwork-habits\current'
+          $snotyApp = Join-Path $env:SCOOP 'apps\snoty\current'
+          foreach ($file in @((Join-Path $groundworkApp 'groundwork-habits.exe'), (Join-Path $snotyApp 'Snoty.exe'))) {
+            if (-not (Test-Path -LiteralPath $file -PathType Leaf)) { throw "Missing executable after Scoop install: $file" }
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $snotyApp 'whisper') -PathType Container)) {
+            throw 'Snoty Whisper runtime directory is missing from the extracted ZIP.'
+          }
+
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          foreach ($shortcutName in @('Groundwork Habits.lnk', 'Snoty.lnk')) {
+            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $shortcutName -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($null -eq $shortcut) { throw "Start Menu shortcut was not created: $shortcutName" }
+          }
+
+          $gwRoaming = Join-Path $env:APPDATA 'Groundwork Habits'
+          $gwRoamingPersist = Join-Path $env:SCOOP 'persist\groundwork-habits\data'
+          $gwWebview = Join-Path $env:LOCALAPPDATA 'com.groundwork.habits'
+          $gwWebviewPersist = Join-Path $env:SCOOP 'persist\groundwork-habits\webview2'
+          $snAppData = Join-Path $env:APPDATA 'Snoty'
+          $snPersist = Join-Path $env:SCOOP 'persist\snoty\data'
+
+          Assert-Junction -Path $gwRoaming -Target $gwRoamingPersist
+          Assert-Junction -Path $gwWebview -Target $gwWebviewPersist
+          Assert-Junction -Path $snAppData -Target $snPersist
+
+          $migrationChecks = @(
+            @{ Path = (Join-Path $gwRoamingPersist 'pre-existing-config.marker'); Value = 'groundwork-roaming' },
+            @{ Path = (Join-Path $gwWebviewPersist 'pre-existing-webview.marker'); Value = 'groundwork-webview' },
+            @{ Path = (Join-Path $snPersist 'pre-existing-notes.marker'); Value = 'snoty-data' }
+          )
+          foreach ($check in $migrationChecks) {
+            if (-not (Test-Path -LiteralPath $check.Path -PathType Leaf)) { throw "Existing user data was not migrated: $($check.Path)" }
+            if ((Get-Content -LiteralPath $check.Path -Raw).Trim() -ne $check.Value) { throw "Migrated marker content changed: $($check.Path)" }
+          }
+
+          Set-Content -LiteralPath (Join-Path $gwRoaming 'lifecycle.marker') -Value 'persisted-groundwork' -Encoding utf8
+          Set-Content -LiteralPath (Join-Path $gwWebview 'lifecycle.marker') -Value 'persisted-webview' -Encoding utf8
+          Set-Content -LiteralPath (Join-Path $snAppData 'lifecycle.marker') -Value 'persisted-snoty' -Encoding utf8
+          Write-Host 'PASS: both executable payloads, shortcuts, migration and three Scoop-managed Junctions.'
+
+      - name: Uninstall and verify user data survives
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('snoty', 'groundwork-habits')) {
+            scoop uninstall $name
+            if ($LASTEXITCODE -ne 0) { throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)." }
+          }
+
+          $externalPaths = @(
+            (Join-Path $env:APPDATA 'Snoty'),
+            (Join-Path $env:APPDATA 'Groundwork Habits'),
+            (Join-Path $env:LOCALAPPDATA 'com.groundwork.habits')
+          )
+          foreach ($path in $externalPaths) {
+            if (Test-Path -LiteralPath $path) { throw "The manifest left an external Junction or app-data directory behind: $path" }
+          }
+
+          $persistMarkers = @(
+            (Join-Path $env:SCOOP 'persist\snoty\data\lifecycle.marker'),
+            (Join-Path $env:SCOOP 'persist\groundwork-habits\data\lifecycle.marker'),
+            (Join-Path $env:SCOOP 'persist\groundwork-habits\webview2\lifecycle.marker')
+          )
+          foreach ($marker in $persistMarkers) {
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) { throw "Persistent data was lost during uninstall: $marker" }
+          }
+          Write-Host 'PASS: uninstall removed only the owned Junctions and retained all persisted data.'
+
+      - name: Reinstall and verify persisted data is reattached
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('groundwork-habits', 'snoty')) {
+            scoop install "kirobucket/$name"
+            if ($LASTEXITCODE -ne 0) { throw "Reinstall failed for $name (exit code $LASTEXITCODE)." }
+          }
+
+          $links = @(
+            @{ Path = (Join-Path $env:APPDATA 'Snoty'); Target = (Join-Path $env:SCOOP 'persist\snoty\data'); Marker = 'persisted-snoty' },
+            @{ Path = (Join-Path $env:APPDATA 'Groundwork Habits'); Target = (Join-Path $env:SCOOP 'persist\groundwork-habits\data'); Marker = 'persisted-groundwork' },
+            @{ Path = (Join-Path $env:LOCALAPPDATA 'com.groundwork.habits'); Target = (Join-Path $env:SCOOP 'persist\groundwork-habits\webview2'); Marker = 'persisted-webview' }
+          )
+          foreach ($link in $links) {
+            $item = Get-Item -LiteralPath $link.Path -Force -ErrorAction Stop
+            if ($item.LinkType -ne 'Junction' -or [IO.Path]::GetFullPath([string]$item.Target) -ine [IO.Path]::GetFullPath($link.Target)) {
+              throw "Persisted data Junction was not restored correctly: $($link.Path)"
+            }
+            $markerPath = Join-Path $link.Path 'lifecycle.marker'
+            if ((Get-Content -LiteralPath $markerPath -Raw).Trim() -ne $link.Marker) {
+              throw "Persisted data was not reattached correctly: $markerPath"
+            }
+          }
+          Write-Host 'PASS: reinstallation reattached existing data without overwriting it.'
+
+      - name: Final uninstall
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop uninstall snoty
+          if ($LASTEXITCODE -ne 0) { throw "Final Snoty uninstall failed: $LASTEXITCODE" }
+          scoop uninstall groundwork-habits
+          if ($LASTEXITCODE -ne 0) { throw "Final Groundwork uninstall failed: $LASTEXITCODE" }

@@ -41,6 +41,13 @@ jobs:
               Kind = 'exe'
             },
             @{
+              Name = 'Snoty'
+              File = 'Snoty-v1.0.0-win-x64.zip'
+              Url = 'https://github.com/Brownfries/Snoty/releases/download/v1.0.0/Snoty-v1.0.0-win-x64.zip'
+              Sha256 = '67575ab6c462ec0cbf24d4aaccbbec5f7cc7e97efdd4931ba24c8fe94fbe76da'
+              Kind = 'zip'
+            },
+            @{
               Name = 'Notch Windows'
               File = 'notch.exe'
               Url = 'https://github.com/anshthakur0999/notch-windows/releases/download/v0.1.9/notch.exe'
