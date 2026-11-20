@@ -238,7 +238,7 @@
         "        '/auto_start=false',",
         "        '/fchannel=gw-win-download',",
         "        '/auto_run=false',",
-        "        ('/D=\"' + $dir + '\"')",
+        "        ('/D=' + $dir)",
         "    )",
         "    $process = Start-Process -FilePath $installerPath -ArgumentList $arguments -Wait -PassThru -WindowStyle Hidden",
         "    if ($null -eq $process) { throw \"MuMuPlayer $Action could not be started.\" }",
