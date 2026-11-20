@@ -7,6 +7,7 @@ on:
     paths:
       - 'bucket/litechat.json'
       - 'bucket/stellarhub.json'
+      - '.github/workflows/litechat-stellarhub-scoop-install-test.yml'
   workflow_dispatch:
 
 permissions:
@@ -52,6 +53,9 @@ jobs:
             throw "Scoop bootstrap did not create $scoopShim"
           }
           scoop --version
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SCOOP=$env:SCOOP" -Encoding utf8
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SCOOP_CACHE=$env:SCOOP_CACHE" -Encoding utf8
+          Add-Content -LiteralPath $env:GITHUB_PATH -Value (Join-Path $env:SCOOP 'shims') -Encoding utf8
 
           Push-Location $localBucket
           try {
