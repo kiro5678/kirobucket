@@ -24,7 +24,7 @@ on:
       - "bucket/windows-dynamic-island.json"
       - "bucket/windynamicisland.json"
       - "bucket/winisland.json"
-      - "bucket/winislands.json"
+      - "bucket/WinIslands-JudeKwong.json"
       - "bucket/wnotch.json"
   workflow_dispatch:
 
