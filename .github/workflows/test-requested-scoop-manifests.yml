@@ -1,0 +1,144 @@
+name: Test Requested Scoop Manifests
+
+on:
+  push:
+    branches:
+      - scoop-requested-manifests
+    paths:
+      - ".github/workflows/test-requested-scoop-manifests.yml"
+      - "bucket/fileferret.json"
+      - "bucket/legacy-router-opener-alaa7hany.json"
+      - "bucket/winorbit-mahadi-siraj.json"
+      - "bucket/gaming-tweaks-hamsypg.json"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/test-requested-scoop-manifests.yml"
+      - "bucket/fileferret.json"
+      - "bucket/legacy-router-opener-alaa7hany.json"
+      - "bucket/winorbit-mahadi-siraj.json"
+      - "bucket/gaming-tweaks-hamsypg.json"
+
+permissions:
+  contents: read
+
+jobs:
+  scoop-install:
+    name: Install and verify manifests with Scoop
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout candidate bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop into an isolated test root
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'kirobucket-scoop-test'
+          New-Item -ItemType Directory -Path $env:SCOOP -Force | Out-Null
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop bootstrap failed.' }
+          scoop --version
+
+      - name: Register a local copy of the candidate bucket
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-local-test'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          $names = @(
+            'fileferret',
+            'legacy-router-opener-alaa7hany',
+            'winorbit-mahadi-siraj',
+            'gaming-tweaks-hamsypg'
+          )
+          foreach ($name in $names) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Missing candidate manifest: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            if ($LASTEXITCODE -ne 0) { throw 'Could not initialize the local test bucket.' }
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket
+            git commit -m 'Seed local candidate manifests'
+            if ($LASTEXITCODE -ne 0) { throw 'Could not commit the local test bucket.' }
+          }
+          finally { Pop-Location }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket-test $bucketUrl
+          if ($LASTEXITCODE -ne 0) { throw 'Could not register the local candidate bucket.' }
+
+      - name: Install the four applications without launching them
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $names = @(
+            'fileferret',
+            'legacy-router-opener-alaa7hany',
+            'winorbit-mahadi-siraj',
+            'gaming-tweaks-hamsypg'
+          )
+          foreach ($name in $names) {
+            Write-Host "Scoop install $name"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) { throw "Scoop install failed for $name (exit code $LASTEXITCODE)." }
+          }
+
+      - name: Verify extracted files, shortcuts, and persistent data links
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $apps = Join-Path $env:SCOOP 'apps'
+          $checks = @(
+            @{ Name = 'FileFerret'; App = 'fileferret'; RelativePath = 'FileFerret-Portable-1.7.0.exe' },
+            @{ Name = 'Legacy Router Opener'; App = 'legacy-router-opener-alaa7hany'; RelativePath = 'legacy-router-opener.exe' },
+            @{ Name = 'WinOrbit'; App = 'winorbit-mahadi-siraj'; RelativePath = 'WinOrbit.exe' },
+            @{ Name = 'GAMING TWEAKS'; App = 'gaming-tweaks-hamsypg'; RelativePath = 'Launcher.bat' }
+          )
+
+          foreach ($check in $checks) {
+            $current = Join-Path $apps "$($check.App)\current"
+            $target = Join-Path $current $check.RelativePath
+            if (-not (Test-Path -LiteralPath $target -PathType Leaf)) {
+              throw "$($check.Name): expected file was not found under the Scoop current link: $target"
+            }
+            Write-Host "PASS: $($check.Name) extracted to $target"
+          }
+
+          $winOrbitData = Join-Path $apps 'winorbit-mahadi-siraj\current\Data'
+          if (-not (Test-Path -LiteralPath $winOrbitData)) {
+            throw "WinOrbit's persistent Data folder was not created: $winOrbitData"
+          }
+          Write-Host "PASS: WinOrbit Data persistence path is present: $winOrbitData"
+
+          @(
+            'Scoop installed all four manifests successfully.'
+            'All four expected entry points were found beneath their current links.'
+            'WinOrbit persistent Data path is present.'
+            'No application executable or tweak launcher was started.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Validate checkver on the installed manifests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('fileferret','legacy-router-opener-alaa7hany','winorbit-mahadi-siraj','gaming-tweaks-hamsypg')) {
+            Write-Host "Scoop checkver $name"
+            scoop checkver $name -f
+            if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed for $name." }
+          }
