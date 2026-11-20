@@ -65,17 +65,20 @@ jobs:
           }
 
           function Expand-NestedArchives([string]$Directory, [string]$Label) {
-            $processed = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+            $processed = @{}
             $index = 0
             while ($true) {
               $archives = @(Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue |
-                Where-Object { $_.Extension -match '(?i)^\.(7z|zip|cab)$' -and $processed.Add($_.FullName) })
+                Where-Object {
+                  $_.Extension -match '(?i)^\.(7z|zip|cab)$' -and -not $processed.ContainsKey($_.FullName)
+                })
               if ($archives.Count -eq 0) { break }
               foreach ($archive in $archives) {
+                $processed[$archive.FullName] = $true
                 $index++
                 $destination = Join-Path $Directory ("nested-{0:D2}" -f $index)
                 New-Item -ItemType Directory -Path $destination -Force | Out-Null
-                Add-Report "$Label nested archive: $($archive.Name)"
+                Add-Report "$Label nested archive: $($archive.FullName)"
                 & $sevenZip x $archive.FullName "-o$destination" -y -bd 2>&1 |
                   Set-Content -LiteralPath (Join-Path $Directory ("nested-{0:D2}.log" -f $index)) -Encoding utf8
                 if ($LASTEXITCODE -ne 0) { throw "Could not extract nested archive $($archive.FullName)." }
@@ -90,8 +93,7 @@ jobs:
               [string]$Type,
               [string]$Url,
               [string]$Sha256,
-              [string]$ExpectedExe,
-              [string]$MsiMode = ''
+              [string]$ExpectedExe
             )
             $appRoot = Join-Path $root $Name
             $extractDir = Join-Path $appRoot 'extracted'
@@ -113,7 +115,8 @@ jobs:
                 if ($process.ExitCode -notin @(0, 3010)) { throw "MSI administrative extraction failed with exit code $($process.ExitCode)." }
               } else {
                 if ($Type -eq 'NSIS') {
-                  & $sevenZip l -slt $download 2>&1 | Set-Content -LiteralPath (Join-Path $appRoot 'listing.log') -Encoding utf8
+                  & $sevenZip l -slt $download 2>&1 |
+                    Set-Content -LiteralPath (Join-Path $appRoot 'listing.log') -Encoding utf8
                   if ($LASTEXITCODE -ne 0) { throw '7-Zip could not list the NSIS installer.' }
                 }
                 & $sevenZip x $download "-o$extractDir" -y -bd 2>&1 |
@@ -143,434 +146,10 @@ jobs:
             $results.Add([PSCustomObject]$result)
           }
 
-          Invoke-PackageTest -Name 'HapWallpaper' -Version '1.3.0' -Type 'ZIP' -Url 'https://github.com/ramiro-soler/HapWallpaper/releases/download/v1.3.0/HapWallpaper-v1.3.0-win-x64.zip' -Sha256 'f05f933e3fb939cdb678a5ae8c7c61e474fff2bed7299504cbac72c909b82512' -ExpectedExe '(?i)^HapWallpaper/HapWallpaper\.exe
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer/OP Keyboard Spammer\.exe
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^nested-01/Yogurt\.exe
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^PFiles/Updainium/updaitium\.exe
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
-
-          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
-          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
-          @(
-            '## Scoop candidate extraction results'
-            ''
-            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
-            '|---|---:|---|---|---|---|'
-            foreach ($item in $results) {
-              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
-            }
-            ''
-            'No downloaded or extracted executable was run.'
-            'Detailed file inventories and logs are available in the artifact.'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
-
-      - name: Upload extraction reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: scoop-candidate-extraction-results
-          path: scoop-candidate-extraction/
-          if-no-files-found: warn
-          retention-days: 14
-
-          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
-          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
+          Invoke-PackageTest -Name 'HapWallpaper' -Version '1.3.0' -Type 'ZIP' -Url 'https://github.com/ramiro-soler/HapWallpaper/releases/download/v1.3.0/HapWallpaper-v1.3.0-win-x64.zip' -Sha256 'f05f933e3fb939cdb678a5ae8c7c61e474fff2bed7299504cbac72c909b82512' -ExpectedExe '(?i)HapWallpaper\.exe$'
+          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)OP Keyboard Spammer\.exe$'
+          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)Yogurt\.exe$'
+          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)updaitium\.exe$'
 
           $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
           $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
