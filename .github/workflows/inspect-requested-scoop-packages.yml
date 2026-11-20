@@ -43,15 +43,31 @@ jobs:
           }
           $version = $Matches[1]
           $filename = "FileFerret-Portable-$version.exe"
-          $anchorMatches = [regex]::Matches($html, '(?is)<a\b[^>]*>.*?' + [regex]::Escape($filename) + '.*?</a>')
           $assetUrl = $null
-          foreach ($anchor in $anchorMatches) {
-            $href = [regex]::Match($anchor.Value, '(?is)href\s*=\s*["''](?<href>[^"'']+)["'']')
-            if ($href.Success) { $assetUrl = [Net.WebUtility]::HtmlDecode($href.Groups['href'].Value); break }
+          $candidateLinks = @()
+          $anchors = [regex]::Matches($html, '(?is)<a\b(?<attrs>[^>]*)>(?<inner>.*?)</a>')
+          foreach ($anchor in $anchors) {
+            $innerText = [Net.WebUtility]::HtmlDecode(($anchor.Groups['inner'].Value -replace '<[^>]+>', ' ' -replace '\s+', ' ')).Trim()
+            if ($innerText -notmatch [regex]::Escape($filename)) { continue }
+            $href = [regex]::Match($anchor.Groups['attrs'].Value, '(?is)href\s*=\s*["''](?<href>[^"'']+)["'']')
+            if ($href.Success) {
+              $candidate = [Net.WebUtility]::HtmlDecode($href.Groups['href'].Value)
+              $candidateLinks += [pscustomobject]@{ Href = $candidate; Text = $innerText }
+              if ($candidate -match '(?i)(\.exe(?:[?#]|$)|download|files?/)') {
+                $assetUrl = $candidate
+                break
+              }
+            }
           }
+
           if (-not $assetUrl) {
-            $nameContext = [regex]::Match($html, '(?is)(?<context>.{0,600}' + [regex]::Escape($filename) + '.{0,300})')
-            throw "Could not resolve the official portable download link for $filename. Context: $($nameContext.Groups['context'].Value)"
+            $pageIndex = $html.IndexOf($filename, [StringComparison]::OrdinalIgnoreCase)
+            $start = [Math]::Max(0, $pageIndex - 1400)
+            $length = [Math]::Min(2800, $html.Length - $start)
+            $context = if ($pageIndex -ge 0) { $html.Substring($start, $length) } else { $html.Substring(0, [Math]::Min(5000,$html.Length)) }
+            Write-Host "FileFerret page anchor candidates: $($candidateLinks | ConvertTo-Json -Compress -Depth 4)"
+            Write-Host "FileFerret HTML context near download filename: $context"
+            throw "Could not resolve a direct portable download link for $filename from an official download anchor."
           }
           if (-not ([uri]::IsWellFormedUriString($assetUrl, [UriKind]::Absolute))) {
             $assetUrl = [uri]::new([uri]$pageUrl, $assetUrl).AbsoluteUri
