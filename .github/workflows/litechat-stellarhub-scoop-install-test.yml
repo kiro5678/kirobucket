@@ -1,0 +1,151 @@
+name: LiteChat and StellarHub Scoop Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/litechat.json'
+      - 'bucket/stellarhub.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-test:
+    name: Install portable packages with Scoop and verify persistence paths
+    runs-on: windows-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Bootstrap isolated Scoop and create a local test bucket
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $testRoot = Join-Path $env:RUNNER_TEMP 'litechat-stellarhub-scoop-test'
+          $env:SCOOP = Join-Path $testRoot 'scoop'
+          $env:SCOOP_CACHE = Join-Path $testRoot 'cache'
+          $localBucket = Join-Path $testRoot 'kirobucket-local'
+          $manifestDirectory = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDirectory, $env:SCOOP_CACHE -Force | Out-Null
+
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\litechat.json') -Destination $manifestDirectory
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\stellarhub.json') -Destination $manifestDirectory
+
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+
+          $scoopShim = Join-Path $env:SCOOP 'shims\scoop.ps1'
+          if (-not (Test-Path -LiteralPath $scoopShim -PathType Leaf)) {
+            throw "Scoop bootstrap did not create $scoopShim"
+          }
+          scoop --version
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket/litechat.json bucket/stellarhub.json
+            git commit -m 'Seed temporary portable-app test bucket'
+            if ($LASTEXITCODE -ne 0) { throw 'Could not initialize the temporary test bucket.' }
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace([char]92, '/')
+          scoop bucket add kirobucket $bucketUrl
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop could not add the temporary local bucket.' }
+
+      - name: Install both packages and verify executables, shortcuts, and persistent data
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          scoop install litechat stellarhub
+          if ($LASTEXITCODE -ne 0) { throw "Scoop install failed with exit code $LASTEXITCODE." }
+
+          $targets = @(
+            @{
+              Name = 'litechat'
+              Version = '0.2.0'
+              Executable = 'litechat.exe'
+              Shortcut = 'LiteChat.lnk'
+            },
+            @{
+              Name = 'stellarhub'
+              Version = '1.1.1'
+              Executable = 'StellarHub.exe'
+              Shortcut = 'StellarHub.lnk'
+            }
+          )
+
+          $startMenu = [Environment]::GetFolderPath([Environment+SpecialFolder]::StartMenu)
+          foreach ($target in $targets) {
+            $appRoot = Join-Path $env:SCOOP ("apps\$($target.Name)")
+            $versionDir = Join-Path $appRoot $target.Version
+            $currentLink = Join-Path $appRoot 'current'
+            $exePath = Join-Path $versionDir $target.Executable
+            $shortcut = Join-Path $startMenu ("Programs\Scoop Apps\$($target.Shortcut)")
+
+            if (-not (Test-Path -LiteralPath $versionDir -PathType Container)) {
+              throw "$($target.Name): Scoop did not create version directory $versionDir"
+            }
+            if (-not (Test-Path -LiteralPath $currentLink -PathType Container)) {
+              throw "$($target.Name): Scoop did not create current link $currentLink"
+            }
+            if (-not (Test-Path -LiteralPath $exePath -PathType Leaf)) {
+              throw "$($target.Name): expected executable was not extracted: $exePath"
+            }
+            if ((Get-Item -LiteralPath $exePath).Length -lt 100000) {
+              throw "$($target.Name): extracted executable is unexpectedly small."
+            }
+            if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
+              throw "$($target.Name): expected Scoop shortcut was not created: $shortcut"
+            }
+            if (-not (Test-Path -LiteralPath (Join-Path $currentLink $target.Executable) -PathType Leaf)) {
+              throw "$($target.Name): executable is not reachable through current."
+            }
+
+            Write-Host "PASS: $($target.Name) $($target.Version)"
+            Write-Host "Executable: $exePath"
+            Write-Host "Executable size: $((Get-Item -LiteralPath $exePath).Length) bytes"
+            Write-Host "Shortcut: $shortcut"
+          }
+
+          $liteChatProfile = Join-Path $env:LOCALAPPDATA 'LiteChat'
+          $liteChatPersist = Join-Path $env:SCOOP 'persist\litechat\profile'
+          $profileItem = Get-Item -LiteralPath $liteChatProfile -Force -ErrorAction Stop
+          if ($profileItem.LinkType -ne 'Junction') { throw 'LiteChat LocalAppData profile is not a junction.' }
+          if ([IO.Path]::GetFullPath([string]$profileItem.Target) -ine [IO.Path]::GetFullPath($liteChatPersist)) {
+            throw "LiteChat profile junction points to '$($profileItem.Target)' instead of '$liteChatPersist'."
+          }
+
+          $stellarVersionDir = Join-Path $env:SCOOP 'apps\stellarhub\1.1.1'
+          $stellarData = Join-Path $stellarVersionDir 'Data'
+          $stellarPersist = Join-Path $env:SCOOP 'persist\stellarhub\Data'
+          if (-not (Test-Path -LiteralPath (Join-Path $stellarVersionDir 'StellarHub.portable') -PathType Leaf)) {
+            throw 'StellarHub portable marker is missing.'
+          }
+          $dataItem = Get-Item -LiteralPath $stellarData -Force -ErrorAction Stop
+          if ($dataItem.LinkType -ne 'Junction') { throw 'StellarHub Data is not a Scoop persistence junction.' }
+          if ([IO.Path]::GetFullPath([string]$dataItem.Target) -ine [IO.Path]::GetFullPath($stellarPersist)) {
+            throw "StellarHub Data junction points to '$($dataItem.Target)' instead of '$stellarPersist'."
+          }
+
+          Write-Host 'PASS: LiteChat session data is redirected to Scoop persist.'
+          Write-Host 'PASS: StellarHub portable marker is retained and Data is redirected to Scoop persist.'
+          Write-Host 'The applications were not launched; this test verifies extraction and Scoop paths only.'
