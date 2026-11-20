@@ -140,7 +140,7 @@ These projects are Android-first releases for Scoop purposes unless their upstre
 - [Wireless Device Battery Monitor](https://github.com/krisgfx9/Wireless-Device-Battery-Monitor): already represented by [wireless-battery.json](../bucket/wireless-battery.json).
 - [Stream Goat](https://github.com/sherazi5110/stream-goat): already represented by [stream-goat.json](../bucket/stream-goat.json).
 - [Huedra](https://github.com/apixelsnet/huedra): already represented by [huedra-apixelsnet.json](../bucket/huedra-apixelsnet.json).
-- [NixanDeck](https://github.com/nurikhsanuddin/nixandeck): now represented by [nixandeck.json](../bucket/nixandeck.json) as Nonportable; its release ZIP wraps a signed MSIX and self-signed publisher certificate.
+- [NixanDeck](https://github.com/nurikhsanuddin/nixandeck): now represented by [nixandeck.json](../bucket/nixandeck.json); the MSIX payload is extracted with Scoop's `Expand-ZipArchive` and runs unpackaged from the Scoop version directory.
 - [DiskWatch](https://github.com/matthart1983/diskwatch): already represented by [diskwatch.json](../bucket/diskwatch.json).
 - [DropTidy](https://github.com/ahmeto55/DropTidy): already represented by [droptidy.json](../bucket/droptidy.json).
 - [Parabolic](https://github.com/NickvisionApps/Parabolic): already present in the official Scoop Extras bucket as `parabolic.json`.
