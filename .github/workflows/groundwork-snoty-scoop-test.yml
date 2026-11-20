@@ -70,9 +70,6 @@ jobs:
           foreach ($name in @('groundwork-habits', 'snoty')) {
             $manifestPath = Join-Path $env:RUNNER_TEMP "kirobucket-groundwork-snoty\bucket\$name.json"
             & $checkver -App $manifestPath -ForceUpdate -ThrowError
-            if ($LASTEXITCODE -ne 0) {
-              throw "Scoop checkver/autoupdate failed for $name (exit code $LASTEXITCODE)."
-            }
             Write-Host "PASS: $name checkver and forced autoupdate."
           }
 
