@@ -1,12 +1,12 @@
 {
-    "version": "1.9.1",
+    "version": "1.9.2",
     "description": "Terminal and coding-agent workspace manager",
     "homepage": "https://termilly.com",
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/termilly/termilly/releases/download/v1.9.1/TermillySetup-1.9.1.exe",
-            "hash": "386a249b1a8ecc37484b6227a02b7d916e4b2c297555d063191813d364601718"
+            "url": "https://github.com/termilly/termilly/releases/download/v1.9.2/TermillySetup-1.9.2.exe",
+            "hash": "540d7c6e4b9b5841d7deee7ebcdd5fc42a8b8dc2d396b5703c39f65a347cc16b"
         }
     },
     "pre_install": [
@@ -40,8 +40,8 @@
             "64bit": {
                 "url": "https://github.com/termilly/termilly/releases/download/v$version/TermillySetup-$version.exe",
                 "hash": {
-                    "url": "https://api.github.com/repos/termilly/termilly/releases/tags/v$version",
-                    "find": "\"name\"\\s*:\\s*\"TermillySetup-$version\\.exe\"[^}]*\"digest\"\\s*:\\s*\"sha256:([a-fA-F\\d]{64})\""
+                    "url": "https://github.com/termilly/termilly/releases/download/v$version/SHA256SUMS",
+                    "find": "([a-fA-F\\d]{64})\\s+TermillySetup-$version\\.exe"
                 }
             }
         }
