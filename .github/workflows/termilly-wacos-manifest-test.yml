@@ -25,9 +25,14 @@ jobs:
             Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
             Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
           }
-          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
-            throw 'Scoop was not added to PATH by the official installer.'
+          $scoopRoot = Join-Path $env:USERPROFILE 'scoop'
+          if (-not (Test-Path -LiteralPath (Join-Path $scoopRoot 'shims\scoop.ps1'))) {
+            throw "Scoop bootstrap completed but its shim was not found under $scoopRoot."
           }
+          "SCOOP=$scoopRoot" >> $env:GITHUB_ENV
+          (Join-Path $scoopRoot 'shims') >> $env:GITHUB_PATH
+          $env:SCOOP = $scoopRoot
+          $env:PATH = (Join-Path $scoopRoot 'shims') + ';' + $env:PATH
           scoop --version
 
       - name: Create isolated local test bucket
