@@ -150,8 +150,8 @@ jobs:
           }
 
           $appDataPath = Join-Path $env:APPDATA 'CedroModernDock'
-          if (-not (Test-Path -LiteralPath $appDataPath -PathType Container)) {
-            throw 'The AppData junction to persistent user data was unexpectedly removed.'
+          if (Test-Path -LiteralPath $appDataPath) {
+            throw 'Scoop post_uninstall did not remove the AppData junction.'
           }
 
-          Write-Host 'PASS: Scoop uninstall preserves Cedro Modern Dock data.'
+          Write-Host 'PASS: Scoop uninstall removes the AppData junction and preserves persistent user data.'
