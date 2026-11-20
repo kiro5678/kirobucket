@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/inspect-requested-scoop-packages.yml"
       - "bucket/legacy-router-opener-alaa7hany.json"
+      - "bucket/fileferret.json"
       - "bucket/winorbit-mahadi-siraj.json"
       - "bucket/gaming-tweaks-hamsypg.json"
   pull_request:
@@ -15,6 +16,7 @@ on:
     paths:
       - ".github/workflows/inspect-requested-scoop-packages.yml"
       - "bucket/legacy-router-opener-alaa7hany.json"
+      - "bucket/fileferret.json"
       - "bucket/winorbit-mahadi-siraj.json"
       - "bucket/gaming-tweaks-hamsypg.json"
 
