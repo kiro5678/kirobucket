@@ -290,6 +290,22 @@ jobs:
           }
 
           Add-Report ""
+          Add-Report ""
+          Add-Report "Native host manifest files after vendor silent setup:"
+          $installedManifestDir = Join-Path $env:LOCALAPPDATA "YoslionDownload\NativeMessagingHosts"
+          if (Test-Path -LiteralPath $installedManifestDir -PathType Container) {
+            foreach ($manifestFile in Get-ChildItem -LiteralPath $installedManifestDir -File -Filter "*.json") {
+              Add-Report "  $($manifestFile.Name):"
+              Get-Content -LiteralPath $manifestFile.FullName -Raw | ForEach-Object { Add-Report "    $_" }
+            }
+          } else {
+            Add-Report "  Native messaging host manifest directory is absent."
+          }
+          $installedAppPath = Join-Path $env:LOCALAPPDATA "YoslionDownload\app-path"
+          if (Test-Path -LiteralPath $installedAppPath -PathType Leaf) {
+            Add-Report "  app-path: $(Get-Content -LiteralPath $installedAppPath -Raw)"
+          }
+
           Add-Report "Potential Yoslion data/configuration directories:"
           foreach ($baseDir in @($env:APPDATA, $env:LOCALAPPDATA, $env:PROGRAMDATA)) {
             if (-not (Test-Path -LiteralPath $baseDir -PathType Container)) { continue }
