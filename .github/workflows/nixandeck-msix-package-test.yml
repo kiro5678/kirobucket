@@ -102,8 +102,40 @@ jobs:
             }
           }
 
+          # Recreate the previous Scoop manifest's per-user MSIX registration so pre_install migration is exercised.
+          if (@(Get-AppxPackage -Name 'NixanDeck' -ErrorAction SilentlyContinue).Count -gt 0) {
+            throw 'The hosted runner unexpectedly already has a NixanDeck package registration.'
+          }
+          $testCertificatePath = Join-Path $dir 'NixanDeck.cer'
+          $testCertificate = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($testCertificatePath)
+          $testStore = [System.Security.Cryptography.X509Certificates.X509Store]::new('TrustedPeople', 'LocalMachine')
+          $testStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
+          $testCertificateWasPresent = $false
+          try {
+            $testCertificateWasPresent = @($testStore.Certificates | Where-Object { $_.Thumbprint -eq $testCertificate.Thumbprint }).Count -gt 0
+            if (-not $testCertificateWasPresent) { $testStore.Add($testCertificate) }
+          } finally { $testStore.Close() }
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "NIXANDECK_TEST_CERT_THUMBPRINT=$($testCertificate.Thumbprint)"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "NIXANDECK_TEST_CERT_ADDED=$([string](-not $testCertificateWasPresent))"
+
+          if ($PSVersionTable.PSVersion.Major -ge 6) {
+            Import-Module Appx -UseWindowsPowerShell -ErrorAction Stop
+          } else {
+            Import-Module Appx -ErrorAction Stop
+          }
+          Add-AppxPackage -Path (Join-Path $dir 'NixanDeck.msix') -ErrorAction Stop
+          if (@(Get-AppxPackage -Name 'NixanDeck' -ErrorAction SilentlyContinue).Count -lt 1) {
+            throw 'Could not register the previous NixanDeck MSIX package for the migration test.'
+          }
+          Write-Host 'Previous MSIX registration setup for migration test: PASS'
+
           # Execute the actual manifest pre_install hook with Scoop's official decompression function.
           Invoke-Expression (@($manifest.pre_install) -join [Environment]::NewLine)
+
+          if (@(Get-AppxPackage -Name 'NixanDeck' -ErrorAction SilentlyContinue).Count -ne 0) {
+            throw 'The manifest did not remove the previous current-user NixanDeck MSIX registration.'
+          }
+          Write-Host 'Previous current-user MSIX registration removal: PASS'
 
           $appDir = Join-Path $dir 'app'
           $exePath = Join-Path $appDir 'WinMacShell.exe'
@@ -325,6 +357,25 @@ jobs:
         if: always()
         shell: pwsh
         run: |
+          if ($PSVersionTable.PSVersion.Major -ge 6) {
+            Import-Module Appx -UseWindowsPowerShell -ErrorAction SilentlyContinue
+          } else {
+            Import-Module Appx -ErrorAction SilentlyContinue
+          }
+          Get-AppxPackage -Name 'NixanDeck' -ErrorAction SilentlyContinue | Remove-AppxPackage -ErrorAction SilentlyContinue
+          $testThumbprint = $env:NIXANDECK_TEST_CERT_THUMBPRINT
+          if ($testThumbprint -and $env:NIXANDECK_TEST_CERT_ADDED -eq 'True') {
+            $testStore = [System.Security.Cryptography.X509Certificates.X509Store]::new('TrustedPeople', 'LocalMachine')
+            $testStore.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
+            try {
+              $testMatches = $testStore.Certificates.Find(
+                [System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint,
+                $testThumbprint,
+                $false
+              )
+              foreach ($testMatch in $testMatches) { $testStore.Remove($testMatch) }
+            } finally { $testStore.Close() }
+          }
           $appDataPath = Join-Path $env:APPDATA 'WinMacShell'
           $localAppDataPath = Join-Path $env:LOCALAPPDATA 'WinMacShell'
           foreach ($path in @($appDataPath, $localAppDataPath)) {
