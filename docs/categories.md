@@ -8,9 +8,10 @@
 | Browsers & Communication | 14 | [View](#browsers-communication) |
 | Clipboard Tools | 19 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
-| Cross-Device Integration | 7 | [View](#cross-device-integration) |
+| Cross-Device Integration | 8 | [View](#cross-device-integration) |
+| Desktop Docks | 8 | [View](#desktop-docks) |
 | Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
-| Disk Monitor | 9 | [View](#disk-monitor) |
+| Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 88 | [View](#file-management) |
@@ -19,33 +20,33 @@
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
 | Games Tools | 15 | [View](#games-tools) |
-| Images & Photos | 61 | [View](#images-photos) |
+| Images & Photos | 62 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 57 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
-| Network & DNS | 48 | [View](#network-dns) |
+| Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 31 | [View](#notch) |
 | Notes & Knowledge | 27 | [View](#notes-knowledge) |
-| Other Utilities | 138 | [View](#other-utilities) |
+| Other Utilities | 139 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
-| Security | 42 | [View](#security) |
+| Security | 43 | [View](#security) |
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
-| Sync & Backup | 12 | [View](#sync-backup) |
+| Sync & Backup | 13 | [View](#sync-backup) |
 | System Monitoring & Hardware | 78 | [View](#system-monitoring-hardware) |
-| Sysinternals Utilities | 75 | [View](#sysinternals-utilities) |
+| Sysinternals Utilities | 76 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 102 | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 46 | [View](#windows-privacy-tweaks) |
-| Windows Update & Management | 5 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1237**
+| Windows Customization | 100 | [View](#windows-customization) |
+| Windows Privacy & Tweaks | 49 | [View](#windows-privacy-tweaks) |
+| Windows Update & Management | 6 | [View](#windows-update-management) |
+**Total unique categorized manifests: 1268**
 
 
 ## Android & Device Tools
@@ -153,6 +154,19 @@
 | [nectarlink](../bucket/nectarlink.json) | 0.1.4 | — | 2026-10-17 | Local-first Android and Windows companion for notifications, calls, messages, clipboard, file transfer, screen mirroring, and phone apps. | [Homepage](https://github.com/thtbee/nectarlink) |
 | [twindesk](../bucket/twindesk.json) | 2.5.3 | 64bit: 121.5 MiB / arm64: 122.2 MiB | 2026-11-05 | Cross-device workspace for sharing screens, apps, files, clipboard, input, calls, and notifications across Windows, macOS, Linux, and Android. | [Homepage](https://github.com/InukaAsith/TwinDesk) |
 | [bytedrop](../bucket/bytedrop.json) | 1.0.0 | 64bit: 27.7 MiB | 2026-11-14 | Browser-based file and clipboard transfer between a PC and phones or other devices over LAN, Mobile Hotspot, or a Cloudflare tunnel. | [Homepage](https://github.com/HusseinWalid48/ByteDrop) |
+
+## Desktop Docks
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [aero-dock](../bucket/aero-dock.json) | 1.3.2 | 3.7 MiB | 2026-09-29 | A lightweight Windows dock with a portable mode. | [Homepage](https://github.com/TheAgencyMGE/aero-dock) |
+| [cedro-modern-dock](../bucket/cedro-modern-dock.json) | 1.3.0 | 46.8 MiB | 2026-08-16 | Modern application dock for Windows. | [Homepage](https://github.com/Cedro-Software/cedro-modern-dock) |
+| [deskripple](../bucket/deskripple.json) | 1.1.2 | 64bit: 74.4 MiB | 2026-10-14 | Folder docks for the Windows desktop that expand into grids of shortcuts. | [Homepage](https://deskripple.com) |
+| [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
+| [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | 122.5 MiB | 2026-09-26 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
+| [stack-dock](../bucket/stack-dock.json) | 0.2.0-beta | 64bit: 2.3 MiB | 2026-11-18 | Customizable Windows dock for apps, games, files, folders, and links. | [Homepage](https://github.com/TNVR-HSN/stack-dock) |
+| [winmac-dock](../bucket/winmac-dock.json) | 0.9.2 | 64bit: 83.2 MiB / arm64: 79.3 MiB | 2026-11-12 | Standalone WinUI 3 dock for Windows 11 with macOS-style magnification and native Windows visuals. | [Homepage](https://github.com/Asteski/WinMac-Dock) |
+| [wisp](../bucket/wisp.json) | 0.8.2 | — | — | Windows 11 dock and keyboard launcher that replaces the taskbar. | [Homepage](https://github.com/SumirSeth/wisp) |
 
 ## Developer & Technical Tools
 
@@ -798,7 +812,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [takeoff-launcher](../bucket/takeoff-launcher.json) | 1.0.4 | — | — | Focused, lightweight native Windows application launcher. | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
 | [torrentplayer](../bucket/torrentplayer.json) | 0.3.3 | — | — | Open-source BitTorrent streaming media player with instant seeking and a background download queue. | [Homepage](https://torrentplayer.io) |
 | [wintousb](../bucket/wintousb.json) | 10.9 | — | — | Create Windows To Go and bootable Windows installation/WinPE USB media. | [Homepage](https://www.easyuefi.com/wintousb/) |
-| [wisp](../bucket/wisp.json) | 0.6.1 | — | — | Windows 11 dock and keyboard launcher that replaces the taskbar. | [Homepage](https://github.com/SumirSeth/wisp) |
 | [anton](../bucket/anton.json) | 0.2.48 | 95.4 MiB | 2026-10-29 | AI-assisted desktop video editor with a manual timeline and local rendering | [Homepage](https://antonvideo.app/) |
 | [autooff](../bucket/autooff.json) | 4.25 | 696.7 KiB | 2023-08-09 | Schedule Windows shutdown, restart, sleep, hibernate, display power, lock, alarms, and program tasks. | [Homepage](https://www.starcodec.com/en/autooff/) |
 | [pake-chatgpt](../bucket/pake-chatgpt.json) | 3.18.0 | 64bit: 3.6 MiB | 2026-11-04 | Pake-generated desktop wrapper for ChatGPT. | [Homepage](https://chatgpt.com/) |
@@ -1286,23 +1299,19 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 
 ## Windows Customization
 
-| [stack-dock](../bucket/stack-dock.json) | 0.2.0-beta | 64bit: 2.3 MiB | 2026-11-18 | Customizable Windows dock for apps, games, files, folders, and links. | [Homepage](https://github.com/TNVR-HSN/stack-dock) |
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
 | [meridian-shell](../bucket/meridian-shell.json) | 1.0-beta-1 | 3.5 MiB | 2026-11-16 | Windows 11 shell replacement with an alternative taskbar, Start menu, and file manager. | [Homepage](https://github.com/meridiandrive/Meridian-Shell) |
 | [stellaria](../bucket/stellaria.json) | 1.1.0 | 23.4 MiB | 2026-11-18 | Material You desktop shell for Windows 11 with a taskbar, widgets, launcher, and system panels. | [Homepage](https://github.com/SMIDR76/stellaria-windows) |
 | [winrust-np](../bucket/winrust-np.json) | 0.4.1 | 64bit: 6.0 MiB | 2026-11-19 | Administrator-level Windows shell replacement with a native taskbar, file manager, search, and system utilities. | [Homepage](https://github.com/Lemxy/WinRust) |
 | [softwareok-12-ants](../bucket/softwareok-12-ants.json) | 6.91 | 64bit: 290.1 KiB | 2026-04-24 | Display animated ants on the Windows desktop. | [Homepage](https://www.softwareok.com/?Download=12-Ants) |
 | [softwareok-4ur-windows-8-mouse-balls](../bucket/softwareok-4ur-windows-8-mouse-balls.json) | 4.91 | 64bit: 112.3 KiB | 2026-04-21 | Show animated mouse-ball effects on the desktop. | [Homepage](https://www.softwareok.com/?Download=4ur-Windows-8-Mouse-Balls) |
 | [aerial](../bucket/aerial.json) | 1.3.0 | 64bit: 198.5 MiB / arm64: 196.4 MiB | 2026-10-23 | Apple TV-style Windows screen saver with aerial videos, local video playback, and configurable overlays. | [Homepage](https://github.com/OrangeJedi/Aerial) |
-| [aero-dock](../bucket/aero-dock.json) | 1.3.2 | 3.7 MiB | 2026-09-29 | A lightweight Windows dock with a portable mode. | [Homepage](https://github.com/TheAgencyMGE/aero-dock) |
 | [softwareok-alwaysmousewheel](../bucket/softwareok-alwaysmousewheel.json) | 6.61 | 64bit: 122.9 KiB | 2026-05-04 | Use the mouse wheel over inactive windows. | [Homepage](https://www.softwareok.com/?Download=AlwaysMouseWheel) |
 | [softwareok-autohide-desktop-icons](../bucket/softwareok-autohide-desktop-icons.json) | 7.11 | 64bit: 91.5 KiB | 2026-10-17 | Automatically hide and show Windows desktop icons. | [Homepage](https://www.softwareok.com/?Download=AutoHideDesktopIcons) |
 | [softwareok-autohide-mouse-cursor](../bucket/softwareok-autohide-mouse-cursor.json) | 6.29 | 64bit: 77.7 KiB | 2026-10-20 | Automatically hide the mouse cursor after inactivity. | [Homepage](https://www.softwareok.com/?Download=AutoHideMouseCursor) |
 | [softwareok-brightness-manager-ok](../bucket/softwareok-brightness-manager-ok.json) | 1.88 | 64bit: 76.7 KiB | 2026-10-25 | Adjust screen brightness on Windows. | [Homepage](https://www.softwareok.com/?Download=Brightness.Manager.OK) |
 | [smart-hdr-manager](../bucket/smart-hdr-manager.json) | 3.0.1 | 64bit: 41.8 MiB | 2026-11-11 | Automatically switches Windows HDR for selected games and HDR videos, then restores SDR. | [Homepage](https://github.com/VantaCode420/SmartHdrManager) |
-| [cedro-modern-dock](../bucket/cedro-modern-dock.json) | 1.2.0 | 46.8 MiB | 2026-08-16 | Modern application dock for Windows. | [Homepage](https://github.com/Cedro-Software/cedro-modern-dock) |
 | [softwareok-classic-desktop-clock](../bucket/softwareok-classic-desktop-clock.json) | 5.33 | 64bit: 455.9 KiB | 2026-08-25 | Display a classic desktop clock. | [Homepage](https://www.softwareok.com/?Download=ClassicDesktopClock) |
 | [clockwork-orange](../bucket/clockwork-orange.json) | 4.7.1 | 64bit: 20.4 MiB | 2026-10-19 | Cross-platform wallpaper manager for Windows, Linux, and macOS. | [Homepage](https://github.com/ushineko/clockwork-orange) |
 | [contextmenumgrplus](../bucket/contextmenumgrplus.json) | 1.7.10 | 64bit: 78.0 MiB / arm64: 75.5 MiB | 2026-10-24 | Windows right-click context menu manager and protection utility | [Homepage](https://github.com/PLFJY/ContextMenuMgr) |
@@ -1313,7 +1322,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [desk-engine](../bucket/desk-engine.json) | 5.1.1 | 64bit: 70.9 MiB | 2026-09-25 | Lightweight Windows desktop overlay utility for displaying GIFs, images, and videos directly on the desktop. | [Homepage](https://github.com/RAF-02/Desk-Engine) |
 | [deskframe](../bucket/deskframe.json) | 1.44.0 | 63.7 MiB | 2026-03-26 | A highly customizable, open-source tool for desktop organization. | [Homepage](https://github.com/PinchToDebug/DeskFrame) |
 | [desk-widgets](../bucket/desk-widgets.json) | 1.8.9 | 289.5 KiB | 2026-11-12 | Lightweight desktop widgets for Windows with a community widget gallery. | [Homepage](https://github.com/whoissaaif/desk-widgets) |
-| [deskripple](../bucket/deskripple.json) | 1.1.1 | 64bit: 74.4 MiB | 2026-10-14 | Folder docks for the Windows desktop that expand into grids of shortcuts. | [Homepage](https://deskripple.com) |
 | [softwareok-desktop-clock-3d](../bucket/softwareok-desktop-clock-3d.json) | 2.51 | 64bit: 353.6 KiB | 2026-04-18 | Display a 3D clock on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopClock3D) |
 | [softwareok-desktop-images-3d](../bucket/softwareok-desktop-images-3d.json) | 2.61 | 64bit: 448.0 KiB | 2026-04-18 | Display images with a 3D desktop effect. | [Homepage](https://www.softwareok.com/?Download=DesktopImages3D) |
 | [softwareok-desktop-schnee-free](../bucket/softwareok-desktop-schnee-free.json) | 2.01 | 64bit: 260.3 KiB | 2020-04-17 | Display snow effects on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopSchneeFree) |
@@ -1331,7 +1339,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [softwareok-get-pixel-color](../bucket/softwareok-get-pixel-color.json) | 3.55 | 64bit: 144.3 KiB | 2026-06-30 | Read the color of a pixel on screen. | [Homepage](https://www.softwareok.com/?Download=GetPixelColor) |
 | [ghost-saver](../bucket/ghost-saver.json) | 1.0.0 | 160.2 KiB | 2026-09-19 | Open-source Windows screensaver with a color-cycling display and animated fireworks. | [Homepage](https://github.com/dmongrel/ghost-saver) |
 | [glassdesk](../bucket/glassdesk.json) | 1.8.0 | 435.5 KiB | 2026-11-13 | Glass-style Windows desktop organizer with auto-sorting fences and widgets. | [Homepage](https://github.com/Stapc-svg/GlassDesk) |
-| [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | 122.5 MiB | 2026-09-26 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
 | [iconswappergui](../bucket/iconswappergui.json) | 2.1.2 | 3.3 MiB | 2026-05-31 | Portable GUI for swapping Windows file and folder icons. | [Homepage](https://github.com/aj-phillips/IconSwapperGui) |
 | [softwareok-keep-mouse-speed-ok](../bucket/softwareok-keep-mouse-speed-ok.json) | 3.55 | 64bit: 53.7 KiB | 2026-04-25 | Keep the mouse speed setting consistent. | [Homepage](https://www.softwareok.com/?Download=KeepMouseSpeedOK) |
 | [komorebi](../bucket/komorebi.json) | 0.1.41 | 64bit: 26.7 MiB / arm64: 25.0 MiB | 2026-05-03 | A tiling window manager for Windows | [Homepage](https://github.com/LGUG2Z/komorebi) |
@@ -1394,7 +1401,6 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | 64bit: 9.1 MiB / 32bit: 8.6 MiB / arm64: 8.3 MiB | 2025-09-18 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
 | [winlestia](../bucket/winlestia.json) | 0.9.0 | 184.0 MiB | 2026-11-01 | Caelestia-inspired Windows 11 desktop shell with a customizable dock, dynamic themes, glass effects and desktop tools. | [Homepage](https://github.com/lilidoxdev/winlestia) |
 | [softwareok-zigarettenschachtel-spruch](../bucket/softwareok-zigarettenschachtel-spruch.json) | 2.32 | 64bit: 64.7 KiB | 2021-05-31 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
-| [winmac-dock](../bucket/winmac-dock.json) | 0.9.2 | 64bit: 83.2 MiB / arm64: 79.3 MiB | 2026-11-12 | Standalone WinUI 3 dock for Windows 11 with macOS-style magnification and native Windows visuals. | [Homepage](https://github.com/Asteski/WinMac-Dock) |
 
 ## Windows Privacy & Tweaks
 
