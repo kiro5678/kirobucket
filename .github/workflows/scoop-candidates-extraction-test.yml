@@ -109,18 +109,9 @@ jobs:
               $hash = Download-Verified -Url $Url -Path $download -Sha256 $Sha256
               $result.Download = "SHA-256 verified: $hash"
               if ($Type -eq 'MSI') {
-                $sevenZipDir = Join-Path $appRoot '7zip-extraction'
-                New-Item -ItemType Directory -Path $sevenZipDir -Force | Out-Null
-                & $sevenZip x $download "-o$sevenZipDir" -y -bd 2>&1 |
-                  Set-Content -LiteralPath (Join-Path $appRoot '7zip-msi-extraction.log') -Encoding utf8
-                if ($LASTEXITCODE -ne 0) { throw "7-Zip MSI extraction failed with exit code $LASTEXITCODE." }
-                $sevenZipExe = @(Get-ExeInventory -Directory $sevenZipDir)
-                $sevenZipMain = $sevenZipExe | Where-Object { $_.Path -match $ExpectedExe } | Select-Object -First 1
-                if ($null -eq $sevenZipMain) { throw "7-Zip MSI extraction did not contain the expected executable: $ExpectedExe" }
-                Add-Report "$Name Scoop/7-Zip MSI extraction main EXE: $($sevenZipMain.Path)"
                 $log = Join-Path $appRoot 'msiexec-admin.log'
                 $process = Start-Process -FilePath "$env:SystemRoot\System32\msiexec.exe" -ArgumentList @('/a', $download, '/qn', "TARGETDIR=$extractDir", '/l*v', $log) -Wait -PassThru
-                Add-Report "$Name msiexec /a exit code: $($process.ExitCode)"
+                Add-Report "$Name Scoop-compatible msiexec /a extraction exit code: $($process.ExitCode)"
                 if ($process.ExitCode -notin @(0, 3010)) { throw "MSI administrative extraction failed with exit code $($process.ExitCode)." }
               } else {
                 if ($Type -eq 'NSIS') {
