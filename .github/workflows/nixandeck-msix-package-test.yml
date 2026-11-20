@@ -1,10 +1,9 @@
-name: NixanDeck MSIX Package Test
+name: NixanDeck Scoop Extraction Test
 
 on:
   push:
     branches:
       - master
-      - nixandeck-nonportable
     paths:
       - "bucket/nixandeck.json"
       - ".github/workflows/nixandeck-msix-package-test.yml"
@@ -19,25 +18,27 @@ permissions:
   contents: read
 
 jobs:
-  msix-install-test:
-    name: Verify ZIP, certificate, MSIX install and Scoop hooks
+  scoop-extraction-test:
+    name: Extract MSIX with Scoop and test unpackaged app
     runs-on: windows-latest
     timeout-minutes: 30
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - name: Verify release metadata, archive and manifest scripts
+      - name: Verify manifest, extract MSIX with Scoop and test install lifecycle
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
 
           $manifest = Get-Content -LiteralPath 'bucket/nixandeck.json' -Raw -Encoding utf8 | ConvertFrom-Json -ErrorAction Stop
-          if ($manifest.version -ne '1.0.0-beta.1') { throw "Unexpected manifest version: $($manifest.version)" }
+          if ($manifest.version -ne '1.0.0-beta.1') { throw "Unexpected NixanDeck version: $($manifest.version)" }
 
-          foreach ($field in @('pre_install', 'post_install', 'pre_uninstall')) {
+          foreach ($field in @('pre_install', 'post_install', 'post_uninstall')) {
             $source = @($manifest.$field) -join [Environment]::NewLine
             $tokens = $null
             $errors = $null
@@ -49,158 +50,165 @@ jobs:
             Write-Host "$field PowerShell AST: PASS"
           }
 
-          $latestUrl = [string]$manifest.checkver.url
-          $latestResponse = Invoke-WebRequest -Uri $latestUrl -MaximumRedirection 10 -TimeoutSec 60
+          $latestResponse = Invoke-WebRequest -Uri ([string]$manifest.checkver.url) -MaximumRedirection 10 -TimeoutSec 60
           $versionMatch = [regex]::Match([string]$latestResponse.Content, [string]$manifest.checkver.regex)
-          if (-not $versionMatch.Success) { throw 'The checkver regex did not find a release tag in the GitHub API response.' }
-          $latestVersion = $versionMatch.Groups[1].Value
-          if ($latestVersion -ne $manifest.version) {
-            throw "Manifest version $($manifest.version) does not match upstream latest version $latestVersion."
+          if (-not $versionMatch.Success -or $versionMatch.Groups[1].Value -ne $manifest.version) {
+            throw 'The manifest version does not match the current upstream release.'
           }
-          Write-Host "checkver: PASS ($latestVersion)"
+          Write-Host "checkver: PASS ($($manifest.version))"
 
           $releaseApi = "https://api.github.com/repos/nurikhsanuddin/nixandeck/releases/tags/v$($manifest.version)"
           $releaseResponse = Invoke-WebRequest -Uri $releaseApi -MaximumRedirection 10 -TimeoutSec 60
-          $hashMatch = [regex]::Match([string]$releaseResponse.Content, [string]$manifest.autoupdate.architecture.'64bit'.hash.regex)
-          if (-not $hashMatch.Success) { throw 'The autoupdate hash regex did not find the ZIP asset digest.' }
-          $apiHash = $hashMatch.Groups[1].Value.ToLowerInvariant()
+          $hashRegex = [string]$manifest.autoupdate.architecture.'64bit'.hash.regex
+          $hashMatch = [regex]::Match([string]$releaseResponse.Content, $hashRegex)
+          if (-not $hashMatch.Success) { throw 'The autoupdate hash regex did not find the official ZIP digest.' }
           $expectedHash = ([string]$manifest.architecture.'64bit'.hash).ToLowerInvariant()
-          if ($apiHash -ne $expectedHash) { throw "Manifest SHA-256 $expectedHash differs from GitHub asset digest $apiHash." }
-          Write-Host "autoupdate hash extraction: PASS ($apiHash)"
+          if ($hashMatch.Groups[1].Value.ToLowerInvariant() -ne $expectedHash) {
+            throw 'The manifest hash does not match the official GitHub release digest.'
+          }
 
-          $root = Join-Path $env:RUNNER_TEMP 'nixandeck-msix-test'
-          $archivePath = Join-Path $root 'NixanDeck-Windows11-x64.zip'
-          $extractDir = Join-Path $root 'release'
-          $packageDir = Join-Path $root 'msix'
+          $root = Join-Path $env:RUNNER_TEMP 'nixandeck-scoop-extraction-test'
+          $zipPath = Join-Path $root 'NixanDeck-Windows11-x64.zip'
+          $scoopSource = Join-Path $root 'scoop-decompress.ps1'
           New-Item -ItemType Directory -Path $root -Force | Out-Null
 
-          $downloadUrl = [string]$manifest.architecture.'64bit'.url
-          Invoke-WebRequest -Uri $downloadUrl -OutFile $archivePath -MaximumRedirection 10 -TimeoutSec 900
-          $actualHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actualHash -ne $expectedHash) { throw "ZIP SHA-256 mismatch. Expected $expectedHash; got $actualHash." }
-          Expand-Archive -LiteralPath $archivePath -DestinationPath $extractDir -Force
+          Invoke-WebRequest -Uri ([string]$manifest.architecture.'64bit'.url) -OutFile $zipPath -MaximumRedirection 10 -TimeoutSec 900
+          $actualHash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) { throw "ZIP SHA-256 mismatch. Expected $expectedHash; received $actualHash." }
+          Write-Host "Official release ZIP SHA-256: PASS ($actualHash)"
 
-          foreach ($name in @('Install.bat', 'NixanDeck.cer', 'NixanDeck.msix')) {
-            if (-not (Test-Path -LiteralPath (Join-Path $extractDir $name) -PathType Leaf)) {
+          # Scoop's install command loads this same official decompression library before running manifest hooks.
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/lib/decompress.ps1' -OutFile $scoopSource -MaximumRedirection 10 -TimeoutSec 120
+          . $scoopSource
+          if (-not (Get-Command Expand-ZipArchive -ErrorAction SilentlyContinue)) {
+            throw 'The official Scoop Expand-ZipArchive function was not loaded.'
+          }
+
+          $scoopRoot = Join-Path $root 'scoop'
+          $app = 'nixandeck'
+          $global = $false
+          $dir = Join-Path $scoopRoot 'apps\nixandeck\1.0.0-beta.1'
+          $original_dir = $dir
+          $persist_dir = Join-Path $scoopRoot 'persist\nixandeck'
+          $scoopdir = $scoopRoot
+          New-Item -ItemType Directory -Path $dir, $persist_dir -Force | Out-Null
+
+          # Scoop first extracts the manifest's outer ZIP to the version directory.
+          Expand-Archive -LiteralPath $zipPath -DestinationPath $dir -Force
+          foreach ($name in @('NixanDeck.msix', 'NixanDeck.cer', 'Install.bat')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $dir $name) -PathType Leaf)) {
               throw "The official ZIP is missing $name."
             }
           }
-          Write-Host "Official ZIP integrity and payload layout: PASS"
 
-          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
-          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
-            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
-            if ($null -eq $command) { throw '7-Zip was not found on the Windows runner.' }
-            $sevenZip = $command.Source
-          }
+          # Execute the actual manifest pre_install hook with Scoop's official decompression function.
+          Invoke-Expression (@($manifest.pre_install) -join [Environment]::NewLine)
 
-          New-Item -ItemType Directory -Path $packageDir -Force | Out-Null
-          & $sevenZip x (Join-Path $extractDir 'NixanDeck.msix') "-o$packageDir" -y | Out-Host
-          if ($LASTEXITCODE -ne 0) { throw "7-Zip could not inspect NixanDeck.msix (exit code $LASTEXITCODE)." }
-
-          $appxManifestPath = Join-Path $packageDir 'AppxManifest.xml'
-          if (-not (Test-Path -LiteralPath $appxManifestPath -PathType Leaf)) { throw 'AppxManifest.xml is missing from the MSIX package.' }
-          [xml]$appxManifest = Get-Content -LiteralPath $appxManifestPath -Raw
-          $identity = $appxManifest.SelectSingleNode("//*[local-name()='Identity']")
-          $application = $appxManifest.SelectSingleNode("//*[local-name()='Application']")
-          if ($identity.GetAttribute('Name') -ne 'NixanDeck') { throw "Unexpected MSIX identity name: $($identity.GetAttribute('Name'))" }
-          if ($identity.GetAttribute('Publisher') -ne 'CN=NixanDeck') { throw "Unexpected MSIX publisher: $($identity.GetAttribute('Publisher'))" }
-          if ($identity.GetAttribute('ProcessorArchitecture') -ne 'x64') { throw 'The MSIX package is not x64.' }
-          if ($application.GetAttribute('Id') -ne 'NixanDeckApp') { throw 'The expected NixanDeckApp application ID was not found.' }
-          $appExecutable = $application.GetAttribute('Executable')
-          if (-not (Test-Path -LiteralPath (Join-Path $packageDir $appExecutable) -PathType Leaf)) {
-            throw "The MSIX application executable is missing: $appExecutable"
-          }
-
-          $msixPath = Join-Path $extractDir 'NixanDeck.msix'
-          $msixZipPath = Join-Path $root 'NixanDeck.msix.zip'
-          Copy-Item -LiteralPath $msixPath -Destination $msixZipPath -Force
-
-          $scoopDecompressSource = Join-Path $root 'scoop-decompress.ps1'
-          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/lib/decompress.ps1' -OutFile $scoopDecompressSource -MaximumRedirection 10 -TimeoutSec 120
-          . $scoopDecompressSource
-
-          $scoopExtractDir = Join-Path $root 'scoop-native-extracted'
-          New-Item -ItemType Directory -Path $scoopExtractDir -Force | Out-Null
-          Expand-ZipArchive -Path $msixZipPath -DestinationPath $scoopExtractDir
-
-          foreach ($requiredPath in @('AppxManifest.xml', $appExecutable)) {
-            if (-not (Test-Path -LiteralPath (Join-Path $scoopExtractDir $requiredPath) -PathType Leaf)) {
-              throw "Scoop native Expand-ZipArchive did not extract required MSIX file: $requiredPath"
+          $appDir = Join-Path $dir 'app'
+          $exePath = Join-Path $appDir 'WinMacShell.exe'
+          $watchdogPath = Join-Path $appDir 'NixanDeck.Watchdog.exe'
+          foreach ($required in @('AppxManifest.xml', 'WinMacShell.exe', 'WinMacShell.dll', 'NixanDeck.Watchdog.exe')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $appDir $required) -PathType Leaf)) {
+              throw "The extracted MSIX payload is missing $required."
             }
           }
-          Write-Host 'Scoop native Expand-ZipArchive MSIX extraction: PASS'
-
-          $makeAppx = $null
-          $kitsRoot = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\bin'
-          if (Test-Path -LiteralPath $kitsRoot -PathType Container) {
-            $makeAppx = Get-ChildItem -LiteralPath $kitsRoot -Filter 'MakeAppx.exe' -File -Recurse -ErrorAction SilentlyContinue |
-              Where-Object { $_.Directory.Name -eq 'x64' } |
-              Sort-Object -Property FullName -Descending |
-              Select-Object -First 1
-          }
-          if ($null -eq $makeAppx) {
-            $certKitMakeAppx = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\App Certification Kit\MakeAppx.exe'
-            if (Test-Path -LiteralPath $certKitMakeAppx -PathType Leaf) {
-              $makeAppx = Get-Item -LiteralPath $certKitMakeAppx
+          foreach ($removed in @('NixanDeck.msix', 'NixanDeck.msix.zip', 'NixanDeck.cer', 'Install.bat')) {
+            if (Test-Path -LiteralPath (Join-Path $dir $removed)) {
+              throw "The manifest left the installer/source file in the Scoop version directory: $removed"
             }
           }
+          if ($manifest.shortcuts[0][0] -ne 'app\WinMacShell.exe') {
+            throw 'The Start Menu shortcut does not target the extracted WinMacShell.exe.'
+          }
+          Write-Host 'Scoop Expand-ZipArchive MSIX extraction and payload layout: PASS'
 
-          if ($null -ne $makeAppx) {
-            $makeAppxDir = Join-Path $root 'makeappx-extracted'
-            New-Item -ItemType Directory -Path $makeAppxDir -Force | Out-Null
-            & $makeAppx.FullName unpack /v /p $msixPath /d $makeAppxDir
-            if ($LASTEXITCODE -ne 0) {
-              throw "Microsoft MakeAppx failed to unpack NixanDeck.msix (exit code $LASTEXITCODE)."
-            }
-            foreach ($requiredPath in @('AppxManifest.xml', $appExecutable)) {
-              if (-not (Test-Path -LiteralPath (Join-Path $makeAppxDir $requiredPath) -PathType Leaf)) {
-                throw "Microsoft MakeAppx did not extract required MSIX file: $requiredPath"
+          $packageManifest = [xml](Get-Content -LiteralPath (Join-Path $appDir 'AppxManifest.xml') -Raw)
+          $identity = $packageManifest.SelectSingleNode("//*[local-name()='Identity']")
+          if ($identity.GetAttribute('Name') -ne 'NixanDeck' -or
+              $identity.GetAttribute('Publisher') -ne 'CN=NixanDeck' -or
+              $identity.GetAttribute('ProcessorArchitecture') -ne 'x64') {
+            throw 'The extracted MSIX identity or architecture is incorrect.'
+          }
+          Write-Host 'Extracted MSIX manifest identity: PASS'
+
+          # Simulate Scoop persist_data: it creates the persist target and links the named directory into $dir.
+          $persistedDataPath = Join-Path $persist_dir 'WinMacShell'
+          New-Item -ItemType Directory -Path $persistedDataPath -Force | Out-Null
+          New-Item -ItemType Junction -Path (Join-Path $dir 'WinMacShell') -Target $persistedDataPath | Out-Null
+
+          # This runner is disposable. Refuse to touch any pre-existing user profile data.
+          $appDataPath = Join-Path $env:APPDATA 'WinMacShell'
+          $localAppDataPath = Join-Path $env:LOCALAPPDATA 'WinMacShell'
+          if (Test-Path -LiteralPath $appDataPath) { throw "Unexpected pre-existing AppData path; refusing to modify it: $appDataPath" }
+          if (Test-Path -LiteralPath $localAppDataPath) { throw "Unexpected pre-existing LocalAppData path; refusing to modify it: $localAppDataPath" }
+
+          # Seed the old MSIX-style config folder to verify migration into Scoop persist.
+          New-Item -ItemType Directory -Path $appDataPath -Force | Out-Null
+          Set-Content -LiteralPath (Join-Path $appDataPath 'legacy-config-test.txt') -Value 'Existing NixanDeck settings must be preserved.'
+
+          $runKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+          $runKeyExisted = Test-Path -LiteralPath $runKeyPath
+          $runKeyBefore = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Run', $false)
+          $hadNixanDeckValue = $false
+          $oldNixanDeckValue = $null
+          $oldNixanDeckKind = [Microsoft.Win32.RegistryValueKind]::String
+          if ($null -ne $runKeyBefore) {
+            try {
+              $hadNixanDeckValue = $runKeyBefore.GetValueNames() -contains 'NixanDeck'
+              if ($hadNixanDeckValue) {
+                $oldNixanDeckValue = $runKeyBefore.GetValue('NixanDeck', $null, 'DoNotExpandEnvironmentNames')
+                $oldNixanDeckKind = $runKeyBefore.GetValueKind('NixanDeck')
               }
-            }
-            Write-Host "Microsoft MakeAppx official MSIX unpack: PASS ($($makeAppx.FullName))"
-          } else {
-            Write-Warning 'MakeAppx.exe is not installed on this runner; Microsoft SDK unpack comparison was skipped.'
-          }
-
-          Write-Host "Unpackaged direct-launch smoke test"
-          $directExe = Join-Path $scoopExtractDir $appExecutable
-          $watchdogExe = Join-Path $scoopExtractDir 'NixanDeck.Watchdog.exe'
-          if (-not (Test-Path -LiteralPath $directExe -PathType Leaf)) {
-            throw "The extracted application executable is missing: $directExe"
-          }
-          if (-not (Test-Path -LiteralPath $watchdogExe -PathType Leaf)) {
-            throw 'The watchdog executable is missing; direct launch was skipped to avoid leaving the shell hidden on the test runner.'
+            } finally { $runKeyBefore.Dispose() }
           }
 
           $watchdogIdsBefore = @((Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue).Id)
-          $startupKeyPath = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
-          $hadStartupKey = Test-Path -LiteralPath $startupKeyPath
-          if (-not $hadStartupKey) {
-            New-Item -Path $startupKeyPath -Force | Out-Null
-          }
-          $startupKey = Get-Item -LiteralPath $startupKeyPath -ErrorAction Stop
-          $hadStartupValue = $startupKey.GetValueNames() -contains 'NixanDeck'
-          $oldStartupValue = if ($hadStartupValue) { $startupKey.GetValue('NixanDeck', $null, 'DoNotExpandEnvironmentNames') } else { $null }
-          $oldStartupKind = if ($hadStartupValue) { $startupKey.GetValueKind('NixanDeck') } else { [Microsoft.Win32.RegistryValueKind]::String }
-          $savedLocalAppData = $env:LOCALAPPDATA
-          $testLocalAppData = Join-Path $root 'unpackaged-localappdata'
-          New-Item -ItemType Directory -Path $testLocalAppData -Force | Out-Null
-          $env:LOCALAPPDATA = $testLocalAppData
           $directProcess = $null
           $directLaunchPassed = $false
+          $watchdogSeen = $false
 
           try {
-            $directProcess = Start-Process -FilePath $directExe -WorkingDirectory $scoopExtractDir -PassThru
-            Write-Host "Unpackaged WinMacShell PID: $($directProcess.Id)"
-            $exited = $directProcess.WaitForExit(15000)
-            $directProcess.Refresh()
-            if ($exited -or $directProcess.HasExited) {
-              Write-Host "Unpackaged process exited before the 15-second smoke-test window. Exit code: $($directProcess.ExitCode)"
-            } else {
-              $directLaunchPassed = $true
-              Write-Host 'Unpackaged direct launch stayed running for 15 seconds: PASS'
+            Invoke-Expression (@($manifest.post_install) -join [Environment]::NewLine)
+
+            $appDataItem = Get-Item -LiteralPath $appDataPath -Force
+            if (($appDataItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -eq 0) {
+              throw 'post_install did not create the AppData junction.'
             }
+            $junctionMarker = Join-Path $persistedDataPath '.scoop-appdata-junction'
+            if (-not (Test-Path -LiteralPath $junctionMarker -PathType Leaf)) {
+              throw 'The AppData junction ownership marker was not created in Scoop persist.'
+            }
+            if (-not (Test-Path -LiteralPath (Join-Path $persistedDataPath 'legacy-config-test.txt') -PathType Leaf)) {
+              throw 'The pre-existing AppData settings were not migrated to Scoop persist.'
+            }
+            if (-not (Test-Path -LiteralPath $runKeyPath)) {
+              throw 'post_install did not prepare the current-user Run registry key.'
+            }
+            Write-Host 'AppData migration, persist junction and startup registry preparation: PASS'
+
+            $directProcess = Start-Process -FilePath $exePath -WorkingDirectory $appDir -PassThru
+            Write-Host "Unpackaged WinMacShell PID: $($directProcess.Id)"
+            $exitedEarly = $directProcess.WaitForExit(15000)
+            $directProcess.Refresh()
+            if ($exitedEarly -or $directProcess.HasExited) {
+              throw "WinMacShell.exe exited before the 15-second test window. Exit code: $($directProcess.ExitCode)"
+            }
+            $directLaunchPassed = $true
+            Write-Host 'Unpackaged direct launch remained running for 15 seconds: PASS'
+
+            $configPath = Join-Path $persistedDataPath 'config.json'
+            if (-not (Test-Path -LiteralPath $configPath -PathType Leaf)) {
+              throw 'WinMacShell did not write its config.json through the AppData junction into Scoop persist.'
+            }
+            $registeredKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Run', $false)
+            if ($null -eq $registeredKey) { throw 'The app did not leave a readable Run registry key.' }
+            try {
+              $registeredValue = [string]$registeredKey.GetValue('NixanDeck', $null, 'DoNotExpandEnvironmentNames')
+            } finally { $registeredKey.Dispose() }
+            if ([string]::IsNullOrWhiteSpace($registeredValue) -or $registeredValue -notmatch '(?i)WinMacShell\.exe') {
+              throw 'Unpackaged NixanDeck did not register its own startup entry.'
+            }
+            Write-Host 'Application config persistence and unpackaged startup fallback: PASS'
           } finally {
             if ($null -ne $directProcess) {
               $directProcess.Refresh()
@@ -210,135 +218,121 @@ jobs:
               }
             }
 
-            # Confirm that the bundled watchdog started, then allow it to restore the Windows shell after the smoke test.
-            $watchdogSeen = $false
-            $watchdogStartDeadline = [DateTime]::UtcNow.AddSeconds(5)
-            do {
-              $newWatchdogs = @(Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue |
-                Where-Object { $watchdogIdsBefore -notcontains $_.Id })
-              if ($newWatchdogs.Count -gt 0) {
-                $watchdogSeen = $true
-                break
-              }
-              Start-Sleep -Milliseconds 250
-            } while ([DateTime]::UtcNow -lt $watchdogStartDeadline)
-
-            $watchdogExitDeadline = [DateTime]::UtcNow.AddSeconds(15)
+            $watchdogDeadline = [DateTime]::UtcNow.AddSeconds(15)
             do {
               $newWatchdogs = @(Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue |
                 Where-Object { $watchdogIdsBefore -notcontains $_.Id })
               if ($newWatchdogs.Count -eq 0) { break }
+              $watchdogSeen = $true
               Start-Sleep -Milliseconds 500
-            } while ([DateTime]::UtcNow -lt $watchdogExitDeadline)
+            } while ([DateTime]::UtcNow -lt $watchdogDeadline)
 
             if ($watchdogSeen -and $newWatchdogs.Count -eq 0) {
               Write-Host 'Watchdog exit after main app termination: PASS'
-            } elseif (-not $watchdogSeen) {
-              Write-Warning 'The bundled watchdog process was not observed during the direct-launch test.'
-            } else {
-              Write-Warning 'The watchdog did not exit in time; stopping only the test-created watchdog process.'
+            } elseif ($newWatchdogs.Count -gt 0) {
               foreach ($watchdog in $newWatchdogs) {
                 Stop-Process -Id $watchdog.Id -Force -ErrorAction SilentlyContinue
               }
+              throw 'The test-created NixanDeck Watchdog did not exit after the main application.'
+            } else {
+              Write-Warning 'The Watchdog process was not observed during the direct-launch test.'
             }
 
-            $env:LOCALAPPDATA = $savedLocalAppData
-            $registryRelativePath = 'Software\Microsoft\Windows\CurrentVersion\Run'
-            $currentStartupKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey($registryRelativePath, $true)
-            if ($null -ne $currentStartupKey) {
-              try {
-                if ($hadStartupValue) {
-                  $currentStartupKey.SetValue('NixanDeck', $oldStartupValue, $oldStartupKind)
-                } else {
-                  $currentStartupKey.DeleteValue('NixanDeck', $false)
-                }
-              } finally {
-                $currentStartupKey.Dispose()
-              }
-            }
-            if (-not $hadStartupKey) {
-              $currentVersionKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion', $true)
-              if ($null -ne $currentVersionKey) {
-                try {
-                  $runKeyCheck = $currentVersionKey.OpenSubKey('Run', $false)
-                  if ($null -ne $runKeyCheck) {
-                    try {
-                      if ($runKeyCheck.GetValueNames().Count -eq 0 -and $runKeyCheck.GetSubKeyNames().Count -eq 0) {
-                        $currentVersionKey.DeleteSubKey('Run', $false)
-                      }
-                    } finally {
-                      $runKeyCheck.Dispose()
-                    }
-                  }
-                } finally {
-                  $currentVersionKey.Dispose()
-                }
-              }
-            }
-            Remove-Item -LiteralPath $testLocalAppData -Recurse -Force -ErrorAction SilentlyContinue
-          }
-
-          if ($directLaunchPassed) {
-            'Unpackaged direct launch: PASS (process remained alive for 15 seconds)' |
-              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          } else {
-            'Unpackaged direct launch: FAIL (process exited before 15 seconds)' |
-              Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-            throw 'NixanDeck could not remain running when launched directly from the extracted MSIX payload without Add-AppxPackage.'
-          }
-
-          $certPath = Join-Path $extractDir 'NixanDeck.cer'
-          $certificate = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($certPath)
-          if ($certificate.Subject -ne $identity.GetAttribute('Publisher')) {
-            throw "Certificate subject '$($certificate.Subject)' does not match MSIX publisher '$($identity.GetAttribute('Publisher'))'."
-          }
-          Write-Host "MSIX identity, architecture, executable and publisher certificate: PASS"
-
-          $app = 'nixandeck'
-          $dir = $extractDir
-          function is_admin {
-            $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-            $principal = [Security.Principal.WindowsPrincipal]::new($identity)
-            return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-          }
-          if (-not (is_admin)) { throw 'The Windows Actions runner is not elevated; this test requires machine certificate-store access.' }
-
-          $appxInstalled = $false
-          try {
-            $preInstall = [scriptblock]::Create((@($manifest.pre_install) -join [Environment]::NewLine))
-            & $preInstall
-            $launcherPath = Join-Path $dir 'NixanDeck.cmd'
-            if (-not (Test-Path -LiteralPath $launcherPath -PathType Leaf)) { throw 'The manifest did not create NixanDeck.cmd.' }
-            if ([string]$manifest.shortcuts[0][0] -ne 'NixanDeck.cmd') { throw 'The manifest shortcut does not point to the generated launcher.' }
-
-            $postInstall = [scriptblock]::Create((@($manifest.post_install) -join [Environment]::NewLine))
-            & $postInstall
-            $packages = @(Get-AppxPackage -Name 'NixanDeck' -ErrorAction SilentlyContinue)
-            if ($packages.Count -lt 1) { throw 'The post_install hook did not register the NixanDeck MSIX package.' }
-            $appxInstalled = $true
-            Write-Host "Scoop post_install MSIX registration: PASS ($($packages[0].PackageFullName))"
-
-            $preUninstall = [scriptblock]::Create((@($manifest.pre_uninstall) -join [Environment]::NewLine))
-            & $preUninstall
-            $remaining = @(Get-AppxPackage -Name 'NixanDeck' -ErrorAction SilentlyContinue)
-            if ($remaining.Count -ne 0) { throw 'The pre_uninstall hook did not remove the NixanDeck MSIX registration.' }
-            $appxInstalled = $false
-            Write-Host 'Scoop pre_uninstall MSIX removal: PASS'
-          } finally {
-            if ($appxInstalled) {
-              if ($PSVersionTable.PSVersion.Major -ge 6) { Import-Module Appx -UseWindowsPowerShell 3>$null -ErrorAction SilentlyContinue }
-              Get-AppxPackage -Name 'NixanDeck' -ErrorAction SilentlyContinue | Remove-AppxPackage -ErrorAction SilentlyContinue
-            }
-            $store = [System.Security.Cryptography.X509Certificates.X509Store]::new('TrustedPeople', 'LocalMachine')
-            $store.Open([System.Security.Cryptography.X509Certificates.OpenFlags]::ReadWrite)
             try {
-              $matches = $store.Certificates.Find(
-                [System.Security.Cryptography.X509Certificates.X509FindType]::FindByThumbprint,
-                $certificate.Thumbprint,
-                $false
-              )
-              foreach ($match in $matches) { $store.Remove($match) }
+              Invoke-Expression (@($manifest.post_uninstall) -join [Environment]::NewLine)
             } finally {
-              $store.Close()
+              # Restore the runner's original NixanDeck Run value and Run-key existence.
+              $runKeyWritable = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Run', $true)
+              if ($null -ne $runKeyWritable) {
+                try {
+                  if ($hadNixanDeckValue) {
+                    $runKeyWritable.SetValue('NixanDeck', $oldNixanDeckValue, $oldNixanDeckKind)
+                  } else {
+                    $runKeyWritable.DeleteValue('NixanDeck', $false)
+                  }
+                } finally { $runKeyWritable.Dispose() }
+              }
+              if (-not $runKeyExisted) {
+                $currentVersionKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion', $true)
+                if ($null -ne $currentVersionKey) {
+                  try {
+                    $runKeyCheck = $currentVersionKey.OpenSubKey('Run', $false)
+                    if ($null -ne $runKeyCheck) {
+                      try {
+                        if ($runKeyCheck.GetValueNames().Count -eq 0 -and $runKeyCheck.GetSubKeyNames().Count -eq 0) {
+                          $currentVersionKey.DeleteSubKey('Run', $false)
+                        }
+                      } finally { $runKeyCheck.Dispose() }
+                    }
+                  } finally { $currentVersionKey.Dispose() }
+                }
+              }
+            }
+
+            if (Test-Path -LiteralPath $appDataPath) {
+              $remainingAppData = Get-Item -LiteralPath $appDataPath -Force
+              if (($remainingAppData.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+                Remove-Item -LiteralPath $appDataPath -Force
+              } else {
+                Remove-Item -LiteralPath $appDataPath -Recurse -Force
+              }
+            }
+            if (Test-Path -LiteralPath $localAppDataPath) {
+              Remove-Item -LiteralPath $localAppDataPath -Recurse -Force
+            }
+          }
+
+          if (-not $directLaunchPassed) { throw 'The unpackaged direct-launch test did not complete.' }
+          if (Test-Path -LiteralPath $appDataPath) { throw 'post_uninstall left the AppData junction behind.' }
+          if (-not (Test-Path -LiteralPath (Join-Path $persistedDataPath 'config.json') -PathType Leaf)) {
+            throw 'post_uninstall removed user settings from Scoop persist.'
+          }
+          if (Test-Path -LiteralPath (Join-Path $persistedDataPath '.scoop-appdata-junction')) {
+            throw 'post_uninstall left the AppData ownership marker in persisted data.'
+          }
+          $postRemovalRunKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Run', $false)
+          if ($null -ne $postRemovalRunKey) {
+            try {
+              $remainingRunValue = [string]$postRemovalRunKey.GetValue('NixanDeck', $null, 'DoNotExpandEnvironmentNames')
+            } finally { $postRemovalRunKey.Dispose() }
+            if ($remainingRunValue -match '(?i)WinMacShell\.exe') {
+              throw 'post_uninstall left the NixanDeck startup registry value behind.'
+            }
+          }
+          if (Test-Path -LiteralPath $localAppDataPath) {
+            throw 'post_uninstall left the NixanDeck watchdog PID directory behind.'
+          }
+
+          Write-Host 'post_uninstall junction, startup and runtime cleanup: PASS'
+          @(
+            '## NixanDeck Scoop extraction test'
+            ''
+            '- Official release SHA-256: PASS'
+            '- Scoop Expand-ZipArchive MSIX extraction: PASS'
+            '- MSIX identity and x64 payload validation: PASS'
+            '- Legacy AppData settings migration: PASS'
+            '- Unpackaged direct launch (15 seconds): PASS'
+            '- Watchdog exit after application termination: PASS'
+            '- Application config persisted in Scoop persist: PASS'
+            '- Unpackaged startup registry fallback: PASS'
+            '- post_uninstall cleanup while retaining persisted settings: PASS'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
+
+      - name: Remove test-created NixanDeck runtime state
+        if: always()
+        shell: pwsh
+        run: |
+          $appDataPath = Join-Path $env:APPDATA 'WinMacShell'
+          $localAppDataPath = Join-Path $env:LOCALAPPDATA 'WinMacShell'
+          foreach ($path in @($appDataPath, $localAppDataPath)) {
+            if (Test-Path -LiteralPath $path) {
+              $item = Get-Item -LiteralPath $path -Force
+              if (($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+                Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
+              } else {
+                Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction SilentlyContinue
+              }
             }
           }
