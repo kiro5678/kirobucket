@@ -1,7 +1,13 @@
-name: 1by1 Scoop Package Validation
+name: 1by1 Scoop Lifecycle Test
 
 on:
   push:
+    branches:
+      - master
+    paths:
+      - "bucket/1by1-martin-pesch.json"
+      - ".github/workflows/1by1-scoop-validation.yml"
+  pull_request:
     branches:
       - master
     paths:
@@ -13,71 +19,134 @@ permissions:
   contents: read
 
 jobs:
-  package:
+  lifecycle:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
-      - name: Download, verify, and inspect 1by1 SFX archive
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $url = 'https://codecsdownload.com/download_4c6df74c1b633f5f81f55a19e9c26270/1by1_217.exe'
-          $expected = 'e6b586242513766fc5d55bcc3fc5cdb2fab0952ea40c3cbdeb5f62ea58977d91'
-          $root = Join-Path $env:GITHUB_WORKSPACE '1by1-validation'
-          $extract = Join-Path $root 'extracted'
-          New-Item -ItemType Directory -Force -Path $extract | Out-Null
-          $package = Join-Path $root '1by1_217.exe'
-          Invoke-WebRequest -Uri $url -OutFile $package -MaximumRedirection 10 -TimeoutSec 180 -Headers @{ 'User-Agent' = 'Mozilla/5.0 Scoop manifest verifier' }
-          $actual = (Get-FileHash -LiteralPath $package -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) {
-            throw "Publisher checksum mismatch. Expected $expected; received $actual"
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-1by1-lifecycle'
+          "SCOOP=$env:SCOOP" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          (Join-Path $env:SCOOP 'shims') | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          scoop --version
+
+      - name: Check checkver and forced autoupdate
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\1by1-martin-pesch.json'
+          $manifestDir = Split-Path -Parent $manifestPath
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Scoop checkver.ps1 was not found: $checkver"
           }
-          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
-          if (-not (Test-Path -LiteralPath $sevenZip)) {
-            $sevenZipCommand = Get-Command 7z.exe -ErrorAction Stop
-            $sevenZip = $sevenZipCommand.Source
+          & $checkver '1by1-martin-pesch' $manifestDir -ForceUpdate -ThrowError
+          if ($LASTEXITCODE -ne 0) {
+            throw "Scoop checkver failed with exit code $LASTEXITCODE."
           }
-          & $sevenZip l -slt $package 2>&1 | Set-Content (Join-Path $root 'listing.log') -Encoding utf8
-          if ($LASTEXITCODE -ne 0) { throw "7-Zip listing failed: $LASTEXITCODE" }
-          & $sevenZip x $package "-o$extract" -y -bd 2>&1 | Set-Content (Join-Path $root 'extract.log') -Encoding utf8
-          if ($LASTEXITCODE -ne 0) { throw "7-Zip extraction failed: $LASTEXITCODE" }
-          $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force | ForEach-Object {
-            [PSCustomObject]@{
-              Path = [IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\', '/')
-              Size = $_.Length
-              Extension = $_.Extension
-            }
-          })
-          $files | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $root 'files.json') -Encoding utf8
-          $exeFiles = @($files | Where-Object { $_.Extension -ieq '.exe' })
-          if ($exeFiles.Count -eq 0) { throw 'No executable files were extracted.' }
-          $page = (Invoke-WebRequest -Uri 'https://mpesch3.de/1by1.html' -TimeoutSec 60).Content
-          $match = [regex]::Match($page, 'Version\s+(?<version>[\d.]+)')
-          if (-not $match.Success) { throw 'Official version regex did not match.' }
-          $detected = $match.Groups['version'].Value
-          if ($detected -ne '2.17') { throw "checkver detected $detected rather than the manifest's 2.17." }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          if ($manifest.version -ne '2.17') {
+            throw "Scoop checkver detected unexpected version: $($manifest.version)"
+          }
+          if ($manifest.url -ne 'https://codecsdownload.com/download_4c6df74c1b633f5f81f55a19e9c26270/1by1_217.exe#/dl.7z') {
+            throw "Forced autoupdate produced an unexpected URL: $($manifest.url)"
+          }
+          if ($manifest.hash -ne 'e6b586242513766fc5d55bcc3fc5cdb2fab0952ea40c3cbdeb5f62ea58977d91') {
+            throw "Forced autoupdate produced an unexpected SHA-256: $($manifest.hash)"
+          }
+          Write-Host "PASS: Scoop checkver detected $($manifest.version), rebuilt the $($manifest.url) URL, and verified its SHA-256."
+
+      - name: Install manifest with Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\1by1-martin-pesch.json'
+          scoop install $manifestPath
+          if ($LASTEXITCODE -ne 0) {
+            throw "Scoop install failed with exit code $LASTEXITCODE."
+          }
+
+      - name: Verify executable, shim, shortcut, and persisted settings
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $appDir = Join-Path $env:SCOOP 'apps\1by1-martin-pesch\current'
+          $exe = Join-Path $appDir '1by1.exe'
+          if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+            throw "Extracted application executable is missing: $exe"
+          }
+
+          $shim = Join-Path $env:SCOOP 'shims\1by1.cmd'
+          if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+            throw "Scoop shim was not created: $shim"
+          }
+
+          $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          $shortcutFile = Get-ChildItem -LiteralPath $shortcutRoot -Filter '1by1 Martin Pesch.lnk' -File -Recurse -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+          if ($null -eq $shortcutFile) {
+            throw 'The 1by1 Martin Pesch Start Menu shortcut was not created.'
+          }
+          $shell = New-Object -ComObject WScript.Shell
+          $shortcut = $shell.CreateShortcut($shortcutFile.FullName)
+          if ($shortcut.TargetPath -ne $exe) {
+            throw "Shortcut target mismatch: $($shortcut.TargetPath)"
+          }
+          if ($shortcut.Arguments -notmatch '/localini') {
+            throw "Shortcut does not use /localini: $($shortcut.Arguments)"
+          }
+
+          $persistIni = Join-Path $env:SCOOP 'persist\1by1-martin-pesch\1by1.ini'
+          $appIni = Join-Path $appDir '1by1.ini'
+          if (-not (Test-Path -LiteralPath $persistIni -PathType Leaf)) {
+            throw "Persisted 1by1.ini was not created: $persistIni"
+          }
+          if (-not (Test-Path -LiteralPath $appIni -PathType Leaf)) {
+            throw "The app-directory 1by1.ini persistence link is missing: $appIni"
+          }
+
+          Set-Content -LiteralPath $appIni -Value '[1by1]' -Encoding Ascii
+          if ((Get-Content -LiteralPath $persistIni -Raw) -notmatch '\[1by1\]') {
+            throw 'Writing 1by1.ini through the app directory did not reach Scoop persist.'
+          }
+
           @(
-            '## 1by1 package inspection'
+            '## 1by1 Scoop lifecycle test'
             ''
-            "- Download: $url"
-            "- SHA-256: $actual (matches publisher)"
-            "- Size: $((Get-Item -LiteralPath $package).Length) bytes"
-            "- checkver regex result: $detected"
-            ''
-            '### Extracted executable files'
-            foreach ($exe in $exeFiles) { "- $($exe.Path) — $($exe.Size) bytes" }
-            ''
-            '### All extracted files'
-            foreach ($file in $files) { "- $($file.Path) — $($file.Size) bytes" }
-            ''
-            'The extracted application was not executed.'
+            '- Scoop checkver and forced autoupdate passed against the official developer page.'
+            '- The generated autoupdate URL and SHA-256 match the verified 2.17 package.'
+            '- Scoop extracted 1by1.exe from the SFX ZIP using the #/dl.7z URL fragment.'
+            '- The 1by1 shim and Start Menu shortcut were created.'
+            '- The shortcut starts 1by1 with /localini.'
+            '- 1by1.ini is linked to the Scoop persist directory and writable.'
+            '- The application was not launched.'
           ) | Set-Content $env:GITHUB_STEP_SUMMARY -Encoding utf8
-      - name: Upload extraction inspection
+
+      - name: Uninstall and verify persisted settings survive
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: 1by1-package-inspection
-          path: 1by1-validation/
-          if-no-files-found: warn
-          retention-days: 14
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (Get-Command scoop -ErrorAction SilentlyContinue) {
+            scoop uninstall 1by1-martin-pesch
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed with exit code $LASTEXITCODE."
+            }
+          }
+          $persistIni = Join-Path $env:SCOOP 'persist\1by1-martin-pesch\1by1.ini'
+          if (-not (Test-Path -LiteralPath $persistIni -PathType Leaf)) {
+            throw 'Scoop uninstall removed the persisted 1by1.ini file.'
+          }
+          if ((Get-Content -LiteralPath $persistIni -Raw) -notmatch '\[1by1\]') {
+            throw 'The persisted 1by1.ini marker did not survive uninstall.'
+          }
+          Write-Host 'PASS: persisted 1by1.ini survived Scoop uninstall.'
