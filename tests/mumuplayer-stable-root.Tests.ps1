@@ -18,6 +18,7 @@ $root = Join-Path $env:RUNNER_TEMP ('mumu-stable-' + [guid]::NewGuid().ToString(
 $scoopRoot = Join-Path $root 'Scoop Root'
 $persistRoot = Join-Path $root 'Global Persist\mumuplayer'
 $appDataRoot = Join-Path $root 'Roaming'
+$userProfileRoot = Join-Path $root 'User Profile'
 $registryRoot = 'HKCU:\Software\KiroBucketMuMuTests\' + [guid]::NewGuid().ToString('N')
 $registryPath = Join-Path $registryRoot 'MuMuPlayerGlobal'
 $oldRoot = Join-Path $scoopRoot 'apps\mumuplayer\1.8.5.5748'
@@ -29,6 +30,7 @@ $vmData = Join-Path $persistRoot 'vms\test-vm\userdata.img'
 $vmConfig = Join-Path $persistRoot 'vms\test-vm\vm_config.json'
 $deviceMarker = Join-Path $persistRoot 'nx_device\device-marker.txt'
 $env:APPDATA = $appDataRoot
+$env:USERPROFILE = $userProfileRoot
 $env:MUMU_SCOOP_TEST_MODE = '1'
 $env:MUMU_SCOOP_TEST_REGISTRY_PATH = $registryPath
 $script:ExpectedStableRoot = $stableRoot
@@ -211,6 +213,22 @@ try {
     Equal $cfg.product.version '6.8.17.0' 'Second update did not update product version.'
     Equal $cfg.product.install_dir $stableRoot 'Second update reverted to a version-specific root.'
     Assert (@($script:Targets | ForEach-Object { [IO.Path]::GetFullPath($_) } | Select-Object -Unique).Count -eq 1) 'Multiple installer target roots were used.'
+
+    $postUninstallText = @($manifest.post_uninstall) -join "`r`n"
+    $cmd = 'update'
+    . ([scriptblock]::Create($postUninstallText))
+    Assert (Test-Path $stableRoot) 'post_uninstall removed the stable root during scoop update.'
+    Assert (Test-Path $registryPath) 'post_uninstall removed the Registry registration during scoop update.'
+    Assert ($script:MockMuMuServicePath -like "*$stableRoot*") 'post_uninstall removed the service during scoop update.'
+
+    $cmd = 'uninstall'
+    . ([scriptblock]::Create($postUninstallText))
+    Assert (-not (Test-Path $stableRoot)) 'post_uninstall did not remove the stable binary root on full Scoop uninstall.'
+    Assert (-not (Test-Path $registryPath)) 'post_uninstall did not remove the stable-root uninstall registration.'
+    Assert ([string]::IsNullOrWhiteSpace($script:MockMuMuServicePath)) 'post_uninstall did not remove the stable-root service.'
+    Equal (Get-Content $vmData -Raw).Trim() 'vm-data-preserve' 'Scoop uninstall removed VM user data.'
+    Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Scoop uninstall removed persisted device data.'
+    Assert (Test-Path (Join-Path $persistRoot 'configs\user-settings.json')) 'Scoop uninstall removed persisted user configuration.'
 
     @(
         '## MuMuPlayer stable install-root regression'
