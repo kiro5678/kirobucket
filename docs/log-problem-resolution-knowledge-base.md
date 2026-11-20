@@ -50,6 +50,18 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-21 — Pass MuMuPlayer's NSIS /D destination without quotes
+
+- **Status:** Manifest correction implemented; real installer verification pending.
+- **Affected area:** `bucket/mumuplayer.json`; `.github/workflows/mumuplayer-scoop-upgrade-test.yml`; `docs/mumuplayer-scoop-upgrade.md`.
+- **Problem:** MuMuPlayer NX-main `1.8.16.6114` exited `install_prepare` with `80010` after the installer was staged outside the Scoop target.
+- **Root cause:** The manifest passed NSIS `/D=` as `/D="<path>"`. The user's `main-main-early-init.log` showed `INSTDIR=` empty and the runtime JSON path unset. NSIS requires `/D=` to be the final command-line argument and forbids quote characters, even when the destination path contains spaces. NSIS also intentionally omits a successfully parsed `/D=` switch from `$CMDLINE`; its absence from the logged command line is not evidence that PowerShell omitted it. The empty `INSTDIR` is the relevant diagnostic.
+- **Resolution:** Changed the manifest to append `('/D=' + $dir)` as the final argument without quotes. Updated the upgrade guide and regression workflow to reject quoted or non-final `/D=` arguments and test a destination path containing spaces.
+- **Verification:** The diagnosis is supported by the user's installer log and the official NSIS command-line documentation. CI and a real MuMu installation/VM boot remain pending; do not mark the issue runtime-verified until those tests pass.
+- **Prevention:** For NSIS installers, pass `/D=<absolute path>` last and without quotes. Add regression assertions for both ordering and quoting; mocked installer success alone does not prove vendor runtime compatibility.
+
+
+
 ### 2026-11-21 — Keep MuMuPlayer installer outside its Scoop installation target
 
 - **Status:** Resolved, verification pending.
