@@ -66,16 +66,18 @@ jobs:
           scoop bucket add kirobucket-validation $bucketUrl
           if ($LASTEXITCODE -ne 0) { throw 'Could not register the local validation bucket.' }
 
-      - name: Validate both upstream version checks
+      - name: Validate both upstream version checks with Scoop checkver.ps1
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          $bucket = Join-Path $env:SCOOP 'buckets\kirobucket-validation\bucket'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Scoop checkver script was not found: $checkver"
+          }
           foreach ($name in @('atlas-filemanager', 'yogurt')) {
             Write-Host "Checking upstream version for $name"
-            scoop checkver $name
-            if ($LASTEXITCODE -ne 0) {
-              throw "Scoop checkver failed for $name (exit code $LASTEXITCODE)."
-            }
+            & $checkver -App $name -Dir $bucket -ThrowError
           }
 
       - name: Install using Scoop extraction
@@ -145,13 +147,15 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           foreach ($name in @('atlas-filemanager', 'yogurt')) {
-            scoop uninstall $name
-            if ($LASTEXITCODE -ne 0) {
-              throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)."
-            }
             $appDir = Join-Path $env:SCOOP "apps\$name"
+            if (Test-Path -LiteralPath $appDir) {
+              scoop uninstall $name
+              if ($LASTEXITCODE -ne 0) {
+                throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)."
+              }
+            }
             if (Test-Path -LiteralPath $appDir) {
               throw "$name application files remain after Scoop uninstall: $appDir"
             }
-            Write-Host "PASS: $name was uninstalled cleanly."
+            Write-Host "PASS: $name cleanup completed."
           }
