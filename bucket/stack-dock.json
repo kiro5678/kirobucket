@@ -16,7 +16,7 @@
             "StackDock"
         ]
     ],
-    "notes": "The portable build stores its layout in the current Windows user's WebView2 local storage, not beside StackDock.exe. Microsoft Edge WebView2 Runtime is required.",
+    "notes": "The portable build stores its layout in the current Windows user's WebView2 local storage, not beside the executable. Microsoft Edge WebView2 Runtime is required.",
     "checkver": {
         "github": "https://github.com/TNVR-HSN/stack-dock"
     },
