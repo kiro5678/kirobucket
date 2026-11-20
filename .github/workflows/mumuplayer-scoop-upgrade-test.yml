@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - fix/mumuplayer-safe-upgrade-20261118
+      - 'fix/*'
     paths:
       - "bucket/mumuplayer.json"
       - ".github/workflows/mumuplayer-scoop-upgrade-test.yml"
