@@ -50,6 +50,17 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-20 — Extract NixanDeck MSIX into Scoop and migrate from prior registration
+
+- **Status:** Resolved and verified.
+- **Affected area:** `bucket/nixandeck.json`; `.github/workflows/nixandeck-msix-package-test.yml`; `docs/manifest-authoring.md`; portability inventory.
+- **Problem:** The previous manifest registered NixanDeck with `Add-AppxPackage`, so Windows managed the application payload outside Scoop. The release ZIP itself only wrapped an MSIX package and its signing certificate.
+- **Root cause:** MSIX is a ZIP-compatible Open Packaging Conventions container, but Scoop's standard ZIP extraction path uses the local archive filename to choose the extraction method. A raw `.msix` file is not treated as a ZIP archive by the normal Scoop extraction dispatch.
+- **Resolution:** After Scoop extracts the official outer release ZIP, `pre_install` copies the MSIX to a temporary `.msix.zip` name and calls the official `Expand-ZipArchive` function from Scoop's `lib/decompress.ps1`. The hook validates the extracted package manifest and required executables, removes the temporary package and vendor install files, and runs `WinMacShell.exe` directly from the Scoop version directory. The manifest redirects only `%APPDATA%\\WinMacShell` to Scoop persist, preserves existing user settings, uses the app's own HKCU Run fallback, removes only the previous current-user NixanDeck MSIX registration during migration, and removes only owned runtime state on uninstall.
+- **Verification:** Windows [NixanDeck Scoop Extraction Test run 44756459760](https://github.com/kiro5678/kirobucket/actions/runs/44756459760) passed: prior MSIX registration setup, current-user package removal, official Scoop MSIX extraction, package identity and x64 payload checks, legacy AppData migration, 15-second unpackaged process launch, config persistence into Scoop persist, app startup fallback, Watchdog exit, and post-uninstall cleanup while retaining settings. [Workflow validation run 44756459988](https://github.com/kiro5678/kirobucket/actions/runs/44756459988) also passed. Interactive UI features and Package Identity-dependent capabilities were not exhaustively tested.
+- **Prevention:** When extracting MSIX/APPX without registering it, use Scoop's official `Expand-ZipArchive` on a temporary ZIP-suffixed copy, verify the Appx manifest and real application payload, test the app unpackaged, and explicitly assess Package Identity-dependent features. Keep a real MSIX registration manifest when Package Identity is required for core functionality.
+
+
 ### 2026-11-20 — Persist custom Scoop paths across workflow steps
 
 - **Status:** Resolved and verified.
