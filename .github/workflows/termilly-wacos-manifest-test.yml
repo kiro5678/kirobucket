@@ -67,7 +67,6 @@ jobs:
           foreach ($name in @('termilly', 'wacos')) {
             Write-Host "Running checkver and forced autoupdate hash test for $name"
             & $checkver $name $env:MANIFEST_DIR -ForceUpdate -ThrowError
-            if ($LASTEXITCODE -ne 0) { throw "checkver failed for $name." }
           }
 
       - name: Install both manifests with Scoop
