@@ -5,7 +5,12 @@
     "license": "Freeware",
     "url": "https://fileferret.net/download.php?f=FileFerret-Portable-1.7.0.exe",
     "hash": "9196b7089e3d13c06604099e32a1c3a74f2c44cbd93868f2bdc8983d4405aa61",
-    "bin": "FileFerret-Portable-1.7.0.exe",
+    "bin": [
+        [
+            "FileFerret-Portable-1.7.0.exe",
+            "FileFerret"
+        ]
+    ],
     "shortcuts": [
         [
             "FileFerret-Portable-1.7.0.exe",
