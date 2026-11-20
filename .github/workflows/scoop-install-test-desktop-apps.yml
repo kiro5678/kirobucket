@@ -9,6 +9,7 @@ on:
       - "bucket/stellarhub.json"
       - "bucket/litechat.json"
       - "bucket/kernel-mindzy007.json"
+      - "bucket/winisland-rheme18.json"
       - ".github/workflows/scoop-install-test-desktop-apps.yml"
   workflow_dispatch:
 
@@ -47,7 +48,7 @@ jobs:
           $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-desktop-apps-test'
           $manifestDir = Join-Path $localBucket 'bucket'
           New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
-          $manifestNames = @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')
+          $manifestNames = @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007', 'winisland-rheme18')
           foreach ($name in $manifestNames) {
             $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
             if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
@@ -109,7 +110,8 @@ jobs:
             @{ Name = 'StackDock'; App = 'stack-dock'; RelativeExe = 'StackDock_portable.exe'; Shortcut = 'StackDock.lnk' },
             @{ Name = 'StellarHub'; App = 'stellarhub'; RelativeExe = 'StellarHub.exe'; Shortcut = 'StellarHub.lnk' },
             @{ Name = 'LiteChat'; App = 'litechat'; RelativeExe = 'litechat.exe'; Shortcut = 'LiteChat.lnk' },
-            @{ Name = 'Kernel'; App = 'kernel-mindzy007'; RelativeExe = 'Kernel.exe'; Shortcut = 'Kernel.lnk' }
+            @{ Name = 'Kernel'; App = 'kernel-mindzy007'; RelativeExe = 'Kernel.exe'; Shortcut = 'Kernel.lnk' },
+            @{ Name = 'WinIsland (rheme18)'; App = 'winisland-rheme18'; RelativeExe = 'WinIsland.exe'; Shortcut = 'WinIsland (rheme18).lnk' }
           )
 
           $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
