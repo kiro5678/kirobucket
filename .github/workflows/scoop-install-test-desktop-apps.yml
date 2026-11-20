@@ -1,0 +1,216 @@
+name: Scoop Install Test - StackDock, StellarHub, LiteChat, Kernel
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/stack-dock.json"
+      - "bucket/stellarhub.json"
+      - "bucket/litechat.json"
+      - "bucket/kernel-mindzy007.json"
+      - ".github/workflows/scoop-install-test-desktop-apps.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-test:
+    name: Install, verify, and uninstall on Windows
+    runs-on: windows-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: \${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install Scoop and create a local test bucket
+        env:
+          GITHUB_TOKEN: \${{ github.token }}
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-desktop-apps-test'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          scoop config gh_token $env:GITHUB_TOKEN
+          if ($LASTEXITCODE -ne 0) { throw 'Could not configure the GitHub API token for Scoop.' }
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-desktop-apps-test'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          $manifestNames = @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')
+          foreach ($name in $manifestNames) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Required manifest is missing: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket
+            git commit -m 'Seed local desktop app manifest test bucket'
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket-test $bucketUrl
+          if ($LASTEXITCODE -ne 0) { throw 'Could not register the local kirobucket test bucket.' }
+
+      - name: Validate checkver and autoupdate templates
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-desktop-apps-test\bucket'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Scoop checkver.ps1 was not found: $checkver"
+          }
+
+          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')) {
+            Write-Host "Checking $name version, autoupdate URL, and SHA-256 template"
+            & $checkver $name $manifestDir -ForceUpdate -ThrowError
+            if ($LASTEXITCODE -ne 0) { throw "checkver validation failed for $name." }
+            Write-Host "PASS: $name checkver and forced autoupdate validation."
+          }
+
+      - name: Install the four manifests with Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')) {
+            Write-Host "Installing $name"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop install failed for $name (exit code $LASTEXITCODE)."
+            }
+          }
+
+      - name: Verify extracted executables, Start Menu shortcuts, and persisted data
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $apps = Join-Path $env:SCOOP 'apps'
+          $checks = @(
+            @{ Name = 'StackDock'; App = 'stack-dock'; RelativeExe = 'StackDock_portable.exe'; Shortcut = 'StackDock.lnk' },
+            @{ Name = 'StellarHub'; App = 'stellarhub'; RelativeExe = 'StellarHub.exe'; Shortcut = 'StellarHub.lnk' },
+            @{ Name = 'LiteChat'; App = 'litechat'; RelativeExe = 'litechat.exe'; Shortcut = 'LiteChat.lnk' },
+            @{ Name = 'Kernel'; App = 'kernel-mindzy007'; RelativeExe = 'Kernel.exe'; Shortcut = 'Kernel.lnk' }
+          )
+
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          $shell = New-Object -ComObject WScript.Shell
+          foreach ($check in $checks) {
+            $appDir = Join-Path $apps "$($check.App)\current"
+            $exe = Join-Path $appDir $check.RelativeExe
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "$($check.Name) executable is missing after installation: $exe"
+            }
+            Write-Host "PASS: $($check.Name) executable extracted to $exe"
+
+            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue |
+              Select-Object -First 1
+            if ($null -eq $shortcut) {
+              throw "$($check.Name) Start Menu shortcut is missing: $($check.Shortcut)"
+            }
+            $shortcutTarget = $shell.CreateShortcut($shortcut.FullName).TargetPath
+            if (-not (Test-Path -LiteralPath $shortcutTarget -PathType Leaf)) {
+              throw "$($check.Name) shortcut points to a missing executable: $shortcutTarget"
+            }
+            Write-Host "PASS: $($check.Name) shortcut resolves to $shortcutTarget"
+          }
+
+          function Assert-Junction {
+            param(
+              [Parameter(Mandatory)][string]$Name,
+              [Parameter(Mandatory)][string]$Path,
+              [Parameter(Mandatory)][string]$Target
+            )
+            $item = Get-Item -LiteralPath $Path -Force -ErrorAction Stop
+            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -eq 0 -or $item.LinkType -ne 'Junction') {
+              throw "$Name path is not a Junction: $Path"
+            }
+            $actual = [IO.Path]::GetFullPath([string]$item.Target).TrimEnd('\')
+            $expected = [IO.Path]::GetFullPath($Target).TrimEnd('\')
+            if ($actual -ine $expected) {
+              throw "$Name junction target mismatch. Actual: $actual; expected: $expected"
+            }
+            Write-Host "PASS: $Name junction -> $expected"
+          }
+
+          $stackLocal = Join-Path $env:LOCALAPPDATA 'com.stackdock.launcher'
+          $stackPersist = Join-Path $env:SCOOP 'persist\stack-dock\profile'
+          Assert-Junction -Name 'StackDock WebView2 profile' -Path $stackLocal -Target $stackPersist
+
+          $liteLocal = Join-Path $env:LOCALAPPDATA 'LiteChat'
+          $litePersist = Join-Path $env:SCOOP 'persist\litechat\profile'
+          Assert-Junction -Name 'LiteChat WebView2 profile' -Path $liteLocal -Target $litePersist
+
+          $stellarData = Join-Path $env:SCOOP 'apps\stellarhub\current\Data'
+          $stellarPersist = Join-Path $env:SCOOP 'persist\stellarhub\Data'
+          Assert-Junction -Name 'StellarHub portable Data' -Path $stellarData -Target $stellarPersist
+
+          $markers = @(
+            @{ Name = 'StackDock'; Target = $stackPersist; Link = $stackLocal },
+            @{ Name = 'LiteChat'; Target = $litePersist; Link = $liteLocal },
+            @{ Name = 'StellarHub'; Target = $stellarPersist; Link = $stellarData }
+          )
+          foreach ($marker in $markers) {
+            $file = Join-Path $marker.Target 'kirobucket-persist-test.txt'
+            Set-Content -LiteralPath $file -Value $marker.Name -Encoding utf8
+            if (-not (Test-Path -LiteralPath (Join-Path $marker.Link 'kirobucket-persist-test.txt') -PathType Leaf)) {
+              throw "$($marker.Name) cannot access its Scoop persisted data through the Junction."
+            }
+            Write-Host "PASS: $($marker.Name) persisted data is visible through its app path."
+          }
+
+      - name: Uninstall and verify persistent data survives
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')) {
+            Write-Host "Uninstalling $name"
+            scoop uninstall $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)."
+            }
+            $appDir = Join-Path $env:SCOOP "apps\$name"
+            if (Test-Path -LiteralPath $appDir) {
+              throw "$name application directory remains after uninstall: $appDir"
+            }
+          }
+
+          foreach ($path in @(
+            (Join-Path $env:LOCALAPPDATA 'com.stackdock.launcher'),
+            (Join-Path $env:LOCALAPPDATA 'LiteChat')
+          )) {
+            if (Test-Path -LiteralPath $path) {
+              throw "A Scoop-owned LocalAppData Junction remains after uninstall: $path"
+            }
+          }
+
+          foreach ($marker in @(
+            (Join-Path $env:SCOOP 'persist\stack-dock\profile\kirobucket-persist-test.txt'),
+            (Join-Path $env:SCOOP 'persist\litechat\profile\kirobucket-persist-test.txt'),
+            (Join-Path $env:SCOOP 'persist\stellarhub\Data\kirobucket-persist-test.txt')
+          )) {
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+              throw "Scoop uninstall removed persistent user data: $marker"
+            }
+          }
+          Write-Host 'PASS: all four apps uninstalled, owned LocalAppData Junctions were removed, and persisted data survived.'

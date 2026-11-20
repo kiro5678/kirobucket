@@ -5,7 +5,7 @@
 | Android & Device Tools | 10 | [View](#android-device-tools) |
 | Associations | 13 | [View](#associations) |
 | Browser Launchers | 6 | [View](#browser-launchers) |
-| Browsers & Communication | 14 | [View](#browsers-communication) |
+| Browsers & Communication | 15 | [View](#browsers-communication) |
 | Clipboard Tools | 19 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 8 | [View](#cross-device-integration) |
@@ -36,7 +36,7 @@
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
 | Sync & Backup | 13 | [View](#sync-backup) |
-| System Monitoring & Hardware | 78 | [View](#system-monitoring-hardware) |
+| System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
 | Sysinternals Utilities | 76 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
@@ -44,9 +44,9 @@
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 100 | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 49 | [View](#windows-privacy-tweaks) |
+| Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1268**
+**Total unique categorized manifests: 1271**
 
 
 ## Android & Device Tools
@@ -97,6 +97,7 @@
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [litechat](../bucket/litechat.json) | 0.2.0 | 342.3 KiB | 2026-11-19 | Lightweight Windows WhatsApp Web client with a system tray, notifications, and persistent sessions. | [Homepage](https://github.com/Casellus/LiteChat) |
 | [aurelitec-portmarks](../bucket/aurelitec-portmarks.json) | 2.5.0.30 | 15.2 KiB | 2015-11-07 | Creates small portable HTML files for storing and opening individual bookmarks. | [Homepage](https://www.aurelitec.com/portmarks/) |
 | [belarc-advisor](../bucket/belarc-advisor.json) | 13.1 | 3.1 MiB | 2025-11-12 | Generate a local browser-based report of Windows hardware, installed software, network inventory, and security status. | [Homepage](https://www.belarc.com/products/belarc-advisor) |
 | [biscuit](../bucket/biscuit.json) | 2.2.1 | 64bit: 212.8 MiB | 2026-10-31 | Electron-based workspace browser for organizing web apps and tabs. | [Homepage](https://eatbiscuit.com/) |
@@ -1149,6 +1150,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [stellarhub](../bucket/stellarhub.json) | 1.1.1 | 21.9 MiB | 2026-11-19 | Windows control center for live hardware monitoring, drivers, apps, storage analysis, cleanup, and hardware tests. | [Homepage](https://github.com/estebanarosemena/StellarHub) |
 | [softwareok-3d-benchmark-ok](../bucket/softwareok-3d-benchmark-ok.json) | 2.55 | 64bit: 1.5 MiB | 2026-05-15 | Benchmark 3D graphics performance. | [Homepage](https://www.softwareok.com/?Download=3D.Benchmark.OK) |
 | [aurelitec-injuredpixels](../bucket/aurelitec-injuredpixels.json) | 4.0.0.127 | 40.2 KiB | 2017-02-06 | Portable display test utility for finding dead, stuck, hot, or defective pixels. | [Homepage](https://www.aurelitec.com/injuredpixels/) |
 | [aurelitec-pixelhealer](../bucket/aurelitec-pixelhealer.json) | 1.5.0.30 | 24.8 KiB | 2015-11-06 | Portable display utility that attempts to recover stuck or hot pixels. | [Homepage](https://www.aurelitec.com/pixelhealer/) |
@@ -1406,6 +1408,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [kernel-mindzy007](../bucket/kernel-mindzy007.json) | 26.11.19.1 | 59.8 MiB | 2026-11-19 | Windows 11 utility for live hardware monitoring, system tweaks, debloating, storage management, and app installs. | [Homepage](https://github.com/mindzy007/kernel) |
 | [anti-yandex](../bucket/anti-yandex.json) | 1.3 | 11.0 MiB | 2026-10-27 | Utility for finding and removing Yandex Browser files and registry entries | [Homepage](https://github.com/TheCawa/AntiYandex) |
 | [Auslogics-boost-speed](../bucket/Auslogics-boost-speed.json) | 14.2.0.6 | 48.2 MiB | 2026-05-01 | PC optimization and maintenance utility | [Homepage](https://www.auslogics.com/en/software/boost-speed/) |
 | [Auslogics-registry-cleaner](../bucket/Auslogics-registry-cleaner.json) | 11.2.0.6 | 23.4 MiB | 2026-04-29 | Windows registry cleanup and repair utility | [Homepage](https://www.auslogics.com/en/software/registry-cleaner/) |
