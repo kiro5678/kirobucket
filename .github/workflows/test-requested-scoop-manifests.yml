@@ -133,12 +133,17 @@ jobs:
             'No application executable or tweak launcher was started.'
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
-      - name: Validate checkver on the installed manifests
+      - name: Validate checkver on the candidate manifests
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Scoop checkver script was not found: $checkver"
+          }
+
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-local-test\bucket'
           foreach ($name in @('fileferret','legacy-router-opener-alaa7hany','winorbit-mahadi-siraj','gaming-tweaks-hamsypg')) {
-            Write-Host "Scoop checkver $name"
-            scoop checkver $name -f
-            if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed for $name." }
+            Write-Host "Running checkver.ps1 for $name"
+            & $checkver -App $name -Dir $manifestDir -ThrowError
           }
