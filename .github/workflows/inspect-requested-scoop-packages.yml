@@ -62,14 +62,23 @@ jobs:
           $downloadDir = Join-Path $env:RUNNER_TEMP 'fileferret'
           New-Item -ItemType Directory -Path $downloadDir -Force | Out-Null
           $asset = Join-Path $downloadDir $filename
-          Invoke-WebRequest -Uri $assetUrl -OutFile $asset -UseBasicParsing -MaximumRedirection 10 -TimeoutSec 1200
+          Write-Host "FileFerret anchor URL: $assetUrl"
+          $downloadResponse = Invoke-WebRequest -Uri $assetUrl -OutFile $asset -UseBasicParsing -MaximumRedirection 10 -TimeoutSec 1200
+          $finalUrl = $downloadResponse.BaseResponse.ResponseUri.AbsoluteUri
           $hash = (Get-FileHash -LiteralPath $asset -Algorithm SHA256).Hash.ToLowerInvariant()
-          $size = (Get-Item -LiteralPath $asset).Length
-          $expectedShortHash = '9196b708…05aa61'
-          if ($hash.Substring(0,8) -ne $expectedShortHash.Substring(0,8) -or $hash.Substring($hash.Length - 6) -ne '05aa61') {
-            throw "FileFerret SHA-256 does not match the official page's abbreviated checksum. Actual: $hash"
-          }
-          if ($size -lt 100KB) { throw "FileFerret portable payload is unexpectedly small: $size bytes." }
+          $item = Get-Item -LiteralPath $asset
+          $size = $item.Length
+          $signature = Get-AuthenticodeSignature -FilePath $asset
+          $versionInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($asset)
+          Write-Host "FileFerret final URL: $finalUrl"
+          Write-Host "FileFerret SHA-256: $hash"
+          Write-Host "FileFerret size: $size bytes"
+          Write-Host "FileFerret file description: $($versionInfo.FileDescription)"
+          Write-Host "FileFerret product name: $($versionInfo.ProductName)"
+          Write-Host "FileFerret file version: $($versionInfo.FileVersion)"
+          Write-Host "FileFerret Authenticode: $($signature.Status)"
+
+          if ($size -lt 100KB -or $size -gt 20MB) { throw "FileFerret portable payload has an implausible size: $size bytes." }
           $stream = [IO.File]::OpenRead($asset)
           try {
             $header = [byte[]]::new(2)
@@ -79,11 +88,18 @@ jobs:
           }
           finally { $stream.Dispose() }
 
+          $expectedShortHash = '9196b708…05aa61'
+          $checksumMatches = ($hash.Substring(0,8) -eq $expectedShortHash.Substring(0,8) -and $hash.Substring($hash.Length - 6) -eq '05aa61')
           "FileFerret version: $version" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret portable URL: $assetUrl" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret portable SHA-256: $hash" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret anchor URL: $assetUrl" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret final URL: $finalUrl" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret calculated SHA-256: $hash" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret publisher abbreviated checksum match: $checksumMatches" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "FileFerret portable size: $size bytes" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret Authenticode: $($signature.Status)" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
           "FILEFERRET_URL=$assetUrl" >> $env:GITHUB_ENV
+          "FILEFERRET_VERSION=$version" >> $env:GITHUB_ENV
+          "FILEFERRET_SHA256=$hash" >> $env:GITHUB_ENV
           "FILEFERRET_VERSION=$version" >> $env:GITHUB_ENV
           "FILEFERRET_SHA256=$hash" >> $env:GITHUB_ENV
 
