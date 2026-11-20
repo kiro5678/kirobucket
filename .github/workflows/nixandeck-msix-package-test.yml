@@ -13,6 +13,7 @@ on:
     paths:
       - "bucket/nixandeck.json"
       - ".github/workflows/nixandeck-msix-package-test.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -109,6 +110,57 @@ jobs:
           $appExecutable = $application.GetAttribute('Executable')
           if (-not (Test-Path -LiteralPath (Join-Path $packageDir $appExecutable) -PathType Leaf)) {
             throw "The MSIX application executable is missing: $appExecutable"
+          }
+
+          $msixPath = Join-Path $extractDir 'NixanDeck.msix'
+          $msixZipPath = Join-Path $root 'NixanDeck.msix.zip'
+          Copy-Item -LiteralPath $msixPath -Destination $msixZipPath -Force
+
+          $scoopDecompressSource = Join-Path $root 'scoop-decompress.ps1'
+          Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/lib/decompress.ps1' -OutFile $scoopDecompressSource -MaximumRedirection 10 -TimeoutSec 120
+          . $scoopDecompressSource
+
+          $scoopExtractDir = Join-Path $root 'scoop-native-extracted'
+          New-Item -ItemType Directory -Path $scoopExtractDir -Force | Out-Null
+          Expand-ZipArchive -Path $msixZipPath -DestinationPath $scoopExtractDir
+
+          foreach ($requiredPath in @('AppxManifest.xml', $appExecutable)) {
+            if (-not (Test-Path -LiteralPath (Join-Path $scoopExtractDir $requiredPath) -PathType Leaf)) {
+              throw "Scoop native Expand-ZipArchive did not extract required MSIX file: $requiredPath"
+            }
+          }
+          Write-Host 'Scoop native Expand-ZipArchive MSIX extraction: PASS'
+
+          $makeAppx = $null
+          $kitsRoot = Join-Path \${env:ProgramFiles(x86)} 'Windows Kits\10\bin'
+          if (Test-Path -LiteralPath $kitsRoot -PathType Container) {
+            $makeAppx = Get-ChildItem -LiteralPath $kitsRoot -Filter 'MakeAppx.exe' -File -Recurse -ErrorAction SilentlyContinue |
+              Where-Object { $_.Directory.Name -eq 'x64' } |
+              Sort-Object -Property FullName -Descending |
+              Select-Object -First 1
+          }
+          if ($null -eq $makeAppx) {
+            $certKitMakeAppx = Join-Path \${env:ProgramFiles(x86)} 'Windows Kits\10\App Certification Kit\MakeAppx.exe'
+            if (Test-Path -LiteralPath $certKitMakeAppx -PathType Leaf) {
+              $makeAppx = Get-Item -LiteralPath $certKitMakeAppx
+            }
+          }
+
+          if ($null -ne $makeAppx) {
+            $makeAppxDir = Join-Path $root 'makeappx-extracted'
+            New-Item -ItemType Directory -Path $makeAppxDir -Force | Out-Null
+            & $makeAppx.FullName unpack /v /p $msixPath /d $makeAppxDir
+            if ($LASTEXITCODE -ne 0) {
+              throw "Microsoft MakeAppx failed to unpack NixanDeck.msix (exit code $LASTEXITCODE)."
+            }
+            foreach ($requiredPath in @('AppxManifest.xml', $appExecutable)) {
+              if (-not (Test-Path -LiteralPath (Join-Path $makeAppxDir $requiredPath) -PathType Leaf)) {
+                throw "Microsoft MakeAppx did not extract required MSIX file: $requiredPath"
+              }
+            }
+            Write-Host "Microsoft MakeAppx official MSIX unpack: PASS ($($makeAppx.FullName))"
+          } else {
+            Write-Warning 'MakeAppx.exe is not installed on this runner; Microsoft SDK unpack comparison was skipped.'
           }
 
           $certPath = Join-Path $extractDir 'NixanDeck.cer'
