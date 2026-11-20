@@ -82,9 +82,14 @@ jobs:
             throw "Extracted application executable is missing: $exe"
           }
 
-          $shim = Join-Path $env:SCOOP 'shims\1by1.cmd'
-          if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
-            throw "Scoop shim was not created: $shim"
+          $shimFiles = @(
+            (Join-Path $env:SCOOP 'shims\1by1.shim'),
+            (Join-Path $env:SCOOP 'shims\1by1.exe')
+          )
+          foreach ($shim in $shimFiles) {
+            if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+              throw "Scoop shim component was not created: $shim"
+            }
           }
 
           $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
