@@ -18,7 +18,9 @@
     ],
     "notes": "The portable build stores its layout in the current Windows user's WebView2 local storage, not beside the executable. Microsoft Edge WebView2 Runtime is required.",
     "checkver": {
-        "github": "https://github.com/TNVR-HSN/stack-dock"
+        "github": "https://github.com/TNVR-HSN/stack-dock",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+-[\\w.]+)$"
     },
     "autoupdate": {
         "architecture": {
