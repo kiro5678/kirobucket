@@ -31,7 +31,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Locate and verify FileFerret portable executable
-        continue-on-error: true
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -44,82 +43,33 @@ jobs:
           }
           $version = $Matches[1]
           $filename = "FileFerret-Portable-$version.exe"
-          $assetUrl = $null
-          $candidateLinks = @()
-          $anchors = [regex]::Matches($html, '(?is)<a\b(?<attrs>[^>]*)>(?<inner>.*?)</a>')
-          foreach ($anchor in $anchors) {
-            $innerText = [Net.WebUtility]::HtmlDecode(($anchor.Groups['inner'].Value -replace '<[^>]+>', ' ' -replace '\s+', ' ')).Trim()
-            if ($innerText -notmatch [regex]::Escape($filename)) { continue }
-            $href = [regex]::Match($anchor.Groups['attrs'].Value, '(?is)href\s*=\s*["''](?<href>[^"'']+)["'']')
-            if ($href.Success) {
-              $candidate = [Net.WebUtility]::HtmlDecode($href.Groups['href'].Value)
-              $candidateLinks += [pscustomobject]@{ Href = $candidate; Text = $innerText }
-              if ($candidate -match '(?i)(\.exe(?:[?#]|$)|download|files?/)') {
-                $assetUrl = $candidate
-                break
-              }
-            }
-          }
 
-          if (-not $assetUrl) {
-            $pageIndex = $html.IndexOf($filename, [StringComparison]::OrdinalIgnoreCase)
-            $start = [Math]::Max(0, $pageIndex - 1400)
-            $length = [Math]::Min(2800, $html.Length - $start)
-            $context = if ($pageIndex -ge 0) { $html.Substring($start, $length) } else { $html.Substring(0, [Math]::Min(5000,$html.Length)) }
-            Write-Host "FileFerret page length: $($html.Length)"
-            $scriptSources = [regex]::Matches($html, '(?is)<script\b[^>]*src\s*=\s*["''](?<src>[^"'']+)["''][^>]*>')
-            foreach ($scriptTag in $scriptSources) {
-              $scriptUrl = [Net.WebUtility]::HtmlDecode($scriptTag.Groups['src'].Value)
-              if (-not ([uri]::IsWellFormedUriString($scriptUrl, [UriKind]::Absolute))) {
-                $scriptUrl = [uri]::new([uri]$pageUrl, $scriptUrl).AbsoluteUri
-              }
-              Write-Host "FileFerret script URL: $scriptUrl"
-              try {
-                $scriptText = (Invoke-WebRequest -Uri $scriptUrl -UseBasicParsing -TimeoutSec 120).Content
-                foreach ($pattern in @('FileFerret-Portable', 'FileFerret-Setup', '9196b708', 'downloadUrl', 'download_url')) {
-                  $scriptIndex = $scriptText.IndexOf($pattern, [StringComparison]::OrdinalIgnoreCase)
-                  if ($scriptIndex -ge 0) {
-                    $scriptStart = [Math]::Max(0, $scriptIndex - 300)
-                    $scriptLength = [Math]::Min(900, $scriptText.Length - $scriptStart)
-                    Write-Host "FileFerret script match [$pattern] in $scriptUrl : $($scriptText.Substring($scriptStart,$scriptLength))"
-                  }
-                }
-              } catch {
-                Write-Warning "Could not inspect script $scriptUrl : $($_.Exception.Message)"
-              }
-            }
-            $interestingAttrs = [regex]::Matches($html, '(?is)(?:href|src|data-[\w-]+)\s*=\s*["''][^"'']*(?:download|portable|file|\.exe)[^"'']*["'']')
-            Write-Host "FileFerret relevant HTML attributes: $(@($interestingAttrs | ForEach-Object Value) -join ' ; ')"
-            Write-Host "FileFerret page HTML begins: $($html.Substring(0,[Math]::Min(1000,$html.Length)))"
-            Write-Host "FileFerret page anchor candidates: $($candidateLinks | ConvertTo-Json -Compress -Depth 4)"
-            Write-Host "FileFerret HTML context near download filename: $context"
-            throw "Could not resolve a direct portable download link for $filename from an official download anchor."
+          $downloadLink = [regex]::Matches($html, '(?is)href\s*=\s*["''](?<href>[^"'']*download\.php\?f=FileFerret-Portable-[0-9.]+\.exe)[^"'']*["'']') |
+            Where-Object { $_.Groups['href'].Value -match [regex]::Escape("FileFerret-Portable-$version.exe") } |
+            Select-Object -First 1
+          if ($null -eq $downloadLink) {
+            throw "Official download page does not expose the expected portable asset link for $filename."
           }
-          if (-not ([uri]::IsWellFormedUriString($assetUrl, [UriKind]::Absolute))) {
-            $assetUrl = [uri]::new([uri]$pageUrl, $assetUrl).AbsoluteUri
+          $assetUrl = [uri]::new([uri]$pageUrl, [Net.WebUtility]::HtmlDecode($downloadLink.Groups['href'].Value)).AbsoluteUri
+
+          $downloadPosition = $downloadLink.Index
+          $checksumMatches = [regex]::Matches($html, '(?is)href\s*=\s*["'']https://www\.virustotal\.com/gui/file/(?<sha256>[a-f0-9]{64})["'']')
+          $checksumLink = $checksumMatches | Where-Object { $_.Index -gt $downloadPosition } | Select-Object -First 1
+          if ($null -eq $checksumLink) {
+            throw "Could not read the VirusTotal SHA-256 link that follows $filename on the official page."
           }
-          $assetUri = [uri]$assetUrl
-          if ($assetUri.Scheme -ne 'https') { throw "FileFerret asset URL is not HTTPS: $assetUrl" }
+          $expectedHash = $checksumLink.Groups['sha256'].Value.ToLowerInvariant()
 
           $downloadDir = Join-Path $env:RUNNER_TEMP 'fileferret'
           New-Item -ItemType Directory -Path $downloadDir -Force | Out-Null
           $asset = Join-Path $downloadDir $filename
-          Write-Host "FileFerret anchor URL: $assetUrl"
-          $downloadResponse = Invoke-WebRequest -Uri $assetUrl -OutFile $asset -UseBasicParsing -MaximumRedirection 10 -TimeoutSec 1200
-          $finalUrl = $downloadResponse.BaseResponse.ResponseUri.AbsoluteUri
-          $hash = (Get-FileHash -LiteralPath $asset -Algorithm SHA256).Hash.ToLowerInvariant()
-          $item = Get-Item -LiteralPath $asset
-          $size = $item.Length
-          $signature = Get-AuthenticodeSignature -FilePath $asset
-          $versionInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($asset)
-          Write-Host "FileFerret final URL: $finalUrl"
-          Write-Host "FileFerret SHA-256: $hash"
-          Write-Host "FileFerret size: $size bytes"
-          Write-Host "FileFerret file description: $($versionInfo.FileDescription)"
-          Write-Host "FileFerret product name: $($versionInfo.ProductName)"
-          Write-Host "FileFerret file version: $($versionInfo.FileVersion)"
-          Write-Host "FileFerret Authenticode: $($signature.Status)"
+          Invoke-WebRequest -Uri $assetUrl -OutFile $asset -UseBasicParsing -MaximumRedirection 10 -TimeoutSec 1200
+          $actualHash = (Get-FileHash -LiteralPath $asset -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) {
+            throw "FileFerret SHA-256 mismatch. Expected $expectedHash from the official page, received $actualHash."
+          }
 
+          $size = (Get-Item -LiteralPath $asset).Length
           if ($size -lt 100KB -or $size -gt 20MB) { throw "FileFerret portable payload has an implausible size: $size bytes." }
           $stream = [IO.File]::OpenRead($asset)
           try {
@@ -130,20 +80,26 @@ jobs:
           }
           finally { $stream.Dispose() }
 
-          $expectedShortHash = '9196b708…05aa61'
-          $checksumMatches = ($hash.Substring(0,8) -eq $expectedShortHash.Substring(0,8) -and $hash.Substring($hash.Length - 6) -eq '05aa61')
-          "FileFerret version: $version" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret anchor URL: $assetUrl" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret final URL: $finalUrl" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret calculated SHA-256: $hash" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret publisher abbreviated checksum match: $checksumMatches" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret portable size: $size bytes" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
-          "FileFerret Authenticode: $($signature.Status)" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          $signature = Get-AuthenticodeSignature -FilePath $asset
+          $versionInfo = [Diagnostics.FileVersionInfo]::GetVersionInfo($asset)
+          Write-Host "FileFerret direct URL: $assetUrl"
+          Write-Host "FileFerret SHA-256: $actualHash"
+          Write-Host "FileFerret size: $size bytes"
+          Write-Host "FileFerret file description: $($versionInfo.FileDescription)"
+          Write-Host "FileFerret product name: $($versionInfo.ProductName)"
+          Write-Host "FileFerret file version: $($versionInfo.FileVersion)"
+          Write-Host "FileFerret Authenticode: $($signature.Status)"
+
+          @(
+            "FileFerret version: $version"
+            "FileFerret portable URL: $assetUrl"
+            "FileFerret SHA-256: $actualHash"
+            "FileFerret size: $size bytes"
+            "FileFerret Authenticode: $($signature.Status)"
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
           "FILEFERRET_URL=$assetUrl" >> $env:GITHUB_ENV
           "FILEFERRET_VERSION=$version" >> $env:GITHUB_ENV
-          "FILEFERRET_SHA256=$hash" >> $env:GITHUB_ENV
-          "FILEFERRET_VERSION=$version" >> $env:GITHUB_ENV
-          "FILEFERRET_SHA256=$hash" >> $env:GITHUB_ENV
+          "FILEFERRET_SHA256=$actualHash" >> $env:GITHUB_ENV
 
       - name: Install 7-Zip
         shell: pwsh
