@@ -2,6 +2,14 @@
 
 ## Runtime behaviour checks
 
+### Yoslion Download 1.1.2 — NSIS payload extraction and native-host registration
+
+- The official Windows x64 Setup is an Authenticode-signed NSIS EXE from Palacios Software Group LLC. GitHub Actions verified the published size (5,607,368 bytes), SHA-256 (afafa745eabdfdd78a98d423036db74712ab120b252e60741f5ab29ce4873e18), publisher certificate, and product version 1.1.2.
+- 7-Zip successfully lists and extracts the actual `yoslion-download.exe` and `yoslion-native-host.exe` into the archive root. The extracted main executable stayed running during the Windows smoke test without launching the vendor setup. The manifest uses Scoop's `#/dl.7z` extraction mode and removes the transient `$PLUGINSDIR` and `uninstall.exe`.
+- The vendor's silent NSIS setup (`/S /D=<directory>`) exited successfully and installed the same two executables plus an uninstaller stub. It also creates Chrome, Edge and Firefox Native Messaging registrations under HKCU, two JSON host manifests, and an `app-path` file. The Scoop manifest recreates those registrations using the tested Chrome extension origin and Firefox extension ID; it does not run the vendor setup.
+- The manifest is classified as **Nonportable** because it registers the browser Native Messaging integration. It redirects `%LOCALAPPDATA%\YoslionDownload` and `%LOCALAPPDATA%\com.yoslion.download` to the app's Scoop `persist` directory, and its uninstall hook removes only registrations and junctions it owns while retaining user data.
+- Windows GitHub Actions run [44742698988](https://github.com/kiro5678/kirobucket/actions/runs/44742698988) passed package download, size/hash/signature verification, 7-Zip listing and extraction, direct-executable launch, vendor silent-install, and Native Messaging inspection. A separate lifecycle test of the Scoop hooks is included in the manifest PR.
+
 ### Orfeo 1.7.3 — Scoop-managed Setup payload extraction
 
 - The official Windows Portable asset (`Orfeo-1.7.3-portable.exe`) is an NSIS self-extracting launcher, not a complete app archive. 7-Zip can extract its outer container, but it exposes only four bootstrap files and does not produce the required `Orfeo.exe` plus `resources/app.asar` application tree. When launched normally, it extracts and runs the application from `%TEMP%`.
