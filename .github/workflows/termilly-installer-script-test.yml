@@ -34,23 +34,13 @@ jobs:
           $env:PATH = (Join-Path $scoopRoot 'shims') + ';' + $env:PATH
           scoop --version
 
-      - name: Add isolated bucket and install Termilly
+      - name: Install Termilly from the local manifest
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $localBucket = Join-Path $env:RUNNER_TEMP 'termilly-test-bucket'
-          $manifestDir = Join-Path $localBucket 'bucket'
-          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
-          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\\termilly.json') -Destination $manifestDir
-          git init --initial-branch=master $localBucket
-          git -C $localBucket config user.name 'GitHub Actions'
-          git -C $localBucket config user.email 'actions@github.com'
-          git -C $localBucket add bucket
-          git -C $localBucket commit -m 'Seed Termilly test manifest'
-          $bucketUrl = 'file:///' + $localBucket.Replace('\\', '/')
-          scoop bucket add termilly-test $bucketUrl
-          scoop install termilly-test/termilly
-          if ($LASTEXITCODE -ne 0) { throw 'Scoop failed to install Termilly.' }
+          $manifest = Join-Path $env:GITHUB_WORKSPACE 'bucket\\termilly.json'
+          scoop install $manifest
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop failed to install Termilly from the local manifest.' }
 
       - name: Verify installation-script extraction and persistence
         shell: pwsh
