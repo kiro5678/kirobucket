@@ -1,0 +1,168 @@
+name: KillerPDF Scoop Installer Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/killerpdf.json'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'bucket/killerpdf.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install, launch, and remove (${{ matrix.shell }})
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Ensure .NET 10 Desktop Runtime
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $runtimeRoot = Join-Path $env:ProgramFiles 'dotnet\shared\Microsoft.WindowsDesktop.App'
+          $desktopRuntime = Get-ChildItem -LiteralPath $runtimeRoot -Directory -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -match '^10\.' } |
+            Select-Object -First 1
+
+          if ($null -eq $desktopRuntime) {
+            $winget = Get-Command winget.exe -ErrorAction Stop
+            & $winget.Source install --id Microsoft.DotNet.DesktopRuntime.10 --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity
+            if ($LASTEXITCODE -notin @(0, 3010)) {
+              throw ".NET 10 Desktop Runtime installation failed with exit code $LASTEXITCODE."
+            }
+          }
+
+          $desktopRuntime = Get-ChildItem -LiteralPath $runtimeRoot -Directory -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -match '^10\.' } |
+            Select-Object -First 1
+          if ($null -eq $desktopRuntime) {
+            throw '.NET 10 Desktop Runtime x64 is still missing after prerequisite setup.'
+          }
+          Write-Host ".NET Desktop Runtime found: $($desktopRuntime.FullName)"
+
+      - name: Install and test the Scoop-managed installer
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-killerpdf-installer'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-killerpdf-test'
+          $localBucketManifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $localBucketManifestDir -Force | Out-Null
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\killerpdf.json') -Destination $localBucketManifestDir
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket/killerpdf.json
+            git commit -m 'Seed temporary KillerPDF installer test bucket'
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket $bucketUrl
+          scoop install killerpdf
+          if ($LASTEXITCODE -ne 0) { throw "scoop install killerpdf failed with exit code $LASTEXITCODE." }
+
+          $appsRoot = Join-Path $env:SCOOP 'apps\killerpdf'
+          $versionDir = Join-Path $appsRoot '1.9.4'
+          $appDir = Join-Path $appsRoot 'current'
+          $appExe = Join-Path $appDir 'KillerPDF.App.exe'
+          $wrapper = Join-Path $appDir 'KillerPDF.cmd'
+          $payloadManifest = Join-Path $appDir 'payload.manifest'
+          foreach ($required in @($appExe, $wrapper, $payloadManifest)) {
+            if (-not (Test-Path -LiteralPath $required -PathType Leaf)) {
+              throw "Required Scoop-installed file is missing: $required"
+            }
+          }
+
+          if (Test-Path -LiteralPath (Join-Path $appDir 'KillerPDF.exe')) {
+            throw 'The setup executable was left inside the installed Scoop version directory.'
+          }
+
+          $expectedWrapper = '@"%~dp0KillerPDF.App.exe" %*' + [Environment]::NewLine + '@exit /b %ERRORLEVEL%' + [Environment]::NewLine
+          $actualWrapper = [System.IO.File]::ReadAllText($wrapper)
+          if ($actualWrapper -cne $expectedWrapper) {
+            throw 'The Scoop launch wrapper does not match the vendor-supported installed wrapper format.'
+          }
+
+          $legacyPortableRoot = Join-Path $env:LOCALAPPDATA 'KillerPDF\Portable'
+          if (Test-Path -LiteralPath $legacyPortableRoot) {
+            throw 'The regular installer unexpectedly created the portable runtime extraction directory.'
+          }
+
+          $wrapperProcess = $null
+          $childProcess = $null
+          try {
+            $wrapperProcess = Start-Process -FilePath $wrapper -PassThru
+            $deadline = (Get-Date).AddSeconds(60)
+            do {
+              $childProcess = Get-CimInstance -ClassName Win32_Process -Filter "Name = 'KillerPDF.App.exe'" |
+                Where-Object {
+                  $_.ExecutablePath -and
+                  $_.ExecutablePath.StartsWith($versionDir, [System.StringComparison]::OrdinalIgnoreCase)
+                } |
+                Select-Object -First 1
+
+              if ($null -ne $childProcess) { break }
+              if ($wrapperProcess.HasExited) {
+                throw "KillerPDF.cmd exited before the application process appeared (exit code $($wrapperProcess.ExitCode))."
+              }
+              Start-Sleep -Milliseconds 500
+            } while ((Get-Date) -lt $deadline)
+
+            if ($null -eq $childProcess) {
+              throw 'KillerPDF.App.exe was not launched from the Scoop-managed version directory.'
+            }
+
+            Write-Host "Application launched from Scoop: $($childProcess.ExecutablePath)"
+            Start-Sleep -Seconds 10
+            $stillRunning = Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = $($childProcess.ProcessId)"
+            if ($null -eq $stillRunning) {
+              throw 'KillerPDF exited unexpectedly during the launch test.'
+            }
+
+            $stagingFolders = @(Get-ChildItem -LiteralPath $appsRoot -Directory -Filter '1.9.4.staging-*' -ErrorAction SilentlyContinue)
+            if ($stagingFolders.Count -gt 0) {
+              throw 'The installer left a staging directory beside the Scoop version folder.'
+            }
+          }
+          finally {
+            if ($null -ne $childProcess) {
+              Stop-Process -Id ([int]$childProcess.ProcessId) -Force -ErrorAction SilentlyContinue
+            }
+            if ($null -ne $wrapperProcess -and -not $wrapperProcess.HasExited) {
+              Stop-Process -Id $wrapperProcess.Id -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          scoop uninstall killerpdf
+          if ($LASTEXITCODE -ne 0) { throw "scoop uninstall killerpdf failed with exit code $LASTEXITCODE." }
+          if (Test-Path -LiteralPath $versionDir) {
+            throw 'Scoop uninstall did not remove the installed KillerPDF version directory.'
+          }
+
+          Write-Host 'PASS: official KillerPDF.exe installer, .NET prerequisite, custom Scoop install path, direct launch, and Scoop removal.'
