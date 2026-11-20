@@ -1,0 +1,49 @@
+{
+    "version": "1.9.1",
+    "description": "Terminal and coding-agent workspace manager",
+    "homepage": "https://termilly.com",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/termilly/termilly/releases/download/v1.9.1/TermillySetup-1.9.1.exe",
+            "hash": "386a249b1a8ecc37484b6227a02b7d916e4b2c297555d063191813d364601718"
+        }
+    },
+    "pre_install": [
+        "$ErrorActionPreference = 'Stop'\n$downloadName = if ($fname -is [array]) { [string]$fname[0] } else { [string]$fname }\n$setupPath = Join-Path $dir $downloadName\n$payloadZip = Join-Path $dir '.termilly-payload.zip'\n$stream = $null\n$reader = $null\n\ntry {\n    $stream = [System.IO.File]::OpenRead($setupPath)\n    $reader = [System.IO.BinaryReader]::new($stream)\n\n    if ($stream.Length -lt 512) { throw 'Termilly setup is too small to contain a valid PE payload.' }\n\n    $stream.Position = 0x3C\n    $peOffset = $reader.ReadInt32()\n    if ($peOffset -le 0 -or $peOffset -gt ($stream.Length - 256)) {\n        throw 'Termilly setup has an invalid PE header offset.'\n    }\n\n    $stream.Position = $peOffset\n    if ($reader.ReadUInt32() -ne 0x00004550) { throw 'Termilly setup is not a valid PE executable.' }\n\n    $optionalHeader = $peOffset + 24\n    $stream.Position = $optionalHeader\n    $peMagic = $reader.ReadUInt16()\n    if ($peMagic -eq 0x20B) {\n        $securityDirectory = $optionalHeader + 144\n    } elseif ($peMagic -eq 0x10B) {\n        $securityDirectory = $optionalHeader + 128\n    } else {\n        throw 'Unsupported PE optional-header format in Termilly setup.'\n    }\n\n    $stream.Position = $securityDirectory\n    $certificateOffset = [long]$reader.ReadUInt32()\n    $certificateSize = [long]$reader.ReadUInt32()\n    $payloadEnd = $stream.Length\n    if ($certificateOffset -gt 0 -and $certificateSize -gt 0 -and\n        ($certificateOffset + $certificateSize) -eq $stream.Length) {\n        $payloadEnd = $certificateOffset\n    }\n\n    $tailLength = 56\n    if ($payloadEnd -lt $tailLength) { throw 'Termilly setup does not contain its embedded payload footer.' }\n\n    $stream.Position = $payloadEnd - $tailLength\n    $tail = $reader.ReadBytes($tailLength)\n    if ($tail.Length -ne $tailLength) { throw 'Could not read the Termilly setup payload footer.' }\n\n    $magic = [System.Text.Encoding]::ASCII.GetBytes('TMLYPAY1')\n    $magicAt = -1\n    for ($i = $tail.Length - $magic.Length; $i -ge 0; $i--) {\n        $same = $true\n        for ($j = 0; $j -lt $magic.Length; $j++) {\n            if ($tail[$i + $j] -ne $magic[$j]) { $same = $false; break }\n        }\n        if ($same) { $magicAt = $i; break }\n    }\n    if ($magicAt -lt 40) { throw 'Termilly setup is missing the TMLYPAY1 payload marker.' }\n\n    $footerStart = $payloadEnd - $tailLength + $magicAt + $magic.Length - 48\n    $stream.Position = $footerStart\n    $payloadOffset = $reader.ReadInt64()\n    $expectedHashBytes = $reader.ReadBytes(32)\n    $payloadLength = $footerStart - $payloadOffset\n    if ($payloadOffset -le 0 -or $payloadLength -le 0 -or $expectedHashBytes.Length -ne 32) {\n        throw 'Termilly setup contains invalid embedded payload offsets.'\n    }\n\n    $stream.Position = $payloadOffset\n    $output = [System.IO.File]::Create($payloadZip)\n    try {\n        $buffer = [byte[]]::new(1048576)\n        $remaining = $payloadLength\n        while ($remaining -gt 0) {\n            $wanted = [int][Math]::Min($buffer.Length, $remaining)\n            $read = $stream.Read($buffer, 0, $wanted)\n            if ($read -le 0) { throw 'Unexpected end of Termilly embedded payload.' }\n            $output.Write($buffer, 0, $read)\n            $remaining -= $read\n        }\n    } finally {\n        $output.Dispose()\n    }\n} finally {\n    if ($null -ne $reader) { $reader.Dispose() }\n    elseif ($null -ne $stream) { $stream.Dispose() }\n}\n\n$expectedHash = [BitConverter]::ToString($expectedHashBytes).Replace('-', '').ToLowerInvariant()\n$actualHash = (Get-FileHash -LiteralPath $payloadZip -Algorithm SHA256).Hash.ToLowerInvariant()\nif ($actualHash -ne $expectedHash) {\n    Remove-Item -LiteralPath $payloadZip -Force -ErrorAction SilentlyContinue\n    throw \"Termilly embedded payload SHA-256 mismatch. Expected $expectedHash; got $actualHash.\"\n}\n\nAdd-Type -AssemblyName System.IO.Compression\nAdd-Type -AssemblyName System.IO.Compression.FileSystem\n$archive = [System.IO.Compression.ZipFile]::OpenRead($payloadZip)\n$root = [System.IO.Path]::GetFullPath($dir).TrimEnd('\\') + '\\'\ntry {\n    foreach ($entry in $archive.Entries) {\n        if (-not $entry.FullName.StartsWith('app/', [System.StringComparison]::OrdinalIgnoreCase)) { continue }\n        $relative = $entry.FullName.Substring(4).Replace('/', [System.IO.Path]::DirectorySeparatorChar)\n        if ([string]::IsNullOrWhiteSpace($relative)) { continue }\n\n        $destination = [System.IO.Path]::GetFullPath((Join-Path $dir $relative))\n        if (-not $destination.StartsWith($root, [System.StringComparison]::OrdinalIgnoreCase)) {\n            throw \"Unsafe path in Termilly app payload: $($entry.FullName)\"\n        }\n\n        if ($entry.FullName.EndsWith('/')) {\n            New-Item -ItemType Directory -Path $destination -Force | Out-Null\n        } else {\n            $parent = Split-Path -Parent $destination\n            New-Item -ItemType Directory -Path $parent -Force | Out-Null\n            [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $destination, $true)\n        }\n    }\n} finally {\n    $archive.Dispose()\n}\n\n$mainExe = Join-Path $dir 'Termilly.exe'\n$cliExe = Join-Path $dir 'agent\\termilly.exe'\nif (-not (Test-Path -LiteralPath $mainExe -PathType Leaf)) { throw 'Termilly.exe is missing from the embedded app payload.' }\nif (-not (Test-Path -LiteralPath $cliExe -PathType Leaf)) { throw 'agent\\termilly.exe is missing from the embedded app payload.' }\n\n$binDir = Join-Path $dir 'bin'\nNew-Item -ItemType Directory -Path $binDir -Force | Out-Null\n$wrapper = @'\n@echo off\nset \"TERMILLY_DATA_DIR=%~dp0..\\data\"\nif \"%~1\"==\"\" (\n    start \"\" \"%~dp0..\\Termilly.exe\"\n) else (\n    \"%~dp0..\\agent\\termilly.exe\" %*\n)\n'@\n[System.IO.File]::WriteAllText((Join-Path $binDir 'termilly.cmd'), $wrapper, [System.Text.Encoding]::ASCII)\n\nRemove-Item -LiteralPath $payloadZip -Force\nRemove-Item -LiteralPath $setupPath -Force"
+    ],
+    "persist": [
+        "data"
+    ],
+    "bin": [
+        [
+            "bin\\termilly.cmd",
+            "termilly"
+        ]
+    ],
+    "shortcuts": [
+        [
+            "bin\\termilly.cmd",
+            "Termilly"
+        ]
+    ],
+    "notes": [
+        "The official setup's embedded app payload is extracted into the Scoop directory; the upstream installer is not run.",
+        "Requires the .NET 10 Desktop Runtime and Microsoft Edge WebView2 Runtime."
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/termilly/termilly/releases/latest",
+        "regex": "\"tag_name\"\\s*:\\s*\"v(?<version>[\\d.]+)\""
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/termilly/termilly/releases/download/v$version/TermillySetup-$version.exe",
+                "hash": {
+                    "url": "https://api.github.com/repos/termilly/termilly/releases/tags/v$version",
+                    "find": "\"name\"\\s*:\\s*\"TermillySetup-$version\\.exe\"[^}]*\"digest\"\\s*:\\s*\"sha256:([a-fA-F\\d]{64})\""
+                }
+            }
+        }
+    }
+}
