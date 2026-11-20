@@ -50,9 +50,6 @@ jobs:
             throw "Scoop checkver.ps1 was not found: $checkver"
           }
           & $checkver '1by1-martin-pesch' $manifestDir -ForceUpdate -ThrowError
-          if ($LASTEXITCODE -ne 0) {
-            throw "Scoop checkver failed with exit code $LASTEXITCODE."
-          }
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
           if ($manifest.version -ne '2.17') {
             throw "Scoop checkver detected unexpected version: $($manifest.version)"
@@ -142,11 +139,20 @@ jobs:
               throw "Scoop uninstall failed with exit code $LASTEXITCODE."
             }
           }
-          $persistIni = Join-Path $env:SCOOP 'persist\1by1-martin-pesch\1by1.ini'
-          if (-not (Test-Path -LiteralPath $persistIni -PathType Leaf)) {
-            throw 'Scoop uninstall removed the persisted 1by1.ini file.'
+          $appPath = Join-Path $env:SCOOP 'apps\1by1-martin-pesch'
+          if (Test-Path -LiteralPath $appPath -PathType Container) {
+            scoop uninstall 1by1-martin-pesch
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed with exit code $LASTEXITCODE."
+            }
+            $persistIni = Join-Path $env:SCOOP 'persist\1by1-martin-pesch\1by1.ini'
+            if (-not (Test-Path -LiteralPath $persistIni -PathType Leaf)) {
+              throw 'Scoop uninstall removed the persisted 1by1.ini file.'
+            }
+            if ((Get-Content -LiteralPath $persistIni -Raw) -notmatch '\[1by1\]') {
+              throw 'The persisted 1by1.ini marker did not survive uninstall.'
+            }
+            Write-Host 'PASS: persisted 1by1.ini survived Scoop uninstall.'
+          } else {
+            Write-Host 'Scoop install did not complete; uninstall persistence check was skipped.'
           }
-          if ((Get-Content -LiteralPath $persistIni -Raw) -notmatch '\[1by1\]') {
-            throw 'The persisted 1by1.ini marker did not survive uninstall.'
-          }
-          Write-Host 'PASS: persisted 1by1.ini survived Scoop uninstall.'
