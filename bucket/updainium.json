@@ -1,6 +1,6 @@
 {
     "version": "1.5.0",
-    "description": "Desktop application for managing and installing application updates from their source.",
+    "description": "Desktop update manager for installing application updates from their source.",
     "homepage": "https://github.com/livrasand/Updainium",
     "license": "GPL-3.0-only",
     "url": "https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi",
