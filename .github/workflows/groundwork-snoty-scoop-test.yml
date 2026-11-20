@@ -150,6 +150,45 @@ jobs:
           Set-Content -LiteralPath (Join-Path $snAppData 'lifecycle.marker') -Value 'persisted-snoty' -Encoding utf8
           Write-Host 'PASS: both executable payloads, shortcuts, migration and three Scoop-managed Junctions.'
 
+      - name: Smoke test desktop executable startup
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $apps = @(
+            @{
+              Name = 'Groundwork Habits'
+              Path = (Join-Path $env:SCOOP 'apps\\groundwork-habits\\current\\groundwork-habits.exe')
+            },
+            @{
+              Name = 'Snoty'
+              Path = (Join-Path $env:SCOOP 'apps\\snoty\\current\\Snoty.exe')
+            }
+          )
+
+          foreach ($app in $apps) {
+            if (-not (Test-Path -LiteralPath $app.Path -PathType Leaf)) {
+              throw "$($app.Name) executable is missing: $($app.Path)"
+            }
+
+            $process = Start-Process -FilePath $app.Path -WorkingDirectory (Split-Path -Parent $app.Path) -PassThru -ErrorAction Stop
+            try {
+              Start-Sleep -Seconds 15
+              $process.Refresh()
+              if ($process.HasExited) {
+                throw "$($app.Name) exited during the 15-second startup window (exit code: $($process.ExitCode))."
+              }
+              Write-Host "PASS: $($app.Name) process stayed alive for 15 seconds (PID $($process.Id))."
+            }
+            finally {
+              $stillRunning = Get-Process -Id $process.Id -ErrorAction SilentlyContinue
+              if ($null -ne $stillRunning) {
+                & "$env:SystemRoot\\System32\\taskkill.exe" /PID $process.Id /T /F | Out-Null
+              }
+            }
+          }
+
+          Write-Host 'PASS: both desktop executables completed the process-startup smoke test.'
+          Write-Warning 'This hosted runner does not provide a guaranteed interactive desktop; this is not a visual/UI interaction test.'
+
       - name: Uninstall and verify user data survives
         run: |
           $ErrorActionPreference = 'Stop'
