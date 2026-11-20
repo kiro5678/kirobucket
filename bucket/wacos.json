@@ -3,7 +3,7 @@
     "description": "Native macOS-style desktop shell and built-in apps for Windows 11",
     "homepage": "https://github.com/renzyxx/WacOS",
     "url": "https://github.com/renzyxx/WacOS/releases/latest/download/WacOS-2026-11-19.zip",
-    "hash": "4690629058aec91ea04b1757e649ab6cb57bc8f1f1381367131636fc683231f9",
+    "hash": "310ab4f16824500a8d77225fef66a62e499c32d6d5484a8752b119b7f24e67f3",
     "shortcuts": [
         [
             "bin\\WacOSShell.exe",
