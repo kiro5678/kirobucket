@@ -110,6 +110,17 @@
 
 إذا فشل مستخرج MSI، اقرأ سجل `msi.log` وجرّب المستخرج البديل وفق سبب الفشل، ولا تغيّر طريقة الاستخراج عشوائياً.
 
+
+### MSIX / APPX payload extraction
+
+- MSIX and APPX packages use a ZIP-compatible Open Packaging Conventions container. When the goal is to run the application from the Scoop version directory rather than register the package with Windows, inspect the package with Scoop's official `Expand-ZipArchive` from `lib/decompress.ps1`.
+- Scoop's ZIP extractor determines archive handling from the local file name. Keep the downloaded release ZIP intact; after Scoop has extracted the outer release ZIP, copy the inner `.msix` or `.appx` to a temporary name ending in `.msix.zip` or `.appx.zip`, then call `Expand-ZipArchive -Path $temporaryArchive -DestinationPath $payloadDir -Removal`. This removes only the temporary renamed copy after extraction.
+- Do not call `Add-AppxPackage` when the intended result is an unpackaged Scoop payload. Parse the extracted `AppxManifest.xml` to verify package identity, architecture, application ID, and the actual `Executable` path. Also verify required companion executables, DLLs, runtimes, and assets before defining `shortcuts` or `bin`.
+- Run the extracted executable directly on a disposable Windows runner without registering the MSIX. Check that the process remains alive, that its data paths remain valid, and that startup / background helpers can shut down cleanly. A successful process start alone does not prove that every feature works.
+- Unpackaged execution has no MSIX Package Identity. Features declared through package capabilities or extensions (for example StartupTask, UserNotificationListener, protocol activation, or package-scoped permissions) may fail or be limited. Inspect source code for documented fallbacks and test those individually; disclose any remaining limitations in the manifest notes.
+- If the application stores settings under AppData, persist only its application-specific directory using a guarded Junction into `$persist_dir`. Migrate existing settings only when doing so cannot overwrite either an existing user-data folder or an existing persist copy. On uninstall, remove only the Junction owned by the manifest, preserve its target data, and remove only registry entries that still point to the Scoop-managed executable.
+- If the application fundamentally requires Package Identity, Windows package registration, package services, or package-scoped integration for its core operation, keep a real MSIX installation manifest and classify it accordingly; do not force an extraction-only manifest just because the container can be unpacked.
+
 ### Inno Setup
 
 **Extensionless EXE endpoints:** When the official download URL returns an EXE but its path has no `.exe` extension, append a filename fragment such as `#/setup.exe` to the manifest URL. Scoop uses the fragment as the local filename; it is not sent to the web server. The manifest pipeline also reads this fragment to pass the correct filename to static installer inspection. Do not invent a server-side URL suffix or alter the endpoint.
