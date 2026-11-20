@@ -181,7 +181,7 @@ jobs:
           }
           Write-Host 'PASS: Kitab data directory is linked and writable.'
 
-      - name: Smoke-test Framecalm, Tasket++, and BatteryHub
+      - name: Smoke-test portable GUI apps including Parabolic and Serein
         run: |
           $ErrorActionPreference = 'Stop'
 
@@ -222,7 +222,7 @@ jobs:
           Test-GuiProcess -Name 'Tasket++' -Path (Join-Path $env:SCOOP 'apps\tasketpp\current\Tasket++.exe')
           Test-GuiProcess -Name 'BatteryHub demo' -Path (Join-Path $env:SCOOP 'apps\batteryhub\current\BatteryHub.exe') -Arguments @('--demo')
           Test-GuiProcess -Name 'Parabolic portable' -Path (Join-Path $env:SCOOP 'apps\parabolic\current\Nickvision.Parabolic.WinUI.exe') -Arguments @('--portable')
-          Test-GuiProcess -Name 'Serein offline demo' -Path (Join-Path $env:SCOOP 'apps\serein\current\serein.exe') -Arguments @('--demo')
+          Test-GuiProcess -Name 'Serein portable client' -Path (Join-Path $env:SCOOP 'apps\serein\current\serein.exe')
           Test-GuiProcess -Name 'Kitab Reader' -Path (Join-Path $env:SCOOP 'apps\kitab\current\kitab.exe')
 
       - name: Smoke-test Mole CLI
