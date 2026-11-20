@@ -1,0 +1,90 @@
+name: Termilly Scoop 1.9.3 installer-script test
+
+on:
+  push:
+    branches:
+      - fix-termilly-installer-script-20261120
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+            Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          }
+          $scoopRoot = Join-Path $env:USERPROFILE 'scoop'
+          if (-not (Test-Path -LiteralPath (Join-Path $scoopRoot 'shims\\scoop.ps1'))) {
+            throw "Scoop bootstrap completed but its shim was not found under $scoopRoot."
+          }
+          "SCOOP=$scoopRoot" >> $env:GITHUB_ENV
+          (Join-Path $scoopRoot 'shims') >> $env:GITHUB_PATH
+          $env:SCOOP = $scoopRoot
+          $env:PATH = (Join-Path $scoopRoot 'shims') + ';' + $env:PATH
+          scoop --version
+
+      - name: Add isolated bucket and install Termilly
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $localBucket = Join-Path $env:RUNNER_TEMP 'termilly-test-bucket'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE 'bucket\\termilly.json') -Destination $manifestDir
+          git init --initial-branch=master $localBucket
+          git -C $localBucket config user.name 'GitHub Actions'
+          git -C $localBucket config user.email 'actions@github.com'
+          git -C $localBucket add bucket
+          git -C $localBucket commit -m 'Seed Termilly test manifest'
+          $bucketUrl = 'file:///' + $localBucket.Replace('\\', '/')
+          scoop bucket add termilly-test $bucketUrl
+          scoop install termilly-test/termilly
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop failed to install Termilly.' }
+
+      - name: Verify installation-script extraction and persistence
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $app = Join-Path $env:SCOOP 'apps\\termilly\\current'
+          foreach ($relative in @('Termilly.exe', 'agent\\termilly.exe', 'bin\\termilly.cmd')) {
+            $path = Join-Path $app $relative
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Scoop installer.script did not extract required file: $path"
+            }
+            Write-Host "PASS: $relative"
+          }
+          if (Get-ChildItem -LiteralPath $app -Filter 'TermillySetup*.exe' -File -Recurse -ErrorAction SilentlyContinue) {
+            throw 'Termilly setup executable remained in the installed app directory.'
+          }
+          if (Test-Path -LiteralPath (Join-Path $app '.termilly-payload.zip')) {
+            throw 'Temporary embedded ZIP was not removed.'
+          }
+          $persist = Join-Path $env:SCOOP 'persist\\termilly\\data'
+          New-Item -ItemType Directory -Path $persist -Force | Out-Null
+          Set-Content -LiteralPath (Join-Path $persist 'test.txt') -Value 'persist-ok'
+          if ((Get-Content -LiteralPath (Join-Path $app 'data\\test.txt') -Raw).Trim() -ne 'persist-ok') {
+            throw 'Scoop persist junction is not working.'
+          }
+          Write-Host 'PASS: embedded payload extracted and data persist junction works.'
+
+      - name: Uninstall and verify persistent data
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop uninstall termilly-test/termilly
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop failed to uninstall Termilly.' }
+          if (-not (Test-Path -LiteralPath (Join-Path $env:SCOOP 'persist\\termilly\\data\\test.txt') -PathType Leaf)) {
+            throw 'Termilly persistent data was not retained after uninstall.'
+          }
+          Write-Host 'PASS: uninstall retained persisted data.'
