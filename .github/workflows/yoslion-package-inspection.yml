@@ -45,7 +45,7 @@ jobs:
 
           $urlUri = [System.Uri]([string]$manifest.url)
           $url = $urlUri.GetLeftPart([System.UriPartial]::Path)
-          $expectedUrl = "https://updates.yoslion.com/release/windows/x86_64/$version/Yoslion%20Download_$version_x64-setup.exe"
+          $expectedUrl = "https://updates.yoslion.com/release/windows/x86_64/" + $version + "/Yoslion%20Download_" + $version + "_x64-setup.exe"
           Write-Host "Resolved manifest installer URL: [$url]"
           Write-Host "Expected official installer URL: [$expectedUrl]"
           if ($url -cne $expectedUrl) {
