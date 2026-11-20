@@ -6,7 +6,6 @@ on:
       - scoop-requested-manifests
     paths:
       - ".github/workflows/inspect-requested-scoop-packages.yml"
-      - "bucket/vantage-deizenits.json"
       - "bucket/legacy-router-opener-alaa7hany.json"
       - "bucket/winorbit-mahadi-siraj.json"
       - "bucket/gaming-tweaks-hamsypg.json"
@@ -15,7 +14,6 @@ on:
       - master
     paths:
       - ".github/workflows/inspect-requested-scoop-packages.yml"
-      - "bucket/vantage-deizenits.json"
       - "bucket/legacy-router-opener-alaa7hany.json"
       - "bucket/winorbit-mahadi-siraj.json"
       - "bucket/gaming-tweaks-hamsypg.json"
@@ -32,6 +30,63 @@ jobs:
       - name: Checkout bucket
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+      - name: Locate and verify FileFerret portable executable
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $pageUrl = 'https://fileferret.net/en/download.html'
+          $response = Invoke-WebRequest -Uri $pageUrl -UseBasicParsing -MaximumRedirection 10 -TimeoutSec 1200
+          $html = [string]$response.Content
+          if ($html -notmatch 'Latest version\s*([0-9]+\.[0-9]+\.[0-9]+)') {
+            throw 'Could not read FileFerret version from the official download page.'
+          }
+          $version = $Matches[1]
+          $filename = "FileFerret-Portable-$version.exe"
+          $anchorMatches = [regex]::Matches($html, '(?is)<a\b[^>]*>.*?' + [regex]::Escape($filename) + '.*?</a>')
+          $assetUrl = $null
+          foreach ($anchor in $anchorMatches) {
+            $href = [regex]::Match($anchor.Value, '(?is)href\s*=\s*["''](?<href>[^"'']+)["'']')
+            if ($href.Success) { $assetUrl = [Net.WebUtility]::HtmlDecode($href.Groups['href'].Value); break }
+          }
+          if (-not $assetUrl) {
+            $nameContext = [regex]::Match($html, '(?is)(?<context>.{0,600}' + [regex]::Escape($filename) + '.{0,300})')
+            throw "Could not resolve the official portable download link for $filename. Context: $($nameContext.Groups['context'].Value)"
+          }
+          if (-not ([uri]::IsWellFormedUriString($assetUrl, [UriKind]::Absolute))) {
+            $assetUrl = [uri]::new([uri]$pageUrl, $assetUrl).AbsoluteUri
+          }
+          $assetUri = [uri]$assetUrl
+          if ($assetUri.Scheme -ne 'https') { throw "FileFerret asset URL is not HTTPS: $assetUrl" }
+
+          $downloadDir = Join-Path $env:RUNNER_TEMP 'fileferret'
+          New-Item -ItemType Directory -Path $downloadDir -Force | Out-Null
+          $asset = Join-Path $downloadDir $filename
+          Invoke-WebRequest -Uri $assetUrl -OutFile $asset -UseBasicParsing -MaximumRedirection 10 -TimeoutSec 1200
+          $hash = (Get-FileHash -LiteralPath $asset -Algorithm SHA256).Hash.ToLowerInvariant()
+          $size = (Get-Item -LiteralPath $asset).Length
+          $expectedShortHash = '9196b708…05aa61'
+          if ($hash.Substring(0,8) -ne $expectedShortHash.Substring(0,8) -or $hash.Substring($hash.Length - 6) -ne '05aa61') {
+            throw "FileFerret SHA-256 does not match the official page's abbreviated checksum. Actual: $hash"
+          }
+          if ($size -lt 100KB) { throw "FileFerret portable payload is unexpectedly small: $size bytes." }
+          $stream = [IO.File]::OpenRead($asset)
+          try {
+            $header = [byte[]]::new(2)
+            if ($stream.Read($header,0,2) -ne 2 -or $header[0] -ne 0x4D -or $header[1] -ne 0x5A) {
+              throw 'FileFerret portable download is not a Windows PE executable.'
+            }
+          }
+          finally { $stream.Dispose() }
+
+          "FileFerret version: $version" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret portable URL: $assetUrl" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret portable SHA-256: $hash" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FileFerret portable size: $size bytes" | Tee-Object -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "FILEFERRET_URL=$assetUrl" >> $env:GITHUB_ENV
+          "FILEFERRET_VERSION=$version" >> $env:GITHUB_ENV
+          "FILEFERRET_SHA256=$hash" >> $env:GITHUB_ENV
+
       - name: Install 7-Zip
         shell: pwsh
         run: |
@@ -44,94 +99,25 @@ jobs:
           }
           "SEVENZIP=$sevenZip" >> $env:GITHUB_ENV
 
-      - name: Verify direct executable and inspect VANTAGE package type
+      - name: Verify Legacy Router Opener standalone executable
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $ProgressPreference = 'SilentlyContinue'
-          $work = Join-Path $env:RUNNER_TEMP 'requested-scoop-inspection'
-          New-Item -ItemType Directory -Path $work -Force | Out-Null
-
-          function Get-VerifiedFile([string]$Name, [string]$Url, [string]$ExpectedHash) {
-            $path = Join-Path $work $Name
-            Invoke-WebRequest -Uri $Url -OutFile $path -MaximumRedirection 10 -TimeoutSec 1200
-            $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($actual -ne $ExpectedHash) {
-              throw "$Name SHA-256 mismatch. Expected $ExpectedHash, received $actual."
-            }
-            Write-Host "PASS: $Name SHA-256 $actual"
-            return $path
-          }
-
-          $legacy = Get-VerifiedFile 'legacy-router-opener.exe' 'https://github.com/Alaa7Hany/legacy-router-opener/releases/download/v1.2.0/legacy-router-opener.exe' 'adc4785d9bfb16d0351693157ce01eb2adbfd2d930edb86af17b629088087a0d'
-
-          $legacyStream = [IO.File]::OpenRead($legacy)
+          $url = 'https://github.com/Alaa7Hany/legacy-router-opener/releases/download/v1.2.0/legacy-router-opener.exe'
+          $expected = 'adc4785d9bfb16d0351693157ce01eb2adbfd2d930edb86af17b629088087a0d'
+          $file = Join-Path $env:RUNNER_TEMP 'legacy-router-opener.exe'
+          Invoke-WebRequest -Uri $url -OutFile $file -MaximumRedirection 10 -TimeoutSec 1200
+          $actual = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "Legacy Router Opener SHA-256 mismatch: $actual" }
+          $stream = [IO.File]::OpenRead($file)
           try {
-            $peHeader = [byte[]]::new(2)
-            if ($legacyStream.Read($peHeader, 0, 2) -ne 2 -or $peHeader[0] -ne 0x4D -or $peHeader[1] -ne 0x5A) {
-              throw 'Legacy Router Opener release asset is not a Windows PE executable (missing MZ header).'
+            $header = [byte[]]::new(2)
+            if ($stream.Read($header,0,2) -ne 2 -or $header[0] -ne 0x4D -or $header[1] -ne 0x5A) {
+              throw 'Legacy Router Opener is not a Windows PE executable.'
             }
           }
-          finally { $legacyStream.Dispose() }
-          Write-Host 'PASS: Legacy Router Opener is a Windows PE executable.'
-
-          $vantage = Get-VerifiedFile 'VANTAGE.exe' 'https://github.com/DeizenITS/VANTAGE/releases/download/v0.12.0-beta/VANTAGE.exe' 'd8de0ed4f5557032b0067f93b3fa41859189b0005cbb4872a3f595f0230a5506'
-
-          $bytes = [IO.File]::ReadAllBytes($vantage)
-          if ($bytes.Length -lt 2 -or $bytes[0] -ne 0x4D -or $bytes[1] -ne 0x5A) {
-            throw 'VANTAGE.exe is not a Windows PE executable (missing MZ header).'
-          }
-
-          $ascii = [Text.Encoding]::ASCII.GetString($bytes)
-          $unicode = [Text.Encoding]::Unicode.GetString($bytes)
-          $combined = $ascii + "`n" + $unicode
-          $installerPatterns = @(
-            'Inno Setup',
-            'Nullsoft Install System',
-            'NSIS',
-            'Squirrel.Windows',
-            'WiX Toolset',
-            'Burn Bootstrapper',
-            'InstallShield',
-            'Advanced Installer',
-            'Setup Factory'
-          )
-          $markers = @($installerPatterns | Where-Object { $combined.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0 })
-          $signature = Get-AuthenticodeSignature -FilePath $vantage
-          Write-Host "VANTAGE Authenticode status: $($signature.Status)"
-          Write-Host "VANTAGE file version: $((Get-Item -LiteralPath $vantage).VersionInfo.FileVersion)"
-
-          $listing = & $env:SEVENZIP l -slt $vantage 2>&1
-          $listExit = $LASTEXITCODE
-          $listing | Set-Content -LiteralPath (Join-Path $work 'vantage-7zip-listing.txt')
-          if ($listExit -eq 0) {
-            Write-Host 'VANTAGE package inspection: 7-Zip recognizes an embedded archive/container.'
-            $extract = Join-Path $work 'vantage-extracted'
-            New-Item -ItemType Directory -Path $extract -Force | Out-Null
-            & $env:SEVENZIP x -y "-o$extract" $vantage
-            if ($LASTEXITCODE -gt 1) { throw '7-Zip recognized VANTAGE as an archive but extraction failed.' }
-            $found = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Filter 'VANTAGE.exe')
-            if ($found.Count -eq 0) {
-              throw 'VANTAGE is an embedded archive, but no extracted VANTAGE.exe was found; do not publish a direct portable manifest.'
-            }
-            $found | ForEach-Object { Write-Host "Embedded VANTAGE.exe: $($_.FullName)" }
-            throw 'VANTAGE is an embedded archive/container. Determine its extracted layout before using a Scoop manifest.'
-          }
-
-          if ($markers.Count -gt 0) {
-            throw "VANTAGE has installer-framework markers: $($markers -join ', '). Do not treat it as a portable executable."
-          }
-
-          Write-Host 'STATIC RESULT: VANTAGE is a PE executable; 7-Zip did not recognize it as an archive and no known installer-framework markers were found.'
-          Write-Host 'This is static inspection only; it does not claim that the application has no first-run system side effects.'
-          @(
-            'VANTAGE SHA-256: verified'
-            'PE header: valid'
-            '7-Zip archive recognition: no'
-            "Known installer markers: $($markers -join ', ')"
-            "Authenticode: $($signature.Status)"
-            'Classification: direct executable candidate; static scan only'
-          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          finally { $stream.Dispose() }
+          "Legacy Router Opener standalone EXE: SHA-256 and PE header verified." | Add-Content $env:GITHUB_STEP_SUMMARY
 
       - name: Test and inspect WinOrbit portable ZIP and GAMING TWEAKS RAR
         shell: pwsh
@@ -159,7 +145,7 @@ jobs:
           )
 
           foreach ($target in $targets) {
-            $folder = Join-Path $work ($target.Name -replace '\\s+', '-')
+            $folder = Join-Path $work ($target.Name -replace '\s+', '-')
             $extract = Join-Path $folder 'extracted'
             New-Item -ItemType Directory -Path $folder,$extract -Force | Out-Null
             $archive = Join-Path $folder $target.Archive
@@ -208,6 +194,6 @@ jobs:
               "$($target.Name): SHA-256 verified"
               "$($target.Name): archive integrity test passed"
               "$($target.Name): extracted $($mainFiles.Count) matching entry point(s)"
-              "$($target.Name): entry point(s): $((@($mainFiles | ForEach-Object { [IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\','/') })) -join '; ')"
+              "$($target.Name): entry point(s): $((@($mainFiles | ForEach-Object { [IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\\','/') })) -join '; ')"
             ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
           }
