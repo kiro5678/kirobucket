@@ -175,8 +175,8 @@ jobs:
         with:
           name: yoslion-package-inspection
           path: |
-            \${{ runner.temp }}/yoslion-package-inspection/yoslion-inspection-report.txt
-            \${{ runner.temp }}/yoslion-package-inspection/7zip-listing.txt
-            \${{ runner.temp }}/yoslion-package-inspection/7zip-extraction.log
+            ${{ runner.temp }}/yoslion-package-inspection/yoslion-inspection-report.txt
+            ${{ runner.temp }}/yoslion-package-inspection/7zip-listing.txt
+            ${{ runner.temp }}/yoslion-package-inspection/7zip-extraction.log
           if-no-files-found: warn
           retention-days: 30
