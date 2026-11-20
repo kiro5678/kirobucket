@@ -166,6 +166,21 @@ jobs:
           }
 
           Add-Report ""
+          $registryTargets = @(
+            "HKCU:\Software\Google\Chrome\NativeMessagingHosts",
+            "HKCU:\Software\Microsoft\Edge\NativeMessagingHosts",
+            "HKCU:\Software\Mozilla\NativeMessagingHosts",
+            "HKLM:\Software\Google\Chrome\NativeMessagingHosts",
+            "HKLM:\Software\Microsoft\Edge\NativeMessagingHosts",
+            "HKLM:\Software\Mozilla\NativeMessagingHosts"
+          )
+          $registryBeforeDirectLaunch = @{}
+          foreach ($keyPath in $registryTargets) {
+            $registryBeforeDirectLaunch[$keyPath] = if (Test-Path -LiteralPath $keyPath) {
+              @(Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue | ForEach-Object { $_.PSChildName })
+            } else { @() }
+          }
+
           Add-Report "Direct execution test of the 7-Zip-extracted main executable:"
           $extractedMain = Join-Path $extractDir "yoslion-download.exe"
           if (Test-Path -LiteralPath $extractedMain -PathType Leaf) {
@@ -188,16 +203,39 @@ jobs:
           }
 
           Add-Report ""
+          Add-Report ""
+          Add-Report "Native Messaging registry state after direct launch (before vendor setup):"
+          foreach ($keyPath in $registryTargets) {
+            if (-not (Test-Path -LiteralPath $keyPath)) { continue }
+            foreach ($key in Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue) {
+              $wasPresent = $registryBeforeDirectLaunch[$keyPath] -contains $key.PSChildName
+              $properties = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+              $defaultValue = $properties.PSObject.Properties |
+                Where-Object { $_.Name -eq '(default)' } | Select-Object -First 1
+              Add-Report "  $(if (-not $wasPresent) { '[NEW] ' } else { '' })$keyPath\$($key.PSChildName) | $($properties.'(default)')"
+            }
+          }
+
+          $nativeManifestDir = Join-Path $env:LOCALAPPDATA "YoslionDownload\NativeMessagingHosts"
+          if (Test-Path -LiteralPath $nativeManifestDir -PathType Container) {
+            Add-Report "Native host manifest files after direct launch:"
+            foreach ($manifestFile in Get-ChildItem -LiteralPath $nativeManifestDir -File -Filter "*.json") {
+              Add-Report "  $($manifestFile.FullName)"
+              Get-Content -LiteralPath $manifestFile.FullName -Raw | ForEach-Object { Add-Report "    $_" }
+            }
+          } else {
+            Add-Report "Native host manifest directory was not created by direct launch."
+          }
+
+          $appPathFile = Join-Path $env:LOCALAPPDATA "YoslionDownload\app-path"
+          if (Test-Path -LiteralPath $appPathFile -PathType Leaf) {
+            Add-Report "Yoslion app-path file: $(Get-Content -LiteralPath $appPathFile -Raw)"
+          }
+
           Add-Report "Vendor silent-install experiment (isolated disposable GitHub-hosted runner):"
           $installDir = Join-Path $root "installed"
           New-Item -ItemType Directory -Path $installDir -Force | Out-Null
-          $registryTargets = @(
-            "HKCU:\Software\Google\Chrome\NativeMessagingHosts",
-            "HKCU:\Software\Microsoft\Edge\NativeMessagingHosts",
-            "HKCU:\Software\Mozilla\NativeMessagingHosts",
-            "HKLM:\Software\Google\Chrome\NativeMessagingHosts",
-            "HKLM:\Software\Microsoft\Edge\NativeMessagingHosts",
-            "HKLM:\Software\Mozilla\NativeMessagingHosts",
+          $registryTargets += @(
             "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
             "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
             "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
