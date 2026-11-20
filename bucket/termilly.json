@@ -1,12 +1,12 @@
 {
-    "version": "1.9.2",
+    "version": "1.9.3",
     "description": "Terminal and coding-agent workspace manager",
     "homepage": "https://termilly.com",
     "license": "Apache-2.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/termilly/termilly/releases/download/v1.9.2/TermillySetup-1.9.2.exe",
-            "hash": "540d7c6e4b9b5841d7deee7ebcdd5fc42a8b8dc2d396b5703c39f65a347cc16b"
+            "url": "https://github.com/termilly/termilly/releases/download/v1.9.3/TermillySetup-1.9.3.exe",
+            "hash": "c8535a94a4df697031c87308d1e8babad37deea9a5afeb68eb08782a24a0af6e"
         }
     },
     "installer": {
