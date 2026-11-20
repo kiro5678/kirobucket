@@ -51,6 +51,27 @@ jobs:
             Write-Host $Text
           }
 
+          $downloadPagePath = Join-Path $root "official-download-page.html"
+          try {
+            $downloadPage = Invoke-WebRequest -Uri "https://download.yoslion.com/downloads" -MaximumRedirection 10 -TimeoutSec 90
+            $downloadPage.Content | Set-Content -LiteralPath $downloadPagePath -Encoding utf8
+            Add-Report "Official download page HTTP status: $([int]$downloadPage.StatusCode)"
+            Add-Report "Official download page title: $([regex]::Match($downloadPage.Content, '(?is)<title[^>]*>(.*?)</title>').Groups[1].Value)"
+            Add-Report "Official download page version/hash-related snippets:"
+            foreach ($pattern in @(
+              '(?is).{0,180}Yoslion Download.{0,180}',
+              '(?is).{0,120}SHA-?256.{0,180}',
+              '(?is).{0,120}1\.1\.2.{0,180}',
+              '(?is)href\s*=\s*["''][^"'']+\.(?:exe|json|ya?ml|txt)[^"'']*["'']'
+            )) {
+              foreach ($match in [regex]::Matches($downloadPage.Content, $pattern) | Select-Object -First 30) {
+                Add-Report "  $($match.Value -replace '\s+', ' ')"
+              }
+            }
+          } catch {
+            Add-Report "Official download page fetch failed: $($_.Exception.Message)"
+          }
+
           Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
           if (-not (Test-Path -LiteralPath $installer -PathType Leaf)) {
             throw "Official installer download did not produce a file."
@@ -441,5 +462,6 @@ jobs:
             ${{ runner.temp }}/yoslion-package-inspection/yoslion-inspection-report.txt
             ${{ runner.temp }}/yoslion-package-inspection/7zip-listing.txt
             ${{ runner.temp }}/yoslion-package-inspection/7zip-extraction.log
+            ${{ runner.temp }}/yoslion-package-inspection/official-download-page.html
           if-no-files-found: warn
           retention-days: 30
