@@ -21,6 +21,8 @@ on:
       - "bucket/framecalm.json"
       - "bucket/tasketpp.json"
       - "bucket/batteryhub.json"
+      - "bucket/parabolic.json"
+      - "bucket/serein.json"
       - "bucket/mole.json"
       - "bucket/kitab.json"
       - ".github/workflows/portable-scoop-lifecycle-test.yml"
@@ -238,7 +240,7 @@ jobs:
       - name: Uninstall all apps and verify persisted Tasket++ data
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'mole', 'kitab')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')) {
             Write-Host "Uninstalling $name"
             scoop uninstall $name
             if ($LASTEXITCODE -ne 0) {
