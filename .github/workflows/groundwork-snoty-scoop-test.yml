@@ -156,11 +156,11 @@ jobs:
           $apps = @(
             @{
               Name = 'Groundwork Habits'
-              Path = (Join-Path $env:SCOOP 'apps\\groundwork-habits\\current\\groundwork-habits.exe')
+              Path = (Join-Path $env:SCOOP 'apps\groundwork-habits\current\groundwork-habits.exe')
             },
             @{
               Name = 'Snoty'
-              Path = (Join-Path $env:SCOOP 'apps\\snoty\\current\\Snoty.exe')
+              Path = (Join-Path $env:SCOOP 'apps\snoty\current\Snoty.exe')
             }
           )
 
@@ -181,7 +181,7 @@ jobs:
             finally {
               $stillRunning = Get-Process -Id $process.Id -ErrorAction SilentlyContinue
               if ($null -ne $stillRunning) {
-                & "$env:SystemRoot\\System32\\taskkill.exe" /PID $process.Id /T /F | Out-Null
+                & "$env:SystemRoot\System32\taskkill.exe" /PID $process.Id /T /F | Out-Null
               }
             }
           }
