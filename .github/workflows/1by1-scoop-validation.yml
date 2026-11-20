@@ -60,16 +60,16 @@ jobs:
           @(
             '## 1by1 package inspection'
             ''
-            "- Download: `$url`"
-            "- SHA-256: `$actual` (matches publisher)"
+            "- Download: $url"
+            "- SHA-256: $actual (matches publisher)"
             "- Size: $((Get-Item -LiteralPath $package).Length) bytes"
             "- checkver regex result: $detected"
             ''
             '### Extracted executable files'
-            foreach ($exe in $exeFiles) { "- `$($exe.Path)` — $($exe.Size) bytes" }
+            foreach ($exe in $exeFiles) { "- $($exe.Path) — $($exe.Size) bytes" }
             ''
             '### All extracted files'
-            foreach ($file in $files) { "- `$($file.Path)` — $($file.Size) bytes" }
+            foreach ($file in $files) { "- $($file.Path) — $($file.Size) bytes" }
             ''
             'The extracted application was not executed.'
           ) | Set-Content $env:GITHUB_STEP_SUMMARY -Encoding utf8
