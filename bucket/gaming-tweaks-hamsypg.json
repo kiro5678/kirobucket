@@ -22,10 +22,12 @@
         "hash": {
             "url": "https://api.github.com/repos/hamsypg/GAMING_TWEAKS/releases/tags/beta-$version",
             "jsonpath": "$.assets[?(@.name =~ /GAMING\\.TWEAKS\\.by\\.HAMSYPG\\.beta\\.v.*\\.rar/)].digest"
-        }
+        },
+        "extract_dir": "GAMING TWEAKS by HAMSYPG beta v$version"
     },
     "notes": [
         "The launcher requests Administrator rights. Its tweaks modify Windows registry values, services, power settings, and network settings.",
         "The publisher's launcher creates a System Restore point and stores a PC-specific settings backup under %ProgramData%\\GamingTweaks. Review the available restore options before applying changes."
-    ]
+    ],
+    "extract_dir": "GAMING TWEAKS by HAMSYPG beta v0.6.5"
 }
