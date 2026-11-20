@@ -1,0 +1,209 @@
+name: NixanDeck MSIX Extraction Probe
+
+on:
+  push:
+    branches:
+      - nixandeck-msix-extraction-probe
+    paths:
+      - "bucket/nixandeck.json"
+      - ".github/workflows/nixandeck-msix-extraction-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  unpack-msix:
+    name: Unpack and inspect the official MSIX payload
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download release and unpack the outer ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $manifest = Get-Content -LiteralPath 'bucket/nixandeck.json' -Raw -Encoding utf8 | ConvertFrom-Json -ErrorAction Stop
+          $root = Join-Path $env:RUNNER_TEMP 'nixandeck-msix-extraction-probe'
+          $archivePath = Join-Path $root 'NixanDeck-Windows11-x64.zip'
+          $releaseDir = Join-Path $root 'release'
+          $packagePath = Join-Path $releaseDir 'NixanDeck.msix'
+          $packageDir = Join-Path $root 'unpacked-msix'
+
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+
+          Invoke-WebRequest -Uri ([string]$manifest.architecture.'64bit'.url) -OutFile $archivePath -MaximumRedirection 10 -TimeoutSec 900
+          $expectedHash = ([string]$manifest.architecture.'64bit'.hash).ToLowerInvariant()
+          $actualHash = (Get-FileHash -LiteralPath $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) {
+            throw "Release ZIP SHA-256 mismatch. Expected $expectedHash; received $actualHash."
+          }
+
+          Expand-Archive -LiteralPath $archivePath -DestinationPath $releaseDir -Force
+          foreach ($name in @('Install.bat', 'NixanDeck.cer', 'NixanDeck.msix')) {
+            $item = Join-Path $releaseDir $name
+            if (-not (Test-Path -LiteralPath $item -PathType Leaf)) {
+              throw "The official ZIP does not contain the expected file: $name"
+            }
+          }
+
+          if ((Get-Item -LiteralPath $packagePath).Length -le 0) {
+            throw 'The extracted NixanDeck.msix file is empty.'
+          }
+
+          "Outer ZIP SHA-256: $actualHash" | Out-File -LiteralPath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "MSIX size: $((Get-Item -LiteralPath $packagePath).Length) bytes" | Out-File -LiteralPath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          Write-Host 'Official release ZIP integrity and expected payload files: PASS'
+
+          "ROOT=$root" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "PACKAGE_PATH=$packagePath" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "PACKAGE_DIR=$packageDir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "RELEASE_DIR=$releaseDir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Locate Microsoft MakeAppx and unpack the MSIX
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $sdkRoot = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\bin'
+          $candidates = @()
+          if (Test-Path -LiteralPath $sdkRoot -PathType Container) {
+            $candidates = @(
+              Get-ChildItem -LiteralPath $sdkRoot -Filter 'MakeAppx.exe' -File -Recurse -ErrorAction SilentlyContinue |
+                Where-Object { $_.Directory.Name -eq 'x64' } |
+                Sort-Object {
+                  try { [version]$_.Directory.Parent.Name }
+                  catch { [version]'0.0' }
+                } -Descending
+            )
+          }
+
+          $makeAppx = $candidates | Select-Object -First 1
+          if ($null -eq $makeAppx) {
+            $fallback = Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\App Certification Kit\MakeAppx.exe'
+            if (Test-Path -LiteralPath $fallback -PathType Leaf) {
+              $makeAppx = Get-Item -LiteralPath $fallback
+            }
+          }
+          if ($null -eq $makeAppx) {
+            throw 'Microsoft MakeAppx.exe (Windows SDK) was not found on this runner.'
+          }
+
+          if (Test-Path -LiteralPath $env:PACKAGE_DIR) {
+            Remove-Item -LiteralPath $env:PACKAGE_DIR -Recurse -Force
+          }
+          New-Item -ItemType Directory -Path $env:PACKAGE_DIR -Force | Out-Null
+
+          Write-Host "Using Microsoft tool: $($makeAppx.FullName)"
+          & $makeAppx.FullName unpack /v /p $env:PACKAGE_PATH /d $env:PACKAGE_DIR
+          if ($LASTEXITCODE -ne 0) {
+            throw "MakeAppx unpack failed with exit code $LASTEXITCODE."
+          }
+
+          $appxManifestPath = Join-Path $env:PACKAGE_DIR 'AppxManifest.xml'
+          if (-not (Test-Path -LiteralPath $appxManifestPath -PathType Leaf)) {
+            throw 'MakeAppx completed but AppxManifest.xml is missing from the extracted payload.'
+          }
+
+          Write-Host 'Microsoft MakeAppx unpack: PASS'
+
+      - name: Inspect extracted package and report portability-relevant contents
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $manifestPath = Join-Path $env:PACKAGE_DIR 'AppxManifest.xml'
+          [xml]$appx = Get-Content -LiteralPath $manifestPath -Raw -Encoding utf8
+
+          $identity = $appx.SelectSingleNode("//*[local-name()='Identity']")
+          $application = $appx.SelectSingleNode("//*[local-name()='Application']")
+          if ($null -eq $identity) { throw 'The extracted AppxManifest.xml has no Identity element.' }
+          if ($null -eq $application) { throw 'The extracted AppxManifest.xml has no Application element.' }
+
+          $name = $identity.GetAttribute('Name')
+          $publisher = $identity.GetAttribute('Publisher')
+          $architecture = $identity.GetAttribute('ProcessorArchitecture')
+          $appId = $application.GetAttribute('Id')
+          $executable = $application.GetAttribute('Executable')
+
+          if ($name -ne 'NixanDeck') { throw "Unexpected MSIX identity: $name" }
+          if ($publisher -ne 'CN=NixanDeck') { throw "Unexpected MSIX publisher: $publisher" }
+          if ($architecture -ne 'x64') { throw "Unexpected MSIX architecture: $architecture" }
+          if ([string]::IsNullOrWhiteSpace($executable)) { throw 'The manifest does not declare an Application Executable.' }
+
+          $executablePath = Join-Path $env:PACKAGE_DIR $executable
+          if (-not (Test-Path -LiteralPath $executablePath -PathType Leaf)) {
+            throw "The executable referenced by AppxManifest.xml is missing: $executable"
+          }
+
+          $certificatePath = Join-Path $env:RELEASE_DIR 'NixanDeck.cer'
+          $certificate = [System.Security.Cryptography.X509Certificates.X509Certificate2]::new($certificatePath)
+          if ($certificate.Subject -ne $publisher) {
+            throw "Release certificate subject '$($certificate.Subject)' does not match MSIX publisher '$publisher'."
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $env:PACKAGE_DIR -File -Recurse)
+          $totalBytes = ($files | Measure-Object -Property Length -Sum).Sum
+          $executables = @($files | Where-Object { $_.Extension -ieq '.exe' } | ForEach-Object {
+            [pscustomobject]@{ Path = $_.FullName.Substring($env:PACKAGE_DIR.Length).TrimStart('\'); Size = $_.Length }
+          })
+          $libraries = @($files | Where-Object { $_.Extension -ieq '.dll' } | ForEach-Object {
+            $_.FullName.Substring($env:PACKAGE_DIR.Length).TrimStart('\')
+          })
+          $dependencies = @($appx.SelectNodes("//*[local-name()='PackageDependency']") | ForEach-Object {
+            $depName = $_.GetAttribute('Name')
+            $depVersion = $_.GetAttribute('MinVersion')
+            "$depName (minimum $depVersion)"
+          })
+          $targetFamilies = @($appx.SelectNodes("//*[local-name()='TargetDeviceFamily']") | ForEach-Object {
+            "$($_.GetAttribute('Name')) (minimum $($_.GetAttribute('MinVersion')))"
+          })
+
+          $report = @(
+            '# NixanDeck MSIX extraction report'
+            ''
+            "- Package identity: $name"
+            "- Package version: $($identity.GetAttribute('Version'))"
+            "- Publisher: $publisher"
+            "- Architecture: $architecture"
+            "- Application ID: $appId"
+            "- Manifest executable: $executable"
+            "- Executable exists after extraction: True"
+            "- Release certificate subject: $($certificate.Subject)"
+            "- Extracted file count: $($files.Count)"
+            "- Extracted payload size: $totalBytes bytes"
+            "- AppxSignature.p7x present: $([bool](Test-Path -LiteralPath (Join-Path $env:PACKAGE_DIR 'AppxSignature.p7x')))"
+            ''
+            '## Target device families'
+          )
+          if ($targetFamilies.Count -gt 0) { $report += $targetFamilies } else { $report += '(none declared)' }
+          $report += ''
+          $report += '## Package dependencies'
+          if ($dependencies.Count -gt 0) { $report += $dependencies } else { $report += '(no PackageDependency entries)' }
+          $report += ''
+          $report += '## Executables'
+          if ($executables.Count -gt 0) {
+            $report += @($executables | ForEach-Object { "- $($_.Path) ($($_.Size) bytes)" })
+          } else {
+            $report += '(none)'
+          }
+          $report += ''
+          $report += '## DLL files'
+          if ($libraries.Count -gt 0) { $report += @($libraries | ForEach-Object { "- $_" }) } else { $report += '(none)' }
+          $report += ''
+          $report += '> This workflow only unpacks and inspects the MSIX. It does not register or launch the app; successful extraction alone does not prove that the extracted files are portable.'
+
+          $reportPath = Join-Path $env:RUNNER_TEMP 'NIXANDECK-MSIX-EXTRACTION-REPORT.md'
+          $report | Out-File -LiteralPath $reportPath -Encoding utf8
+          Get-Content -LiteralPath $reportPath | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+          Write-Host "Extracted files: $($files.Count)"
+          Write-Host "Payload size: $totalBytes bytes"
+          Write-Host "Application executable: $executable"
+          Write-Host "Application executable exists: $executablePath"
+          Write-Host "Package dependencies: $($dependencies -join '; ')"
+          Write-Host 'MSIX extraction and manifest inspection: PASS'
