@@ -11,7 +11,18 @@
         ]
     ],
     "pre_uninstall": [
-        "$runningNames = @(\n    'WacOSShell', 'WacOSFinder', 'WacOSSettings', 'WacOSActivityMonitor', 'WacOSTerminal',\n    'WacOSCalculator', 'WacOSNotes', 'WacOSScreenshot', 'WacOSPreview', 'WacOSReminders',\n    'WacOSCalendar', 'WacOSTextEdit', 'WacOSClock', 'WacOSWeather', 'WacOSContacts',\n    'WacOSPhotos', 'WacOSTimeMachine', 'WacOSMusic', 'WacOSQuickTime', 'WacOSForceQuit',\n    'SequoiaShell'\n)\n$running = @(Get-Process -Name $runningNames -ErrorAction SilentlyContinue)\nif ($running.Count -gt 0) {\n    $names = ($running.ProcessName | Sort-Object -Unique) -join ', '\n    throw \"Close WacOS and its apps before uninstalling/updating. Exit the shell with Ctrl+Alt+Shift+F12 (emergency exit: Ctrl+Alt+Shift+F11). Still running: $names\"\n}"
+        "$runningNames = @(",
+        "    'WacOSShell', 'WacOSFinder', 'WacOSSettings', 'WacOSActivityMonitor', 'WacOSTerminal',",
+        "    'WacOSCalculator', 'WacOSNotes', 'WacOSScreenshot', 'WacOSPreview', 'WacOSReminders',",
+        "    'WacOSCalendar', 'WacOSTextEdit', 'WacOSClock', 'WacOSWeather', 'WacOSContacts',",
+        "    'WacOSPhotos', 'WacOSTimeMachine', 'WacOSMusic', 'WacOSQuickTime', 'WacOSForceQuit',",
+        "    'SequoiaShell'",
+        ")",
+        "$running = @(Get-Process -Name $runningNames -ErrorAction SilentlyContinue)",
+        "if ($running.Count -gt 0) {",
+        "    $names = ($running.ProcessName | Sort-Object -Unique) -join ', '",
+        "    throw \"Close WacOS and its apps before uninstalling/updating. Exit the shell with Ctrl+Alt+Shift+F12 (emergency exit: Ctrl+Alt+Shift+F11). Still running: $names\"",
+        "}"
     ],
     "notes": [
         "Requires Windows 11 22H2 or newer. While running, WacOS hides the Windows taskbar and adjusts the desktop work area; it restores them when the shell exits. Use Ctrl+Alt+Shift+F12 to exit or Ctrl+Alt+Shift+F11 for emergency exit.",
