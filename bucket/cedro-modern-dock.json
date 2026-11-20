@@ -59,5 +59,10 @@
         "        if ($LASTEXITCODE -ne 0) { throw ('Failed to remove the Cedro Modern Dock AppData junction; cmd exit code: ' + $LASTEXITCODE) }",
         "    }",
         "}"
+    ],
+    "pre_install": [
+        "$exe = Get-ChildItem -LiteralPath $dir -Filter 'CedroModernDock.exe' -File -Recurse | Select-Object -First 1",
+        "if ($null -eq $exe) { throw 'CedroModernDock.exe was not found in the extracted MSI payload.' }",
+        "if ($exe.DirectoryName -ne $dir) { Get-ChildItem -LiteralPath $exe.DirectoryName -Force | ForEach-Object { Move-Item -LiteralPath $_.FullName -Destination $dir -Force } }"
     ]
 }
