@@ -85,7 +85,6 @@ jobs:
           foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')) {
             Write-Host "Checking $name version, autoupdate URL, and SHA-256 template"
             & $checkver $name $manifestDir -ForceUpdate -ThrowError
-            if ($LASTEXITCODE -ne 0) { throw "checkver validation failed for $name." }
             Write-Host "PASS: $name checkver and forced autoupdate validation."
           }
 

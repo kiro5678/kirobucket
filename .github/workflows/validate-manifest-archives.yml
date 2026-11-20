@@ -5,6 +5,7 @@ on:
     branches:
       - master
     paths:
+      - 'bucket/kernel-mindzy007.json'
       - 'bucket/droptidy.json'
       - 'bucket/diskmonitor.json'
       - 'bucket/desktopframesplus.json'
