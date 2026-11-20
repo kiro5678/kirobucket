@@ -232,6 +232,97 @@ jobs:
             Add-Report "Yoslion app-path file: $(Get-Content -LiteralPath $appPathFile -Raw)"
           }
 
+          Add-Report ""
+          Add-Report "Scoop manifest post_install/pre_uninstall lifecycle simulation:"
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE "bucket\yoslion.json"
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            throw "bucket/yoslion.json was not found in the checked-out branch."
+          }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $simRoot = Join-Path $root "scoop-hook-simulation"
+          $simScoop = Join-Path $simRoot "scoop"
+          $simAppDir = Join-Path $simScoop "apps\yoslion\current"
+          $simPersist = Join-Path $simScoop "persist\yoslion"
+          $simLocalAppData = Join-Path $simRoot "LocalAppData"
+          New-Item -ItemType Directory -Path $simAppDir -Force | Out-Null
+          New-Item -ItemType Directory -Path $simLocalAppData -Force | Out-Null
+          Copy-Item -Path (Join-Path $extractDir "*") -Destination $simAppDir -Recurse -Force
+
+          $savedLocalAppData = $env:LOCALAPPDATA
+          $env:LOCALAPPDATA = $simLocalAppData
+          $scoopdir = $simScoop
+          $app = "yoslion"
+          $version = "1.1.2"
+          $dir = $simAppDir
+          $persist_dir = $simPersist
+          $global = $false
+
+          Invoke-Expression $manifest.post_install
+
+          $dataLink = Join-Path $simLocalAppData "YoslionDownload"
+          $webViewLink = Join-Path $simLocalAppData "com.yoslion.download"
+          foreach ($linkPath in @($dataLink, $webViewLink)) {
+            $link = Get-Item -LiteralPath $linkPath -Force
+            if (($link.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -eq 0) {
+              throw "post_install did not create the expected AppData junction: $linkPath"
+            }
+          }
+
+          $persistData = Join-Path $simPersist "YoslionDownload"
+          $persistWebView = Join-Path $simPersist "com.yoslion.download"
+          $chromeHost = Join-Path $dataLink "NativeMessagingHosts\com.yoslion.download.json"
+          $firefoxHost = Join-Path $dataLink "NativeMessagingHosts\com.yoslion.download.firefox.json"
+          $chromeJson = Get-Content -LiteralPath $chromeHost -Raw | ConvertFrom-Json
+          $firefoxJson = Get-Content -LiteralPath $firefoxHost -Raw | ConvertFrom-Json
+          if ($chromeJson.path -ne (Join-Path $simAppDir "yoslion-native-host.exe")) {
+            throw "Chrome Native Messaging JSON does not point to the Scoop native host."
+          }
+          if ($chromeJson.allowed_origins[0] -ne "chrome-extension://jbddlgncoljibdenillmmibcegpgicnb/") {
+            throw "Chrome Native Messaging extension origin is incorrect."
+          }
+          if ($firefoxJson.allowed_extensions[0] -ne "yoslion-download@yoslion.com") {
+            throw "Firefox Native Messaging extension ID is incorrect."
+          }
+          $simRegistry = @(
+            "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.yoslion.download",
+            "HKCU:\Software\Microsoft\Edge\NativeMessagingHosts\com.yoslion.download",
+            "HKCU:\Software\Mozilla\NativeMessagingHosts\com.yoslion.download"
+          )
+          foreach ($keyPath in $simRegistry) {
+            if (-not (Test-Path -LiteralPath $keyPath)) {
+              throw "post_install did not create the browser registry entry: $keyPath"
+            }
+          }
+          Add-Report "  PASS: two AppData junctions, Chrome/Edge/Firefox manifests and registry entries created."
+          Add-Report "  Chrome host path: $($chromeJson.path)"
+          Add-Report "  Firefox allowed extension: $($firefoxJson.allowed_extensions[0])"
+
+          Set-Content -LiteralPath (Join-Path $persistData "scoop-persist-test.txt") -Value "Keep this user data after uninstall."
+          Set-Content -LiteralPath (Join-Path $persistWebView "webview-persist-test.txt") -Value "Keep this WebView profile data after uninstall."
+
+          Invoke-Expression $manifest.pre_uninstall
+
+          foreach ($keyPath in $simRegistry) {
+            if (Test-Path -LiteralPath $keyPath) {
+              throw "pre_uninstall left an owned browser registry entry behind: $keyPath"
+            }
+          }
+          foreach ($linkPath in @($dataLink, $webViewLink)) {
+            if (Test-Path -LiteralPath $linkPath) {
+              throw "pre_uninstall did not remove an owned AppData junction: $linkPath"
+            }
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $persistData "scoop-persist-test.txt"))) {
+            throw "pre_uninstall removed the persisted Yoslion user data."
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $persistWebView "webview-persist-test.txt"))) {
+            throw "pre_uninstall removed the persisted WebView2 data."
+          }
+
+          Add-Report "  PASS: uninstall removed only the owned registrations and junctions."
+          Add-Report "  PASS: app data and WebView2 test files remain in Scoop persist."
+          $env:LOCALAPPDATA = $savedLocalAppData
+
           Add-Report "Vendor silent-install experiment (isolated disposable GitHub-hosted runner):"
           $installDir = Join-Path $root "installed"
           New-Item -ItemType Directory -Path $installDir -Force | Out-Null
