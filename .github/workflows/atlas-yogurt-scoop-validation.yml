@@ -8,7 +8,7 @@ on:
       - "bucket/yogurt.json"
       - ".github/workflows/atlas-yogurt-scoop-validation.yml"
   push:
-    branches: [master]
+    branches: ["**"]
     paths:
       - "bucket/atlas-filemanager.json"
       - "bucket/yogurt.json"
