@@ -25,7 +25,7 @@
         "url": "https://github.com/renzyxx/WacOS/releases/latest/download/WacOS-$version.zip",
         "hash": {
             "url": "https://api.github.com/repos/renzyxx/WacOS/releases/latest",
-            "find": "\"name\"\\s*:\\s*\"WacOS-$version\\.zip\"[^}]*\"digest\"\\s*:\\s*\"sha256:([a-fA-F\\d]{64})\""
+            "find": "sha256:([a-fA-F\\d]{64})"
         }
     }
 }
