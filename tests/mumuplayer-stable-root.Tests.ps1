@@ -10,7 +10,7 @@ $tokens=$null; $parseErrors=$null
 Assert ($parseErrors.Count -eq 0) 'pre_install syntax error.'
 Assert (@($manifest.persist) -contains 'configs' -and @($manifest.persist) -contains 'vms' -and @($manifest.persist) -contains 'nx_device') 'Manifest must persist configs, vms, nx_device.'
 Equal $manifest.shortcuts[0][0] 'MuMuPlayer.cmd' 'Shortcut must use version-local launcher.'
-foreach ($marker in @('$stableRoot','Get-MuMuRegisteredInstallRoot','Copy-MuMuInstallRootToStable','Update-MuMuUninstallRegistration','Restore-MuMuRegistrySnapshot','Set-MuMuServicePath','('/D=' + $stableRoot)')) {
+foreach ($marker in @('$stableRoot','Get-MuMuRegisteredInstallRoot','Copy-MuMuInstallRootToStable','Update-MuMuUninstallRegistration','Restore-MuMuRegistrySnapshot','Set-MuMuServicePath','(''/D='' + $stableRoot)')) {
     Assert ($hookText.Contains($marker)) "Missing stable-root handling: $marker"
 }
 
