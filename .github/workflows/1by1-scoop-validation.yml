@@ -1,0 +1,83 @@
+name: 1by1 Scoop Package Validation
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/1by1-martin-pesch.json"
+      - ".github/workflows/1by1-scoop-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download, verify, and inspect 1by1 SFX archive
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://codecsdownload.com/download_4c6df74c1b633f5f81f55a19e9c26270/1by1_217.exe'
+          $expected = 'e6b586242513766fc5d55bcc3fc5cdb2fab0952ea40c3cbdeb5f62ea58977d91'
+          $root = Join-Path $env:GITHUB_WORKSPACE '1by1-validation'
+          $extract = Join-Path $root 'extracted'
+          New-Item -ItemType Directory -Force -Path $extract | Out-Null
+          $package = Join-Path $root '1by1_217.exe'
+          Invoke-WebRequest -Uri $url -OutFile $package -MaximumRedirection 10 -TimeoutSec 180 -Headers @{ 'User-Agent' = 'Mozilla/5.0 Scoop manifest verifier' }
+          $actual = (Get-FileHash -LiteralPath $package -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) {
+            throw "Publisher checksum mismatch. Expected $expected; received $actual"
+          }
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $sevenZipCommand = Get-Command 7z.exe -ErrorAction Stop
+            $sevenZip = $sevenZipCommand.Source
+          }
+          & $sevenZip l -slt $package 2>&1 | Set-Content (Join-Path $root 'listing.log') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip listing failed: $LASTEXITCODE" }
+          & $sevenZip x $package "-o$extract" -y -bd 2>&1 | Set-Content (Join-Path $root 'extract.log') -Encoding utf8
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip extraction failed: $LASTEXITCODE" }
+          $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force | ForEach-Object {
+            [PSCustomObject]@{
+              Path = [IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\', '/')
+              Size = $_.Length
+              Extension = $_.Extension
+            }
+          })
+          $files | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $root 'files.json') -Encoding utf8
+          $exeFiles = @($files | Where-Object { $_.Extension -ieq '.exe' })
+          if ($exeFiles.Count -eq 0) { throw 'No executable files were extracted.' }
+          $page = (Invoke-WebRequest -Uri 'https://mpesch3.de/1by1.html' -TimeoutSec 60).Content
+          $match = [regex]::Match($page, 'Version\s+(?<version>[\d.]+)')
+          if (-not $match.Success) { throw 'Official version regex did not match.' }
+          $detected = $match.Groups['version'].Value
+          if ($detected -ne '2.17') { throw "checkver detected $detected rather than the manifest's 2.17." }
+          @(
+            '## 1by1 package inspection'
+            ''
+            "- Download: `$url`"
+            "- SHA-256: `$actual` (matches publisher)"
+            "- Size: $((Get-Item -LiteralPath $package).Length) bytes"
+            "- checkver regex result: $detected"
+            ''
+            '### Extracted executable files'
+            foreach ($exe in $exeFiles) { "- `$($exe.Path)` — $($exe.Size) bytes" }
+            ''
+            '### All extracted files'
+            foreach ($file in $files) { "- `$($file.Path)` — $($file.Size) bytes" }
+            ''
+            'The extracted application was not executed.'
+          ) | Set-Content $env:GITHUB_STEP_SUMMARY -Encoding utf8
+      - name: Upload extraction inspection
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: 1by1-package-inspection
+          path: 1by1-validation/
+          if-no-files-found: warn
+          retention-days: 14
