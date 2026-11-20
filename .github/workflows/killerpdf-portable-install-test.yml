@@ -67,6 +67,11 @@ jobs:
           scoop bucket add kirobucket $bucketUrl
           scoop install killerpdf
 
+          $tempPayloadArchives = @(Get-ChildItem -LiteralPath $env:TEMP -Filter 'KillerPDF-payload-*.zip' -File -ErrorAction SilentlyContinue)
+          if ($tempPayloadArchives.Count -gt 0) {
+            throw 'KillerPDF left its temporary embedded-payload ZIP archive behind after Scoop installation.'
+          }
+
           $appDir = Join-Path $env:SCOOP 'apps\killerpdf\current'
           $launcher = Join-Path $appDir 'KillerPDF-Portable.exe'
           $appExe = Join-Path $appDir 'KillerPDF.App.exe'
@@ -89,6 +94,7 @@ jobs:
           }
 
           $legacyRuntime = Join-Path $env:LOCALAPPDATA 'KillerPDF\Portable'
+          $tempPortableMarkersBefore = @(Get-ChildItem -LiteralPath $env:TEMP -Filter '.killerpdf-portable' -File -Recurse -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName)
           if (Test-Path -LiteralPath $legacyRuntime) {
             Remove-Item -LiteralPath $legacyRuntime -Recurse -Force
           }
@@ -129,6 +135,12 @@ jobs:
 
             if (Test-Path -LiteralPath $legacyRuntime) {
               throw 'KillerPDF unexpectedly created the vendor launcher runtime extraction directory in LocalAppData.'
+            }
+
+            $tempPortableMarkersAfter = @(Get-ChildItem -LiteralPath $env:TEMP -Filter '.killerpdf-portable' -File -Recurse -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName)
+            $newTempPortableMarkers = @($tempPortableMarkersAfter | Where-Object { $_ -notin $tempPortableMarkersBefore })
+            if ($newTempPortableMarkers.Count -gt 0) {
+              throw "KillerPDF unexpectedly extracted a portable runtime under TEMP: $($newTempPortableMarkers -join '; ')"
             }
 
             Set-Content -LiteralPath (Join-Path $persistData 'kirobucket-persist-test.txt') -Value 'persisted' -Encoding utf8
