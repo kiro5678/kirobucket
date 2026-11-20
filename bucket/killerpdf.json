@@ -63,7 +63,7 @@
         }
     },
     "notes": [
-        "This manifest uses the official non-portable installer but directs its files into the Scoop-managed version directory. Scoop controls updates and removal; installer registration is skipped to avoid stale shortcuts and registry entries when Scoop changes versions.",
+        "The official KillerPDF.exe installer is run with /install-user and /install-dir64 so the verified application payload is placed inside the Scoop-managed version directory. Installer registration is skipped to prevent stale registry entries and shortcuts across Scoop updates.",
         "The .NET 10 Desktop Runtime (x64) must already be installed system-wide. Install it with 'winget install --id Microsoft.DotNet.DesktopRuntime.10 --exact' if it is missing."
     ]
 }
