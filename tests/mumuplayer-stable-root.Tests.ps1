@@ -78,7 +78,7 @@ function Start-Process {
     if ($action -eq 'install_prepare') {
         New-Item -ItemType Directory -Path (Join-Path $target 'configs\main'),(Join-Path $target 'vms\test-vm'),(Join-Path $target 'nx_device\15.0\shell') -Force | Out-Null
         $cfg = [pscustomobject]@{
-            product=[pscustomobject]@{version=$script:MockProductVersion;install_dir=$target}
+            product=[pscustomobject]@{version=$script:MockPreparedProductVersion;install_dir=$target}
             main=[pscustomobject]@{install_dir=(Join-Path $target 'nx_main')}
             engines=[pscustomobject]@{mumu15=[pscustomobject]@{
                 player=[pscustomobject]@{install_dir=(Join-Path $target 'nx_device\15.0\shell')}
@@ -90,7 +90,7 @@ function Start-Process {
         Set-Content (Join-Path $target 'nx_device\15.0\shell\MuMuNxDevice.exe') ('engine=' + $script:MockProductVersion)
         if (Test-Path $appDataConfig) {
             $app = Get-Content $appDataConfig -Raw | ConvertFrom-Json
-            $app.product.version=$script:MockProductVersion
+            $app.product.version=$script:MockPreparedProductVersion
             $app.product.install_dir=$target
             $app.main.install_dir=Join-Path $target 'nx_main'
             $app | ConvertTo-Json -Depth 12 | Set-Content $appDataConfig -Encoding utf8
@@ -112,6 +112,7 @@ function Invoke-MuMuHook {
     $script:fname="MuMu-$Version.exe"; $script:version=$Version; $script:app='mumuplayer'; $script:persist_dir=$persistRoot
     $script:ExpectedStableRoot=Join-Path $persistRoot 'install'
     $script:MockProductVersion=$ProductVersion
+    $script:MockPreparedProductVersion=if ($Retry80002) { '6.8.15.9' } else { $ProductVersion }
     $script:FailPrepare=[bool]$Fail
     $script:RetryPrepare=[bool]$Retry80002; $script:PrepareRetried=$false
     $script:RetryCommit=[bool]$Retry80002; $script:CommitRetried=$false
@@ -178,7 +179,7 @@ try {
     Assert ([string]$reg.DisplayIcon -like "*$stableRoot*") 'DisplayIcon is not stable.'
     Equal $script:MockMuMuServicePath ('"' + (Join-Path $stableRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service') 'Service path not updated.'
     $cfg=Get-Content $persistConfig -Raw | ConvertFrom-Json
-    Equal $cfg.product.version '6.8.16.0' 'Product version missing after commit.'
+    Equal $cfg.product.version '6.8.15.9' 'Product version missing after commit retry.'
     Equal $cfg.product.install_dir $stableRoot 'Persisted product install_dir is not stable.'
     Equal $cfg.main.install_dir (Join-Path $stableRoot 'nx_main') 'Persisted main install_dir is not stable.'
     $app=Get-Content $appDataConfig -Raw | ConvertFrom-Json
@@ -194,6 +195,8 @@ try {
     Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Device data was not preserved.'
     Equal (Get-Content (Join-Path $persistRoot 'nx_device\15.0\shell\MuMuNxDevice.exe') -Raw).Trim() 'engine=6.8.16.0' 'Persisted engine executable was not updated.'
     Assert (Test-Path (Join-Path $stableRoot 'nx_main\MuMuNxMain.exe')) 'Stable main executable missing.'
+    Assert (Test-Path (Join-Path $oldRoot 'uninstall.exe')) 'Original versioned installation was deleted during migration.'
+    Equal (Get-Content (Join-Path $oldRoot 'uninstall.exe') -Raw).Trim() 'original-uninstaller' 'Original versioned uninstaller was modified.'
     $launcher=Join-Path $scoopRoot 'apps\mumuplayer\1.8.16.6114\MuMuPlayer.cmd'
     Assert (Test-Path $launcher) 'Stable-root launcher missing.'
     Assert ((Get-Content $launcher -Raw) -like "*$stableRoot*") 'Launcher points somewhere other than stable root.'
