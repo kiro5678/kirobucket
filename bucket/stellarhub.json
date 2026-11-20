@@ -30,6 +30,7 @@
     "notes": [
         "Uses the official portable ZIP and its StellarHub.portable marker; settings, history, logs, and the WebView2 profile are stored in the persistent Data directory beside the app.",
         "Machine-specific rollback backups are deliberately kept in ProgramData by the application.",
-        "Some maintenance and driver operations require administrator approval when used."
+        "Some maintenance and driver operations require administrator approval when used.",
+        "The built-in updater can replace files inside the Scoop-managed folder when you choose Update now; use Scoop to update StellarHub instead."
     ]
 }

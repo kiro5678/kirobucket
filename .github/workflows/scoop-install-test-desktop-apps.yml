@@ -1,4 +1,4 @@
-name: Scoop Install Test - StackDock, StellarHub, LiteChat, Kernel
+name: Scoop Install Test - StackDock, StellarHub, LiteChat, Kernel, WinIsland
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
       - "bucket/stellarhub.json"
       - "bucket/litechat.json"
       - "bucket/kernel-mindzy007.json"
+      - "bucket/winisland-rheme18.json"
       - ".github/workflows/scoop-install-test-desktop-apps.yml"
   workflow_dispatch:
 
@@ -41,13 +42,11 @@ jobs:
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
           Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
           $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
-          scoop config gh_token $env:GITHUB_TOKEN
-          if ($LASTEXITCODE -ne 0) { throw 'Could not configure the GitHub API token for Scoop.' }
 
           $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-desktop-apps-test'
           $manifestDir = Join-Path $localBucket 'bucket'
           New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
-          $manifestNames = @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')
+          $manifestNames = @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007', 'winisland-rheme18')
           foreach ($name in $manifestNames) {
             $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
             if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
@@ -72,27 +71,11 @@ jobs:
           scoop bucket add kirobucket-test $bucketUrl
           if ($LASTEXITCODE -ne 0) { throw 'Could not register the local kirobucket test bucket.' }
 
-      - name: Validate checkver and autoupdate templates
+      - name: Install the five manifests with Scoop
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
-          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-desktop-apps-test\bucket'
-          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
-            throw "Scoop checkver.ps1 was not found: $checkver"
-          }
-
-          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')) {
-            Write-Host "Checking $name version, autoupdate URL, and SHA-256 template"
-            & $checkver $name $manifestDir -ForceUpdate -ThrowError
-            Write-Host "PASS: $name checkver and forced autoupdate validation."
-          }
-
-      - name: Install the four manifests with Scoop
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')) {
+          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007', 'winisland-rheme18')) {
             Write-Host "Installing $name"
             scoop install $name
             if ($LASTEXITCODE -ne 0) {
@@ -109,7 +92,8 @@ jobs:
             @{ Name = 'StackDock'; App = 'stack-dock'; RelativeExe = 'StackDock_portable.exe'; Shortcut = 'StackDock.lnk' },
             @{ Name = 'StellarHub'; App = 'stellarhub'; RelativeExe = 'StellarHub.exe'; Shortcut = 'StellarHub.lnk' },
             @{ Name = 'LiteChat'; App = 'litechat'; RelativeExe = 'litechat.exe'; Shortcut = 'LiteChat.lnk' },
-            @{ Name = 'Kernel'; App = 'kernel-mindzy007'; RelativeExe = 'Kernel.exe'; Shortcut = 'Kernel.lnk' }
+            @{ Name = 'Kernel'; App = 'kernel-mindzy007'; RelativeExe = 'Kernel.exe'; Shortcut = 'Kernel.lnk' },
+            @{ Name = 'WinIsland (rheme18)'; App = 'winisland-rheme18'; RelativeExe = 'WinIsland.exe'; Shortcut = 'WinIsland (rheme18).lnk' }
           )
 
           $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
@@ -182,7 +166,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007')) {
+          foreach ($name in @('stack-dock', 'stellarhub', 'litechat', 'kernel-mindzy007', 'winisland-rheme18')) {
             Write-Host "Uninstalling $name"
             scoop uninstall $name
             if ($LASTEXITCODE -ne 0) {

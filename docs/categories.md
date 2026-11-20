@@ -26,7 +26,7 @@
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
-| Notch | 31 | [View](#notch) |
+| Notch | 32 | [View](#notch) |
 | Notes & Knowledge | 27 | [View](#notes-knowledge) |
 | Other Utilities | 139 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
@@ -721,6 +721,8 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 
 ## Notch
 
+The `winisland` and `winisland-rheme18` entries are different upstream projects; the latter is developer-qualified to avoid a filename collision.
+
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [astraeus](../bucket/astraeus.json) | 2.2.3 | 2.5 MiB | 2026-10-29 | Native Windows edge dashboard with music controls, synced lyrics, system stats, and quick controls. | [Homepage](https://github.com/Icetist/Astraeus) |
@@ -749,6 +751,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [windows-notch-overlay](../bucket/windows-notch-overlay.json) | 0.4.0 | 64bit: 99.6 MiB | 2026-10-24 | Customizable Windows notch control center with quick settings, media controls, notifications, productivity tools, and system telemetry. | [Homepage](https://github.com/Taxperia/windows-notch-overlay) |
 | [windynamicisland](../bucket/windynamicisland.json) | 1.0.0 | 64bit: 61.6 MiB | 2026-09-25 | macOS-style Dynamic Island for Windows with media controls, dashboard, calendar, timer, file shelf, system information, and quick actions. | [Homepage](https://github.com/uponatime2019/WinDynamicIsland) |
 | [winisland](../bucket/winisland.json) | 1.0.2 | 64bit: 43.2 MiB | 2026-06-16 | Dynamic Island-style Windows overlay with media controls, weather, Pomodoro timer, camera preview, tasks, and notification mirroring. | [Homepage](https://github.com/zHeuzy2/WinIsland) |
+| [winisland-rheme18](../bucket/winisland-rheme18.json) | 0.9.15 | 33.6 MiB | 2026-11-16 | Dynamic Island-style Windows desktop companion with media controls, system status, calendar, tasks, and quick controls. | [Homepage](https://github.com/rheme18/WinIsland) |
 | [winislands](../bucket/winislands.json) | 3.1.1 | 64bit: 43.0 MiB | 2026-10-23 | Customizable Windows Dynamic Island with media controls, 30+ widgets, weather, system monitoring, quick toggles, and local component plugins. | [Homepage](https://winislands.judekwong.com) |
 | [winnotch](../bucket/winnotch.json) | 0.7.2 | 64bit: 75.0 MiB | 2026-07-03 | Dynamic Island-style notch overlay for Windows with media controls, calendar, battery, webcam, volume and brightness HUDs, file staging, and plugins. | [Homepage](https://n3uralcreativity.github.io/WinNotch/) |
 | [wnotch](../bucket/wnotch.json) | 0.22.0 | 64bit: 70.0 MiB | 2026-10-30 | Windows Dynamic Notch with media controls, system HUDs, file shelf, terminal, agent integrations, widgets, and plugins. | [Homepage](https://github.com/Brick-Bread/WNotch) |
