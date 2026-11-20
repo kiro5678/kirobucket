@@ -99,7 +99,7 @@ jobs:
           $summary = [System.Collections.Generic.List[string]]::new()
           $summary.Add('## 1by1 mirror investigation')
           $summary.Add('')
-          $summary.Add("Publisher SHA-256: `$expected`")
+          $summary.Add("Publisher SHA-256: $expected")
           $summary.Add('')
           $summary.Add('| URL | Resolved URL | Bytes | SHA-256 | Match |')
           $summary.Add('|---|---|---:|---|---|')
