@@ -7,7 +7,7 @@
     "hash": "9196b7089e3d13c06604099e32a1c3a74f2c44cbd93868f2bdc8983d4405aa61",
     "pre_install": [
         "$source = Join-Path $dir 'download.php'",
-        "$target = Join-Path $dir \"FileFerret-Portable-$version.exe\"",
+        "$target = Join-Path $dir ('FileFerret-Portable-' + $Manifest.version + '.exe')",
         "if (Test-Path -LiteralPath $source -PathType Leaf) {",
         "    $stream = [IO.File]::OpenRead($source)",
         "    try {",
