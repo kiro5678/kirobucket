@@ -179,6 +179,55 @@ jobs:
             Write-Warning $_.Exception.Message
           }
           Get-Content -LiteralPath (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Test the current Softaro 1by1 2.17 mirrors against the publisher SHA-256
+        if: always()
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $work = Join-Path $env:RUNNER_TEMP "inspect\1by1-softaro"
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $pageUrl = "https://softaro.jp/1by1/"
+          $page = Invoke-WebRequest -Uri $pageUrl -TimeoutSec 90
+          $html = $page.Content
+          $expected = "e6b586242513766fc5d55bcc3fc5cdb2fab0952ea40c3cbdeb5f62ea58977d91"
+          $pattern = '(?is)<a\b[^>]*href=["''](?<href>[^"'']+)["''][^>]*>.*?1by1_217\.exe.*?</a>'
+          $match = [regex]::Match($html, $pattern)
+          if (-not $match.Success) {
+            $message = "Softaro live page did not expose an anchor for 1by1_217.exe."
+            $message | Tee-Object (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
+            Write-Warning $message
+            return
+          }
+          $assetUrl = [Uri]::new([Uri]$pageUrl, $match.Groups["href"].Value).AbsoluteUri
+          "Softaro asset URL: $assetUrl" | Set-Content (Join-Path $work "report.txt")
+          "Softaro page version markers:" | Add-Content (Join-Path $work "report.txt")
+          ($html -split [Environment]::NewLine | Select-String -Pattern "1by1 2.17|1by1_217|2026/08/23" | Select-Object -First 12) | ForEach-Object { Add-Content (Join-Path $work "report.txt") $_.Line }
+          $file = Join-Path $work "1by1_217.exe"
+          Invoke-WebRequest -Uri $assetUrl -OutFile $file -MaximumRedirection 10 -TimeoutSec 900
+          $size = (Get-Item -LiteralPath $file).Length
+          $actual = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+          @("Downloaded size: $size bytes","Expected publisher SHA-256: $expected","Actual SHA-256: $actual") | Add-Content (Join-Path $work "report.txt")
+          if ($size -lt 100KB -or $actual -ne $expected) {
+            Add-Content (Join-Path $work "report.txt") "FAIL: this is not the exact publisher-verified 2.17 package."
+            Write-Warning "Softaro 1by1 2.17 download did not match the official SHA-256."
+          } else {
+            $sevenZip = "$env:ProgramFiles\7-Zip\7z.exe"
+            & $sevenZip t $file 2>&1 | Set-Content (Join-Path $work "7zip-test.log")
+            if ($LASTEXITCODE -ne 0) { throw "Publisher-verified 1by1 2.17 EXE is not a valid 7-Zip-supported archive." }
+            $out = Join-Path $work "extracted"
+            New-Item -ItemType Directory -Path $out -Force | Out-Null
+            & $sevenZip x $file "-o$out" -y -bd 2>&1 | Set-Content (Join-Path $work "7zip-extract.log")
+            if ($LASTEXITCODE -gt 1) { throw "7-Zip failed to extract the publisher-verified 1by1 package." }
+            $files = @(Get-ChildItem -LiteralPath $out -File -Recurse -Force)
+            $exe = @($files | Where-Object { $_.Name -ieq "1by1.exe" })
+            if (-not $exe) { throw "1by1.exe was missing from the verified SFX payload." }
+            Add-Content (Join-Path $work "report.txt") "PASS: exact publisher SHA-256 matched; SFX archive tested and extracted."
+            Add-Content (Join-Path $work "report.txt") "1by1.exe: $($exe[0].FullName)"
+            Add-Content (Join-Path $work "report.txt") "Extracted files: $($files.Count)"
+          }
+          Get-Content (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
       - name: Test Scoop manifests, checkver, persist, and shortcuts
         shell: pwsh
         run: |
