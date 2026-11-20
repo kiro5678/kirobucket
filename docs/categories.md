@@ -23,7 +23,7 @@
 | Games Tools | 16 | [View](#games-tools) |
 | Images & Photos | 62 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 57 | [View](#media-audio-video) |
+| Media & Audio/Video | 58 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
@@ -47,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1275**
+**Total unique categorized manifests: 1276**
 
 
 ## Android & Device Tools
@@ -593,6 +593,7 @@ Utilities and launchers designed for a particular game or game series. General-p
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [1by1-martin-pesch](../bucket/1by1-martin-pesch.json) | 2.17 | 355.3 KiB | 2026-08-21 | Lightweight directory-based audio player with gapless playback, resume, audio enhancing, and file management. | [Homepage](https://mpesch3.de/1by1.html) |
 | [allplayer](../bucket/allplayer.json) | 9.6 | 88.4 MiB | 2026-02-24 | Free multimedia player with built-in codecs and automatic subtitles. | [Homepage](https://allplayer.com/) |
 | [blur](../bucket/blur.json) | 2.45 | 64bit: 7.3 MiB | 2026-05-12 | Native desktop application for adding motion blur to videos through frame blending and frame interpolation. | [Homepage](https://github.com/f0e/blur) |
 | [concat](../bucket/concat.json) | 0.2.9 | 64bit: 95.5 MiB | 2026-11-05 | Open-source cross-platform video editor with a multi-track timeline, effects, captions, and local processing. | [Homepage](https://github.com/jub0t/Concat) |
