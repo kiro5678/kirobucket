@@ -85,6 +85,7 @@ jobs:
             'Get-MuMuRegisteredInstallRoot',
             'Move-MuMuInstallRootToStable',
             'Restore-MuMuMovedInstallRoot',
+            "'/MOVE'",
             'Update-MuMuUninstallRegistration',
             'Restore-MuMuRegistrySnapshot',
             'Backup-MuMuFile',
