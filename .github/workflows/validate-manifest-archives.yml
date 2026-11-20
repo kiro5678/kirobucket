@@ -868,7 +868,7 @@ jobs:
                       $innounpZip = Join-Path $env:RUNNER_TEMP 'innounp-2.zip'
                       $innounpRoot = Join-Path $env:RUNNER_TEMP 'innounp-helper'
                       Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/refs/heads/master/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 120
-                      Test-StaticHash -ArchivePath $innounpZip -HashValue 'f8e45c9676bebc7d7570108ab572673b541fcf7a7d3d24a04319ac6b5315b4e8' -Context 'innounp helper'
+                      Test-StaticHash -ArchivePath $innounpZip -HashValue '078ddb005aa17e669f0b5545980bff92200f7401418174172dca0d75f9e5d8f0' -Context 'innounp helper'
                       New-Item -ItemType Directory -Path $innounpRoot -Force | Out-Null
                       Add-Content -LiteralPath $sevenZipLog -Value "`n[innounp helper extraction] $innounpZip"
                       & $sevenZipPath x $innounpZip "-o$innounpRoot" '-y' 2>&1 | Tee-Object -FilePath $sevenZipLog -Append | Out-Null
