@@ -115,6 +115,61 @@ jobs:
           }
           "SEVENZIP=$sevenZip" >> $env:GITHUB_ENV
 
+      - name: Inspect and attempt extraction of the VANTAGE NSIS package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://github.com/DeizenITS/VANTAGE/releases/download/v0.12.0-beta/VANTAGE.exe'
+          $expected = 'd8de0ed4f5557032b0067f93b3fa41859189b0005cbb4872a3f595f0230a5506'
+          $work = Join-Path $env:RUNNER_TEMP 'vantage-nsis-inspection'
+          $extract = Join-Path $work 'extracted'
+          New-Item -ItemType Directory -Path $work,$extract -Force | Out-Null
+          $installer = Join-Path $work 'VANTAGE.exe'
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 1200
+          $actual = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "VANTAGE SHA-256 mismatch: $actual" }
+
+          $sevenZip = $env:SEVENZIP
+          $listing = & $sevenZip l -slt $installer 2>&1
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $work '7zip-listing.txt')
+          Write-Host "VANTAGE 7-Zip listing exit code: $listExit"
+          & $sevenZip x -y "-o$extract" $installer 2>&1 | Tee-Object -FilePath (Join-Path $work '7zip-extract.log')
+          $extractExit = $LASTEXITCODE
+          Write-Host "VANTAGE 7-Zip extraction exit code: $extractExit"
+
+          $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force -ErrorAction SilentlyContinue)
+          $executables = @($files | Where-Object { $_.Extension -ieq '.exe' })
+          Write-Host "VANTAGE extracted files: $($files.Count)"
+          foreach ($item in $files | Select-Object -First 100) {
+            $relative = [IO.Path]::GetRelativePath($extract, $item.FullName).Replace('\','/')
+            Write-Host "  $relative ($($item.Length) bytes)"
+          }
+          foreach ($exe in $executables) {
+            $relative = [IO.Path]::GetRelativePath($extract, $exe.FullName).Replace('\','/')
+            $info = [Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+            Write-Host "  EXE: $relative | $($info.FileDescription) | $($info.FileVersion)"
+          }
+          $main = @($executables | Where-Object { $_.Name -ieq 'VANTAGE.exe' })
+          if ($extractExit -eq 0 -and $main.Count -gt 0) {
+            Write-Host "VANTAGE extraction candidate: $($main[0].FullName)"
+            @(
+              'VANTAGE NSIS package: 7-Zip extraction completed.'
+              "Extracted files: $($files.Count)"
+              "VANTAGE.exe location: $([IO.Path]::GetRelativePath($extract, $main[0].FullName))"
+              'Classification: extracted payload candidate; inspect all side effects before using it as portable.'
+            ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          } else {
+            Write-Warning 'VANTAGE could not be extracted as a complete portable payload using 7-Zip; no nonportable manifest is created.'
+            @(
+              'VANTAGE NSIS package: 7-Zip extraction did not produce a VANTAGE.exe payload.'
+              "Listing exit code: $listExit"
+              "Extraction exit code: $extractExit"
+              'No nonportable manifest was created.'
+            ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          }
+
       - name: Verify Legacy Router Opener standalone executable
         shell: pwsh
         run: |
