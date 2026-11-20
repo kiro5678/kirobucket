@@ -90,11 +90,8 @@ jobs:
             }
           }
 
-          if ($scriptText -notmatch "\\('/D=' \\+ \\$dir\\)") {
-            throw 'The NSIS /D target must be passed without quotes.'
-          }
-          if ($scriptText -match "\\('/D=""'") {
-            throw 'The NSIS /D target must not contain quote characters.'
+          if (-not $scriptText.Contains("('/D=' + `$dir)")) {
+            throw 'The NSIS /D target must be passed as an unquoted final argument.'
           }
 
           & $checkver -App 'mumuplayer' -Dir (Join-Path $env:GITHUB_WORKSPACE 'bucket') -ThrowError
