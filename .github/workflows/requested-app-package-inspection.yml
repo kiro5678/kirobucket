@@ -179,7 +179,7 @@ jobs:
             Write-Warning $_.Exception.Message
           }
           Get-Content -LiteralPath (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
-      - name: Test the current Softaro 1by1 2.17 mirrors against the publisher SHA-256
+      - name: Test the current Softaro 1by1 2.17 installer and portable ZIP
         if: always()
         continue-on-error: true
         shell: pwsh
@@ -189,44 +189,71 @@ jobs:
           $work = Join-Path $env:RUNNER_TEMP "inspect\1by1-softaro"
           New-Item -ItemType Directory -Path $work -Force | Out-Null
           $pageUrl = "https://softaro.jp/1by1/"
-          $page = Invoke-WebRequest -Uri $pageUrl -TimeoutSec 90
-          $html = $page.Content
+          $html = (Invoke-WebRequest -Uri $pageUrl -TimeoutSec 90).Content
           $expected = "e6b586242513766fc5d55bcc3fc5cdb2fab0952ea40c3cbdeb5f62ea58977d91"
-          $pattern = '(?is)<a\b[^>]*href=["''](?<href>[^"'']+)["''][^>]*>.*?1by1_217\.exe.*?</a>'
-          $match = [regex]::Match($html, $pattern)
-          if (-not $match.Success) {
-            $message = "Softaro live page did not expose an anchor for 1by1_217.exe."
-            $message | Tee-Object (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
-            Write-Warning $message
-            return
+          $anchors = [regex]::Matches($html, '(?is)<a\b(?<attrs>[^>]*)>(?<body>.*?)</a>')
+          $installerAnchor = $null
+          $portableAnchor = $null
+          foreach ($anchor in $anchors) {
+            $attrs = $anchor.Groups["attrs"].Value
+            $body = $anchor.Groups["body"].Value
+            if ($attrs -match '(?i)\bclass=["''][^"'']*\bdownload-link\b' -and $body -match '(?i)1by1_217\.exe') { $installerAnchor = $anchor; break }
           }
-          $assetUrl = [Uri]::new([Uri]$pageUrl, $match.Groups["href"].Value).AbsoluteUri
-          "Softaro asset URL: $assetUrl" | Set-Content (Join-Path $work "report.txt")
-          "Softaro page version markers:" | Add-Content (Join-Path $work "report.txt")
-          ($html -split [Environment]::NewLine | Select-String -Pattern "1by1 2.17|1by1_217|2026/08/23" | Select-Object -First 12) | ForEach-Object { Add-Content (Join-Path $work "report.txt") $_.Line }
-          $file = Join-Path $work "1by1_217.exe"
-          Invoke-WebRequest -Uri $assetUrl -OutFile $file -MaximumRedirection 10 -TimeoutSec 900
-          $size = (Get-Item -LiteralPath $file).Length
-          $actual = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
-          @("Downloaded size: $size bytes","Expected publisher SHA-256: $expected","Actual SHA-256: $actual") | Add-Content (Join-Path $work "report.txt")
-          if ($size -lt 100KB -or $actual -ne $expected) {
-            Add-Content (Join-Path $work "report.txt") "FAIL: this is not the exact publisher-verified 2.17 package."
-            Write-Warning "Softaro 1by1 2.17 download did not match the official SHA-256."
-          } else {
-            $sevenZip = "$env:ProgramFiles\7-Zip\7z.exe"
-            & $sevenZip t $file 2>&1 | Set-Content (Join-Path $work "7zip-test.log")
-            if ($LASTEXITCODE -ne 0) { throw "Publisher-verified 1by1 2.17 EXE is not a valid 7-Zip-supported archive." }
-            $out = Join-Path $work "extracted"
-            New-Item -ItemType Directory -Path $out -Force | Out-Null
-            & $sevenZip x $file "-o$out" -y -bd 2>&1 | Set-Content (Join-Path $work "7zip-extract.log")
-            if ($LASTEXITCODE -gt 1) { throw "7-Zip failed to extract the publisher-verified 1by1 package." }
-            $files = @(Get-ChildItem -LiteralPath $out -File -Recurse -Force)
-            $exe = @($files | Where-Object { $_.Name -ieq "1by1.exe" })
-            if (-not $exe) { throw "1by1.exe was missing from the verified SFX payload." }
-            Add-Content (Join-Path $work "report.txt") "PASS: exact publisher SHA-256 matched; SFX archive tested and extracted."
-            Add-Content (Join-Path $work "report.txt") "1by1.exe: $($exe[0].FullName)"
-            Add-Content (Join-Path $work "report.txt") "Extracted files: $($files.Count)"
+          foreach ($anchor in $anchors) {
+            $attrs = $anchor.Groups["attrs"].Value
+            $body = $anchor.Groups["body"].Value
+            if ($attrs -match '(?i)\bclass=["''][^"'']*\bdownload-link\b' -and $body -match '(?i)1by1_217\.zip') { $portableAnchor = $anchor; break }
           }
+          if ($null -eq $installerAnchor -or $null -eq $portableAnchor) {
+            throw "Could not identify both exact Softaro download-link anchors for 1by1_217.exe and 1by1_217.zip."
+          }
+          function Resolve-DownloadHref($Anchor) {
+            $hrefMatch = [regex]::Match($Anchor.Groups["attrs"].Value, '(?is)\bhref=["''](?<href>[^"'']+)')
+            if (-not $hrefMatch.Success) { throw "Download anchor has no href attribute." }
+            $href = $hrefMatch.Groups["href"].Value.Replace('&#038;','&').Replace('&amp;','&')
+            return [Uri]::new([Uri]$pageUrl, $href).AbsoluteUri
+          }
+          $installerUrl = Resolve-DownloadHref $installerAnchor
+          $portableUrl = Resolve-DownloadHref $portableAnchor
+          $installerFile = Join-Path $work "1by1_217.exe"
+          $installerResponse = Invoke-WebRequest -Uri $installerUrl -OutFile $installerFile -PassThru -MaximumRedirection 10 -TimeoutSec 900
+          $installerSize = (Get-Item -LiteralPath $installerFile).Length
+          $installerHash = (Get-FileHash -LiteralPath $installerFile -Algorithm SHA256).Hash.ToLowerInvariant()
+          $installerFinalUrl = $installerResponse.BaseResponse.RequestMessage.RequestUri.AbsoluteUri
+          @("Installer landing URL: $installerUrl","Installer final URL: $installerFinalUrl","Installer size: $installerSize bytes","Expected publisher SHA-256: $expected","Actual installer SHA-256: $installerHash") | Set-Content (Join-Path $work "report.txt")
+          if ($installerSize -lt 100KB -or $installerHash -ne $expected) {
+            Add-Content (Join-Path $work "report.txt") "FAIL: Softaro installer bytes do not match the publisher SHA-256."
+            throw "Softaro 1by1_217.exe failed publisher SHA-256 validation."
+          }
+          $sevenZip = "$env:ProgramFiles\7-Zip\7z.exe"
+          & $sevenZip t $installerFile 2>&1 | Set-Content (Join-Path $work "installer-test.log")
+          if ($LASTEXITCODE -ne 0) { throw "Publisher-verified 1by1 2.17 SFX is not a valid 7-Zip-supported archive." }
+          $installerOut = Join-Path $work "installer-extracted"
+          New-Item -ItemType Directory -Path $installerOut -Force | Out-Null
+          & $sevenZip x $installerFile "-o$installerOut" -y -bd 2>&1 | Set-Content (Join-Path $work "installer-extract.log")
+          if ($LASTEXITCODE -gt 1) { throw "7-Zip failed to extract the verified 1by1 SFX package." }
+          $installerExe = @(Get-ChildItem -LiteralPath $installerOut -File -Recurse -Force | Where-Object { $_.Name -ieq "1by1.exe" })
+          if (-not $installerExe) { throw "Verified 1by1 SFX package did not contain 1by1.exe." }
+          $portableFile = Join-Path $work "1by1_217.zip"
+          $portableResponse = Invoke-WebRequest -Uri $portableUrl -OutFile $portableFile -PassThru -MaximumRedirection 10 -TimeoutSec 900
+          $portableSize = (Get-Item -LiteralPath $portableFile).Length
+          $portableHash = (Get-FileHash -LiteralPath $portableFile -Algorithm SHA256).Hash.ToLowerInvariant()
+          $portableFinalUrl = $portableResponse.BaseResponse.RequestMessage.RequestUri.AbsoluteUri
+          @("Portable landing URL: $portableUrl","Portable final URL: $portableFinalUrl","Portable ZIP size: $portableSize bytes","Portable ZIP SHA-256: $portableHash") | Add-Content (Join-Path $work "report.txt")
+          if ($portableSize -lt 10KB) { throw "Softaro portable ZIP download is unexpectedly small." }
+          & $sevenZip t $portableFile 2>&1 | Set-Content (Join-Path $work "portable-test.log")
+          if ($LASTEXITCODE -ne 0) { throw "Softaro 1by1 portable ZIP failed 7-Zip archive validation." }
+          $portableOut = Join-Path $work "portable-extracted"
+          New-Item -ItemType Directory -Path $portableOut -Force | Out-Null
+          & $sevenZip x $portableFile "-o$portableOut" -y -bd 2>&1 | Set-Content (Join-Path $work "portable-extract.log")
+          if ($LASTEXITCODE -gt 1) { throw "7-Zip failed to extract the portable ZIP." }
+          $portableExe = @(Get-ChildItem -LiteralPath $portableOut -File -Recurse -Force | Where-Object { $_.Name -ieq "1by1.exe" })
+          if (-not $portableExe) { throw "Portable ZIP did not contain 1by1.exe." }
+          $sfxExeHash = (Get-FileHash -LiteralPath $installerExe[0].FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          $zipExeHash = (Get-FileHash -LiteralPath $portableExe[0].FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          @("SFX extracted 1by1.exe: $($installerExe[0].FullName)","Portable ZIP extracted 1by1.exe: $($portableExe[0].FullName)","SFX internal EXE SHA-256: $sfxExeHash","ZIP internal EXE SHA-256: $zipExeHash") | Add-Content (Join-Path $work "report.txt")
+          if ($sfxExeHash -ne $zipExeHash) { throw "1by1.exe differs between the publisher-verified SFX and the Softaro portable ZIP." }
+          Add-Content (Join-Path $work "report.txt") "PASS: installer matches the publisher SHA-256; both packages extract and contain byte-identical 1by1.exe."
           Get-Content (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
       - name: Test Scoop manifests, checkver, persist, and shortcuts
         shell: pwsh
