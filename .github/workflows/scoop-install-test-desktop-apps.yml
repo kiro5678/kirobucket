@@ -42,8 +42,6 @@ jobs:
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
           Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
           $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
-          scoop config gh_token $env:GITHUB_TOKEN
-          if ($LASTEXITCODE -ne 0) { throw 'Could not configure the GitHub API token for Scoop.' }
 
           $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-desktop-apps-test'
           $manifestDir = Join-Path $localBucket 'bucket'
