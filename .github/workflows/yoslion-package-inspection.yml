@@ -1,0 +1,182 @@
+name: Yoslion Download Package Inspection
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - "bucket/yoslion.json"
+      - ".github/workflows/yoslion-package-inspection.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/yoslion.json"
+      - ".github/workflows/yoslion-package-inspection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify and inspect official Windows installer
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download, verify and inspect installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $url = "https://updates.yoslion.com/release/windows/x86_64/1.1.2/Yoslion%20Download_1.1.2_x64-setup.exe"
+          $expectedHash = "afafa745eabdfdd78a98d423036db74712ab120b252e60741f5ab29ce4873e18"
+          $expectedSize = 5607368
+          $root = Join-Path $env:RUNNER_TEMP "yoslion-package-inspection"
+          $installer = Join-Path $root "Yoslion Download_1.1.2_x64-setup.exe"
+          $extractDir = Join-Path $root "extracted"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          function Add-Report([string]$Text) {
+            $report.Add($Text)
+            Write-Host $Text
+          }
+
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
+          if (-not (Test-Path -LiteralPath $installer -PathType Leaf)) {
+            throw "Official installer download did not produce a file."
+          }
+
+          $file = Get-Item -LiteralPath $installer
+          $hash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($file.Length -ne $expectedSize) {
+            throw "Published size mismatch. Expected $expectedSize bytes; got $($file.Length)."
+          }
+          if ($hash -ne $expectedHash) {
+            throw "Published SHA-256 mismatch. Expected $expectedHash; got $hash."
+          }
+
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+          Add-Report "File: $($file.Name)"
+          Add-Report "Size: $($file.Length) bytes"
+          Add-Report "SHA256: $hash"
+          Add-Report "Authenticode status: $($signature.Status)"
+          Add-Report "Signer: $($signature.SignerCertificate.Subject)"
+          Add-Report "Product: $($versionInfo.ProductName)"
+          Add-Report "Description: $($versionInfo.FileDescription)"
+          Add-Report "File version: $($versionInfo.FileVersion)"
+          Add-Report "Product version: $($versionInfo.ProductVersion)"
+
+          if ($signature.Status -ne "Valid") {
+            throw "The downloaded installer does not have a valid Authenticode signature."
+          }
+          if ($signature.SignerCertificate.Subject -notmatch "Palacios Software Group LLC") {
+            throw "Unexpected Authenticode publisher."
+          }
+
+          $bytes = [System.IO.File]::ReadAllBytes($installer)
+          $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+          $unicode = [System.Text.Encoding]::Unicode.GetString($bytes)
+          $strings = $ascii + [Environment]::NewLine + $unicode
+          $markers = @(
+            "Nullsoft|NSIS",
+            "Inno Setup",
+            "WiX Toolset|Windows Installer XML",
+            "Squirrel",
+            "Tauri",
+            "Electron",
+            "MSIX|AppX",
+            "InstallShield"
+          )
+          Add-Report ""
+          Add-Report "Installer-engine string markers:"
+          foreach ($marker in $markers) {
+            $found = [regex]::IsMatch($strings, $marker, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+            Add-Report "  $marker : $found"
+          }
+
+          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+            if (-not $command) {
+              throw "7-Zip was not found on the Windows runner."
+            }
+            $sevenZip = $command.Source
+          }
+
+          $listing = Join-Path $root "7zip-listing.txt"
+          $listOutput = & $sevenZip l -slt $installer 2>&1
+          $listExit = $LASTEXITCODE
+          $listOutput | Set-Content -LiteralPath $listing -Encoding utf8
+          Add-Report ""
+          Add-Report "7-Zip listing exit code: $listExit"
+
+          $extractLog = Join-Path $root "7zip-extraction.log"
+          $extractOutput = & $sevenZip x -y "-o$extractDir" $installer 2>&1
+          $extractExit = $LASTEXITCODE
+          $extractOutput | Set-Content -LiteralPath $extractLog -Encoding utf8
+          Add-Report "7-Zip extraction exit code: $extractExit"
+
+          $files = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+          Add-Report "Extracted file count: $($files.Count)"
+          Add-Report "Extracted files and directories (first 250 files):"
+          foreach ($entry in Get-ChildItem -LiteralPath $extractDir -Force -Recurse -ErrorAction SilentlyContinue |
+              Sort-Object FullName | Select-Object -First 250) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $entry.FullName).Replace('\', '/')
+            if ($entry.PSIsContainer) {
+              Add-Report "  [DIR]  $relative"
+            } else {
+              Add-Report "  [FILE] $relative [$($entry.Length) bytes]"
+            }
+          }
+
+          $executables = @($files | Where-Object { $_.Extension -ieq ".exe" })
+          Add-Report ""
+          Add-Report "Extracted executables:"
+          foreach ($exe in $executables) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $exe.FullName).Replace('\', '/')
+            $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+            Add-Report "  $relative | $($exe.Length) bytes | Product=$($vi.ProductName) | Description=$($vi.FileDescription) | Version=$($vi.FileVersion)"
+          }
+
+          $nestedArchives = @($files | Where-Object { $_.Extension -match '^\.(7z|zip|cab|msi|exe)$' })
+          Add-Report ""
+          Add-Report "Nested archives or installer-like files:"
+          foreach ($nested in $nestedArchives) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $nested.FullName).Replace('\', '/')
+            Add-Report "  $relative [$($nested.Length) bytes]"
+            if ($nested.Extension -match '^\.(7z|zip|cab|msi)$') {
+              $nestedOutput = & $sevenZip l -slt $nested.FullName 2>&1
+              $nestedExit = $LASTEXITCODE
+              Add-Report "    7-Zip nested listing exit code: $nestedExit"
+              foreach ($line in ($nestedOutput | Select-Object -First 80)) {
+                Add-Report "    $line"
+              }
+            }
+          }
+
+          $reportPath = Join-Path $root "yoslion-inspection-report.txt"
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Upload installer inspection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: yoslion-package-inspection
+          path: |
+            \${{ runner.temp }}/yoslion-package-inspection/yoslion-inspection-report.txt
+            \${{ runner.temp }}/yoslion-package-inspection/7zip-listing.txt
+            \${{ runner.temp }}/yoslion-package-inspection/7zip-extraction.log
+          if-no-files-found: warn
+          retention-days: 30
