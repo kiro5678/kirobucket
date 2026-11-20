@@ -1286,6 +1286,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 
 ## Windows Customization
 
+| [stack-dock](../bucket/stack-dock.json) | 0.2.0-beta | 64bit: 2.3 MiB | 2026-11-18 | Customizable Windows dock for apps, games, files, folders, and links. | [Homepage](https://github.com/TNVR-HSN/stack-dock) |
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
