@@ -31,6 +31,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Locate and verify FileFerret portable executable
+        continue-on-error: true
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -65,6 +66,31 @@ jobs:
             $start = [Math]::Max(0, $pageIndex - 1400)
             $length = [Math]::Min(2800, $html.Length - $start)
             $context = if ($pageIndex -ge 0) { $html.Substring($start, $length) } else { $html.Substring(0, [Math]::Min(5000,$html.Length)) }
+            Write-Host "FileFerret page length: $($html.Length)"
+            $scriptSources = [regex]::Matches($html, '(?is)<script\b[^>]*src\s*=\s*["''](?<src>[^"'']+)["''][^>]*>')
+            foreach ($scriptTag in $scriptSources) {
+              $scriptUrl = [Net.WebUtility]::HtmlDecode($scriptTag.Groups['src'].Value)
+              if (-not ([uri]::IsWellFormedUriString($scriptUrl, [UriKind]::Absolute))) {
+                $scriptUrl = [uri]::new([uri]$pageUrl, $scriptUrl).AbsoluteUri
+              }
+              Write-Host "FileFerret script URL: $scriptUrl"
+              try {
+                $scriptText = (Invoke-WebRequest -Uri $scriptUrl -UseBasicParsing -TimeoutSec 120).Content
+                foreach ($pattern in @('FileFerret-Portable', 'FileFerret-Setup', '9196b708', 'downloadUrl', 'download_url')) {
+                  $scriptIndex = $scriptText.IndexOf($pattern, [StringComparison]::OrdinalIgnoreCase)
+                  if ($scriptIndex -ge 0) {
+                    $scriptStart = [Math]::Max(0, $scriptIndex - 300)
+                    $scriptLength = [Math]::Min(900, $scriptText.Length - $scriptStart)
+                    Write-Host "FileFerret script match [$pattern] in $scriptUrl : $($scriptText.Substring($scriptStart,$scriptLength))"
+                  }
+                }
+              } catch {
+                Write-Warning "Could not inspect script $scriptUrl : $($_.Exception.Message)"
+              }
+            }
+            $interestingAttrs = [regex]::Matches($html, '(?is)(?:href|src|data-[\w-]+)\s*=\s*["''][^"'']*(?:download|portable|file|\.exe)[^"'']*["'']')
+            Write-Host "FileFerret relevant HTML attributes: $(@($interestingAttrs | ForEach-Object Value) -join ' ; ')"
+            Write-Host "FileFerret page HTML begins: $($html.Substring(0,[Math]::Min(1000,$html.Length)))"
             Write-Host "FileFerret page anchor candidates: $($candidateLinks | ConvertTo-Json -Compress -Depth 4)"
             Write-Host "FileFerret HTML context near download filename: $context"
             throw "Could not resolve a direct portable download link for $filename from an official download anchor."
