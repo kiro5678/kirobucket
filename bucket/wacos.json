@@ -27,5 +27,6 @@
             "url": "https://api.github.com/repos/renzyxx/WacOS/releases/latest",
             "find": "sha256:([a-fA-F\\d]{64})"
         }
-    }
+    },
+    "license": "Proprietary"
 }
