@@ -96,25 +96,25 @@ jobs:
 
           $pageRows | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $work 'pages.json') -Encoding utf8
           $results | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $work 'download-results.json') -Encoding utf8
-          @(
-            '## 1by1 mirror investigation'
-            ''
-            "Publisher SHA-256: `$expected`"
-            ''
-            '| URL | Resolved URL | Bytes | SHA-256 | Match |'
-            '|---|---|---:|---|---|'
-            foreach ($r in $results) {
-              if ($r.PublisherHashMatch) {
-                "| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | **MATCH** |"
-              } elseif ($r.SHA256) {
-                "| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | no |"
-              } else {
-                "| $($r.Url) | — | — | — | error: $($r.Error) |"
-              }
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('## 1by1 mirror investigation')
+          $summary.Add('')
+          $summary.Add("Publisher SHA-256: `$expected`")
+          $summary.Add('')
+          $summary.Add('| URL | Resolved URL | Bytes | SHA-256 | Match |')
+          $summary.Add('|---|---|---:|---|---|')
+          foreach ($r in $results) {
+            if ($r.PublisherHashMatch) {
+              $summary.Add("| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | **MATCH** |")
+            } elseif ($r.SHA256) {
+              $summary.Add("| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | no |")
+            } else {
+              $summary.Add("| $($r.Url) | — | — | — | error: $($r.Error) |")
             }
-            ''
-            'Page responses are saved in the artifact. A matching SHA-256 is required before adding a manifest.'
-          ) | Set-Content $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          }
+          $summary.Add('')
+          $summary.Add('Page responses are saved in the artifact. A matching SHA-256 is required before adding a manifest.')
+          $summary | Set-Content $env:GITHUB_STEP_SUMMARY -Encoding utf8
           $pageRows | Format-Table -AutoSize | Out-String | Write-Host
           $results | Format-List | Out-String | Write-Host
       - name: Upload investigation results
