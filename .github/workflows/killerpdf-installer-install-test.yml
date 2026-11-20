@@ -16,8 +16,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: killerpdf-installer-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   install:
+    timeout-minutes: 5
     name: Install, launch, and remove (${{ matrix.shell }})
     runs-on: windows-latest
     strategy:
@@ -120,10 +125,10 @@ jobs:
             $wrapperProcess = Start-Process -FilePath $wrapper -PassThru
             $deadline = (Get-Date).AddSeconds(60)
             do {
-              $childProcess = Get-CimInstance -ClassName Win32_Process -Filter "Name = 'KillerPDF.App.exe'" |
+              $childProcess = Get-Process -Name 'KillerPDF.App' -ErrorAction SilentlyContinue |
                 Where-Object {
-                  $_.ExecutablePath -and
-                  $_.ExecutablePath.StartsWith($versionDir, [System.StringComparison]::OrdinalIgnoreCase)
+                  $_.Path -and
+                  $_.Path.StartsWith($versionDir, [System.StringComparison]::OrdinalIgnoreCase)
                 } |
                 Select-Object -First 1
 
@@ -135,12 +140,13 @@ jobs:
             } while ((Get-Date) -lt $deadline)
 
             if ($null -eq $childProcess) {
-              throw 'KillerPDF.App.exe was not launched from the Scoop-managed version directory.'
+              $observed = @(Get-Process -Name 'KillerPDF.App' -ErrorAction SilentlyContinue | ForEach-Object { $_.Path })
+              throw "KillerPDF was not detected under the Scoop version directory. Observed paths: $($observed -join '; ')"
             }
 
-            Write-Host "Application launched from Scoop: $($childProcess.ExecutablePath)"
+            Write-Host "Application launched from Scoop: $($childProcess.Path)"
             Start-Sleep -Seconds 10
-            $stillRunning = Get-CimInstance -ClassName Win32_Process -Filter "ProcessId = $($childProcess.ProcessId)"
+            $stillRunning = Get-Process -Id $childProcess.Id -ErrorAction SilentlyContinue
             if ($null -eq $stillRunning) {
               throw 'KillerPDF exited unexpectedly during the launch test.'
             }
@@ -152,7 +158,7 @@ jobs:
           }
           finally {
             if ($null -ne $childProcess) {
-              Stop-Process -Id ([int]$childProcess.ProcessId) -Force -ErrorAction SilentlyContinue
+              Stop-Process -Id $childProcess.Id -Force -ErrorAction SilentlyContinue
             }
             if ($null -ne $wrapperProcess -and -not $wrapperProcess.HasExited) {
               Stop-Process -Id $wrapperProcess.Id -Force -ErrorAction SilentlyContinue
