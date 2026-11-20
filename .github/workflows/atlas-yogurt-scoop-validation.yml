@@ -25,9 +25,10 @@ jobs:
     timeout-minutes: 120
     steps:
       - name: Checkout bucket
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install Scoop and create an isolated local bucket
+        id: setup
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -36,16 +37,17 @@ jobs:
           $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-atlas-yogurt-validation'
           "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
           (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          (Join-Path $env:SCOOP 'apps\scoop\current\bin') >> $env:GITHUB_PATH
 
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
           Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
-          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + (Join-Path $env:SCOOP 'apps\scoop\current\bin') + ';' + $env:PATH
 
           $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-atlas-yogurt-validation'
           $manifestDir = Join-Path $localBucket 'bucket'
           New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
           foreach ($name in @('atlas-filemanager', 'yogurt')) {
-            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\\$name.json"
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
             if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
               throw "Required manifest is missing: $source"
             }
@@ -60,7 +62,7 @@ jobs:
           git -C $localBucket commit -m 'Prepare isolated Scoop validation bucket'
           if ($LASTEXITCODE -ne 0) { throw 'Could not commit local test manifests.' }
 
-          $bucketUrl = 'file:///' + $localBucket.Replace('\\', '/')
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
           scoop bucket add kirobucket-validation $bucketUrl
           if ($LASTEXITCODE -ne 0) { throw 'Could not register the local validation bucket.' }
 
@@ -92,7 +94,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $programs = Join-Path $env:APPDATA 'Microsoft\\Windows\\Start Menu\\Programs'
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
           $shell = New-Object -ComObject WScript.Shell
 
           $checks = @(
@@ -111,7 +113,7 @@ jobs:
           )
 
           foreach ($check in $checks) {
-            $appDir = Join-Path $env:SCOOP "apps\\$($check.App)\\current"
+            $appDir = Join-Path $env:SCOOP "apps\$($check.App)\current"
             $exe = Join-Path $appDir $check.Executable
             if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
               throw "$($check.Name) executable was not extracted into Scoop: $exe"
@@ -131,14 +133,14 @@ jobs:
             Write-Host "PASS: shortcut resolves to $target"
           }
 
-          $asar = Join-Path $env:SCOOP 'apps\\yogurt\\current\\resources\\app.asar'
+          $asar = Join-Path $env:SCOOP 'apps\yogurt\current\resources\app.asar'
           if (-not (Test-Path -LiteralPath $asar -PathType Leaf)) {
             throw 'Yogurt resources/app.asar was not extracted from its nested 7z payload.'
           }
           Write-Host 'PASS: Yogurt nested application payload is present.'
 
       - name: Uninstall both apps and verify Scoop app directories are removed
-        if: always()
+        if: always() && steps.setup.outcome == 'success'
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -147,7 +149,7 @@ jobs:
             if ($LASTEXITCODE -ne 0) {
               throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)."
             }
-            $appDir = Join-Path $env:SCOOP "apps\\$name"
+            $appDir = Join-Path $env:SCOOP "apps\$name"
             if (Test-Path -LiteralPath $appDir) {
               throw "$name application files remain after Scoop uninstall: $appDir"
             }
