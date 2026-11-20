@@ -144,11 +144,12 @@ jobs:
               Add-Report "$Name FAILED: $($result.Error)"
             }
             $results.Add([PSCustomObject]$result)
+            if (Test-Path -LiteralPath $appRoot) { Remove-Item -LiteralPath $appRoot -Recurse -Force }
           }
 
           Invoke-PackageTest -Name 'HapWallpaper' -Version '1.3.0' -Type 'ZIP' -Url 'https://github.com/ramiro-soler/HapWallpaper/releases/download/v1.3.0/HapWallpaper-v1.3.0-win-x64.zip' -Sha256 'f05f933e3fb939cdb678a5ae8c7c61e474fff2bed7299504cbac72c909b82512' -ExpectedExe '(?i)HapWallpaper\.exe$'
           Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)OP Keyboard Spammer\.exe$'
-          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)Yogurt\.exe$'
+          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)(^|/)Yogurt\.exe$'
           Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)updaitium\.exe$'
 
           $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
