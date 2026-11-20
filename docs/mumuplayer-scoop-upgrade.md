@@ -26,7 +26,7 @@ On the first migration:
 
 1. The hook reads the existing MuMu uninstall registration and stored install paths.
 2. It refuses conflicting registrations or a source directory outside the current Scoop app.
-3. It validates the registered root, then copies program files to `$persist_dir\\install`. The old version directory is not moved or deleted by the hook.
+3. It validates the registered root, then **moves** the program files to `$persist_dir\\install` with Robocopy `/MOVE`. The old Scoop version directory can remain temporarily, but its MuMu program binaries are no longer in it; the existing persist junctions stay attached to Scoop's persist folders.
 4. It creates junctions under the stable root for `configs`, `vms`, and `nx_device`, each pointing to the corresponding Scoop persist folder.
 5. It updates MuMu's uninstall registration, AppData and persisted absolute paths, and the `MuMuPlayerRemoteService` image path to the stable root.
 6. It starts `install_prepare` and `commit` with the same fixed, unquoted, final NSIS argument: `/D=$persist_dir\\install`.
@@ -39,7 +39,7 @@ Scoop creates its own version-local persist junctions after `pre_install`. The h
 
 Before changing files, the hook snapshots the relevant uninstall Registry keys, configuration files, and the remote-service image path. If installer preparation or commit fails, it restores those snapshots. If rollback itself fails, it retains the recovery directory and reports its path instead of deleting the recovery copies.
 
-The old versioned install root is copied, not removed. Persisted VM data is not deleted or renamed, and the hook does not manipulate `%PUBLIC%\\.MUMUVMM`.
+The old versioned program files are moved, not copied. If setup fails after the move, the hook moves the program files back to the original version directory before restoring Registry, configuration, and service paths. Persisted VM data is not deleted or renamed, and the hook does not manipulate `%PUBLIC%\\.MUMUVMM`.
 
 The `post_uninstall` hook checks Scoop's documented `$cmd` value. During `scoop update`, it removes only the old version's shortcuts and leaves the shared stable root intact. During `scoop uninstall`, it removes the service and uninstall registration only when they point to this stable root, detaches only verified junctions, and deletes the stable program files. The persisted `configs`, `vms`, and `nx_device` folders are retained. Do not use Scoop's purge option unless you intend to delete all persisted VM and configuration data as well.
 
@@ -51,7 +51,7 @@ The regression test covers:
 
 - A prior install registered in a versioned Scoop directory.
 - Injected `80011` and restoration of Registry, configuration, and service paths.
-- A non-destructive copy into the stable root.
+- A true move into the stable root, with reverse-move rollback after the injected `80011` failure.
 - First upgrade and subsequent updates using the same `/D=` destination.
 - Existing `80002` retry paths in `install_prepare` and `commit`.
 - Preservation of VM data, configuration markers, and device-engine data.
