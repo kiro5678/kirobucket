@@ -1,11 +1,11 @@
 {
     "##": "Installer Type: Inno Setup",
-    "version": "7.02",
+    "version": "8.0",
     "description": "Windows startup manager for reviewing and controlling auto-start entries",
     "homepage": "https://www.chemtable.com/autorun-organizer.htm",
     "license": "Proprietary",
     "url": "https://files.chemtable.com/ao/autorun-organizer-setup.exe",
-    "hash": "85BE6F0FC4AFF9BB874E946186301E5509FBF1E1996A9F8DDD75D7FFD9FC165F",
+    "hash": "0e1c3696efd97aaa80cc3bb28f404afc2f48aed4182a40a94bbd0c22cddbc1af",
     "pre_install": "if (!(is_admin)) { error \"$app requires administrator rights to $cmd\"; break }",
     "installer": {
         "args": [
