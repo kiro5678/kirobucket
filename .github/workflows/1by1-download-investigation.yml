@@ -105,11 +105,14 @@ jobs:
           $summary.Add('|---|---|---:|---|---|')
           foreach ($r in $results) {
             if ($r.PublisherHashMatch) {
-              $summary.Add("| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | **MATCH** |")
+              $row = '| {0} | {1} | {2} | {3} | **MATCH** |' -f $r.Url, $r.FinalUrl, $r.Bytes, $r.SHA256
+              $summary.Add($row)
             } elseif ($r.SHA256) {
-              $summary.Add("| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | no |")
+              $row = '| {0} | {1} | {2} | {3} | no |' -f $r.Url, $r.FinalUrl, $r.Bytes, $r.SHA256
+              $summary.Add($row)
             } else {
-              $summary.Add("| $($r.Url) | — | — | — | error: $($r.Error) |")
+              $row = '| {0} | — | — | — | error: {1} |' -f $r.Url, $r.Error
+              $summary.Add($row)
             }
           }
           $summary.Add('')
