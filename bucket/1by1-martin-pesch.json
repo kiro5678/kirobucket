@@ -27,5 +27,6 @@
     "autoupdate": {
         "url": "https://codecsdownload.com/download_4c6df74c1b633f5f81f55a19e9c26270/1by1_$cleanVersion.exe#/dl.7z"
     },
-    "notes": "The shim and Start Menu shortcut use /localini, keeping settings in the persisted 1by1.ini file."
+    "notes": "The shim and Start Menu shortcut use /localini, keeping settings in the persisted 1by1.ini file.",
+    "pre_install": "if (!(Test-Path \"$dir\\1by1.ini\")) { New-Item -ItemType File -Path \"$dir\\1by1.ini\" -Force | Out-Null }"
 }
