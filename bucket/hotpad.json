@@ -38,6 +38,7 @@
     },
     "notes": [
         "The public Hotpad changelog identifies this release as 1.0.0. The downloaded Setup executable currently reports an internal ProductVersion of 1.0.1; the manifest follows the publisher's public release version.",
+        "The vendor currently publishes a mutable latest-installer URL and the public changelog does not provide a release-specific SHA-256. This manifest pins the hash of the inspected installer; whenever the vendor replaces the file, verify its version and recompute the root hash before updating. The URL template alone cannot derive a trustworthy new checksum.",
         "This is a nonportable Inno Setup installation tested with /VERYSILENT and /DIR=$dir. The Inno Setup uninstaller is registered as unins000.exe and was successfully tested.",
         "The optional Interception keyboard driver is not installed by this manifest. Hotpad needs that driver to distinguish the secondary keyboard; install it separately only when you explicitly choose to enable that feature. Driver installation requires elevated permission and may require a restart.",
         "User profiles are stored under %LOCALAPPDATA%\\Hotpad\\macros.json, outside the Scoop version directory.",
