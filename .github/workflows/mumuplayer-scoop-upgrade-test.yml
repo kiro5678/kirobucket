@@ -81,6 +81,8 @@ jobs:
             'Wait-ForMuMuInstallStability',
             'Update-MuMuStoredPaths',
             'New-MuMuPersistJunction',
+            'cache_path',
+            'mumuplayer-installer-',
             'nx_device'
           )) {
             if ($scriptText -notmatch [regex]::Escape($requiredText)) {
@@ -108,6 +110,10 @@ jobs:
           function Start-Sleep {
             param([int]$Seconds, [int]$Milliseconds)
           }
+          function cache_path {
+            param([string]$App, [string]$Version, [string]$Url)
+            return Join-Path $env:TEMP "mumu-cache-miss-$App-$Version.exe"
+          }
 
           $script:MockProductVersion = $null
           $script:MockReturn80002 = $false
@@ -132,6 +138,19 @@ jobs:
 
             $action = $actionArg.Substring(8)
             $target = $directoryArg.Substring(3).Trim('"')
+
+            if (-not (Test-Path -LiteralPath $FilePath -PathType Leaf)) {
+              throw "Mock MuMu installer file is missing: $FilePath"
+            }
+            $targetPrefix = [IO.Path]::GetFullPath($target).TrimEnd('\') + '\'
+            $installerFullPath = [IO.Path]::GetFullPath($FilePath)
+            if ($installerFullPath.StartsWith($targetPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+              throw "MuMu installer must be staged outside its /D target directory: $FilePath"
+            }
+            $targetRootFiles = @(Get-ChildItem -LiteralPath $target -File -Force -ErrorAction SilentlyContinue)
+            if ($targetRootFiles.Count -gt 0) {
+              throw "MuMu install target contains unexpected root files: $($targetRootFiles[0].FullName)"
+            }
 
             if ($action -eq 'install_prepare' -and
                 $script:MockReturn80002 -and
@@ -313,6 +332,7 @@ jobs:
           @(
             '## MuMuPlayer Scoop upgrade regression'
             ''
+            '- The installer ran from Scoop cache/staging outside the /D target directory; the target root contained no installer executable.'
             '- The first-install hook completed with a mock NX-main installer.'
             '- The second install simulated an upgrade from 6.8.9.0 to 6.8.15.0.'
             '- Error 80002 was injected once in install_prepare and the version-aware retry succeeded.'
