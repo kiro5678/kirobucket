@@ -1,0 +1,488 @@
+name: Yoslion Download Package Inspection
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - "bucket/yoslion.json"
+      - ".github/workflows/yoslion-package-inspection.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/yoslion.json"
+      - ".github/workflows/yoslion-package-inspection.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify and inspect official Windows installer
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download, verify and inspect installer
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE "bucket\yoslion.json"
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $version = [string]$manifest.version
+          if ($version -notmatch '^\d+(?:\.\d+){1,3}$') {
+            throw "Invalid Yoslion manifest version: $version"
+          }
+
+          $url = ([string]$manifest.url) -replace '#/dl\.7z$', ''
+          $expectedUrl = "https://updates.yoslion.com/release/windows/x86_64/$version/Yoslion%20Download_$version_x64-setup.exe"
+          if ($url -ne $expectedUrl) {
+            throw "Manifest installer URL does not match the official versioned Windows endpoint. Expected $expectedUrl; got $url."
+          }
+
+          $expectedHash = ([string]$manifest.hash).ToLowerInvariant()
+          if ($expectedHash -notmatch '^[a-f0-9]{64}$') {
+            throw "Manifest SHA-256 is missing or malformed."
+          }
+          $expectedFileName = "Yoslion Download_" + $version + "_x64-setup.exe"
+
+          $root = Join-Path $env:RUNNER_TEMP "yoslion-package-inspection"
+          $installer = Join-Path $root $expectedFileName
+          $extractDir = Join-Path $root "extracted"
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          function Add-Report([string]$Text) {
+            $report.Add($Text)
+            Write-Host $Text
+          }
+
+          $downloadPagePath = Join-Path $root "official-download-page.html"
+          $downloadPage = Invoke-WebRequest -Uri "https://download.yoslion.com/downloads" -MaximumRedirection 10 -TimeoutSec 90
+          if ([int]$downloadPage.StatusCode -ne 200) {
+            throw "Official download page returned HTTP $([int]$downloadPage.StatusCode)."
+          }
+          $downloadPage.Content | Set-Content -LiteralPath $downloadPagePath -Encoding utf8
+          Add-Report "Official download page HTTP status: $([int]$downloadPage.StatusCode)"
+          Add-Report "Official download page title: $([regex]::Match($downloadPage.Content, '(?is)<title[^>]*>(.*?)</title>').Groups[1].Value)"
+
+          $escapedFileName = [regex]::Escape($expectedFileName)
+          $metadataPattern = "(?is)<dt[^>]*>\s*Installer\s*</dt>\s*<dd[^>]*>\s*$escapedFileName\s*</dd>.*?<dt[^>]*>\s*Size\s*</dt>\s*<dd[^>]*>[^<]*\((?<size>[\d,]+)\s+bytes\)</dd>.*?<p[^>]*>\s*SHA-256\s*</p>\s*<code[^>]*>\s*(?<hash>[a-f0-9]{64})\s*</code>"
+          $metadata = [regex]::Match($downloadPage.Content, $metadataPattern)
+          if (-not $metadata.Success) {
+            throw "Could not extract the official size and SHA-256 for $expectedFileName from the publisher's download page."
+          }
+
+          $expectedSize = [long]($metadata.Groups['size'].Value -replace ',', '')
+          $publishedHash = $metadata.Groups['hash'].Value.ToLowerInvariant()
+          if ($publishedHash -ne $expectedHash) {
+            throw "Manifest SHA-256 does not match the publisher's page. Manifest: $expectedHash; publisher: $publishedHash."
+          }
+          Add-Report "Manifest version: $version"
+          Add-Report "Official installer: $expectedFileName"
+          Add-Report "Publisher-published size: $expectedSize bytes"
+          Add-Report "Publisher-published SHA-256: $publishedHash"
+
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 600
+          if (-not (Test-Path -LiteralPath $installer -PathType Leaf)) {
+            throw "Official installer download did not produce a file."
+          }
+
+          $file = Get-Item -LiteralPath $installer
+          $hash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($file.Length -ne $expectedSize) {
+            throw "Published size mismatch. Expected $expectedSize bytes; got $($file.Length)."
+          }
+          if ($hash -ne $expectedHash) {
+            throw "Published SHA-256 mismatch. Expected $expectedHash; got $hash."
+          }
+
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+          Add-Report "File: $($file.Name)"
+          Add-Report "Size: $($file.Length) bytes"
+          Add-Report "SHA256: $hash"
+          Add-Report "Authenticode status: $($signature.Status)"
+          Add-Report "Signer: $($signature.SignerCertificate.Subject)"
+          Add-Report "Product: $($versionInfo.ProductName)"
+          Add-Report "Description: $($versionInfo.FileDescription)"
+          Add-Report "File version: $($versionInfo.FileVersion)"
+          Add-Report "Product version: $($versionInfo.ProductVersion)"
+
+          if ($signature.Status -ne "Valid") {
+            throw "The downloaded installer does not have a valid Authenticode signature."
+          }
+          if ($signature.SignerCertificate.Subject -notmatch "Palacios Software Group LLC") {
+            throw "Unexpected Authenticode publisher."
+          }
+
+          $bytes = [System.IO.File]::ReadAllBytes($installer)
+          $ascii = [System.Text.Encoding]::ASCII.GetString($bytes)
+          $unicode = [System.Text.Encoding]::Unicode.GetString($bytes)
+          $strings = $ascii + [Environment]::NewLine + $unicode
+          $markers = @(
+            "Nullsoft|NSIS",
+            "Inno Setup",
+            "WiX Toolset|Windows Installer XML",
+            "Squirrel",
+            "Tauri",
+            "Electron",
+            "MSIX|AppX",
+            "InstallShield"
+          )
+          Add-Report ""
+          Add-Report "Installer-engine string markers:"
+          foreach ($marker in $markers) {
+            $found = [regex]::IsMatch($strings, $marker, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+            Add-Report "  $marker : $found"
+          }
+
+          $sevenZip = "C:\Program Files\7-Zip\7z.exe"
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command "7z.exe" -ErrorAction SilentlyContinue
+            if (-not $command) {
+              throw "7-Zip was not found on the Windows runner."
+            }
+            $sevenZip = $command.Source
+          }
+
+          $listing = Join-Path $root "7zip-listing.txt"
+          $listOutput = & $sevenZip l -slt $installer 2>&1
+          $listExit = $LASTEXITCODE
+          $listOutput | Set-Content -LiteralPath $listing -Encoding utf8
+          Add-Report ""
+          Add-Report "7-Zip listing exit code: $listExit"
+
+          $extractLog = Join-Path $root "7zip-extraction.log"
+          $extractOutput = & $sevenZip x -y "-o$extractDir" $installer 2>&1
+          $extractExit = $LASTEXITCODE
+          $extractOutput | Set-Content -LiteralPath $extractLog -Encoding utf8
+          Add-Report "7-Zip extraction exit code: $extractExit"
+
+          $files = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+          Add-Report "Extracted file count: $($files.Count)"
+          Add-Report "Extracted files and directories (first 250 files):"
+          foreach ($entry in Get-ChildItem -LiteralPath $extractDir -Force -Recurse -ErrorAction SilentlyContinue |
+              Sort-Object FullName | Select-Object -First 250) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $entry.FullName).Replace('\', '/')
+            if ($entry.PSIsContainer) {
+              Add-Report "  [DIR]  $relative"
+            } else {
+              Add-Report "  [FILE] $relative [$($entry.Length) bytes]"
+            }
+          }
+
+          $executables = @($files | Where-Object { $_.Extension -ieq ".exe" })
+          Add-Report ""
+          Add-Report "Extracted executables:"
+          foreach ($exe in $executables) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $exe.FullName).Replace('\', '/')
+            $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exe.FullName)
+            Add-Report "  $relative | $($exe.Length) bytes | Product=$($vi.ProductName) | Description=$($vi.FileDescription) | Version=$($vi.FileVersion)"
+          }
+
+          $nestedArchives = @($files | Where-Object { $_.Extension -match '^\.(7z|zip|cab|msi|exe)$' })
+          Add-Report ""
+          Add-Report "Nested archives or installer-like files:"
+          foreach ($nested in $nestedArchives) {
+            $relative = [System.IO.Path]::GetRelativePath($extractDir, $nested.FullName).Replace('\', '/')
+            Add-Report "  $relative [$($nested.Length) bytes]"
+            if ($nested.Extension -match '^\.(7z|zip|cab|msi)$') {
+              $nestedOutput = & $sevenZip l -slt $nested.FullName 2>&1
+              $nestedExit = $LASTEXITCODE
+              Add-Report "    7-Zip nested listing exit code: $nestedExit"
+              foreach ($line in ($nestedOutput | Select-Object -First 80)) {
+                Add-Report "    $line"
+              }
+            }
+          }
+
+          Add-Report ""
+          $registryTargets = @(
+            "HKCU:\Software\Google\Chrome\NativeMessagingHosts",
+            "HKCU:\Software\Microsoft\Edge\NativeMessagingHosts",
+            "HKCU:\Software\Mozilla\NativeMessagingHosts",
+            "HKLM:\Software\Google\Chrome\NativeMessagingHosts",
+            "HKLM:\Software\Microsoft\Edge\NativeMessagingHosts",
+            "HKLM:\Software\Mozilla\NativeMessagingHosts"
+          )
+          $registryBeforeDirectLaunch = @{}
+          foreach ($keyPath in $registryTargets) {
+            $registryBeforeDirectLaunch[$keyPath] = if (Test-Path -LiteralPath $keyPath) {
+              @(Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue | ForEach-Object { $_.PSChildName })
+            } else { @() }
+          }
+
+          Add-Report "Direct execution test of the 7-Zip-extracted main executable:"
+          $extractedMain = Join-Path $extractDir "yoslion-download.exe"
+          if (Test-Path -LiteralPath $extractedMain -PathType Leaf) {
+            try {
+              $directProcess = Start-Process -FilePath $extractedMain -WorkingDirectory $extractDir -PassThru
+              Add-Report "  Process started: PID=$($directProcess.Id)"
+              $directExited = $directProcess.WaitForExit(12000)
+              $directProcess.Refresh()
+              if ($directExited -or $directProcess.HasExited) {
+                Add-Report "  Exited within 12 seconds. ExitCode=$($directProcess.ExitCode)"
+              } else {
+                Add-Report "  Stayed running for 12 seconds; terminated test process."
+                & taskkill.exe /PID $directProcess.Id /T /F | Out-Null
+              }
+            } catch {
+              Add-Report "  Direct launch failed: $($_.Exception.Message)"
+            }
+          } else {
+            Add-Report "  Main executable was not found at the extracted root."
+          }
+
+          Add-Report ""
+          Add-Report ""
+          Add-Report "Native Messaging registry state after direct launch (before vendor setup):"
+          foreach ($keyPath in $registryTargets) {
+            if (-not (Test-Path -LiteralPath $keyPath)) { continue }
+            foreach ($key in Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue) {
+              $wasPresent = $registryBeforeDirectLaunch[$keyPath] -contains $key.PSChildName
+              $properties = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+              $defaultValue = $properties.PSObject.Properties |
+                Where-Object { $_.Name -eq '(default)' } | Select-Object -First 1
+              Add-Report "  $(if (-not $wasPresent) { '[NEW] ' } else { '' })$keyPath\$($key.PSChildName) | $($properties.'(default)')"
+            }
+          }
+
+          $nativeManifestDir = Join-Path $env:LOCALAPPDATA "YoslionDownload\NativeMessagingHosts"
+          if (Test-Path -LiteralPath $nativeManifestDir -PathType Container) {
+            Add-Report "Native host manifest files after direct launch:"
+            foreach ($manifestFile in Get-ChildItem -LiteralPath $nativeManifestDir -File -Filter "*.json") {
+              Add-Report "  $($manifestFile.FullName)"
+              Get-Content -LiteralPath $manifestFile.FullName -Raw | ForEach-Object { Add-Report "    $_" }
+            }
+          } else {
+            Add-Report "Native host manifest directory was not created by direct launch."
+          }
+
+          $appPathFile = Join-Path $env:LOCALAPPDATA "YoslionDownload\app-path"
+          if (Test-Path -LiteralPath $appPathFile -PathType Leaf) {
+            Add-Report "Yoslion app-path file: $(Get-Content -LiteralPath $appPathFile -Raw)"
+          }
+
+          Add-Report ""
+          Add-Report "Scoop manifest post_install/pre_uninstall lifecycle simulation:"
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE "bucket\yoslion.json"
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+            throw "bucket/yoslion.json was not found in the checked-out branch."
+          }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          $simRoot = Join-Path $root "scoop-hook-simulation"
+          $simScoop = Join-Path $simRoot "scoop"
+          $simAppDir = Join-Path $simScoop "apps\yoslion\current"
+          $simPersist = Join-Path $simScoop "persist\yoslion"
+          $simLocalAppData = Join-Path $simRoot "LocalAppData"
+          New-Item -ItemType Directory -Path $simAppDir -Force | Out-Null
+          New-Item -ItemType Directory -Path $simLocalAppData -Force | Out-Null
+          Copy-Item -Path (Join-Path $extractDir "*") -Destination $simAppDir -Recurse -Force
+
+          $savedLocalAppData = $env:LOCALAPPDATA
+          $env:LOCALAPPDATA = $simLocalAppData
+          $scoopdir = $simScoop
+          $app = "yoslion"
+          $version = "1.1.2"
+          $dir = $simAppDir
+          $persist_dir = $simPersist
+          $global = $false
+
+          Invoke-Expression ($manifest.post_install -join [Environment]::NewLine)
+
+          $dataLink = Join-Path $simLocalAppData "YoslionDownload"
+          $webViewLink = Join-Path $simLocalAppData "com.yoslion.download"
+          foreach ($linkPath in @($dataLink, $webViewLink)) {
+            $link = Get-Item -LiteralPath $linkPath -Force
+            if (($link.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -eq 0) {
+              throw "post_install did not create the expected AppData junction: $linkPath"
+            }
+          }
+
+          $persistData = Join-Path $simPersist "YoslionDownload"
+          $persistWebView = Join-Path $simPersist "com.yoslion.download"
+          $chromeHost = Join-Path $dataLink "NativeMessagingHosts\com.yoslion.download.json"
+          $firefoxHost = Join-Path $dataLink "NativeMessagingHosts\com.yoslion.download.firefox.json"
+          $chromeJson = Get-Content -LiteralPath $chromeHost -Raw | ConvertFrom-Json
+          $firefoxJson = Get-Content -LiteralPath $firefoxHost -Raw | ConvertFrom-Json
+          if ($chromeJson.path -ne (Join-Path $simAppDir "yoslion-native-host.exe")) {
+            throw "Chrome Native Messaging JSON does not point to the Scoop native host."
+          }
+          if ($chromeJson.allowed_origins[0] -ne "chrome-extension://jbddlgncoljibdenillmmibcegpgicnb/") {
+            throw "Chrome Native Messaging extension origin is incorrect."
+          }
+          if ($firefoxJson.allowed_extensions[0] -ne "yoslion-download@yoslion.com") {
+            throw "Firefox Native Messaging extension ID is incorrect."
+          }
+          $simRegistry = @(
+            "HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.yoslion.download",
+            "HKCU:\Software\Microsoft\Edge\NativeMessagingHosts\com.yoslion.download",
+            "HKCU:\Software\Mozilla\NativeMessagingHosts\com.yoslion.download"
+          )
+          foreach ($keyPath in $simRegistry) {
+            if (-not (Test-Path -LiteralPath $keyPath)) {
+              throw "post_install did not create the browser registry entry: $keyPath"
+            }
+          }
+          Add-Report "  PASS: two AppData junctions, Chrome/Edge/Firefox manifests and registry entries created."
+          Add-Report "  Chrome host path: $($chromeJson.path)"
+          Add-Report "  Firefox allowed extension: $($firefoxJson.allowed_extensions[0])"
+
+          Set-Content -LiteralPath (Join-Path $persistData "scoop-persist-test.txt") -Value "Keep this user data after uninstall."
+          Set-Content -LiteralPath (Join-Path $persistWebView "webview-persist-test.txt") -Value "Keep this WebView profile data after uninstall."
+
+          Invoke-Expression ($manifest.pre_uninstall -join [Environment]::NewLine)
+
+          foreach ($keyPath in $simRegistry) {
+            if (Test-Path -LiteralPath $keyPath) {
+              throw "pre_uninstall left an owned browser registry entry behind: $keyPath"
+            }
+          }
+          foreach ($linkPath in @($dataLink, $webViewLink)) {
+            if (Test-Path -LiteralPath $linkPath) {
+              throw "pre_uninstall did not remove an owned AppData junction: $linkPath"
+            }
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $persistData "scoop-persist-test.txt"))) {
+            throw "pre_uninstall removed the persisted Yoslion user data."
+          }
+          if (-not (Test-Path -LiteralPath (Join-Path $persistWebView "webview-persist-test.txt"))) {
+            throw "pre_uninstall removed the persisted WebView2 data."
+          }
+
+          Add-Report "  PASS: uninstall removed only the owned registrations and junctions."
+          Add-Report "  PASS: app data and WebView2 test files remain in Scoop persist."
+          $env:LOCALAPPDATA = $savedLocalAppData
+
+          Add-Report "Vendor silent-install experiment (isolated disposable GitHub-hosted runner):"
+          $installDir = Join-Path $root "installed"
+          New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+          $registryTargets += @(
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
+            "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall",
+            "HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+          )
+          $registryBefore = @{}
+          foreach ($keyPath in $registryTargets) {
+            $registryBefore[$keyPath] = if (Test-Path -LiteralPath $keyPath) {
+              @(Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue | ForEach-Object { $_.PSChildName })
+            } else { @() }
+          }
+
+          $installerProcess = Start-Process -FilePath $installer -ArgumentList "/S /D=$installDir" -PassThru
+          Add-Report "  Silent setup PID: $($installerProcess.Id)"
+          $installExited = $installerProcess.WaitForExit(120000)
+          $installerProcess.Refresh()
+          if (-not $installExited -and -not $installerProcess.HasExited) {
+            Add-Report "  Silent setup did not exit within 120 seconds; terminating it."
+            & taskkill.exe /PID $installerProcess.Id /T /F | Out-Null
+            throw "Yoslion NSIS silent installation timed out."
+          }
+          Add-Report "  Silent setup exit code: $($installerProcess.ExitCode)"
+          Add-Report "  Requested install directory: $installDir"
+
+          $installedFiles = @(Get-ChildItem -LiteralPath $installDir -File -Recurse -Force -ErrorAction SilentlyContinue)
+          Add-Report "  Installed file count in requested directory: $($installedFiles.Count)"
+          foreach ($installed in $installedFiles | Sort-Object FullName | Select-Object -First 250) {
+            $relative = [System.IO.Path]::GetRelativePath($installDir, $installed.FullName).Replace('\', '/')
+            Add-Report "  [FILE] $relative [$($installed.Length) bytes]"
+          }
+
+          Add-Report ""
+          Add-Report "Changed registry keys and values after install:"
+          foreach ($keyPath in $registryTargets) {
+            if (-not (Test-Path -LiteralPath $keyPath)) { continue }
+            foreach ($key in Get-ChildItem -LiteralPath $keyPath -ErrorAction SilentlyContinue) {
+              $wasPresent = $registryBefore[$keyPath] -contains $key.PSChildName
+              $properties = Get-ItemProperty -LiteralPath $key.PSPath -ErrorAction SilentlyContinue
+              $summary = ($properties.PSObject.Properties |
+                Where-Object { $_.Name -notmatch '^PS' } |
+                ForEach-Object { "$($_.Name)=$($_.Value)" }) -join "; "
+              if (-not $wasPresent -or $keyPath -match 'NativeMessagingHosts|Uninstall') {
+                Add-Report "  $keyPath\$($key.PSChildName) | $summary"
+                foreach ($child in Get-ChildItem -LiteralPath $key.PSPath -Recurse -ErrorAction SilentlyContinue) {
+                  $childProperties = Get-ItemProperty -LiteralPath $child.PSPath -ErrorAction SilentlyContinue
+                  $childSummary = ($childProperties.PSObject.Properties |
+                    Where-Object { $_.Name -notmatch '^PS' } |
+                    ForEach-Object { "$($_.Name)=$($_.Value)" }) -join "; "
+                  Add-Report "    $($child.Name) | $childSummary"
+                }
+              }
+            }
+          }
+
+          Add-Report ""
+          Add-Report ""
+          Add-Report "Native host manifest files after vendor silent setup:"
+          $installedManifestDir = Join-Path $env:LOCALAPPDATA "YoslionDownload\NativeMessagingHosts"
+          if (Test-Path -LiteralPath $installedManifestDir -PathType Container) {
+            foreach ($manifestFile in Get-ChildItem -LiteralPath $installedManifestDir -File -Filter "*.json") {
+              Add-Report "  $($manifestFile.Name):"
+              Get-Content -LiteralPath $manifestFile.FullName -Raw | ForEach-Object { Add-Report "    $_" }
+            }
+          } else {
+            Add-Report "  Native messaging host manifest directory is absent."
+          }
+          $installedAppPath = Join-Path $env:LOCALAPPDATA "YoslionDownload\app-path"
+          if (Test-Path -LiteralPath $installedAppPath -PathType Leaf) {
+            Add-Report "  app-path: $(Get-Content -LiteralPath $installedAppPath -Raw)"
+          }
+
+          Add-Report "Potential Yoslion data/configuration directories:"
+          foreach ($baseDir in @($env:APPDATA, $env:LOCALAPPDATA, $env:PROGRAMDATA)) {
+            if (-not (Test-Path -LiteralPath $baseDir -PathType Container)) { continue }
+            foreach ($candidate in Get-ChildItem -LiteralPath $baseDir -Directory -Force -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -match 'Yoslion|Palacios' }) {
+              Add-Report "  $($candidate.FullName)"
+              foreach ($item in Get-ChildItem -LiteralPath $candidate.FullName -Force -Recurse -ErrorAction SilentlyContinue |
+                  Select-Object -First 100) {
+                Add-Report "    $($item.FullName)"
+              }
+            }
+          }
+
+          $installedMain = Join-Path $installDir "yoslion-download.exe"
+          if (Test-Path -LiteralPath $installedMain -PathType Leaf) {
+            Add-Report ""
+            Add-Report "Installed application launch smoke test:"
+            $appProcess = Start-Process -FilePath $installedMain -WorkingDirectory $installDir -PassThru
+            Add-Report "  Process started: PID=$($appProcess.Id)"
+            $appExited = $appProcess.WaitForExit(12000)
+            $appProcess.Refresh()
+            if ($appExited -or $appProcess.HasExited) {
+              Add-Report "  Exited within 12 seconds. ExitCode=$($appProcess.ExitCode)"
+            } else {
+              Add-Report "  Stayed running for 12 seconds; terminated test process."
+              & taskkill.exe /PID $appProcess.Id /T /F | Out-Null
+            }
+          } else {
+            Add-Report "Installed main executable was not found at the requested install directory root."
+          }
+
+          $reportPath = Join-Path $root "yoslion-inspection-report.txt"
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+
+      - name: Upload installer inspection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: yoslion-package-inspection
+          path: |
+            ${{ runner.temp }}/yoslion-package-inspection/yoslion-inspection-report.txt
+            ${{ runner.temp }}/yoslion-package-inspection/7zip-listing.txt
+            ${{ runner.temp }}/yoslion-package-inspection/7zip-extraction.log
+            ${{ runner.temp }}/yoslion-package-inspection/official-download-page.html
+          if-no-files-found: warn
+          retention-days: 30
