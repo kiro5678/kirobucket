@@ -1,0 +1,248 @@
+name: Requested App Package Inspection
+on:
+  pull_request:
+    paths: [".github/workflows/requested-app-package-inspection.yml", "bucket/selfsemester.json", "bucket/splash-plus.json"]
+  push:
+    branches: ["**"]
+    paths: [".github/workflows/requested-app-package-inspection.yml", "bucket/selfsemester.json", "bucket/splash-plus.json"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Install 7-Zip
+        shell: pwsh
+        run: |
+          choco install 7zip.install --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip install failed." }
+      - name: Extract and verify SelfSemester NSIS setup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $work = Join-Path $env:RUNNER_TEMP "inspect\selfsemester"
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $url = "https://github.com/munitkala/selfsemester/releases/download/v0.8.0/SelfSemester_0.8.0_x64-setup.exe"
+          $expected = "0ca3ca9f173717fb3be2a2dc2bb2c1c0656bdc6c1789b612a962e9cefd42fdba"
+          $file = Join-Path $work "SelfSemester-setup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $file -MaximumRedirection 10 -TimeoutSec 900
+          $actual = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "SelfSemester SHA-256 mismatch: $actual" }
+          $sevenZip = "$env:ProgramFiles\7-Zip\7z.exe"
+          $listing = & $sevenZip l -slt $file 2>&1
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content (Join-Path $work "listing.txt")
+          if ($listExit -ne 0) { throw "7-Zip cannot list SelfSemester setup." }
+          $out = Join-Path $work "extracted"
+          New-Item -ItemType Directory -Path $out -Force | Out-Null
+          & $sevenZip x $file "-o$out" -y -bd 2>&1 | Set-Content (Join-Path $work "extract.log")
+          if ($LASTEXITCODE -gt 1) { throw "SelfSemester NSIS extraction failed." }
+          $files = @(Get-ChildItem $out -File -Recurse -Force)
+          $main = @($files | Where-Object Name -IEQ "SelfSemester.exe")
+          if (-not $main) { throw "No SelfSemester.exe found in extracted payload." }
+          @("SHA256: $actual","SelfSemester.exe: $($main[0].FullName)","Files: $($files.Count)") -join [Environment]::NewLine | Tee-Object (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Test and extract Splash Plus PEXT ZIP package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $work = Join-Path $env:RUNNER_TEMP "inspect\splash-plus"
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $url = "https://github.com/Ad1Bb/Splash-Plus/releases/download/2.0/SplashPlus_2_0.pext"
+          $expected = "be1ae157d96f1d499c0cc536942c6ebfe1ecd280ed120b6443141d4433b95da3"
+          $file = Join-Path $work "SplashPlus_2_0.pext"
+          Invoke-WebRequest -Uri $url -OutFile $file -MaximumRedirection 10 -TimeoutSec 900
+          $actual = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "Splash Plus SHA-256 mismatch: $actual" }
+          $sevenZip = "$env:ProgramFiles\7-Zip\7z.exe"
+          & $sevenZip t $file 2>&1 | Set-Content (Join-Path $work "test.log")
+          if ($LASTEXITCODE -ne 0) { throw "Splash Plus PEXT is not a valid ZIP archive." }
+          $out = Join-Path $work "extracted"
+          New-Item -ItemType Directory -Path $out -Force | Out-Null
+          & $sevenZip x $file "-o$out" -y -bd 2>&1 | Set-Content (Join-Path $work "extract.log")
+          if ($LASTEXITCODE -gt 1) { throw "Splash Plus PEXT extraction failed." }
+          foreach ($name in @("SplashAddonPlus.dll","extension.yaml","icon.png")) {
+            if (-not (Test-Path (Join-Path $out $name) -PathType Leaf)) { throw "PEXT member missing: $name" }
+          }
+          @("SHA256: $actual","PEXT extraction: PASS","Required files: SplashAddonPlus.dll, extension.yaml, icon.png","Classification: Playnite extension; no standalone executable or shortcut.") -join [Environment]::NewLine | Tee-Object (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Inspect and administratively extract Synergy MSI
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $work = Join-Path $env:RUNNER_TEMP "inspect\synergy"
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $url = "https://symless.com/synergy/download/package/synergy-personal-v3/windows-10/synergy-3.9.1-windows-x64.msi"
+          $msi = Join-Path $work "synergy-3.9.1-windows-x64.msi"
+          Invoke-WebRequest -Uri $url -OutFile $msi -MaximumRedirection 10 -TimeoutSec 900
+          if ((Get-Item $msi).Length -lt 100KB) {
+            $firstBytes = Get-Content -LiteralPath $msi -TotalCount 1 -ErrorAction SilentlyContinue
+            $report = @(
+              "Synergy official installer URL returned a small HTML/document response, not a validated MSI."
+              "Downloaded response size: $((Get-Item $msi).Length) bytes"
+              "Response preview: $firstBytes"
+              "Blocked at the official guest-download gate; no MSI hash, ProductCode, or extraction result is claimed."
+            )
+            $report | Tee-Object (Join-Path $work "inspection.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
+            Write-Warning "Synergy download endpoint returned the guest-download page, not an MSI file."
+            exit 0
+          }
+          $sha = (Get-FileHash $msi -Algorithm SHA256).Hash.ToLowerInvariant()
+          $wi = New-Object -ComObject WindowsInstaller.Installer
+          $db = $wi.OpenDatabase($msi, 0)
+          function Get-MsiProperty([string]$Name) {
+            $view = $db.OpenView("SELECT [Value] FROM [Property] WHERE [Property] = '$Name'")
+            $view.Execute()
+            $record = $view.Fetch()
+            if ($null -eq $record) { return "" }
+            return $record.StringData(1)
+          }
+          $name = Get-MsiProperty "ProductName"
+          $version = Get-MsiProperty "ProductVersion"
+          $code = Get-MsiProperty "ProductCode"
+          if (-not $code) { throw "Could not read the MSI ProductCode." }
+          $out = Join-Path $work "admin-extracted"
+          New-Item -ItemType Directory -Path $out -Force | Out-Null
+          $log = Join-Path $work "msiexec-admin.log"
+          $args = '/a "' + $msi + '" /qn TARGETDIR="' + $out + '" /L*v "' + $log + '"'
+          $proc = Start-Process msiexec.exe -ArgumentList $args -Wait -PassThru
+          if ($proc.ExitCode -notin @(0,3010)) { throw "Synergy MSI admin extraction failed: $($proc.ExitCode)" }
+          $files = @(Get-ChildItem $out -File -Recurse -Force)
+          if (-not $files) { throw "Synergy MSI administrative extraction produced no files." }
+          @("SHA256: $sha","ProductName: $name","ProductVersion: $version","ProductCode: $code","Extracted files: $($files.Count)") -join [Environment]::NewLine | Tee-Object (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Discover the 1by1 official download link
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $url = "https://mpesch3.de/1by1.html"
+          $page = Invoke-WebRequest -Uri $url -TimeoutSec 60
+          $page.Content | Set-Content -LiteralPath (Join-Path $env:RUNNER_TEMP "1by1-official-page.html") -Encoding utf8
+          $links = @($page.Links | Where-Object { $_.href -match "(?i)1by1|download" })
+          if ($links.Count -eq 0) {
+            Write-Host "No direct 1by1 download link was exposed in the official page HTML."
+          } else {
+            foreach ($link in $links) {
+              $resolved = [Uri]::new([Uri]$url, [string]$link.href).AbsoluteUri
+              Write-Host ("Link text: {0}; href: {1}" -f $link.innerText, $resolved)
+            }
+          }
+          Write-Host "Official page metadata as seen by the Windows runner:"
+          ($page.Content -split "`n" | Select-String -Pattern "Version|1by1_217|1by1_216|SHA-256" | Select-Object -First 20) | ForEach-Object { Write-Host $_.Line }
+      - name: Test 1by1 2.17 from the developer-listed MajorGeeks mirror
+        if: always()
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          $work = Join-Path $env:RUNNER_TEMP "inspect\1by1"
+          New-Item -ItemType Directory -Path $work -Force | Out-Null
+          $page = Invoke-WebRequest -Uri "https://mpesch3.de/1by1.html" -TimeoutSec 60
+          $versionMatch = [regex]::Match($page.Content, '(?is)Version\s+(?<version>\d+\.\d+)\s*[·|<]')
+          if ($versionMatch.Success) {
+            "Official page current version: $($versionMatch.Groups['version'].Value)" | Set-Content (Join-Path $work "report.txt")
+          } else {
+            "Official page current version not found in runner response." | Set-Content (Join-Path $work "report.txt")
+          }
+          $url = "https://www.majorgeeks.com/files/mg/getmirror/1by1,1.html"
+          $file = Join-Path $work "1by1-2.17-sfx.exe"
+          try {
+            Invoke-WebRequest -Uri $url -OutFile $file -MaximumRedirection 10 -TimeoutSec 900
+            $actual = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            $expected = "e6b586242513766fc5d55bcc3fc5cdb2fab0952ea40c3cbdeb5f62ea58977d91"
+            Add-Content -LiteralPath (Join-Path $work "report.txt") -Value "Mirror URL: $url"
+            Add-Content -LiteralPath (Join-Path $work "report.txt") -Value "Downloaded file size: $((Get-Item -LiteralPath $file).Length)"
+            Add-Content -LiteralPath (Join-Path $work "report.txt") -Value "Downloaded SHA-256: $actual"
+            if ($actual -ne $expected) {
+              Add-Content -LiteralPath (Join-Path $work "report.txt") -Value "HASH MISMATCH: this mirror response is not the official 2.17 package."
+              Write-Warning "1by1 mirror did not match the developer-published 2.17 SHA-256."
+            } else {
+              $sevenZip = "$env:ProgramFiles\7-Zip\7z.exe"
+              $listing = & $sevenZip l -slt $file 2>&1
+              $listExit = $LASTEXITCODE
+              $listing | Set-Content (Join-Path $work "7zip-listing.txt")
+              if ($listExit -ne 0) { throw "7-Zip could not list the verified 1by1 SFX package." }
+              $out = Join-Path $work "extracted"
+              New-Item -ItemType Directory -Path $out -Force | Out-Null
+              & $sevenZip x $file "-o$out" -y -bd 2>&1 | Set-Content (Join-Path $work "7zip-extraction.log")
+              if ($LASTEXITCODE -gt 1) { throw "7-Zip could not extract the verified 1by1 SFX package." }
+              $files = @(Get-ChildItem -LiteralPath $out -File -Recurse -Force)
+              $exe = @($files | Where-Object { $_.Name -ieq "1by1.exe" })
+              if (-not $exe) { throw "Verified 1by1 package has no 1by1.exe after extraction." }
+              Add-Content -LiteralPath (Join-Path $work "report.txt") -Value "PASS: official 2.17 SHA-256 matched and extracted 1by1.exe."
+              Add-Content -LiteralPath (Join-Path $work "report.txt") -Value "Extracted files: $($files.Count)"
+            }
+          } catch {
+            Add-Content -LiteralPath (Join-Path $work "report.txt") -Value "Mirror download/extraction could not be validated: $($_.Exception.Message)"
+            Write-Warning $_.Exception.Message
+          }
+          Get-Content -LiteralPath (Join-Path $work "report.txt") | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Test Scoop manifests, checkver, persist, and shortcuts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+          Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri "https://get.scoop.sh" | Invoke-Expression
+          $scoopRoot = Join-Path $env:USERPROFILE "scoop"
+          $bucketPath = Join-Path $scoopRoot "buckets\kirobucket"
+          New-Item -ItemType Directory -Path (Split-Path $bucketPath -Parent) -Force | Out-Null
+          git clone --no-hardlinks "$env:GITHUB_WORKSPACE" $bucketPath
+          if ($LASTEXITCODE -ne 0) { throw "Could not clone the PR checkout as a local Scoop bucket." }
+          scoop install 7zip
+          if ($LASTEXITCODE -ne 0) { throw "Scoop could not install its 7-Zip dependency." }
+
+          $checkver = Join-Path $scoopRoot "apps\scoop\current\bin\checkver.ps1"
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) { throw "Scoop checkver.ps1 was not found." }
+          $manifestDir = Join-Path $bucketPath "bucket"
+          & $checkver -App selfsemester -Dir $manifestDir
+          if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed for SelfSemester." }
+          & $checkver -App splash-plus -Dir $manifestDir
+          if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed for Splash Plus." }
+
+          scoop install selfsemester
+          if ($LASTEXITCODE -ne 0) { throw "Scoop install failed for SelfSemester." }
+          $selfDir = Join-Path $scoopRoot "apps\selfsemester\current"
+          $persistData = Join-Path $scoopRoot "persist\selfsemester\data"
+          $selfExe = Join-Path $selfDir "selfsemester.exe"
+          $launcher = Join-Path $selfDir "SelfSemester.vbs"
+          if (-not (Test-Path -LiteralPath $selfExe -PathType Leaf)) { throw "SelfSemester.exe was not extracted into Scoop's current directory." }
+          if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) { throw "SelfSemester VBS launcher was not created." }
+          if (-not (Test-Path -LiteralPath $persistData -PathType Container)) { throw "SelfSemester persist data directory was not created." }
+          $script = Get-Content -LiteralPath $launcher -Raw
+          foreach ($required in @("SELFSEMESTER_HOME", "\data", "selfsemester.exe")) {
+            if ($script -notlike "*$required*") { throw "SelfSemester launcher is missing expected content: $required" }
+          }
+          $shortcut = @(Get-ChildItem -Path (Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs") -Filter "SelfSemester.lnk" -File -Recurse -ErrorAction SilentlyContinue)
+          if (-not $shortcut) { throw "Scoop did not create the SelfSemester Start Menu shortcut." }
+          Set-Content -LiteralPath (Join-Path $persistData "scoop-persist-test.txt") -Value "persist-ok" -Encoding ascii
+          scoop uninstall selfsemester
+          if ($LASTEXITCODE -ne 0) { throw "Scoop uninstall failed for SelfSemester." }
+          if (-not (Test-Path -LiteralPath (Join-Path $persistData "scoop-persist-test.txt") -PathType Leaf)) { throw "SelfSemester persisted data did not survive uninstall." }
+          scoop install selfsemester
+          if ($LASTEXITCODE -ne 0) { throw "Scoop reinstall failed for SelfSemester." }
+          if ((Get-Content -LiteralPath (Join-Path $selfDir "data\scoop-persist-test.txt") -Raw).Trim() -ne "persist-ok") { throw "SelfSemester did not reattach existing persisted data after reinstall." }
+
+          scoop install splash-plus
+          if ($LASTEXITCODE -ne 0) { throw "Scoop install failed for Splash Plus." }
+          $splashDir = Join-Path $scoopRoot "apps\splash-plus\current"
+          $pext = Join-Path $splashDir "SplashPlus_2_0.pext"
+          if (-not (Test-Path -LiteralPath $pext -PathType Leaf)) { throw "Scoop did not preserve the Splash Plus PEXT package in its app directory." }
+          $splashHash = (Get-FileHash -LiteralPath $pext -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($splashHash -ne "be1ae157d96f1d499c0cc536942c6ebfe1ecd280ed120b6443141d4433b95da3") { throw "Installed Splash Plus PEXT hash mismatch." }
+          scoop uninstall splash-plus
+          if ($LASTEXITCODE -ne 0) { throw "Scoop uninstall failed for Splash Plus." }
+          if (Test-Path -LiteralPath $pext) { throw "Scoop did not remove Splash Plus app files during uninstall." }
+
+          "SelfSemester: Scoop install, extracted EXE, VBS shortcut, persist survival, uninstall and reinstall: PASS" | Add-Content $env:GITHUB_STEP_SUMMARY
+          "Splash Plus: Scoop install, raw PEXT retained, SHA-256 and uninstall: PASS" | Add-Content $env:GITHUB_STEP_SUMMARY
+      - name: Upload package inspection evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: requested-app-package-inspection
+          path: ${{ runner.temp }}/inspect/
+          if-no-files-found: warn
+          retention-days: 14

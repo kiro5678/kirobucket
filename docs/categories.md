@@ -20,7 +20,7 @@
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
-| Games Tools | 15 | [View](#games-tools) |
+| Games Tools | 16 | [View](#games-tools) |
 | Images & Photos | 62 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 57 | [View](#media-audio-video) |
@@ -29,7 +29,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 32 | [View](#notch) |
 | Notes & Knowledge | 27 | [View](#notes-knowledge) |
-| Other Utilities | 139 | [View](#other-utilities) |
+| Other Utilities | 140 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
@@ -47,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1273**
+**Total unique categorized manifests: 1275**
 
 
 ## Android & Device Tools
@@ -494,6 +494,7 @@ Utilities and launchers designed for a particular game or game series. General-p
 | [openspeedy](../bucket/openspeedy.json) | 3.3.17 | 5.2 MiB | 2026-10-18 | A Windows utility that speeds up games and applications by modifying process timing. | [Homepage](https://github.com/game1024/OpenSpeedy) |
 | [rstgametranslation](../bucket/rstgametranslation.json) | 6.2 | 64bit: 309.9 MiB | 2026-11-05 | Real-time game screen OCR and translation tool. | [Homepage](https://github.com/thanhkeke97/RSTGameTranslation) |
 | [savestate](../bucket/savestate.json) | 3.1 | 88.7 MiB | 2026-10-29 | Back up and restore video game saves, with Steam detection and emulator support. | [Homepage](https://github.com/Matteo842/SaveState) |
+| [splash-plus](../bucket/splash-plus.json) | 2.0 | 141.9 KiB | 2026-11-18 | Playnite extension that displays game backgrounds and logos while games load. | [Homepage](https://github.com/Ad1Bb/Splash-Plus) |
 | [skwire-steam-url-converter](../bucket/skwire-steam-url-converter.json) | 1.0.2 | 437.5 KiB | 2026-09-11 | Convert Steam URL shortcuts into standard Windows shortcuts. | [Homepage](https://www.donationcoder.com/dcmembers/skwire/download/steam-url-converter/) |
 | [tcno-acc-switcher](../bucket/tcno-acc-switcher.json) | 4.0.8 | 64bit: 43.7 MiB | 2025-11-21 | Account switcher for Steam, Battle.net, Epic Games, Discord, EA, Riot, Ubisoft and other game clients. | [Homepage](https://github.com/TCNOco/TcNo-Acc-Switcher) |
 | [uesave](../bucket/uesave.json) | 0.7.1 | 839.1 KiB | 2026-03-23 | A library for reading and writing Unreal Engine save files | [Homepage](https://github.com/trumank/uesave-rs) |
@@ -821,6 +822,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [nirlauncher.schinese](../bucket/nirlauncher.schinese.json) | 1.30.27 | — | — | Most of NirSoft utilities are translated to other languages by volunteers from around the world. In the following section, you can download all translations of the desired language in one zip file, and extract them into NirSoft folder with all other utilities. After you do that, you'll be able to use the utilities of NirSoft in your preferred language, as long as there is a translation file for the utility that you use. | [Homepage](https://launcher.nirsoft.net/) |
 | [rainmeter-webhook-monitor-thiojoe](../bucket/rainmeter-webhook-monitor-thiojoe.json) | 1.1.1 | 59.6 MiB | 2025-04-19 | Receive webhook messages and send configured commands to Rainmeter skins. | [Homepage](https://github.com/ThioJoe/Rainmeter-Webhook-Monitor) |
 | [skim](../bucket/skim.json) | 1.0.34 | — | — | A fast, minimalist, AI-native email client for Windows. | [Homepage](https://skim-tech.com) |
+| [selfsemester](../bucket/selfsemester.json) | 0.8.0 | 64bit: 3.8 MiB | 2026-11-19 | Scheduled course builder and study manager powered by Claude Code. | [Homepage](https://github.com/munitkala/selfsemester) |
 | [systemtraymenu-v1](../bucket/systemtraymenu-v1.json) | 1.3.5.0 | — | — | Open-source desktop toolbar and Start Menu alternative for browsing and opening files, folders, and links. | [Homepage](https://github.com/Hofknecht/SystemTrayMenu) |
 | [systemtraymenu-v3](../bucket/systemtraymenu-v3.json) | 3.1.256 | — | — | Portable folder-based launcher and menu for files, programs and links. | [Homepage](https://hofknecht.eu/systemtraymenu/en.html) |
 | [takeoff-launcher](../bucket/takeoff-launcher.json) | 1.0.4 | — | — | Focused, lightweight native Windows application launcher. | [Homepage](https://github.com/akiraeng/takeoff-launcher) |
