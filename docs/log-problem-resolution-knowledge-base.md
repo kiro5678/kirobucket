@@ -50,6 +50,16 @@ Copy this template for every newly resolved issue and fill in the evidence-based
 
 ## Resolved incidents
 
+### 2026-11-21 — Keep MuMuPlayer installer outside its Scoop installation target
+
+- **Status:** Resolved, verification pending.
+- **Affected area:** `bucket/mumuplayer.json`; `.github/workflows/mumuplayer-scoop-upgrade-test.yml`; `docs/mumuplayer-scoop-upgrade.md`.
+- **Problem:** During an update from MuMuPlayer NX-main `1.8.5.5748` to `1.8.16.6114`, the manifest launched the downloaded installer from the Scoop version directory while passing that same directory as `/D=`. MuMu's `install_prepare` exited with code `80010`.
+- **Root cause:** The latest pre-install hook had lost the earlier staging safeguard. The installer executable remained as a root-level file inside its own installation target. The previous backup staged the executable outside the target and explicitly checked that the target directory was empty. MuMu's public error-code page does not document `80010`, so the exact internal meaning of that code remains unknown; the target-directory conflict in the manifest is confirmed.
+- **Resolution:** Reuse Scoop's `cache_path` when the downloaded installer is available there; otherwise copy it to a transaction-specific directory under the Scoop cache. Remove the app-directory copy before setup, reject unexpected root-level target files, run the staged executable, and clean up the staging directory in a nested `finally` block.
+- **Verification:** The Windows regression workflow now checks that the installer path is outside the `/D=` target and that the target root contains no files. The workflow result and a real MuMu installation/VM boot are pending; do not label the fix runtime-verified until those checks pass.
+- **Prevention:** Every Scoop manifest that invokes a vendor installer with a destination directory must keep the installer payload outside that destination. Add a regression assertion for this invariant; mocked process exit codes alone are insufficient.
+
 ### 2026-11-20 — Extract NixanDeck MSIX into Scoop and migrate from prior registration
 
 - **Status:** Resolved and verified.
