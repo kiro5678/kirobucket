@@ -721,6 +721,8 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 
 ## Notch
 
+The `winisland` and `winisland-rheme18` entries are different upstream projects; the latter is developer-qualified to avoid a filename collision.
+
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [astraeus](../bucket/astraeus.json) | 2.2.3 | 2.5 MiB | 2026-10-29 | Native Windows edge dashboard with music controls, synced lyrics, system stats, and quick controls. | [Homepage](https://github.com/Icetist/Astraeus) |
