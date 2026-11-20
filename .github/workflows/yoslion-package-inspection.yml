@@ -43,10 +43,13 @@ jobs:
             throw "Invalid Yoslion manifest version: $version"
           }
 
-          $url = ([string]$manifest.url) -replace '#/dl\.7z$', ''
+          $urlUri = [System.Uri]([string]$manifest.url)
+          $url = $urlUri.GetLeftPart([System.UriPartial]::Path)
           $expectedUrl = "https://updates.yoslion.com/release/windows/x86_64/$version/Yoslion%20Download_$version_x64-setup.exe"
-          if ($url -ne $expectedUrl) {
-            throw "Manifest installer URL does not match the official versioned Windows endpoint. Expected $expectedUrl; got $url."
+          Write-Host "Resolved manifest installer URL: [$url]"
+          Write-Host "Expected official installer URL: [$expectedUrl]"
+          if ($url -cne $expectedUrl) {
+            throw "Manifest installer URL does not match the official versioned Windows endpoint."
           }
 
           $expectedHash = ([string]$manifest.hash).ToLowerInvariant()
