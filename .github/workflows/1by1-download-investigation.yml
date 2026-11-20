@@ -1,0 +1,127 @@
+name: 1by1 Download Source Investigation
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/1by1-download-investigation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Resolve mirrors and verify publisher checksum
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $expected = 'e6b586242513766fc5d55bcc3fc5cdb2fab0952ea40c3cbdeb5f62ea58977d91'
+          $work = Join-Path $env:RUNNER_TEMP '1by1-investigation'
+          New-Item -ItemType Directory -Force -Path $work | Out-Null
+          $pages = @(
+            'https://mpesch3.de/1by1.html',
+            'https://1by1.sooftware.com/windows/download',
+            'https://www.softpedia.com/get/Multimedia/Audio/Audio-Players/1by1.shtml',
+            'https://www.majorgeeks.com/files/details/1by1.html',
+            'https://www.free-codecs.com/1by1_download.htm',
+            'https://www.techspot.com/downloads/531-1by1.html',
+            'https://www.filehorse.com/download-1by1/',
+            'https://www.filecroco.com/download-1by1/',
+            'https://1by1.en.uptodown.com/windows/download'
+          )
+          $candidates = [System.Collections.Generic.List[string]]::new()
+          $pageRows = [System.Collections.Generic.List[object]]::new()
+          foreach ($page in $pages) {
+            try {
+              $response = Invoke-WebRequest -Uri $page -MaximumRedirection 10 -TimeoutSec 60 -Headers @{ 'User-Agent' = 'Mozilla/5.0 Scoop manifest verifier' }
+              $html = [string]$response.Content
+              $pageRows.Add([PSCustomObject]@{ Page=$page; Status=[int]$response.StatusCode; FinalUrl=$response.BaseResponse.ResponseUri.AbsoluteUri; Bytes=$response.RawContentLength })
+              [regex]::Matches($html, '(?is)href\s*=\s*["'']([^"'']+)["'']') | ForEach-Object {
+                $href = [System.Net.WebUtility]::HtmlDecode($_.Groups[1].Value).Replace('&amp;', '&')
+                if ($href -match '(?i)1by1|download|\.exe|\.zip') {
+                  try {
+                    $absolute = ([uri]::new([uri]$response.BaseResponse.ResponseUri, $href)).AbsoluteUri
+                    if ($absolute -match '(?i)1by1|download|\.exe|\.zip') { $candidates.Add($absolute) }
+                  } catch {}
+                }
+              }
+              [regex]::Matches($html, '(?i)https?[^\s"'']+') | ForEach-Object {
+                $u = $_.Value.TrimEnd(')', ']', '}', ',', ';')
+                if ($u -match '(?i)1by1.*(\.exe|\.zip)|1by1_217') { $candidates.Add($u) }
+              }
+            } catch {
+              $pageRows.Add([PSCustomObject]@{ Page=$page; Status='ERROR'; FinalUrl=''; Bytes=0; Error=$_.Exception.Message })
+            }
+          }
+
+          @(
+            'https://mpesch3.de/1by1_217.exe'
+            'https://www.mpesch3.de/1by1_217.exe'
+            'https://1by1.sooftware.com/download/1by1_217.exe'
+            'https://www.sac.sk/download/1by1_217.exe'
+            'https://www.majorgeeks.com/files/details/mg/getmirror/1by1%2C1.html'
+            'https://www.majorgeeks.com/files/details/mg/getmirror/1by1%2C2.html'
+          ) | ForEach-Object { $candidates.Add($_) }
+
+          $unique = @($candidates | Sort-Object -Unique | Select-Object -First 80)
+          $results = [System.Collections.Generic.List[object]]::new()
+          $index = 0
+          foreach ($url in $unique) {
+            $index++
+            $path = Join-Path $work ("candidate-{0:D2}.bin" -f $index)
+            try {
+              $response = Invoke-WebRequest -Uri $url -OutFile $path -PassThru -MaximumRedirection 10 -TimeoutSec 120 -Headers @{ 'User-Agent' = 'Mozilla/5.0 Scoop manifest verifier' }
+              if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw 'No file was created.' }
+              $item = Get-Item -LiteralPath $path
+              $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+              $md5 = (Get-FileHash -LiteralPath $path -Algorithm MD5).Hash.ToLowerInvariant()
+              $match = $hash -eq $expected
+              $results.Add([PSCustomObject]@{
+                Url=$url; FinalUrl=$response.BaseResponse.ResponseUri.AbsoluteUri
+                Status=[int]$response.StatusCode; Bytes=$item.Length; SHA256=$hash; MD5=$md5
+                PublisherHashMatch=$match; ContentType=$response.Headers['Content-Type']
+              })
+            } catch {
+              $results.Add([PSCustomObject]@{ Url=$url; Error=$_.Exception.Message; PublisherHashMatch=$false })
+            } finally {
+              Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
+            }
+          }
+
+          $pageRows | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $work 'pages.json') -Encoding utf8
+          $results | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $work 'download-results.json') -Encoding utf8
+          @(
+            '## 1by1 mirror investigation'
+            ''
+            "Publisher SHA-256: `$expected`"
+            ''
+            '| URL | Resolved URL | Bytes | SHA-256 | Match |'
+            '|---|---|---:|---|---|'
+            foreach ($r in $results) {
+              if ($r.PublisherHashMatch) {
+                "| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | **MATCH** |"
+              } elseif ($r.SHA256) {
+                "| $($r.Url) | $($r.FinalUrl) | $($r.Bytes) | $($r.SHA256) | no |"
+              } else {
+                "| $($r.Url) | — | — | — | error: $($r.Error) |"
+              }
+            }
+            ''
+            'Page responses are saved in the artifact. A matching SHA-256 is required before adding a manifest.'
+          ) | Set-Content $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          $pageRows | Format-Table -AutoSize | Out-String | Write-Host
+          $results | Format-List | Out-String | Write-Host
+      - name: Upload investigation results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: 1by1-download-investigation
+          path: ${{ runner.temp }}/1by1-investigation/
+          if-no-files-found: warn
+          retention-days: 7
