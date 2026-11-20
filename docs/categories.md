@@ -30,7 +30,7 @@
 | Other Utilities | 138 | [View](#other-utilities) |
 | Package Management | 13 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
-| Productivity & Launchers | 35 | [View](#productivity-launchers) |
+| Productivity & Launchers | 36 | [View](#productivity-launchers) |
 | Security | 42 | [View](#security) |
 | Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
@@ -39,7 +39,7 @@
 | Sysinternals Utilities | 75 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
-| Time Tracking & Focus | 15 | [View](#time-tracking-focus) |
+| Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 102 | [View](#windows-customization) |
@@ -749,6 +749,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [beaver-notes](../bucket/beaver-notes.json) | 5.0.0-beta.2 | 171.9 MiB | 2026-03-29 | A privacy-focused note-taking app for Windows, macOS and Linux. | [Homepage](https://github.com/Beaver-Notes/Beaver-Notes) |
 | [butterfly](../bucket/butterfly.json) | 2.6.1 | 64bit: 27.3 MiB | 2026-10-28 | A powerful, minimalistic, cross-platform note-taking app | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [butterfly-nightly](../bucket/butterfly-nightly.json) | 2026.10.24.1034 | 64bit: 27.4 MiB / arm64: 26.4 MiB | 2026-10-24 | A powerful, minimalistic, cross-platform note-taking app (nightly build) | [Homepage](https://github.com/LinwoodDev/Butterfly) |
+| [snoty](../bucket/snoty.json) | 1.0.0 | 57.2 MiB | 2026-11-19 | Lightweight sticky notes app with offline Whisper speech-to-text. | [Homepage](https://github.com/Brownfries/Snoty) |
 | [softwareok-desktop-note-ok](../bucket/softwareok-desktop-note-ok.json) | 4.66 | 64bit: 292.3 KiB | 2026-06-13 | Create and manage notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopNoteOK) |
 | [deepown](../bucket/deepown.json) | 1.1.4 | 11.8 MiB | 2026-11-10 | Local-first encrypted data vaults with direct device-to-device LAN sync and revision history. | [Homepage](https://deepown.app/) |
 | [pake-flomo](../bucket/pake-flomo.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Flomo. | [Homepage](https://v.flomoapp.com/mine) |
@@ -981,6 +982,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | [biniware-run](../bucket/biniware-run.json) | 7.9.0.0 | 398.9 KiB | 2026-10-20 | Portable Windows productivity tool for quickly accessing favorite website links, files and folders. | [Homepage](https://biniware.com/brun) |
 | [deskboard](../bucket/deskboard.json) | 0.13.0 | 7.9 MiB | 2026-10-30 | Turns local folders into customizable visual workspaces with widgets, annotations, and notes. | [Homepage](https://deskboard.geeke.app) |
 | [desktoptools](../bucket/desktoptools.json) | 1.2.9 | 64bit: 251.1 MiB | 2026-10-23 | Windows toolkit for screenshots, screen recording, presentations, OCR, notes, image editing, and everyday desktop work. | [Homepage](https://github.com/vg2222/DesktopTools) |
+| [groundwork-habits](../bucket/groundwork-habits.json) | 1.7.11 | 5.4 MiB | 2026-11-17 | Habit tracker for weekly planning, tasks, goals, and reminders. | [Homepage](https://github.com/English-Muffin/GroundworkHabits) |
 | [pake-excalidraw](../bucket/pake-excalidraw.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Excalidraw. | [Homepage](https://excalidraw.com/) |
 | [softwareok-favoritenfreund](../bucket/softwareok-favoritenfreund.json) | 1.34 | 64bit: 54.3 KiB | 2007-11-12 | Manage favorites in a small Windows utility. | [Homepage](https://www.softwareok.com/?Download=FavoritenFreund) |
 | [flashlaunch](../bucket/flashlaunch.json) | 1.0.9 | 1.9 MiB | 2026-10-08 | Lightweight keyboard-first application launcher for Windows. | [Homepage](https://github.com/SingCJ/FlashLaunch) |
