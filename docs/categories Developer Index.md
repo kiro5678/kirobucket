@@ -626,20 +626,20 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [bios-beep-codes-viewer](../bucket/bios-beep-codes-viewer.json) | 11.3.1.1992 | 3.9 MiB | 2024-12-09 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
+| [rizonesoft-bios-beep-codes-viewer](../bucket/rizonesoft-bios-beep-codes-viewer.json) | 11.3.1.1992 | 3.9 MiB | 2024-12-09 | View BIOS beep-code meanings and diagnostics for common motherboard and BIOS vendors. | [Homepage](https://rizonesoft.com/downloads/bios-beep-codes-viewer/) |
 | [carbon-cd](../bucket/carbon-cd.json) | 1.0.8 | 1.4 MiB | 2023-09-29 | Portable CD cloning and disc-image utility. | [Homepage](https://rizonesoft.com/downloads/carbon-cd/) |
-| [chromin](../bucket/chromin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
-| [complete-internet-repair](../bucket/complete-internet-repair.json) | 11.1.3.6518 | 4.4 MiB | 2024-12-09 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
-| [dvd-drive-repair](../bucket/dvd-drive-repair.json) | 11.2.3.2920 | 2.5 MiB | 2024-02-26 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
-| [edgemin](../bucket/edgemin.json) | 11.8.3.8522 | 3.9 MiB | 2024-12-09 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
-| [firemin](../bucket/firemin.json) | 11.8.3.8520 | 3.9 MiB | 2024-12-09 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [rizonesoft-chromin](../bucket/rizonesoft-chromin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Chrome and other Chromium-based browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [rizonesoft-complete-internet-repair](../bucket/rizonesoft-complete-internet-repair.json) | 11.1.3.6518 | 4.4 MiB | 2024-12-09 | Portable utility for repairing Windows internet connectivity issues. | [Homepage](https://rizonesoft.com/downloads/complete-internet-repair/) |
+| [rizonesoft-dvd-drive-repair](../bucket/rizonesoft-dvd-drive-repair.json) | 11.2.3.2920 | 2.5 MiB | 2024-02-26 | Portable utility for diagnosing and repairing DVD drive issues. | [Homepage](https://rizonesoft.com/downloads/dvd-drive-repair/) |
+| [rizonesoft-edgemin](../bucket/rizonesoft-edgemin.json) | 11.8.3.8522 | 3.9 MiB | 2024-12-09 | Memory optimizer for Microsoft Edge and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [rizonesoft-firemin](../bucket/rizonesoft-firemin.json) | 11.8.3.8520 | 3.9 MiB | 2024-12-09 | Utility to reduce the memory usage of Firefox or other browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | [notepad3](../bucket/notepad3.json) | 7.26.602.1 | 64bit: 6.6 MiB / 32bit: 6.2 MiB | 2026-06-02 | Portable Scintilla-based text editor with syntax highlighting. | [Homepage](https://rizonesoft.com/downloads/notepad3/) |
-| [pixel-repair](../bucket/pixel-repair.json) | 11.1.1.1008 | 2.3 MiB | 2023-11-01 | Portable utility for detecting and attempting to fix stuck pixels on LCD and OLED displays. | [Homepage](https://rizonesoft.com/downloads/pixel-repair/) |
+| [rizonesoft-pixel-repair](../bucket/rizonesoft-pixel-repair.json) | 11.1.1.1008 | 2.3 MiB | 2023-11-01 | Portable utility for detecting and attempting to fix stuck pixels on LCD and OLED displays. | [Homepage](https://rizonesoft.com/downloads/pixel-repair/) |
 | [rizonesoft-office](../bucket/rizonesoft-office.json) | 2023.9.27.1794 | 145.1 MiB | 2023-09-29 | Rizonesoft Office Alpha 5 suite, bundling Clock, Evaluate, Flow, Imagine, Scholar, Verbum, and Zone. | [Homepage](https://rizonesoft.com/downloads/rizonesoft-office/) |
 | [rizonesoft-resolute](../bucket/rizonesoft-resolute.json) | 23.2.0.853 | 82.4 MiB | 2025-04-02 | Portable system utility suite with repair tools, browser memory optimizers, and diagnostic utilities. | [Homepage](https://rizonesoft.com/downloads/resolute/) |
-| [take-ownership](../bucket/take-ownership.json) | 11.1.1.869 | 2.3 MiB | 2025-04-07 | Portable utility that can add or remove a Take Ownership context-menu action. | [Homepage](https://rizonesoft.com/gdm_downloads/take-ownership/) |
-| [usb-repair](../bucket/usb-repair.json) | 11.2.3.2380 | 2.3 MiB | 2025-07-03 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
-| [watermin](../bucket/watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
+| [rizonesoft-take-ownership](../bucket/rizonesoft-take-ownership.json) | 11.1.1.869 | 2.3 MiB | 2025-04-07 | Portable utility that can add or remove a Take Ownership context-menu action. | [Homepage](https://rizonesoft.com/gdm_downloads/take-ownership/) |
+| [rizonesoft-usb-repair](../bucket/rizonesoft-usb-repair.json) | 11.2.3.2380 | 2.3 MiB | 2025-07-03 | Portable utility for diagnosing and repairing USB device problems. | [Homepage](https://rizonesoft.com/downloads/usb-repair/) |
+| [rizonesoft-watermin](../bucket/rizonesoft-watermin.json) | 11.8.3.8535 | 3.9 MiB | 2024-12-09 | Memory optimizer for Waterfox and compatible browsers. | [Homepage](https://rizonesoft.com/downloads/firemin/) |
 | **TOTAL DOWNLOAD SIZE** | — | **268.80 MiB** | — | — | — |
 
 <a id="thiojoe-suite"></a>
