@@ -10,7 +10,7 @@ $tokens=$null; $parseErrors=$null
 Assert ($parseErrors.Count -eq 0) 'pre_install syntax error.'
 Assert (@($manifest.persist) -contains 'configs' -and @($manifest.persist) -contains 'vms' -and @($manifest.persist) -contains 'nx_device') 'Manifest must persist configs, vms, nx_device.'
 Equal $manifest.shortcuts[0][0] 'MuMuPlayer.cmd' 'Shortcut must use version-local launcher.'
-foreach ($marker in @('$stableRoot','Get-MuMuRegisteredInstallRoot','Copy-MuMuInstallRootToStable','Update-MuMuUninstallRegistration','Restore-MuMuRegistrySnapshot','Set-MuMuServicePath','(''/D='' + $stableRoot)')) {
+foreach ($marker in @('$stableRoot','Get-MuMuRegisteredInstallRoot','Move-MuMuInstallRootToStable','Restore-MuMuMovedInstallRoot','Update-MuMuUninstallRegistration','Restore-MuMuRegistrySnapshot','Set-MuMuServicePath','(''/D='' + $stableRoot)')) {
     Assert ($hookText.Contains($marker)) "Missing stable-root handling: $marker"
 }
 
@@ -171,7 +171,9 @@ try {
     Assert ($script:MockMuMuServicePath -like "*$oldRoot*") 'Service path changed on failed prepare.'
     Equal (Get-Content $vmData -Raw).Trim() 'vm-data-preserve' 'VM data changed on failed migration.'
     Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Device data changed on failed migration.'
-    Assert (Test-Path (Join-Path $stableRoot 'nx_main\MuMuNxMain.exe')) 'The old install was not copied to stable root.'
+    Assert (Test-Path (Join-Path $oldRoot 'nx_main\MuMuNxMain.exe')) 'Rollback did not move the original main executable back.'
+    Assert (Test-Path (Join-Path $oldRoot 'uninstall.exe')) 'Rollback did not move the original uninstaller back.'
+    Assert (-not (Test-Path (Join-Path $stableRoot 'nx_main\MuMuNxMain.exe'))) 'Rollback left the original main executable in the stable root.'
 
     Invoke-MuMuHook -Version '1.8.16.6114' -ProductVersion '6.8.16.0' -Retry80002
     Invoke-ScoopPersistData '1.8.16.6114'
@@ -197,8 +199,9 @@ try {
     Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Device data was not preserved.'
     Equal (Get-Content (Join-Path $persistRoot 'nx_device\15.0\shell\MuMuNxDevice.exe') -Raw).Trim() 'engine=6.8.16.0' 'Persisted engine executable was not updated.'
     Assert (Test-Path (Join-Path $stableRoot 'nx_main\MuMuNxMain.exe')) 'Stable main executable missing.'
-    Assert (Test-Path (Join-Path $oldRoot 'uninstall.exe')) 'Original versioned installation was deleted during migration.'
-    Equal (Get-Content (Join-Path $oldRoot 'uninstall.exe') -Raw).Trim() 'original-uninstaller' 'Original versioned uninstaller was modified.'
+    Assert (-not (Test-Path (Join-Path $oldRoot 'uninstall.exe'))) 'The original versioned uninstaller was not moved.'
+    Assert (-not (Test-Path (Join-Path $oldRoot 'nx_main\MuMuNxMain.exe'))) 'The original versioned main executable was not moved.'
+    Assert (Test-Path $oldRoot) 'Scoop old version directory should remain available for its own persist-junction cleanup.'
     $launcher=Join-Path $scoopRoot 'apps\mumuplayer\1.8.16.6114\MuMuPlayer.cmd'
     Assert (Test-Path $launcher) 'Stable-root launcher missing.'
     Assert ((Get-Content $launcher -Raw) -like "*$stableRoot*") 'Launcher points somewhere other than stable root.'
@@ -234,7 +237,7 @@ try {
         '## MuMuPlayer stable install-root regression'
         ''
         '- Injected install_prepare error 80011 and verified Registry/config rollback.'
-        '- Preserved the original versioned install while copying binaries into persist.'
+        '- Rolled the move back after injected 80011, then moved program files into the stable persist root on success.'
         '- Updated uninstall registration, AppData and persisted config paths, and service path.'
         '- Preserved VM data, configs, and custom nx_device files.'
         '- Verified first migration and subsequent upgrades use the same /D target.'
