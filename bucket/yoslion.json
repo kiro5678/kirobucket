@@ -245,5 +245,16 @@
         "Write-Host 'Yoslion browser registration removed. User data remains in Scoop persist.'",
         ""
     ],
-    "notes": "The app payload is extracted from the NSIS package; the vendor setup is not run. Browser integration is registered per-user for Chrome, Edge and Firefox. The app database, logs, native-host manifests and WebView2 profile are redirected to this app's persist directory. Global installs skip browser integration; the publisher's WebView2 Runtime remains a system dependency."
+    "notes": "The app payload is extracted from the NSIS package; the vendor setup is not run. Browser integration is registered per-user for Chrome, Edge and Firefox. The app database, logs, native-host manifests and WebView2 profile are redirected to this app's persist directory. Global installs skip browser integration; the publisher's WebView2 Runtime remains a system dependency.",
+    "checkver": {
+        "url": "https://download.yoslion.com/downloads",
+        "regex": "Yoslion Download_(?<version>[\\d.]+)_x64-setup\\.exe"
+    },
+    "autoupdate": {
+        "url": "https://updates.yoslion.com/release/windows/x86_64/$version/Yoslion%20Download_$version_x64-setup.exe#/dl.7z",
+        "hash": {
+            "url": "https://download.yoslion.com/downloads",
+            "regex": "(?is)Yoslion Download_$version_x64-setup\\.exe.*?SHA-256</p><code[^>]*>([a-f0-9]{64})"
+        }
+    }
 }
