@@ -278,7 +278,7 @@ jobs:
           $persist_dir = $simPersist
           $global = $false
 
-          Invoke-Expression $manifest.post_install
+          Invoke-Expression ($manifest.post_install -join [Environment]::NewLine)
 
           $dataLink = Join-Path $simLocalAppData "YoslionDownload"
           $webViewLink = Join-Path $simLocalAppData "com.yoslion.download"
@@ -321,7 +321,7 @@ jobs:
           Set-Content -LiteralPath (Join-Path $persistData "scoop-persist-test.txt") -Value "Keep this user data after uninstall."
           Set-Content -LiteralPath (Join-Path $persistWebView "webview-persist-test.txt") -Value "Keep this WebView profile data after uninstall."
 
-          Invoke-Expression $manifest.pre_uninstall
+          Invoke-Expression ($manifest.pre_uninstall -join [Environment]::NewLine)
 
           foreach ($keyPath in $simRegistry) {
             if (Test-Path -LiteralPath $keyPath) {
