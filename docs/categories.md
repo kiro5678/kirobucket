@@ -15,7 +15,7 @@
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 76 | [View](#file-management) |
-| File Managers & Explorers | 14 | [View](#file-managers-explorers) |
+| File Managers & Explorers | 15 | [View](#file-managers-explorers) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
@@ -34,7 +34,7 @@
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
 | Security | 43 | [View](#security) |
-| Speech-to-Text (STT) | 6 | [View](#speech-to-text-stt) |
+| Speech-to-Text (STT) | 7 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
 | Sync & Backup | 13 | [View](#sync-backup) |
 | System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
@@ -47,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1276**
+**Total unique categorized manifests: 1278**
 
 
 ## Android & Device Tools
@@ -390,6 +390,7 @@ Desktop file managers and file explorers that provide a graphical way to browse,
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
 | [arke](../bucket/arke.json) | 0.7.3 | — | — | Fast Windows file explorer with tabs, split panes, indexed search, previews, and optional Explorer integration. | [Homepage](https://github.com/Koimsurai/Arke) |
+| [atlas-filemanager](../bucket/atlas-filemanager.json) | 0.1.6-beta.3 | 64bit: 38.4 MiB | 2026-11-14 | Native, GPU-accelerated, local-first file manager for Windows. | [Homepage](https://github.com/neondeex/atlas-filemanager) |
 | [doublecmd](../bucket/doublecmd.json) | 1.2.9 | 64bit: — / 32bit: — | — | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
 | [ef-commander](../bucket/ef-commander.json) | 26.10 | 64bit: 7.5 MiB | 2026-08-24 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
 | [filey](../bucket/filey.json) | 0.2.10 | 1.3 MiB | 2026-11-12 | Fast, keyboard-first file manager for Windows with split panels, tabs, previews, archive browsing, and Git integration. | [Homepage](https://github.com/Solessfir/Filey) |
@@ -1103,6 +1104,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [vovsoft-audio-to-lyrics-converter](../bucket/vovsoft-audio-to-lyrics-converter.json) | 1.5 | 146.0 MiB | 2026-08-29 | Portable edition of Vovsoft Audio to Lyrics Converter. | [Homepage](https://vovsoft.com/software/audio-to-lyrics-converter/) |
 | [vovsoft-speech-to-subtitle-converter](../bucket/vovsoft-speech-to-subtitle-converter.json) | 2.5 | 166.6 MiB | 2026-09-20 | Portable edition of Vovsoft Speech to Subtitle Converter. | [Homepage](https://vovsoft.com/software/speech-to-subtitle-converter/) |
 | [vovsoft-speech-to-text-converter](../bucket/vovsoft-speech-to-text-converter.json) | 6.0 | 255.1 MiB | 2026-10-07 | Portable edition of Vovsoft Speech to Text Converter. | [Homepage](https://vovsoft.com/software/speech-to-text-converter/) |
+| [yogurt](../bucket/yogurt.json) | 0.3.59 | 64bit: 402.3 MiB | 2026-11-20 | Local-first AI desktop app for meeting transcription, notes, and summaries. | [Homepage](https://github.com/FrigadeHQ/yogurt) |
 
 ## Storage & Disk Tools
 
