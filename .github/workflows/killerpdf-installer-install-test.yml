@@ -128,8 +128,10 @@ jobs:
             do {
               $childProcess = Get-Process -Name 'KillerPDF.App' -ErrorAction SilentlyContinue |
                 Where-Object {
-                  $_.Path -and
-                  $_.Path.StartsWith($versionDir, [System.StringComparison]::OrdinalIgnoreCase)
+                  $_.Path -and (
+                    $_.Path.StartsWith($versionDir, [System.StringComparison]::OrdinalIgnoreCase) -or
+                    $_.Path.StartsWith($appDir, [System.StringComparison]::OrdinalIgnoreCase)
+                  )
                 } |
                 Select-Object -First 1
 
