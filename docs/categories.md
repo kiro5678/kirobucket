@@ -14,7 +14,8 @@
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 88 | [View](#file-management) |
+| File Management | 76 | [View](#file-management) |
+| File Managers & Explorers | 14 | [View](#file-managers-explorers) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
@@ -46,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1271**
+**Total unique categorized manifests: 1273**
 
 
 ## Android & Device Tools
@@ -327,12 +328,10 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [deskbox](../bucket/deskbox.json) | 1.5.9 | 64bit: 32.2 MiB / arm64: 31.6 MiB | 2026-10-23 | Local-first Windows desktop organizer with file and folder widgets, groups, tasks, notes, and desktop search. | [Homepage](https://github.com/Tianyu199509/DeskBox) |
 | [softwareok-delete-on-reboot](../bucket/softwareok-delete-on-reboot.json) | 3.47 | 64bit: 226.3 KiB | 2026-03-13 | Schedule files for deletion during the next reboot. | [Homepage](https://www.softwareok.com/?Download=Delete.On.Reboot) |
 | [softwareok-dirprintok](../bucket/softwareok-dirprintok.json) | 7.69 | 64bit: 852.5 KiB | 2026-10-20 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
-| [doublecmd](../bucket/doublecmd.json) | 1.2.9 | 64bit: — / 32bit: — | — | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
 | [easy-link-file-viewer](../bucket/easy-link-file-viewer.json) | 1.9.2 | 0.7 MiB | 2026-11-10 | Portable Windows utility to view, edit, and write shortcut files (.lnk), with a hex viewer and icon editor. | [Homepage](https://github.com/ElektroStudios/Easy-Link-File-Viewer) |
 | [droptidy](../bucket/droptidy.json) | 0.1.0 | 4.3 MiB | 2026-11-17 | Organizes Downloads with dry-run previews, duplicate detection, undo history, and optional automatic sorting. | [Homepage](https://github.com/ahmeto55/DropTidy) |
 | [downloadorganizer](../bucket/downloadorganizer.json) | 0.1.0 | 2.7 MiB | 2026-11-01 | Organize downloads by file type with change previews, undo history and optional automatic sorting. | [Homepage](https://github.com/thonyydev/DownloadOrganizer) |
 | [dude](../bucket/dude.json) | 2.0763.579 | 73.4 MiB | 2026-06-24 | Disk usage analyzer and file browser for Windows. | [Homepage](https://github.com/PJDude/dude) |
-| [ef-commander](../bucket/ef-commander.json) | 26.10 | 64bit: 7.5 MiB | 2026-08-24 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
 | [ef-duplicate-files-manager](../bucket/ef-duplicate-files-manager.json) | 26.10 | 64bit: 3.1 MiB | 2026-08-24 | Finds duplicate files by name, size, or content, including files inside supported archives. | [Homepage](https://efsoftware.com/dm/e.htm) |
 | [ef-file-catalog](../bucket/ef-file-catalog.json) | 26.10 | 64bit: 3.1 MiB | 2026-08-24 | Catalogs disks and directories for offline browsing and searching, with support for compressed archives. | [Homepage](https://efsoftware.com/fc/e.htm) |
 | [ef-find](../bucket/ef-find.json) | 26.10 | 64bit: 3.5 MiB | 2026-08-24 | Searches for files, text, hexadecimal sequences, and regular expressions, including inside supported archives. | [Homepage](https://efsoftware.com/fn/e.htm) |
@@ -342,31 +341,24 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [file-arbor](../bucket/file-arbor.json) | 1.4.1 | 116.9 MiB | 2026-11-14 | Local-first file organizer that sorts files into folders using customizable rules. | [Homepage](https://filearbor.com/) |
 | [filebrowser](../bucket/filebrowser.json) | 2.63.23 | 15.3 MiB | 2026-07-27 | Self-hosted web file manager for managing files in a specified directory. | [Homepage](https://github.com/filebrowser/filebrowser) |
 | [filee](../bucket/filee.json) | 2.1.0 | 150.7 MiB | 2026-10-28 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
-| [filey](../bucket/filey.json) | 0.2.10 | 1.3 MiB | 2026-11-12 | Fast, keyboard-first file manager for Windows with split panels, tabs, previews, archive browsing, and Git integration. | [Homepage](https://github.com/Solessfir/Filey) |
 | [filepilot](../bucket/filepilot.json) | 1.0.7 | 64bit: 64.7 MiB | 2026-10-11 | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. | [Homepage](https://github.com/qup1010/FilePilot) |
 | [files-inspector](../bucket/files-inspector.json) | 4.55 | 18.3 MiB | 2026-06-16 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
 | [findly](../bucket/findly.json) | 1.0.2 | 4.3 MiB | 2026-08-11 | Windows utility for finding installed programs and their executable paths | [Homepage](https://findly.devslim.com/) |
-| [foldersizeexplorer](../bucket/foldersizeexplorer.json) | 1.0.4 | 64bit: 90.9 MiB | 2026-09-01 | Portable file manager with recursive folder-size analysis for Windows. | [Homepage](https://github.com/ribeirogustav/FolderSizeExplorer-Releases) |
 | [foldra](../bucket/foldra.json) | 1.0 | 64bit: 2.1 MiB | 2025-12-25 | Lightweight desktop folder widgets and file organization utility for Windows. | [Homepage](https://github.com/YusufEren97/FoldRa) |
 | [hatchzip](../bucket/hatchzip.json) | 0.1.9 | 64bit: 10.3 MiB | 2026-11-05 | Extracts large archives in place, reusing archive space as files are extracted. | [Homepage](https://hatchzip.dev/) |
 | [funk-smf](../bucket/funk-smf.json) | 18 | 15.6 MiB | 2025-06-25 | Multi-purpose file search and duplicate finder with filters, hash calculation, reporting, copy/move, and deletion tools. | [Homepage](https://funk.eu/smf/) |
 | [softwareok-meinplatz](../bucket/softwareok-meinplatz.json) | 8.66 | 64bit: 846.7 KiB / 32bit: 707.8 KiB | 2026-05-22 | Scan disk usage and visualize space occupied by files and folders. | [Homepage](https://www.softwareok.com/?Download=MeinPlatz) |
 | [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | 12.2 MiB | 2026-04-15 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
 | [mouzi](../bucket/mouzi.json) | 0.2.1 | 64bit: 17.7 MiB | 2026-09-27 | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. | [Homepage](https://github.com/hsr88/mouzi) |
-| [mucommander](../bucket/mucommander.json) | 1.6.2-1 | 64bit: 135.4 MiB | 2026-05-14 | Dual-pane file manager (stable release). | [Homepage](https://www.mucommander.com) |
 | [magpie-search](../bucket/magpie-search.json) | 3.3.1 | 69.6 MiB | — | Local Windows search across documents, PDFs, spreadsheets, notes, and text inside pictures. | [Homepage](https://magpiesearch.app/) |
 | [softwareok-new-file-time](../bucket/softwareok-new-file-time.json) | 8.31 | 32bit: 154.0 KiB / 64bit: 181.6 KiB | 2026-10-30 | NewFileTime is a Windows tool that provides you easy access to correct or manipulate any of the timestamps for any file and folder on your Windows system. | [Homepage](http://www.softwareok.com/?seite=Microsoft/NewFileTime) |
 | [softwareok-new-file-time.unicode](../bucket/softwareok-new-file-time.unicode.json) | 8.31 | 159.1 KiB | 2026-10-30 | NewFileTime is a Windows tool that provides you easy access to correct or manipulate any of the timestamps for any file and folder on your Windows system. | [Homepage](http://www.softwareok.com/?seite=Microsoft/NewFileTime) |
 | [nomina](../bucket/nomina.json) | 1.1 | 15.5 MiB | 2026-05-23 | Advanced batch file and folder renamer for Windows. | [Homepage](https://github.com/esmail-mkh/Nomina) |
 | [softwareok-office-files-images](../bucket/softwareok-office-files-images.json) | 2.88 | 64bit: 181.5 KiB | 2026-05-03 | List and extract images contained in Office documents, with export support. | [Homepage](https://www.softwareok.com/?Download=Office.Files.Images) |
-| [prime-files](../bucket/prime-files.json) | 0.3.9 | 64bit: 11.8 MiB | 2026-11-08 | Windows file manager with tabs, previews, full-computer search, and optional Explorer integration. | [Homepage](https://github.com/CakeDev4k/prime-files) |
 | [omni-search](../bucket/omni-search.json) | 0.1.16 | 64bit: 5.9 MiB | 2026-07-28 | Fast Windows desktop file search and duplicate finder with Android LAN sync. | [Homepage](https://github.com/Eul45/omni-search) |
 | [omni-search-exe](../bucket/omni-search-exe.json) | 0.1.16 | 64bit: 5.1 MiB / arm64: 4.9 MiB | 2026-07-28 | Fast Windows desktop file search and duplicate finder with Android LAN sync. Portable payload extracted from the official setup executable. | [Homepage](https://github.com/Eul45/omni-search) |
-| [softwareok-q-dir](../bucket/softwareok-q-dir.json) | 12.82 | 64bit: 1.2 MiB / 32bit: 842.6 KiB | 2026-10-24 | Quad-pane file manager for Windows. | [Homepage](https://www.softwareok.com/?Download=Q-Dir) |
 | [restart-explorer](../bucket/restart-explorer.json) | 1.7 | 762.3 KiB | 2024-05-11 | A small tool for restarting the Windows File Explorer. | [Homepage](https://www.sordum.org/restart-explorer) |
-| [sigma-file-manager](../bucket/sigma-file-manager.json) | 2.2.0 | 15.0 MiB | 2026-07-17 | A modern cross-platform file manager with a powerful interface. | [Homepage](https://github.com/aleksey-hoffman/sigma-file-manager) |
 | [sordum-streams-remover](../bucket/sordum-streams-remover.json) | 1.0 | 383.6 KiB | 2018-12-13 | Utility for removing Zone.Identifier alternate data streams from downloaded Windows files. | [Homepage](https://www.sordum.org/11263/streams-remover-v1-0/) |
-| [spacedrive](../bucket/spacedrive.json) | 2.0.0-alpha.2 | 51.7 MiB | 2026-02-07 | Open source cross-platform file explorer. | [Homepage](https://github.com/spacedriveapp/spacedrive) |
 | [take-ownership](../bucket/take-ownership.json) | 11.1.1.869 | 2.3 MiB | 2025-04-07 | Portable utility that can add or remove a Take Ownership context-menu action. | [Homepage](https://rizonesoft.com/gdm_downloads/take-ownership/) |
 | [softwareok-thisismyfile](../bucket/softwareok-thisismyfile.json) | 4.51 | 64bit: 382.8 KiB | 2026-04-24 | Unlock or delete locked and protected files. | [Homepage](https://www.softwareok.com/?Download=ThisIsMyFile) |
 | [vcardix](../bucket/vcardix.json) | 26.11 | 833.7 KiB | 2026-10-10 | Contact manager and converter for vCard, CSV, and JSON files. | [Homepage](https://github.com/turkaysoft/vcardix) |
@@ -381,7 +373,6 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [vovsoft-filename-lister](../bucket/vovsoft-filename-lister.json) | 5.4 | 2.3 MiB | 2026-08-13 | Portable edition of Vovsoft Filename Lister. | [Homepage](https://vovsoft.com/software/filename-lister/) |
 | [vovsoft-find-and-replace-multiple-files](../bucket/vovsoft-find-and-replace-multiple-files.json) | 2.3 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Find And Replace Multiple Files. | [Homepage](https://vovsoft.com/software/find-and-replace-multiple-files/) |
 | [vovsoft-folder-splitter](../bucket/vovsoft-folder-splitter.json) | 1.3 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Folder Splitter. | [Homepage](https://vovsoft.com/software/folder-splitter/) |
-| [vovsoft-hierarchical-file-manager](../bucket/vovsoft-hierarchical-file-manager.json) | 1.3 | 2.1 MiB | 2026-08-26 | Portable edition of Vovsoft Hierarchical File Manager. | [Homepage](https://vovsoft.com/software/hierarchical-file-manager/) |
 | [vovsoft-merge-multiple-folders](../bucket/vovsoft-merge-multiple-folders.json) | 2.4 | 3.8 MiB | 2026-08-13 | Portable edition of Vovsoft Merge Multiple Folders. | [Homepage](https://vovsoft.com/software/merge-multiple-folders/) |
 | [vovsoft-open-multiple-files](../bucket/vovsoft-open-multiple-files.json) | 3.3 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Open Multiple Files. | [Homepage](https://vovsoft.com/software/open-multiple-files/) |
 | [vovsoft-rename-multiple-files](../bucket/vovsoft-rename-multiple-files.json) | 2.4 | 2.3 MiB | 2026-08-13 | Portable edition of Vovsoft Rename Multiple Files. | [Homepage](https://vovsoft.com/software/rename-multiple-files/) |
@@ -390,9 +381,28 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [vovsoft-vcf-merger](../bucket/vovsoft-vcf-merger.json) | 1.0 | 2.7 MiB | 2026-08-13 | Portable edition of Vovsoft VCF Merger. | [Homepage](https://vovsoft.com/software/vcf-merger/) |
 | [vovsoft-vcf-splitter](../bucket/vovsoft-vcf-splitter.json) | 1.0 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft VCF Splitter. | [Homepage](https://vovsoft.com/software/vcf-splitter/) |
 | [softwareok-winbin2iso](../bucket/softwareok-winbin2iso.json) | 6.79 | 64bit: 157.6 KiB | 2026-10-19 | Convert BIN CD images to ISO images. | [Homepage](https://www.softwareok.com/?Download=WinBin2Iso) |
+
+
+## File Managers & Explorers
+
+Desktop file managers and file explorers that provide a graphical way to browse, copy, move, search, preview, and organize files and folders as alternatives to Windows File Explorer.
+
+| Manifest | Version | Size | Program Update | Description | Homepage |
+| --- | --- | --- | --- | --- | --- |
+| [arke](../bucket/arke.json) | 0.7.3 | — | — | Fast Windows file explorer with tabs, split panes, indexed search, previews, and optional Explorer integration. | [Homepage](https://github.com/Koimsurai/Arke) |
+| [doublecmd](../bucket/doublecmd.json) | 1.2.9 | 64bit: — / 32bit: — | — | A cross-platform open-source file manager with two panels side by side. | [Homepage](https://doublecmd.sourceforge.io/) |
+| [ef-commander](../bucket/ef-commander.json) | 26.10 | 64bit: 7.5 MiB | 2026-08-24 | Dual-pane file manager with archive handling, file viewer, FTP/SFTP/FTPS/SCP client, hexadecimal editor, and synchronization tools. | [Homepage](https://efsoftware.com/cw/e.htm) |
+| [filey](../bucket/filey.json) | 0.2.10 | 1.3 MiB | 2026-11-12 | Fast, keyboard-first file manager for Windows with split panels, tabs, previews, archive browsing, and Git integration. | [Homepage](https://github.com/Solessfir/Filey) |
+| [foldersizeexplorer](../bucket/foldersizeexplorer.json) | 1.0.4 | 64bit: 90.9 MiB | 2026-09-01 | Portable file manager with recursive folder-size analysis for Windows. | [Homepage](https://github.com/ribeirogustav/FolderSizeExplorer-Releases) |
+| [mucommander](../bucket/mucommander.json) | 1.6.2-1 | 64bit: 135.4 MiB | 2026-05-14 | Dual-pane file manager (stable release). | [Homepage](https://www.mucommander.com) |
+| [prime-files](../bucket/prime-files.json) | 0.3.11 | 64bit: 11.8 MiB | 2026-11-08 | Windows file manager with tabs, previews, full-computer search, and optional Explorer integration. | [Homepage](https://github.com/CakeDev4k/prime-files) |
+| [sigma-file-manager](../bucket/sigma-file-manager.json) | 2.2.0 | 15.0 MiB | 2026-07-17 | A modern cross-platform file manager with a powerful interface. | [Homepage](https://github.com/aleksey-hoffman/sigma-file-manager) |
+| [softwareok-q-dir](../bucket/softwareok-q-dir.json) | 12.84 | 64bit: 1.2 MiB / 32bit: 842.6 KiB | 2026-10-24 | Quad-pane file manager for Windows. | [Homepage](https://www.softwareok.com/?Download=Q-Dir) |
+| [spacedrive](../bucket/spacedrive.json) | 2.0.0-alpha.2 | 51.7 MiB | 2026-02-07 | Open source cross-platform file explorer. | [Homepage](https://github.com/spacedriveapp/spacedrive) |
+| [sunvale](../bucket/sunvale.json) | 0.3.7 | — | — | Native Windows file manager with tabs, indexed search, archive browsing, previews, and file operations. | [Homepage](https://github.com/mcxen/WinExplorer) |
+| [vovsoft-hierarchical-file-manager](../bucket/vovsoft-hierarchical-file-manager.json) | 1.3 | 2.1 MiB | 2026-08-26 | Portable edition of Vovsoft Hierarchical File Manager. | [Homepage](https://vovsoft.com/software/hierarchical-file-manager/) |
 | [xyplorer](../bucket/xyplorer.json) | 28.40.0600 | — | — | Portable file manager for Windows with tabbed browsing, powerful search, preview, and customization. | [Homepage](https://www.xyplorer.com/) |
 | [zexor](../bucket/zexor.json) | 1.16.0 | 63.9 MiB | 2026-10-04 | Visual Windows file manager with instant previews and the proprietary .zex container format. | [Homepage](https://github.com/metalbug/Zexor) |
-
 ## Local File Sharing
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
