@@ -91,6 +91,7 @@ jobs:
           $original_dir = $dir
           $persist_dir = Join-Path $scoopRoot 'persist\nixandeck'
           $scoopdir = $scoopRoot
+          function appdir($name, $isGlobal) { Join-Path (Join-Path $scoopRoot 'apps') $name }
           New-Item -ItemType Directory -Path $dir, $persist_dir -Force | Out-Null
 
           # Scoop first extracts the manifest's outer ZIP to the version directory.
