@@ -1,0 +1,174 @@
+name: Scoop Candidate Extraction Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/scoop-candidates-extraction-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extraction:
+    name: Verify official portable and installer payloads
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - name: Download, verify, and extract packages
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if (-not $command) { throw '7-Zip is not available on this runner.' }
+            $sevenZip = $command.Source
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP 'scoop-candidate-extraction'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $results = [System.Collections.Generic.List[object]]::new()
+          $report = [System.Collections.Generic.List[string]]::new()
+          $failed = $false
+
+          function Add-Report([string]$Message) {
+            $report.Add($Message)
+            Write-Host $Message
+          }
+
+          function Download-Verified {
+            param([string]$Url, [string]$Path, [string]$Sha256)
+            Invoke-WebRequest -Uri $Url -OutFile $Path -MaximumRedirection 10 -TimeoutSec 1200
+            if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+              throw "Download did not create a file: $Url"
+            }
+            $actual = (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $Sha256.ToLowerInvariant()) {
+              throw "SHA-256 mismatch. Expected $Sha256; actual $actual"
+            }
+            return $actual
+          }
+
+          function Get-ExeInventory([string]$Directory) {
+            @(Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue |
+              Where-Object { $_.Extension -ieq '.exe' } |
+              ForEach-Object {
+                [PSCustomObject]@{
+                  Path = [IO.Path]::GetRelativePath($Directory, $_.FullName).Replace('\', '/')
+                  Size = $_.Length
+                }
+              })
+          }
+
+          function Expand-NestedArchives([string]$Directory, [string]$Label) {
+            $processed = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+            $index = 0
+            while ($true) {
+              $archives = @(Get-ChildItem -LiteralPath $Directory -File -Recurse -Force -ErrorAction SilentlyContinue |
+                Where-Object { $_.Extension -match '(?i)^\.(7z|zip|cab)$' -and $processed.Add($_.FullName) })
+              if ($archives.Count -eq 0) { break }
+              foreach ($archive in $archives) {
+                $index++
+                $destination = Join-Path $Directory ("nested-{0:D2}" -f $index)
+                New-Item -ItemType Directory -Path $destination -Force | Out-Null
+                Add-Report "$Label nested archive: $($archive.Name)"
+                & $sevenZip x $archive.FullName "-o$destination" -y -bd 2>&1 |
+                  Set-Content -LiteralPath (Join-Path $Directory ("nested-{0:D2}.log" -f $index)) -Encoding utf8
+                if ($LASTEXITCODE -ne 0) { throw "Could not extract nested archive $($archive.FullName)." }
+              }
+            }
+          }
+
+          function Invoke-PackageTest {
+            param(
+              [string]$Name,
+              [string]$Version,
+              [string]$Type,
+              [string]$Url,
+              [string]$Sha256,
+              [string]$ExpectedExe,
+              [string]$MsiMode = ''
+            )
+            $appRoot = Join-Path $root $Name
+            $extractDir = Join-Path $appRoot 'extracted'
+            New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+            $extension = if ($Type -eq 'MSI') { 'msi' } elseif ($Type -eq 'NSIS') { 'exe' } else { 'zip' }
+            $download = Join-Path $appRoot "package.$extension"
+            $result = [ordered]@{
+              Name = $Name; Version = $Version; Type = $Type
+              Download = 'failed'; Extraction = 'not-run'; MainExe = ''
+              ExeFiles = @(); Error = ''
+            }
+            try {
+              $hash = Download-Verified -Url $Url -Path $download -Sha256 $Sha256
+              $result.Download = "SHA-256 verified: $hash"
+              if ($Type -eq 'MSI') {
+                $log = Join-Path $appRoot 'msiexec-admin.log'
+                $process = Start-Process -FilePath "$env:SystemRoot\System32\msiexec.exe" -ArgumentList @('/a', $download, '/qn', "TARGETDIR=$extractDir", '/l*v', $log) -Wait -PassThru
+                Add-Report "$Name msiexec /a exit code: $($process.ExitCode)"
+                if ($process.ExitCode -notin @(0, 3010)) { throw "MSI administrative extraction failed with exit code $($process.ExitCode)." }
+              } else {
+                if ($Type -eq 'NSIS') {
+                  & $sevenZip l -slt $download 2>&1 | Set-Content -LiteralPath (Join-Path $appRoot 'listing.log') -Encoding utf8
+                  if ($LASTEXITCODE -ne 0) { throw '7-Zip could not list the NSIS installer.' }
+                }
+                & $sevenZip x $download "-o$extractDir" -y -bd 2>&1 |
+                  Set-Content -LiteralPath (Join-Path $appRoot 'extract.log') -Encoding utf8
+                if ($LASTEXITCODE -ne 0) { throw "7-Zip extraction failed with exit code $LASTEXITCODE." }
+                Expand-NestedArchives -Directory $extractDir -Label $Name
+              }
+
+              $exe = @(Get-ExeInventory -Directory $extractDir)
+              $result.ExeFiles = $exe
+              Add-Report "$Name ($Version): extracted EXE count = $($exe.Count)"
+              foreach ($item in $exe) { Add-Report "  $($item.Path) [$($item.Size) bytes]" }
+              if ($exe.Count -eq 0) { throw 'No executable was found in the extracted payload.' }
+              $main = $exe | Where-Object { $_.Path -match $ExpectedExe } | Select-Object -First 1
+              if ($null -eq $main) {
+                throw "Expected application executable pattern was not found: $ExpectedExe"
+              }
+              $result.MainExe = $main.Path
+              $result.Extraction = 'success'
+              Add-Report "$Name MAIN EXE: $($result.MainExe)"
+            } catch {
+              $result.Error = $_.Exception.Message
+              $result.Extraction = 'failed'
+              $script:failed = $true
+              Add-Report "$Name FAILED: $($result.Error)"
+            }
+            $results.Add([PSCustomObject]$result)
+          }
+
+          Invoke-PackageTest -Name 'HapWallpaper' -Version '1.3.0' -Type 'ZIP' -Url 'https://github.com/ramiro-soler/HapWallpaper/releases/download/v1.3.0/HapWallpaper-v1.3.0-win-x64.zip' -Sha256 'f05f933e3fb939cdb678a5ae8c7c61e474fff2bed7299504cbac72c909b82512' -ExpectedExe '(?i)^HapWallpaper\.exe$'
+          Invoke-PackageTest -Name 'OP-Keyboard-Spammer' -Version '0.2.0' -Type 'ZIP' -Url 'https://github.com/Trevor-2/OP-Keyboard-Spammer/releases/download/update/OP.Keyboard.Spammer.Portable.zip' -Sha256 '6fcdacd5f64c4e043a8dd32342114bd36dc346300bc0ace1fbb6f0f27758b0d1' -ExpectedExe '(?i)^OP Keyboard Spammer\.exe$'
+          Invoke-PackageTest -Name 'Yogurt' -Version '0.3.56' -Type 'NSIS' -Url 'https://github.com/FrigadeHQ/yogurt/releases/download/v0.3.56/Yogurt-windows-x64.exe' -Sha256 'ebf96243ec2b9e6079160c491d0840ca7f7dcc1a2cfec17e807ca7d0d3123b0c' -ExpectedExe '(?i)^Yogurt\.exe$'
+          Invoke-PackageTest -Name 'Updainium' -Version '1.5.0' -Type 'MSI' -Url 'https://github.com/livrasand/Updainium/releases/download/v1.5.0/Updainium_1.5.0_x64_en-US.msi' -Sha256 'd9ea38982d359b70f3decd9fcc32efbb5cc614136e8680bc073b8d9be6c24081' -ExpectedExe '(?i)^Updainium\.exe$'
+
+          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
+          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
+          @(
+            '## Scoop candidate extraction results'
+            ''
+            '| Program | Version | Package method | SHA-256 | Extraction | Main executable |'
+            '|---|---:|---|---|---|---|'
+            foreach ($item in $results) {
+              "| $($item.Name) | $($item.Version) | $($item.Type) | $($item.Download) | $($item.Extraction) | $($item.MainExe) |"
+            }
+            ''
+            'No downloaded or extracted executable was run.'
+            'Detailed file inventories and logs are available in the artifact.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          if ($failed) { throw 'One or more package extraction tests failed. Review the extraction report artifact.' }
+
+      - name: Upload extraction reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: scoop-candidate-extraction-results
+          path: \${{ runner.temp }}/scoop-candidate-extraction/
+          if-no-files-found: warn
+          retention-days: 14
