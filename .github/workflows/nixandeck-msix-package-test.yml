@@ -210,30 +210,70 @@ jobs:
               }
             }
 
-            # Allow the bundled watchdog to restore the Windows taskbar/work area after the smoke test.
-            $deadline = [DateTime]::UtcNow.AddSeconds(15)
+            # Confirm that the bundled watchdog started, then allow it to restore the Windows shell after the smoke test.
+            $watchdogSeen = $false
+            $watchdogStartDeadline = [DateTime]::UtcNow.AddSeconds(5)
+            do {
+              $newWatchdogs = @(Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue |
+                Where-Object { $watchdogIdsBefore -notcontains $_.Id })
+              if ($newWatchdogs.Count -gt 0) {
+                $watchdogSeen = $true
+                break
+              }
+              Start-Sleep -Milliseconds 250
+            } while ([DateTime]::UtcNow -lt $watchdogStartDeadline)
+
+            $watchdogExitDeadline = [DateTime]::UtcNow.AddSeconds(15)
             do {
               $newWatchdogs = @(Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue |
                 Where-Object { $watchdogIdsBefore -notcontains $_.Id })
               if ($newWatchdogs.Count -eq 0) { break }
               Start-Sleep -Milliseconds 500
-            } while ([DateTime]::UtcNow -lt $deadline)
+            } while ([DateTime]::UtcNow -lt $watchdogExitDeadline)
 
-            # The runner is disposable; stop only watchdog instances created by this test if one remains.
-            foreach ($watchdog in @(Get-Process -Name 'NixanDeck.Watchdog' -ErrorAction SilentlyContinue |
-                Where-Object { $watchdogIdsBefore -notcontains $_.Id })) {
-              Stop-Process -Id $watchdog.Id -Force -ErrorAction SilentlyContinue
+            if ($watchdogSeen -and $newWatchdogs.Count -eq 0) {
+              Write-Host 'Watchdog exit after main app termination: PASS'
+            } elseif (-not $watchdogSeen) {
+              Write-Warning 'The bundled watchdog process was not observed during the direct-launch test.'
+            } else {
+              Write-Warning 'The watchdog did not exit in time; stopping only the test-created watchdog process.'
+              foreach ($watchdog in $newWatchdogs) {
+                Stop-Process -Id $watchdog.Id -Force -ErrorAction SilentlyContinue
+              }
             }
 
             $env:LOCALAPPDATA = $savedLocalAppData
-            $currentStartupKey = Get-Item -LiteralPath $startupKeyPath -ErrorAction Stop
-            if ($hadStartupValue) {
-              $currentStartupKey.SetValue('NixanDeck', $oldStartupValue, $oldStartupKind)
-            } else {
-              $currentStartupKey.DeleteValue('NixanDeck', $false)
+            $registryRelativePath = 'Software\Microsoft\Windows\CurrentVersion\Run'
+            $currentStartupKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey($registryRelativePath, $true)
+            if ($null -ne $currentStartupKey) {
+              try {
+                if ($hadStartupValue) {
+                  $currentStartupKey.SetValue('NixanDeck', $oldStartupValue, $oldStartupKind)
+                } else {
+                  $currentStartupKey.DeleteValue('NixanDeck', $false)
+                }
+              } finally {
+                $currentStartupKey.Dispose()
+              }
             }
-            if (-not $hadStartupKey -and $currentStartupKey.GetValueNames().Count -eq 0 -and $currentStartupKey.GetSubKeyNames().Count -eq 0) {
-              Remove-Item -LiteralPath $startupKeyPath -Force -ErrorAction SilentlyContinue
+            if (-not $hadStartupKey) {
+              $currentVersionKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion', $true)
+              if ($null -ne $currentVersionKey) {
+                try {
+                  $runKeyCheck = $currentVersionKey.OpenSubKey('Run', $false)
+                  if ($null -ne $runKeyCheck) {
+                    try {
+                      if ($runKeyCheck.GetValueNames().Count -eq 0 -and $runKeyCheck.GetSubKeyNames().Count -eq 0) {
+                        $currentVersionKey.DeleteSubKey('Run', $false)
+                      }
+                    } finally {
+                      $runKeyCheck.Dispose()
+                    }
+                  }
+                } finally {
+                  $currentVersionKey.Dispose()
+                }
+              }
             }
             Remove-Item -LiteralPath $testLocalAppData -Recurse -Force -ErrorAction SilentlyContinue
           }
