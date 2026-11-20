@@ -1,0 +1,41 @@
+{
+    "version": "0.12.0-beta",
+    "description": "Windows optimization and customization utility with system monitoring and configurable tweaks.",
+    "homepage": "https://github.com/DeizenITS/VANTAGE",
+    "license": {
+        "identifier": "Freeware",
+        "url": "https://github.com/DeizenITS/VANTAGE/blob/main/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/DeizenITS/VANTAGE/releases/download/v0.12.0-beta/VANTAGE.exe",
+            "hash": "d8de0ed4f5557032b0067f93b3fa41859189b0005cbb4872a3f595f0230a5506",
+            "bin": "VANTAGE.exe",
+            "shortcuts": [
+                [
+                    "VANTAGE.exe",
+                    "VANTAGE"
+                ]
+            ]
+        }
+    },
+    "checkver": {
+        "url": "https://api.github.com/repos/DeizenITS/VANTAGE/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+-beta)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/DeizenITS/VANTAGE/releases/download/v$version/VANTAGE.exe"
+            }
+        },
+        "hash": {
+            "url": "https://api.github.com/repos/DeizenITS/VANTAGE/releases/tags/v$version",
+            "jsonpath": "$.assets[?(@.name == 'VANTAGE.exe')].digest"
+        }
+    },
+    "notes": [
+        "Public beta. VANTAGE can apply Windows, network, power, display, and performance changes; review each tweak before applying it and create a backup or restore point first."
+    ]
+}
