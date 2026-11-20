@@ -90,6 +90,10 @@ jobs:
             }
           }
 
+          if (-not $scriptText.Contains("('/D=' + `$dir)")) {
+            throw 'The NSIS /D target must be passed as an unquoted final argument.'
+          }
+
           & $checkver -App 'mumuplayer' -Dir (Join-Path $env:GITHUB_WORKSPACE 'bucket') -ThrowError
           if (-not $?) { throw 'Official Scoop checkver returned an unsuccessful result.' }
 
@@ -135,9 +139,15 @@ jobs:
             if (-not $actionArg -or -not $directoryArg) {
               throw "Mock MuMu installer received incomplete arguments: $($ArgumentList -join ' ')"
             }
+            if ($ArgumentList[-1] -cne $directoryArg) {
+              throw 'NSIS /D must be the final command-line argument.'
+            }
+            if ($directoryArg.Contains('"')) {
+              throw 'NSIS /D must not contain quote characters.'
+            }
 
             $action = $actionArg.Substring(8)
-            $target = $directoryArg.Substring(3).Trim('"')
+            $target = $directoryArg.Substring(3)
 
             if (-not (Test-Path -LiteralPath $FilePath -PathType Leaf)) {
               throw "Mock MuMu installer file is missing: $FilePath"
@@ -338,7 +348,7 @@ jobs:
             '- Error 80002 was injected once in install_prepare and the version-aware retry succeeded.'
             '- Error 80002 was also injected once in commit; commit retried with the version written by install_prepare.'
             '- The test Scoop app root and persist root were separate, simulating a custom/global persist location.'
-            '- Both paths contained spaces; the quoted /D argument was parsed correctly.'
+            '- Both paths contained spaces; the unquoted NSIS /D argument was passed last and parsed correctly.'
             '- configs, vms, and nx_device were all kept in Scoop persist.'
             '- VM user data and custom config/device markers survived the upgrade.'
             '- The nx_device executable was updated through its persist junction.'
