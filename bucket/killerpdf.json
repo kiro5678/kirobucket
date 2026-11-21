@@ -1,10 +1,10 @@
 {
-    "version": "1.9.4",
+    "version": "1.9.5",
     "description": "Free and open-source Windows PDF editor installed with the official KillerPDF setup package, including OCR, annotation, text editing, redaction, signing, forms, comparison and conversion.",
     "homepage": "https://killerpdf.net/",
     "license": "GPL-3.0-only",
-    "url": "https://github.com/SteveTheKiller/KillerPDF/releases/download/v1.9.4/KillerPDF.exe",
-    "hash": "6941cb34005615a42d6a654334e28477ff525c7baaadec7dbae54d61890eeb56",
+    "url": "https://github.com/SteveTheKiller/KillerPDF/releases/download/v1.9.5/KillerPDF.exe",
+    "hash": "97e3ae5d95bd7a160a2c2aa47c9b38a2dc14a34d0659bb221a95187ac984ff31",
     "pre_install": [
         "$ErrorActionPreference = 'Stop'",
         "$runtimeRoot = Join-Path $env:ProgramFiles 'dotnet'",
