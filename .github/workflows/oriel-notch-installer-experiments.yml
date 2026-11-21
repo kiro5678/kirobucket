@@ -173,12 +173,12 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $reportRoot = Join-Path $env:RUNNER_TEMP 'oriel-scoop-probe'
           New-Item -ItemType Directory -Path $reportRoot -Force | Out-Null
-          $manifestPath = Join-Path $env:GITHUB_WORKSPACE ($env:MANIFEST_FILE.Replace('/', '\\'))
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE ($env:MANIFEST_FILE.Replace('/', '\'))
           if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Missing manifest: $manifestPath" }
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
           $appName = [System.IO.Path]::GetFileNameWithoutExtension($manifestPath)
 
-          $checkverScript = Join-Path $env:SCOOP 'apps\\scoop\\current\\bin\\checkver.ps1'
+          $checkverScript = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
           if (-not (Test-Path -LiteralPath $checkverScript -PathType Leaf)) { throw "Scoop checkver script was not found: $checkverScript" }
           $bucketRoot = Join-Path $env:RUNNER_TEMP 'oriel-checkver-bucket'
           $bucketDir = Join-Path $bucketRoot 'bucket'
@@ -202,7 +202,7 @@ jobs:
           if ($manifest.installer.file) { throw 'Guided setup must use installer.script so the changing download filename can come from $fname.' }
           if ($manifest.installer.args) { throw 'Guided setup must not pass installer command-line arguments.' }
           $installerScript = [string]::Join([Environment]::NewLine, [string[]]@($manifest.installer.script))
-          if ($installerScript -notmatch '\\$fname' -or $installerScript -notmatch 'Start-Process' -or $installerScript -notmatch '-Wait') {
+          if ($installerScript -notmatch '\$fname' -or $installerScript -notmatch 'Start-Process' -or $installerScript -notmatch '-Wait') {
             throw 'Guided installer must launch the downloaded $fname with Start-Process and wait for the wizard to exit.'
           }
           if ($installerScript -match '(?i)--silent|--quiet|/quiet|/silent|/S(?![a-z])') {
@@ -211,7 +211,7 @@ jobs:
           if (-not $manifest.pre_install -or -not $manifest.uninstaller.script) {
             throw 'Expected pre_install and uninstaller scripts are missing.'
           }
-          if ([string]$manifest.bin -ne 'oriel-managed\\oriel.exe') {
+          if ([string]$manifest.bin -ne 'oriel-managed\oriel.exe') {
             throw "Unexpected Scoop shim target: $($manifest.bin)"
           }
 
