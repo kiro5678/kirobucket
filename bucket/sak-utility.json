@@ -1,10 +1,10 @@
 {
-    "version": "0.9.3",
+    "version": "0.9.4",
     "description": "Portable Windows toolkit for PC technicians with profile backup and restore, diagnostics, application management, disk tools, network utilities, and USB imaging.",
     "homepage": "https://github.com/RandyNorthrup/S.A.K.-Utility",
     "license": "AGPL-3.0-only",
-    "url": "https://github.com/RandyNorthrup/S.A.K.-Utility/releases/download/v0.9.3/SAK-Utility-Windows-x64.zip",
-    "hash": "4de827f7ed62a550ab2c0038e02ef3761c3148bf76cb97f858132a6b33fc0e70",
+    "url": "https://github.com/RandyNorthrup/S.A.K.-Utility/releases/download/v0.9.4/SAK-Utility-Windows-x64.zip",
+    "hash": "ecd73d9b8af0bb9a1496d07d5f4f6b701a26d5bffa015271def6167d154e62da",
     "persist": "data",
     "bin": "sak_utility.exe",
     "shortcuts": [
