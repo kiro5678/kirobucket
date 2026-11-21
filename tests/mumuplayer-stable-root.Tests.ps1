@@ -95,9 +95,11 @@ $legacyRoot = Join-Path $persistRoot 'install'
 $previousVersion = '1.8.5.5748'
 $firstVersion = '1.8.16.6114'
 $secondVersion = '1.8.17.6200'
+$thirdVersion = '1.8.18.6300'
 $previousRoot = Join-Path $appRoot $previousVersion
 $firstDir = Join-Path $appRoot $firstVersion
 $secondDir = Join-Path $appRoot $secondVersion
+$thirdDir = Join-Path $appRoot $thirdVersion
 $persistConfig = Join-Path $persistRoot 'configs\main\install_config.json'
 $appDataConfig = Join-Path $appDataRoot 'Netease\MuMuPlayerGlobal\install_config.json'
 $vmData = Join-Path $persistRoot 'vms\test-vm\userdata.img'
@@ -337,17 +339,26 @@ try {
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedStableRoot 'Second update changed persistent install_dir.'
     Assert (@($script:PhysicalTargets | Select-Object -Unique).Count -ge 2) 'Installer phases did not execute against more than one version directory.'
 
+    # Forced same-version repair: Scoop renames the previous version to _<version>.old.
     Remove-ScoopCurrentAndPersistLinks $secondVersion
     $forceBackupRoot = Join-Path $appRoot ('_' + $secondVersion + '.old')
     Move-Item -LiteralPath $secondDir -Destination $forceBackupRoot -ErrorAction Stop
-    Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0' -Retry80002
+    Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0'
+    Assert (Test-Path (Join-Path $secondDir 'nx_main\\MuMuNxMain.exe')) 'Forced same-version update payload is missing.'
     Invoke-ScoopPersistData $secondVersion
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedStableRoot 'Forced same-version update changed the stable install path.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Forced same-version update did not preserve the current product version.'
+
+    # Test 80002 recovery only when the stored product version is older than the target.
+    Remove-ScoopCurrentAndPersistLinks $secondVersion
+    Invoke-UpgradeAttempt -Version $thirdVersion -ProductVersion '6.8.18.0' -Retry80002
+    Assert (Test-Path (Join-Path $thirdDir 'nx_main\\MuMuNxMain.exe')) 'The 80002 retry update did not create the third-version payload.'
+    Invoke-ScoopPersistData $thirdVersion
     Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedStableRoot '80002 retry changed the stable install path.'
-    Assert (Test-Path (Join-Path $secondDir 'nx_main\MuMuNxMain.exe')) 'Forced same-version update payload is missing.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.15.9' 'The commit retry result was not preserved.'
 
-    Remove-ScoopCurrentAndPersistLinks $secondVersion
-    $script:dir = $secondDir
+    Remove-ScoopCurrentAndPersistLinks $thirdVersion
+    $script:dir = $thirdDir
     $script:persist_dir = $persistRoot
     $cmd = 'update'
     . ([scriptblock]::Create($postUninstallText))
@@ -372,7 +383,7 @@ try {
         '- Verified successful migration places MuMu binaries and uninstall.exe inside the Scoop version directory.'
         '- Simulated Scoop persist_data moving configs, vms and nx_device back to persist and creating version-local junctions.'
         '- Simulated a subsequent update after unlink_current and verified old binaries move to the next version directory.'
-        '- Exercised the 80002 prepare and commit retry branches.'
+        '- Simulated Scoop's forced same-version backup folder and exercised 80002 prepare/commit retry separately.'
         '- Verified current alias paths, Registry, AppData, service path and persisted VM/config/device data.'
         '- Verified post_uninstall keeps persistent user data and leaves versioned files for Scoop to remove.'
         ''
