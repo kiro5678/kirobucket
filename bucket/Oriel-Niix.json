@@ -73,7 +73,7 @@
             "if (Test-Path -LiteralPath $installDir) { throw \"Oriel install directory remains after cleanup: $installDir\" }"
         ]
     },
-    "notes": "Non-portable package: Scoop opens the official Oriel setup wizard without command-line switches and waits for you to complete it. The program is installed per-user in %LOCALAPPDATA%\\Programs\\Oriel; Scoop creates a Junction in its version directory for the shim and shortcut. User data remains in %APPDATA%\\Oriel and Windows Credential Manager. Remove any existing standalone Oriel installation before the first Scoop install. Disable Oriel's automatic update check in Settings > About to keep Scoop as the update authority.",
+    "notes": "Non-portable package: run Scoop from a normal, non-elevated PowerShell session. Scoop opens the official Oriel setup wizard without command-line switches and waits for you to complete it. The program is installed per-user in %LOCALAPPDATA%\\Programs\\Oriel; Scoop creates a Junction in its version directory for the shim and shortcut. User data remains in %APPDATA%\\Oriel and Windows Credential Manager. Remove any existing standalone Oriel installation before the first Scoop install. Disable Oriel's automatic update check in Settings > About to keep Scoop as the update authority.",
     "checkver": {
         "github": "https://github.com/Niix-x/Oriel-Releases"
     },
