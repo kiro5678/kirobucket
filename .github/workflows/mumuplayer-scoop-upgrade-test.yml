@@ -88,6 +88,7 @@ jobs:
 
           foreach ($requiredText in @(
             'Find-MuMuPreviousVersionInstallRoot',
+            '$requestedInstallFull',
             'Move-MuMuInstallRootToVersion',
             'Move-MuMuPersistDataIntoVersion',
             'Restore-MuMuPersistDataToStore',
