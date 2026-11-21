@@ -70,6 +70,7 @@ Equal $manifest.shortcuts[0][0] 'MuMuPlayer.cmd' 'Shortcut must use the version-
 foreach ($marker in @(
     'Join-Path $scoopAppRoot',
     'Find-MuMuPreviousVersionInstallRoot',
+    '$requestedInstallFull',
     'Move-MuMuInstallRootToVersion',
     'Move-MuMuPersistDataIntoVersion',
     'Restore-MuMuPersistDataToStore',
@@ -348,6 +349,8 @@ try {
     Move-Item -LiteralPath $secondDir -Destination $forceBackupRoot -ErrorAction Stop
     Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0'
     Assert (Test-Path (Join-Path $secondDir 'nx_main\\MuMuNxMain.exe')) 'Forced same-version update payload is missing.'
+    Assert (-not (Test-Path (Join-Path $forceBackupRoot 'nx_main\\MuMuNxMain.exe'))) 'Forced same-version update did not migrate the renamed Scoop backup payload.'
+    Assert (-not (Test-Path (Join-Path $forceBackupRoot 'uninstall.exe'))) 'Forced same-version update left the old uninstaller in the renamed Scoop backup.'
     Invoke-ScoopPersistData $secondVersion
     Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Forced same-version update changed the version-specific install path.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Forced same-version update did not preserve the current product version.'
