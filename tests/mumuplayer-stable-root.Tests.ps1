@@ -374,7 +374,7 @@ try {
     Assert (Test-Path $deviceMarker) 'Scoop uninstall removed persisted device data.'
     Assert (Test-Path $persistConfig) 'Scoop uninstall removed persisted configuration.'
     Assert (-not (Test-Path $legacyRoot)) 'The empty legacy install root and its old persist junctions were not cleaned.'
-    Assert (Test-Path (Join-Path $secondDir 'nx_main\MuMuNxMain.exe')) 'post_uninstall incorrectly deleted versioned program files instead of leaving them to Scoop.'
+    Assert (Test-Path (Join-Path $thirdDir 'nx_main\MuMuNxMain.exe')) 'post_uninstall incorrectly deleted versioned program files instead of leaving them to Scoop.'
 
     @(
         '## MuMuPlayer versioned-payload regression'
