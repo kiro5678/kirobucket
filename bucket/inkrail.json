@@ -28,5 +28,6 @@
                 "url": "https://github.com/Aaryanverma/inkrail/releases/download/v$version/Inkrail-Windows-x64.zip"
             }
         }
-    }
+    },
+    "extract_dir": "Inkrail-Windows-x64"
 }
