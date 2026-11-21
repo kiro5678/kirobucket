@@ -3,7 +3,7 @@
     "description": "Desktop library for organizing and saving shell commands in local workspaces.",
     "homepage": "https://github.com/Renato1478/termemo",
     "license": "Unknown",
-    "url": "https://github.com/Renato1478/termemo/releases/download/v$version/Termemo_$version_x64_en-US.msi#/dl.msi",
+    "url": "https://github.com/Renato1478/termemo/releases/download/v0.3.1/Termemo_0.3.1_x64_en-US.msi#/dl.msi",
     "hash": "80c0e451f561ca4dc755749ce76b7d21648b6700aeee8183ebfb6024a41c8b11",
     "extract_dir": "PFiles/Termemo",
     "persist": [
