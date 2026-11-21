@@ -94,11 +94,9 @@ $legacyRoot = Join-Path $persistRoot 'install'
 $previousVersion = '1.8.5.5748'
 $firstVersion = '1.8.16.6114'
 $secondVersion = '1.8.17.6200'
-$thirdVersion = '1.8.18.6300'
 $previousRoot = Join-Path $appRoot $previousVersion
 $firstDir = Join-Path $appRoot $firstVersion
 $secondDir = Join-Path $appRoot $secondVersion
-$thirdDir = Join-Path $appRoot $thirdVersion
 $persistConfig = Join-Path $persistRoot 'configs\main\install_config.json'
 $appDataConfig = Join-Path $appDataRoot 'Netease\MuMuPlayerGlobal\install_config.json'
 $vmData = Join-Path $persistRoot 'vms\test-vm\userdata.img'
@@ -338,14 +336,16 @@ try {
     Assert (@($script:PhysicalTargets | Select-Object -Unique).Count -ge 2) 'Installer phases did not execute against more than one version directory.'
 
     Remove-ScoopCurrentAndPersistLinks $secondVersion
-    Invoke-UpgradeAttempt -Version $thirdVersion -ProductVersion '6.8.18.0' -Retry80002
-    Invoke-ScoopPersistData $thirdVersion
+    $forceBackupRoot = Join-Path $appRoot ('_' + $secondVersion + '.old')
+    Move-Item -LiteralPath $secondDir -Destination $forceBackupRoot -ErrorAction Stop
+    Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0' -Retry80002
+    Invoke-ScoopPersistData $secondVersion
     Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedStableRoot '80002 retry changed the stable install path.'
-    Assert (Test-Path (Join-Path $thirdDir 'nx_main\MuMuNxMain.exe')) 'Third version payload is missing.'
+    Assert (Test-Path (Join-Path $secondDir 'nx_main\MuMuNxMain.exe')) 'Forced same-version update payload is missing.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.15.9' 'The commit retry result was not preserved.'
 
-    Remove-ScoopCurrentAndPersistLinks $thirdVersion
-    $script:dir = $thirdDir
+    Remove-ScoopCurrentAndPersistLinks $secondVersion
+    $script:dir = $secondDir
     $script:persist_dir = $persistRoot
     $cmd = 'update'
     . ([scriptblock]::Create($postUninstallText))
@@ -361,7 +361,7 @@ try {
     Assert (Test-Path $deviceMarker) 'Scoop uninstall removed persisted device data.'
     Assert (Test-Path $persistConfig) 'Scoop uninstall removed persisted configuration.'
     Assert (-not (Test-Path $legacyRoot)) 'The empty legacy install root and its old persist junctions were not cleaned.'
-    Assert (Test-Path (Join-Path $thirdDir 'nx_main\MuMuNxMain.exe')) 'post_uninstall incorrectly deleted versioned program files instead of leaving them to Scoop.'
+    Assert (Test-Path (Join-Path $secondDir 'nx_main\MuMuNxMain.exe')) 'post_uninstall incorrectly deleted versioned program files instead of leaving them to Scoop.'
 
     @(
         '## MuMuPlayer versioned-payload regression'
