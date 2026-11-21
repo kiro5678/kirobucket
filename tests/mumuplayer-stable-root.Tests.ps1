@@ -383,7 +383,7 @@ try {
         '- Verified successful migration places MuMu binaries and uninstall.exe inside the Scoop version directory.'
         '- Simulated Scoop persist_data moving configs, vms and nx_device back to persist and creating version-local junctions.'
         '- Simulated a subsequent update after unlink_current and verified old binaries move to the next version directory.'
-        '- Simulated Scoop's forced same-version backup folder and exercised 80002 prepare/commit retry separately.'
+        '- Simulated a forced same-version backup folder and tested 80002 retry separately.'
         '- Verified current alias paths, Registry, AppData, service path and persisted VM/config/device data.'
         '- Verified post_uninstall keeps persistent user data and leaves versioned files for Scoop to remove.'
         ''
