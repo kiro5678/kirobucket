@@ -1,12 +1,12 @@
 {
-    "version": "1.8.15.6065",
+    "version": "1.8.16.6114",
     "description": "Android emulator for Windows (NX main engine)",
     "homepage": "https://www.mumuplayer.com/",
     "license": "Freeware",
     "architecture": {
         "64bit": {
-            "url": "https://a11.gdl.easebar.com/MuMu-setup-nxmain-V1.8.15.6065-overseas-1113212110.exe",
-            "hash": "89cada777999e995ae48ca99b59aa214b0386a6de693ed9f4c6a55be43af0d95"
+            "url": "https://a11.gdl.easebar.com/MuMu-setup-nxmain-V1.8.16.6114-overseas-1119205802.exe",
+            "hash": "16583e0f6c8d54e99ebc2926340bacf7b7dbca575919bf5adeba3e6d2d262c45"
         }
     },
     "pre_install": [
