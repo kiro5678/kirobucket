@@ -138,7 +138,7 @@ function Start-Process {
     $dirArg = $ArgumentList | Where-Object { $_ -like '/D=*' } | Select-Object -First 1
     Assert ($actionArg -and $dirArg) 'Missing MuMu installer action or /D argument.'
     Equal $ArgumentList[-1] $dirArg '/D must be the final installer argument.'
-    Assert (-not $dirArg.Contains('"')) '/D must be unquoted.'
+    Assert (-not $dirArg.Contains([string][char]34)) '/D must be unquoted.'
     $action = $actionArg.Substring(8)
     $target = $dirArg.Substring(3)
     Equal ([IO.Path]::GetFullPath($target)) ([IO.Path]::GetFullPath($script:ExpectedStableRoot)) 'Installer must use Scoop current alias.'
