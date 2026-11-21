@@ -10,7 +10,7 @@
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 8 | [View](#cross-device-integration) |
 | Desktop Docks | 8 | [View](#desktop-docks) |
-| Developer & Technical Tools | 58 | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 59 | [View](#developer-technical-tools) |
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
@@ -47,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1279**
+**Total unique categorized manifests: 1280**
 
 
 ## Android & Device Tools
@@ -207,6 +207,7 @@
 | [sessionary](../bucket/sessionary.json) | 0.1.0 | 27.8 MiB | 2026-10-17 | Desktop workspace for managing AI coding-agent sessions, projects, and terminals. | [Homepage](https://github.com/onlynor/Sessionary-Desktop) |
 | [sordum-reg-converter](../bucket/sordum-reg-converter.json) | 1.2 | 439.0 KiB | 2021-03-27 | Reg Converter is a portable freeware utility to convert .reg data to .bat, .vbs, or .au3. (RegConverter可以将.reg文件转换为.bat，.vbs或.au3。这对于需要管理员权限才能合并到注册表中的文件或无人参与的自动化安装时特别有用。) | [Homepage](https://www.sordum.org/8478/reg-converter-v1-2/) |
 | [sordum-registry-key-jumper](../bucket/sordum-registry-key-jumper.json) | 1.3 | 964.8 KiB | 2025-12-01 | A tool that helps the user navigate to a user-defined registry key with minimal effort. | [Homepage](https://www.sordum.org/registry-key-jumper) |
+| [termemo](../bucket/termemo.json) | 0.3.1 | 3.4 MiB | 2026-11-20 | Local desktop library for reusable shell commands and workspaces. | [Homepage](https://github.com/Renato1478/termemo) |
 | [vcredist](../bucket/vcredist.json) | 14.51.36247.0 | 24.5 MiB | 2026-05-29 | Microsoft Visual C++ Redistributables bundle for all major versions. | [Homepage](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist) |
 | [vovsoft-ai-automator](../bucket/vovsoft-ai-automator.json) | 1.5 | 30.9 MiB | 2026-08-13 | Portable edition of Vovsoft AI Automator. | [Homepage](https://vovsoft.com/software/ai-automator/) |
 | [vovsoft-ai-requester](../bucket/vovsoft-ai-requester.json) | 5.4 | 2.5 MiB | 2026-09-29 | Portable edition of Vovsoft AI Requester. | [Homepage](https://vovsoft.com/software/ai-requester/) |
