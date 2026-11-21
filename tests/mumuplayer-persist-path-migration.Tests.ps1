@@ -34,6 +34,8 @@ Assert $helperMatch.Success 'Could not extract the embedded migration helper fro
 $helperText = $helperMatch.Groups['helper'].Value
 Assert-ScriptSyntax $helperText 'embedded migration helper'
 
+$helperPath = Join-Path $testRoot 'path-migration-helper.ps1'
+
 foreach ($required in @(
     '-Phase Pre',
     '-Phase Post',
@@ -102,7 +104,8 @@ try {
     $vm12Config | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $vm12Path -Encoding utf8
     $vm15Config | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $vm15Path -Encoding utf8
 
-    & ([scriptblock]::Create($helperText)) -Phase Pre -VersionRoot $newRoot -PersistRoot $persistRoot -AppDataConfig $appDataConfig -ProgramFilesRoot $programFilesMock -ServicesRegistryRoot $servicesRegistryRoot -ClassesRegistryRoot $classesRegistryRoot
+    Set-Content -LiteralPath $helperPath -Value $helperText -Encoding utf8
+    & $helperPath -Phase Pre -VersionRoot $newRoot -PersistRoot $persistRoot -AppDataConfig $appDataConfig -ProgramFilesRoot $programFilesMock -ServicesRegistryRoot $servicesRegistryRoot -ClassesRegistryRoot $classesRegistryRoot
 
     $persistAfter = Get-Content -LiteralPath $persistInstallPath -Raw | ConvertFrom-Json
     Assert ($persistAfter.product.install_dir -eq $newRoot) 'Pre-install did not update product.install_dir.'
@@ -160,7 +163,7 @@ try {
         finally { $registryKey.Dispose() }
     }
 
-    $postOutput = @(& ([scriptblock]::Create($helperText)) -Phase Post -VersionRoot $newRoot -PersistRoot $persistRoot -AppDataConfig $appDataConfig -ProgramFilesRoot $programFilesMock -ServicesRegistryRoot $servicesRegistryRoot -ClassesRegistryRoot $classesRegistryRoot 2>&1 | ForEach-Object { "$_" })
+    $postOutput = @(& $helperPath -Phase Post -VersionRoot $newRoot -PersistRoot $persistRoot -AppDataConfig $appDataConfig -ProgramFilesRoot $programFilesMock -ServicesRegistryRoot $servicesRegistryRoot -ClassesRegistryRoot $classesRegistryRoot 2>&1 | ForEach-Object { "$_" })
     $postText = $postOutput -join [Environment]::NewLine
     Assert ($postText -match 'Android 12: Hypervisor and COM checks passed') 'Android 12 Hypervisor/COM validation did not pass.'
     Assert ($postText -match 'Android 15: Hypervisor and COM checks passed') 'Android 15 Hypervisor/COM validation did not pass.'
