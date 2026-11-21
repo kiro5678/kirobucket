@@ -1,4 +1,4 @@
-name: MuMuPlayer Scoop Safe Upgrade Regression
+name: MuMuPlayer Scoop Versioned Payload Regression
 
 on:
   push:
@@ -12,7 +12,6 @@ on:
   pull_request:
     branches:
       - master
-      - fix/mumuplayer-global-persistdir-20261119
     paths:
       - "bucket/mumuplayer.json"
       - ".github/workflows/mumuplayer-scoop-upgrade-test.yml"
@@ -25,7 +24,7 @@ permissions:
 jobs:
   validate-and-upgrade-simulation:
     runs-on: windows-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout bucket
@@ -57,11 +56,10 @@ jobs:
 
           $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket\mumuplayer.json'
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
-
-          if (@($manifest.persist) -notcontains 'vms' -or
-              @($manifest.persist) -notcontains 'configs' -or
-              @($manifest.persist) -notcontains 'nx_device') {
-            throw 'The MuMuPlayer manifest must persist configs, vms, and nx_device.'
+          foreach ($persistName in @('configs','vms','nx_device')) {
+            if (@($manifest.persist) -notcontains $persistName) {
+              throw "The MuMuPlayer manifest must persist '$persistName'."
+            }
           }
 
           $tokens = $null
@@ -77,55 +75,67 @@ jobs:
             throw 'The MuMuPlayer pre_install PowerShell script has syntax errors.'
           }
 
+          $postUninstallText = @($manifest.post_uninstall) -join [Environment]::NewLine
+          [System.Management.Automation.Language.Parser]::ParseInput(
+            $postUninstallText,
+            [ref]$tokens,
+            [ref]$parseErrors
+          ) | Out-Null
+          if ($parseErrors.Count -gt 0) {
+            $parseErrors | ForEach-Object { Write-Error $_.Message }
+            throw 'The MuMuPlayer post_uninstall PowerShell script has syntax errors.'
+          }
+
           foreach ($requiredText in @(
-            'install_prepare',
-            '80002',
-            'Wait-ForMuMuInstallStability',
-            'Update-MuMuStoredPaths',
-            'Get-MuMuRegisteredInstallRoot',
+            'Find-MuMuPreviousVersionInstallRoot',
+            'New-MuMuCurrentVersionJunction',
             'Move-MuMuInstallRootToStable',
-            'Restore-MuMuMovedInstallRoot',
-            "'/MOVE'",
+            'Move-MuMuPersistDataIntoVersion',
+            'Restore-MuMuPersistDataToStore',
+            'Restore-MuMuCurrentVersionJunction',
             'Update-MuMuUninstallRegistration',
             'Restore-MuMuRegistrySnapshot',
             'Backup-MuMuFile',
-            '$stableRoot',
+            'install_prepare',
+            '80002',
+            'Wait-ForMuMuInstallStability',
             'cache_path',
-            'mumuplayer-installer-',
-            'nx_device'
+            'mumuplayer-installer-'
           )) {
-            if ($scriptText -notmatch [regex]::Escape($requiredText)) {
-              throw "The pre_install script is missing required upgrade handling: $requiredText"
+            if (-not $scriptText.Contains($requiredText)) {
+              throw "The pre_install script is missing required handling: $requiredText"
             }
           }
 
-          if (-not $scriptText.Contains("('/D=' + `$stableRoot)")) {
-            throw 'The NSIS /D target must be the fixed persist install root and an unquoted final argument.'
+          if ($scriptText -notmatch '\$stableRoot\s*=\s*Join-Path\s+\$scoopAppRoot\s+''current''') {
+            throw 'The stable MuMuPlayer install path must be Scoop apps\<app>\current.'
           }
-
+          if ($scriptText -match '\$stableRoot\s*=\s*Join-Path\s+\$persistRoot') {
+            throw 'The MuMuPlayer program payload must not be installed under persist.'
+          }
+          $installTarget = "('/D=' + " + '$stableRoot' + ")"
+          if (-not $scriptText.Contains($installTarget)) {
+            throw 'The NSIS /D target must be Scoop current and remain the final unquoted argument.'
+          }
+          if (-not $scriptText.Contains('Move-MuMuPersistDataIntoVersion')) {
+            throw 'Existing persist data must be made available under the version directory before installer execution.'
+          }
           if ($manifest.shortcuts[0][0] -ne 'MuMuPlayer.cmd') {
-            throw 'The Start Menu shortcut must use the stable-root launcher in the Scoop version directory.'
+            throw 'The Start Menu shortcut must use the launcher stored in the version directory.'
           }
 
           & $checkver -App 'mumuplayer' -Dir (Join-Path $env:GITHUB_WORKSPACE 'bucket') -ThrowError
           if (-not $?) { throw 'Official Scoop checkver returned an unsuccessful result.' }
 
-      - name: Run stable install-root migration and rollback regression
+      - name: Run migration, rollback, next-update and uninstall regression
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          & (Join-Path $env:GITHUB_WORKSPACE 'tests\\mumuplayer-stable-root.Tests.ps1')
+          & (Join-Path $env:GITHUB_WORKSPACE 'tests\mumuplayer-stable-root.Tests.ps1')
 
-      - name: Cleanup mock test root
+      - name: Cleanup mock test roots
         if: always()
         shell: pwsh
         run: |
-          $testRoots = @(
-            (Join-Path $env:RUNNER_TEMP 'MuMu Test Scoop Root With Spaces'),
-            (Join-Path $env:RUNNER_TEMP 'MuMu Global Persist Root With Spaces')
-          )
-          foreach ($testRoot in $testRoots) {
-            if (Test-Path -LiteralPath $testRoot) {
-              Remove-Item -LiteralPath $testRoot -Recurse -Force -ErrorAction SilentlyContinue
-            }
-          }
+          Get-ChildItem -LiteralPath $env:RUNNER_TEMP -Directory -Filter 'mumu-versioned-*' -ErrorAction SilentlyContinue |
+            ForEach-Object { Remove-Item -LiteralPath $_.FullName -Recurse -Force -ErrorAction SilentlyContinue }
