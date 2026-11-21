@@ -107,17 +107,35 @@ try {
     $persistAfter = Get-Content -LiteralPath $persistInstallPath -Raw | ConvertFrom-Json
     Assert ($persistAfter.product.install_dir -eq $newRoot) 'Pre-install did not update product.install_dir.'
     Assert ($persistAfter.main.install_dir -eq (Join-Path $newRoot 'nx_main')) 'Pre-install did not update main.install_dir.'
-    Assert ($persistAfter.engines.nemux.player.install_dir -eq (Join-Path $newRoot 'nx_device\12.0\shell')) 'Pre-install altered or misrouted the nemux path.'
-    Assert ($persistAfter.engines.mumu15.player.install_dir -eq (Join-Path $newRoot 'nx_device\15.0\shell')) 'Pre-install altered or misrouted the mumu15 path.'
+    Assert ($persistAfter.engines.nemux.player.install_dir -eq (Join-Path $persistRoot 'nx_device\12.0\shell')) 'Pre-install did not map nemux to its stable persist location for installer access.'
+    Assert ($persistAfter.engines.mumu15.player.install_dir -eq (Join-Path $persistRoot 'nx_device\15.0\shell')) 'Pre-install did not map mumu15 to its stable persist location for installer access.'
 
     $vm12After = Get-Content -LiteralPath $vm12Path -Raw | ConvertFrom-Json
     $vm15After = Get-Content -LiteralPath $vm15Path -Raw | ConvertFrom-Json
-    Assert ($vm12After.path -eq (Join-Path $newRoot 'nx_device\12.0\vms\MuMuPlayerGlobal-12.0-base\keymap_config')) 'Android 12 config path was not migrated to its matching engine.'
-    Assert ($vm15After.path -eq (Join-Path $newRoot 'nx_device\15.0\vms\MuMuPlayerGlobal-15.0-base\install_apk')) 'Android 15 config path was not migrated to its matching engine.'
+    Assert ($vm12After.path -eq (Join-Path $persistRoot 'nx_device\12.0\vms\MuMuPlayerGlobal-12.0-base\keymap_config')) 'Android 12 config path was not mapped to its stable persist location during pre_install.'
+    Assert ($vm15After.path -eq (Join-Path $persistRoot 'nx_device\15.0\vms\MuMuPlayerGlobal-15.0-base\install_apk')) 'Android 15 config path was not mapped to its stable persist location during pre_install.'
     Assert ((Get-Content -LiteralPath $vmDataPath -Raw).Trim() -eq 'do-not-change-vm-data') 'VM data was modified.'
     $backupRoot = Join-Path $persistRoot '_mumu-scoop-path-backups'
     Assert (Test-Path -LiteralPath $backupRoot -PathType Container) 'A backup folder was not created before configuration edits.'
     Assert ((Get-ChildItem -LiteralPath $backupRoot -Filter '*.json' -File -Recurse).Count -ge 4) 'Expected original configuration backups were not created.'
+
+    # Simulate Scoop persist_data: version-local junctions are created after the installer succeeds.
+    foreach ($name in @('configs','vms','nx_device')) {
+        $versionLink = Join-Path $newRoot $name
+        $persistTarget = Join-Path $persistRoot $name
+        New-Item -ItemType Junction -Path $versionLink -Target $persistTarget | Out-Null
+    }
+
+    $persistAfterPost = Get-Content -LiteralPath $persistInstallPath -Raw | ConvertFrom-Json
+    Assert ($persistAfterPost.engines.nemux.player.install_dir -eq (Join-Path $persistRoot 'nx_device\12.0\shell')) 'Pre-install persist path was unexpectedly changed before post_install.'
+    $persistAfter = Get-Content -LiteralPath $persistInstallPath -Raw | ConvertFrom-Json
+    Assert ($persistAfter.product.install_dir -eq $newRoot) 'Post-install did not leave product.install_dir at the current version root.'
+    Assert ($persistAfter.engines.nemux.player.install_dir -eq (Join-Path $newRoot 'nx_device\12.0\shell')) 'Post-install did not restore nemux path through the version-local persist junction.'
+    Assert ($persistAfter.engines.mumu15.player.install_dir -eq (Join-Path $newRoot 'nx_device\15.0\shell')) 'Post-install did not restore mumu15 path through the version-local persist junction.'
+    $vm12Post = Get-Content -LiteralPath $vm12Path -Raw | ConvertFrom-Json
+    $vm15Post = Get-Content -LiteralPath $vm15Path -Raw | ConvertFrom-Json
+    Assert ($vm12Post.path -eq (Join-Path $newRoot 'nx_device\12.0\vms\MuMuPlayerGlobal-12.0-base\keymap_config')) 'Android 12 config path was not normalized after persist links were created.'
+    Assert ($vm15Post.path -eq (Join-Path $newRoot 'nx_device\15.0\vms\MuMuPlayerGlobal-15.0-base\install_apk')) 'Android 15 config path was not normalized after persist links were created.'
 
     foreach ($engine in @(
         [pscustomobject]@{Version='12.0';Runtime='MuMuVMMVbox';Service='MuMuVMMDrv';Driver='MuMuVMMDrv.sys';Server='MuMuVMMSVC.exe';CLSID='{23cd1535-edaa-4f21-a4ab-45d97fd1d58b}'}
