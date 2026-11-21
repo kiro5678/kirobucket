@@ -34,8 +34,6 @@ Assert $helperMatch.Success 'Could not extract the embedded migration helper fro
 $helperText = $helperMatch.Groups['helper'].Value
 Assert-ScriptSyntax $helperText 'embedded migration helper'
 
-$helperPath = Join-Path $testRoot 'path-migration-helper.ps1'
-
 foreach ($required in @(
     '-Phase Pre',
     '-Phase Post',
@@ -50,6 +48,7 @@ foreach ($required in @(
 }
 
 $testRoot = Join-Path $env:RUNNER_TEMP ('mumu-persist-path-' + [guid]::NewGuid().ToString('N'))
+$helperPath = Join-Path $testRoot 'path-migration-helper.ps1'
 $scoopAppRoot = Join-Path $testRoot 'Scoop Root\apps\mumuplayer'
 $oldRoot = Join-Path $scoopAppRoot '1.8.5.5748'
 $newRoot = Join-Path $scoopAppRoot '1.8.17.6200'
@@ -59,6 +58,7 @@ $programFilesMock = Join-Path $testRoot 'Program Files'
 $servicesRegistryRoot = 'HKCU:\Software\KiroBucketMuMuMigrationTests\Services\' + [guid]::NewGuid().ToString('N')
 $classesRegistryRoot = 'HKCU:\Software\KiroBucketMuMuMigrationTests\Classes\CLSID'
 $registryRoot = Split-Path $servicesRegistryRoot -Parent
+New-Item -Path $servicesRegistryRoot -Force | Out-Null
 $vmDataPath = Join-Path $persistRoot 'vms\MuMuPlayerGlobal-15.0-1\userdata.img'
 
 try {
@@ -163,7 +163,7 @@ try {
         finally { $registryKey.Dispose() }
     }
 
-    $postOutput = @(& $helperPath -Phase Post -VersionRoot $newRoot -PersistRoot $persistRoot -AppDataConfig $appDataConfig -ProgramFilesRoot $programFilesMock -ServicesRegistryRoot $servicesRegistryRoot -ClassesRegistryRoot $classesRegistryRoot 2>&1 | ForEach-Object { "$_" })
+    $postOutput = @(& $helperPath -Phase Post -VersionRoot $newRoot -PersistRoot $persistRoot -AppDataConfig $appDataConfig -ProgramFilesRoot $programFilesMock -ServicesRegistryRoot $servicesRegistryRoot -ClassesRegistryRoot $classesRegistryRoot *>&1 | ForEach-Object { "$_" })
     $postText = $postOutput -join [Environment]::NewLine
     Assert ($postText -match 'Android 12: Hypervisor and COM checks passed') 'Android 12 Hypervisor/COM validation did not pass.'
     Assert ($postText -match 'Android 15: Hypervisor and COM checks passed') 'Android 15 Hypervisor/COM validation did not pass.'
