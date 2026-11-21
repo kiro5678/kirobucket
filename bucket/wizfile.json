@@ -1,6 +1,6 @@
 {
     "version": "3.15",
-    "description": "Fast Windows file finder that searches by file name, size, and modification date.",
+    "description": "Fast Windows file finder with instant file and folder search by name, size, and modification date.",
     "homepage": "https://antibody-software.com/wizfile/",
     "license": "Proprietary",
     "url": "https://antibody-software.com/files/wizfile_3_15_portable.zip",

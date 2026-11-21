@@ -284,7 +284,7 @@ jobs:
               $candidateUrl = [string]$sourceUrls[$assetIndex]
               $downloadUrl = ($candidateUrl -split '#', 2)[0]
               $candidateUri = [System.Uri]$candidateUrl
-              $fragmentName = [System.Uri]::UnescapeDataString($candidateUri.Fragment.TrimStart('#'))
+              $fragmentName = if ([string]::IsNullOrEmpty($candidateUri.Fragment)) { '' } else { [System.Uri]::UnescapeDataString($candidateUri.Fragment.TrimStart('#')) }
               if ($fragmentName -match '^/(?<name>[^/]+\.exe)$') {
                 $installerName = $Matches.name
               } else {
