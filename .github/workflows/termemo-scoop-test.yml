@@ -40,6 +40,18 @@ jobs:
           $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
           scoop --version
 
+      - name: Verify Scoop formatter output
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:SCOOP_HOME = (scoop prefix scoop).Trim()
+          $formatter = Join-Path $env:GITHUB_WORKSPACE 'bin\formatjson.ps1'
+          & $formatter 'termemo'
+          git diff --exit-code -- bucket/termemo.json
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Termemo manifest differs from the repository Scoop formatjson.ps1 output.'
+          }
+
       - name: Force checkver and validate release hash
         shell: pwsh
         run: |
