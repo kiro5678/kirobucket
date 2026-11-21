@@ -500,7 +500,7 @@
         "    return ($candidates | Sort-Object -Property Version -Descending | Select-Object -First 1).Path",
         "}",
         "function Move-MuMuInstallRootToStable([string]$SourceRoot) {",
-        "    New-Item -ItemType Directory -Path $stableRoot -Force | Out-Null",
+        "    if (-not (Test-Path -LiteralPath $stableRoot -PathType Container)) {`n        throw \"Scoop current junction is missing or does not resolve to the new version directory: $stableRoot\"`n    }",
         "    if ([string]::IsNullOrWhiteSpace($SourceRoot)) { return }",
         "    $sourceFull = [IO.Path]::GetFullPath($SourceRoot).TrimEnd('\\')",
         "    $stableFull = [IO.Path]::GetFullPath($stableRoot).TrimEnd('\\')",
