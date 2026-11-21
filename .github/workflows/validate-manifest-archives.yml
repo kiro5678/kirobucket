@@ -1,4 +1,5 @@
 name: Validate manifest archives
+# Includes archive-path regression checks for the portable desktop app manifests.
 
 on:
   push:
