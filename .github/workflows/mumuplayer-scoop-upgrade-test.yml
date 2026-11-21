@@ -98,7 +98,6 @@ jobs:
             'Backup-MuMuFile',
             'install_prepare',
             '80002',
-            '80011',
             'Wait-ForMuMuInstallStability',
             'cache_path',
             'mumuplayer-installer-'
