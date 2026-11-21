@@ -1,0 +1,102 @@
+name: Termemo MSI Payload Inspection
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/termemo-scoop-test.yml"
+      - ".github/workflows/termemo-msi-inspection.yml"
+      - "bucket/termemo.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify official MSI and Scoop-compatible extraction
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download, verify, and extract Termemo MSI
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $version = '0.3.1'
+          $url = "https://github.com/Renato1478/termemo/releases/download/v$version/Termemo_${version}_x64_en-US.msi"
+          $expectedHash = '80c0e451f561ca4dc755749ce76b7d21648b6700aeee8183ebfb6024a41c8b11'
+          $root = Join-Path $env:GITHUB_WORKSPACE 'termemo-msi-inspection'
+          $msi = Join-Path $root "Termemo_${version}_x64_en-US.msi"
+          $destination = Join-Path $root 'payload'
+          New-Item -ItemType Directory -Path $destination -Force | Out-Null
+
+          Invoke-WebRequest -Uri $url -OutFile $msi -MaximumRedirection 10 -TimeoutSec 1200
+          $actualHash = (Get-FileHash -LiteralPath $msi -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) {
+            throw "Termemo MSI SHA-256 mismatch. Expected $expectedHash; received $actualHash."
+          }
+          Write-Host "Verified MSI SHA-256: $actualHash"
+
+          $log = Join-Path $root 'msiexec-admin.log'
+          $arguments = @('/a', $msi, '/qn', "TARGETDIR=$destination", '/l*v', $log)
+          $process = Start-Process -FilePath "$env:SystemRoot\System32\msiexec.exe" -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -notin @(0, 3010)) {
+            throw "MSI administrative extraction failed with exit code $($process.ExitCode). See $log"
+          }
+
+          $files = @(Get-ChildItem -LiteralPath $destination -File -Recurse -Force)
+          $executables = @($files | Where-Object { $_.Extension -ieq '.exe' })
+          if ($executables.Count -eq 0) {
+            throw "MSI extraction produced no EXE files. Inspect $log."
+          }
+
+          Write-Host "Extracted file count: $($files.Count)"
+          Write-Host "Extracted executable inventory:"
+          foreach ($file in $executables) {
+            $relative = [IO.Path]::GetRelativePath($destination, $file.FullName).Replace('\', '/')
+            Write-Host "  $relative [$($file.Length) bytes]"
+          }
+
+          $files |
+            ForEach-Object { [IO.Path]::GetRelativePath($destination, $_.FullName).Replace('\', '/') } |
+            Sort-Object |
+            Set-Content -LiteralPath (Join-Path $root 'payload-files.txt') -Encoding utf8
+
+          $executables |
+            ForEach-Object {
+              [PSCustomObject]@{
+                Path = [IO.Path]::GetRelativePath($destination, $_.FullName).Replace('\', '/')
+                Size = $_.Length
+                FileDescription = [Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).FileDescription
+                ProductName = [Diagnostics.FileVersionInfo]::GetVersionInfo($_.FullName).ProductName
+              }
+            } |
+            ConvertTo-Json -Depth 4 |
+            Set-Content -LiteralPath (Join-Path $root 'executables.json') -Encoding utf8
+
+          @(
+            '## Termemo MSI extraction'
+            ''
+            "- Release: $version"
+            "- MSI SHA-256: $actualHash"
+            "- Extracted files: $($files.Count)"
+            "- EXE files: $($executables.Count)"
+            ''
+            '### Executable paths'
+            foreach ($file in $executables) {
+              "- $([IO.Path]::GetRelativePath($destination, $file.FullName).Replace('\', '/'))"
+            }
+            ''
+            'Extraction used `msiexec /a`, the administrative extraction method used by Scoop when extracting MSI archives. The vendor installation routine was not run.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload MSI inspection
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: termemo-msi-inspection
+          path: termemo-msi-inspection/
+          if-no-files-found: error
+          retention-days: 14
