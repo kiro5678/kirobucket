@@ -1,4 +1,5 @@
 name: Validate manifest archives
+# Includes archive-path regression checks for the portable desktop app manifests.
 
 on:
   push:
@@ -204,6 +205,10 @@ on:
       - 'bucket/hop-mygo.json'
       - 'bucket/sakamoto.json'
       - '.github/workflows/validate-manifest-archives.yml'
+      - 'bucket/crest.json'
+      - 'bucket/omnicontrol.json'
+      - 'bucket/porter.json'
+      - 'bucket/inkrail.json'
       - 'bucket/cooldesk.json'
       - 'bucket/cooldesk-msi.json'
       - 'bucket/kando.json'
@@ -368,6 +373,10 @@ on:
       - 'bucket/hop-mygo.json'
       - 'bucket/sakamoto.json'
       - '.github/workflows/validate-manifest-archives.yml'
+      - 'bucket/crest.json'
+      - 'bucket/omnicontrol.json'
+      - 'bucket/porter.json'
+      - 'bucket/inkrail.json'
       - 'bucket/cooldesk.json'
       - 'bucket/cooldesk-msi.json'
       - 'bucket/filebrowser.json'
