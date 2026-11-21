@@ -70,7 +70,7 @@ Equal $manifest.shortcuts[0][0] 'MuMuPlayer.cmd' 'Shortcut must use the version-
 foreach ($marker in @(
     'Join-Path $scoopAppRoot',
     'Find-MuMuPreviousVersionInstallRoot',
-    'Move-MuMuInstallRootToStable',
+    'Move-MuMuInstallRootToVersion',
     'Move-MuMuPersistDataIntoVersion',
     'Restore-MuMuPersistDataToStore',
     'Restore-MuMuCurrentVersionJunction',
@@ -321,11 +321,11 @@ try {
     Assert (Test-Path (Join-Path $firstDir 'MuMuPlayer.cmd')) 'Version-local launcher was not created.'
     Invoke-ScoopPersistData $firstVersion
     $reg=Get-ItemProperty -LiteralPath $registryPath
-    Equal $reg.InstallLocation $script:ExpectedInstallRoot 'Registry InstallLocation is not the stable current alias.'
-    Assert ([string]$reg.UninstallString -like ('*' + (Join-Path $script:ExpectedInstallRoot 'uninstall.exe') + '*')) 'UninstallString is not based on current alias.'
-    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Persisted product.install_dir is not current.'
+    Equal $reg.InstallLocation $script:ExpectedInstallRoot 'Registry InstallLocation is not the version directory.'
+    Assert ([string]$reg.UninstallString -like ('*' + (Join-Path $script:ExpectedInstallRoot 'uninstall.exe') + '*')) 'UninstallString is not based on the version directory.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Persisted product.install_dir is not the version directory.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.16.0' 'Product version missing after first migration.'
-    Equal $script:MockMuMuServicePath ('"' + (Join-Path $script:ExpectedInstallRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service') 'Service image path is not current.'
+    Equal $script:MockMuMuServicePath ('"' + (Join-Path $script:ExpectedInstallRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service') 'Service image path is not the version directory.'
     Equal (Get-Content $vmData -Raw).Trim() 'vm-data-preserve' 'VM data was not preserved.'
     Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Device data was not preserved.'
     $persistedConfig=Get-Content (Join-Path $persistRoot 'configs\main\install_config.json') -Raw | ConvertFrom-Json
@@ -337,9 +337,9 @@ try {
     Assert (-not (Test-Path (Join-Path $firstDir 'nx_main\MuMuNxMain.exe'))) 'Second update left the old program binaries behind.'
     Assert (Test-Path (Join-Path $secondDir 'uninstall.exe')) 'Second update uninstaller is missing.'
     Invoke-ScoopPersistData $secondVersion
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Second update changed the stable Registry path.'
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Second update did not update the Registry to the new version directory.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Second update did not store the new product version.'
-    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Second update changed persistent install_dir.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Second update did not update persistent install_dir to the new version directory.'
     Assert (@($script:PhysicalTargets | Select-Object -Unique).Count -ge 2) 'Installer phases did not execute against more than one version directory.'
 
     # Forced same-version repair: Scoop renames the previous version to _<version>.old.
@@ -349,7 +349,7 @@ try {
     Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0'
     Assert (Test-Path (Join-Path $secondDir 'nx_main\\MuMuNxMain.exe')) 'Forced same-version update payload is missing.'
     Invoke-ScoopPersistData $secondVersion
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Forced same-version update changed the stable install path.'
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Forced same-version update changed the version-specific install path.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Forced same-version update did not preserve the current product version.'
 
     # Test 80002 recovery only when the stored product version is older than the target.
@@ -357,7 +357,7 @@ try {
     Invoke-UpgradeAttempt -Version $thirdVersion -ProductVersion '6.8.18.0' -Retry80002
     Assert (Test-Path (Join-Path $thirdDir 'nx_main\\MuMuNxMain.exe')) 'The 80002 retry update did not create the third-version payload.'
     Invoke-ScoopPersistData $thirdVersion
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot '80002 retry changed the stable install path.'
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot '80002 retry changed the version-specific install path.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.15.9' 'The commit retry result was not preserved.'
 
     Remove-ScoopCurrentAndPersistLinks $thirdVersion
@@ -372,7 +372,7 @@ try {
     $cmd = 'uninstall'
     . ([scriptblock]::Create($postUninstallText))
     Assert (-not (Test-Path $registryPath)) 'Full Scoop uninstall did not remove current-root registration.'
-    Assert ([string]::IsNullOrWhiteSpace($script:MockMuMuServicePath)) 'Full Scoop uninstall did not remove current-root service.'
+    Assert ([string]::IsNullOrWhiteSpace($script:MockMuMuServicePath)) 'Full Scoop uninstall did not remove version-specific service.'
     Assert (Test-Path $vmData) 'Scoop uninstall removed persisted VM data.'
     Assert (Test-Path $deviceMarker) 'Scoop uninstall removed persisted device data.'
     Assert (Test-Path $persistConfig) 'Scoop uninstall removed persisted configuration.'
