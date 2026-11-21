@@ -9,6 +9,10 @@ Production manifest: `bucket/Oriel-Niix.json`
 
 This is the Oriel Notch desktop overlay. It is separate from the existing `bucket/oriel.json` package (Yangflow RSS reader) and `bucket/oriel-highercomve.json` package (Highercomve Zig framework CLI).
 
+## Install
+
+After adding the bucket, run `scoop install Oriel-Niix` from a normal PowerShell session. The official Oriel setup wizard opens; complete its options and click **Install**. Keep the Scoop terminal open until the wizard closes and the manifest finishes its post-install checks.
+
 ## Installation model
 
 The publisher supplies a per-user setup executable, not a portable archive. Scoop runs the official setup interactively, without passing command-line switches. The setup wizard opens during `scoop install`; Scoop waits until the user completes or cancels it.
