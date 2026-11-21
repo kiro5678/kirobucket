@@ -5,7 +5,7 @@
     "license": "GPL-3.0-or-later",
     "notes": [
         "Uses the vendor-provided self-contained Portable ZIP; no setup installer is run.",
-        "OmniControl stores its settings and logs in %APPDATA%\\\\OmniControl by default. Setup-only optional integrations such as Equalizer APO and the Windows Packet Filter are not installed by this portable manifest."
+        "OmniControl stores its settings and logs in %APPDATA%\\OmniControl by default. Setup-only optional integrations such as Equalizer APO and the Windows Packet Filter are not installed by this portable manifest."
     ],
     "architecture": {
         "64bit": {
