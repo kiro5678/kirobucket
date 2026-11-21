@@ -3,7 +3,7 @@
 Production manifest: `bucket/Oriel-Niix.json`
 
 - Source: [Niix-x/Oriel-Releases](https://github.com/Niix-x/Oriel-Releases)
-- Current tested release: `1.1.1`
+- Current release: `1.1.1`
 - Official installer: `OrielSetup-1.1.1.exe`
 - SHA-256: `808ec378fcc90c8ae90ace3628596d8819ae728796a1229ff0cf5505ceb8d954`
 
