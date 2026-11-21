@@ -238,6 +238,42 @@ jobs:
             }
           }
 
+          $scoopInstallScript = Join-Path $env:SCOOP 'apps\scoop\current\lib\install.ps1'
+          if (-not (Test-Path -LiteralPath $scoopInstallScript -PathType Leaf)) { throw "Scoop install implementation was not found: $scoopInstallScript" }
+          $scoopInstallSource = Get-Content -LiteralPath $scoopInstallScript -Raw
+          if ($scoopInstallSource -notmatch '\$installer\.file -or \$installer\.args' -or $scoopInstallSource -notmatch 'Invoke-ExternalCommand \$progName -ArgumentList \$fnArgs' -or $scoopInstallSource -notmatch 'Remove-Item \$progName') {
+            throw 'The installed Scoop Invoke-Installer implementation does not match the expected native installer.file execution flow.'
+          }
+
+          $hookTestRoot = Join-Path $env:RUNNER_TEMP 'oriel-hook-order-test'
+          $hookVersionDir = Join-Path $hookTestRoot 'version'
+          $hookLocalAppData = Join-Path $hookTestRoot 'localappdata'
+          $originalLocalAppData = $env:LOCALAPPDATA
+          try {
+            New-Item -ItemType Directory -Path $hookVersionDir, $hookLocalAppData -Force | Out-Null
+            $env:LOCALAPPDATA = $hookLocalAppData
+            $dir = $hookVersionDir
+            $version = [string]$manifest.version
+            $downloadedSetup = Join-Path $dir "OrielSetup-$version.exe"
+            [System.IO.File]::WriteAllText($downloadedSetup, 'test installer placeholder')
+            & ([scriptblock]::Create($preInstallScript))
+            $preparedSetup = Join-Path $dir ([string]$manifest.installer.file)
+            if (-not (Test-Path -LiteralPath $preparedSetup -PathType Leaf)) { throw 'pre_install did not create the configured Scoop installer.file.' }
+            if (Test-Path -LiteralPath $downloadedSetup -PathType Leaf) { throw 'pre_install did not rename the versioned setup file.' }
+
+            $fakeOrielDir = Join-Path $hookLocalAppData 'Programs\Oriel'
+            New-Item -ItemType Directory -Path $fakeOrielDir -Force | Out-Null
+            [System.IO.File]::WriteAllText((Join-Path $fakeOrielDir 'oriel.exe'), 'test executable placeholder')
+            [System.IO.File]::WriteAllText((Join-Path $fakeOrielDir 'uninstall.exe'), 'test uninstaller placeholder')
+            Remove-Item -LiteralPath $preparedSetup -Force
+            & ([scriptblock]::Create($installerScript))
+            if (-not (Test-Path -LiteralPath (Join-Path $dir 'oriel-managed\oriel.exe') -PathType Leaf)) { throw 'installer.script did not create a working Scoop Junction to the Oriel executable.' }
+            if (Test-Path -LiteralPath $preparedSetup) { throw 'The Scoop installer placeholder was not removed before installer.script execution.' }
+          } finally {
+            $env:LOCALAPPDATA = $originalLocalAppData
+            if (Test-Path -LiteralPath $hookTestRoot) { Remove-Item -LiteralPath $hookTestRoot -Recurse -Force -ErrorAction SilentlyContinue }
+          }
+
           $report = @(
             "Method: $env:TEST_METHOD",
             "Manifest: $env:MANIFEST_FILE",
