@@ -19,7 +19,7 @@ function Remove-Junction([string]$Path) {
     [IO.Directory]::Delete($Path, $false)
 }
 function Remove-ScoopCurrentAndPersistLinks([string]$Version) {
-    Remove-Junction $script:ExpectedStableRoot
+    Remove-Junction $script:ExpectedCurrentRoot
     $versionRoot = Join-Path $script:AppRoot $Version
     foreach ($name in @('configs','vms','nx_device')) {
         Remove-Junction (Join-Path $versionRoot $name)
@@ -27,14 +27,15 @@ function Remove-ScoopCurrentAndPersistLinks([string]$Version) {
 }
 function Invoke-ScoopLinkCurrent([string]$Version) {
     $versionRoot = Join-Path $script:AppRoot $Version
-    Remove-Junction $script:ExpectedStableRoot
-    New-Item -ItemType Junction -Path $script:ExpectedStableRoot -Value $versionRoot | Out-Null
-    $link = Get-Item -LiteralPath $script:ExpectedStableRoot -Force
+    Remove-Junction $script:ExpectedCurrentRoot
+    New-Item -ItemType Junction -Path $script:ExpectedCurrentRoot -Value $versionRoot | Out-Null
+    $link = Get-Item -LiteralPath $script:ExpectedCurrentRoot -Force
     Assert ($link.LinkType -eq 'Junction') 'Scoop current alias is not a junction.'
     Equal ([IO.Path]::GetFullPath([string]$link.Target)) ([IO.Path]::GetFullPath($versionRoot)) 'Scoop current alias points to the wrong version.'
 }
 function Invoke-ScoopPersistData([string]$Version) {
     $appDir = Join-Path $script:AppRoot $Version
+    Invoke-ScoopLinkCurrent $Version
     foreach ($name in @('configs','vms','nx_device')) {
         $source = Join-Path $appDir $name
         $target = Join-Path $script:PersistRoot $name
@@ -56,7 +57,6 @@ function Invoke-ScoopPersistData([string]$Version) {
             New-Item -ItemType Junction -Path $source -Value $target | Out-Null
         }
     }
-    Invoke-ScoopLinkCurrent $Version
 }
 
 $tokens=$null
@@ -70,16 +70,18 @@ Equal $manifest.shortcuts[0][0] 'MuMuPlayer.cmd' 'Shortcut must use the version-
 foreach ($marker in @(
     'Join-Path $scoopAppRoot',
     'Find-MuMuPreviousVersionInstallRoot',
-    'New-MuMuCurrentVersionJunction',
-    'Move-MuMuInstallRootToStable',
+    '$requestedInstallFull',
+    'Move-MuMuInstallRootToVersion',
     'Move-MuMuPersistDataIntoVersion',
     'Restore-MuMuPersistDataToStore',
     'Restore-MuMuCurrentVersionJunction',
-    '(''/D='' + $stableRoot)'
+    '(''/D='' + $installRoot)'
 )) {
     Assert ($hookText.Contains($marker)) "Missing versioned-root handling: $marker"
 }
-Assert ($hookText -match '\$stableRoot\s*=\s*Join-Path\s+\$scoopAppRoot') 'The program payload must use Scoop current, not persist\install.'
+Assert ($hookText -match '\$installRoot\s*=\s*\[IO\.Path\]::GetFullPath\(\$dir\)') 'The program payload must use the real Scoop version directory.'
+Assert ($hookText -match '\$currentAlias\s*=\s*Join-Path\s+\$scoopAppRoot\s+''current''') 'The rollback helper must know Scoop current without creating it during install.'
+Assert (-not $hookText.Contains('function New-MuMuCurrentVersionJunction')) 'pre_install must not create or own Scoop current.'
 Assert ($hookText.Contains("StartsWith('_')")) 'The migration must recognize Scoop force-update backup directories.'
 
 $root = Join-Path $env:RUNNER_TEMP ('mumu-versioned-' + [guid]::NewGuid().ToString('N'))
@@ -114,7 +116,7 @@ $env:MUMU_SCOOP_TEST_REGISTRY_PATH = $registryPath
 
 $script:AppRoot = $appRoot
 $script:PersistRoot = $persistRoot
-$script:ExpectedStableRoot = Join-Path $appRoot 'current'
+$script:ExpectedCurrentRoot = Join-Path $appRoot 'current'
 $script:MockMuMuServicePath = $null
 $script:MockProductVersion = $null
 $script:MockPreparedProductVersion = $null
@@ -142,10 +144,11 @@ function Start-Process {
     Assert (-not $dirArg.Contains([string][char]34)) '/D must be unquoted.'
     $action = $actionArg.Substring(8)
     $target = $dirArg.Substring(3)
-    Equal ([IO.Path]::GetFullPath($target)) ([IO.Path]::GetFullPath($script:ExpectedStableRoot)) 'Installer must use Scoop current alias.'
+    Equal ([IO.Path]::GetFullPath($target)) ([IO.Path]::GetFullPath($script:ExpectedInstallRoot)) 'Installer must use the real Scoop version directory.'
     $targetItem = Get-Item -LiteralPath $target -Force
-    Assert ($targetItem.LinkType -eq 'Junction') 'Installer target is not the current version junction.'
-    $physicalTarget = [string]@($targetItem.Target)[0]
+    Assert ($targetItem.PSIsContainer -and -not $targetItem.LinkType) 'Installer target must be a real version directory, not a junction.'
+    Assert (-not (Test-Path -LiteralPath $script:ExpectedCurrentRoot)) 'pre_install must leave current absent; Scoop creates it after the installer succeeds.'
+    $physicalTarget = [IO.Path]::GetFullPath($target)
     $script:Targets.Add($target) | Out-Null
     $script:PhysicalTargets.Add($physicalTarget) | Out-Null
     Assert (Test-Path -LiteralPath $FilePath -PathType Leaf) 'Staged installer is missing.'
@@ -221,7 +224,8 @@ function Invoke-MuMuHook {
     $script:version = $Version
     $script:app = 'mumuplayer'
     $script:persist_dir = $script:PersistRoot
-    $script:ExpectedStableRoot = Join-Path $script:AppRoot 'current'
+    $script:ExpectedCurrentRoot = Join-Path $script:AppRoot 'current'
+    $script:ExpectedInstallRoot = $script:dir
     $script:MockProductVersion = $ProductVersion
     $script:MockPreparedProductVersion = if ($Retry80002) { '6.8.15.9' } else { $ProductVersion }
     $script:FailPrepare = [bool]$Fail
@@ -239,7 +243,7 @@ function Invoke-MuMuHook {
 function Invoke-UpgradeAttempt {
     param([string]$Version,[string]$ProductVersion,[switch]$Fail,[switch]$Retry80002)
     $versionRoot = Join-Path $script:AppRoot $Version
-    Remove-Junction $script:ExpectedStableRoot
+    Remove-Junction $script:ExpectedCurrentRoot
     if (Test-Path -LiteralPath $versionRoot) {
         Remove-Item -LiteralPath $versionRoot -Recurse -Force
     }
@@ -307,8 +311,8 @@ try {
     Assert (Test-Path (Join-Path $legacyRoot 'nx_main\MuMuNxMain.exe')) 'Rollback did not restore the legacy main executable.'
     Assert (Test-Path (Join-Path $legacyRoot 'uninstall.exe')) 'Rollback did not restore the legacy uninstaller.'
     Equal (Get-Content (Join-Path $legacyRoot 'plugins\marker.dll') -Raw).Trim() 'plugin-payload' 'Rollback did not restore nested program files.'
-    $currentAfterRollback=Get-Item -LiteralPath $script:ExpectedStableRoot -Force
-    Equal ([IO.Path]::GetFullPath([string]@($currentAfterRollback.Target)[0])) ([IO.Path]::GetFullPath($previousRoot)) 'Current junction was not restored to the previous installed version.'
+    $currentAfterRollback=Get-Item -LiteralPath $script:ExpectedCurrentRoot -Force
+    Equal ([IO.Path]::GetFullPath([string]@($currentAfterRollback.Target)[0])) ([IO.Path]::GetFullPath($legacyRoot)) 'Current junction was not restored to the previous legacy install root.'
 
     Invoke-UpgradeAttempt -Version $firstVersion -ProductVersion '6.8.16.0'
     Assert (Test-Path (Join-Path $firstDir 'nx_main\MuMuNxMain.exe')) 'First version payload is not inside its Scoop version directory.'
@@ -318,11 +322,11 @@ try {
     Assert (Test-Path (Join-Path $firstDir 'MuMuPlayer.cmd')) 'Version-local launcher was not created.'
     Invoke-ScoopPersistData $firstVersion
     $reg=Get-ItemProperty -LiteralPath $registryPath
-    Equal $reg.InstallLocation $script:ExpectedStableRoot 'Registry InstallLocation is not the stable current alias.'
-    Assert ([string]$reg.UninstallString -like ('*' + (Join-Path $script:ExpectedStableRoot 'uninstall.exe') + '*')) 'UninstallString is not based on current alias.'
-    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedStableRoot 'Persisted product.install_dir is not current.'
+    Equal $reg.InstallLocation $script:ExpectedInstallRoot 'Registry InstallLocation is not the version directory.'
+    Assert ([string]$reg.UninstallString -like ('*' + (Join-Path $script:ExpectedInstallRoot 'uninstall.exe') + '*')) 'UninstallString is not based on the version directory.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Persisted product.install_dir is not the version directory.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.16.0' 'Product version missing after first migration.'
-    Equal $script:MockMuMuServicePath ('"' + (Join-Path $script:ExpectedStableRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service') 'Service image path is not current.'
+    Equal $script:MockMuMuServicePath ('"' + (Join-Path $script:ExpectedInstallRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service') 'Service image path is not the version directory.'
     Equal (Get-Content $vmData -Raw).Trim() 'vm-data-preserve' 'VM data was not preserved.'
     Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Device data was not preserved.'
     $persistedConfig=Get-Content (Join-Path $persistRoot 'configs\main\install_config.json') -Raw | ConvertFrom-Json
@@ -334,9 +338,9 @@ try {
     Assert (-not (Test-Path (Join-Path $firstDir 'nx_main\MuMuNxMain.exe'))) 'Second update left the old program binaries behind.'
     Assert (Test-Path (Join-Path $secondDir 'uninstall.exe')) 'Second update uninstaller is missing.'
     Invoke-ScoopPersistData $secondVersion
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedStableRoot 'Second update changed the stable Registry path.'
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Second update did not update the Registry to the new version directory.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Second update did not store the new product version.'
-    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedStableRoot 'Second update changed persistent install_dir.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Second update did not update persistent install_dir to the new version directory.'
     Assert (@($script:PhysicalTargets | Select-Object -Unique).Count -ge 2) 'Installer phases did not execute against more than one version directory.'
 
     # Forced same-version repair: Scoop renames the previous version to _<version>.old.
@@ -345,8 +349,10 @@ try {
     Move-Item -LiteralPath $secondDir -Destination $forceBackupRoot -ErrorAction Stop
     Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0'
     Assert (Test-Path (Join-Path $secondDir 'nx_main\\MuMuNxMain.exe')) 'Forced same-version update payload is missing.'
+    Assert (-not (Test-Path (Join-Path $forceBackupRoot 'nx_main\\MuMuNxMain.exe'))) 'Forced same-version update did not migrate the renamed Scoop backup payload.'
+    Assert (-not (Test-Path (Join-Path $forceBackupRoot 'uninstall.exe'))) 'Forced same-version update left the old uninstaller in the renamed Scoop backup.'
     Invoke-ScoopPersistData $secondVersion
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedStableRoot 'Forced same-version update changed the stable install path.'
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Forced same-version update changed the version-specific install path.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Forced same-version update did not preserve the current product version.'
 
     # Test 80002 recovery only when the stored product version is older than the target.
@@ -354,7 +360,7 @@ try {
     Invoke-UpgradeAttempt -Version $thirdVersion -ProductVersion '6.8.18.0' -Retry80002
     Assert (Test-Path (Join-Path $thirdDir 'nx_main\\MuMuNxMain.exe')) 'The 80002 retry update did not create the third-version payload.'
     Invoke-ScoopPersistData $thirdVersion
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedStableRoot '80002 retry changed the stable install path.'
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot '80002 retry changed the version-specific install path.'
     Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.15.9' 'The commit retry result was not preserved.'
 
     Remove-ScoopCurrentAndPersistLinks $thirdVersion
@@ -363,13 +369,13 @@ try {
     $cmd = 'update'
     . ([scriptblock]::Create($postUninstallText))
     Assert (Test-Path $registryPath) 'post_uninstall removed Registry during scoop update.'
-    Assert ($script:MockMuMuServicePath -like "*$script:ExpectedStableRoot*") 'post_uninstall removed service during scoop update.'
+    Assert ($script:MockMuMuServicePath -like "*$script:ExpectedInstallRoot*") 'post_uninstall removed service during scoop update.'
     Assert (Test-Path $persistConfig) 'post_uninstall removed persistent config during scoop update.'
 
     $cmd = 'uninstall'
     . ([scriptblock]::Create($postUninstallText))
     Assert (-not (Test-Path $registryPath)) 'Full Scoop uninstall did not remove current-root registration.'
-    Assert ([string]::IsNullOrWhiteSpace($script:MockMuMuServicePath)) 'Full Scoop uninstall did not remove current-root service.'
+    Assert ([string]::IsNullOrWhiteSpace($script:MockMuMuServicePath)) 'Full Scoop uninstall did not remove version-specific service.'
     Assert (Test-Path $vmData) 'Scoop uninstall removed persisted VM data.'
     Assert (Test-Path $deviceMarker) 'Scoop uninstall removed persisted device data.'
     Assert (Test-Path $persistConfig) 'Scoop uninstall removed persisted configuration.'
@@ -384,7 +390,7 @@ try {
         '- Simulated Scoop persist_data moving configs, vms and nx_device back to persist and creating version-local junctions.'
         '- Simulated a subsequent update after unlink_current and verified old binaries move to the next version directory.'
         '- Simulated a forced same-version backup folder and tested 80002 retry separately.'
-        '- Verified current alias paths, Registry, AppData, service path and persisted VM/config/device data.'
+        '- Verified version-specific Registry, AppData and service paths and persisted VM/config/device data.'
         '- Verified post_uninstall keeps persistent user data and leaves versioned files for Scoop to remove.'
         ''
         'Mock installer only; it does not boot Android or validate host virtualization drivers.'
