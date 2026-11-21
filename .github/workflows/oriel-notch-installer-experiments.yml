@@ -13,6 +13,7 @@ on:
     branches: [master]
     paths:
       - ".github/workflows/oriel-notch-installer-experiments.yml"
+      - "bucket/Oriel-Niix.json"
       - "tests/oriel/**"
   workflow_dispatch:
 
