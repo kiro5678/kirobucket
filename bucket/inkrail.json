@@ -5,7 +5,7 @@
     "license": "MIT",
     "notes": [
         "Uses the vendor-provided portable Windows x64 ZIP; no installer is run.",
-        "Inkrail stores its writing library under %APPDATA%\\\\Inkrail\\\\Library and preferences under %APPDATA%\\\\Inkrail by default. Use Make it yours > Storage > Change Location to move the library to another folder."
+        "Inkrail stores its writing library under %APPDATA%\\Inkrail\\Library and preferences under %APPDATA%\\Inkrail by default. Use Make it yours > Storage > Change Location to move the library to another folder."
     ],
     "architecture": {
         "64bit": {
