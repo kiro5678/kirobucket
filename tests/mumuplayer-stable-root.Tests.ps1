@@ -75,7 +75,7 @@ foreach ($marker in @(
     'Move-MuMuPersistDataIntoVersion',
     'Restore-MuMuPersistDataToStore',
     'Restore-MuMuCurrentVersionJunction',
-    '($stableRoot)'
+    '(''/D='' + $stableRoot)'
 )) {
     Assert ($hookText.Contains($marker)) "Missing versioned-root handling: $marker"
 }
