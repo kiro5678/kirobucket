@@ -88,7 +88,6 @@ jobs:
 
           foreach ($requiredText in @(
             'Find-MuMuPreviousVersionInstallRoot',
-            'New-MuMuCurrentVersionJunction',
             'Move-MuMuInstallRootToStable',
             'Move-MuMuPersistDataIntoVersion',
             'Restore-MuMuPersistDataToStore',
@@ -107,15 +106,21 @@ jobs:
             }
           }
 
-          if ($scriptText -notmatch '\$stableRoot\s*=\s*Join-Path\s+\$scoopAppRoot\s+''current''') {
-            throw 'The stable MuMuPlayer install path must be Scoop apps\<app>\current.'
+          if ($scriptText -notmatch '\$installRoot\s*=\s*\[IO\.Path\]::GetFullPath\(\$dir\)') {
+            throw 'The MuMuPlayer payload must use Scoop $dir, which is the real version directory during pre_install.'
           }
-          if ($scriptText -match '\$stableRoot\s*=\s*Join-Path\s+\$persistRoot') {
+          if ($scriptText -notmatch '\$currentAlias\s*=\s*Join-Path\s+\$scoopAppRoot\s+''current''') {
+            throw 'The rollback helper must resolve the Scoop current alias.'
+          }
+          if ($scriptText -match 'function New-MuMuCurrentVersionJunction') {
+            throw 'The manifest must not create or own Scoop current during pre_install.'
+          }
+          if ($scriptText -match '\$installRoot\s*=\s*Join-Path\s+\$persistRoot') {
             throw 'The MuMuPlayer program payload must not be installed under persist.'
           }
-          $installTarget = "('/D=' + " + '$stableRoot' + ")"
+          $installTarget = "('/D=' + " + '$installRoot' + ")"
           if (-not $scriptText.Contains($installTarget)) {
-            throw 'The NSIS /D target must be Scoop current and remain the final unquoted argument.'
+            throw 'The NSIS /D target must be Scoop $dir and remain the final unquoted argument.'
           }
           if (-not $scriptText.Contains('Move-MuMuPersistDataIntoVersion')) {
             throw 'Existing persist data must be made available under the version directory before installer execution.'
