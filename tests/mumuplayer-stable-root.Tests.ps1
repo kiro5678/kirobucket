@@ -81,7 +81,6 @@ foreach ($marker in @(
 }
 Assert ($hookText -match '\$stableRoot\s*=\s*Join-Path\s+\$scoopAppRoot') 'The program payload must use Scoop current, not persist\install.'
 Assert ($hookText.Contains("StartsWith('_')")) 'The migration must recognize Scoop force-update backup directories.'
-Assert ($hookText.Contains("\.old(?:\(\d+\))?
 
 $root = Join-Path $env:RUNNER_TEMP ('mumu-versioned-' + [guid]::NewGuid().ToString('N'))
 $scoopRoot = Join-Path $root 'Scoop Root'
