@@ -13,9 +13,9 @@ This is the Oriel Notch desktop overlay. It is separate from the existing `bucke
 
 The publisher supplies a per-user setup executable, not a portable archive. Scoop runs the official setup interactively, without passing command-line switches. The setup wizard opens during `scoop install`; Scoop waits until the user completes or cancels it.
 
-Before setup starts, `pre_install` checks for an existing standalone Oriel installation and refuses to take it over. After the wizard exits successfully, the `installer.script` verifies that `oriel.exe` and `uninstall.exe` exist in `%LOCALAPPDATA%\\Programs\\Oriel`, creates a Junction in the Scoop version directory, and removes the downloaded setup file. The shim and Start Menu shortcut target the executable through that Junction.
+Before setup starts, `pre_install` checks for an existing standalone Oriel installation and refuses to take it over. After the wizard exits successfully, the `installer.script` verifies that `oriel.exe` and `uninstall.exe` exist in `%LOCALAPPDATA%\Programs\\Oriel`, creates a Junction in the Scoop version directory, and removes the downloaded setup file. The shim and Start Menu shortcut target the executable through that Junction.
 
-This package is **not portable**. Oriel keeps its user data in `%APPDATA%\\Oriel` and uses Windows Credential Manager for some credentials. The existing uninstaller script remains responsible for Scoop uninstall and update operations. Disable Oriel's built-in automatic update check in Settings > About so Scoop remains the update authority.
+This package is **not portable**. Oriel keeps its user data in `%APPDATA%\Oriel` and uses Windows Credential Manager for some credentials. The existing uninstaller script remains responsible for Scoop uninstall and update operations. Disable Oriel's built-in automatic update check in Settings > About so Scoop remains the update authority.
 
 ## Automated validation
 
