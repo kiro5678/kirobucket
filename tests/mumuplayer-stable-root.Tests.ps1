@@ -12,201 +12,392 @@ function Equal($actual,$expected,[string]$message) {
         throw "$message Actual='$actual'; Expected='$expected'"
     }
 }
+function Remove-Junction([string]$Path) {
+    $item = Get-Item -LiteralPath $Path -Force -ErrorAction SilentlyContinue
+    if (-not $item) { return }
+    if ($item.LinkType -ne 'Junction') { throw "Refusing to remove non-junction in test: $Path" }
+    [IO.Directory]::Delete($Path, $false)
+}
+function Remove-ScoopCurrentAndPersistLinks([string]$Version) {
+    Remove-Junction $script:ExpectedCurrentRoot
+    $versionRoot = Join-Path $script:AppRoot $Version
+    foreach ($name in @('configs','vms','nx_device')) {
+        Remove-Junction (Join-Path $versionRoot $name)
+    }
+}
+function Invoke-ScoopLinkCurrent([string]$Version) {
+    $versionRoot = Join-Path $script:AppRoot $Version
+    Remove-Junction $script:ExpectedCurrentRoot
+    New-Item -ItemType Junction -Path $script:ExpectedCurrentRoot -Value $versionRoot | Out-Null
+    $link = Get-Item -LiteralPath $script:ExpectedCurrentRoot -Force
+    Assert ($link.LinkType -eq 'Junction') 'Scoop current alias is not a junction.'
+    Equal ([IO.Path]::GetFullPath([string]$link.Target)) ([IO.Path]::GetFullPath($versionRoot)) 'Scoop current alias points to the wrong version.'
+}
+function Invoke-ScoopPersistData([string]$Version) {
+    $appDir = Join-Path $script:AppRoot $Version
+    Invoke-ScoopLinkCurrent $Version
+    foreach ($name in @('configs','vms','nx_device')) {
+        $source = Join-Path $appDir $name
+        $target = Join-Path $script:PersistRoot $name
+        $sourceExists = Test-Path -LiteralPath $source -PathType Container
+        $targetExists = Test-Path -LiteralPath $target -PathType Container
+        if ($sourceExists -and -not $targetExists) {
+            Move-Item -LiteralPath $source -Destination $target -ErrorAction Stop
+        } elseif ($sourceExists -and $targetExists) {
+            $original = "$source.original"
+            if (Test-Path -LiteralPath $original) {
+                throw "Scoop persist simulation found an existing .original path: $original"
+            }
+            Move-Item -LiteralPath $source -Destination $original -ErrorAction Stop
+        }
+        if (-not (Test-Path -LiteralPath $target -PathType Container)) {
+            New-Item -ItemType Directory -Path $target -Force | Out-Null
+        }
+        if (-not (Test-Path -LiteralPath $source)) {
+            New-Item -ItemType Junction -Path $source -Value $target | Out-Null
+        }
+    }
+}
 
-$tokens = $null
-$parseErrors = $null
+$tokens=$null
+$parseErrors=$null
 [System.Management.Automation.Language.Parser]::ParseInput($hookText,[ref]$tokens,[ref]$parseErrors) | Out-Null
 Assert ($parseErrors.Count -eq 0) 'pre_install PowerShell syntax error.'
 [System.Management.Automation.Language.Parser]::ParseInput($postUninstallText,[ref]$tokens,[ref]$parseErrors) | Out-Null
 Assert ($parseErrors.Count -eq 0) 'post_uninstall PowerShell syntax error.'
-Assert ($manifest.architecture.'64bit'.url -match '-overseas-') 'Manifest must remain on the MuMuPlayer Global channel.'
 Assert (@($manifest.persist) -contains 'configs' -and @($manifest.persist) -contains 'vms' -and @($manifest.persist) -contains 'nx_device') 'Manifest must persist configs, vms and nx_device.'
-Equal $manifest.shortcuts[0][0] 'nx_main\MuMuNxMain.exe' 'Shortcut must point to the NX-main executable.'
-
+Equal $manifest.shortcuts[0][0] 'MuMuPlayer.cmd' 'Shortcut must use the version-local launcher.'
 foreach ($marker in @(
-    'Get-MuMuPreviousScoopVersionRoot',
-    'Update-MuMuUninstallRegistration',
-    'Update-MuMuServicePath',
-    'Restore-MuMuRegistryChanges',
-    'MuMuPlayerRemoteService',
-    'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\MuMuPlayerGlobal'
-)) {
-    Assert ($hookText.Contains($marker)) "Missing Registry/service handling: $marker"
-}
-foreach ($marker in @(
+    'Join-Path $scoopAppRoot',
+    'Find-MuMuPreviousVersionInstallRoot',
+    '$requestedInstallFull',
     'Move-MuMuInstallRootToVersion',
     'Move-MuMuPersistDataIntoVersion',
-    'Find-MuMuPreviousVersionInstallRoot',
-    '$appDataConfigPaths'
+    'Restore-MuMuPersistDataToStore',
+    'Restore-MuMuCurrentVersionJunction',
+    '(''/D='' + $installRoot)'
 )) {
-    Assert (-not $hookText.Contains($marker)) "Unexpected migration/discovery logic remains: $marker"
+    Assert ($hookText.Contains($marker)) "Missing versioned-root handling: $marker"
 }
-Assert ($postUninstallText.Contains('Stop-Service')) 'Uninstall cleanup must stop the MuMuPlayer service.'
-Assert ($postUninstallText.Contains('sc.exe delete')) 'Uninstall cleanup must delete the MuMuPlayer service.'
-Assert ($postUninstallText.Contains('Remove-Item -LiteralPath $registryPath')) 'Uninstall cleanup must remove matching Registry entries.'
-Assert ($postUninstallText.Contains('Keep any unexpected files')) 'Uninstall cleanup must retain unexpected legacy files.'
+Assert ($hookText -match '\$installRoot\s*=\s*\[IO\.Path\]::GetFullPath\(\$dir\)') 'The program payload must use the real Scoop version directory.'
+Assert ($hookText -match '\$currentAlias\s*=\s*Join-Path\s+\$scoopAppRoot\s+''current''') 'The rollback helper must know Scoop current without creating it during install.'
+Assert (-not $hookText.Contains('function New-MuMuCurrentVersionJunction')) 'pre_install must not create or own Scoop current.'
+Assert ($hookText.Contains("StartsWith('_')")) 'The migration must recognize Scoop force-update backup directories.'
 
-$root = Join-Path $env:RUNNER_TEMP ('mumu-registry-' + [guid]::NewGuid().ToString('N'))
-$appRoot = Join-Path $root 'Scoop Root\apps\mumuplayer'
+$root = Join-Path $env:RUNNER_TEMP ('mumu-versioned-' + [guid]::NewGuid().ToString('N'))
+$scoopRoot = Join-Path $root 'Scoop Root'
+$appRoot = Join-Path $scoopRoot 'apps\mumuplayer'
 $persistRoot = Join-Path $root 'Global Persist\mumuplayer'
-$oldVersion = '1.8.15.6065'
-$newVersion = [string]$manifest.version
-$oldRoot = Join-Path $appRoot $oldVersion
-$newRoot = Join-Path $appRoot $newVersion
-$installerPath = Join-Path $root 'fake-mumu-installer.exe'
+$appDataRoot = Join-Path $root 'Roaming'
+$programDataRoot = Join-Path $root 'ProgramData'
+$tempRoot = Join-Path $root 'Temp'
 $registryRoot = 'HKCU:\Software\KiroBucketMuMuTests\' + [guid]::NewGuid().ToString('N')
 $registryPath = Join-Path $registryRoot 'MuMuPlayerGlobal'
 $legacyRoot = Join-Path $persistRoot 'install'
+$previousVersion = '1.8.5.5748'
+$firstVersion = '1.8.16.6114'
+$secondVersion = '1.8.17.6200'
+$thirdVersion = '1.8.18.6300'
+$previousRoot = Join-Path $appRoot $previousVersion
+$firstDir = Join-Path $appRoot $firstVersion
+$secondDir = Join-Path $appRoot $secondVersion
+$thirdDir = Join-Path $appRoot $thirdVersion
+$persistConfig = Join-Path $persistRoot 'configs\main\install_config.json'
+$appDataConfig = Join-Path $appDataRoot 'Netease\MuMuPlayerGlobal\install_config.json'
+$vmData = Join-Path $persistRoot 'vms\test-vm\userdata.img'
+$vmConfig = Join-Path $persistRoot 'vms\test-vm\vm_config.json'
+$deviceMarker = Join-Path $persistRoot 'nx_device\device-marker.txt'
+
+$env:APPDATA = $appDataRoot
+$env:ProgramData = $programDataRoot
+$env:TEMP = $tempRoot
+$env:MUMU_SCOOP_TEST_MODE = '1'
+$env:MUMU_SCOOP_TEST_REGISTRY_PATH = $registryPath
+
+$script:AppRoot = $appRoot
+$script:PersistRoot = $persistRoot
+$script:ExpectedCurrentRoot = Join-Path $appRoot 'current'
+$script:MockMuMuServicePath = $null
+$script:MockProductVersion = $null
+$script:MockPreparedProductVersion = $null
+$script:FailPrepare = $false
+$script:RetryPrepare = $false
+$script:PrepareRetried = $false
+$script:RetryCommit = $false
+$script:CommitRetried = $false
+$script:Targets = New-Object System.Collections.Generic.List[string]
+$script:PhysicalTargets = New-Object System.Collections.Generic.List[string]
+
+function is_admin { return $true }
+function Get-Process { param($Name,$ErrorAction) return @() }
+function Start-Sleep { param([int]$Seconds,[int]$Milliseconds) }
+function cache_path {
+    param($App,$Version,$Url)
+    return (Join-Path $env:TEMP ('mumu-cache-' + $Version + '-' + [guid]::NewGuid().ToString('N') + '.exe'))
+}
+function Start-Process {
+    param([string]$FilePath,[string[]]$ArgumentList,[switch]$Wait,[switch]$PassThru,[string]$WindowStyle)
+    $actionArg = $ArgumentList | Where-Object { $_ -like '/action=*' } | Select-Object -First 1
+    $dirArg = $ArgumentList | Where-Object { $_ -like '/D=*' } | Select-Object -First 1
+    Assert ($actionArg -and $dirArg) 'Missing MuMu installer action or /D argument.'
+    Equal $ArgumentList[-1] $dirArg '/D must be the final installer argument.'
+    Assert (-not $dirArg.Contains([string][char]34)) '/D must be unquoted.'
+    $action = $actionArg.Substring(8)
+    $target = $dirArg.Substring(3)
+    Equal ([IO.Path]::GetFullPath($target)) ([IO.Path]::GetFullPath($script:ExpectedInstallRoot)) 'Installer must use the real Scoop version directory.'
+    $targetItem = Get-Item -LiteralPath $target -Force
+    Assert ($targetItem.PSIsContainer -and -not $targetItem.LinkType) 'Installer target must be a real version directory, not a junction.'
+    Assert (-not (Test-Path -LiteralPath $script:ExpectedCurrentRoot)) 'pre_install must leave current absent; Scoop creates it after the installer succeeds.'
+    $physicalTarget = [IO.Path]::GetFullPath($target)
+    $script:Targets.Add($target) | Out-Null
+    $script:PhysicalTargets.Add($physicalTarget) | Out-Null
+    Assert (Test-Path -LiteralPath $FilePath -PathType Leaf) 'Staged installer is missing.'
+    $prefix = [IO.Path]::GetFullPath($physicalTarget).TrimEnd('\') + '\'
+    Assert (-not ([IO.Path]::GetFullPath($FilePath).StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase))) 'Installer is inside the program target.'
+
+    $reg = Get-ItemProperty -LiteralPath $env:MUMU_SCOOP_TEST_REGISTRY_PATH
+    Equal $reg.InstallLocation $target 'Registry InstallLocation was not migrated to current before install_prepare.'
+    Assert ([string]$reg.UninstallString -like ('*' + (Join-Path $target 'uninstall.exe') + '*')) 'UninstallString was not migrated to current.'
+    $activePersistConfig = Join-Path $target 'configs\main\install_config.json'
+    Assert (Test-Path -LiteralPath $activePersistConfig -PathType Leaf) 'Persisted config was not available through current during setup.'
+    $cfg0 = Get-Content -LiteralPath $activePersistConfig -Raw | ConvertFrom-Json
+    Equal $cfg0.product.install_dir $target 'product.install_dir was not migrated before setup.'
+    Equal $cfg0.main.install_dir (Join-Path $target 'nx_main') 'main.install_dir was not migrated before setup.'
+
+    if (Test-Path -LiteralPath $appDataConfig) {
+        $app = Get-Content $appDataConfig -Raw | ConvertFrom-Json
+        if ($app.product.install_dir) { Equal $app.product.install_dir $target 'AppData product.install_dir not migrated.' }
+        if ($app.main.install_dir) { Equal $app.main.install_dir (Join-Path $target 'nx_main') 'AppData main.install_dir not migrated.' }
+    }
+
+    if ($action -eq 'install_prepare' -and $script:FailPrepare) {
+        return [pscustomobject]@{ExitCode=80011}
+    }
+    if ($action -eq 'install_prepare' -and $script:RetryPrepare -and -not $script:PrepareRetried) {
+        $script:PrepareRetried=$true
+        return [pscustomobject]@{ExitCode=80002}
+    }
+    if ($action -eq 'commit' -and $script:RetryCommit -and -not $script:CommitRetried) {
+        $script:CommitRetried=$true
+        return [pscustomobject]@{ExitCode=80002}
+    }
+    if ($action -eq 'install_prepare') {
+        New-Item -ItemType Directory -Path (Join-Path $target 'configs\main'),(Join-Path $target 'vms\test-vm'),(Join-Path $target 'nx_device\15.0\shell') -Force | Out-Null
+        $cfg = Get-Content -LiteralPath $activePersistConfig -Raw | ConvertFrom-Json
+        $cfg.product.version = $script:MockPreparedProductVersion
+        $cfg.product.install_dir = $target
+        $cfg.main.install_dir = Join-Path $target 'nx_main'
+        $cfg.engines.mumu15.player.install_dir = Join-Path $target 'nx_device\15.0\shell'
+        $cfg.engines.mumu15.vms.install_dir = Join-Path $target 'vms'
+        $cfg.engines.mumu15.renderer.install_dir = Join-Path $target 'nx_device\15.0\device'
+        $cfg | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $activePersistConfig -Encoding utf8
+        Set-Content (Join-Path $target 'nx_device\15.0\shell\MuMuNxDevice.exe') ('engine=' + $script:MockProductVersion)
+        if (Test-Path -LiteralPath $appDataConfig) {
+            $app = Get-Content $appDataConfig -Raw | ConvertFrom-Json
+            $app.product.version = $script:MockPreparedProductVersion
+            $app.product.install_dir = $target
+            $app.main.install_dir = Join-Path $target 'nx_main'
+            $app | ConvertTo-Json -Depth 12 | Set-Content $appDataConfig -Encoding utf8
+        }
+        return [pscustomobject]@{ExitCode=0}
+    }
+    if ($action -eq 'commit') {
+        New-Item -ItemType Directory -Path (Join-Path $target 'nx_main') -Force | Out-Null
+        Set-Content (Join-Path $target 'nx_main\MuMuNxMain.exe') ('main=' + $script:MockProductVersion)
+        Set-Content (Join-Path $target 'nx_main\MuMuPlayerRemoteService.exe') 'service'
+        if (-not (Test-Path -LiteralPath (Join-Path $target 'uninstall.exe'))) {
+            Set-Content (Join-Path $target 'uninstall.exe') 'uninstaller'
+        }
+        return [pscustomobject]@{ExitCode=0}
+    }
+    throw "Unknown mocked MuMu action: $action"
+}
+function Invoke-MuMuHook {
+    param(
+        [string]$Version,
+        [string]$ProductVersion,
+        [switch]$Fail,
+        [switch]$Retry80002
+    )
+    $script:dir = Join-Path $script:AppRoot $Version
+    $script:fname = "MuMu-$Version.exe"
+    $script:version = $Version
+    $script:app = 'mumuplayer'
+    $script:persist_dir = $script:PersistRoot
+    $script:ExpectedCurrentRoot = Join-Path $script:AppRoot 'current'
+    $script:ExpectedInstallRoot = $script:dir
+    $script:MockProductVersion = $ProductVersion
+    $script:MockPreparedProductVersion = if ($Retry80002) { '6.8.15.9' } else { $ProductVersion }
+    $script:FailPrepare = [bool]$Fail
+    $script:RetryPrepare = [bool]$Retry80002
+    $script:PrepareRetried = $false
+    $script:RetryCommit = [bool]$Retry80002
+    $script:CommitRetried = $false
+    New-Item -ItemType Directory -Path $script:dir -Force | Out-Null
+    Set-Content (Join-Path $script:dir $script:fname) 'mock-installer'
+    . ([scriptblock]::Create($hookText))
+    if ($Retry80002 -and (-not $script:PrepareRetried -or -not $script:CommitRetried)) {
+        throw 'The 80002 prepare/commit retry branches were not both exercised.'
+    }
+}
+function Invoke-UpgradeAttempt {
+    param([string]$Version,[string]$ProductVersion,[switch]$Fail,[switch]$Retry80002)
+    $versionRoot = Join-Path $script:AppRoot $Version
+    Remove-Junction $script:ExpectedCurrentRoot
+    if (Test-Path -LiteralPath $versionRoot) {
+        Remove-Item -LiteralPath $versionRoot -Recurse -Force
+    }
+    Invoke-MuMuHook -Version $Version -ProductVersion $ProductVersion -Fail:$Fail -Retry80002:$Retry80002
+}
+function New-MuMuConfig([string]$InstallRoot,[string]$ProductVersion) {
+    return [pscustomobject]@{
+        product=[pscustomobject]@{version=$ProductVersion;install_dir=$InstallRoot}
+        main=[pscustomobject]@{install_dir=(Join-Path $InstallRoot 'nx_main')}
+        engines=[pscustomobject]@{mumu15=[pscustomobject]@{
+            player=[pscustomobject]@{install_dir=(Join-Path $InstallRoot 'nx_device\15.0\shell')}
+            vms=[pscustomobject]@{install_dir=(Join-Path $InstallRoot 'vms')}
+            renderer=[pscustomobject]@{install_dir=(Join-Path $InstallRoot 'nx_device\15.0\device')}
+        }}
+        custom='keep'
+    }
+}
 
 try {
-    New-Item -ItemType Directory -Path $appRoot,$oldRoot,$persistRoot -Force | Out-Null
-    New-Item -ItemType Directory -Path (Join-Path $oldRoot 'nx_main') -Force | Out-Null
-    Set-Content (Join-Path $oldRoot 'nx_main\MuMuNxMain.exe') 'previous-version-main'
+    New-Item -ItemType Directory -Path $scoopRoot,$appRoot,$persistRoot,$appDataRoot,$programDataRoot,$tempRoot -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $legacyRoot 'nx_main'),(Join-Path $legacyRoot 'plugins'),(Join-Path $persistRoot 'configs\main'),(Join-Path $persistRoot 'vms\test-vm'),(Join-Path $persistRoot 'nx_device\15.0\shell'),(Split-Path $appDataConfig -Parent),$previousRoot -Force | Out-Null
+
+    Set-Content (Join-Path $legacyRoot 'uninstall.exe') 'original-uninstaller'
+    Set-Content (Join-Path $legacyRoot 'nx_main\MuMuNxMain.exe') 'original-main'
+    Set-Content (Join-Path $legacyRoot 'nx_main\MuMuPlayerRemoteService.exe') 'original-service'
+    Set-Content (Join-Path $legacyRoot 'plugins\marker.dll') 'plugin-payload'
+    Set-Content (Join-Path $previousRoot 'MuMuPlayer.cmd') '@echo off'
+    foreach ($name in @('configs','vms','nx_device')) {
+        New-Item -ItemType Junction -Path (Join-Path $legacyRoot $name) -Value (Join-Path $persistRoot $name) | Out-Null
+    }
+
+    (New-MuMuConfig $legacyRoot '6.8.5.0') | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $persistConfig -Encoding utf8
+    (New-MuMuConfig $legacyRoot '6.8.5.0') | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $appDataConfig -Encoding utf8
+    Set-Content $vmData 'vm-data-preserve'
+    Set-Content $vmConfig ('vm_path=' + $legacyRoot)
+    Set-Content $deviceMarker 'device-data-preserve'
+
     New-Item -ItemType Directory -Path $registryRoot -Force | Out-Null
     New-Item -Path $registryPath -Force | Out-Null
-    Set-ItemProperty -LiteralPath $registryPath -Name InstallLocation -Value $oldRoot
-    Set-ItemProperty -LiteralPath $registryPath -Name UninstallString -Value ('"' + (Join-Path $oldRoot 'uninstall.exe') + '"')
-    Set-ItemProperty -LiteralPath $registryPath -Name DisplayIcon -Value (Join-Path $oldRoot 'nx_main\MuMuNxMain.exe')
-    Set-ItemProperty -LiteralPath $registryPath -Name DisplayVersion -Value '6.8.15.0'
+    Set-ItemProperty $registryPath UninstallString ('"' + (Join-Path $legacyRoot 'uninstall.exe') + '"')
+    Set-ItemProperty $registryPath InstallLocation $legacyRoot
+    Set-ItemProperty $registryPath DisplayIcon (Join-Path $legacyRoot 'nx_main\MuMuNxMain.exe')
+    Set-ItemProperty $registryPath DisplayVersion '6.8.5.0'
+    $script:MockMuMuServicePath = '"' + (Join-Path $legacyRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service'
 
-    $script:MockMuMuServicePath = '"' + (Join-Path $oldRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service'
-    $script:MockInstallerPath = $installerPath
-    $script:MockPrepareExitCode = 80011
-    Set-Content -LiteralPath $installerPath 'mock-installer'
-
-    $env:MUMU_SCOOP_TEST_MODE = '1'
-    $env:MUMU_SCOOP_TEST_REGISTRY_PATH = $registryPath
-    $env:APPDATA = Join-Path $root 'Roaming'
-    $env:USERPROFILE = $root
-    New-Item -ItemType Directory -Path $env:APPDATA -Force | Out-Null
-
-    function is_admin { return $true }
-    function cache_path {
-        param($App,$Version,$Url)
-        return $script:MockInstallerPath
-    }
-    function Start-Sleep {
-        param([int]$Seconds,[int]$Milliseconds)
-    }
-    function Start-Process {
-        param(
-            [string]$FilePath,
-            [string[]]$ArgumentList,
-            [switch]$Wait,
-            [switch]$PassThru
-        )
-        Assert (Test-Path -LiteralPath $FilePath -PathType Leaf) 'Mock installer file is missing.'
-        $actionArg = $ArgumentList | Where-Object { $_ -like '/action=*' } | Select-Object -First 1
-        $dirArg = $ArgumentList | Where-Object { $_ -like '/D=*' } | Select-Object -First 1
-        Assert ($actionArg -and $dirArg) 'Missing MuMu installer action or /D argument.'
-        Equal $ArgumentList[-1] $dirArg '/D must remain the final installer argument.'
-        Equal $dirArg ("/D=" + $script:ExpectedInstallRoot) 'Installer must target the real Scoop version directory.'
-
-        $action = $actionArg.Substring(8)
-        if ($action -eq 'install_prepare' -and $script:MockPrepareExitCode -ne 0) {
-            return [pscustomobject]@{ ExitCode = $script:MockPrepareExitCode }
-        }
-        if ($action -eq 'install_prepare') {
-            return [pscustomobject]@{ ExitCode = 0 }
-        }
-        if ($action -eq 'commit') {
-            New-Item -ItemType Directory -Path (Join-Path $script:ExpectedInstallRoot 'nx_main') -Force | Out-Null
-            Set-Content (Join-Path $script:ExpectedInstallRoot 'nx_main\MuMuNxMain.exe') 'new-version-main'
-            Set-Content (Join-Path $script:ExpectedInstallRoot 'nx_main\MuMuPlayerRemoteService.exe') 'new-version-service'
-            return [pscustomobject]@{ ExitCode = 0 }
-        }
-        throw "Unexpected mock installer action: $action"
-    }
-
-    function Invoke-MuMuInstallHook([string]$Version) {
-        $script:dir = Join-Path $script:AppRoot $Version
-        $script:fname = "MuMu-setup-$Version.exe"
-        $script:version = $Version
-        $script:app = 'mumuplayer'
-        $script:persist_dir = $script:PersistRoot
-        $script:ExpectedInstallRoot = $script:dir
-        New-Item -ItemType Directory -Path $script:dir -Force | Out-Null
-        Set-Content (Join-Path $script:dir $script:fname) 'downloaded-installer'
-        . ([scriptblock]::Create($script:HookText))
-    }
-
-    $script:AppRoot = $appRoot
-    $script:PersistRoot = $persistRoot
-    $script:HookText = $hookText
-
-    # Failed setup must not change Registry or service paths.
-    $failed = $false
-    try {
-        Invoke-MuMuInstallHook -Version $newVersion
-    } catch {
+    $failed=$false
+    try { Invoke-UpgradeAttempt -Version $firstVersion -ProductVersion '6.8.16.0' -Fail }
+    catch {
         $failed = $true
         if ($_.Exception.Message -notmatch '80011') { throw }
+        if ($_.Exception.Message -match 'Rollback also reported:') {
+            throw "Rollback was incomplete during injected 80011: $($_.Exception.Message)"
+        }
     }
-    Assert $failed 'The injected setup failure was not surfaced.'
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $oldRoot 'Registry changed after failed setup.'
-    Assert ($script:MockMuMuServicePath -like "*$oldRoot*") 'Service path changed after failed setup.'
+    Assert $failed 'The injected 80011 was not surfaced.'
+    $reg=Get-ItemProperty -LiteralPath $registryPath
+    Equal $reg.InstallLocation $legacyRoot 'Registry rollback failed.'
+    Assert ([string]$reg.UninstallString -like ('*' + (Join-Path $legacyRoot 'uninstall.exe') + '*')) 'UninstallString rollback failed.'
+    Assert ([string]$reg.DisplayIcon -like "*$legacyRoot*") 'DisplayIcon rollback failed.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $legacyRoot 'Persist config rollback failed.'
+    Equal ((Get-Content $appDataConfig -Raw | ConvertFrom-Json).product.install_dir) $legacyRoot 'AppData config rollback failed.'
+    Assert ($script:MockMuMuServicePath -like "*$legacyRoot*") 'Service path changed after failed migration.'
+    Equal (Get-Content $vmData -Raw).Trim() 'vm-data-preserve' 'VM data changed after failed migration.'
+    Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Device data changed after failed migration.'
+    Assert (Test-Path (Join-Path $legacyRoot 'nx_main\MuMuNxMain.exe')) 'Rollback did not restore the legacy main executable.'
+    Assert (Test-Path (Join-Path $legacyRoot 'uninstall.exe')) 'Rollback did not restore the legacy uninstaller.'
+    Equal (Get-Content (Join-Path $legacyRoot 'plugins\marker.dll') -Raw).Trim() 'plugin-payload' 'Rollback did not restore nested program files.'
+    $currentAfterRollback=Get-Item -LiteralPath $script:ExpectedCurrentRoot -Force
+    Equal ([IO.Path]::GetFullPath([string]@($currentAfterRollback.Target)[0])) ([IO.Path]::GetFullPath($legacyRoot)) 'Current junction was not restored to the previous legacy install root.'
 
-    # Successful setup changes only references to the immediately previous Scoop version directory.
-    $script:MockPrepareExitCode = 0
-    Set-Content -LiteralPath $installerPath 'mock-installer'
-    Invoke-MuMuInstallHook -Version $newVersion
+    Invoke-UpgradeAttempt -Version $firstVersion -ProductVersion '6.8.16.0'
+    Assert (Test-Path (Join-Path $firstDir 'nx_main\MuMuNxMain.exe')) 'First version payload is not inside its Scoop version directory.'
+    Assert (Test-Path (Join-Path $firstDir 'uninstall.exe')) 'First version uninstaller is not inside its Scoop version directory.'
+    Assert (-not (Test-Path (Join-Path $legacyRoot 'nx_main\MuMuNxMain.exe'))) 'Legacy persist root still contains the program main executable.'
+    Assert (-not (Test-Path (Join-Path $legacyRoot 'uninstall.exe'))) 'Legacy persist root still contains the uninstaller.'
+    Assert (Test-Path (Join-Path $firstDir 'MuMuPlayer.cmd')) 'Version-local launcher was not created.'
+    Invoke-ScoopPersistData $firstVersion
+    $reg=Get-ItemProperty -LiteralPath $registryPath
+    Equal $reg.InstallLocation $script:ExpectedInstallRoot 'Registry InstallLocation is not the version directory.'
+    Assert ([string]$reg.UninstallString -like ('*' + (Join-Path $script:ExpectedInstallRoot 'uninstall.exe') + '*')) 'UninstallString is not based on the version directory.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Persisted product.install_dir is not the version directory.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.16.0' 'Product version missing after first migration.'
+    Equal $script:MockMuMuServicePath ('"' + (Join-Path $script:ExpectedInstallRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service') 'Service image path is not the version directory.'
+    Equal (Get-Content $vmData -Raw).Trim() 'vm-data-preserve' 'VM data was not preserved.'
+    Equal (Get-Content $deviceMarker -Raw).Trim() 'device-data-preserve' 'Device data was not preserved.'
+    $persistedConfig=Get-Content (Join-Path $persistRoot 'configs\main\install_config.json') -Raw | ConvertFrom-Json
+    Equal $persistedConfig.custom 'keep' 'Custom persistent config was lost.'
 
-    Assert (Test-Path -LiteralPath (Join-Path $newRoot 'nx_main\MuMuNxMain.exe') -PathType Leaf) 'New payload was not created inside the Scoop version directory.'
-    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $newRoot 'Registry InstallLocation was not updated.'
-    Assert ([string](Get-ItemProperty -LiteralPath $registryPath).UninstallString -like ('*' + (Join-Path $newRoot 'uninstall.exe') + '*')) 'Registry UninstallString was not updated.'
-    Assert ([string](Get-ItemProperty -LiteralPath $registryPath).DisplayIcon -like ('*' + (Join-Path $newRoot 'nx_main\MuMuNxMain.exe') + '*')) 'Registry DisplayIcon was not updated.'
-    Equal $script:MockMuMuServicePath ('"' + (Join-Path $newRoot 'nx_main\MuMuPlayerRemoteService.exe') + '" --service') 'Service image path was not updated.'
-    Assert (Test-Path -LiteralPath (Join-Path $oldRoot 'nx_main\MuMuNxMain.exe')) 'The old Scoop version directory was moved or deleted.'
+    Remove-ScoopCurrentAndPersistLinks $firstVersion
+    Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0'
+    Assert (Test-Path (Join-Path $secondDir 'nx_main\MuMuNxMain.exe')) 'Second update did not place binaries in its version directory.'
+    Assert (-not (Test-Path (Join-Path $firstDir 'nx_main\MuMuNxMain.exe'))) 'Second update left the old program binaries behind.'
+    Assert (Test-Path (Join-Path $secondDir 'uninstall.exe')) 'Second update uninstaller is missing.'
+    Invoke-ScoopPersistData $secondVersion
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Second update did not update the Registry to the new version directory.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Second update did not store the new product version.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.install_dir) $script:ExpectedInstallRoot 'Second update did not update persistent install_dir to the new version directory.'
+    Assert (@($script:PhysicalTargets | Select-Object -Unique).Count -ge 2) 'Installer phases did not execute against more than one version directory.'
 
-    # Build legacy persist junctions to verify safe full-uninstall cleanup.
-    New-Item -ItemType Directory -Path $legacyRoot -Force | Out-Null
-    foreach ($name in @('configs','vms','nx_device')) {
-        $persistent = Join-Path $persistRoot $name
-        New-Item -ItemType Directory -Path $persistent -Force | Out-Null
-        Set-Content (Join-Path $persistent 'keep.txt') "keep-$name"
-        New-Item -ItemType Junction -Path (Join-Path $legacyRoot $name) -Value $persistent | Out-Null
-    }
-    Set-Content (Join-Path $legacyRoot 'keep-unexpected-file.txt') 'retain-this-file'
+    # Forced same-version repair: Scoop renames the previous version to _<version>.old.
+    Remove-ScoopCurrentAndPersistLinks $secondVersion
+    $forceBackupRoot = Join-Path $appRoot ('_' + $secondVersion + '.old')
+    Move-Item -LiteralPath $secondDir -Destination $forceBackupRoot -ErrorAction Stop
+    Invoke-UpgradeAttempt -Version $secondVersion -ProductVersion '6.8.17.0'
+    Assert (Test-Path (Join-Path $secondDir 'nx_main\\MuMuNxMain.exe')) 'Forced same-version update payload is missing.'
+    Assert (-not (Test-Path (Join-Path $forceBackupRoot 'nx_main\\MuMuNxMain.exe'))) 'Forced same-version update did not migrate the renamed Scoop backup payload.'
+    Assert (-not (Test-Path (Join-Path $forceBackupRoot 'uninstall.exe'))) 'Forced same-version update left the old uninstaller in the renamed Scoop backup.'
+    Invoke-ScoopPersistData $secondVersion
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot 'Forced same-version update changed the version-specific install path.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.17.0' 'Forced same-version update did not preserve the current product version.'
 
-    $script:dir = $newRoot
+    # Test 80002 recovery only when the stored product version is older than the target.
+    Remove-ScoopCurrentAndPersistLinks $secondVersion
+    Invoke-UpgradeAttempt -Version $thirdVersion -ProductVersion '6.8.18.0' -Retry80002
+    Assert (Test-Path (Join-Path $thirdDir 'nx_main\\MuMuNxMain.exe')) 'The 80002 retry update did not create the third-version payload.'
+    Invoke-ScoopPersistData $thirdVersion
+    Equal (Get-ItemProperty -LiteralPath $registryPath).InstallLocation $script:ExpectedInstallRoot '80002 retry changed the version-specific install path.'
+    Equal ((Get-Content $persistConfig -Raw | ConvertFrom-Json).product.version) '6.8.15.9' 'The commit retry result was not preserved.'
+
+    Remove-ScoopCurrentAndPersistLinks $thirdVersion
+    $script:dir = $thirdDir
     $script:persist_dir = $persistRoot
-    $script:cmd = 'update'
+    $cmd = 'update'
     . ([scriptblock]::Create($postUninstallText))
-    Assert (Test-Path -LiteralPath $registryPath) 'Update-time post_uninstall removed Registry.'
-    Assert ($script:MockMuMuServicePath -like "*$newRoot*") 'Update-time post_uninstall removed the service.'
-    Assert (Test-Path -LiteralPath (Join-Path $legacyRoot 'configs')) 'Update-time post_uninstall detached persist links.'
+    Assert (Test-Path $registryPath) 'post_uninstall removed Registry during scoop update.'
+    Assert ($script:MockMuMuServicePath -like "*$script:ExpectedInstallRoot*") 'post_uninstall removed service during scoop update.'
+    Assert (Test-Path $persistConfig) 'post_uninstall removed persistent config during scoop update.'
 
-    $script:cmd = 'uninstall'
+    $cmd = 'uninstall'
     . ([scriptblock]::Create($postUninstallText))
-    Assert (-not (Test-Path -LiteralPath $registryPath)) 'Full uninstall did not remove the matching Registry entry.'
-    Assert ([string]::IsNullOrWhiteSpace($script:MockMuMuServicePath)) 'Full uninstall did not remove the Scoop-owned service.'
-    foreach ($name in @('configs','vms','nx_device')) {
-        Assert (Test-Path -LiteralPath (Join-Path (Join-Path $persistRoot $name) 'keep.txt')) "Uninstall removed persistent $name data."
-        Assert (-not (Test-Path -LiteralPath (Join-Path $legacyRoot $name))) "Uninstall did not detach the $name junction."
-    }
-    Equal (Get-Content (Join-Path $legacyRoot 'keep-unexpected-file.txt') -Raw).Trim() 'retain-this-file' 'Uninstall removed unexpected legacy data.'
-    Assert (Test-Path -LiteralPath (Join-Path $newRoot 'nx_main\MuMuNxMain.exe')) 'post_uninstall removed program files instead of leaving them to Scoop.'
+    Assert (-not (Test-Path $registryPath)) 'Full Scoop uninstall did not remove current-root registration.'
+    Assert ([string]::IsNullOrWhiteSpace($script:MockMuMuServicePath)) 'Full Scoop uninstall did not remove version-specific service.'
+    Assert (Test-Path $vmData) 'Scoop uninstall removed persisted VM data.'
+    Assert (Test-Path $deviceMarker) 'Scoop uninstall removed persisted device data.'
+    Assert (Test-Path $persistConfig) 'Scoop uninstall removed persisted configuration.'
+    Assert (-not (Test-Path $legacyRoot)) 'The empty legacy install root and its old persist junctions were not cleaned.'
+    Assert (Test-Path (Join-Path $thirdDir 'nx_main\MuMuNxMain.exe')) 'post_uninstall incorrectly deleted versioned program files instead of leaving them to Scoop.'
 
     @(
-        '## MuMuPlayer Registry and uninstall regression'
+        '## MuMuPlayer versioned-payload regression'
         ''
-        '- Injected installer failure and verified no Registry or service paths changed.'
-        '- Verified successful update rewrites Registry InstallLocation, UninstallString and DisplayIcon.'
-        '- Verified MuMuPlayerRemoteService image path follows the new Scoop version directory.'
-        '- Verified update-time post_uninstall leaves Registry, service and persist links intact.'
-        '- Verified full uninstall removes only matching Registry/service entries.'
-        '- Verified known legacy persist junctions are detached while persistent data and unexpected files remain.'
+        '- Injected 80011 during migration from persist\install and verified reverse-move rollback.'
+        '- Verified successful migration places MuMu binaries and uninstall.exe inside the Scoop version directory.'
+        '- Simulated Scoop persist_data moving configs, vms and nx_device back to persist and creating version-local junctions.'
+        '- Simulated a subsequent update after unlink_current and verified old binaries move to the next version directory.'
+        '- Simulated a forced same-version backup folder and tested 80002 retry separately.'
+        '- Verified version-specific Registry, AppData and service paths and persisted VM/config/device data.'
+        '- Verified post_uninstall keeps persistent user data and leaves versioned files for Scoop to remove.'
         ''
         'Mock installer only; it does not boot Android or validate host virtualization drivers.'
     ) | Out-File $env:GITHUB_STEP_SUMMARY -Encoding utf8
-    Write-Host 'MuMuPlayer Registry and uninstall regression passed.'
+    Write-Host 'MuMuPlayer versioned-payload regression passed.'
 } finally {
-    if (Test-Path -LiteralPath $registryRoot) {
-        Remove-Item -LiteralPath $registryRoot -Recurse -Force -ErrorAction SilentlyContinue
-    }
-    if (Test-Path -LiteralPath $root) {
-        Remove-Item -LiteralPath $root -Recurse -Force -ErrorAction SilentlyContinue
-    }
+    if (Test-Path $root) { Remove-Item $root -Recurse -Force -ErrorAction SilentlyContinue }
     Remove-Item Env:\MUMU_SCOOP_TEST_MODE -ErrorAction SilentlyContinue
     Remove-Item Env:\MUMU_SCOOP_TEST_REGISTRY_PATH -ErrorAction SilentlyContinue
 }
