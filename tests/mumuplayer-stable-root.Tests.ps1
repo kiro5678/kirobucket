@@ -178,22 +178,20 @@ function Start-Process {
     }
     if ($action -eq 'install_prepare') {
         New-Item -ItemType Directory -Path (Join-Path $target 'configs\main'),(Join-Path $target 'vms\test-vm'),(Join-Path $target 'nx_device\15.0\shell') -Force | Out-Null
-        $cfg = [pscustomobject]@{
-            product=[pscustomobject]@{version=$script:MockPreparedProductVersion;install_dir=$target}
-            main=[pscustomobject]@{install_dir=(Join-Path $target 'nx_main')}
-            engines=[pscustomobject]@{mumu15=[pscustomobject]@{
-                player=[pscustomobject]@{install_dir=(Join-Path $target 'nx_device\15.0\shell')}
-                vms=[pscustomobject]@{install_dir=(Join-Path $target 'vms')}
-                renderer=[pscustomobject]@{install_dir=(Join-Path $target 'nx_device\15.0\device')}
-            }}
-        }
+        $cfg = Get-Content -LiteralPath $activePersistConfig -Raw | ConvertFrom-Json
+        $cfg.product.version = $script:MockPreparedProductVersion
+        $cfg.product.install_dir = $target
+        $cfg.main.install_dir = Join-Path $target 'nx_main'
+        $cfg.engines.mumu15.player.install_dir = Join-Path $target 'nx_device\15.0\shell'
+        $cfg.engines.mumu15.vms.install_dir = Join-Path $target 'vms'
+        $cfg.engines.mumu15.renderer.install_dir = Join-Path $target 'nx_device\15.0\device'
         $cfg | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $activePersistConfig -Encoding utf8
         Set-Content (Join-Path $target 'nx_device\15.0\shell\MuMuNxDevice.exe') ('engine=' + $script:MockProductVersion)
         if (Test-Path -LiteralPath $appDataConfig) {
             $app = Get-Content $appDataConfig -Raw | ConvertFrom-Json
-            $app.product.version=$script:MockPreparedProductVersion
-            $app.product.install_dir=$target
-            $app.main.install_dir=Join-Path $target 'nx_main'
+            $app.product.version = $script:MockPreparedProductVersion
+            $app.product.install_dir = $target
+            $app.main.install_dir = Join-Path $target 'nx_main'
             $app | ConvertTo-Json -Depth 12 | Set-Content $appDataConfig -Encoding utf8
         }
         return [pscustomobject]@{ExitCode=0}
@@ -288,8 +286,11 @@ try {
     $failed=$false
     try { Invoke-UpgradeAttempt -Version $firstVersion -ProductVersion '6.8.16.0' -Fail }
     catch {
-        $failed=$true
+        $failed = $true
         if ($_.Exception.Message -notmatch '80011') { throw }
+        if ($_.Exception.Message -match 'Rollback also reported:') {
+            throw "Rollback was incomplete during injected 80011: $($_.Exception.Message)"
+        }
     }
     Assert $failed 'The injected 80011 was not surfaced.'
     $reg=Get-ItemProperty -LiteralPath $registryPath
