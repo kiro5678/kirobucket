@@ -14,7 +14,7 @@
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 76 | [View](#file-management) |
+| File Management | 77 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
@@ -47,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1278**
+**Total unique categorized manifests: 1279**
 
 
 ## Android & Device Tools
@@ -351,6 +351,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [mitec-exe-explorer](../bucket/mitec-exe-explorer.json) | 3.7.5 | 12.2 MiB | 2026-04-15 | Executable file explorer for OS/2, NE, PE32, PE32+ and VxD files. | [Homepage](https://www.mitec.cz/wp/mee/) |
 | [mouzi](../bucket/mouzi.json) | 0.2.1 | 64bit: 17.7 MiB | 2026-09-27 | Silent, customizable file organizer that automatically keeps your Downloads folder tidy. | [Homepage](https://github.com/hsr88/mouzi) |
 | [magpie-search](../bucket/magpie-search.json) | 3.3.1 | 69.6 MiB | — | Local Windows search across documents, PDFs, spreadsheets, notes, and text inside pictures. | [Homepage](https://magpiesearch.app/) |
+| [wizfile](../bucket/wizfile.json) | 3.15 | — | 2026-04-17 | Fast Windows file finder that searches by file name, size, and modification date. | [Homepage](https://antibody-software.com/wizfile/) |
 | [softwareok-new-file-time](../bucket/softwareok-new-file-time.json) | 8.31 | 32bit: 154.0 KiB / 64bit: 181.6 KiB | 2026-10-30 | NewFileTime is a Windows tool that provides you easy access to correct or manipulate any of the timestamps for any file and folder on your Windows system. | [Homepage](http://www.softwareok.com/?seite=Microsoft/NewFileTime) |
 | [softwareok-new-file-time.unicode](../bucket/softwareok-new-file-time.unicode.json) | 8.31 | 159.1 KiB | 2026-10-30 | NewFileTime is a Windows tool that provides you easy access to correct or manipulate any of the timestamps for any file and folder on your Windows system. | [Homepage](http://www.softwareok.com/?seite=Microsoft/NewFileTime) |
 | [nomina](../bucket/nomina.json) | 1.1 | 15.5 MiB | 2026-05-23 | Advanced batch file and folder renamer for Windows. | [Homepage](https://github.com/esmail-mkh/Nomina) |
