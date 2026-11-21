@@ -137,7 +137,7 @@ jobs:
       matrix:
         include:
           - id: script-managed-external-stable
-            method: "Scoop Checkver/autoupdate + guided-installer static validation (interactive lifecycle not automated)"
+            method: "Scoop native installer.file + Checkver/autoupdate validation (interactive lifecycle not automated)"
             manifest: "bucket/Oriel-Niix.json"
 
     steps:
@@ -199,14 +199,21 @@ jobs:
           if ([string]$updatedManifest.url -ne $expectedUrl) { throw "autoupdate generated an unexpected URL: $($updatedManifest.url)" }
           if ([string]$updatedManifest.hash -ne $expectedHash) { throw "autoupdate generated an unexpected SHA-256: $($updatedManifest.hash)" }
 
-          if ($manifest.installer.file) { throw 'Guided setup must use installer.script so the changing download filename can come from $fname.' }
-          if ($manifest.installer.args) { throw 'Guided setup must not pass installer command-line arguments.' }
-          $installerScript = [string]::Join([Environment]::NewLine, [string[]]@($manifest.installer.script))
-          if ($installerScript -notmatch '\$fname' -or $installerScript -notmatch 'Start-Process' -or $installerScript -notmatch '-Wait') {
-            throw 'Guided installer must launch the downloaded $fname with Start-Process and wait for the wizard to exit.'
+          if ([string]$manifest.installer.file -ne 'OrielSetup.exe') {
+            throw "Expected Scoop native installer.file OrielSetup.exe, got: $($manifest.installer.file)"
           }
-          if ($installerScript -match '(?i)--silent|--quiet|/quiet|/silent|/S(?![a-z])') {
-            throw 'The guided installer script contains a silent-install argument.'
+          if ($manifest.installer.args) { throw 'Guided setup must not pass installer command-line arguments.' }
+          if ([bool]$manifest.installer.keep) { throw 'Scoop should remove OrielSetup.exe after its native installer handler succeeds.' }
+          $preInstallScript = [string]::Join([Environment]::NewLine, [string[]]@($manifest.pre_install))
+          if ($preInstallScript -notmatch 'OrielSetup-\$version\.exe' -or $preInstallScript -notmatch 'Move-Item' -or $preInstallScript -notmatch 'OrielSetup.exe') {
+            throw 'pre_install must rename the versioned official download to Scoop installer.file OrielSetup.exe.'
+          }
+          $installerScript = [string]::Join([Environment]::NewLine, [string[]]@($manifest.installer.script))
+          if ($installerScript -match '(?i)Start-Process|Invoke-ExternalCommand|--silent|--quiet|/quiet|/silent|/S(?![a-z])') {
+            throw 'installer.script must validate the result only; Scoop natively executes installer.file without silent arguments.'
+          }
+          if ($installerScript -notmatch 'oriel.exe' -or $installerScript -notmatch 'New-Item -ItemType Junction') {
+            throw 'installer.script must verify the installed executable and create the Scoop launch junction.'
           }
           if (-not $manifest.pre_install -or -not $manifest.uninstaller.script) {
             throw 'Expected pre_install and uninstaller scripts are missing.'
@@ -237,8 +244,8 @@ jobs:
             "Scoop checkver version: $($updatedManifest.version)",
             "Scoop autoupdate URL: $($updatedManifest.url)",
             "Scoop autoupdate SHA-256: $($updatedManifest.hash)",
-            'Guided setup: PASS — no command-line arguments are passed.',
-            'Dynamic setup filename: PASS — installer script uses Scoop $fname.',
+            'Guided setup: PASS — Scoop native installer.file runs OrielSetup.exe without arguments.',
+            'Dynamic setup filename: PASS — pre_install renames OrielSetup-$version.exe to OrielSetup.exe.',
             'pre_install / installer.script / uninstaller.script PowerShell parsing: PASS.',
             'Full GUI installation lifecycle: NOT RUN — it requires an interactive desktop session.'
           )
