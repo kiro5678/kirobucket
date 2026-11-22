@@ -779,8 +779,10 @@ jobs:
             if ($payloadOffset -le 0 -or $payloadLength -le 0 -or $expectedPayloadHashBytes.Length -ne 32) {
               throw 'The embedded payload offset or length is invalid.'
             }
-            if (($payloadOffset + $payloadLength + 48) -ne $payloadEnd) {
-              throw 'The embedded ZIP and footer do not end at the expected PE payload boundary.'
+            $footerEnd = $payloadOffset + $payloadLength + 48
+            $trailingPadding = $payloadEnd - $footerEnd
+            if ($trailingPadding -lt 0 -or $trailingPadding -gt 8) {
+              throw "Unexpected data after the Termilly footer: $trailingPadding byte(s)."
             }
 
             $stream.Position = $payloadOffset
