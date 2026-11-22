@@ -1,0 +1,192 @@
+name: Requested Apps Round 2 Inspection
+
+on:
+  push:
+    branches:
+      - manifest-round2-inspection-2026-11-22
+    paths:
+      - ".github/workflows/requested-apps-round2-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Inspect Agent Theater npm package
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $root = Join-Path $env:RUNNER_TEMP 'round2-inspection'
+          $agent = Join-Path $root 'agent-theater'
+          New-Item -ItemType Directory -Path $agent -Force | Out-Null
+
+          $metaText = npm view agent-theater@0.3.0 version dist.tarball dist.shasum dist.integrity --json
+          if ($LASTEXITCODE -ne 0) { throw 'npm registry query failed for agent-theater@0.3.0.' }
+          $meta = $metaText | ConvertFrom-Json
+          $tarball = Join-Path $agent 'agent-theater-0.3.0.tgz'
+          Invoke-WebRequest -Uri $meta.dist.tarball -OutFile $tarball -TimeoutSec 600
+          $hash = (Get-FileHash -LiteralPath $tarball -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "Agent Theater npm version: $($meta.version)"
+          Write-Host "Agent Theater tarball: $($meta.dist.tarball)"
+          Write-Host "Agent Theater SHA256: $hash"
+          Write-Host "Agent Theater npm shasum: $($meta.dist.shasum)"
+          Write-Host "Agent Theater npm integrity: $($meta.dist.integrity)"
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }
+          & $sevenZip t $tarball
+          if ($LASTEXITCODE -ne 0) { throw 'Agent Theater npm tarball integrity test failed.' }
+          $extract = Join-Path $agent 'extracted'
+          New-Item -ItemType Directory -Path $extract -Force | Out-Null
+          & $sevenZip x -y "-o$extract" $tarball
+          if ($LASTEXITCODE -ne 0) { throw 'Agent Theater npm tarball extraction failed.' }
+          $pkg = Join-Path $extract 'package\package.json'
+          $cli = Join-Path $extract 'package\cli\agent-theater.mjs'
+          if (-not (Test-Path -LiteralPath $pkg -PathType Leaf)) { throw 'Agent Theater npm package.json missing from tarball.' }
+          if (-not (Test-Path -LiteralPath $cli -PathType Leaf)) { throw 'Agent Theater CLI entrypoint missing from tarball.' }
+          $package = Get-Content -LiteralPath $pkg -Raw | ConvertFrom-Json
+          if ($package.dependencies -and $package.dependencies.PSObject.Properties.Count -gt 0) {
+            throw 'Agent Theater package has runtime dependencies; direct tarball extraction would be incomplete.'
+          }
+          if ([version]$package.engines.node.TrimStart('>','=') -gt [version]'24.0.0') {
+            Write-Host "Agent Theater Node engine: $($package.engines.node)"
+          }
+          node --check $cli
+          if ($LASTEXITCODE -ne 0) { throw 'Agent Theater CLI syntax check failed.' }
+          $agentSummary = @(
+            "## Agent Theater npm package"
+            "- Version: $($package.version)"
+            "- SHA-256: $hash"
+            "- npm shasum: $($meta.dist.shasum)"
+            "- npm integrity: $($meta.dist.integrity)"
+            "- CLI entrypoint: package/cli/agent-theater.mjs"
+            "- Runtime dependencies: $(@($package.dependencies.PSObject.Properties).Count)"
+            ""
+          )
+          $agentSummary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          Write-Host 'PASS: Agent Theater npm package extracted and CLI syntax verified.'
+
+      - name: Inspect CopySpeech Windows MSI and setup EXE
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $root = Join-Path $env:RUNNER_TEMP 'round2-inspection\copyspeech'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }
+
+          $targets = @(
+            @{
+              Name = 'MSI'
+              File = 'CopySpeech_0.3.2_x64_en-US.msi'
+              Url = 'https://github.com/ilyaizen/CopySpeech/releases/download/v0.3.2/CopySpeech_0.3.2_x64_en-US.msi'
+              Sha256 = 'a6bc4e571867886cded2b50ab1b4fccda87910422501a8b4ed6afa1f806ad728'
+            },
+            @{
+              Name = 'SetupEXE'
+              File = 'CopySpeech_0.3.2_x64-setup.exe'
+              Url = 'https://github.com/ilyaizen/CopySpeech/releases/download/v0.3.2/CopySpeech_0.3.2_x64-setup.exe'
+              Sha256 = 'acd166709e4ed1b0e40072a350523e204aa44bca826dc3fcb73990fa43e325dc'
+            }
+          )
+
+          foreach ($target in $targets) {
+            $folder = Join-Path $root $target.Name
+            New-Item -ItemType Directory -Path $folder -Force | Out-Null
+            $download = Join-Path $folder $target.File
+            Invoke-WebRequest -Uri $target.Url -OutFile $download -TimeoutSec 900
+            $hash = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($hash -ne $target.Sha256) { throw "$($target.Name) SHA256 mismatch: $hash" }
+            Write-Host "PASS: CopySpeech $($target.Name) SHA256 $hash"
+            & $sevenZip l -slt $download
+            if ($LASTEXITCODE -ne 0) { throw "7-Zip could not inspect CopySpeech $($target.Name)." }
+            & $sevenZip t $download
+            if ($LASTEXITCODE -ne 0) { throw "CopySpeech $($target.Name) archive integrity test failed." }
+            $extract = Join-Path $folder 'extracted'
+            New-Item -ItemType Directory -Path $extract -Force | Out-Null
+            & $sevenZip x -y "-o$extract" $download
+            if ($LASTEXITCODE -ne 0) { throw "CopySpeech $($target.Name) extraction failed." }
+            $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+            $exe = @($files | Where-Object { $_.Name -ieq 'CopySpeech.exe' })
+            $summary = "CopySpeech $($target.Name): $($files.Count) extracted files; CopySpeech.exe matches: $($exe.Count)"
+            Write-Host $summary
+            foreach ($item in $exe) {
+              Write-Host ('CopySpeech executable path: ' + [IO.Path]::GetRelativePath($extract, $item.FullName))
+            }
+            if ($target.Name -eq 'MSI' -and $exe.Count -eq 0) {
+              throw 'CopySpeech MSI extraction did not yield CopySpeech.exe.'
+            }
+            if ($target.Name -eq 'MSI') {
+              $summary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+            }
+          }
+
+      - name: Inspect and extract Veyra NVIDIA and AMD portable ZIPs
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $root = Join-Path $env:RUNNER_TEMP 'round2-inspection\veyra'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }
+
+          $targets = @(
+            @{
+              Name = 'NVIDIA'
+              File = 'Veyra-2.2.0-NVIDIA-win64-portable.zip'
+              Url = 'https://github.com/Likely7/Veyra-NRVideo/releases/download/v2.2.0/Veyra-2.2.0-NVIDIA-win64-portable.zip'
+              Sha256 = 'fd1235483a6e36b2520966ec161104478cd93186e97af3b0d78d2dfa7b129932'
+            },
+            @{
+              Name = 'AMD'
+              File = 'Veyra-2.2.0-AMD-win64-portable.zip'
+              Url = 'https://github.com/Likely7/Veyra-NRVideo/releases/download/v2.2.0/Veyra-2.2.0-AMD-win64-portable.zip'
+              Sha256 = 'b383cd4fbc94a6b84e32f36bc8c2758b4c03216c2bd0a2560e3112ba520d6905'
+            }
+          )
+
+          $summaries = [System.Collections.Generic.List[string]]::new()
+          foreach ($target in $targets) {
+            $folder = Join-Path $root $target.Name
+            New-Item -ItemType Directory -Path $folder -Force | Out-Null
+            $download = Join-Path $folder $target.File
+            Invoke-WebRequest -Uri $target.Url -OutFile $download -TimeoutSec 3600
+            $hash = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($hash -ne $target.Sha256) { throw "Veyra $($target.Name) SHA256 mismatch: $hash" }
+            Write-Host "PASS: Veyra $($target.Name) SHA256 $hash"
+
+            & $sevenZip t $download
+            if ($LASTEXITCODE -ne 0) { throw "Veyra $($target.Name) ZIP integrity test failed." }
+            $listing = & $sevenZip l -slt $download 2>&1
+            if ($LASTEXITCODE -ne 0) { throw "Veyra $($target.Name) ZIP listing failed." }
+            $listing | Set-Content -LiteralPath (Join-Path $folder 'archive-listing.txt')
+
+            $extract = Join-Path $folder 'extracted'
+            New-Item -ItemType Directory -Path $extract -Force | Out-Null
+            & $sevenZip x -y "-o$extract" $download
+            if ($LASTEXITCODE -ne 0) { throw "Veyra $($target.Name) full extraction failed." }
+            $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+            $main = @($files | Where-Object { $_.Name -ieq 'Veyra.exe' })
+            if ($main.Count -ne 1) {
+              $main = @($files | Where-Object { $_.Name -ieq 'veyra_qml_ui.exe' })
+            }
+            if ($main.Count -ne 1) { throw "Veyra $($target.Name) extracted archive must contain one recognized main executable; found $($main.Count)." }
+            $runtime = @(Get-ChildItem -LiteralPath $extract -Directory -Recurse -Force | Where-Object { $_.Name -ieq 'runtime_local' })
+            if ($runtime.Count -eq 0) { throw "Veyra $($target.Name) runtime_local data directory missing." }
+            $relativeMain = [IO.Path]::GetRelativePath($extract, $main[0].FullName).Replace([char]92,[char]47)
+            $summaries.Add("## Veyra $($target.Name)")
+            $summaries.Add("- SHA-256: $hash")
+            $summaries.Add("- Extracted files: $($files.Count)")
+            $summaries.Add("- Main executable: $relativeMain")
+            $summaries.Add("- runtime_local directories: $($runtime.Count)")
+            $summaries.Add('')
+            Write-Host "PASS: Veyra $($target.Name) extracted $($files.Count) files; main=$relativeMain; runtime_local=$($runtime.Count)"
+          }
+          $summaries | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
