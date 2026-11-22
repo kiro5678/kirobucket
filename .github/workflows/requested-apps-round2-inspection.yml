@@ -206,6 +206,14 @@ jobs:
             if ($main.Count -ne 1) { throw "Veyra $($target.Name) extracted archive must contain one recognized main executable; found $($main.Count)." }
             $runtime = @(Get-ChildItem -LiteralPath $extract -Directory -Recurse -Force | Where-Object { $_.Name -ieq 'runtime_local' })
             if ($runtime.Count -eq 0) { throw "Veyra $($target.Name) runtime_local data directory missing." }
+            $appRoot = $main[0].DirectoryName
+            foreach ($relativeData in @('runtime_local\user-data-2.0.0','runtime_local\luts')) {
+              $dataPath = Join-Path $appRoot $relativeData
+              if (-not (Test-Path -LiteralPath $dataPath -PathType Container)) {
+                throw "Veyra $($target.Name) expected persistent data folder missing: $relativeData"
+              }
+              Write-Host "Veyra $($target.Name) persistence folder: $relativeData"
+            }
             $relativeMain = [IO.Path]::GetRelativePath($extract, $main[0].FullName).Replace([char]92,[char]47)
             $summaries.Add("## Veyra $($target.Name)")
             $summaries.Add("- SHA-256: $hash")
