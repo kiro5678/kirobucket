@@ -10,6 +10,10 @@ on:
       - "bucket/legacy-router-opener-alaa7hany.json"
       - "bucket/winorbit-mahadi-siraj.json"
       - "bucket/gaming-tweaks-hamsypg.json"
+      - "bucket/screenlight.json"
+      - "bucket/scribe.json"
+      - "bucket/folder-icon-maker.json"
+      - "bucket/wingetix.json"
   pull_request:
     branches:
       - master
@@ -19,6 +23,10 @@ on:
       - "bucket/legacy-router-opener-alaa7hany.json"
       - "bucket/winorbit-mahadi-siraj.json"
       - "bucket/gaming-tweaks-hamsypg.json"
+      - "bucket/screenlight.json"
+      - "bucket/scribe.json"
+      - "bucket/folder-icon-maker.json"
+      - "bucket/wingetix.json"
 
 permissions:
   contents: read
@@ -57,7 +65,11 @@ jobs:
             'fileferret',
             'legacy-router-opener-alaa7hany',
             'winorbit-mahadi-siraj',
-            'gaming-tweaks-hamsypg'
+            'gaming-tweaks-hamsypg',
+            'screenlight',
+            'scribe',
+            'folder-icon-maker',
+            'wingetix'
           )
           foreach ($name in $names) {
             $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
@@ -83,7 +95,7 @@ jobs:
           scoop bucket add kirobucket-test $bucketUrl
           if ($LASTEXITCODE -ne 0) { throw 'Could not register the local candidate bucket.' }
 
-      - name: Install the four applications without launching them
+      - name: Install the eight applications without launching them
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
@@ -91,7 +103,11 @@ jobs:
             'fileferret',
             'legacy-router-opener-alaa7hany',
             'winorbit-mahadi-siraj',
-            'gaming-tweaks-hamsypg'
+            'gaming-tweaks-hamsypg',
+            'screenlight',
+            'scribe',
+            'folder-icon-maker',
+            'wingetix'
           )
           foreach ($name in $names) {
             Write-Host "Scoop install $name"
@@ -105,10 +121,14 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $apps = Join-Path $env:SCOOP 'apps'
           $checks = @(
-            @{ Name = 'FileFerret'; App = 'fileferret'; RelativePath = 'FileFerret-Portable-1.7.0.exe' },
+            @{ Name = 'FileFerret'; App = 'fileferret'; RelativePath = 'FileFerret-Portable-1.8.0.exe' },
             @{ Name = 'Legacy Router Opener'; App = 'legacy-router-opener-alaa7hany'; RelativePath = 'legacy-router-opener.exe' },
             @{ Name = 'WinOrbit'; App = 'winorbit-mahadi-siraj'; RelativePath = 'WinOrbit.exe' },
-            @{ Name = 'GAMING TWEAKS'; App = 'gaming-tweaks-hamsypg'; RelativePath = 'Launcher.bat' }
+            @{ Name = 'GAMING TWEAKS'; App = 'gaming-tweaks-hamsypg'; RelativePath = 'Launcher.bat' },
+            @{ Name = 'ScreenLight'; App = 'screenlight'; RelativePath = 'ScreenLight.exe' },
+            @{ Name = 'Scribe launcher'; App = 'scribe'; RelativePath = 'scribe.cmd' },
+            @{ Name = 'Folder Icon Maker'; App = 'folder-icon-maker'; RelativePath = 'FolderIconMaker.exe' },
+            @{ Name = 'Wingetix'; App = 'wingetix'; RelativePath = 'Wingetix.exe' }
           )
 
           foreach ($check in $checks) {
@@ -120,6 +140,40 @@ jobs:
             Write-Host "PASS: $($check.Name) extracted to $target"
           }
 
+          $folderIconInternal = Join-Path $apps 'folder-icon-maker\current\_internal'
+          if (-not (Test-Path -LiteralPath $folderIconInternal -PathType Container)) {
+            throw "Folder Icon Maker's _internal directory is missing beside its executable: $folderIconInternal"
+          }
+
+          $wingetixAsar = Join-Path $apps 'wingetix\current\resources\app.asar'
+          if (-not (Test-Path -LiteralPath $wingetixAsar -PathType Leaf)) {
+            throw "Wingetix's Electron payload is incomplete: $wingetixAsar"
+          }
+          $wingetixPlugins = Join-Path $apps 'wingetix\current\$PLUGINSDIR'
+          if (Test-Path -LiteralPath $wingetixPlugins) {
+            throw "Wingetix's temporary NSIS payload was not removed: $wingetixPlugins"
+          }
+
+          $scribeLauncher = Join-Path $apps 'scribe\current\scribe.cmd'
+          $launcherText = Get-Content -LiteralPath $scribeLauncher -Raw
+          if ($launcherText -notmatch 'XDG_CONFIG_HOME=.*data\\config' -or $launcherText -notmatch 'XDG_CACHE_HOME=.*data\\cache') {
+            throw 'Scribe launcher does not redirect XDG config and cache into its persisted data folder.'
+          }
+          $scribeData = Join-Path $apps 'scribe\current\data'
+          $scribePersist = Join-Path $env:SCOOP 'persist\scribe\data'
+          if (-not (Test-Path -LiteralPath $scribeData -PathType Container) -or -not (Test-Path -LiteralPath $scribePersist -PathType Container)) {
+            throw 'Scribe persisted data folder or app junction was not created.'
+          }
+
+          $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Scoop Apps'
+          foreach ($shortcutName in @('ScreenLight', 'Scribe (Terminal)', 'Folder Icon Maker', 'Wingetix')) {
+            $shortcutPath = Join-Path $shortcutRoot "$shortcutName.lnk"
+            if (-not (Test-Path -LiteralPath $shortcutPath -PathType Leaf)) {
+              throw "Expected Start Menu shortcut was not created: $shortcutPath"
+            }
+            Write-Host "PASS: Start Menu shortcut exists: $shortcutPath"
+          }
+
           $winOrbitData = Join-Path $apps 'winorbit-mahadi-siraj\current\Data'
           if (-not (Test-Path -LiteralPath $winOrbitData)) {
             throw "WinOrbit's persistent Data folder was not created: $winOrbitData"
@@ -127,9 +181,9 @@ jobs:
           Write-Host "PASS: WinOrbit Data persistence path is present: $winOrbitData"
 
           @(
-            'Scoop installed all four manifests successfully.'
-            'All four expected entry points were found beneath their current links.'
-            'WinOrbit persistent Data path is present.'
+            'Scoop installed all eight manifests successfully.'
+            'All eight expected entry points were found beneath their current links.'
+            'WinOrbit and Scribe persistent data paths are present.'
             'No application executable or tweak launcher was started.'
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
@@ -143,7 +197,7 @@ jobs:
           }
 
           $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-local-test\bucket'
-          foreach ($name in @('fileferret','legacy-router-opener-alaa7hany','winorbit-mahadi-siraj','gaming-tweaks-hamsypg')) {
+          foreach ($name in @('fileferret','legacy-router-opener-alaa7hany','winorbit-mahadi-siraj','gaming-tweaks-hamsypg','screenlight','scribe','folder-icon-maker','wingetix')) {
             Write-Host "Running checkver.ps1 for $name"
             & $checkver -App $name -Dir $manifestDir -ThrowError
           }

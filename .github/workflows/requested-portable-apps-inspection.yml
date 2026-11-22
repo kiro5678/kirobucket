@@ -1,0 +1,189 @@
+name: Requested Portable Apps Inspection
+
+on:
+  push:
+    branches:
+      - manifest-inspection-2026-11-22
+    paths:
+      - ".github/workflows/requested-portable-apps-inspection.yml"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/requested-portable-apps-inspection.yml"
+      - "bucket/screenlight.json"
+      - "bucket/scribe.json"
+      - "bucket/folder-icon-maker.json"
+      - "bucket/wingetix.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Download and verify official assets
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $command = Get-Command '7z.exe' -ErrorAction Stop
+            $sevenZip = $command.Source
+          }
+
+          $root = Join-Path $env:RUNNER_TEMP 'requested-portable-apps'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $targets = @(
+            @{
+              Name = 'ScreenLight'
+              File = 'ScreenLight-0.1.0-portable.zip'
+              Url = 'https://github.com/Zephkek/ScreenLight/releases/download/v0.1.0/ScreenLight-0.1.0-portable.zip'
+              Sha256 = 'ade9f7bd8af02c8cac295251ab483f50bb152a0eb63384787ebfb6a362213fd8'
+              MainExe = 'ScreenLight.exe'
+              Archive = $true
+            },
+            @{
+              Name = 'FolderIconMaker'
+              File = 'FolderIconMaker-1.3.0.zip'
+              Url = 'https://github.com/garfiewlolz/folder-icon-maker/releases/download/v1.3.0/FolderIconMaker-1.3.0.zip'
+              Sha256 = 'dd7242da6a09a39f11312be1aff8b220ec5507b1eabfd6c95e28471cb5fd2941'
+              MainExe = 'FolderIconMaker.exe'
+              Archive = $true
+            },
+            @{
+              Name = 'Scribe'
+              File = 'scribe-windows-x86_64.exe'
+              Url = 'https://github.com/programmersd21/scribe/releases/download/v0.2.0/scribe-windows-x86_64.exe'
+              Sha256 = '7b86b90dc27b3cea83383068a6fcf03e91b9250cee45687e241a9550cc0d89cc'
+              MainExe = 'scribe-windows-x86_64.exe'
+              Archive = $false
+            },
+            @{
+              Name = 'Wingetix'
+              File = 'Wingetix.1.1.1.exe'
+              Url = 'https://github.com/joselyky/Wingetix/releases/download/v1.1.1/Wingetix.1.1.1.exe'
+              Sha256 = 'bef8aacca5bed13919d8cd0fffe33084374e11efb8d39947fd97cda045307c03'
+              MainExe = 'Wingetix.1.1.1.exe'
+              Archive = $false
+            }
+          )
+
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('# Requested portable assets inspection')
+          $summary.Add('')
+
+          foreach ($target in $targets) {
+            $folder = Join-Path $root $target.Name
+            New-Item -ItemType Directory -Path $folder -Force | Out-Null
+            $download = Join-Path $folder $target.File
+            Invoke-WebRequest -Uri $target.Url -OutFile $download -MaximumRedirection 10 -TimeoutSec 1200
+
+            $actual = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $target.Sha256) {
+              throw "$($target.Name): SHA-256 mismatch. Expected $($target.Sha256), received $actual."
+            }
+
+            $size = (Get-Item -LiteralPath $download).Length
+            Write-Host "PASS: $($target.Name) download SHA-256 $actual ($size bytes)"
+            $summary.Add("## $($target.Name)")
+            $summary.Add("- SHA-256: $actual")
+            $summary.Add("- Size: $size bytes")
+
+            if ($target.Archive) {
+              $listing = & $sevenZip l -slt $download 2>&1
+              if ($LASTEXITCODE -ne 0) { throw "$($target.Name): 7-Zip listing failed." }
+              $listing | Set-Content -LiteralPath (Join-Path $folder 'archive-listing.txt')
+              & $sevenZip t $download
+              if ($LASTEXITCODE -ne 0) { throw "$($target.Name): archive integrity test failed." }
+
+              $extract = Join-Path $folder 'extracted'
+              New-Item -ItemType Directory -Path $extract -Force | Out-Null
+              & $sevenZip x -y "-o$extract" $download
+              if ($LASTEXITCODE -ne 0) { throw "$($target.Name): archive extraction failed." }
+
+              $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+              if ($files.Count -eq 0) { throw "$($target.Name): archive extracted no files." }
+              $main = @($files | Where-Object { $_.Name -ieq $target.MainExe })
+              if ($main.Count -ne 1) {
+                throw "$($target.Name): expected exactly one $($target.MainExe); found $($main.Count)."
+              }
+
+              $relativeMain = [IO.Path]::GetRelativePath($extract, $main[0].FullName).Replace([char]92,[char]47)
+              $summary.Add("- Extracted files: $($files.Count)")
+              $summary.Add("- Main executable: $relativeMain")
+              Write-Host "$($target.Name) main executable: $relativeMain"
+              if ($target.Name -eq 'FolderIconMaker') {
+                $internal = Join-Path $main[0].DirectoryName '_internal'
+                if (-not (Test-Path -LiteralPath $internal -PathType Container)) {
+                  throw 'Folder Icon Maker _internal directory is not beside the main executable.'
+                }
+                Write-Host 'PASS: FolderIconMaker.exe and _internal are adjacent.'
+                $summary.Add('- _internal directory: beside the main executable')
+              }
+            } else {
+              $stream = [IO.File]::OpenRead($download)
+              try {
+                $header = [byte[]]::new(2)
+                if ($stream.Read($header,0,2) -ne 2 -or $header[0] -ne 0x4D -or $header[1] -ne 0x5A) {
+                  throw "$($target.Name): downloaded file is not a Windows PE executable."
+                }
+              } finally { $stream.Dispose() }
+              $info = [Diagnostics.FileVersionInfo]::GetVersionInfo($download)
+              $summary.Add('- PE header: valid')
+              $summary.Add("- Product version: $($info.ProductVersion)")
+              Write-Host "$($target.Name) PE header: valid; ProductVersion=$($info.ProductVersion)"
+              if ($target.Name -eq 'Wingetix') {
+                $sfxListing = & $sevenZip l -slt $download 2>&1
+                $sfxExit = $LASTEXITCODE
+                $sfxListing | Set-Content -LiteralPath (Join-Path $folder 'sevenzip-listing.txt')
+                if ($sfxExit -eq 0) {
+                  Write-Host '7-Zip recognizes Wingetix portable EXE as an archive; extracting for payload inspection.'
+                  $sfxExtract = Join-Path $folder 'sevenzip-extracted'
+                  New-Item -ItemType Directory -Path $sfxExtract -Force | Out-Null
+                  & $sevenZip x -y "-o$sfxExtract" $download
+                  if ($LASTEXITCODE -ne 0) { throw 'Wingetix 7-Zip payload extraction failed.' }
+                  $payloadFiles = @(Get-ChildItem -LiteralPath $sfxExtract -File -Recurse -Force)
+                  Write-Host "Wingetix SFX extracted files: $($payloadFiles.Count)"
+                  foreach ($item in $payloadFiles) {
+                    $relative = [IO.Path]::GetRelativePath($sfxExtract, $item.FullName).Replace([char]92,[char]47)
+                    Write-Host "Wingetix outer payload: $relative ($($item.Length) bytes)"
+                  }
+
+                  $nestedArchives = @($payloadFiles | Where-Object { $_.Extension -in @('.7z','.zip') })
+                  foreach ($archive in $nestedArchives) {
+                    Write-Host "Inspect nested Wingetix archive: $($archive.Name)"
+                    & $sevenZip t $archive.FullName
+                    if ($LASTEXITCODE -ne 0) { throw "Wingetix nested archive integrity check failed: $($archive.Name)" }
+                    $nestedOutput = Join-Path $folder 'nested-application'
+                    New-Item -ItemType Directory -Path $nestedOutput -Force | Out-Null
+                    & $sevenZip x -y "-o$nestedOutput" $archive.FullName
+                    if ($LASTEXITCODE -ne 0) { throw "Wingetix nested archive extraction failed: $($archive.Name)" }
+                    $nestedFiles = @(Get-ChildItem -LiteralPath $nestedOutput -File -Recurse -Force)
+                    Write-Host "Wingetix nested application files: $($nestedFiles.Count)"
+                    foreach ($item in $nestedFiles) {
+                      $relative = [IO.Path]::GetRelativePath($nestedOutput, $item.FullName).Replace([char]92,[char]47)
+                      Write-Host "Wingetix application payload: $relative ($($item.Length) bytes)"
+                    }
+                    $mainApp = @($nestedFiles | Where-Object { $_.Name -ieq 'Wingetix.exe' })
+                    if ($mainApp.Count -eq 1) {
+                      Write-Host ('PASS: extracted Wingetix.exe at ' + [IO.Path]::GetRelativePath($nestedOutput, $mainApp[0].FullName))
+                      $summary.Add('- Nested application archive: extracted and verified')
+                    }
+                  }
+                  $summary.Add("- 7-Zip payload extraction: PASS ($($payloadFiles.Count) outer files)")
+                } else {
+                  Write-Host '7-Zip does not recognize Wingetix as an extractable archive; keep it as a standalone portable EXE.'
+                  $summary.Add('- 7-Zip payload extraction: not supported; standalone PE')
+                }
+              }
+            }
+            $summary.Add('')
+          }
+
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
