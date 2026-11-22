@@ -1095,7 +1095,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [vovsoft-password-generator](../bucket/vovsoft-password-generator.json) | 2.2 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Password Generator. | [Homepage](https://vovsoft.com/software/password-generator/) |
 | [yamira](../bucket/yamira.json) | 26.11 | 667.5 KiB | 2026-10-10 | USB drive protection tool for Windows. | [Homepage](https://github.com/turkaysoft/yamira) |
 | [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
-| [screenlight](../bucket/screenlight.json) | 0.1.0 | 64bit: 433.4 KiB | 2026-11-21 | Windows utility that alerts when applications access the screen, keyboard, and input devices. | [Homepage](https://github.com/Zephkek/ScreenLight) |
+| [screenlight](../bucket/screenlight.json) | 0.1.0 | 64bit: 433.4 KiB | 2026-11-21 | Windows privacy monitor that detects screen recording, screenshots, keyboard reading, and simulated input. | [Homepage](https://github.com/Zephkek/ScreenLight) |
 
 ## Speech-to-Text (STT)
 
