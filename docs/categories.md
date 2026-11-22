@@ -30,11 +30,11 @@
 | Notch | 32 | [View](#notch) |
 | Notes & Knowledge | 27 | [View](#notes-knowledge) |
 | Other Utilities | 140 | [View](#other-utilities) |
-| Package Management | 13 | [View](#package-management) |
+| Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
 | Security | 44 | [View](#security) |
-| Speech-to-Text (STT) | 7 | [View](#speech-to-text-stt) |
+| Speech-to-Text (STT) | 8 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
 | Sync & Backup | 13 | [View](#sync-backup) |
 | System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
