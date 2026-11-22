@@ -121,7 +121,7 @@ jobs:
           foreach ($name in $expectedSetupFiles) {
             $found = $setupBasenames -contains $name
             $status = if ($found) { 'FOUND' } else { 'NOT FOUND' }
-            $summary.Add("- $name: **$status**")
+            $summary.Add("- $($name): **$status**")
             Write-Host "$($name): $status"
           }
           $summary.Add('')
