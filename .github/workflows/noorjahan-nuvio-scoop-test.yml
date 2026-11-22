@@ -120,27 +120,51 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $noorDir = Join-Path $env:SCOOP 'apps\noorjahan-qbittorrent\current'
+          $setupDir = Join-Path $noorDir 'Noorjahan-Setup'
           $themes = @(
-            'Noorjahan-Light.qbtheme',
-            'Noorjahan-Dark.qbtheme',
-            'Noorjahan-Light-Compact.qbtheme',
-            'Noorjahan-Dark-Compact.qbtheme'
+            'Noorjahan Light.qbtheme',
+            'Noorjahan Dark.qbtheme',
+            'Noorjahan Light Compact.qbtheme',
+            'Noorjahan Dark Compact.qbtheme'
           )
           foreach ($theme in $themes) {
-            $path = Join-Path $noorDir $theme
+            $path = Join-Path $setupDir $theme
             if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
-              throw "Expected Noorjahan theme asset was not downloaded: $path"
+              throw "Expected Noorjahan theme was not extracted from Noorjahan-Setup.zip: $path"
             }
           }
+          foreach ($file in @('install.ps1', 'Install Noorjahan.cmd')) {
+            $path = Join-Path $setupDir $file
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Noorjahan setup script is missing: $path"
+            }
+          }
+          foreach ($font in @('Inter.ttf', 'Inter-Italic.ttf')) {
+            $path = Join-Path $setupDir "fonts\$font"
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Noorjahan font is missing from Setup ZIP: $path"
+            }
+          }
+          $updater = Join-Path $noorDir 'update-webui.ps1'
+          if (-not (Test-Path -LiteralPath $updater -PathType Leaf)) {
+            throw "Noorjahan Web UI updater script is missing: $updater"
+          }
+
           $webUiDir = Join-Path $noorDir 'Noorjahan-WebUI'
           if (-not (Test-Path -LiteralPath $webUiDir -PathType Container)) {
             throw "Noorjahan Web UI archive did not extract its documented folder: $webUiDir"
+          }
+          foreach ($required in @('public\index.html', 'private\index.html')) {
+            $path = Join-Path $webUiDir $required
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Noorjahan Web UI is missing required file: $path"
+            }
           }
           $webUiFiles = @(Get-ChildItem -LiteralPath $webUiDir -File -Recurse)
           if ($webUiFiles.Count -eq 0) {
             throw 'Noorjahan Web UI folder is empty after extraction.'
           }
-          Write-Host "PASS: all four desktop themes and $($webUiFiles.Count) extracted Web UI files are present."
+          Write-Host "PASS: four themes, both setup scripts, Inter fonts, updater, and $($webUiFiles.Count) Web UI files are present."
 
           $nuvioDir = Join-Path $env:SCOOP 'apps\nuvio-one-desktop\current'
           $nuvioExe = Join-Path $nuvioDir 'Nuvio One.exe'
@@ -184,7 +208,7 @@ jobs:
 
           @(
             'Both manifests installed successfully through Scoop.'
-            'All four Noorjahan theme files were downloaded without running the upstream installer.'
+            'All four Noorjahan themes, setup scripts, Inter font files, and the Web UI updater were extracted and verified; the upstream installer was not executed.'
             'Nuvio One.exe, launcher, shim, and Start Menu shortcut were verified.'
             'APPDATA and LOCALAPPDATA point to Scoop-persisted directories.'
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
