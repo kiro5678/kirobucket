@@ -127,14 +127,29 @@ jobs:
             foreach ($item in $exe) {
               Write-Host ('CopySpeech executable path: ' + [IO.Path]::GetRelativePath($folder, $item.FullName))
             }
-            if ($target.Name -eq 'MSI' -and $exe.Count -eq 0) {
-              throw 'CopySpeech MSI/CAB extraction did not yield CopySpeech.exe.'
+            if ($target.Name -eq 'MSI') {
+              $adminRoot = Join-Path $folder 'admin-install'
+              New-Item -ItemType Directory -Path $adminRoot -Force | Out-Null
+              $argumentLine = '/a "' + $download + '" /qn TARGETDIR="' + $adminRoot + '"'
+              $process = Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\msiexec.exe') -ArgumentList $argumentLine -Wait -PassThru
+              if ($process.ExitCode -notin @(0,3010)) {
+                throw "CopySpeech administrative MSI extraction failed with exit code $($process.ExitCode)."
+              }
+              $adminFiles = @(Get-ChildItem -LiteralPath $adminRoot -File -Recurse -Force)
+              $adminExe = @($adminFiles | Where-Object { $_.Name -ieq 'CopySpeech.exe' })
+              Write-Host "CopySpeech MSI administrative extraction: $($adminFiles.Count) files; CopySpeech.exe matches: $($adminExe.Count)"
+              foreach ($item in $adminExe) {
+                Write-Host ('CopySpeech MSI application path: ' + [IO.Path]::GetRelativePath($adminRoot, $item.FullName))
+              }
+              if ($adminExe.Count -eq 0) {
+                throw 'CopySpeech MSI /a administrative extraction did not yield CopySpeech.exe.'
+              }
+              $summary += "; administrative MSI extraction files: $($adminFiles.Count)"
+              $summary += "; CopySpeech.exe: $([IO.Path]::GetRelativePath($adminRoot, $adminExe[0].FullName))"
+              $summary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
             }
             if ($target.Name -eq 'SetupEXE' -and $nestedIndex -eq 0) {
               Write-Host 'No nested app-64.7z/CAB was detected in the setup EXE; review its installer layout before packaging.'
-            }
-            if ($target.Name -eq 'MSI') {
-              $summary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
             }
           }
 
