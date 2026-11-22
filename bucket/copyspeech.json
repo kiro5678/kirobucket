@@ -1,0 +1,44 @@
+{
+    "version": "0.3.2",
+    "description": "Clipboard text-to-speech desktop app with local and cloud voice engines, captions, tray integration, and browser companion.",
+    "homepage": "https://github.com/ilyaizen/CopySpeech",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/ilyaizen/CopySpeech/releases/download/v0.3.2/CopySpeech_0.3.2_x64_en-US.msi",
+            "hash": "a6bc4e571867886cded2b50ab1b4fccda87910422501a8b4ed6afa1f806ad728",
+            "extract_dir": "PFiles\\CopySpeech"
+        }
+    },
+    "persist": "data",
+    "post_install": "$persistRoot = Join-Path $persist_dir 'data'\n$locations = @(\n    @{\n        Source = Join-Path $env:APPDATA 'CopySpeech'\n        Legacy = Join-Path $env:APPDATA 'CopySpeak'\n        Relative = 'Roaming\\CopySpeech'\n    },\n    @{\n        Source = Join-Path $env:LOCALAPPDATA 'CopySpeech'\n        Legacy = Join-Path $env:LOCALAPPDATA 'CopySpeak'\n        Relative = 'Local\\CopySpeech'\n    },\n    @{\n        Source = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'CopySpeech'\n        Legacy = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'CopySpeak'\n        Relative = 'Documents\\CopySpeech'\n    }\n)\n\nforeach ($location in $locations) {\n    $target = Join-Path $persistRoot $location.Relative\n    New-Item -ItemType Directory -Path $target -Force | Out-Null\n\n    foreach ($sourcePath in @($location.Source, $location.Legacy)) {\n        if (-not (Test-Path -LiteralPath $sourcePath)) {\n            continue\n        }\n\n        $sourceItem = Get-Item -LiteralPath $sourcePath -Force\n        if ($sourceItem.Attributes -band [IO.FileAttributes]::ReparsePoint) {\n            if ($sourcePath -ieq $location.Source) {\n                continue\n            }\n            throw \"CopySpeech legacy data path is already a reparse point; refusing to move it: $sourcePath\"\n        }\n        if (-not $sourceItem.PSIsContainer) {\n            throw \"CopySpeech data path exists but is not a directory: $sourcePath\"\n        }\n\n        $children = @(Get-ChildItem -LiteralPath $sourcePath -Force)\n        $conflicts = @($children | Where-Object {\n            Test-Path -LiteralPath (Join-Path $target $_.Name)\n        })\n        if ($conflicts.Count -gt 0) {\n            $names = ($conflicts | ForEach-Object Name) -join ', '\n            throw \"CopySpeech data migration found name conflicts in '$sourcePath': $names. No conflicting files were overwritten.\"\n        }\n\n        foreach ($child in $children) {\n            Move-Item -LiteralPath $child.FullName -Destination $target\n        }\n        if (@(Get-ChildItem -LiteralPath $sourcePath -Force).Count -eq 0) {\n            Remove-Item -LiteralPath $sourcePath -Force\n        }\n    }\n\n    if (Test-Path -LiteralPath $location.Source) {\n        $existing = Get-Item -LiteralPath $location.Source -Force\n        if ($existing.Attributes -band [IO.FileAttributes]::ReparsePoint) {\n            $linkTarget = [string](@($existing.Target)[0])\n            if ([string]::IsNullOrWhiteSpace($linkTarget)) {\n                throw \"Could not determine the existing CopySpeech junction target: $($location.Source)\"\n            }\n            if ([IO.Path]::GetFullPath($linkTarget).TrimEnd('\\') -ne [IO.Path]::GetFullPath($target).TrimEnd('\\')) {\n                throw \"CopySpeech path already points somewhere else: $($location.Source)\"\n            }\n            continue\n        }\n        throw \"CopySpeech data directory still exists after migration; refusing to replace it: $($location.Source)\"\n    }\n\n    New-Item -ItemType Directory -Path (Split-Path -Parent $location.Source) -Force | Out-Null\n    New-Item -ItemType Junction -Path $location.Source -Target $target -ErrorAction Stop | Out-Null\n}\n",
+    "pre_uninstall": "$locations = @(\n    @{\n        Source = Join-Path $env:APPDATA 'CopySpeech'\n        Relative = 'Roaming\\CopySpeech'\n    },\n    @{\n        Source = Join-Path $env:LOCALAPPDATA 'CopySpeech'\n        Relative = 'Local\\CopySpeech'\n    },\n    @{\n        Source = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'CopySpeech'\n        Relative = 'Documents\\CopySpeech'\n    }\n)\n\nforeach ($location in $locations) {\n    if (-not (Test-Path -LiteralPath $location.Source)) {\n        continue\n    }\n\n    $item = Get-Item -LiteralPath $location.Source -Force\n    if (-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {\n        continue\n    }\n\n    $expected = Join-Path $persist_dir ('data\\' + $location.Relative)\n    $actual = [string](@($item.Target)[0])\n    if (-not [string]::IsNullOrWhiteSpace($actual) -and\n        [IO.Path]::GetFullPath($actual).TrimEnd('\\') -eq [IO.Path]::GetFullPath($expected).TrimEnd('\\')) {\n        Remove-Item -LiteralPath $location.Source -Force\n    }\n}\n",
+    "shortcuts": [
+        [
+            "copyspeech.exe",
+            "CopySpeech"
+        ]
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/ilyaizen/CopySpeech/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/ilyaizen/CopySpeech/releases/download/v$version/CopySpeech_$version_x64_en-US.msi",
+                "extract_dir": "PFiles\\CopySpeech"
+            }
+        },
+        "hash": {
+            "url": "https://api.github.com/repos/ilyaizen/CopySpeech/releases/tags/v$version",
+            "jsonpath": "$.assets[?(@.name == 'CopySpeech_$version_x64_en-US.msi')].digest"
+        }
+    },
+    "notes": [
+        "Scoop extracts the official MSI into the application directory; the MSI is not installed system-wide.",
+        "Roaming, LocalAppData, and Documents data directories are linked to Scoop's persistent data folder. Existing CopySpeech/CopySpeak data is moved only when the destination has no filename conflicts; conflicts stop installation without overwriting data.",
+        "The first launch may download selected local TTS engines and voice models. CopySpeech also offers cloud engines."
+    ]
+}
