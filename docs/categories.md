@@ -23,13 +23,13 @@
 | Games Tools | 16 | [View](#games-tools) |
 | Images & Photos | 62 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 58 | [View](#media-audio-video) |
+| Media & Audio/Video | 60 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
 | Notch | 32 | [View](#notch) |
 | Notes & Knowledge | 27 | [View](#notes-knowledge) |
-| Other Utilities | 140 | [View](#other-utilities) |
+| Other Utilities | 141 | [View](#other-utilities) |
 | Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
@@ -39,15 +39,15 @@
 | Sync & Backup | 13 | [View](#sync-backup) |
 | System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
 | Sysinternals Utilities | 76 | [View](#sysinternals-utilities) |
-| Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
+| Text-to-Speech (TTS) | 7 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 101 | [View](#windows-customization) |
+| Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1284**
+**Total unique categorized manifests: 1288**
 
 
 ## Android & Device Tools
@@ -631,6 +631,8 @@ Utilities and launchers designed for a particular game or game series. General-p
 | [sukut](../bucket/sukut.json) | 0.2.33 | 56.8 MiB | 2026-10-20 | Windows x64 audio utility that filters music from app audio to focus on speech. | [Homepage](https://github.com/altarafiya/Sukut) |
 | [stream-goat](../bucket/stream-goat.json) | 9.0.1 | 129.9 MiB | 2026-11-16 | Streaming media center for movies, series, anime and Live TV with CloudStream extensions and Stremio add-ons. | [Homepage](https://github.com/sherazi5110/stream-goat) |
 | [ventic](../bucket/ventic.json) | 0.5.0 | 71.3 MiB | 2026-08-28 | A media library and BitTorrent player for the desktop and Android TV. | [Homepage](https://github.com/ventic/ventic) |
+| [veyra-nrvideo-nvidia](../bucket/veyra-nrvideo-nvidia.json) | 2.2.0 | 64bit: 715.4 MiB | 2026-11-20 | Portable Windows video player and capture-card enhancement suite (NVIDIA GPU build). | [Homepage](https://github.com/Likely7/Veyra-NRVideo) |
+| [veyra-nrvideo-amd](../bucket/veyra-nrvideo-amd.json) | 2.2.0 | 64bit: 714.0 MiB | 2026-11-20 | Portable Windows video player and capture-card enhancement suite (AMD GPU build). | [Homepage](https://github.com/Likely7/Veyra-NRVideo) |
 | [video2x](../bucket/video2x.json) | 6.4.0 | 64bit: 217.0 MiB | 2025-01-24 | A Machine learning-based lossless video super resolution framework | [Homepage](https://github.com/k4yt3x/video2x) |
 | [vidray](../bucket/vidray.json) | — | — | — | Local video compressor and converter with bundled FFmpeg. | [Homepage](https://vidray.app/) |
 | [volumey](../bucket/volumey.json) | 1.5.4.0 | 64bit: 49.3 MiB | 2026-10-31 | Volume mixer with global hotkeys for controlling Windows audio. | [Homepage](https://github.com/G-Stas/Volumey) |
@@ -1258,7 +1260,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
-| [copyspeech](../bucket/copyspeech.json) | 0.3.2 | — | 2026-11-19 | Clipboard text-to-speech desktop app with AI voice generation and browser integration. | [Homepage](https://github.com/ilyaizen/CopySpeech) |
+| [copyspeech](../bucket/copyspeech.json) | 0.3.2 | 64bit: 11.0 MiB | 2026-11-19 | Clipboard text-to-speech desktop app with local and cloud voice engines, tray controls, and browser companion. | [Homepage](https://github.com/ilyaizen/CopySpeech) |
 | [voicestudio](../bucket/voicestudio.json) | 0.5.7 | 64bit: 212.0 MiB | 2026-10-26 | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. | [Homepage](https://voicestudio.sh) |
 | [vovsoft-clipboard-reader](../bucket/vovsoft-clipboard-reader.json) | 1.4 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Clipboard Reader. | [Homepage](https://vovsoft.com/software/clipboard-reader/) |
 | [vovsoft-read-mode](../bucket/vovsoft-read-mode.json) | 2.7 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Read Mode. | [Homepage](https://vovsoft.com/software/read-mode/) |
