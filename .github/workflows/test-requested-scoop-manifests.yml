@@ -121,7 +121,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $apps = Join-Path $env:SCOOP 'apps'
           $checks = @(
-            @{ Name = 'FileFerret'; App = 'fileferret'; RelativePath = 'FileFerret-Portable-1.7.0.exe' },
+            @{ Name = 'FileFerret'; App = 'fileferret'; RelativePath = 'FileFerret-Portable-1.8.0.exe' },
             @{ Name = 'Legacy Router Opener'; App = 'legacy-router-opener-alaa7hany'; RelativePath = 'legacy-router-opener.exe' },
             @{ Name = 'WinOrbit'; App = 'winorbit-mahadi-siraj'; RelativePath = 'WinOrbit.exe' },
             @{ Name = 'GAMING TWEAKS'; App = 'gaming-tweaks-hamsypg'; RelativePath = 'Launcher.bat' },
