@@ -39,6 +39,7 @@
     "notes": [
         "Scoop extracts the official MSI into the application directory; the MSI is not installed system-wide.",
         "Roaming, LocalAppData, and Documents data directories are linked to Scoop's persistent data folder. Existing CopySpeech/CopySpeak data is moved only when the destination has no filename conflicts; conflicts stop installation without overwriting data.",
-        "The first launch may download selected local TTS engines and voice models. CopySpeech also offers cloud engines."
+        "The first launch may download selected local TTS engines and voice models. CopySpeech also offers cloud engines.",
+        "CopySpeech includes an in-app updater; use Scoop as the update authority to avoid competing updates."
     ]
 }
