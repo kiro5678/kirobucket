@@ -78,10 +78,14 @@ jobs:
             if ([string]::IsNullOrWhiteSpace($url)) { throw 'workflow_dispatch requires installer_url.' }
           } elseif ($env:EVENT_NAME -eq 'push') {
             $pushEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
-            $changedPaths = @()
-            $beforeSha = [string]$pushEvent.before
-            $afterSha = [string]$pushEvent.after
-            if ($beforeSha -match '^[0-9a-fA-F]{40}
+            $changedPaths = @(& git -C $env:GITHUB_WORKSPACE diff --name-only $pushEvent.before $pushEvent.after)
+            if ($LASTEXITCODE -ne 0) { throw 'Could not determine changed files for this push event.' }
+            if ($changedPaths.Count -eq 0) {
+              $changedPaths = @($pushEvent.head_commit.added) + @($pushEvent.head_commit.modified) + @($pushEvent.head_commit.removed)
+            }
+            Write-Output "Push changed paths: $($changedPaths -join ', ')"
+            $runForPake = $changedPaths -contains 'bucket/pake-desktop.json'
+            $runForTermilly = ($pushEvent.head_commit.message -match '(?i)Termilly') -or ($changedPaths -contains 'bucket/termilly.json') -or ($changedPaths -contains '.github/workflows/multi-engine-installer-type-inspector.yml')
             $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'bucket/keptinflow.json')
             $runForWinToUSB = ($pushEvent.head_commit.message -match '(?i)WinToUSB') -or ($changedPaths -contains 'bucket/wintousb.json')
 
