@@ -1,0 +1,204 @@
+name: Noorjahan and Nuvio Scoop Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - "bucket/noorjahan-qbittorrent.json"
+      - "bucket/nuvio-one-desktop.json"
+      - ".github/workflows/noorjahan-nuvio-scoop-test.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/noorjahan-qbittorrent.json"
+      - "bucket/nuvio-one-desktop.json"
+      - ".github/workflows/noorjahan-nuvio-scoop-test.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  scoop-lifecycle:
+    name: Scoop lifecycle (${{ matrix.shell }})
+    runs-on: windows-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install Scoop and create an isolated local bucket
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-noorjahan-nuvio-test'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-noorjahan-nuvio-test'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          foreach ($name in @('noorjahan-qbittorrent', 'nuvio-one-desktop')) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Required manifest is missing: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            if ($LASTEXITCODE -ne 0) { throw 'Could not initialize the local test bucket.' }
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket
+            git commit -m 'Seed local Scoop test bucket'
+            if ($LASTEXITCODE -ne 0) { throw 'Could not commit the local test bucket.' }
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket-test $bucketUrl
+          if ($LASTEXITCODE -ne 0) { throw 'Could not register the local test bucket.' }
+
+      - name: Validate checkver and forced autoupdate URL/hash templates
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Scoop checkver.ps1 was not found: $checkver"
+          }
+
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-noorjahan-nuvio-test\bucket'
+          foreach ($name in @('noorjahan-qbittorrent', 'nuvio-one-desktop')) {
+            Write-Host "Checking current upstream version for $name"
+            & $checkver -App $name -Dir $manifestDir -ThrowError
+          }
+
+          $forceDir = Join-Path $env:RUNNER_TEMP 'kirobucket-noorjahan-nuvio-force-update'
+          New-Item -ItemType Directory -Path $forceDir -Force | Out-Null
+          foreach ($name in @('noorjahan-qbittorrent', 'nuvio-one-desktop')) {
+            Copy-Item -LiteralPath (Join-Path $manifestDir "$name.json") -Destination $forceDir
+            Write-Host "Testing forced autoupdate URL/hash generation for $name"
+            & $checkver -App $name -Dir $forceDir -ForceUpdate -ThrowError
+          }
+
+          foreach ($name in @('noorjahan-qbittorrent', 'nuvio-one-desktop')) {
+            $updated = Get-Content -LiteralPath (Join-Path $forceDir "$name.json") -Raw | ConvertFrom-Json
+            if (-not $updated.autoupdate) { throw "$name lost its autoupdate definition during checkver." }
+          }
+
+      - name: Install both manifests with Scoop
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('noorjahan-qbittorrent', 'nuvio-one-desktop')) {
+            Write-Host "Installing $name"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) { throw "Scoop install failed for $name (exit code $LASTEXITCODE)." }
+          }
+
+      - name: Verify theme assets, Nuvio executable, shim, shortcut, and persistence
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $noorDir = Join-Path $env:SCOOP 'apps\noorjahan-qbittorrent\current'
+          $themes = @(
+            'Noorjahan-Light.qbtheme',
+            'Noorjahan-Dark.qbtheme',
+            'Noorjahan-Light-Compact.qbtheme',
+            'Noorjahan-Dark-Compact.qbtheme'
+          )
+          foreach ($theme in $themes) {
+            $path = Join-Path $noorDir $theme
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Expected Noorjahan theme asset was not downloaded: $path"
+            }
+          }
+          Write-Host 'PASS: all four Noorjahan theme assets are present.'
+
+          $nuvioDir = Join-Path $env:SCOOP 'apps\nuvio-one-desktop\current'
+          $nuvioExe = Join-Path $nuvioDir 'Nuvio One.exe'
+          if (-not (Test-Path -LiteralPath $nuvioExe -PathType Leaf)) {
+            throw "Nuvio portable executable was not extracted at the documented path: $nuvioExe"
+          }
+          $launcher = Join-Path $nuvioDir 'Nuvio One.cmd'
+          if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) {
+            throw 'Scoop pre_install did not create the Nuvio portable launcher.'
+          }
+          $launcherText = Get-Content -LiteralPath $launcher -Raw
+          if ($launcherText -notmatch 'APPDATA=%~dp0Roaming' -or $launcherText -notmatch 'LOCALAPPDATA=%~dp0Local') {
+            throw 'Nuvio launcher does not redirect APPDATA and LOCALAPPDATA into the Scoop app directory.'
+          }
+
+          $shim = Join-Path $env:SCOOP 'shims\nuvio-one.cmd'
+          if (-not (Test-Path -LiteralPath $shim -PathType Leaf)) {
+            throw "Scoop did not create the nuvio-one shim: $shim"
+          }
+
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          $shortcut = Get-ChildItem -LiteralPath $programs -Filter 'Nuvio One.lnk' -File -Recurse -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+          if ($null -eq $shortcut) {
+            throw 'The Nuvio One Start Menu shortcut was not created.'
+          }
+
+          $persistRoot = Join-Path $env:SCOOP 'persist\nuvio-one-desktop'
+          $persistRoaming = Join-Path $persistRoot 'Roaming'
+          $persistLocal = Join-Path $persistRoot 'Local'
+          foreach ($path in @($persistRoaming, $persistLocal)) {
+            if (-not (Test-Path -LiteralPath $path -PathType Container)) {
+              throw "Expected Scoop persistent data directory is missing: $path"
+            }
+          }
+          $marker = Join-Path $persistRoaming 'kirobucket-persist-test.txt'
+          Set-Content -LiteralPath $marker -Value 'persisted' -Encoding utf8
+          if (-not (Test-Path -LiteralPath (Join-Path $nuvioDir 'Roaming\kirobucket-persist-test.txt') -PathType Leaf)) {
+            throw 'Nuvio app directory cannot see the persisted Roaming data through its Scoop link.'
+          }
+
+          @(
+            'Both manifests installed successfully through Scoop.'
+            'All four Noorjahan theme files were downloaded without running the upstream installer.'
+            'Nuvio One.exe, launcher, shim, and Start Menu shortcut were verified.'
+            'APPDATA and LOCALAPPDATA point to Scoop-persisted directories.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Uninstall both manifests and verify persisted data survives
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop uninstall noorjahan-qbittorrent
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop could not uninstall noorjahan-qbittorrent.' }
+          scoop uninstall nuvio-one-desktop
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop could not uninstall nuvio-one-desktop.' }
+
+          $marker = Join-Path $env:SCOOP 'persist\nuvio-one-desktop\Roaming\kirobucket-persist-test.txt'
+          if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+            throw 'Nuvio persisted data was removed during Scoop uninstall.'
+          }
+          $nuvioCurrent = Join-Path $env:SCOOP 'apps\nuvio-one-desktop\current'
+          if (Test-Path -LiteralPath $nuvioCurrent) {
+            throw 'Nuvio current link still exists after Scoop uninstall.'
+          }
+
+          @(
+            'Both applications uninstalled successfully.'
+            'Nuvio persistent marker survived Scoop uninstall.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
