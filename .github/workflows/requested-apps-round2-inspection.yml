@@ -16,60 +16,55 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 120
     steps:
-      - name: Inspect Agent Theater npm package
+      - name: Inspect Agent Theater official tag archive
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
-          $root = Join-Path $env:RUNNER_TEMP 'round2-inspection'
-          $agent = Join-Path $root 'agent-theater'
-          New-Item -ItemType Directory -Path $agent -Force | Out-Null
+          $root = Join-Path $env:RUNNER_TEMP 'round2-inspection\agent-theater'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
 
-          $metaText = npm view agent-theater@0.3.0 version dist.tarball dist.shasum dist.integrity --json
-          if ($LASTEXITCODE -ne 0) { throw 'npm registry query failed for agent-theater@0.3.0.' }
-          $meta = $metaText | ConvertFrom-Json
-          $tarball = Join-Path $agent 'agent-theater-0.3.0.tgz'
-          Invoke-WebRequest -Uri $meta.dist.tarball -OutFile $tarball -TimeoutSec 600
-          $hash = (Get-FileHash -LiteralPath $tarball -Algorithm SHA256).Hash.ToLowerInvariant()
-          Write-Host "Agent Theater npm version: $($meta.version)"
-          Write-Host "Agent Theater tarball: $($meta.dist.tarball)"
-          Write-Host "Agent Theater SHA256: $hash"
-          Write-Host "Agent Theater npm shasum: $($meta.dist.shasum)"
-          Write-Host "Agent Theater npm integrity: $($meta.dist.integrity)"
+          $url = 'https://github.com/tarqmamdouh/agent-theater/archive/refs/tags/v0.3.0.zip'
+          $archive = Join-Path $root 'agent-theater-v0.3.0.zip'
+          Invoke-WebRequest -Uri $url -OutFile $archive -TimeoutSec 900
+          $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "Agent Theater source archive SHA256: $hash"
 
           $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
           if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source }
-          & $sevenZip t $tarball
-          if ($LASTEXITCODE -ne 0) { throw 'Agent Theater npm tarball integrity test failed.' }
-          $extract = Join-Path $agent 'extracted'
+          & $sevenZip t $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Agent Theater source archive integrity test failed.' }
+          $extract = Join-Path $root 'extracted'
           New-Item -ItemType Directory -Path $extract -Force | Out-Null
-          & $sevenZip x -y "-o$extract" $tarball
-          if ($LASTEXITCODE -ne 0) { throw 'Agent Theater npm tarball extraction failed.' }
-          $pkg = Join-Path $extract 'package\package.json'
-          $cli = Join-Path $extract 'package\cli\agent-theater.mjs'
-          if (-not (Test-Path -LiteralPath $pkg -PathType Leaf)) { throw 'Agent Theater npm package.json missing from tarball.' }
-          if (-not (Test-Path -LiteralPath $cli -PathType Leaf)) { throw 'Agent Theater CLI entrypoint missing from tarball.' }
-          $package = Get-Content -LiteralPath $pkg -Raw | ConvertFrom-Json
+          & $sevenZip x -y "-o$extract" $archive
+          if ($LASTEXITCODE -ne 0) { throw 'Agent Theater source archive extraction failed.' }
+          $packageFiles = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
+          $pkg = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Filter 'package.json' | Where-Object { $_.Directory.Name -eq 'agent-theater-0.3.0' })
+          if ($pkg.Count -ne 1) { throw "Expected one Agent Theater package.json in the tagged source archive; found $($pkg.Count)." }
+          $package = Get-Content -LiteralPath $pkg[0].FullName -Raw | ConvertFrom-Json
+          $cli = Join-Path $pkg[0].DirectoryName 'cli\agent-theater.mjs'
+          $license = Join-Path $pkg[0].DirectoryName 'LICENSE.md'
+          if ($package.version -ne '0.3.0') { throw "Agent Theater tag/package version mismatch: $($package.version)." }
+          if (-not (Test-Path -LiteralPath $cli -PathType Leaf)) { throw 'Agent Theater CLI entrypoint missing.' }
+          if (-not (Test-Path -LiteralPath $license -PathType Leaf)) { throw 'Agent Theater LICENSE.md missing.' }
           if ($package.dependencies -and $package.dependencies.PSObject.Properties.Count -gt 0) {
-            throw 'Agent Theater package has runtime dependencies; direct tarball extraction would be incomplete.'
-          }
-          if ([version]$package.engines.node.TrimStart('>','=') -gt [version]'24.0.0') {
-            Write-Host "Agent Theater Node engine: $($package.engines.node)"
+            throw 'Agent Theater has runtime dependencies; a source archive-only manifest would be incomplete.'
           }
           node --check $cli
           if ($LASTEXITCODE -ne 0) { throw 'Agent Theater CLI syntax check failed.' }
-          $agentSummary = @(
-            "## Agent Theater npm package"
-            "- Version: $($package.version)"
+          Write-Host "Agent Theater version: $($package.version)"
+          Write-Host "Agent Theater Node requirement: $($package.engines.node)"
+          Write-Host "Agent Theater CLI: cli/agent-theater.mjs"
+          Write-Host "Agent Theater extracted files: $($packageFiles.Count)"
+          @(
+            '## Agent Theater v0.3.0'
             "- SHA-256: $hash"
-            "- npm shasum: $($meta.dist.shasum)"
-            "- npm integrity: $($meta.dist.integrity)"
-            "- CLI entrypoint: package/cli/agent-theater.mjs"
-            "- Runtime dependencies: $(@($package.dependencies.PSObject.Properties).Count)"
-            ""
-          )
-          $agentSummary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
-          Write-Host 'PASS: Agent Theater npm package extracted and CLI syntax verified.'
+            "- Node requirement: $($package.engines.node)"
+            "- CLI: cli/agent-theater.mjs"
+            "- Dependencies: $(@($package.dependencies.PSObject.Properties).Count)"
+            "- Files extracted: $($packageFiles.Count)"
+            ''
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
       - name: Inspect CopySpeech Windows MSI and setup EXE
         shell: pwsh
