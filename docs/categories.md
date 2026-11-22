@@ -23,7 +23,7 @@
 | Games Tools | 16 | [View](#games-tools) |
 | Images & Photos | 62 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 60 | [View](#media-audio-video) |
+| Media & Audio/Video | 62 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 11 | [View](#network-security) |
@@ -47,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1288**
+**Total unique categorized manifests: 1290**
 
 
 ## Android & Device Tools
@@ -616,6 +616,8 @@ Utilities and launchers designed for a particular game or game series. General-p
 | [softwareok-lauschangriff](../bucket/softwareok-lauschangriff.json) | 2.51 | 64bit: 141.0 KiB | 2021-05-15 | Portable utility from SoftwareOK. | [Homepage](https://www.softwareok.com/?Download=LauschAngriff) |
 | [pake-lizhi](../bucket/pake-lizhi.json) | 3.18.0 | 64bit: 3.9 MiB | 2026-11-04 | Pake-generated desktop wrapper for LiZhi. | [Homepage](https://lizhi.dengdengju.com/?from=pake) |
 | [softwareok-mediaplayerok](../bucket/softwareok-mediaplayerok.json) | 1.01 | 64bit: 229.0 KiB | 2026-06-11 | Portable media player with playlists and automatic resume playback. | [Homepage](https://www.softwareok.com/?Download=MediaPlayerOK) |
+| [noorjahan-qbittorrent](../bucket/noorjahan-qbittorrent.json) | 1.3.1 | 1.9 MiB | 2026-11-22 | Light and dark qBittorrent 5.3 desktop themes and matching Web UI for Windows. | [Homepage](https://github.com/chiefhamim/noorjahan-qbittorrent) |
+| [nuvio-one-desktop](../bucket/nuvio-one-desktop.json) | 0.1.345 | 228.5 MiB | 2026-11-22 | Unofficial Windows desktop media center for movies, series, live TV, and music. | [Homepage](https://github.com/zoga2o3-ops/Nuvio-One-Desktop) |
 | [moviebox-tui](../bucket/moviebox-tui.json) | 0.1.27 | 4.9 MiB | 2026-10-29 | Terminal client for watching and downloading movies, TV shows, anime, and live TV. | [Homepage](https://github.com/mesamirh/MovieBox-Tui) |
 | [ncspot](../bucket/ncspot.json) | 1.5.0 | 64bit: 5.8 MiB | 2026-10-01 | ncurses Spotify client written in Rust | [Homepage](https://github.com/hrkfdn/ncspot) |
 | [open-aria-exporter](../bucket/open-aria-exporter.json) | 0.1.11 | 64bit: 130.1 MiB | 2026-11-09 | Export Open Aria recordings from memory cards to side-by-side MP4 while preserving the original recording data. | [Homepage](https://github.com/Alpenl/openaria-bridge-sdk/tree/main/desktop/exporter) |
