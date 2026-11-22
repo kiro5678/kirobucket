@@ -29,7 +29,7 @@
 | Network Security | 11 | [View](#network-security) |
 | Notch | 32 | [View](#notch) |
 | Notes & Knowledge | 27 | [View](#notes-knowledge) |
-| Other Utilities | 140 | [View](#other-utilities) |
+| Other Utilities | 141 | [View](#other-utilities) |
 | Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
@@ -39,15 +39,15 @@
 | Sync & Backup | 13 | [View](#sync-backup) |
 | System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
 | Sysinternals Utilities | 76 | [View](#sysinternals-utilities) |
-| Text-to-Speech (TTS) | 6 | [View](#text-to-speech-tts) |
+| Text-to-Speech (TTS) | 7 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 101 | [View](#windows-customization) |
+| Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1286**
+**Total unique categorized manifests: 1288**
 
 
 ## Android & Device Tools
