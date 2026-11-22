@@ -25,6 +25,7 @@ on:
       - 'bucket/keptinflow.json'
       - 'bucket/wintousb.json'
       - 'bucket/pake-desktop.json'
+      - 'bucket/termilly.json'
       - '.github/workflows/multi-engine-installer-type-inspector.yml'
   pull_request:
     types: [opened, synchronize, reopened]
@@ -79,10 +80,15 @@ jobs:
             $pushEvent = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json -ErrorAction Stop
             $changedPaths = @($pushEvent.head_commit.added) + @($pushEvent.head_commit.modified) + @($pushEvent.head_commit.removed)
             $runForPake = $changedPaths -contains 'bucket/pake-desktop.json'
+            $runForTermilly = ($changedPaths -contains 'bucket/termilly.json') -or ($changedPaths -contains '.github/workflows/multi-engine-installer-type-inspector.yml')
             $runForKeptInFlow = ($pushEvent.head_commit.message -eq 'Run installer inspector for KeptInFlow') -or ($changedPaths -contains 'bucket/keptinflow.json')
             $runForWinToUSB = ($pushEvent.head_commit.message -match '(?i)WinToUSB') -or ($changedPaths -contains 'bucket/wintousb.json')
 
-            if ($runForPake) {
+            if ($runForTermilly) {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/termilly.json'
+              $officialReleasePrefix = 'https://github.com/termilly/termilly/releases/download/'
+              $targetProduct = 'Termilly'
+            } elseif ($runForPake) {
               $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/pake-desktop.json'
               $officialReleasePrefix = 'https://pake.run/updates/windows/'
               $targetProduct = 'Pake Desktop'
@@ -116,9 +122,9 @@ jobs:
               }
             }
             $source = if ($manifest.architecture.'64bit'.url) { $manifest.architecture.'64bit' } else { $manifest }
-            $url = [string]$source.url
+            $url = if ($source.url -is [array]) { [string]$source.url[0] } else { [string]$source.url }
             $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
-            $expectedHash = [string]$source.hash
+            $expectedHash = if ($source.hash -is [array]) { [string]$source.hash[0] } else { [string]$source.hash }
             if (-not $url.StartsWith($officialReleasePrefix, [System.StringComparison]::OrdinalIgnoreCase)) { throw "Manifest URL is not an official $targetProduct release asset." }
             if ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]') { throw "Manifest SHA-256 for $targetProduct must be a 64-character hexadecimal digest." }
           } elseif ($env:EVENT_NAME -eq 'pull_request') {
@@ -659,6 +665,225 @@ jobs:
             "- **Scan exit code:** $scanExitCode"
             ""
             $scanOutput
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Inspect Termilly PE stub and verify its appended custom ZIP payload
+        if: steps.source.outputs.target_product == 'Termilly'
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          EXPECTED_SHA256: ${{ steps.target.outputs.sha256 }}
+          DIE_RELEASE: ${{ steps.die.outputs.release_tag }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          Add-Type -AssemblyName System.IO.Compression
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+          $installer = $env:INSTALLER_PATH
+          $workDir = Join-Path $env:RUNNER_TEMP 'detect-it-easy-api'
+          $payloadZip = Join-Path $workDir 'termilly-embedded-payload.zip'
+          $reportPath = Join-Path $workDir 'termilly-installer-structure.txt'
+          $stream = [System.IO.File]::OpenRead($installer)
+          $reader = [System.IO.BinaryReader]::new($stream)
+          try {
+            if ($stream.Length -lt 512) { throw 'The downloaded Termilly setup is too small to be a valid PE installer.' }
+
+            $stream.Position = 0
+            $dosHeader = $reader.ReadBytes(64)
+            if ($dosHeader.Length -ne 64 -or $dosHeader[0] -ne 0x4D -or $dosHeader[1] -ne 0x5A) {
+              throw 'The downloaded Termilly setup does not begin with a valid MZ header.'
+            }
+
+            $peOffset = [BitConverter]::ToInt32($dosHeader, 0x3C)
+            if ($peOffset -le 0 -or $peOffset -gt ($stream.Length - 256)) {
+              throw "Invalid PE header offset: $peOffset"
+            }
+
+            $stream.Position = $peOffset
+            $peHeader = $reader.ReadBytes(24)
+            if ($peHeader.Length -ne 24 -or [System.Text.Encoding]::ASCII.GetString($peHeader, 0, 4) -ne ("PE" + [char]0 + [char]0)) {
+              throw 'A valid PE signature was not found.'
+            }
+
+            $machine = [BitConverter]::ToUInt16($peHeader, 4)
+            $optionalHeaderSize = [BitConverter]::ToUInt16($peHeader, 20)
+            $optionalHeader = $peOffset + 24
+            if ($optionalHeaderSize -lt 160 -or ($optionalHeader + $optionalHeaderSize) -gt $stream.Length) {
+              throw 'The PE optional header is incomplete or invalid.'
+            }
+
+            $stream.Position = $optionalHeader
+            $peMagic = $reader.ReadUInt16()
+            if ($peMagic -eq 0x20B) {
+              $securityDirectory = $optionalHeader + 144
+              $clrDirectory = $optionalHeader + 112 + (14 * 8)
+              $peFormat = 'PE32+'
+            } elseif ($peMagic -eq 0x10B) {
+              $securityDirectory = $optionalHeader + 128
+              $clrDirectory = $optionalHeader + 96 + (14 * 8)
+              $peFormat = 'PE32'
+            } else {
+              throw ('Unsupported PE optional-header magic: 0x{0:X4}' -f $peMagic)
+            }
+
+            $architecture = switch ($machine) {
+              0x8664 { 'x64 (AMD64)' }
+              0x014c { 'x86 (I386)' }
+              0xAA64 { 'ARM64' }
+              default { 'Unknown (0x{0:X4})' -f $machine }
+            }
+
+            $stream.Position = $clrDirectory
+            $clrRva = $reader.ReadUInt32()
+            $clrSize = $reader.ReadUInt32()
+            $managed = ($clrRva -gt 0 -and $clrSize -gt 0)
+
+            $stream.Position = $securityDirectory
+            $certificateOffset = [long]$reader.ReadUInt32()
+            $certificateSize = [long]$reader.ReadUInt32()
+            $payloadEnd = $stream.Length
+            if ($certificateOffset -gt 0 -and $certificateSize -gt 0 -and
+                ($certificateOffset + $certificateSize) -eq $stream.Length) {
+              $payloadEnd = $certificateOffset
+            }
+
+            $tailLength = 56
+            if ($payloadEnd -lt $tailLength) { throw 'The expected Termilly payload footer is missing.' }
+            $stream.Position = $payloadEnd - $tailLength
+            $tail = $reader.ReadBytes($tailLength)
+            if ($tail.Length -ne $tailLength) { throw 'Could not read the complete payload footer window.' }
+
+            $magic = [System.Text.Encoding]::ASCII.GetBytes('TMLYPAY1')
+            $magicAt = -1
+            for ($i = $tail.Length - $magic.Length; $i -ge 0; $i--) {
+              $same = $true
+              for ($j = 0; $j -lt $magic.Length; $j++) {
+                if ($tail[$i + $j] -ne $magic[$j]) { $same = $false; break }
+              }
+              if ($same) { $magicAt = $i; break }
+            }
+            if ($magicAt -lt 40) { throw 'The TMLYPAY1 marker was not found in the expected PE payload footer.' }
+
+            $footerStart = $payloadEnd - $tailLength + $magicAt + $magic.Length - 48
+            if ($footerStart -lt 0 -or ($footerStart + 48) -gt $payloadEnd) {
+              throw 'The Termilly payload footer has invalid boundaries.'
+            }
+
+            $stream.Position = $footerStart
+            $payloadOffset = $reader.ReadInt64()
+            $expectedPayloadHashBytes = $reader.ReadBytes(32)
+            $payloadLength = $footerStart - $payloadOffset
+            if ($payloadOffset -le 0 -or $payloadLength -le 0 -or $expectedPayloadHashBytes.Length -ne 32) {
+              throw 'The embedded payload offset or length is invalid.'
+            }
+            if (($payloadOffset + $payloadLength + 48) -ne $payloadEnd) {
+              throw 'The embedded ZIP and footer do not end at the expected PE payload boundary.'
+            }
+
+            $stream.Position = $payloadOffset
+            $output = [System.IO.File]::Create($payloadZip)
+            try {
+              $buffer = [byte[]]::new(1MB)
+              $remaining = $payloadLength
+              while ($remaining -gt 0) {
+                $wanted = [int][Math]::Min($buffer.Length, $remaining)
+                $read = $stream.Read($buffer, 0, $wanted)
+                if ($read -le 0) { throw 'Unexpected end of file while extracting the embedded ZIP payload.' }
+                $output.Write($buffer, 0, $read)
+                $remaining -= $read
+              }
+            } finally {
+              $output.Dispose()
+            }
+          } finally {
+            $reader.Dispose()
+          }
+
+          $expectedPayloadHash = [BitConverter]::ToString($expectedPayloadHashBytes).Replace('-', '').ToLowerInvariant()
+          $actualPayloadHash = (Get-FileHash -LiteralPath $payloadZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualPayloadHash -ne $expectedPayloadHash) {
+            throw "Embedded ZIP SHA-256 mismatch. Footer: $expectedPayloadHash; calculated: $actualPayloadHash."
+          }
+
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($payloadZip)
+          try {
+            $entries = @($archive.Entries)
+            if ($entries.Count -eq 0) { throw 'The embedded ZIP archive is empty.' }
+            $entryNames = @($entries | ForEach-Object { $_.FullName })
+            foreach ($requiredEntry in @('app/Termilly.exe', 'app/agent/termilly.exe', 'version.txt')) {
+              if ($entryNames -notcontains $requiredEntry) {
+                throw "The embedded ZIP is missing the required payload entry: $requiredEntry"
+              }
+            }
+            $versionEntry = $archive.GetEntry('version.txt')
+            $versionReader = [System.IO.StreamReader]::new($versionEntry.Open())
+            try { $payloadVersion = $versionReader.ReadToEnd().Trim() } finally { $versionReader.Dispose() }
+            if ([string]::IsNullOrWhiteSpace($payloadVersion)) { throw 'The embedded version.txt is empty.' }
+
+            $prereqEntries = @($entryNames | Where-Object { $_ -like 'prereqs/*' })
+            $appEntries = @($entryNames | Where-Object { $_ -like 'app/*' })
+            $totalUncompressedBytes = ($entries | Measure-Object -Property Length -Sum).Sum
+            if ($null -eq $totalUncompressedBytes) { $totalUncompressedBytes = 0 }
+          } finally {
+            $archive.Dispose()
+          }
+
+          $assemblyDescription = 'Managed .NET assembly'
+          try {
+            $assemblyName = [System.Reflection.AssemblyName]::GetAssemblyName($installer)
+            $assemblyDescription = "Managed .NET assembly: $($assemblyName.Name), assembly version $($assemblyName.Version)"
+          } catch {
+            if ($managed) { $assemblyDescription = 'PE contains a CLR/.NET header; assembly metadata could not be loaded by this runner.' }
+            else { $assemblyDescription = 'Native PE executable; no CLR/.NET header detected.' }
+          }
+
+          $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($installer)
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          $report = @(
+            'Termilly installer binary inspection'
+            '==================================='
+            "Installer: $([System.IO.Path]::GetFileName($installer))"
+            "Installer SHA-256: $env:EXPECTED_SHA256"
+            "Detect It Easy release used by the multi-engine workflow: $env:DIE_RELEASE"
+            "PE format: $peFormat"
+            "PE architecture: $architecture"
+            "CLR/.NET header present: $managed"
+            "Assembly identification: $assemblyDescription"
+            "Product name: $($fileVersion.ProductName)"
+            "File description: $($fileVersion.FileDescription)"
+            "File version: $($fileVersion.FileVersion)"
+            "Authenticode status: $($signature.Status)"
+            "Certificate table at file end: $($payloadEnd -ne $stream.Length)"
+            "Custom payload marker: TMLYPAY1 (verified)"
+            "Embedded payload offset: $payloadOffset"
+            "Embedded payload length: $payloadLength bytes"
+            "Embedded ZIP SHA-256: $actualPayloadHash (matches footer)"
+            "Embedded ZIP version: $payloadVersion"
+            "Embedded ZIP entries: $($entries.Count)"
+            "Application payload entries: $($appEntries.Count)"
+            "Prerequisite payload entries: $($prereqEntries.Count)"
+            "Embedded uncompressed size: $totalUncompressedBytes bytes"
+            ''
+            'CLASSIFICATION: Custom self-extracting PE setup program with an appended ZIP payload and a proprietary TMLYPAY1 footer.'
+            'This is not an MSI database, and the payload is not identified by a standard Inno Setup or NSIS container.'
+            'The setup executable was not launched; only its PE header, footer, embedded ZIP and ZIP directory were inspected.'
+          )
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          "## Termilly binary classification" | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          @(
+            ''
+            "- **PE architecture:** $architecture"
+            "- **Managed .NET:** $managed"
+            "- **Footer marker:** `TMLYPAY1` verified"
+            "- **Embedded ZIP SHA-256:** $actualPayloadHash verified"
+            "- **Payload version:** $payloadVersion"
+            "- **Payload entries:** $($entries.Count)"
+            '- **Result:** Custom self-extracting PE bootstrapper with an appended ZIP payload; not a standard MSI/Inno/NSIS package.'
+            '- **Execution:** setup was not run.'
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
       - name: Inspect and extract Pake embedded setup payload without executing
