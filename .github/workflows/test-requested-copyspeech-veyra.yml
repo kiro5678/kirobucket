@@ -1,0 +1,243 @@
+name: Test Requested CopySpeech and Veyra Manifests
+
+on:
+  push:
+    branches:
+      - manifest-copy-speech-veyra-2026-11-22
+    paths:
+      - ".github/workflows/test-requested-copyspeech-veyra.yml"
+      - "bucket/copyspeech.json"
+      - "bucket/veyra-nrvideo-nvidia.json"
+      - "bucket/veyra-nrvideo-amd.json"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - ".github/workflows/test-requested-copyspeech-veyra.yml"
+      - "bucket/copyspeech.json"
+      - "bucket/veyra-nrvideo-nvidia.json"
+      - "bucket/veyra-nrvideo-amd.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    name: Install and verify CopySpeech and Veyra
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout candidate bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop into an isolated test root
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'kirobucket-round2-scoop-test'
+          New-Item -ItemType Directory -Path $env:SCOOP -Force | Out-Null
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop bootstrap failed.' }
+          scoop --version
+
+      - name: Register candidate manifests in a local bucket
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-round2-local'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          foreach ($name in @('copyspeech','veyra-nrvideo-nvidia','veyra-nrvideo-amd')) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Missing candidate manifest: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            if ($LASTEXITCODE -ne 0) { throw 'Could not initialize the local test bucket.' }
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket
+            git commit -m 'Seed CopySpeech and Veyra manifests'
+            if ($LASTEXITCODE -ne 0) { throw 'Could not commit the local candidate bucket.' }
+          }
+          finally { Pop-Location }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket-round2 $bucketUrl
+          if ($LASTEXITCODE -ne 0) { throw 'Could not register the local candidate bucket.' }
+
+      - name: Install CopySpeech from its MSI without system-wide installation
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop install copyspeech
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop install failed for copyspeech.' }
+
+      - name: Verify CopySpeech extracted files and Scoop data junctions
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $apps = Join-Path $env:SCOOP 'apps'
+          $copyRoot = Join-Path $apps 'copyspeech\current'
+          foreach ($name in @('copyspeech.exe','copyspeech-browser-host.exe')) {
+            $path = Join-Path $copyRoot $name
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "CopySpeech extracted file missing: $path"
+            }
+            Write-Host "PASS: CopySpeech file exists: $path"
+          }
+
+          $documents = [Environment]::GetFolderPath('MyDocuments')
+          $locations = @(
+            @{
+              Name = 'Roaming'
+              Source = Join-Path $env:APPDATA 'CopySpeech'
+              Persist = Join-Path $env:SCOOP 'persist\copyspeech\data\Roaming\CopySpeech'
+            },
+            @{
+              Name = 'LocalAppData'
+              Source = Join-Path $env:LOCALAPPDATA 'CopySpeech'
+              Persist = Join-Path $env:SCOOP 'persist\copyspeech\data\Local\CopySpeech'
+            },
+            @{
+              Name = 'Documents'
+              Source = Join-Path $documents 'CopySpeech'
+              Persist = Join-Path $env:SCOOP 'persist\copyspeech\data\Documents\CopySpeech'
+            }
+          )
+
+          foreach ($location in $locations) {
+            if (-not (Test-Path -LiteralPath $location.Source -PathType Container)) {
+              throw "CopySpeech $($location.Name) path is missing: $($location.Source)"
+            }
+            $item = Get-Item -LiteralPath $location.Source -Force
+            if (-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+              throw "CopySpeech $($location.Name) path is not a junction: $($location.Source)"
+            }
+            if (-not (Test-Path -LiteralPath $location.Persist -PathType Container)) {
+              throw "CopySpeech $($location.Name) persist target is missing: $($location.Persist)"
+            }
+            $actual = [string](@($item.Target)[0])
+            if ([string]::IsNullOrWhiteSpace($actual) -or
+                [IO.Path]::GetFullPath($actual).TrimEnd('\') -ne [IO.Path]::GetFullPath($location.Persist).TrimEnd('\')) {
+              throw "CopySpeech $($location.Name) junction points to the wrong location: $actual"
+            }
+            Write-Host "PASS: CopySpeech $($location.Name) linked to Scoop persist: $($location.Persist)"
+          }
+
+          $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Scoop Apps'
+          $shortcut = Join-Path $shortcutRoot 'CopySpeech.lnk'
+          if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
+            throw "CopySpeech Start Menu shortcut missing: $shortcut"
+          }
+          Write-Host "PASS: CopySpeech shortcut exists: $shortcut"
+
+      - name: Verify CopySpeech uninstall removes junctions but preserves data
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop uninstall copyspeech
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop uninstall failed for copyspeech.' }
+
+          $documents = [Environment]::GetFolderPath('MyDocuments')
+          $sources = @(
+            (Join-Path $env:APPDATA 'CopySpeech'),
+            (Join-Path $env:LOCALAPPDATA 'CopySpeech'),
+            (Join-Path $documents 'CopySpeech')
+          )
+          foreach ($source in $sources) {
+            if (Test-Path -LiteralPath $source) {
+              throw "CopySpeech external junction was left behind after uninstall: $source"
+            }
+          }
+
+          $persist = Join-Path $env:SCOOP 'persist\copyspeech\data'
+          if (-not (Test-Path -LiteralPath $persist -PathType Container)) {
+            throw "CopySpeech persistent data was deleted during uninstall: $persist"
+          }
+          Write-Host "PASS: CopySpeech junctions removed; persistent data retained."
+
+      - name: Install the NVIDIA and AMD Veyra portable builds
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('veyra-nrvideo-nvidia','veyra-nrvideo-amd')) {
+            Write-Host "Scoop install $name"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) { throw "Scoop install failed for $name." }
+          }
+
+      - name: Verify Veyra executables, data persistence, and shortcuts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $apps = Join-Path $env:SCOOP 'apps'
+          $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Scoop Apps'
+          $checks = @(
+            @{
+              Name = 'NVIDIA'
+              App = 'veyra-nrvideo-nvidia'
+              Shortcut = 'Veyra (NVIDIA).lnk'
+            },
+            @{
+              Name = 'AMD'
+              App = 'veyra-nrvideo-amd'
+              Shortcut = 'Veyra (AMD).lnk'
+            }
+          )
+
+          foreach ($check in $checks) {
+            $current = Join-Path $apps "$($check.App)\current"
+            $exe = Join-Path $current 'Veyra.exe'
+            $runtime = Join-Path $current 'runtime_local'
+            $persistRuntime = Join-Path $env:SCOOP "persist\$($check.App)\runtime_local"
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "Veyra $($check.Name) main executable missing: $exe"
+            }
+            if (-not (Test-Path -LiteralPath $runtime -PathType Container)) {
+              throw "Veyra $($check.Name) runtime_local directory missing: $runtime"
+            }
+            if (-not (Test-Path -LiteralPath $persistRuntime -PathType Container)) {
+              throw "Veyra $($check.Name) persistent runtime directory missing: $persistRuntime"
+            }
+            $item = Get-Item -LiteralPath $runtime -Force
+            if (-not ($item.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+              throw "Veyra $($check.Name) runtime_local is not persisted through Scoop."
+            }
+            $shortcut = Join-Path $shortcutRoot $check.Shortcut
+            if (-not (Test-Path -LiteralPath $shortcut -PathType Leaf)) {
+              throw "Veyra $($check.Name) shortcut missing: $shortcut"
+            }
+            Write-Host "PASS: Veyra $($check.Name) executable, runtime_local persistence, and shortcut."
+          }
+
+      - name: Validate checkver for all three manifests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          if (-not (Test-Path -LiteralPath $checkver -PathType Leaf)) {
+            throw "Scoop checkver script not found: $checkver"
+          }
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-round2-local\bucket'
+          foreach ($name in @('copyspeech','veyra-nrvideo-nvidia','veyra-nrvideo-amd')) {
+            Write-Host "Running checkver for $name"
+            & $checkver -App $name -Dir $manifestDir -ThrowError
+          }
+          @(
+            'CopySpeech MSI extraction and persistence junctions passed.'
+            'CopySpeech uninstall removed only the junctions and retained persistent data.'
+            'Both GPU-specific Veyra ZIPs installed and persisted runtime_local.'
+            'All three checkver checks passed.'
+            'No application executable was launched.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
