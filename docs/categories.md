@@ -3,7 +3,7 @@
 | Category | Manifests | Link |
 | --- | ---: | --- |
 | Android & Device Tools | 10 | [View](#android-device-tools) |
-| Associations | 14 | [View](#associations) |
+| Associations | 13 | [View](#associations) |
 | Browser Launchers | 6 | [View](#browser-launchers) |
 | Browsers & Communication | 15 | [View](#browsers-communication) |
 | Clipboard Tools | 19 | [View](#clipboard-tools) |
@@ -14,7 +14,7 @@
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 87 | [View](#file-management) |
+| File Management | 77 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
 | Local File Sharing | 1 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
@@ -967,7 +967,6 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [unigetui-portable](../bucket/unigetui-portable.json) | 2026.3.2 | 64bit: 51.4 MiB / arm64: 48.9 MiB | 2026-10-29 | GUI for the most common CLI package managers, such as WinGet, Scoop, Chocolatey, Pip, Npm, .NET Tool, PowerShell Gallery and more. | [Homepage](https://devolutions.net/unigetui/) |
 | [unigetuiglobal](../bucket/unigetuiglobal.json) | 2026.3.2 | 64bit: 51.4 MiB / arm64: 48.9 MiB | 2026-10-29 | UniGetUI package-manager GUI configured to keep settings and application data in the user's LocalAppData profile, outside the Scoop installation directory. | [Homepage](https://devolutions.net/unigetui/) |
 | [vovsoft-software-manager](../bucket/vovsoft-software-manager.json) | 1.3 | 5.2 MiB | 2026-09-23 | Portable edition of Vovsoft Software Manager. | [Homepage](https://vovsoft.com/software/software-manager/) |
-
 | [wingetix](../bucket/wingetix.json) | 1.1.1 | 64bit: 72.8 MiB | 2026-11-09 | GUI for managing software updates and Windows utilities through WinGet. | [Homepage](https://github.com/joselyky/Wingetix) |
 
 ## PDF & Documents
@@ -1096,8 +1095,6 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [vovsoft-password-generator](../bucket/vovsoft-password-generator.json) | 2.2 | 2.0 MiB | 2026-08-13 | Portable edition of Vovsoft Password Generator. | [Homepage](https://vovsoft.com/software/password-generator/) |
 | [yamira](../bucket/yamira.json) | 26.11 | 667.5 KiB | 2026-10-10 | USB drive protection tool for Windows. | [Homepage](https://github.com/turkaysoft/yamira) |
 | [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
-
-
 | [screenlight](../bucket/screenlight.json) | 0.1.0 | 64bit: 433.4 KiB | 2026-11-21 | Windows utility that alerts when applications access the screen, keyboard, and input devices. | [Homepage](https://github.com/Zephkek/ScreenLight) |
 
 ## Speech-to-Text (STT)
@@ -1111,7 +1108,6 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [vovsoft-speech-to-subtitle-converter](../bucket/vovsoft-speech-to-subtitle-converter.json) | 2.5 | 166.6 MiB | 2026-09-20 | Portable edition of Vovsoft Speech to Subtitle Converter. | [Homepage](https://vovsoft.com/software/speech-to-subtitle-converter/) |
 | [vovsoft-speech-to-text-converter](../bucket/vovsoft-speech-to-text-converter.json) | 6.0 | 255.1 MiB | 2026-10-07 | Portable edition of Vovsoft Speech to Text Converter. | [Homepage](https://vovsoft.com/software/speech-to-text-converter/) |
 | [yogurt](../bucket/yogurt.json) | 0.3.59 | 64bit: 402.3 MiB | 2026-11-20 | Local-first AI desktop app for meeting transcription, notes, and summaries. | [Homepage](https://github.com/FrigadeHQ/yogurt) |
-
 | [scribe](../bucket/scribe.json) | 0.2.0 | 64bit: 12.6 MiB | 2026-11-21 | Local, offline, CPU-only speech-to-text terminal application powered by whisper.cpp. | [Homepage](https://github.com/programmersd21/scribe) |
 
 ## Storage & Disk Tools
@@ -1429,7 +1425,6 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | 64bit: 9.1 MiB / 32bit: 8.6 MiB / arm64: 8.3 MiB | 2025-09-18 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
 | [winlestia](../bucket/winlestia.json) | 0.9.0 | 184.0 MiB | 2026-11-01 | Caelestia-inspired Windows 11 desktop shell with a customizable dock, dynamic themes, glass effects and desktop tools. | [Homepage](https://github.com/lilidoxdev/winlestia) |
 | [softwareok-zigarettenschachtel-spruch](../bucket/softwareok-zigarettenschachtel-spruch.json) | 2.32 | 64bit: 64.7 KiB | 2021-05-31 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
-
 | [folder-icon-maker](../bucket/folder-icon-maker.json) | 1.3.0 | 64bit: 19.4 MiB | 2026-11-22 | Windows utility for changing folder colors and icons from the system tray. | [Homepage](https://github.com/garfiewlolz/folder-icon-maker) |
 
 ## Windows Privacy & Tweaks
