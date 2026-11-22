@@ -166,8 +166,9 @@ jobs:
                     if ($LASTEXITCODE -ne 0) { throw "Wingetix nested archive extraction failed: $($archive.Name)" }
                     $nestedFiles = @(Get-ChildItem -LiteralPath $nestedOutput -File -Recurse -Force)
                     Write-Host "Wingetix nested application files: $($nestedFiles.Count)"
-                    foreach ($item in $nestedFiles | Where-Object { $_.Extension -ieq '.exe' }) {
-                      Write-Host ('Wingetix application EXE: ' + [IO.Path]::GetRelativePath($nestedOutput, $item.FullName))
+                    foreach ($item in $nestedFiles) {
+                      $relative = [IO.Path]::GetRelativePath($nestedOutput, $item.FullName).Replace([char]92,[char]47)
+                      Write-Host "Wingetix application payload: $relative ($($item.Length) bytes)"
                     }
                     $mainApp = @($nestedFiles | Where-Object { $_.Name -ieq 'Wingetix.exe' })
                     if ($mainApp.Count -eq 1) {
