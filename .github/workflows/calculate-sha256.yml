@@ -1,6 +1,9 @@
 name: Calculate SHA-256 for Download URLs
 
 on:
+  push:
+    branches:
+      - manifest-inspection-2026-11-22
   workflow_dispatch:
     inputs:
       urls:
@@ -24,9 +27,10 @@ jobs:
         env:
           URLS_INPUT: ${{ inputs.urls }}
           DEFAULT_URLS: |
-            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-x64.zip
-            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-ARM64.zip
-            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-X86.zip
+            https://github.com/Zephkek/ScreenLight/releases/download/v0.1.0/ScreenLight-0.1.0-portable.zip
+            https://github.com/programmersd21/scribe/releases/download/v0.2.0/scribe-windows-x86_64.exe
+            https://github.com/garfiewlolz/folder-icon-maker/releases/download/v1.3.0/FolderIconMaker-1.3.0.zip
+            https://github.com/joselyky/Wingetix/releases/download/v1.1.1/Wingetix.1.1.1.exe
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
