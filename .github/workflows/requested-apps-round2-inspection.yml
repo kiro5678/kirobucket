@@ -107,15 +107,31 @@ jobs:
             New-Item -ItemType Directory -Path $extract -Force | Out-Null
             & $sevenZip x -y "-o$extract" $download
             if ($LASTEXITCODE -ne 0) { throw "CopySpeech $($target.Name) extraction failed." }
-            $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force)
-            $exe = @($files | Where-Object { $_.Name -ieq 'CopySpeech.exe' })
-            $summary = "CopySpeech $($target.Name): $($files.Count) extracted files; CopySpeech.exe matches: $($exe.Count)"
+
+            $nested = @(Get-ChildItem -LiteralPath $extract -File -Recurse -Force | Where-Object { $_.Extension -ieq '.cab' -or $_.Name -ieq 'app-64.7z' })
+            $nestedIndex = 0
+            foreach ($archive in $nested) {
+              $nestedOutput = Join-Path $folder "nested-$nestedIndex"
+              New-Item -ItemType Directory -Path $nestedOutput -Force | Out-Null
+              & $sevenZip t $archive.FullName
+              if ($LASTEXITCODE -ne 0) { throw "CopySpeech nested archive test failed: $($archive.Name)" }
+              & $sevenZip x -y "-o$nestedOutput" $archive.FullName
+              if ($LASTEXITCODE -ne 0) { throw "CopySpeech nested archive extraction failed: $($archive.Name)" }
+              $nestedIndex++
+            }
+
+            $files = @(Get-ChildItem -LiteralPath $folder -File -Recurse -Force | Where-Object { $_.FullName -notmatch '\\\\(extracted|nested-\\d+)\\\\' -or $_.DirectoryName -match '\\\\nested-\\d+(\\\\|$)' })
+            $exe = @(Get-ChildItem -LiteralPath $folder -File -Recurse -Force | Where-Object { $_.Name -ieq 'CopySpeech.exe' })
+            $summary = "CopySpeech $($target.Name): $($files.Count) extracted files; nested archives: $nestedIndex; CopySpeech.exe matches: $($exe.Count)"
             Write-Host $summary
             foreach ($item in $exe) {
-              Write-Host ('CopySpeech executable path: ' + [IO.Path]::GetRelativePath($extract, $item.FullName))
+              Write-Host ('CopySpeech executable path: ' + [IO.Path]::GetRelativePath($folder, $item.FullName))
             }
             if ($target.Name -eq 'MSI' -and $exe.Count -eq 0) {
-              throw 'CopySpeech MSI extraction did not yield CopySpeech.exe.'
+              throw 'CopySpeech MSI/CAB extraction did not yield CopySpeech.exe.'
+            }
+            if ($target.Name -eq 'SetupEXE' -and $nestedIndex -eq 0) {
+              Write-Host 'No nested app-64.7z/CAB was detected in the setup EXE; review its installer layout before packaging.'
             }
             if ($target.Name -eq 'MSI') {
               $summary | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
