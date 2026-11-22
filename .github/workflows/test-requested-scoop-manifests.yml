@@ -165,6 +165,15 @@ jobs:
             throw 'Scribe persisted data folder or app junction was not created.'
           }
 
+          $shortcutRoot = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\Scoop Apps'
+          foreach ($shortcutName in @('ScreenLight', 'Scribe (Terminal)', 'Folder Icon Maker', 'Wingetix')) {
+            $shortcutPath = Join-Path $shortcutRoot "$shortcutName.lnk"
+            if (-not (Test-Path -LiteralPath $shortcutPath -PathType Leaf)) {
+              throw "Expected Start Menu shortcut was not created: $shortcutPath"
+            }
+            Write-Host "PASS: Start Menu shortcut exists: $shortcutPath"
+          }
+
           $winOrbitData = Join-Path $apps 'winorbit-mahadi-siraj\current\Data'
           if (-not (Test-Path -LiteralPath $winOrbitData)) {
             throw "WinOrbit's persistent Data folder was not created: $winOrbitData"
@@ -188,7 +197,7 @@ jobs:
           }
 
           $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-local-test\bucket'
-          foreach ($name in @('fileferret','legacy-router-opener-alaa7hany','winorbit-mahadi-siraj','gaming-tweaks-hamsypg')) {
+          foreach ($name in @('fileferret','legacy-router-opener-alaa7hany','winorbit-mahadi-siraj','gaming-tweaks-hamsypg','screenlight','scribe','folder-icon-maker','wingetix')) {
             Write-Host "Running checkver.ps1 for $name"
             & $checkver -App $name -Dir $manifestDir -ThrowError
           }
