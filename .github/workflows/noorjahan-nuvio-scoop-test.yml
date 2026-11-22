@@ -132,7 +132,15 @@ jobs:
               throw "Expected Noorjahan theme asset was not downloaded: $path"
             }
           }
-          Write-Host 'PASS: all four Noorjahan theme assets are present.'
+          $webUiDir = Join-Path $noorDir 'Noorjahan-WebUI'
+          if (-not (Test-Path -LiteralPath $webUiDir -PathType Container)) {
+            throw "Noorjahan Web UI archive did not extract its documented folder: $webUiDir"
+          }
+          $webUiFiles = @(Get-ChildItem -LiteralPath $webUiDir -File -Recurse)
+          if ($webUiFiles.Count -eq 0) {
+            throw 'Noorjahan Web UI folder is empty after extraction.'
+          }
+          Write-Host "PASS: all four desktop themes and $($webUiFiles.Count) extracted Web UI files are present."
 
           $nuvioDir = Join-Path $env:SCOOP 'apps\nuvio-one-desktop\current'
           $nuvioExe = Join-Path $nuvioDir 'Nuvio One.exe'
