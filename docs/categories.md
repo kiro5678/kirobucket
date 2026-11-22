@@ -809,6 +809,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [whatsapp-chat-exporter](../bucket/whatsapp-chat-exporter.json) | 0.14.0rc2 | — | 2026-11-14 | Command-line tool to parse Android and iOS WhatsApp backups and export chats to HTML and JSON. | [Homepage](https://github.com/KnugiHK/WhatsApp-Chat-Exporter) |
 | [ahk-tts](../bucket/ahk-tts.json) | 1.8 | — | — | AutoHotkey-based text-to-speech utility for Windows. | [Homepage](https://github.com/altbdoor/ahk-tts) |
 | [aula](../bucket/aula.json) | 0.1.3 | — | — | Study companion that turns notes, slides, and past exams into interactive courses. | [Homepage](https://github.com/luumlabs/aula) |
 | [bootease](../bucket/bootease.json) | 3.0.0 | 64bit: 5.0 MiB | 2026-10-31 | Windows utility for BIOS/UEFI, recovery, restart options, and system information. | [Homepage](https://github.com/voidksa/BootEase) |
@@ -1257,6 +1258,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [copyspeech](../bucket/copyspeech.json) | 0.3.2 | — | 2026-11-19 | Clipboard text-to-speech desktop app with AI voice generation and browser integration. | [Homepage](https://github.com/ilyaizen/CopySpeech) |
 | [voicestudio](../bucket/voicestudio.json) | 0.5.7 | 64bit: 212.0 MiB | 2026-10-26 | Open-source voice cloning, voice design, video dubbing, dictation, transcription & audiobook creation in 646 languages. | [Homepage](https://voicestudio.sh) |
 | [vovsoft-clipboard-reader](../bucket/vovsoft-clipboard-reader.json) | 1.4 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft Clipboard Reader. | [Homepage](https://vovsoft.com/software/clipboard-reader/) |
 | [vovsoft-read-mode](../bucket/vovsoft-read-mode.json) | 2.7 | 2.8 MiB | 2026-08-13 | Portable edition of Vovsoft Read Mode. | [Homepage](https://vovsoft.com/software/read-mode/) |
@@ -1582,3 +1584,4 @@ The all-in-one manifest extracts the official Sysinternals Suite together with t
 | [whois](../bucket/sysinternals/whois.json) |
 | [winobj](../bucket/sysinternals/winobj.json) |
 | [zoomit](../bucket/sysinternals/zoomit.json) |
+
