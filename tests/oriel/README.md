@@ -17,13 +17,13 @@ After adding the bucket, run `scoop install Oriel-Niix` from a normal PowerShell
 
 The publisher supplies a per-user setup executable, not a portable archive. Scoop runs the official setup interactively, without passing command-line switches. The setup wizard opens during `scoop install`; Scoop waits until the user completes or cancels it.
 
-Before setup starts, `pre_install` checks for an existing standalone Oriel installation and refuses to take it over. After the wizard exits successfully, the `installer.script` verifies that `oriel.exe` and `uninstall.exe` exist in `%LOCALAPPDATA%\Programs\\Oriel`, creates a Junction in the Scoop version directory, and removes the downloaded setup file. The shim and Start Menu shortcut target the executable through that Junction.
+Before setup starts, `pre_install` checks for an existing standalone Oriel installation and refuses to take it over. It then renames the versioned download (`OrielSetup-$version.exe`) to `OrielSetup.exe`. This lets the manifest use Scoop's native `installer.file` handler rather than manually launching the EXE from PowerShell. Scoop's `Invoke-Installer` runs the file through its built-in `Invoke-ExternalCommand` helper with no arguments, waits for the process to exit, and removes the installer after a successful exit. The subsequent `installer.script` verifies that `oriel.exe` and `uninstall.exe` exist in `%LOCALAPPDATA%\Programs\Oriel`, then creates a Junction in the Scoop version directory. The shim and Start Menu shortcut target the executable through that Junction.
 
 This package is **not portable**. Oriel keeps its user data in `%APPDATA%\Oriel` and uses Windows Credential Manager for some credentials. The existing uninstaller script remains responsible for Scoop uninstall and update operations. Disable Oriel's built-in automatic update check in Settings > About so Scoop remains the update authority.
 
 ## Automated validation
 
-The Windows workflow runs Scoop's official `checkver.ps1` against a temporary copy and verifies the generated version, setup URL, and SHA-256. It also checks that the guided installer uses the downloaded `$fname`, has no silent arguments, and that the `pre_install`, `installer.script`, and `uninstaller.script` PowerShell blocks parse successfully.
+The Windows workflow runs Scoop's official `checkver.ps1` against a temporary copy and verifies the generated version, setup URL, and SHA-256. It also checks that the manifest defines `installer.file: OrielSetup.exe`, that `pre_install` renames the versioned download using Scoop's `$version` variable, that no installer arguments are supplied, and that the PowerShell hook blocks parse successfully.
 
 The workflow does **not** run the setup wizard or claim a full install/uninstall lifecycle: the GUI requires a person to complete it in an interactive Windows session. Complete one manual `scoop install Oriel-Niix` test on a desktop session before treating the runtime lifecycle as verified.
 
