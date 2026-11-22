@@ -208,11 +208,7 @@
                         "url": "https://github.com/termilly/termilly/releases/download/v$version/SHA256SUMS",
                         "find": "([a-fA-F\\d]{64})\\s+TermillySetup-$version\\.exe"
                     },
-                    {
-                        "url": "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/10.0.15/windowsdesktop-runtime-10.0.15-win-x64.zip",
-                        "mode": "download",
-                        "type": "sha512"
-                    }
+                    {}
                 ]
             }
         }
