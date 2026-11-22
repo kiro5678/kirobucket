@@ -743,9 +743,11 @@ jobs:
             $certificateOffset = [long]$reader.ReadUInt32()
             $certificateSize = [long]$reader.ReadUInt32()
             $payloadEnd = $stream.Length
+            $hadCertificateAtEnd = $false
             if ($certificateOffset -gt 0 -and $certificateSize -gt 0 -and
                 ($certificateOffset + $certificateSize) -eq $stream.Length) {
               $payloadEnd = $certificateOffset
+              $hadCertificateAtEnd = $true
             }
 
             $tailLength = 56
@@ -854,7 +856,7 @@ jobs:
             "File description: $($fileVersion.FileDescription)"
             "File version: $($fileVersion.FileVersion)"
             "Authenticode status: $($signature.Status)"
-            "Certificate table at file end: $($payloadEnd -ne $stream.Length)"
+            "Certificate table at file end: $hadCertificateAtEnd"
             "Custom payload marker: TMLYPAY1 (verified)"
             "Embedded payload offset: $payloadOffset"
             "Embedded payload length: $payloadLength bytes"
