@@ -1,6 +1,6 @@
 {
     "version": "0.1.0",
-    "description": "Windows utility that alerts when applications access the screen, keyboard, and input devices.",
+    "description": "Windows privacy monitor that detects screen recording, screenshots, keyboard reading, and simulated mouse or keyboard input.",
     "homepage": "https://github.com/Zephkek/ScreenLight",
     "license": "GPL-3.0-only",
     "architecture": {
