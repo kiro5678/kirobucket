@@ -8,6 +8,7 @@
         "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v1.3.1/Noorjahan-Dark.qbtheme",
         "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v1.3.1/Noorjahan-Light-Compact.qbtheme",
         "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v1.3.1/Noorjahan-Dark-Compact.qbtheme",
+        "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v1.3.1/Noorjahan-Setup.zip",
         "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v1.3.1/Noorjahan-WebUI.zip"
     ],
     "hash": [
@@ -15,6 +16,7 @@
         "395d6c43adb40d505560ba36e597b2ca90096303cd34fb5cd698998970ea75fd",
         "06a5cb75d30ce6831356884fe6d0620707f46d846f0f2cac2ca206afb860ae0b",
         "794b18bd35784ece58209052e1848bcce9136b6d0c0c11ddbabbdb3ec55637aa",
+        "85f8efece44f4804c2eab19bdaf5ac2943cbc6831757198b5025541fa5d77ae4",
         "8c5e3ce81f2a2c2530ac4c4e897757c0898de720e8c52db678b390bb25286d4a"
     ],
     "checkver": {
@@ -28,6 +30,7 @@
             "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v$version/Noorjahan-Dark.qbtheme",
             "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v$version/Noorjahan-Light-Compact.qbtheme",
             "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v$version/Noorjahan-Dark-Compact.qbtheme",
+            "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v$version/Noorjahan-Setup.zip",
             "https://github.com/chiefhamim/noorjahan-qbittorrent/releases/download/v$version/Noorjahan-WebUI.zip"
         ],
         "hash": [
@@ -54,12 +57,18 @@
             {
                 "mode": "json",
                 "url": "https://api.github.com/repos/chiefhamim/noorjahan-qbittorrent/releases/latest",
+                "jsonpath": "$.assets[?(@.name == 'Noorjahan-Setup.zip')].digest"
+            },
+            {
+                "mode": "json",
+                "url": "https://api.github.com/repos/chiefhamim/noorjahan-qbittorrent/releases/latest",
                 "jsonpath": "$.assets[?(@.name == 'Noorjahan-WebUI.zip')].digest"
             }
         ]
     },
     "notes": [
-        "Downloads the four standalone .qbtheme files and the matching Noorjahan-WebUI.zip. It does not install the Inter font, modify qBittorrent.ini, or change qBittorrent settings.",
+        "Downloads the four standalone .qbtheme files, the Windows Noorjahan-Setup.zip, and the matching Noorjahan-WebUI.zip.",
+        "Noorjahan-Setup.zip is extracted into this Scoop app directory. Run Install Noorjahan.cmd manually only when you want to install Inter for the current Windows user, copy the themes into %APPDATA%\\qBittorrent\\themes, and optionally change qBittorrent.ini. The script backs up qBittorrent.ini before changing it; Scoop does not run this installer automatically.",
         "In qBittorrent, open Tools > Options > Behavior, enable the custom UI theme, and select the desired Noorjahan .qbtheme file from this Scoop app directory. Restart qBittorrent to apply it.",
         "The Web UI ZIP is extracted into the Noorjahan-WebUI folder under this Scoop app directory. In qBittorrent, open Tools > Options > Web UI, enable Use alternative WebUI, and select that folder."
     ]
