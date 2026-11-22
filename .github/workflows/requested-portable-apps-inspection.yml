@@ -138,6 +138,27 @@ jobs:
               $summary.Add('- PE header: valid')
               $summary.Add("- Product version: $($info.ProductVersion)")
               Write-Host "$($target.Name) PE header: valid; ProductVersion=$($info.ProductVersion)"
+              if ($target.Name -eq 'Wingetix') {
+                $sfxListing = & $sevenZip l -slt $download 2>&1
+                $sfxExit = $LASTEXITCODE
+                $sfxListing | Set-Content -LiteralPath (Join-Path $folder 'sevenzip-listing.txt')
+                if ($sfxExit -eq 0) {
+                  Write-Host '7-Zip recognizes Wingetix portable EXE as an archive; extracting for payload inspection.'
+                  $sfxExtract = Join-Path $folder 'sevenzip-extracted'
+                  New-Item -ItemType Directory -Path $sfxExtract -Force | Out-Null
+                  & $sevenZip x -y "-o$sfxExtract" $download
+                  if ($LASTEXITCODE -ne 0) { throw 'Wingetix 7-Zip payload extraction failed.' }
+                  $payloadFiles = @(Get-ChildItem -LiteralPath $sfxExtract -File -Recurse -Force)
+                  Write-Host "Wingetix SFX extracted files: $($payloadFiles.Count)"
+                  foreach ($item in $payloadFiles | Where-Object { $_.Extension -ieq '.exe' }) {
+                    Write-Host ('Wingetix extracted EXE: ' + [IO.Path]::GetRelativePath($sfxExtract, $item.FullName))
+                  }
+                  $summary.Add("- 7-Zip payload extraction: PASS ($($payloadFiles.Count) files)")
+                } else {
+                  Write-Host '7-Zip does not recognize Wingetix as an extractable archive; keep it as a standalone portable EXE.'
+                  $summary.Add('- 7-Zip payload extraction: not supported; standalone PE')
+                }
+              }
             }
             $summary.Add('')
           }
