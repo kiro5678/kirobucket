@@ -1,16 +1,16 @@
 {
-    "version": "0.3.3",
+    "version": "0.3.4",
     "description": "Native source code reader with project tree, tabs, search, symbols, diffs and terminal.",
     "homepage": "https://github.com/wibus-wee/see",
     "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/wibus-wee/see/releases/download/v0.3.3/see-0.3.3-windows-amd64.tar.gz",
-            "hash": "03899a02e197b0d209e474756a63642f9cc77890d7226968cbe5ef1cf1f9538e"
+            "url": "https://github.com/wibus-wee/see/releases/download/v0.3.4/see-0.3.4-windows-amd64.tar.gz",
+            "hash": "00132b23505f8d00724c9cdc590178b3e6fe002b17d6897ede9b23dedc7431c9"
         },
         "arm64": {
-            "url": "https://github.com/wibus-wee/see/releases/download/v0.3.3/see-0.3.3-windows-arm64.tar.gz",
-            "hash": "a2cd0d4921e8535d8d59f711a1fcd10e2129e292be4de87189f396f8aea237c2"
+            "url": "https://github.com/wibus-wee/see/releases/download/v0.3.4/see-0.3.4-windows-arm64.tar.gz",
+            "hash": "f9131f5e9500ef3ab2bc139cc598e8346dc44085d9e8709b7b61bfc015aaa930"
         }
     },
     "bin": "See.exe",
