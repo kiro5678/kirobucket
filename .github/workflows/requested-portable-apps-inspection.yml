@@ -150,10 +150,32 @@ jobs:
                   if ($LASTEXITCODE -ne 0) { throw 'Wingetix 7-Zip payload extraction failed.' }
                   $payloadFiles = @(Get-ChildItem -LiteralPath $sfxExtract -File -Recurse -Force)
                   Write-Host "Wingetix SFX extracted files: $($payloadFiles.Count)"
-                  foreach ($item in $payloadFiles | Where-Object { $_.Extension -ieq '.exe' }) {
-                    Write-Host ('Wingetix extracted EXE: ' + [IO.Path]::GetRelativePath($sfxExtract, $item.FullName))
+                  foreach ($item in $payloadFiles) {
+                    $relative = [IO.Path]::GetRelativePath($sfxExtract, $item.FullName).Replace([char]92,[char]47)
+                    Write-Host "Wingetix outer payload: $relative ($($item.Length) bytes)"
                   }
-                  $summary.Add("- 7-Zip payload extraction: PASS ($($payloadFiles.Count) files)")
+
+                  $nestedArchives = @($payloadFiles | Where-Object { $_.Extension -in @('.7z','.zip') })
+                  foreach ($archive in $nestedArchives) {
+                    Write-Host "Inspect nested Wingetix archive: $($archive.Name)"
+                    & $sevenZip t $archive.FullName
+                    if ($LASTEXITCODE -ne 0) { throw "Wingetix nested archive integrity check failed: $($archive.Name)" }
+                    $nestedOutput = Join-Path $folder 'nested-application'
+                    New-Item -ItemType Directory -Path $nestedOutput -Force | Out-Null
+                    & $sevenZip x -y "-o$nestedOutput" $archive.FullName
+                    if ($LASTEXITCODE -ne 0) { throw "Wingetix nested archive extraction failed: $($archive.Name)" }
+                    $nestedFiles = @(Get-ChildItem -LiteralPath $nestedOutput -File -Recurse -Force)
+                    Write-Host "Wingetix nested application files: $($nestedFiles.Count)"
+                    foreach ($item in $nestedFiles | Where-Object { $_.Extension -ieq '.exe' }) {
+                      Write-Host ('Wingetix application EXE: ' + [IO.Path]::GetRelativePath($nestedOutput, $item.FullName))
+                    }
+                    $mainApp = @($nestedFiles | Where-Object { $_.Name -ieq 'Wingetix.exe' })
+                    if ($mainApp.Count -eq 1) {
+                      Write-Host ('PASS: extracted Wingetix.exe at ' + [IO.Path]::GetRelativePath($nestedOutput, $mainApp[0].FullName))
+                      $summary.Add('- Nested application archive: extracted and verified')
+                    }
+                  }
+                  $summary.Add("- 7-Zip payload extraction: PASS ($($payloadFiles.Count) outer files)")
                 } else {
                   Write-Host '7-Zip does not recognize Wingetix as an extractable archive; keep it as a standalone portable EXE.'
                   $summary.Add('- 7-Zip payload extraction: not supported; standalone PE')
