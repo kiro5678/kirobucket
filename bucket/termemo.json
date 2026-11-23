@@ -81,4 +81,4 @@
         "The external junctions are retained during 'scoop update' and removed only during 'scoop uninstall'. Persisted data remains after uninstall unless Scoop is run with --purge.",
         "Workspaces explicitly created in another location remain there. Scoop extracts the MSI payload without running the vendor's Windows Installer registration routine."
     ]
-}
+ }
