@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   lifecycle:
-    name: Check, install, launch, persist, uninstall, and reinstall
+    name: Check, install, launch, persist, update, uninstall, and reinstall
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
@@ -131,6 +131,51 @@ jobs:
           Set-Content -LiteralPath (Join-Path $persistData 'scoop-persist-check.txt') -Value 'Termemo data survives Scoop uninstall.'
           Set-Content -LiteralPath (Join-Path $persistLocal 'webview-persist-check.txt') -Value 'Termemo WebView2 data survives Scoop uninstall.'
           Write-Host "PASS: executable, shortcut, both junctions, and default workspace verified."
+
+      - name: Force update and verify Scoop retains external data junctions
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop update termemo --force
+          if ($LASTEXITCODE -ne 0) { throw "Scoop update failed with exit code $LASTEXITCODE." }
+
+          $appData = Join-Path $env:APPDATA 'dev.commandpad.app'
+          $localData = Join-Path $env:LOCALAPPDATA 'dev.commandpad.app'
+          $persistData = Join-Path $env:SCOOP 'persist\\termemo\\data'
+          $persistLocal = Join-Path $env:SCOOP 'persist\\termemo\\local-data'
+
+          foreach ($pair in @(
+            @{ Path = $appData; Target = $persistData },
+            @{ Path = $localData; Target = $persistLocal }
+          )) {
+            $item = Get-Item -LiteralPath $pair.Path -Force -ErrorAction Stop
+            if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -eq 0 -or
+                $item.LinkType -ne 'Junction' -or
+                [IO.Path]::GetFullPath([string]$item.Target) -ine [IO.Path]::GetFullPath([string]$pair.Target)) {
+              throw "Scoop update broke Termemo's persistence junction: $($pair.Path) -> $($item.Target)"
+            }
+          }
+
+          foreach ($marker in @(
+            (Join-Path $persistData 'scoop-persist-check.txt'),
+            (Join-Path $persistLocal 'webview-persist-check.txt'),
+            (Join-Path $persistData 'default-workspace\\.cmdpad\\workspace.json')
+          )) {
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+              throw "Termemo data did not survive Scoop update: $marker"
+            }
+          }
+
+          $exe = Join-Path $env:SCOOP 'apps\\termemo\\current\\termemo.exe'
+          $process = Start-Process -FilePath $exe -PassThru
+          Start-Sleep -Seconds 10
+          $process.Refresh()
+          if ($process.HasExited) {
+            throw "Termemo failed to launch after Scoop update (exit code $($process.ExitCode))."
+          }
+          Stop-Process -Id $process.Id -Force
+          Wait-Process -Id $process.Id -ErrorAction SilentlyContinue
+          Write-Host 'PASS: forced Scoop update retained both junctions and all persistent data; Termemo launched again.'
 
       - name: Uninstall and verify persisted data retention
         shell: pwsh
