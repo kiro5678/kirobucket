@@ -1,10 +1,10 @@
 {
-    "version": "2.2.0",
+    "version": "2.2.1",
     "description": "Live network speeds, CPU/GPU stats, temperatures, and power draw on the Windows taskbar.",
     "homepage": "https://github.com/erez-c137/NetSpeedTray",
     "license": "GPL-3.0-only",
-    "url": "https://github.com/erez-c137/NetSpeedTray/releases/download/v2.2.0/NetSpeedTray-Portable-2.2.0.zip",
-    "hash": "79ff9879318149b56765554b394fe0f370d84c5d537d9bb82c27b48e5eb5102a",
+    "url": "https://github.com/erez-c137/NetSpeedTray/releases/download/v2.2.1/NetSpeedTray-Portable-2.2.1.zip",
+    "hash": "4c306e55752c83a7702543480f6b2e14a7fdcb80b2ffe9602713594bf016a6b9",
     "extract_dir": "NetSpeedTray",
     "bin": "NetSpeedTray.exe",
     "shortcuts": [

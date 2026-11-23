@@ -1,10 +1,10 @@
 {
-    "version": "1.19.269",
+    "version": "1.20.280",
     "description": "Classic WinForms edition of FluentCleaner for Windows.",
     "homepage": "https://github.com/builtbybel/FluentCleaner",
     "license": "MIT",
     "url": "https://github.com/builtbybel/FluentCleaner/releases/latest/download/FluentCleaner-Classic-net48.zip",
-    "hash": "8a93a8a08f2141fc532ed16b4e1534d84b3e66650507d5affe38ec6e0c3c1d4e",
+    "hash": "bc2f0b90c6f6f9b8c6af517fa6c23b6259eb1bdeb6b7263c6445ceebdabd6b42",
     "extract_dir": "FluentCleaner-net48",
     "bin": "FluentCleaner.Classic.exe",
     "shortcuts": [
