@@ -39,7 +39,7 @@
         "    New-Item -ItemType Junction -Path $path -Target $target | Out-Null",
         "}"
     ],
-    "pre_uninstall": [
+    "post_uninstall": [
         "$junctions = @(",
         "    @{ Path = (Join-Path $env:APPDATA 'dev.commandpad.app'); Target = (Join-Path $persist_dir 'data') },",
         "    @{ Path = (Join-Path $env:LOCALAPPDATA 'dev.commandpad.app'); Target = (Join-Path $persist_dir 'local-data') }",
