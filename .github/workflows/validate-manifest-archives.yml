@@ -231,6 +231,16 @@ on:
       - 'bucket/gloof.json'
       - 'bucket/killerpdf.json'
       - 'bucket/magpie-search.json'
+      - 'bucket/better-windows-services.json'
+      - 'bucket/bws-cli.json'
+      - 'bucket/testing-files-generator.json'
+      - 'bucket/testing-files-generator-cli.json'
+      - 'bucket/chronomock.json'
+      - 'bucket/chronomock-cli.json'
+      - 'bucket/certdoctor.json'
+      - 'bucket/certdoctor-gui.json'
+      - 'bucket/naughty-keyboard.json'
+      - 'bucket/naughty-keyboard-cli.json'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
@@ -474,6 +484,16 @@ on:
       - 'bucket/fort-firewall.json'
       - 'bucket/gloof.json'
       - 'bucket/killerpdf.json'
+      - 'bucket/better-windows-services.json'
+      - 'bucket/bws-cli.json'
+      - 'bucket/testing-files-generator.json'
+      - 'bucket/testing-files-generator-cli.json'
+      - 'bucket/chronomock.json'
+      - 'bucket/chronomock-cli.json'
+      - 'bucket/certdoctor.json'
+      - 'bucket/certdoctor-gui.json'
+      - 'bucket/naughty-keyboard.json'
+      - 'bucket/naughty-keyboard-cli.json'
   workflow_dispatch:
     inputs:
       manifest:
