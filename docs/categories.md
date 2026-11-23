@@ -14,9 +14,9 @@
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 25 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 77 | [View](#file-management) |
+| File Management | 78 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
-| Local File Sharing | 1 | [View](#local-file-sharing) |
+| Local File Sharing | 2 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
@@ -47,7 +47,7 @@
 | Windows Customization | 100 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1290**
+**Total unique categorized manifests: 1292**
 
 
 ## Android & Device Tools
@@ -343,6 +343,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [filebrowser](../bucket/filebrowser.json) | 2.63.23 | 15.3 MiB | 2026-07-27 | Self-hosted web file manager for managing files in a specified directory. | [Homepage](https://github.com/filebrowser/filebrowser) |
 | [filee](../bucket/filee.json) | 2.1.0 | 150.7 MiB | 2026-10-28 | Portable file converter and viewer for images, documents, archives, fonts, CAD, 3D models, and geospatial formats. | [Homepage](https://github.com/KnifeLemon/Filee) |
 | [filepilot](../bucket/filepilot.json) | 1.0.7 | 64bit: 64.7 MiB | 2026-10-11 | Local-first Windows file organization workbench with AI-assisted planning and reversible execution. | [Homepage](https://github.com/qup1010/FilePilot) |
+| [flect](../bucket/flect.json) | 1.2 | 90.7 MiB | 2026-11-20 | Nonportable Explorer extension for converting, compressing, resizing, previewing, and inspecting files from the context menu. | [Homepage](https://github.com/Ko7ayuki/Flect) |
 | [files-inspector](../bucket/files-inspector.json) | 4.55 | 18.3 MiB | 2026-06-16 | Disk space analyzer for finding large files, folders, and removable data | [Homepage](https://www.chemtable.com/files-inspector.htm) |
 | [findly](../bucket/findly.json) | 1.0.2 | 4.3 MiB | 2026-08-11 | Windows utility for finding installed programs and their executable paths | [Homepage](https://findly.devslim.com/) |
 | [foldra](../bucket/foldra.json) | 1.0 | 64bit: 2.1 MiB | 2025-12-25 | Lightweight desktop folder widgets and file organization utility for Windows. | [Homepage](https://github.com/YusufEren97/FoldRa) |
@@ -410,6 +411,7 @@ Desktop file managers and file explorers that provide a graphical way to browse,
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
 | --- | --- | --- | --- | --- | --- |
+| [airdrop-bridge](../bucket/airdrop-bridge.json) | 1.0.0 | 5.3 MiB | 2026-11-22 | Local-network file and clipboard transfer from iPhone and iPad to Windows or Linux without a third-party iOS app. | [Homepage](https://github.com/jorjanion/AirDrop-Bridge) |
 | [warpinator](../bucket/warpinator.json) | 1.1 | 12.9 MiB | 2025-12-29 | Unofficial Windows implementation of Linux Mint's Warpinator for transferring files between Linux, Windows and Android devices. | [Homepage](https://github.com/slowscript/warpinator-windows) |
 
 ## Forensics & Diagnostics
