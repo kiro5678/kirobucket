@@ -1,0 +1,209 @@
+name: AirDrop Bridge and Flect Scoop Install Test
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/airdrop-bridge.json'
+      - 'bucket/flect.json'
+      - '.github/workflows/airdrop-flect-scoop-test.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/airdrop-bridge.json'
+      - 'bucket/flect.json'
+      - '.github/workflows/airdrop-flect-scoop-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install-update-uninstall:
+    name: Install, force-update, and uninstall (${{ matrix.shell }})
+    runs-on: windows-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $scoopShims = Join-Path $env:USERPROFILE 'scoop\shims'
+          $env:PATH = "$scoopShims;$env:PATH"
+          $scoopShims | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          if (-not (Get-Command scoop -ErrorAction SilentlyContinue)) {
+            throw 'Scoop command was not added to PATH after installation.'
+          }
+          scoop --version
+
+      - name: Check the .NET 10 Desktop Runtime prerequisite
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $runtimeRoot = Join-Path $env:ProgramW6432 'dotnet\shared\Microsoft.WindowsDesktop.App'
+          $runtime = if (Test-Path -LiteralPath $runtimeRoot) {
+            Get-ChildItem -LiteralPath $runtimeRoot -Directory |
+              Where-Object { $_.Name -match '^10\.' } |
+              Select-Object -First 1
+          }
+          if (-not $runtime) {
+            throw "The Windows runner does not have the .NET 10 Desktop Runtime required to test Flect: $runtimeRoot"
+          }
+          Write-Host "PASS: .NET Desktop Runtime $($runtime.Name) is available."
+
+      - name: Install and test AirDrop Bridge
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $scoop = (Get-Command scoop -ErrorAction Stop).Source
+          $manifest = Join-Path $env:GITHUB_WORKSPACE 'bucket\airdrop-bridge.json'
+          $appRoot = Join-Path $env:USERPROFILE 'scoop\apps\airdrop-bridge'
+          $persistRoot = Join-Path $env:USERPROFILE 'scoop\persist\airdrop-bridge'
+          $configFile = Join-Path $persistRoot 'Roaming\jorjanion\AirDropBridge\config\config.json'
+
+          function Invoke-Scoop {
+            param([string[]]$Arguments)
+            $global:LASTEXITCODE = 0
+            & $scoop @Arguments
+            if ($global:LASTEXITCODE -ne 0) {
+              throw "Scoop command failed (exit $global:LASTEXITCODE): scoop $($Arguments -join ' ')"
+            }
+          }
+
+          Invoke-Scoop -Arguments @('install', $manifest)
+          $current = Join-Path $appRoot 'current'
+          $exe = Join-Path $current 'airdrop-bridge-windows-x64.exe'
+          $launcher = Join-Path $current 'AirDrop-Bridge.cmd'
+          if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "AirDrop Bridge executable is missing: $exe" }
+          if (-not (Test-Path -LiteralPath $launcher -PathType Leaf)) { throw "AirDrop Bridge launcher is missing: $launcher" }
+          if (-not (Test-Path -LiteralPath $configFile -PathType Leaf)) { throw "Persisted configuration was not created: $configFile" }
+
+          $config = Get-Content -LiteralPath $configFile -Raw | ConvertFrom-Json
+          if ($config.auto_update -ne $false) { throw 'AirDrop Bridge internal updater was not disabled.' }
+          if ($config.autostart -ne $false) { throw 'AirDrop Bridge automatic startup was not disabled.' }
+          if ($config.token -notmatch '^[0-9a-f]{64}$') { throw 'AirDrop Bridge token is not a 256-bit hexadecimal value.' }
+          if (-not (Select-String -LiteralPath $launcher -Pattern 'APPDATA=%~dp0Roaming' -Quiet)) {
+            throw 'AirDrop Bridge launcher does not redirect APPDATA to the persisted directory.'
+          }
+          Write-Host 'PASS: AirDrop Bridge executable, launcher, persistent config, token, and updater settings.'
+
+          Invoke-Scoop -Arguments @('update', 'airdrop-bridge', '--force')
+          if (-not (Test-Path -LiteralPath (Join-Path $appRoot 'current\airdrop-bridge-windows-x64.exe'))) {
+            throw 'AirDrop Bridge executable is missing after a forced Scoop update.'
+          }
+          if (-not (Test-Path -LiteralPath $configFile)) { throw 'AirDrop Bridge configuration did not survive a forced update.' }
+          Write-Host 'PASS: AirDrop Bridge forced update retained persisted configuration.'
+
+          Invoke-Scoop -Arguments @('uninstall', 'airdrop-bridge')
+          if (Test-Path -LiteralPath $appRoot) { throw 'AirDrop Bridge app directory remains after uninstall.' }
+          if (-not (Test-Path -LiteralPath $configFile)) { throw 'AirDrop Bridge persisted configuration was removed without --purge.' }
+          Write-Host 'PASS: AirDrop Bridge uninstalled and its persisted configuration survived.'
+
+      - name: Install, update, and uninstall Flect
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $scoop = (Get-Command scoop -ErrorAction Stop).Source
+          $manifest = Join-Path $env:GITHUB_WORKSPACE 'bucket\flect.json'
+          $appRoot = Join-Path $env:USERPROFILE 'scoop\apps\flect'
+          $persistRoot = Join-Path $env:USERPROFILE 'scoop\persist\flect'
+          $flectHome = Join-Path $persistRoot 'Home'
+          $version = (Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json).version
+          $settingsFile = Join-Path $flectHome 'settings.json'
+          $shellClsid = '{4D038D4F-2125-48BE-8848-BA30A13AC7EA}'
+          $previewClsid = '{CBB10B48-4759-440B-AC1B-464F22A79CDE}'
+          $previewHtmlClsid = '{278E97FA-5FB2-4E65-8278-1F7A663C4EA4}'
+          $previewAppId = '{A9975779-3CE3-47B2-B696-2CD97D01A683}'
+          $classes = 'HKCU:\Software\Classes'
+          $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
+
+          function Invoke-Scoop {
+            param([string[]]$Arguments)
+            $global:LASTEXITCODE = 0
+            & $scoop @Arguments
+            if ($global:LASTEXITCODE -ne 0) {
+              throw "Scoop command failed (exit $global:LASTEXITCODE): scoop $($Arguments -join ' ')"
+            }
+          }
+
+          function Get-DefaultValue {
+            param([string]$Path)
+            if (-not (Test-Path -LiteralPath $Path)) { return $null }
+            return (Get-Item -LiteralPath $Path).GetValue('')
+          }
+
+          function Assert-FlectRegistered {
+            $actualDir = Join-Path $appRoot $version
+            foreach ($entry in @(
+              @{ Key = "$classes\CLSID\$shellClsid\InprocServer32"; File = 'FlectShell.dll' },
+              @{ Key = "$classes\CLSID\$previewClsid\InprocServer32"; File = 'FlectPreview.dll' },
+              @{ Key = "$classes\CLSID\$previewHtmlClsid\InprocServer32"; File = 'FlectPreview.dll' }
+            )) {
+              $registered = Get-DefaultValue $entry.Key
+              $expected = Join-Path $actualDir $entry.File
+              if ($registered -ne $expected) {
+                throw "Flect registration mismatch at $($entry.Key): '$registered' (expected '$expected')"
+              }
+            }
+            if (-not (Test-Path -LiteralPath "$classes\AppID\$previewAppId")) {
+              throw 'Flect Preview AppID was not registered.'
+            }
+            if (-not (Test-Path -LiteralPath "$classes\*\shellex\ContextMenuHandlers\Flect")) {
+              throw 'Flect Explorer context-menu handler was not registered.'
+            }
+          }
+
+          Invoke-Scoop -Arguments @('install', $manifest)
+          $env:FLECT_HOME = $flectHome
+          $current = Join-Path $appRoot 'current'
+          foreach ($file in @('Flect.exe', 'FlectShell.dll', 'FlectPreview.dll', 'unins000.exe')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $current $file) -PathType Leaf)) {
+              throw "Flect installer did not install the expected Inno Setup payload: $file"
+            }
+          }
+          if (-not (Test-Path -LiteralPath $settingsFile)) { throw "Flect settings were not persisted: $settingsFile" }
+          $settings = Get-Content -LiteralPath $settingsFile -Raw | ConvertFrom-Json
+          if ($settings.General.AutoUpdate -ne $false) { throw 'Flect built-in updater was not disabled.' }
+          if ([Environment]::GetEnvironmentVariable('FLECT_HOME', 'User') -ne $flectHome) {
+            throw 'FLECT_HOME was not persisted as a user environment variable.'
+          }
+          Assert-FlectRegistered
+          $runValue = (Get-ItemProperty -LiteralPath $runKey -Name 'FlectAutoUpdate' -ErrorAction SilentlyContinue).FlectAutoUpdate
+          if ($runValue) { throw "Flect auto-update startup entry should be disabled, but exists: $runValue" }
+          Write-Host 'PASS: Flect Inno Setup installation, COM registration, preview handlers, persisted settings, and updater control.'
+
+          $marker = Join-Path $flectHome 'scoop-persist-test.txt'
+          Set-Content -LiteralPath $marker -Value 'persisted-through-update-and-uninstall'
+          Invoke-Scoop -Arguments @('update', 'flect', '--force')
+          $env:FLECT_HOME = $flectHome
+          if (-not (Test-Path -LiteralPath $marker)) { throw 'Flect persisted Home data did not survive a forced update.' }
+          if ((Get-Content -LiteralPath $settingsFile -Raw | ConvertFrom-Json).General.AutoUpdate -ne $false) {
+            throw 'Flect settings did not survive a forced update.'
+          }
+          Assert-FlectRegistered
+          Write-Host 'PASS: Flect official uninstaller/reinstaller update cycle preserved data and restored registrations.'
+
+          Invoke-Scoop -Arguments @('uninstall', 'flect')
+          if (Test-Path -LiteralPath $appRoot) { throw 'Flect app directory remains after uninstall.' }
+          if (Test-Path -LiteralPath "$classes\CLSID\$shellClsid") { throw 'Flect shell CLSID remains registered after uninstall.' }
+          if (Test-Path -LiteralPath "$classes\CLSID\$previewClsid") { throw 'Flect preview CLSID remains registered after uninstall.' }
+          if (Test-Path -LiteralPath "$classes\CLSID\$previewHtmlClsid") { throw 'Flect HTML preview CLSID remains registered after uninstall.' }
+          if (Test-Path -LiteralPath "$classes\AppID\$previewAppId") { throw 'Flect preview AppID remains registered after uninstall.' }
+          if (Test-Path -LiteralPath "$classes\*\shellex\ContextMenuHandlers\Flect") { throw 'Flect Explorer context-menu registration remains after uninstall.' }
+          if ([Environment]::GetEnvironmentVariable('FLECT_HOME', 'User')) { throw 'FLECT_HOME was not removed by Scoop uninstall.' }
+          if (-not (Test-Path -LiteralPath $marker)) { throw 'Flect persisted Home data was removed without --purge.' }
+          Write-Host 'PASS: Flect uninstaller removed Explorer registrations and Scoop removed its app files; persisted data survived.'
