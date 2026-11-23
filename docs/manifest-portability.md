@@ -16,6 +16,17 @@
 - Evidence: [manifest](../bucket/orfeo.json), [Scoop extraction workflow](../.github/workflows/orfeo-scoop-extraction-experiments.yml), and [Portable TEMP diagnostic](../.github/workflows/orfeo-portable-temp-test.yml).
 
 
+### Hearth 0.4.3 — Official Portable ZIP
+
+- The manifest uses the official `Hearth-0.4.3-Portable.zip` release asset. GitHub publishes its SHA-256 digest as `9c97f763ce164280253dc209a5c1f509c4b1880fa36becb05b06a3f1b8cd699d`.
+- Source inspection confirms the archive is created from the contents of `dist/Hearth` using paths relative to that directory. The build script writes `portable.dat` beside `Hearth.exe`; no guessed `extract_dir` is needed.
+- In `main.py`, the presence of `portable.dat` selects `<application directory>\\data` for the SQLite database, application data, caches, backups, and WebView2 storage. The manifest therefore persists the exact `data` directory through Scoop's `persist` mechanism.
+- The Inno Setup package was not selected: its script registers Explorer context-menu handlers and language information under HKCU. The official Portable ZIP is documented as requiring no installation or registry changes.
+- Hearth uses pywebview with the Microsoft Edge WebView2 Evergreen Runtime. The manifest documents this prerequisite and does not install the unrelated Fixed Version Runtime automatically.
+- The dedicated Windows GitHub Actions lifecycle workflow validates Scoop checkver/autoupdate, installs the archive, checks the executable and portable marker, verifies the Start Menu shortcut, and tests data retention through uninstall and reinstall.
+- Scope: the workflow tests Scoop's package lifecycle on a disposable GitHub Actions Windows runner. It does not claim to qualify every GUI feature or replace testing on a clean physical Windows installation.
+- Evidence: [manifest](../bucket/hearth.json), [lifecycle workflow](../.github/workflows/hearth-scoop-lifecycle-test.yml), [upstream release](https://github.com/rheme18/Hearth/releases/tag/0.4.3), [portable packaging script](https://github.com/rheme18/Hearth/blob/main/make_portable.py), [application data-path logic](https://github.com/rheme18/Hearth/blob/main/main.py), and [Inno Setup definition](https://github.com/rheme18/Hearth/blob/main/installer/Hearth.iss).
+
 ## Portable candidate lifecycle checks — November 19, 2026
 
 ### Framecalm 0.5.3
