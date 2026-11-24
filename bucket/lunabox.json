@@ -1,18 +1,18 @@
 {
-    "version": "2.1.0",
+    "version": "2.1.2",
     "description": "Native visual novel library manager with playtime tracking, statistics, imports, backups and sync.",
     "homepage": "https://github.com/Saramanda9988/LunaBox",
     "license": "AGPL-3.0",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Saramanda9988/LunaBox/releases/download/v2.1.0/LunaBox-2.1.0-windows-amd64-portable.zip",
-            "hash": "c5e0c71fcb15150688fa90ba572df2476494609aec5758efc809041075774fce",
-            "extract_dir": "LunaBox-2.1.0-windows-amd64-portable"
+            "url": "https://github.com/Saramanda9988/LunaBox/releases/download/v2.1.2/LunaBox-2.1.2-windows-amd64-portable.zip",
+            "hash": "95801fbc1c1ab73b93d54b2d4905200b98c9fa648ea877305e65c2975fe7c344",
+            "extract_dir": "LunaBox-2.1.2-windows-amd64-portable"
         },
         "arm64": {
-            "url": "https://github.com/Saramanda9988/LunaBox/releases/download/v2.1.0/LunaBox-2.1.0-windows-arm64-portable.zip",
-            "hash": "9c4ee5273f09caf20c53d6efaebe865cf7c9fdaae1c5b243515a5e4a377e7bd0",
-            "extract_dir": "LunaBox-2.1.0-windows-arm64-portable"
+            "url": "https://github.com/Saramanda9988/LunaBox/releases/download/v2.1.2/LunaBox-2.1.2-windows-arm64-portable.zip",
+            "hash": "9bba96ac626b351e8542d4204643974fe62a46e1571f54ef9e737df320ce2045",
+            "extract_dir": "LunaBox-2.1.2-windows-arm64-portable"
         }
     },
     "bin": "LunaBox.exe",
