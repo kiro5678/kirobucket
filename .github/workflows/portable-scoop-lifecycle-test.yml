@@ -13,6 +13,8 @@ on:
       - "bucket/serein.json"
       - "bucket/mole.json"
       - "bucket/kitab.json"
+      - "bucket/screenveil.json"
+      - "bucket/kestryl.json"
       - ".github/workflows/portable-scoop-lifecycle-test.yml"
   push:
     branches:
@@ -69,7 +71,7 @@ jobs:
           $manifestDir = Join-Path $localBucket 'bucket'
           New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
 
-          $manifests = @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')
+          $manifests = @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')
           foreach ($name in $manifests) {
             $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
             if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
@@ -102,7 +104,7 @@ jobs:
             throw "Scoop checkver.ps1 was not found: $checkver"
           }
 
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')) {
             Write-Host "Checking $name version, autoupdate URL, and SHA-256 template"
             & $checkver $name $manifestDir -ForceUpdate -ThrowError
             Write-Host "PASS: checkver and forced autoupdate completed for $name."
@@ -111,7 +113,7 @@ jobs:
       - name: Install all portable manifests
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')) {
             Write-Host "Installing $name with Scoop"
             scoop install $name
             if ($LASTEXITCODE -ne 0) {
@@ -130,6 +132,8 @@ jobs:
             @{ Name = 'Serein'; App = 'serein'; RelativeExe = 'serein.exe'; Shortcut = 'Serein.lnk' },
             @{ Name = 'Mole'; App = 'mole'; RelativeExe = 'mo.exe'; Shortcut = $null },
             @{ Name = 'Kitab'; App = 'kitab'; RelativeExe = 'kitab.exe'; Shortcut = 'Kitab Reader.lnk' }
+            @{ Name = 'ScreenVeil'; App = 'screenveil'; RelativeExe = 'ScreenVeil.exe'; Shortcut = 'ScreenVeil.lnk' },
+            @{ Name = 'Kestryl'; App = 'kestryl'; RelativeExe = 'Kestryl.exe'; Shortcut = 'Kestryl.lnk' }
           )
 
           $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
@@ -240,7 +244,7 @@ jobs:
       - name: Uninstall all apps and verify persisted Tasket++ data
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')) {
             Write-Host "Uninstalling $name"
             scoop uninstall $name
             if ($LASTEXITCODE -ne 0) {
@@ -260,4 +264,4 @@ jobs:
           if (-not (Test-Path -LiteralPath $kitabMarker -PathType Leaf)) {
             throw 'Scoop uninstall removed Kitab persistent data.'
           }
-          Write-Host 'PASS: all five apps uninstalled; Tasket++ and Kitab persistent data survived uninstall.'
+          Write-Host 'PASS: all nine apps uninstalled; Tasket++ and Kitab persistent data survived uninstall.'
