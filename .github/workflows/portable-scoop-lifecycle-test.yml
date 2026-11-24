@@ -335,9 +335,6 @@ jobs:
           foreach ($name in @('screenveil', 'kestryl')) {
             Write-Host "Checking $name version and SHA-256 autoupdate"
             & $checkver $name $manifestDir -ForceUpdate -ThrowError
-            if ($LASTEXITCODE -ne 0) {
-              throw "Scoop checkver failed for $name (exit code $LASTEXITCODE)."
-            }
           }
 
       - name: Install ScreenVeil and Kestryl
