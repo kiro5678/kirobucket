@@ -26,7 +26,7 @@
 | Media & Audio/Video | 62 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 49 | [View](#network-dns) |
-| Network Security | 11 | [View](#network-security) |
+| Network Security | 12 | [View](#network-security) |
 | Notch | 32 | [View](#notch) |
 | Notes & Knowledge | 27 | [View](#notes-knowledge) |
 | Other Utilities | 141 | [View](#other-utilities) |
@@ -45,7 +45,7 @@
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
 | Windows Customization | 100 | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 50 | [View](#windows-privacy-tweaks) |
+| Windows Privacy & Tweaks | 51 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
 **Total unique categorized manifests: 1292**
 
@@ -731,6 +731,7 @@ Desktop software focused on piano learning, music reading, music theory, and ins
 | --- | --- | --- | --- | --- | --- |
 | [ai-security-monitor](../bucket/ai-security-monitor.json) | 0.8.5 | 64bit: 8.4 MiB | 2026-10-19 | Open-source desktop security monitor for Windows with network connection analysis, threat-intelligence feeds, and firewall management. | [Homepage](https://github.com/markku636/ai-security-monitor) |
 | [fort-firewall](../bucket/fort-firewall.json) | 3.21.0 | 7.9 MiB | 2026-11-17 | An effective firewall for Windows with per-application rules, traffic statistics, speed limits and its own driver. | [Homepage](https://github.com/tnodir/fort) |
+| [kestryl](../bucket/kestryl.json) | 1.8.3 | 64bit: 17.7 MiB | 2026-11-24 | Windows network security monitor with per-program traffic analysis, threat alerts, and firewall controls. | [Homepage](https://github.com/HacanAle/Kestryl) |
 | [minimal-firewall](../bucket/minimal-firewall.json) | 2.8.6 | 1.8 MiB | 2026-10-11 | A lightweight frontend for Windows Firewall. | [Homepage](https://github.com/deminimis/minimalfirewall) |
 | [peerblock](../bucket/peerblock.json) | 1.2.0.693 | 2.3 MiB | 2020-01-19 | An IP filter for Windows 7/10, forked from PeerGuardian 2 | [Homepage](https://forums.peerblock.com/) |
 | [sordum-bluelife-hosts-editor](../bucket/sordum-bluelife-hosts-editor.json) | 1.6 | 1.1 MiB | 2026-06-17 | A simple app that allows for easy changes to the hosts file. | [Homepage](https://www.sordum.org/bluelifehosts-editor) |
@@ -1471,6 +1472,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [nixthis](../bucket/nixthis.json) | 0.42.2 | 569.0 KiB | 2026-10-04 | Portable Windows ad, suggestion, and privacy filter manager with reversible changes. | [Homepage](https://github.com/builtbybel/NixThis) |
 | [oo-appbuster](../bucket/oo-appbuster.json) | 3.1.1029 | — | 2026-11-10 | Portable utility for reviewing, removing and restoring built-in and third-party Windows apps. | [Homepage](https://www.oo-software.com/en/ooappbuster) |
 | [oo-shutup10](../bucket/oo-shutup10.json) | 3.7.1143 | — | 2026-11-10 | Portable privacy utility for reviewing and changing Windows 10 and 11 settings. | [Homepage](https://www.oo-software.com/en/shutup10) |
+| [screenveil](../bucket/screenveil.json) | 0.2.1 | 64bit: 4.9 MiB | 2026-11-24 | A Windows privacy curtain that blurs or covers the screen with a keyboard shortcut. | [Homepage](https://github.com/SalmaGz/ScreenVeil-Download) |
 | [optimizerduck](../bucket/optimizerduck.json) | 2.29.0 | 83.3 MiB | 2026-10-07 | A free, open-source Windows optimization tool focused on performance, privacy, and simplicity. | [Homepage](https://github.com/itsfatduck/optimizerDuck) |
 | [softwareok-prevent-turn-off](../bucket/softwareok-prevent-turn-off.json) | 3.63 | 64bit: 264.2 KiB | 2026-05-13 | Prevent Windows from shutting down or entering sleep mode. | [Homepage](https://www.softwareok.com/?Download=PreventTurnOff) |
 | [reg-organizer](../bucket/reg-organizer.json) | 9.96 | 26.0 MiB | 2026-10-20 | Windows maintenance, registry cleanup, and optimization utility | [Homepage](https://www.chemtable.com/organizer.htm) |
