@@ -15,8 +15,6 @@ on:
       - "bucket/kitab.json"
       - "bucket/screenveil.json"
       - "bucket/kestryl.json"
-      - "bucket/screenveil.json"
-      - "bucket/kestryl.json"
       - ".github/workflows/portable-scoop-lifecycle-test.yml"
   push:
     branches:
@@ -135,7 +133,7 @@ jobs:
             @{ Name = 'Parabolic'; App = 'parabolic'; RelativeExe = 'Nickvision.Parabolic.WinUI.exe'; Shortcut = 'Parabolic.lnk' },
             @{ Name = 'Serein'; App = 'serein'; RelativeExe = 'serein.exe'; Shortcut = 'Serein.lnk' },
             @{ Name = 'Mole'; App = 'mole'; RelativeExe = 'mo.exe'; Shortcut = $null },
-            @{ Name = 'Kitab'; App = 'kitab'; RelativeExe = 'kitab.exe'; Shortcut = 'Kitab Reader.lnk' }
+            @{ Name = 'Kitab'; App = 'kitab'; RelativeExe = 'kitab.exe'; Shortcut = 'Kitab Reader.lnk' },
             @{ Name = 'ScreenVeil'; App = 'screenveil'; RelativeExe = 'ScreenVeil.exe'; Shortcut = 'ScreenVeil.lnk' },
             @{ Name = 'Kestryl'; App = 'kestryl'; RelativeExe = 'Kestryl.exe'; Shortcut = 'Kestryl.lnk' }
           )
