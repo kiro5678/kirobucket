@@ -267,3 +267,124 @@ jobs:
             throw 'Scoop uninstall removed Kitab persistent data.'
           }
           Write-Host 'PASS: all nine apps uninstalled; Tasket++ and Kitab persistent data survived uninstall.'
+
+  requested-manifests:
+    name: ScreenVeil and Kestryl Scoop lifecycle (${{ matrix.shell }})
+    runs-on: windows-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install Scoop and seed an isolated test bucket
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-requested-manifests'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          scoop config gh_token $env:GITHUB_TOKEN
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-requested-manifests'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          foreach ($name in @('screenveil', 'kestryl')) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Required manifest is missing: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket
+            git commit -m 'Seed isolated ScreenVeil and Kestryl test bucket'
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket $bucketUrl
+
+      - name: Verify versions and forced autoupdate hashes
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-requested-manifests\bucket'
+          foreach ($name in @('screenveil', 'kestryl')) {
+            Write-Host "Checking $name version and SHA-256 autoupdate"
+            & $checkver $name $manifestDir -ForceUpdate -ThrowError
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop checkver failed for $name (exit code $LASTEXITCODE)."
+            }
+          }
+
+      - name: Install ScreenVeil and Kestryl
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('screenveil', 'kestryl')) {
+            Write-Host "Installing $name with Scoop"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop install failed for $name (exit code $LASTEXITCODE)."
+            }
+          }
+
+      - name: Verify executable paths and Start Menu shortcuts
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checks = @(
+            @{ Name = 'ScreenVeil'; App = 'screenveil'; RelativeExe = 'ScreenVeil.exe'; Shortcut = 'ScreenVeil.lnk' },
+            @{ Name = 'Kestryl'; App = 'kestryl'; RelativeExe = 'Kestryl.exe'; Shortcut = 'Kestryl.lnk' }
+          )
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          foreach ($check in $checks) {
+            $exe = Join-Path $env:SCOOP "apps\$($check.App)\current\$($check.RelativeExe)"
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "$($check.Name) executable is missing after Scoop install: $exe"
+            }
+            Write-Host "PASS: $($check.Name) executable: $exe"
+            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue |
+              Select-Object -First 1
+            if ($null -eq $shortcut) {
+              throw "$($check.Name) Start Menu shortcut is missing: $($check.Shortcut)"
+            }
+            Write-Host "PASS: $($check.Name) shortcut: $($shortcut.FullName)"
+          }
+
+      - name: Uninstall ScreenVeil and Kestryl
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('screenveil', 'kestryl')) {
+            scoop uninstall $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)."
+            }
+            $appDir = Join-Path $env:SCOOP "apps\$name"
+            if (Test-Path -LiteralPath $appDir) {
+              throw "$name application directory remains after Scoop uninstall: $appDir"
+            }
+            Write-Host "PASS: $name uninstalled."
+          }
+
