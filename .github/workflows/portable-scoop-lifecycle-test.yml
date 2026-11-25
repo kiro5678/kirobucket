@@ -394,6 +394,10 @@ jobs:
           Write-Host 'PASS: WallpaperSuite picker and video-player payloads are present.'
 
           $nordApp = Join-Path $env:SCOOP 'apps\nordtorrent\current'
+          if (-not (Test-Path -LiteralPath (Join-Path $nordApp 'run-nordtorrent.cmd') -PathType Leaf)) {
+            throw 'NordTorrent official run-nordtorrent.cmd launcher is missing.'
+          }
+          Write-Host 'PASS: NordTorrent official Windows launcher is present.'
           $nordPersist = Join-Path $env:SCOOP 'persist\nordtorrent'
           foreach ($relative in @('data', 'downloads')) {
             $appPath = Join-Path $nordApp $relative
