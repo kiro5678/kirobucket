@@ -1,17 +1,17 @@
 {
     "$schema": "https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json",
-    "version": "0.1.924-beta",
+    "version": "0.1.925-beta",
     "description": "Desktop app for running, fine-tuning, and serving local LLMs and diffusion models, including GGUF and MLX.",
     "homepage": "https://unsloth.ai/",
     "license": "AGPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.924-beta/Unsloth-Desktop-Windows.exe",
-            "hash": "dcd5f7f4402faab0fe109f8c2074ac460263e147933f71c062745040fa1b5e87"
+            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.925-beta/Unsloth-Desktop-Windows.exe",
+            "hash": "6d8be9711b78c0df9b6d53a9c6600f2fb45f5c914d4c0eea5c4ed5a6062a006f"
         },
         "arm64": {
-            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.924-beta/Unsloth-Desktop-Windows-ARM64.exe",
-            "hash": "51ededbf7b9217922cc3b5be8348dc49927a4942bd907a51216416b46a182676"
+            "url": "https://github.com/unslothai/unsloth/releases/download/v0.1.925-beta/Unsloth-Desktop-Windows-ARM64.exe",
+            "hash": "eec158e9dc4ae9bfe486d625240918150fb233be33f6922044cc1d4ed5bf606f"
         }
     },
     "installer": {

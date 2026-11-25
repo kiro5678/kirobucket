@@ -1,10 +1,10 @@
 {
-    "version": "0.1.25",
+    "version": "0.1.26",
     "description": "Native desktop music player for local files, playlists, lyrics, plugins, and podcast captions.",
     "homepage": "https://github.com/egoist/mygo-music",
     "license": "AGPL-3.0-only",
-    "url": "https://github.com/egoist/mygo-music/releases/download/v0.1.25/mygo-music-0.1.25-windows-amd64.tar.gz",
-    "hash": "21e8ce842db1f1d20b008080a77f5963e028555d10f358a486fddc93cabbe92d",
+    "url": "https://github.com/egoist/mygo-music/releases/download/v0.1.26/mygo-music-0.1.26-windows-amd64.tar.gz",
+    "hash": "917e2830793c3f8c800672724c91a4aaade5f7d4a9714a7a38e69dfa082e04a4",
     "bin": "MyGo Music.exe",
     "shortcuts": [
         [
