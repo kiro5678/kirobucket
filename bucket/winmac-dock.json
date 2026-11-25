@@ -40,5 +40,5 @@
             }
         }
     },
-    "notes": "User settings and logs are stored in %LOCALAPPDATA%\\WinMac\\Dock."
+    "notes": "Requires Windows 11 build 22621 or newer. User settings and logs are stored in %LOCALAPPDATA%\\WinMac\\Dock."
 }
