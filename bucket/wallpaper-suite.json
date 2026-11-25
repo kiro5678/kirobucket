@@ -1,0 +1,36 @@
+{
+    "##": "Extracts the official Inno Setup payload; the vendor installer is not executed.",
+    "version": "0.8.0",
+    "description": "Offline-first Windows wallpaper manager with scheduled changes, hotkeys, multi-monitor support, and a tray picker.",
+    "homepage": "https://github.com/zero1-spec/wallpaper-picker",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/zero1-spec/wallpaper-picker/releases/download/v0.8.0/WallpaperSetup-0.8.0.exe",
+            "hash": "3994aea742f18558870d8a9c49187b7d2ceaa8d22c7170da97e30313f6538968"
+        }
+    },
+    "innosetup": true,
+    "bin": "walld.exe",
+    "shortcuts": [
+        [
+            "walld.exe",
+            "WallpaperSuite"
+        ]
+    ],
+    "checkver": {
+        "github": "https://github.com/zero1-spec/wallpaper-picker"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/zero1-spec/wallpaper-picker/releases/download/v$version/WallpaperSetup-$version.exe",
+                "hash": {
+                    "url": "https://api.github.com/repos/zero1-spec/wallpaper-picker/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == '$basename')].digest"
+                }
+            }
+        }
+    },
+    "notes": "The installer’s initial launch and startup-registration tasks are not run. Launch walld.exe from the shortcut; enable Start with Windows from the tray menu if needed. Settings and wallpaper data remain under %APPDATA%\\WallpaperPicker after Scoop uninstall."
+}
