@@ -13,6 +13,12 @@ on:
       - "bucket/serein.json"
       - "bucket/mole.json"
       - "bucket/kitab.json"
+      - "bucket/screenveil.json"
+      - "bucket/kestryl.json"
+      - "bucket/winmac-dock.json"
+      - "bucket/wallpaper-suite.json"
+      - "bucket/nordtorrent.json"
+      - "bucket/stalker-search.json"
       - ".github/workflows/portable-scoop-lifecycle-test.yml"
   push:
     branches:
@@ -25,6 +31,12 @@ on:
       - "bucket/serein.json"
       - "bucket/mole.json"
       - "bucket/kitab.json"
+      - "bucket/screenveil.json"
+      - "bucket/kestryl.json"
+      - "bucket/winmac-dock.json"
+      - "bucket/wallpaper-suite.json"
+      - "bucket/nordtorrent.json"
+      - "bucket/stalker-search.json"
       - ".github/workflows/portable-scoop-lifecycle-test.yml"
   workflow_dispatch:
 
@@ -69,7 +81,7 @@ jobs:
           $manifestDir = Join-Path $localBucket 'bucket'
           New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
 
-          $manifests = @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')
+          $manifests = @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')
           foreach ($name in $manifests) {
             $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
             if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
@@ -102,7 +114,7 @@ jobs:
             throw "Scoop checkver.ps1 was not found: $checkver"
           }
 
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')) {
             Write-Host "Checking $name version, autoupdate URL, and SHA-256 template"
             & $checkver $name $manifestDir -ForceUpdate -ThrowError
             Write-Host "PASS: checkver and forced autoupdate completed for $name."
@@ -111,7 +123,7 @@ jobs:
       - name: Install all portable manifests
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')) {
             Write-Host "Installing $name with Scoop"
             scoop install $name
             if ($LASTEXITCODE -ne 0) {
@@ -129,7 +141,9 @@ jobs:
             @{ Name = 'Parabolic'; App = 'parabolic'; RelativeExe = 'Nickvision.Parabolic.WinUI.exe'; Shortcut = 'Parabolic.lnk' },
             @{ Name = 'Serein'; App = 'serein'; RelativeExe = 'serein.exe'; Shortcut = 'Serein.lnk' },
             @{ Name = 'Mole'; App = 'mole'; RelativeExe = 'mo.exe'; Shortcut = $null },
-            @{ Name = 'Kitab'; App = 'kitab'; RelativeExe = 'kitab.exe'; Shortcut = 'Kitab Reader.lnk' }
+            @{ Name = 'Kitab'; App = 'kitab'; RelativeExe = 'kitab.exe'; Shortcut = 'Kitab Reader.lnk' },
+            @{ Name = 'ScreenVeil'; App = 'screenveil'; RelativeExe = 'ScreenVeil.exe'; Shortcut = 'ScreenVeil.lnk' },
+            @{ Name = 'Kestryl'; App = 'kestryl'; RelativeExe = 'Kestryl.exe'; Shortcut = 'Kestryl.lnk' }
           )
 
           $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
@@ -240,7 +254,7 @@ jobs:
       - name: Uninstall all apps and verify persisted Tasket++ data
         run: |
           $ErrorActionPreference = 'Stop'
-          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab')) {
+          foreach ($name in @('framecalm', 'tasketpp', 'batteryhub', 'parabolic', 'serein', 'mole', 'kitab', 'screenveil', 'kestryl')) {
             Write-Host "Uninstalling $name"
             scoop uninstall $name
             if ($LASTEXITCODE -ne 0) {
@@ -260,4 +274,165 @@ jobs:
           if (-not (Test-Path -LiteralPath $kitabMarker -PathType Leaf)) {
             throw 'Scoop uninstall removed Kitab persistent data.'
           }
-          Write-Host 'PASS: all five apps uninstalled; Tasket++ and Kitab persistent data survived uninstall.'
+          Write-Host 'PASS: all nine apps uninstalled; Tasket++ and Kitab persistent data survived uninstall.'
+
+  requested-manifests:
+    name: Requested Windows apps Scoop lifecycle (${{ matrix.shell }})
+    runs-on: windows-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shell: [powershell, pwsh]
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Install Scoop and seed an isolated test bucket
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-requested-windows-apps'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          scoop config gh_token $env:GITHUB_TOKEN
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-requested-windows-apps'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          $manifests = @('screenveil', 'kestryl', 'winmac-dock', 'wallpaper-suite', 'nordtorrent', 'stalker-search')
+          foreach ($name in $manifests) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Required manifest is missing: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          Push-Location $localBucket
+          try {
+            git init --initial-branch=master
+            git config user.name 'GitHub Actions'
+            git config user.email 'actions@github.com'
+            git add bucket
+            git commit -m 'Seed isolated requested Windows app manifests'
+          }
+          finally {
+            Pop-Location
+          }
+
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket $bucketUrl
+
+      - name: Verify checkver and forced autoupdate hashes
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-requested-windows-apps\bucket'
+          foreach ($name in @('screenveil', 'kestryl', 'winmac-dock', 'wallpaper-suite', 'nordtorrent', 'stalker-search')) {
+            Write-Host "Checking $name version and SHA-256 autoupdate"
+            & $checkver $name $manifestDir -ForceUpdate -ThrowError
+          }
+
+      - name: Install all requested manifests
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('screenveil', 'kestryl', 'winmac-dock', 'wallpaper-suite', 'nordtorrent', 'stalker-search')) {
+            Write-Host "Installing $name with Scoop"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop install failed for $name (exit code $LASTEXITCODE)."
+            }
+          }
+
+      - name: Verify extracted executables, launchers, shortcuts, and persisted data
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checks = @(
+            @{ Name = 'ScreenVeil'; App = 'screenveil'; RelativeExe = 'ScreenVeil.exe'; Shortcut = 'ScreenVeil.lnk' },
+            @{ Name = 'Kestryl'; App = 'kestryl'; RelativeExe = 'Kestryl.exe'; Shortcut = 'Kestryl.lnk' },
+            @{ Name = 'WinMac Dock'; App = 'winmac-dock'; RelativeExe = 'WinMac.Dock.exe'; Shortcut = 'WinMac Dock.lnk' },
+            @{ Name = 'WallpaperSuite'; App = 'wallpaper-suite'; RelativeExe = 'walld.exe'; Shortcut = 'WallpaperSuite.lnk' },
+            @{ Name = 'NordTorrent'; App = 'nordtorrent'; RelativeExe = 'nordtorrent.exe'; Shortcut = 'NordTorrent.lnk' },
+            @{ Name = 'Stalker Search'; App = 'stalker-search'; RelativeExe = 'stalker-search.exe'; Shortcut = 'Stalker Search.lnk' }
+          )
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          foreach ($check in $checks) {
+            $appDir = Join-Path $env:SCOOP "apps\$($check.App)\current"
+            $exe = Join-Path $appDir $check.RelativeExe
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "$($check.Name) executable is missing after Scoop install: $exe"
+            }
+            Write-Host "PASS: $($check.Name) executable: $exe"
+
+            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue |
+              Select-Object -First 1
+            if ($null -eq $shortcut) {
+              throw "$($check.Name) Start Menu shortcut is missing: $($check.Shortcut)"
+            }
+            Write-Host "PASS: $($check.Name) shortcut: $($shortcut.FullName)"
+          }
+
+          $wallpaperDir = Join-Path $env:SCOOP 'apps\wallpaper-suite\current'
+          foreach ($relative in @('wallpicker.exe', 'wallpicker.dll', 'wallvideo.exe', 'wallvideo.dll')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $wallpaperDir $relative) -PathType Leaf)) {
+              throw "WallpaperSuite is missing a required companion file: $relative"
+            }
+          }
+          Write-Host 'PASS: WallpaperSuite picker and video-player payloads are present.'
+
+          $nordApp = Join-Path $env:SCOOP 'apps\nordtorrent\current'
+          if (-not (Test-Path -LiteralPath (Join-Path $nordApp 'run-nordtorrent.cmd') -PathType Leaf)) {
+            throw 'NordTorrent official run-nordtorrent.cmd launcher is missing.'
+          }
+          Write-Host 'PASS: NordTorrent official Windows launcher is present.'
+          $nordPersist = Join-Path $env:SCOOP 'persist\nordtorrent'
+          foreach ($relative in @('data', 'downloads')) {
+            $appPath = Join-Path $nordApp $relative
+            $persistPath = Join-Path $nordPersist $relative
+            if (-not (Test-Path -LiteralPath $appPath -PathType Container)) {
+              throw "NordTorrent persisted folder is not linked into the app directory: $relative"
+            }
+            New-Item -ItemType Directory -Path $persistPath -Force | Out-Null
+            $marker = Join-Path $persistPath 'kirobucket-persist-test.txt'
+            Set-Content -LiteralPath $marker -Value 'persisted' -Encoding utf8
+            if (-not (Test-Path -LiteralPath (Join-Path $appPath 'kirobucket-persist-test.txt') -PathType Leaf)) {
+              throw "NordTorrent cannot access its persisted $relative folder."
+            }
+          }
+          Write-Host 'PASS: NordTorrent data and downloads are linked to Scoop persist.'
+
+      - name: Uninstall all requested apps and verify NordTorrent data retention
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('screenveil', 'kestryl', 'winmac-dock', 'wallpaper-suite', 'nordtorrent', 'stalker-search')) {
+            Write-Host "Uninstalling $name"
+            scoop uninstall $name
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed for $name (exit code $LASTEXITCODE)."
+            }
+            $appDir = Join-Path $env:SCOOP "apps\$name"
+            if (Test-Path -LiteralPath $appDir) {
+              throw "$name application directory remains after Scoop uninstall: $appDir"
+            }
+          }
+
+          foreach ($relative in @('data', 'downloads')) {
+            $marker = Join-Path $env:SCOOP "persist\nordtorrent\$relative\kirobucket-persist-test.txt"
+            if (-not (Test-Path -LiteralPath $marker -PathType Leaf)) {
+              throw "Scoop uninstall removed NordTorrent's persisted $relative folder."
+            }
+          }
+          Write-Host 'PASS: six apps uninstalled; NordTorrent data and downloads survived.'
