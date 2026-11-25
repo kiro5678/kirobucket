@@ -12,7 +12,7 @@
 | Desktop Docks | 8 | [View](#desktop-docks) |
 | Developer & Technical Tools | 59 | [View](#developer-technical-tools) |
 | Disk Monitor | 10 | [View](#disk-monitor) |
-| Download Managers | 25 | [View](#download-managers) |
+| Download Managers | 26 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 78 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
@@ -33,7 +33,7 @@
 | Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
-| Security | 44 | [View](#security) |
+| Security | 45 | [View](#security) |
 | Speech-to-Text (STT) | 8 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
 | Sync & Backup | 13 | [View](#sync-backup) |
@@ -44,10 +44,10 @@
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 100 | [View](#windows-customization) |
+| Windows Customization | 101 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 51 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1294**
+**Total unique categorized manifests: 1297**
 
 
 ## Android & Device Tools
@@ -167,7 +167,7 @@
 | [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
 | [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | 122.5 MiB | 2026-09-26 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
 | [stack-dock](../bucket/stack-dock.json) | 0.2.0-beta | 64bit: 2.3 MiB | 2026-11-18 | Customizable Windows dock for apps, games, files, folders, and links. | [Homepage](https://github.com/TNVR-HSN/stack-dock) |
-| [winmac-dock](../bucket/winmac-dock.json) | 0.9.2 | 64bit: 83.2 MiB / arm64: 79.3 MiB | 2026-11-12 | Standalone WinUI 3 dock for Windows 11 with macOS-style magnification and native Windows visuals. | [Homepage](https://github.com/Asteski/WinMac-Dock) |
+| [winmac-dock](../bucket/winmac-dock.json) | 1.0.0 | 64bit: 83.3 MiB / arm64: 79.4 MiB | 2026-11-22 | Standalone WinUI 3 dock for Windows 11 with macOS-style magnification and native Windows visuals. | [Homepage](https://github.com/Asteski/WinMac-Dock) |
 | [wisp](../bucket/wisp.json) | 0.8.2 | — | — | Windows 11 dock and keyboard launcher that replaces the taskbar. | [Homepage](https://github.com/SumirSeth/wisp) |
 
 ## Developer & Technical Tools
@@ -270,6 +270,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [omniget-tomhowtf](../bucket/omniget-tomhowtf.json) | 0.10.1 | 64bit: 116.5 MiB | 2026-09-21 | Desktop download manager and local MCP server for downloads, media, files, chats, and developer tools. | [Homepage](https://getomniget.com) |
 | [prism-download-manager](../bucket/prism-download-manager.json) | 1.2.4 | 16.5 MiB | 2026-11-01 | Open-source download manager with multi-connection downloads, browser integration, video downloads and torrents. | [Homepage](https://github.com/FortoGraphy/prism-download-manager) |
 | [nanaget](../bucket/nanaget.json) | 1.3.1609.0 | 3.8 MiB | 2026-09-20 | Lightweight file transfer utility based on aria2 and XAML Islands. | [Homepage](https://github.com/M2Team/NanaGet) |
+| [nordtorrent](../bucket/nordtorrent.json) | 0.3.0 | 4.5 MiB | 2026-11-23 | Self-hosted BitTorrent client with a web panel, torrent management, a media library, and Android TV streaming. | [Homepage](https://github.com/JonathanNet/NordTorrent) |
 | [qbittorrent](../bucket/qbittorrent.json) | 5.3.0 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 1.2.x). | [Homepage](https://www.qbittorrent.org) |
 | [qbittorrent-lt20](../bucket/qbittorrent-lt20.json) | 5.2.4 | 64bit: — | — | Free and reliable P2P BitTorrent client (libtorrent 2.0.x). | [Homepage](https://www.qbittorrent.org) |
 | [rayburst](../bucket/rayburst.json) | 4.1.1 | 64bit: 24.6 MiB / arm64: 21.8 MiB | 2026-10-25 | A full-featured download manager — rebuilt from the ground up (formerly Motrix Next). | [Homepage](https://rayburst.pages.dev) |
@@ -1083,6 +1084,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [sandboxie-plus](../bucket/sandboxie-plus.json) | 1.18.8 | 23.8 MiB | 2026-10-17 | Sandboxie Plus sandboxing software for Windows. | [Homepage](https://github.com/sandboxie-plus/Sandboxie) |
 | [softwareok-smarttextcrypter](../bucket/softwareok-smarttextcrypter.json) | 1.04 | 64bit: 315.0 KiB | 2026-10-18 | Encrypt and decrypt text. | [Homepage](https://www.softwareok.com/?Download=SmartTextCrypter) |
 | [snitch](../bucket/snitch.json) | 1.6.4 | 189.3 MiB | 2026-10-23 | Privacy-focused real-time network monitor and application firewall with per-process traffic attribution, local traffic history, and opt-in IP threat intelligence. | [Homepage](https://github.com/aixisstudio/Snitch) |
+| [stalker-search](../bucket/stalker-search.json) | 1.0 | 5.3 MiB | 2026-11-24 | Local-first Windows privacy and OSINT scanner for personal exposure audits, with a companion Firefox-based browser extension. | [Homepage](https://github.com/Venky7514/Stalker-Search) |
 | [sordum-askadmin](../bucket/sordum-askadmin.json) | 2.1 | 1.2 MiB | 2026-09-07 | Block access to chosen applications, files, and folder contents. | [Homepage](https://www.sordum.org/7941/askadmin-v2-1/) |
 | [sordum-bluelife-keyfreeze](../bucket/sordum-bluelife-keyfreeze.json) | 1.4 | 911.7 KiB | 2024-12-02 | A free Windows application that blocks your keyboard and mouse without “locking” the screen. | [Homepage](https://www.sordum.org/7921/bluelife-keyfreeze-v1-4-block-keyboard-and-mouse/) |
 | [sordum-defender-exclusion-tool](../bucket/sordum-defender-exclusion-tool.json) | 1.4 | 534.4 KiB | 2025-06-23 | Sordum's Defender Exclusion Tool. Add/Remove exclusions to Windows Defender. | [Homepage](https://www.sordum.org/10636/defender-exclusion-tool-v1-4/) |
@@ -1430,6 +1432,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [vovsoft-window-resizer](../bucket/vovsoft-window-resizer.json) | 5.0 | 2.7 MiB | 2026-09-17 | Portable edition of Vovsoft Window Resizer. | [Homepage](https://vovsoft.com/software/window-resizer/) |
 | [wallpaper](../bucket/wallpaper.json) | 0.3.4 | 64bit: 4.7 MiB / arm64: 4.0 MiB | 2026-10-23 | Dynamic desktop wallpaper player with a native Windows settings interface. | [Homepage](https://github.com/Alpenl/wallpaper) |
 | [wallpaper-changer](../bucket/wallpaper-changer.json) | 5.4.1 | 64bit: 45.3 MiB | 2026-08-15 | Free wallpaper manager for Windows with multi-monitor collage and live video wallpaper support. | [Homepage](https://github.com/klysman08/wallpaper-changer-windows) |
+| [wallpaper-suite](../bucket/wallpaper-suite.json) | 0.8.0 | 64bit: 75.9 MiB | 2026-11-25 | Offline-first Windows wallpaper manager with scheduled changes, hotkeys, multi-monitor support, and a tray picker. | [Homepage](https://github.com/zero1-spec/wallpaper-picker) |
 | [wincux](../bucket/wincux.json) | 1.1.0 | 5.7 MiB | 2026-04-21 | Windows 11-style desktop enhancement application for wallpapers and Rainmeter skins. | [Homepage](https://github.com/samcuxx/WinCux) |
 | [windhawk](../bucket/windhawk.json) | 2.0.0-alpha.8 | 142.0 MiB | 2025-12-08 | Customization framework for Windows programs. | [Homepage](https://windhawk.net/) |
 | [wingodarktray](../bucket/wingodarktray.json) | 2.3.1 | 64bit: 9.1 MiB / 32bit: 8.6 MiB / arm64: 8.3 MiB | 2025-09-18 | System tray app for toggling Windows light and dark themes. | [Homepage](https://github.com/5mdt/WinGoDarkTray) |
