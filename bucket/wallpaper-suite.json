@@ -7,7 +7,7 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/zero1-spec/wallpaper-picker/releases/download/v0.8.0/WallpaperSetup-0.8.0.exe",
-            "hash": "3994aea742f18558870d8a9c49187b7d2ceaa8d22c7170da97e30313f6538968"
+            "hash": "b8123e58fe7bc0101dc03216b545ca4791f8bacdbfc7bb7e1ef7af1f550637d0"
         }
     },
     "innosetup": true,
