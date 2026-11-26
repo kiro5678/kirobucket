@@ -1,4 +1,4 @@
-name: Inspect SafeZone Checkver Page
+name: Inspect SafeZone Checkver Sources
 
 on:
   push:
@@ -14,37 +14,28 @@ jobs:
   inspect:
     runs-on: windows-latest
     steps:
-      - name: Inspect HTML received by PowerShell and Scoop-style WebClient
+      - name: Inspect resource page response and official ZIP metadata
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $url = 'https://safezone.cc/resources/security-check-by-glax24.25/'
-          $response = Invoke-WebRequest -Uri $url -UseBasicParsing
-          $content = [string]$response.Content
-          Write-Host "IWR_STATUS=$([int]$response.StatusCode)|Length=$($content.Length)|Encoding=$($response.RawContentLength)"
-          foreach ($term in @('Security Check', 'included upd', '31.08.2026', '1.4.0.58')) {
-            $index = $content.IndexOf($term, [StringComparison]::OrdinalIgnoreCase)
-            Write-Host "TERM=$term|Index=$index"
-            if ($index -ge 0) {
-              $start = [Math]::Max(0, $index - 220)
-              $length = [Math]::Min(650, $content.Length - $start)
-              Write-Host "EXCERPT=$($content.Substring($start, $length))"
-            }
+          $pageUrl = 'https://safezone.cc/resources/security-check-by-glax24.25/'
+          $zipUrl = 'https://tools.safezone.cc/glax24/SecurityCheck/SecurityCheck.zip'
+          $page = Invoke-WebRequest -Uri $pageUrl -UseBasicParsing
+          Write-Host "PAGE_STATUS=$([int]$page.StatusCode)|Length=$($page.Content.Length)"
+          Write-Host "PAGE_HEAD=$($page.Content.Substring(0, [Math]::Min(3200, $page.Content.Length)))"
+
+          $head = Invoke-WebRequest -Uri $zipUrl -Method Head -UseBasicParsing
+          foreach ($name in @('Last-Modified', 'Content-Length', 'Content-Type', 'ETag')) {
+            Write-Host "ZIP_HEADER_$name=$($head.Headers[$name])"
           }
 
-          $client = [System.Net.WebClient]::new()
+          $zip = Join-Path $env:RUNNER_TEMP 'securitycheck-metadata.zip'
+          Invoke-WebRequest -Uri $zipUrl -OutFile $zip -UseBasicParsing
+          Write-Host "ZIP_SHA256=$((Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant())"
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
           try {
-            $client.Headers.Add('User-Agent', 'Scoop/1.0')
-            $client.Headers.Add('Referer', 'https://safezone.cc/')
-            $webClientContent = $client.DownloadString($url)
-            Write-Host "WEBCLIENT_LENGTH=$($webClientContent.Length)"
-            foreach ($term in @('Security Check', 'included upd', '31.08.2026', '1.4.0.58')) {
-              $index = $webClientContent.IndexOf($term, [StringComparison]::OrdinalIgnoreCase)
-              Write-Host "WEBCLIENT_TERM=$term|Index=$index"
-              if ($index -ge 0) {
-                $start = [Math]::Max(0, $index - 220)
-                $length = [Math]::Min(650, $webClientContent.Length - $start)
-                Write-Host "WEBCLIENT_EXCERPT=$($webClientContent.Substring($start, $length))"
-              }
+            foreach ($entry in $archive.Entries) {
+              Write-Host "ZIP_ENTRY=$($entry.FullName)|Length=$($entry.Length)|LastWriteTime=$($entry.LastWriteTime.ToString('o'))"
             }
-          } finally { $client.Dispose() }
+          } finally { $archive.Dispose() }
