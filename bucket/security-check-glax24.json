@@ -12,7 +12,8 @@
         ]
     ],
     "notes": [
-        "Requires administrator privileges. The executable is not Authenticode-signed."
+        "Requires administrator privileges.",
+        "The executable is not Authenticode-signed."
     ],
     "checkver": {
         "url": "https://tools.safezone.cc/glax24/SecurityCheck/SecurityCheck.zip",
