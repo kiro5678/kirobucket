@@ -21,8 +21,10 @@
             "$lastModified = [string]$response.Headers['Last-Modified']",
             "if ([string]::IsNullOrWhiteSpace($lastModified)) { throw 'SecurityCheck ZIP response has no Last-Modified header.' }",
             "try { $updated = [DateTimeOffset]::Parse($lastModified).UtcDateTime.ToString('yyyy.MM.dd') } catch { throw \"Invalid SecurityCheck Last-Modified value: $lastModified\" }",
-            "\"1.4.0.58.$updated\""
-        ]
+            "\"version=1.4.0.58.$updated\""
+        ],
+        "regex": "version=(?<version>[0-9.]+)",
+        "replace": "${version}"
     },
     "autoupdate": {
         "url": "https://tools.safezone.cc/glax24/SecurityCheck/SecurityCheck.zip",
