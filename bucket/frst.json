@@ -25,7 +25,8 @@
         }
     },
     "notes": [
-        "Portable executable. The official download page does not publish a version number; checkver reads the PE file version from the current official 64-bit download."
+        "Portable executable. The official download page does not publish a version number; checkver reads the PE file version from the current official 64-bit download.",
+        "The official 32-bit and 64-bit executables are not Authenticode-signed."
     ],
     "checkver": {
         "url": "https://www.bleepingcomputer.com/download/farbar-recovery-scan-tool/",
