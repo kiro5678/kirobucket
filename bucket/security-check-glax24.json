@@ -16,7 +16,7 @@
     ],
     "checkver": {
         "url": "https://safezone.cc/resources/security-check-by-glax24.25/",
-        "regex": "v\\.([0-9.]+) \\[[^]]+\\] - included upd \\(([0-9]{2})\\.([0-9]{2})\\.([0-9]{4})\\)",
+        "regex": "v\\.([0-9.]+) \\[[^\\]]+\\] - included upd \\(([0-9]{2})\\.([0-9]{2})\\.([0-9]{4})\\)",
         "replace": "${1}.${4}.${3}.${2}"
     },
     "autoupdate": {
