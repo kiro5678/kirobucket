@@ -1,0 +1,69 @@
+name: Requested SecurityCheck and FRST Source Inspection
+
+on:
+  push:
+    branches:
+      - "manifest-inspection/**"
+    paths:
+      - ".github/workflows/inspect-securitycheck-frst.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download and inspect SecurityCheck ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $zip = Join-Path $env:RUNNER_TEMP 'SecurityCheck.zip'
+          $extract = Join-Path $env:RUNNER_TEMP 'SecurityCheck-extracted'
+          Invoke-WebRequest -Uri 'https://tools.safezone.cc/glax24/SecurityCheck/SecurityCheck.zip' -OutFile $zip
+          $item = Get-Item -LiteralPath $zip
+          Write-Host "SECURITYCHECK_ZIP_SIZE=$($item.Length)"
+          Write-Host "SECURITYCHECK_ZIP_SHA256=$((Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant())"
+          Expand-Archive -LiteralPath $zip -DestinationPath $extract -Force
+          $files = @(Get-ChildItem -LiteralPath $extract -File -Recurse | Sort-Object FullName)
+          if ($files.Count -eq 0) { throw 'SecurityCheck ZIP contains no files.' }
+          foreach ($file in $files) {
+            $relative = $file.FullName.Substring($extract.Length).TrimStart('\')
+            Write-Host "SECURITYCHECK_FILE=$relative|$($file.Length)"
+            if ($file.Extension -ieq '.exe') {
+              $signature = Get-AuthenticodeSignature -LiteralPath $file.FullName
+              Write-Host "SECURITYCHECK_EXE=$relative|FileVersion=$($file.VersionInfo.FileVersion)|ProductVersion=$($file.VersionInfo.ProductVersion)|Signature=$($signature.Status)|Signer=$($signature.SignerCertificate.Subject)"
+            }
+          }
+          if (-not (Get-ChildItem -LiteralPath $extract -Filter 'SecurityCheck.exe' -File -Recurse)) {
+            throw 'SecurityCheck.exe was not found in the extracted archive.'
+          }
+
+      - name: Download and inspect both official FRST executables
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $downloads = @(
+            @{ Name = 'FRST.exe'; Url = 'https://download.bleepingcomputer.com/farbar/FRST.exe' },
+            @{ Name = 'FRST64.exe'; Url = 'https://download.bleepingcomputer.com/farbar/FRST64.exe' }
+          )
+          foreach ($download in $downloads) {
+            $path = Join-Path $env:RUNNER_TEMP $download.Name
+            Invoke-WebRequest -Uri $download.Url -OutFile $path
+            $file = Get-Item -LiteralPath $path
+            if ($file.Length -lt 100KB) { throw "$($download.Name) is unexpectedly small: $($file.Length) bytes" }
+            $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+            $signature = Get-AuthenticodeSignature -LiteralPath $path
+            Write-Host "FRST_FILE=$($download.Name)|Size=$($file.Length)|SHA256=$hash|FileVersion=$($file.VersionInfo.FileVersion)|ProductVersion=$($file.VersionInfo.ProductVersion)|Signature=$($signature.Status)|Signer=$($signature.SignerCertificate.Subject)"
+            $stream = [System.IO.File]::OpenRead($path)
+            try {
+              $reader = [System.IO.BinaryReader]::new($stream)
+              $mz = [System.Text.Encoding]::ASCII.GetString($reader.ReadBytes(2))
+              if ($mz -ne 'MZ') { throw "$($download.Name) is not a PE executable." }
+            } finally {
+              if ($reader) { $reader.Dispose() } else { $stream.Dispose() }
+            }
+          }
