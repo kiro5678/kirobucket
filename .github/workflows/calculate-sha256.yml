@@ -1,11 +1,6 @@
 name: Calculate SHA-256 for Download URLs
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - ".github/workflows/calculate-sha256.yml"
   workflow_dispatch:
     inputs:
       urls:
@@ -29,17 +24,9 @@ jobs:
         env:
           URLS_INPUT: ${{ inputs.urls }}
           DEFAULT_URLS: |
-            https://ntcore.com/files/RebelDotNET.zip
-            https://ntcore.com/files/DriverList.zip
-            https://ntcore.com/files/VirtualRegManager.zip
-            https://ntcore.com/files/DynLogger_x86.zip
-            https://ntcore.com/files/DynLogger_x64.zip
-            https://ntcore.com/files/PE_Detective.zip
-            https://ntcore.com/files/WIM_Installer.zip
-            https://ntcore.com/files/ScreenWriter.msi
-            https://ntcore.com/files/SNSRemover.zip
-            https://ntcore.com/files/NoDel.zip
-            https://ntcore.com/files/antimida_1.0.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-x64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-ARM64.zip
+            https://github.com/hatelamers/WinPinMenu/releases/download/v0.1.1/WinPinMenu-0.1.1-X86.zip
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
