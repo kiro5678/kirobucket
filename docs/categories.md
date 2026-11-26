@@ -17,7 +17,7 @@
 | File Management | 78 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
 | Local File Sharing | 2 | [View](#local-file-sharing) |
-| Forensics & Diagnostics | 37 | [View](#forensics-diagnostics) |
+| Forensics & Diagnostics | 38 | [View](#forensics-diagnostics) |
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
 | Games Tools | 16 | [View](#games-tools) |
@@ -33,7 +33,7 @@
 | Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
 | Productivity & Launchers | 36 | [View](#productivity-launchers) |
-| Security | 45 | [View](#security) |
+| Security | 46 | [View](#security) |
 | Speech-to-Text (STT) | 8 | [View](#speech-to-text-stt) |
 | Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
 | Sync & Backup | 13 | [View](#sync-backup) |
@@ -458,6 +458,7 @@ Desktop file managers and file explorers that provide a graphical way to browse,
 | [sak-utility](../bucket/sak-utility.json) | 0.9.3 | 90.0 MiB | 2026-11-16 | Portable Windows technician toolkit for profile migration, diagnostics, application management, disk and USB imaging, network and email tools. | [Homepage](https://github.com/RandyNorthrup/S.A.K.-Utility) |
 | [triagesuite](../bucket/triagesuite.json) | 0.3.0 | 64bit: 56.5 MiB / arm64: 34.9 MiB | 2026-09-20 | Rust-based forensic parsers and orchestrator for offline Velociraptor Windows triage captures. | [Homepage](https://github.com/darkoperator/TriageSuite) |
 
+| [frst](../bucket/frst.json) | 20.11.2026.1 | 32bit: 2.0 MiB / 64bit: 2.3 MiB | 2026-11-20 | Portable Windows malware-diagnosis and recovery scan tool from Farbar. | [Homepage](https://www.bleepingcomputer.com/download/farbar-recovery-scan-tool/) |
 ## Game-Specific Tools
 
 Utilities and launchers designed for a particular game or game series. General-purpose gaming utilities remain under Games Tools.
@@ -1108,6 +1109,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
 | [screenlight](../bucket/screenlight.json) | 0.1.0 | 64bit: 433.4 KiB | 2026-11-21 | Windows privacy monitor that detects screen recording, screenshots, keyboard reading, and simulated input. | [Homepage](https://github.com/Zephkek/ScreenLight) |
 
+| [security-check-glax24](../bucket/security-check-glax24.json) | 1.4.0.58.2026.08.31 | 0.5 MiB | 2026-08-31 | Portable Windows audit utility for outdated or vulnerable applications, security tools, services, and system settings. | [Homepage](https://safezone.cc/resources/security-check-by-glax24.25/) |
 ## Speech-to-Text (STT)
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
