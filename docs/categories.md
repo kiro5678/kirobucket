@@ -1109,7 +1109,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [oo-safeerase](../bucket/oo-safeerase.json) | 22.0.26169 | — | — | Securely erase files, folders, and storage devices. | [Homepage](https://www.oo-software.com/en/safeerase-hard-drive-data-secure-deletion) |
 | [screenlight](../bucket/screenlight.json) | 0.1.0 | 64bit: 433.4 KiB | 2026-11-21 | Windows privacy monitor that detects screen recording, screenshots, keyboard reading, and simulated input. | [Homepage](https://github.com/Zephkek/ScreenLight) |
 
-| [security-check-glax24](../bucket/security-check-glax24.json) | 1.4.0.58.2026.08.31 | 0.5 MiB | 2026-08-31 | Portable Windows audit utility for outdated or vulnerable applications, security tools, services, and system settings. | [Homepage](https://safezone.cc/resources/security-check-by-glax24.25/) |
+| [securitycheck-glax24](../bucket/securitycheck-glax24.json) | 1.4.0.58.2026.08.31 | 0.5 MiB | 2026-08-31 | Portable Windows audit utility for outdated or vulnerable applications, security tools, services, and system settings. | [Homepage](https://safezone.cc/resources/security-check-by-glax24.25/) |
 ## Speech-to-Text (STT)
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
