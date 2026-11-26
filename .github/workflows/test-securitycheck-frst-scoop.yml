@@ -16,12 +16,10 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout candidate manifests
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
       - name: Install Scoop and create an isolated local bucket
         shell: pwsh
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
@@ -31,7 +29,6 @@ jobs:
           Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
           Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
           $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
-          scoop config gh_token $env:GITHUB_TOKEN
 
           $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test'
           $manifestDir = Join-Path $localBucket 'bucket'
@@ -58,240 +55,46 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
           $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket'
+
           foreach ($name in @('security-check-glax24', 'frst')) {
             Write-Host "Running official Scoop checkver -ForceUpdate for $name"
             $output = @(& $checkver (Join-Path $manifestDir "$name.json") -ForceUpdate -ThrowError 2>&1 | ForEach-Object { "$_" })
             $outputText = $output -join [Environment]::NewLine
             Write-Host $outputText
-            if ($outputText -match '(?i)couldn.t\s+(match|find|retrieve)|URL .+ is not valid|failed to convert JSON|error occurred') {
+
+            if ($outputText -match "(?i)couldn't\s+(match|find|retrieve)|URL .+ is not valid|failed to convert JSON|error occurred") {
               throw "Scoop checkver reported a source or version-detection error for $name."
             }
+
             $manifest = Get-Content -LiteralPath (Join-Path $manifestDir "$name.json") -Raw | ConvertFrom-Json
-            if ([string]::IsNullOrWhiteSpace([string]$manifest.version)) { throw "$name has no version after checkver." }
-            if ($name -eq 'security-check-glax24') {
-              if ($manifest.version -notmatch '^1\.4\.0\.58\.\d{4}\.\d{2}\.\d{2}
-
-      - name: Verify the current FRST 32-bit download and SHA-256
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $manifestPath = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket\frst.json'
-          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-          $url = $manifest.architecture.'32bit'.url
-          $expected = $manifest.architecture.'32bit'.hash
-          $path = Join-Path $env:RUNNER_TEMP 'FRST-32bit-test.exe'
-          Invoke-WebRequest -Uri $url -OutFile $path
-          $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) { throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual." }
-          if ((Get-Item -LiteralPath $path).Length -lt 100KB) { throw 'FRST 32-bit download is unexpectedly small.' }
-          Write-Host "FRST_32BIT_HASH_PASS=$actual"
-
-      - name: Install both manifests through Scoop
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          foreach ($name in @('security-check-glax24', 'frst')) {
-            Write-Host "Installing $name through Scoop"
-            scoop install $name
-            if (-not $?) { throw "Scoop install failed for $name." }
-          }
-
-      - name: Verify installed executables and Start Menu shortcuts
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $checks = @(
-            @{ App = 'security-check-glax24'; Exe = 'SecurityCheck.exe'; Shortcut = 'Security Check by glax24.lnk' },
-            @{ App = 'frst'; Exe = 'FRST64.exe'; Shortcut = 'Farbar Recovery Scan Tool.lnk' }
-          )
-          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
-          foreach ($check in $checks) {
-            $exe = Join-Path $env:SCOOP "apps\$($check.App)\current\$($check.Exe)"
-            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Missing installed executable: $exe" }
-            Write-Host "INSTALL_PASS=$($check.App)|$exe"
-            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($null -eq $shortcut) { throw "Missing Start Menu shortcut: $($check.Shortcut)" }
-            Write-Host "SHORTCUT_PASS=$($shortcut.FullName)"
-          }
-
-      - name: Uninstall both manifests
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          scoop uninstall frst
-          if (-not $?) { throw 'Could not uninstall frst cleanly.' }
-          scoop uninstall security-check-glax24
-          if (-not $?) { throw 'Could not uninstall security-check-glax24 cleanly.' }
-) { throw "Unexpected SecurityCheck version: $($manifest.version)" }
-              if ($manifest.hash -notmatch '^[a-f0-9]{64}
-
-      - name: Verify the current FRST 32-bit download and SHA-256
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $manifestPath = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket\frst.json'
-          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-          $url = $manifest.architecture.'32bit'.url
-          $expected = $manifest.architecture.'32bit'.hash
-          $path = Join-Path $env:RUNNER_TEMP 'FRST-32bit-test.exe'
-          Invoke-WebRequest -Uri $url -OutFile $path
-          $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) { throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual." }
-          if ((Get-Item -LiteralPath $path).Length -lt 100KB) { throw 'FRST 32-bit download is unexpectedly small.' }
-          Write-Host "FRST_32BIT_HASH_PASS=$actual"
-
-      - name: Install both manifests through Scoop
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          foreach ($name in @('security-check-glax24', 'frst')) {
-            Write-Host "Installing $name through Scoop"
-            scoop install $name
-            if (-not $?) { throw "Scoop install failed for $name." }
-          }
-
-      - name: Verify installed executables and Start Menu shortcuts
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $checks = @(
-            @{ App = 'security-check-glax24'; Exe = 'SecurityCheck.exe'; Shortcut = 'Security Check by glax24.lnk' },
-            @{ App = 'frst'; Exe = 'FRST64.exe'; Shortcut = 'Farbar Recovery Scan Tool.lnk' }
-          )
-          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
-          foreach ($check in $checks) {
-            $exe = Join-Path $env:SCOOP "apps\$($check.App)\current\$($check.Exe)"
-            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Missing installed executable: $exe" }
-            Write-Host "INSTALL_PASS=$($check.App)|$exe"
-            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($null -eq $shortcut) { throw "Missing Start Menu shortcut: $($check.Shortcut)" }
-            Write-Host "SHORTCUT_PASS=$($shortcut.FullName)"
-          }
-
-      - name: Uninstall both manifests
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          scoop uninstall frst
-          if (-not $?) { throw 'Could not uninstall frst cleanly.' }
-          scoop uninstall security-check-glax24
-          if (-not $?) { throw 'Could not uninstall security-check-glax24 cleanly.' }
-) { throw 'SecurityCheck autoupdate did not produce a SHA-256 hash.' }
+            if ([string]::IsNullOrWhiteSpace([string]$manifest.version)) {
+              throw "$name has no version after checkver."
             }
+
+            if ($name -eq 'security-check-glax24') {
+              if ($manifest.version -notmatch '^1[.]4[.]0[.]58[.][0-9]{4}[.][0-9]{2}[.][0-9]{2}$') {
+                throw "Unexpected SecurityCheck version: $($manifest.version)"
+              }
+              if ($manifest.hash -notmatch '^[a-f0-9]{64}$') {
+                throw 'SecurityCheck autoupdate did not produce a SHA-256 hash.'
+              }
+            }
+
             if ($name -eq 'frst') {
               foreach ($arch in @('32bit', '64bit')) {
                 $entry = $manifest.architecture.$arch
-                if ($entry.url -notmatch '^https://download\.bleepingcomputer\.com/dl/.+/FRST(64)?\.exe
-
-      - name: Verify the current FRST 32-bit download and SHA-256
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $manifestPath = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket\frst.json'
-          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-          $url = $manifest.architecture.'32bit'.url
-          $expected = $manifest.architecture.'32bit'.hash
-          $path = Join-Path $env:RUNNER_TEMP 'FRST-32bit-test.exe'
-          Invoke-WebRequest -Uri $url -OutFile $path
-          $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) { throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual." }
-          if ((Get-Item -LiteralPath $path).Length -lt 100KB) { throw 'FRST 32-bit download is unexpectedly small.' }
-          Write-Host "FRST_32BIT_HASH_PASS=$actual"
-
-      - name: Install both manifests through Scoop
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          foreach ($name in @('security-check-glax24', 'frst')) {
-            Write-Host "Installing $name through Scoop"
-            scoop install $name
-            if (-not $?) { throw "Scoop install failed for $name." }
-          }
-
-      - name: Verify installed executables and Start Menu shortcuts
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $checks = @(
-            @{ App = 'security-check-glax24'; Exe = 'SecurityCheck.exe'; Shortcut = 'Security Check by glax24.lnk' },
-            @{ App = 'frst'; Exe = 'FRST64.exe'; Shortcut = 'Farbar Recovery Scan Tool.lnk' }
-          )
-          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
-          foreach ($check in $checks) {
-            $exe = Join-Path $env:SCOOP "apps\$($check.App)\current\$($check.Exe)"
-            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Missing installed executable: $exe" }
-            Write-Host "INSTALL_PASS=$($check.App)|$exe"
-            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($null -eq $shortcut) { throw "Missing Start Menu shortcut: $($check.Shortcut)" }
-            Write-Host "SHORTCUT_PASS=$($shortcut.FullName)"
-          }
-
-      - name: Uninstall both manifests
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          scoop uninstall frst
-          if (-not $?) { throw 'Could not uninstall frst cleanly.' }
-          scoop uninstall security-check-glax24
-          if (-not $?) { throw 'Could not uninstall security-check-glax24 cleanly.' }
-) { throw "FRST $arch did not receive a current official direct URL: $($entry.url)" }
-                if ($entry.hash -notmatch '^[a-f0-9]{64}
-
-      - name: Verify the current FRST 32-bit download and SHA-256
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $manifestPath = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket\frst.json'
-          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-          $url = $manifest.architecture.'32bit'.url
-          $expected = $manifest.architecture.'32bit'.hash
-          $path = Join-Path $env:RUNNER_TEMP 'FRST-32bit-test.exe'
-          Invoke-WebRequest -Uri $url -OutFile $path
-          $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) { throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual." }
-          if ((Get-Item -LiteralPath $path).Length -lt 100KB) { throw 'FRST 32-bit download is unexpectedly small.' }
-          Write-Host "FRST_32BIT_HASH_PASS=$actual"
-
-      - name: Install both manifests through Scoop
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          foreach ($name in @('security-check-glax24', 'frst')) {
-            Write-Host "Installing $name through Scoop"
-            scoop install $name
-            if (-not $?) { throw "Scoop install failed for $name." }
-          }
-
-      - name: Verify installed executables and Start Menu shortcuts
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $checks = @(
-            @{ App = 'security-check-glax24'; Exe = 'SecurityCheck.exe'; Shortcut = 'Security Check by glax24.lnk' },
-            @{ App = 'frst'; Exe = 'FRST64.exe'; Shortcut = 'Farbar Recovery Scan Tool.lnk' }
-          )
-          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
-          foreach ($check in $checks) {
-            $exe = Join-Path $env:SCOOP "apps\$($check.App)\current\$($check.Exe)"
-            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Missing installed executable: $exe" }
-            Write-Host "INSTALL_PASS=$($check.App)|$exe"
-            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($null -eq $shortcut) { throw "Missing Start Menu shortcut: $($check.Shortcut)" }
-            Write-Host "SHORTCUT_PASS=$($shortcut.FullName)"
-          }
-
-      - name: Uninstall both manifests
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          scoop uninstall frst
-          if (-not $?) { throw 'Could not uninstall frst cleanly.' }
-          scoop uninstall security-check-glax24
-          if (-not $?) { throw 'Could not uninstall security-check-glax24 cleanly.' }
-) { throw "FRST $arch has no valid SHA-256 after autoupdate." }
+                if ($entry.url -notmatch '^https://download[.]bleepingcomputer[.]com/dl/.+/FRST(64)?[.]exe$') {
+                  throw "FRST $arch did not receive a current official direct URL: $($entry.url)"
+                }
+                if ($entry.hash -notmatch '^[a-f0-9]{64}$') {
+                  throw "FRST $arch has no valid SHA-256 after autoupdate."
+                }
               }
-              if ($manifest.architecture.'32bit'.url -eq $manifest.architecture.'64bit'.url) { throw 'FRST 32-bit and 64-bit URLs must be different.' }
+              if ($manifest.architecture.'32bit'.url -eq $manifest.architecture.'64bit'.url) {
+                throw 'FRST 32-bit and 64-bit URLs must be different.'
+              }
             }
+
             Write-Host "CHECKVER_PASS=$name|Version=$($manifest.version)"
           }
 
@@ -306,8 +109,12 @@ jobs:
           $path = Join-Path $env:RUNNER_TEMP 'FRST-32bit-test.exe'
           Invoke-WebRequest -Uri $url -OutFile $path
           $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) { throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual." }
-          if ((Get-Item -LiteralPath $path).Length -lt 100KB) { throw 'FRST 32-bit download is unexpectedly small.' }
+          if ($actual -ne $expected) {
+            throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual."
+          }
+          if ((Get-Item -LiteralPath $path).Length -lt 100KB) {
+            throw 'FRST 32-bit download is unexpectedly small.'
+          }
           Write-Host "FRST_32BIT_HASH_PASS=$actual"
 
       - name: Install both manifests through Scoop
@@ -331,10 +138,14 @@ jobs:
           $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
           foreach ($check in $checks) {
             $exe = Join-Path $env:SCOOP "apps\$($check.App)\current\$($check.Exe)"
-            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Missing installed executable: $exe" }
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "Missing installed executable: $exe"
+            }
             Write-Host "INSTALL_PASS=$($check.App)|$exe"
             $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-            if ($null -eq $shortcut) { throw "Missing Start Menu shortcut: $($check.Shortcut)" }
+            if ($null -eq $shortcut) {
+              throw "Missing Start Menu shortcut: $($check.Shortcut)"
+            }
             Write-Host "SHORTCUT_PASS=$($shortcut.FullName)"
           }
 
