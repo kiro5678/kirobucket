@@ -1,0 +1,119 @@
+name: Requested SecurityCheck and FRST Scoop Test
+
+on:
+  push:
+    branches:
+      - "manifest-inspection/**"
+    paths:
+      - ".github/workflows/test-securitycheck-frst-scoop.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  scoop-test:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout candidate manifests
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop and create an isolated local bucket
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop-securitycheck-frst-test'
+          "SCOOP=$env:SCOOP" >> $env:GITHUB_ENV
+          (Join-Path $env:SCOOP 'shims') >> $env:GITHUB_PATH
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+          Invoke-RestMethod -Uri 'https://get.scoop.sh' | Invoke-Expression
+          $env:PATH = (Join-Path $env:SCOOP 'shims') + ';' + $env:PATH
+          scoop config gh_token $env:GITHUB_TOKEN
+
+          $localBucket = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test'
+          $manifestDir = Join-Path $localBucket 'bucket'
+          New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+          foreach ($name in @('security-check-glax24', 'frst')) {
+            $source = Join-Path $env:GITHUB_WORKSPACE "bucket\$name.json"
+            if (-not (Test-Path -LiteralPath $source -PathType Leaf)) {
+              throw "Required manifest is missing: $source"
+            }
+            Copy-Item -LiteralPath $source -Destination $manifestDir
+          }
+
+          git -C $localBucket init --initial-branch=master
+          git -C $localBucket config user.name 'GitHub Actions'
+          git -C $localBucket config user.email 'actions@github.com'
+          git -C $localBucket add bucket
+          git -C $localBucket commit -m 'Seed isolated requested manifest tests'
+          $bucketUrl = 'file:///' + $localBucket.Replace('\', '/')
+          scoop bucket add kirobucket-test $bucketUrl
+
+      - name: Validate checkver and refresh hashes and download URLs
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:SCOOP 'apps\scoop\current\bin\checkver.ps1'
+          $manifestDir = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket'
+          foreach ($name in @('security-check-glax24', 'frst')) {
+            Write-Host "Running official Scoop checkver -ForceUpdate for $name"
+            & $checkver (Join-Path $manifestDir "$name.json") -ForceUpdate -ThrowError
+            if ($LASTEXITCODE -ne 0) { throw "checkver failed for $name (exit code $LASTEXITCODE)." }
+            $manifest = Get-Content -LiteralPath (Join-Path $manifestDir "$name.json") -Raw | ConvertFrom-Json
+            Write-Host "CHECKVER_PASS=$name|Version=$($manifest.version)"
+          }
+
+      - name: Verify the current FRST 32-bit download and SHA-256
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $manifestPath = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket\frst.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+          $url = $manifest.architecture.'32bit'.url
+          $expected = $manifest.architecture.'32bit'.hash
+          $path = Join-Path $env:RUNNER_TEMP 'FRST-32bit-test.exe'
+          Invoke-WebRequest -Uri $url -OutFile $path
+          $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actual -ne $expected) { throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual." }
+          if ((Get-Item -LiteralPath $path).Length -lt 100KB) { throw 'FRST 32-bit download is unexpectedly small.' }
+          Write-Host "FRST_32BIT_HASH_PASS=$actual"
+
+      - name: Install both manifests through Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($name in @('security-check-glax24', 'frst')) {
+            Write-Host "Installing $name through Scoop"
+            scoop install $name
+            if ($LASTEXITCODE -ne 0) { throw "Scoop install failed for $name (exit code $LASTEXITCODE)." }
+          }
+
+      - name: Verify installed executables and Start Menu shortcuts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checks = @(
+            @{ App = 'security-check-glax24'; Exe = 'SecurityCheck.exe'; Shortcut = 'Security Check by glax24.lnk' },
+            @{ App = 'frst'; Exe = 'FRST64.exe'; Shortcut = 'Farbar Recovery Scan Tool.lnk' }
+          )
+          $programs = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs'
+          foreach ($check in $checks) {
+            $exe = Join-Path $env:SCOOP "apps\$($check.App)\current\$($check.Exe)"
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) { throw "Missing installed executable: $exe" }
+            Write-Host "INSTALL_PASS=$($check.App)|$exe"
+            $shortcut = Get-ChildItem -LiteralPath $programs -Filter $check.Shortcut -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($null -eq $shortcut) { throw "Missing Start Menu shortcut: $($check.Shortcut)" }
+            Write-Host "SHORTCUT_PASS=$($shortcut.FullName)"
+          }
+
+      - name: Uninstall both manifests
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          scoop uninstall frst
+          if ($LASTEXITCODE -ne 0) { throw 'Could not uninstall frst cleanly.' }
+          scoop uninstall security-check-glax24
+          if ($LASTEXITCODE -ne 0) { throw 'Could not uninstall security-check-glax24 cleanly.' }
