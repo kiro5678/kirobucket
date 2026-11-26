@@ -61,7 +61,7 @@ jobs:
           foreach ($name in @('security-check-glax24', 'frst')) {
             Write-Host "Running official Scoop checkver -ForceUpdate for $name"
             & $checkver (Join-Path $manifestDir "$name.json") -ForceUpdate -ThrowError
-            if ($LASTEXITCODE -ne 0) { throw "checkver failed for $name (exit code $LASTEXITCODE)." }
+            if (-not $?) { throw "checkver failed for $name." }
             $manifest = Get-Content -LiteralPath (Join-Path $manifestDir "$name.json") -Raw | ConvertFrom-Json
             Write-Host "CHECKVER_PASS=$name|Version=$($manifest.version)"
           }
@@ -88,7 +88,7 @@ jobs:
           foreach ($name in @('security-check-glax24', 'frst')) {
             Write-Host "Installing $name through Scoop"
             scoop install $name
-            if ($LASTEXITCODE -ne 0) { throw "Scoop install failed for $name (exit code $LASTEXITCODE)." }
+            if (-not $?) { throw "Scoop install failed for $name." }
           }
 
       - name: Verify installed executables and Start Menu shortcuts
@@ -114,6 +114,6 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           scoop uninstall frst
-          if ($LASTEXITCODE -ne 0) { throw 'Could not uninstall frst cleanly.' }
+          if (-not $?) { throw 'Could not uninstall frst cleanly.' }
           scoop uninstall security-check-glax24
-          if ($LASTEXITCODE -ne 0) { throw 'Could not uninstall security-check-glax24 cleanly.' }
+          if (-not $?) { throw 'Could not uninstall security-check-glax24 cleanly.' }
