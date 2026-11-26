@@ -1,4 +1,4 @@
-name: Requested SecurityCheck and FRST Scoop Test
+name: Requested SecurityCheck and FRST Scoop Test - strict verification
 
 on:
   push:
@@ -98,24 +98,29 @@ jobs:
             Write-Host "CHECKVER_PASS=$name|Version=$($manifest.version)"
           }
 
-      - name: Verify the current FRST 32-bit download and SHA-256
+      - name: Verify the current FRST 32-bit and 64-bit downloads and SHA-256
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $manifestPath = Join-Path $env:RUNNER_TEMP 'kirobucket-securitycheck-frst-test\bucket\frst.json'
           $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
-          $url = $manifest.architecture.'32bit'.url
-          $expected = $manifest.architecture.'32bit'.hash
-          $path = Join-Path $env:RUNNER_TEMP 'FRST-32bit-test.exe'
-          Invoke-WebRequest -Uri $url -OutFile $path
-          $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-          if ($actual -ne $expected) {
-            throw "FRST 32-bit SHA-256 mismatch. Expected $expected, got $actual."
+          foreach ($arch in @('32bit', '64bit')) {
+            $entry = $manifest.architecture.$arch
+            $expectedName = if ($arch -eq '64bit') { 'FRST64.exe' } else { 'FRST.exe' }
+            $path = Join-Path $env:RUNNER_TEMP "$arch-test.exe"
+            Invoke-WebRequest -Uri $entry.url -OutFile $path
+            $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -ne $entry.hash) {
+              throw "FRST $arch SHA-256 mismatch. Expected $($entry.hash), got $actual."
+            }
+            if ((Get-Item -LiteralPath $path).Length -lt 100KB) {
+              throw "FRST $arch download is unexpectedly small."
+            }
+            if ([System.IO.Path]::GetFileName($entry.url) -ne $expectedName) {
+              throw "FRST $arch URL points to the wrong binary: $($entry.url)"
+            }
+            Write-Host "FRST_$($arch.ToUpperInvariant())_HASH_PASS=$actual"
           }
-          if ((Get-Item -LiteralPath $path).Length -lt 100KB) {
-            throw 'FRST 32-bit download is unexpectedly small.'
-          }
-          Write-Host "FRST_32BIT_HASH_PASS=$actual"
 
       - name: Install both manifests through Scoop
         shell: pwsh
