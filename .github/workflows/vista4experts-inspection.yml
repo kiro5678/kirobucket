@@ -1,0 +1,61 @@
+name: Inspect Vista4Experts package
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/vista4experts-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download and extract official archive
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $url = 'https://ntcore.com/files/Vista4Experts.zip'
+          $root = Join-Path $env:RUNNER_TEMP 'vista4experts-inspection'
+          $download = Join-Path $root 'Vista4Experts.zip'
+          $payload = Join-Path $root 'payload'
+          New-Item -ItemType Directory -Path $payload -Force | Out-Null
+
+          Invoke-WebRequest -Uri $url -OutFile $download -TimeoutSec 180
+          $hash = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "SHA256: $hash"
+
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $sevenZip = (Get-Command 7z.exe -ErrorAction Stop).Source
+          }
+          & $sevenZip x $download "-o$payload" -y -bd
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip extraction failed: $LASTEXITCODE" }
+
+          $files = @(Get-ChildItem -LiteralPath $payload -File -Recurse -Force)
+          if ($files.Count -eq 0) { throw 'The extracted archive is empty.' }
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('# Vista4Experts package inspection')
+          $summary.Add("- SHA-256: $hash")
+          $summary.Add("- Extracted files: $($files.Count)")
+          $summary.Add('')
+          foreach ($file in $files) {
+            $relative = [IO.Path]::GetRelativePath($payload, $file.FullName).Replace('\','/')
+            $summary.Add("- $relative ($($file.Length) bytes)")
+            Write-Host "FILE: $relative"
+          }
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8
+          $summary | Set-Content -LiteralPath (Join-Path $root 'inspection-report.txt') -Encoding utf8
+
+      - name: Upload inspection report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: vista4experts-package-inventory
+          path: ${{ runner.temp }}/vista4experts-inspection/
+          if-no-files-found: error
+          retention-days: 7
