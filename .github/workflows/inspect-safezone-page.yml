@@ -1,0 +1,50 @@
+name: Inspect SafeZone Checkver Page
+
+on:
+  push:
+    branches:
+      - "manifest-inspection/**"
+    paths:
+      - ".github/workflows/inspect-safezone-page.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    steps:
+      - name: Inspect HTML received by PowerShell and Scoop-style WebClient
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $url = 'https://safezone.cc/resources/security-check-by-glax24.25/'
+          $response = Invoke-WebRequest -Uri $url -UseBasicParsing
+          $content = [string]$response.Content
+          Write-Host "IWR_STATUS=$([int]$response.StatusCode)|Length=$($content.Length)|Encoding=$($response.RawContentLength)"
+          foreach ($term in @('Security Check', 'included upd', '31.08.2026', '1.4.0.58')) {
+            $index = $content.IndexOf($term, [StringComparison]::OrdinalIgnoreCase)
+            Write-Host "TERM=$term|Index=$index"
+            if ($index -ge 0) {
+              $start = [Math]::Max(0, $index - 220)
+              $length = [Math]::Min(650, $content.Length - $start)
+              Write-Host "EXCERPT=$($content.Substring($start, $length))"
+            }
+          }
+
+          $client = [System.Net.WebClient]::new()
+          try {
+            $client.Headers.Add('User-Agent', 'Scoop/1.0')
+            $client.Headers.Add('Referer', 'https://safezone.cc/')
+            $webClientContent = $client.DownloadString($url)
+            Write-Host "WEBCLIENT_LENGTH=$($webClientContent.Length)"
+            foreach ($term in @('Security Check', 'included upd', '31.08.2026', '1.4.0.58')) {
+              $index = $webClientContent.IndexOf($term, [StringComparison]::OrdinalIgnoreCase)
+              Write-Host "WEBCLIENT_TERM=$term|Index=$index"
+              if ($index -ge 0) {
+                $start = [Math]::Max(0, $index - 220)
+                $length = [Math]::Min(650, $webClientContent.Length - $start)
+                Write-Host "WEBCLIENT_EXCERPT=$($webClientContent.Substring($start, $length))"
+              }
+            }
+          } finally { $client.Dispose() }
