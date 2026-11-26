@@ -41,24 +41,37 @@ jobs:
             throw 'SecurityCheck.exe was not found in the extracted archive.'
           }
 
-      - name: Download and inspect both official FRST executables
+      - name: Resolve current official FRST download endpoints and inspect both files
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $ProgressPreference = 'SilentlyContinue'
           $downloads = @(
-            @{ Name = 'FRST.exe'; Url = 'https://download.bleepingcomputer.com/farbar/FRST.exe' },
-            @{ Name = 'FRST64.exe'; Url = 'https://download.bleepingcomputer.com/farbar/FRST64.exe' }
+            @{ Name = 'FRST.exe'; Page = 'https://www.bleepingcomputer.com/download/farbar-recovery-scan-tool/dl/81/' },
+            @{ Name = 'FRST64.exe'; Page = 'https://www.bleepingcomputer.com/download/farbar-recovery-scan-tool/dl/82/' }
           )
           foreach ($download in $downloads) {
+            $page = Invoke-WebRequest -Uri $download.Page -MaximumRedirection 0 -SkipHttpErrorCheck
+            Write-Host "FRST_ENDPOINT=$($download.Name)|Status=$([int]$page.StatusCode)|Location=$($page.Headers.Location)"
+            $direct = [string]$page.Headers.Location
+            if ([string]::IsNullOrWhiteSpace($direct)) {
+              $match = [regex]::Match($page.Content, 'https?://download\.bleepingcomputer\.com/dl/[^"''\s<>]+/' + [regex]::Escape($download.Name))
+              if ($match.Success) { $direct = $match.Value }
+            }
+            if ([string]::IsNullOrWhiteSpace($direct)) {
+              $sample = ([regex]::Matches($page.Content, 'download\.bleepingcomputer\.com.{0,180}') | Select-Object -First 5 | ForEach-Object Value) -join ' || '
+              throw "Could not resolve official direct link for $($download.Name). Page status=$([int]$page.StatusCode); samples=$sample"
+            }
+            Write-Host "FRST_DIRECT=$($download.Name)|$direct"
             $path = Join-Path $env:RUNNER_TEMP $download.Name
-            Invoke-WebRequest -Uri $download.Url -OutFile $path
+            Invoke-WebRequest -Uri $direct -OutFile $path
             $file = Get-Item -LiteralPath $path
             if ($file.Length -lt 100KB) { throw "$($download.Name) is unexpectedly small: $($file.Length) bytes" }
             $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
             $signature = Get-AuthenticodeSignature -LiteralPath $path
             Write-Host "FRST_FILE=$($download.Name)|Size=$($file.Length)|SHA256=$hash|FileVersion=$($file.VersionInfo.FileVersion)|ProductVersion=$($file.VersionInfo.ProductVersion)|Signature=$($signature.Status)|Signer=$($signature.SignerCertificate.Subject)"
             $stream = [System.IO.File]::OpenRead($path)
+            $reader = $null
             try {
               $reader = [System.IO.BinaryReader]::new($stream)
               $mz = [System.Text.Encoding]::ASCII.GetString($reader.ReadBytes(2))
