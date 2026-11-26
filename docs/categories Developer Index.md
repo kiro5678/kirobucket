@@ -919,7 +919,7 @@ Neuber also lists Typograf, Visual TimeAnalyzer, and Learn to Type/TypingCenter.
 | [voke](../bucket/voke.json) |
 | [vray](../bucket/vray.json) |
 | [wagyu-music](../bucket/wagyu-music.json) |
-| [wallpaper](../bucket/wallpaper.json) |
+| [wallpaper-alpenl](../bucket/wallpaper-alpenl.json) |
 | [win-xinai-de-tools-mygo](../bucket/win-xinai-de-tools-mygo.json) |
 | [winswx](../bucket/winswx.json) |
 | [withdo](../bucket/withdo.json) |
