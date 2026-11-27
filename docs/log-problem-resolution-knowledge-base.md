@@ -13,6 +13,16 @@ This is the repository-wide maintenance record for technical problems, resolutio
 - **Scope:** These checks do not prove full Scoop install/uninstall or application launch behavior. DigUp remains a Windows beta; Noodle's Windows x64 build is also beta.
 - **Prevention:** Always terminate newly created manifest files with CRLF, use full GitHub repository URLs for `checkver.github`, and prefer tag-based checking unless a release-page regex has been verified against the exact upstream page.
 
+## 2026-11-27 — Add DeskBloom through its official Portable ZIP link
+
+- **Status:** Manifest added; archive and PR checks are pending.
+- **Affected files:** `bucket/deskbloom.json`, `docs/categories.md`, `docs/manifest-portability.md`, `docs/manifest-review.md`.
+- **Problem:** DeskBloom was initially excluded because its source-available license prohibits redistribution of copies without permission.
+- **Root cause:** The review treated publishing a Scoop recipe that points to the publisher's own GitHub release as though the bucket were re-hosting or uploading the program binary.
+- **Resolution:** Added a manifest that downloads the official `DeskBloom-4.1.3-portable.zip` directly from the upstream release URL. The manifest uses the release's published SHA-256, declares the portable executable shortcut, and identifies the license as Proprietary with a link to the upstream license. It does not mirror, upload, or include the program binary in this repository. The review blocker was removed. Documentation records the Portable ZIP's limitations: Explorer commands and the `.groups` association supplied by the Setup installer are not registered by the ZIP manifest; settings and group data remain in the user's Documents folders.
+- **Verification:** The upstream README explicitly allows sharing links to the official repository or release. GitHub publishes the v4.1.3 Portable ZIP SHA-256 as `630387278c54ebac855077bf242982a8a97aa11f3337ce013a9d0189fc2b5f95`. The manifest archive validation and Scoop PR checks are to be completed on PR #296; no install/launch test is claimed yet.
+- **Prevention:** Distinguish re-hosting/re-uploading a program from a bucket manifest that points directly to an official vendor URL. Review the license and the actual download flow separately; do not block a manifest solely because the license prohibits redistribution of copies.
+
 ## Mandatory rule
 
 Whenever a real problem is encountered in this repository, investigate it to an evidence-supported cause and apply a fix. **After the problem has been resolved, add an entry to this file in the same task.** Do not finish the task with a fix that exists only in chat, a commit message, or an unrecorded workflow run.
