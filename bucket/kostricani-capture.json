@@ -14,16 +14,16 @@
                     "Kostricani Capture.exe",
                     "Kostricani Capture"
                 ]
+            ],
+            "pre_install": [
+                "$setupFiles = @(Get-ChildItem -LiteralPath $dir -File -Recurse -Filter 'Kostricani-Capture-Setup-1.0.1-Windows-x64.exe' -Force)",
+                "if ($setupFiles.Count -ne 1) { throw \"Expected one nested NSIS setup executable; found $($setupFiles.Count).\" }",
+                "Expand-7zipArchive $setupFiles[0].FullName $dir",
+                "if (!(Test-Path -LiteralPath (Join-Path $dir 'Kostricani Capture.exe') -PathType Leaf)) { throw 'Kostricani Capture.exe was not found in the extracted NSIS payload.' }",
+                "if (!(Test-Path -LiteralPath (Join-Path $dir 'resources\\app.asar') -PathType Leaf)) { throw 'resources\\app.asar was not found in the extracted NSIS payload.' }",
+                "Remove-Item -LiteralPath (Join-Path $dir 'Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta') -Recurse -Force -ErrorAction SilentlyContinue",
+                "Remove-Item -LiteralPath (Join-Path $dir 'Uninstall.exe') -Force -ErrorAction SilentlyContinue"
             ]
         }
-    },
-    "pre_install": [
-        "$setupFiles = @(Get-ChildItem -LiteralPath $dir -File -Recurse -Filter 'Kostricani-Capture-Setup-1.0.1-Windows-x64.exe' -Force)",
-        "if ($setupFiles.Count -ne 1) { throw \"Expected one nested NSIS setup executable; found $($setupFiles.Count).\" }",
-        "Expand-7zipArchive $setupFiles[0].FullName $dir",
-        "if (!(Test-Path -LiteralPath (Join-Path $dir 'Kostricani Capture.exe') -PathType Leaf)) { throw 'Kostricani Capture.exe was not found in the extracted NSIS payload.' }",
-        "if (!(Test-Path -LiteralPath (Join-Path $dir 'resources\\app.asar') -PathType Leaf)) { throw 'resources\\app.asar was not found in the extracted NSIS payload.' }",
-        "Remove-Item -LiteralPath (Join-Path $dir 'Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta') -Recurse -Force -ErrorAction SilentlyContinue",
-        "Remove-Item -LiteralPath (Join-Path $dir 'Uninstall.exe') -Force -ErrorAction SilentlyContinue"
-    ]
+    }
 }
