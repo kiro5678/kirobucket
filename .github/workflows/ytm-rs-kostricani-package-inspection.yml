@@ -44,6 +44,13 @@ jobs:
               ExpectedHash = ''
             },
             [PSCustomObject]@{
+              Name = 'kostricani-capture-direct-setup-1.0.1'
+              Url = 'https://scr.kostricani.com/Kostricani-Capture-Setup-1.0.1-Windows-x64.exe'
+              Type = 'EXE'
+              ExpectedHash = ''
+              Optional = $true
+            },
+            [PSCustomObject]@{
               Name = 'kostricani-orbit-0.3.0'
               Url = 'https://kostricani.com/orbit-app/Orbit-0.3.0-Windows-x64.exe'
               Type = 'EXE'
@@ -80,6 +87,7 @@ jobs:
               Executables = @()
               Signature = ''
               Error = ''
+              Optional = [bool]$case.Optional
             }
 
             try {
@@ -129,8 +137,12 @@ jobs:
                 }
               }
 
-              if ($case.Name -eq 'kostricani-capture-0.1.5') {
-                $setupFiles = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Filter 'Kostricani-Capture-Setup-*.exe' -Force -ErrorAction SilentlyContinue)
+              if ($case.Name -like 'kostricani-capture-*') {
+                if ($case.Type -eq 'EXE') {
+                  $setupFiles = @((Get-Item -LiteralPath $download))
+                } else {
+                  $setupFiles = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Filter 'Kostricani-Capture-Setup-*.exe' -Force -ErrorAction SilentlyContinue)
+                }
                 foreach ($setup in $setupFiles) {
                   $setupListing = Join-Path $appRoot 'capture-setup-listing.txt'
                   & $sevenZip l -slt $setup.FullName 2>&1 | Set-Content -LiteralPath $setupListing -Encoding utf8
@@ -155,7 +167,7 @@ jobs:
                 }
               }
 
-              $result | Add-Member -NotePropertyName NestedExtractions -NotePropertyValue @($nestedReports)
+              $result.NestedExtractions = @($nestedReports)
               $supportingDocs = [System.Collections.Generic.List[object]]::new()
               $docPatterns = @('README.md', 'RELEASE.json', 'SHA256SUMS', 'VERIFICATION.md', 'package.json', 'README-win32.txt', 'README.txt')
               $searchRoots = @($extractDir, $nestedRoot) | Where-Object { Test-Path -LiteralPath $_ -PathType Container }
@@ -167,7 +179,22 @@ jobs:
                   })
                 }
               }
-              $result | Add-Member -NotePropertyName SupportingDocs -NotePropertyValue @($supportingDocs)
+              if ($case.Name -eq 'kostricani-hdd-rescue-0.14.0') {
+                $appRootPath = Join-Path $extractDir 'resources/app'
+                if (Test-Path -LiteralPath $appRootPath -PathType Container) {
+                  $sourceFiles = @(Get-ChildItem -LiteralPath $appRootPath -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in @('.js', '.cjs', '.mjs') -and $_.Length -le 250000 })
+                  foreach ($sourceFile in $sourceFiles) {
+                    $matches = @(Select-String -LiteralPath $sourceFile.FullName -Pattern 'app\.setPath|app\.getPath|userData|AppData|autoUpdater|update-electron-app' -Context 2,2 -ErrorAction SilentlyContinue)
+                    if ($matches.Count -gt 0) {
+                      $supportingDocs.Add([PSCustomObject]@{
+                        Path = [IO.Path]::GetRelativePath($appRootPath, $sourceFile.FullName).Replace('\\', '/')
+                        Content = (($matches | ForEach-Object { $_.ToString() }) -join [Environment]::NewLine)
+                      })
+                    }
+                  }
+                }
+              }
+              $result.SupportingDocs = @($supportingDocs)
 
               if (Test-Path -LiteralPath (Join-Path $extractDir 'portable.txt')) {
                 $result.PortableMarker = $true
@@ -216,6 +243,9 @@ jobs:
             if (Test-Path -LiteralPath $extractDir) {
               Remove-Item -LiteralPath $extractDir -Recurse -Force
             }
+            if (Test-Path -LiteralPath $nestedRoot) {
+              Remove-Item -LiteralPath $nestedRoot -Recurse -Force
+            }
           }
 
           $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
@@ -232,8 +262,8 @@ jobs:
             'File inventories, signatures, and 7-Zip logs are included in the artifact.'
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
-          if (@($results | Where-Object { $_.Error }).Count -gt 0) {
-            throw 'One or more package downloads or integrity checks failed.'
+          if (@($results | Where-Object { $_.Error -and -not $_.Optional }).Count -gt 0) {
+            throw 'One or more required package downloads or integrity checks failed.'
           }
 
       - name: Upload inspection results
