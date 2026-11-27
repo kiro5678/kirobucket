@@ -127,12 +127,18 @@ jobs:
 
           if (Test-Path -LiteralPath $installDir) {
             $remaining = @(Get-ChildItem -LiteralPath $installDir -Force -Recurse -ErrorAction SilentlyContinue)
-            if ($remaining.Count -gt 0) {
-              Write-Host 'Files still present after the NSIS cleanup process exited:'
-              $remaining | ForEach-Object { Write-Host $_.FullName }
-              throw "The NSIS uninstaller left files under the Scoop target: $installDir"
+            $unexpected = @($remaining | Where-Object { $_.Name -ne 'Uninstall NoteGraph Board.exe' })
+            if ($unexpected.Count -gt 0) {
+              Write-Host 'Application files still present after the NSIS uninstaller finished:'
+              $unexpected | ForEach-Object { Write-Host $_.FullName }
+              throw "The NSIS uninstaller left application payload files under: $installDir"
             }
-            Remove-Item -LiteralPath $installDir -Force -ErrorAction SilentlyContinue
+
+            # Scoop removes the complete version directory after Invoke-Installer returns.
+            Remove-Item -LiteralPath $installDir -Recurse -Force -ErrorAction Stop
+          }
+          if (Test-Path -LiteralPath $installDir) {
+            throw "Scoop-style version-directory cleanup failed: $installDir"
           }
 
           $desktop = [Environment]::GetFolderPath('Desktop')
