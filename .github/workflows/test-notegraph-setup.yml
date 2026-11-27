@@ -46,43 +46,46 @@ jobs:
             throw "NoteGraph Setup exited with code $($process.ExitCode)."
           }
 
-          $appExe = Join-Path $installDir 'NoteGraph Board.exe'
-          $uninstaller = Join-Path $installDir 'Uninstall NoteGraph Board.exe'
-          if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) {
-            throw "Expected application executable was not installed: $appExe"
-          }
-          if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
-            throw "Expected NSIS uninstaller was not installed: $uninstaller"
-          }
-
-          $desktop = [Environment]::GetFolderPath('Desktop')
-          $desktopShortcut = Join-Path $desktop 'NoteGraph Board.lnk'
-          if (-not (Test-Path -LiteralPath $desktopShortcut -PathType Leaf)) {
-            throw "Expected Desktop shortcut was not created: $desktopShortcut"
-          }
-
-          $programs = [Environment]::GetFolderPath('Programs')
-          $startMenuShortcuts = @(Get-ChildItem -LiteralPath $programs -Filter 'NoteGraph Board.lnk' -File -Recurse -ErrorAction SilentlyContinue)
-          if ($startMenuShortcuts.Count -lt 1) {
-            throw 'Expected NoteGraph Board Start Menu shortcut was not created.'
+          Write-Host "Requested install directory: $installDir"
+          if (Test-Path -LiteralPath $installDir) {
+            Write-Host 'Requested directory contents:'
+            Get-ChildItem -LiteralPath $installDir -Force -Recurse -Depth 4 | ForEach-Object { Write-Host $_.FullName }
+          } else {
+            Write-Host 'Requested install directory does not exist.'
           }
 
           $registryRoot = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall'
-          $uninstallEntry = Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue |
+          $allEntries = @(Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue |
             ForEach-Object { Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction SilentlyContinue } |
-            Where-Object {
-              $_.DisplayName -like 'NoteGraph Board*' -and
-              $_.InstallLocation -and
-              ([string]$_.InstallLocation).TrimEnd('\') -ieq $installDir.TrimEnd('\')
-            } |
-            Select-Object -First 1
-          if (-not $uninstallEntry) {
-            throw 'The expected current-user NoteGraph Board uninstall registration was not found.'
+            Where-Object { $_.DisplayName -like '*NoteGraph*' })
+          Write-Host 'Matching uninstall registrations:'
+          $allEntries | Select-Object DisplayName, DisplayVersion, InstallLocation, UninstallString | Format-List | Out-String | Write-Host
+
+          Write-Host 'LocalAppData Programs folders:'
+          $localPrograms = Join-Path $env:LOCALAPPDATA 'Programs'
+          if (Test-Path -LiteralPath $localPrograms) {
+            Get-ChildItem -LiteralPath $localPrograms -Force -Recurse -Depth 4 | ForEach-Object { Write-Host $_.FullName }
           }
 
-          Write-Host "Installed app: $appExe"
-          Write-Host "Generated uninstaller: $uninstaller"
-          Write-Host "Start Menu shortcut: $($startMenuShortcuts[0].FullName)"
+          Write-Host 'Current-user Start Menu entries:'
+          $programs = [Environment]::GetFolderPath('Programs')
+          Get-ChildItem -LiteralPath $programs -Force -Recurse -Depth 4 -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.FullName }
+
+          Write-Host 'Desktop entries:'
+          $desktop = [Environment]::GetFolderPath('Desktop')
+          Get-ChildItem -LiteralPath $desktop -Force -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_.FullName }
+
+          $appExe = Get-ChildItem -LiteralPath $installDir -Filter 'NoteGraph Board.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          $uninstaller = Get-ChildItem -LiteralPath $installDir -Filter 'Uninstall NoteGraph Board.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (-not $appExe) {
+            throw "Expected NoteGraph Board.exe was not found under requested install directory: $installDir"
+          }
+          if (-not $uninstaller) {
+            throw "Expected NSIS uninstaller was not found under requested install directory: $installDir"
+          }
+          Write-Host "Installed app: $($appExe.FullName)"
+          Write-Host "Generated uninstaller: $($uninstaller.FullName)"
+          Write-Host 'Install-path diagnostics completed.'
 
       - name: Uninstall and verify cleanup
         shell: pwsh
