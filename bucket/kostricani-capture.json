@@ -1,0 +1,29 @@
+{
+    "version": "0.1.5",
+    "description": "Windows screenshot capture and annotation companion. The upstream portable target extracts runtime files under %TEMP% on launch; the currently served ZIP instead contains an NSIS package that Scoop extracts into its version directory.",
+    "homepage": "https://kostricani.com/screenshot-tool/",
+    "license": {
+        "identifier": "Proprietary"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://scr.kostricani.com/Kostricani-Capture-Desktop-$version-Windows-x64-beta.zip",
+            "hash": "6a8f10e56290a18bdc85fff1bfefae8591bbc9ea4a4541e91aa0c5315a56aae8",
+            "shortcuts": [
+                [
+                    "Kostricani Capture.exe",
+                    "Kostricani Capture"
+                ]
+            ],
+            "pre_install": [
+                "$setupFiles = @(Get-ChildItem -LiteralPath $dir -File -Recurse -Filter 'Kostricani-Capture-Setup-1.0.1-Windows-x64.exe' -Force)",
+                "if ($setupFiles.Count -ne 1) { throw \"Expected one nested NSIS setup executable; found $($setupFiles.Count).\" }",
+                "Expand-7zipArchive $setupFiles[0].FullName $dir",
+                "if (!(Test-Path -LiteralPath (Join-Path $dir 'Kostricani Capture.exe') -PathType Leaf)) { throw 'Kostricani Capture.exe was not found in the extracted NSIS payload.' }",
+                "if (!(Test-Path -LiteralPath (Join-Path $dir 'resources\\app.asar') -PathType Leaf)) { throw 'resources\\app.asar was not found in the extracted NSIS payload.' }",
+                "Remove-Item -LiteralPath (Join-Path $dir 'Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta') -Recurse -Force -ErrorAction SilentlyContinue",
+                "Remove-Item -LiteralPath (Join-Path $dir 'Uninstall.exe') -Force -ErrorAction SilentlyContinue"
+            ]
+        }
+    }
+}
