@@ -47,8 +47,11 @@ jobs:
             $manifest = Join-Path $bucket $name
             if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) { throw "Manifest is missing: $manifest" }
             Write-Host "Checking $name"
-            & $checkver -App $manifest -ThrowError
-            if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed for $name." }
+            $output = @(& $checkver -App $manifest -ThrowError *>&1 | ForEach-Object { [string]$_ })
+            $outputText = $output -join [Environment]::NewLine
+            if ($outputText -match "(?i)(couldn't\\s+(retrieve|find|match)|could\\s+not\\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)") {
+              throw "Scoop reported a version-detection failure for $($name): $($Matches[0])"
+            }
           }
 
       - name: Download, hash, and inspect official Windows packages
