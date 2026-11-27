@@ -107,12 +107,76 @@ jobs:
                 $result.Extracted = $result.ExtractionExitCode -eq 0
               }
 
+              # Inspect nested payloads without running any installer or executable.
+              $nestedReports = [System.Collections.Generic.List[object]]::new()
+              $nestedRoot = Join-Path $appRoot 'nested-payloads'
+              New-Item -ItemType Directory -Path $nestedRoot -Force | Out-Null
+
+              if ($case.Name -eq 'kostricani-orbit-0.3.0') {
+                $nestedArchives = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Filter 'app-64.7z' -Force -ErrorAction SilentlyContinue)
+                foreach ($archive in $nestedArchives) {
+                  $destination = Join-Path $nestedRoot 'orbit-app'
+                  New-Item -ItemType Directory -Path $destination -Force | Out-Null
+                  $nestedLog = Join-Path $appRoot 'orbit-inner-extract.txt'
+                  & $sevenZip x $archive.FullName "-o$destination" -y -bd 2>&1 | Set-Content -LiteralPath $nestedLog -Encoding utf8
+                  $code = $LASTEXITCODE
+                  $nestedReports.Add([PSCustomObject]@{
+                    Archive = [IO.Path]::GetRelativePath($extractDir, $archive.FullName).Replace('\\', '/')
+                    Destination = 'nested-payloads/orbit-app'
+                    ExtractionExitCode = $code
+                  })
+                  if ($code -ne 0) { throw "Could not extract Orbit's embedded app-64.7z (exit code $code)." }
+                }
+              }
+
+              if ($case.Name -eq 'kostricani-capture-0.1.5') {
+                $setupFiles = @(Get-ChildItem -LiteralPath $extractDir -File -Recurse -Filter 'Kostricani-Capture-Setup-*.exe' -Force -ErrorAction SilentlyContinue)
+                foreach ($setup in $setupFiles) {
+                  $setupListing = Join-Path $appRoot 'capture-setup-listing.txt'
+                  & $sevenZip l -slt $setup.FullName 2>&1 | Set-Content -LiteralPath $setupListing -Encoding utf8
+                  $listCode = $LASTEXITCODE
+                  $nestedReports.Add([PSCustomObject]@{
+                    Archive = [IO.Path]::GetRelativePath($extractDir, $setup.FullName).Replace('\\', '/')
+                    ListingExitCode = $listCode
+                    Destination = 'nested-payloads/capture-setup'
+                  })
+                  if ($listCode -eq 0) {
+                    $destination = Join-Path $nestedRoot 'capture-setup'
+                    New-Item -ItemType Directory -Path $destination -Force | Out-Null
+                    $nestedLog = Join-Path $appRoot 'capture-setup-extract.txt'
+                    & $sevenZip x $setup.FullName "-o$destination" -y -bd 2>&1 | Set-Content -LiteralPath $nestedLog -Encoding utf8
+                    $extractCode = $LASTEXITCODE
+                    $nestedReports.Add([PSCustomObject]@{
+                      Archive = [IO.Path]::GetRelativePath($extractDir, $setup.FullName).Replace('\\', '/')
+                      ExtractionExitCode = $extractCode
+                      Destination = 'nested-payloads/capture-setup'
+                    })
+                  }
+                }
+              }
+
+              $result | Add-Member -NotePropertyName NestedExtractions -NotePropertyValue @($nestedReports)
+              $supportingDocs = [System.Collections.Generic.List[object]]::new()
+              $docPatterns = @('README.md', 'RELEASE.json', 'SHA256SUMS', 'VERIFICATION.md', 'package.json', 'README-win32.txt', 'README.txt')
+              $searchRoots = @($extractDir, $nestedRoot) | Where-Object { Test-Path -LiteralPath $_ -PathType Container }
+              foreach ($searchRoot in $searchRoots) {
+                foreach ($doc in (Get-ChildItem -LiteralPath $searchRoot -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -in $docPatterns -and $_.Length -le 150000 })) {
+                  $supportingDocs.Add([PSCustomObject]@{
+                    Path = [IO.Path]::GetRelativePath($searchRoot, $doc.FullName).Replace('\\', '/')
+                    Content = Get-Content -LiteralPath $doc.FullName -Raw
+                  })
+                }
+              }
+              $result | Add-Member -NotePropertyName SupportingDocs -NotePropertyValue @($supportingDocs)
+
               if (Test-Path -LiteralPath (Join-Path $extractDir 'portable.txt')) {
                 $result.PortableMarker = $true
               }
 
+              $inventoryRoots = @($extractDir, $nestedRoot) | Where-Object { Test-Path -LiteralPath $_ -PathType Container }
               $result.Executables = @(
-                Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force -ErrorAction SilentlyContinue |
+                foreach ($inventoryRoot in $inventoryRoots) {
+                  Get-ChildItem -LiteralPath $inventoryRoot -File -Recurse -Force -ErrorAction SilentlyContinue |
                   Where-Object { $_.Extension -ieq '.exe' } |
                   ForEach-Object {
                     $signature = Get-AuthenticodeSignature -LiteralPath $_.FullName
@@ -126,6 +190,7 @@ jobs:
                       Signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { '' }
                     }
                   }
+                }
               )
 
               if ($case.Type -eq 'EXE') {
