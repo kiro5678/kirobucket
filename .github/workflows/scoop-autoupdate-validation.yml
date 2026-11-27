@@ -6,6 +6,13 @@ on:
       - master
     paths:
       - 'bucket/magpie-search.json'
+      - 'bucket/dainvo-pdf.json'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/dainvo-pdf.json'
   workflow_dispatch:
     inputs:
       manifest:
@@ -65,8 +72,8 @@ jobs:
         shell: pwsh
         env:
           EVENT_NAME: ${{ github.event_name }}
-          MANUAL_MANIFEST: ${{ inputs.manifest || (github.event_name == 'push' && 'bucket/magpie-search.json') || '' }}
-          FORCE_UPDATE: ${{ github.event_name == 'push' || inputs.force_update || false }}
+          MANUAL_MANIFEST: ${{ inputs.manifest || (github.event_name == 'push' && 'bucket/magpie-search.json') || (github.event_name == 'pull_request' && 'bucket/dainvo-pdf.json') || '' }}
+          FORCE_UPDATE: ${{ github.event_name == 'push' || github.event_name == 'pull_request' || inputs.force_update || false }}
           GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
           MANIFESTS_JSON: ${{ toJSON(github.event.client_payload.manifests || fromJSON('[]')) }}
           SCOOP_HOME: ${{ github.workspace }}/scoop_core
