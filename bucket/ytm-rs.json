@@ -17,8 +17,11 @@
     },
     "persist": "data",
     "checkver": {
-        "url": "https://api.github.com/repos/grapedjuice/ytm-rs/releases?per_page=100",
-        "jsonpath": "$[?(@.prerelease == false && @.draft == false)][0].tag_name",
+        "script": [
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/grapedjuice/ytm-rs/releases?per_page=100' -Headers @{ 'User-Agent' = 'Scoop' }",
+            "$stable = $releases | Where-Object { -not $_.draft -and -not $_.prerelease -and $_.tag_name -match '^v[0-9.]+$' } | Sort-Object { [datetime]$_.published_at } -Descending | Select-Object -First 1",
+            "if ($stable) { $stable.tag_name }"
+        ],
         "regex": "^v(?<version>[\\d.]+)$"
     },
     "autoupdate": {
