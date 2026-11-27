@@ -7,6 +7,8 @@ on:
       - master
     paths:
       - 'bucket/kernel-mindzy007.json'
+      - 'bucket/digup.json'
+      - 'bucket/noodle.json'
       - 'bucket/droptidy.json'
       - 'bucket/diskmonitor.json'
       - 'bucket/desktopframesplus.json'
@@ -246,6 +248,8 @@ on:
       - master
     paths:
       - 'bucket/droptidy.json'
+      - 'bucket/digup.json'
+      - 'bucket/noodle.json'
       - 'bucket/diskmonitor.json'
       - 'bucket/axonhub.json'
       - 'bucket/huedra-apixelsnet.json'
