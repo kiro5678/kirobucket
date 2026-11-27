@@ -1,0 +1,39 @@
+{
+    "version": "26.11.27",
+    "description": "Windows cleanup, optimization, privacy, and maintenance utility",
+    "homepage": "https://github.com/sh1zen/win-optimizer",
+    "license": "Apache-2.0",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/sh1zen/win-optimizer/releases/download/v26.11.27/win-optimizer.Installer.exe",
+            "hash": "6c08fc00d5a063553f1d38d3d1c8b7fd792d131ab803ffb6c6cbb1009fe6f813"
+        }
+    },
+    "innosetup": true,
+    "shortcuts": [
+        [
+            "win-optimizer.exe",
+            "win-optimizer"
+        ]
+    ],
+    "post_install": [
+        "New-Item -ItemType File -Path \"$dir\\portable.marker\" -Force | Out-Null"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/sh1zen/win-optimizer/releases/latest",
+        "jsonpath": "$.tag_name",
+        "regex": "v(?<version>\\d+\\.\\d+(?:\\.\\d+)?)"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/sh1zen/win-optimizer/releases/download/v$version/win-optimizer.Installer.exe",
+                "hash": {
+                    "url": "https://api.github.com/repos/sh1zen/win-optimizer/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == '$basename')].digest"
+                }
+            }
+        }
+    },
+    "notes": "Automatic update checks are enabled by default; disable them in Settings > General > Updates and update with Scoop. App data remains in %ProgramData%\\win-optimizer."
+}
