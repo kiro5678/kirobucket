@@ -3,7 +3,7 @@
     "description": "Windows launcher for organizing and opening application shortcuts.",
     "homepage": "https://kostricani.com/orbit/",
     "license": "Unknown",
-    "url": "https://kostricani.com/orbit-app/Orbit-$version-Windows-x64.exe#/dl.7z",
+    "url": "https://kostricani.com/orbit-app/Orbit-0.3.0-Windows-x64.exe#/dl.7z",
     "hash": "94de79643cc0633ee99fc2e4aa8c32995b01e109261c4fca3bf0aadfc873383a",
     "pre_install": [
         "if (!(Test-Path -LiteralPath (Join-Path $dir '$PLUGINSDIR\\app-64.7z') -PathType Leaf)) { throw 'Orbit application payload archive was not found in the NSIS package.' }",
