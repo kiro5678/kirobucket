@@ -9,10 +9,10 @@
 | Clipboard Tools | 19 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 8 | [View](#cross-device-integration) |
-| Desktop Docks | 8 | [View](#desktop-docks) |
+| Desktop Docks | 9 | [View](#desktop-docks) |
 | Developer & Technical Tools | 59 | [View](#developer-technical-tools) |
 | Disk Monitor | 10 | [View](#disk-monitor) |
-| Download Managers | 26 | [View](#download-managers) |
+| Download Managers | 27 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
 | File Management | 79 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
@@ -41,13 +41,13 @@
 | Sysinternals Utilities | 76 | [View](#sysinternals-utilities) |
 | Text-to-Speech (TTS) | 7 | [View](#text-to-speech-tts) |
 | Text Utilities | 13 | [View](#text-utilities) |
-| Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
+| Time Tracking & Focus | 15 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 106 | [View](#windows-customization) |
+| Windows Customization | 107 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1308**
+**Total unique categorized manifests: 1312**
 
 
 ## Android & Device Tools
@@ -166,6 +166,7 @@
 | [deskripple](../bucket/deskripple.json) | 1.1.2 | 64bit: 74.4 MiB | 2026-10-14 | Folder docks for the Windows desktop that expand into grids of shortcuts. | [Homepage](https://deskripple.com) |
 | [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
 | [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | 122.5 MiB | 2026-09-26 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
+| [sidestage](../bucket/sidestage.json) | 0.3.0 | 10.8 MiB | 2026-11-23 | Edge sidebar for favourite apps and minimized windows on Windows and Linux. | [Homepage](https://github.com/danny19862025/sidestage) |
 | [stack-dock](../bucket/stack-dock.json) | 0.2.0-beta | 64bit: 2.3 MiB | 2026-11-18 | Customizable Windows dock for apps, games, files, folders, and links. | [Homepage](https://github.com/TNVR-HSN/stack-dock) |
 | [winmac-dock](../bucket/winmac-dock.json) | 1.0.0 | 64bit: 83.3 MiB / arm64: 79.4 MiB | 2026-11-22 | Standalone WinUI 3 dock for Windows 11 with macOS-style magnification and native Windows visuals. | [Homepage](https://github.com/Asteski/WinMac-Dock) |
 | [wisp](../bucket/wisp.json) | 0.8.2 | — | — | Windows 11 dock and keyboard launcher that replaces the taskbar. | [Homepage](https://github.com/SumirSeth/wisp) |
@@ -277,6 +278,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [rqbit](../bucket/rqbit.json) | 9.0.1 | 6.9 MiB | 2026-10-29 | A BitTorrent client with a desktop GUI, HTTP API and Web UI. | [Homepage](https://github.com/ikatson/rqbit) |
 | [varia](../bucket/varia.json) | 2026.8.5-1 | 64bit: 141.3 MiB | 2026-08-23 | Download manager for files, torrents and videos. | [Homepage](https://github.com/giantpinkrobots/varia) |
 | [veloxfetch](../bucket/veloxfetch.json) | 2.0.1 | 104.5 MiB | 2026-10-30 | Rust-based download manager with multi-connection downloads, browser integration, video and playlist downloads. | [Homepage](https://github.com/IlyesBs/VeloxFetch) |
+| [vidhoist](../bucket/vidhoist.json) | 1.2.0 | 46.9 MiB | 2026-11-26 | Video and audio downloader with yt-dlp and transcript-based clip search. | [Homepage](https://github.com/sagheerys/vidhoist) |
 | [vovsoft-batch-url-downloader](../bucket/vovsoft-batch-url-downloader.json) | 6.4 | 5.3 MiB | 2026-10-28 | Portable edition of Vovsoft Batch URL Downloader. | [Homepage](https://vovsoft.com/software/batch-url-downloader/) |
 | [vovsoft-download-mailbox-emails](../bucket/vovsoft-download-mailbox-emails.json) | 2.1 | 2.9 MiB | 2026-08-13 | Portable edition of Vovsoft Download Mailbox Emails. | [Homepage](https://vovsoft.com/software/download-mailbox-emails/) |
 | [yt-dlp-gui](../bucket/yt-dlp-gui.json) | 1.0.0 | 9.4 MiB | 2026-09-20 | Desktop GUI for yt-dlp with video downloads, playlists, subtitles, thumbnails, and live-chat archiving. | [Homepage](https://github.com/imsyy/yt-dlp-gui) |
@@ -1304,6 +1306,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | --- | --- | --- | --- | --- | --- |
 | [activitywatch](../bucket/activitywatch.json) | 0.14.1 | 64bit: 100.5 MiB | 2026-10-10 | Open-source automated time tracker. | [Homepage](https://activitywatch.net/) |
 | [activitywatch-tauri](../bucket/activitywatch-tauri.json) | 0.14.1 | 64bit: 59.4 MiB | 2026-10-10 | Open-source time tracker with a Tauri desktop application. | [Homepage](https://activitywatch.net/) |
+| [flip-clock](../bucket/flip-clock.json) | 1.4.0 | 53.4 MiB | 2026-11-26 | Split-flap clock for the Windows desktop. | [Homepage](https://github.com/harrycat1494/flip-clock) |
 | [softwareok-desktop-calendar-tray-ok](../bucket/softwareok-desktop-calendar-tray-ok.json) | 4.51 | 64bit: 96.1 KiB | 2026-05-08 | Calendar utility for the Windows system tray. | [Homepage](https://www.softwareok.com/?Download=Desktop.Calendar.Tray.OK) |
 | [softwareok-desktop-digital-clock](../bucket/softwareok-desktop-digital-clock.json) | 6.41 | 64bit: 455.4 KiB | 2026-10-15 | Display a digital clock on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopDigitalClock) |
 | [kalarm](../bucket/kalarm.json) | 3573 | 64bit: 151.4 MiB | 2026-10-30 | Personal alarm message, command and email scheduler application | [Homepage](https://apps.kde.org/kalarm/) |
@@ -1353,6 +1356,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [softwareok-brightness-manager-ok](../bucket/softwareok-brightness-manager-ok.json) | 1.88 | 64bit: 76.7 KiB | 2026-10-25 | Adjust screen brightness on Windows. | [Homepage](https://www.softwareok.com/?Download=Brightness.Manager.OK) |
 | [smart-hdr-manager](../bucket/smart-hdr-manager.json) | 3.0.1 | 64bit: 41.8 MiB | 2026-11-11 | Automatically switches Windows HDR for selected games and HDR videos, then restores SDR. | [Homepage](https://github.com/VantaCode420/SmartHdrManager) |
 | [softwareok-classic-desktop-clock](../bucket/softwareok-classic-desktop-clock.json) | 5.33 | 64bit: 455.9 KiB | 2026-08-25 | Display a classic desktop clock. | [Homepage](https://www.softwareok.com/?Download=ClassicDesktopClock) |
+| [overlook](../bucket/overlook.json) | 0.3.2 | 0.9 MiB | 2026-11-26 | Windows 11 desktop clock displayed behind desktop icons. | [Homepage](https://github.com/wallbangz/Overlook) |
 | [clockwork-orange](../bucket/clockwork-orange.json) | 4.7.1 | 64bit: 20.4 MiB | 2026-10-19 | Cross-platform wallpaper manager for Windows, Linux, and macOS. | [Homepage](https://github.com/ushineko/clockwork-orange) |
 | [contextmenumgrplus](../bucket/contextmenumgrplus.json) | 1.7.10 | 64bit: 78.0 MiB / arm64: 75.5 MiB | 2026-10-24 | Windows right-click context menu manager and protection utility | [Homepage](https://github.com/PLFJY/ContextMenuMgr) |
 | [coodesker](../bucket/coodesker.json) | 2.2.2.2 | 4.3 MiB | 2026-08-04 | Desktop organization tool for automatically organizing desktop icons and running tasks. | [Homepage](https://www.coodesker.com/) |
