@@ -3,8 +3,16 @@ name: ytm-rs and Kostricani package inspection
 on:
   push:
     branches:
-      - add/ytm-rs-kostricani-manifests
+      - master
     paths:
+      - ".github/workflows/ytm-rs-kostricani-package-inspection.yml"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "bucket/ytm-rs.json"
+      - "bucket/kostricani-orbit.json"
+      - "bucket/kostricani-hdd-rescue.json"
       - ".github/workflows/ytm-rs-kostricani-package-inspection.yml"
   workflow_dispatch:
 
@@ -16,6 +24,33 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 45
     steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Checkout Scoop core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ScoopInstaller/Scoop
+          ref: master
+          path: scoop_core
+
+      - name: Validate Scoop checkver for the new manifests
+        shell: pwsh
+        env:
+          SCOOP_HOME: ${{ github.workspace }}\\scoop_core
+          GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
+          $bucket = Join-Path $env:GITHUB_WORKSPACE 'bucket'
+          foreach ($name in @('ytm-rs.json', 'kostricani-orbit.json', 'kostricani-hdd-rescue.json')) {
+            $manifest = Join-Path $bucket $name
+            if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) { throw "Manifest is missing: $manifest" }
+            Write-Host "Checking $name"
+            & $checkver -App $manifest -ThrowError
+            if ($LASTEXITCODE -ne 0) { throw "Scoop checkver failed for $name." }
+          }
+
       - name: Download, hash, and inspect official Windows packages
         shell: pwsh
         run: |
@@ -42,13 +77,6 @@ jobs:
               Url = 'https://scr.kostricani.com/Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta.zip'
               Type = 'ZIP'
               ExpectedHash = ''
-            },
-            [PSCustomObject]@{
-              Name = 'kostricani-capture-direct-setup-1.0.1'
-              Url = 'https://scr.kostricani.com/Kostricani-Capture-Setup-1.0.1-Windows-x64.exe'
-              Type = 'EXE'
-              ExpectedHash = ''
-              Optional = $true
             },
             [PSCustomObject]@{
               Name = 'kostricani-orbit-0.3.0'
