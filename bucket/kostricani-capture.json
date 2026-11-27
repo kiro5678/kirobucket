@@ -5,11 +5,11 @@
     "license": "Unknown",
     "architecture": {
         "64bit": {
-            "url": "https://scr.kostricani.com/Kostricani-Capture-Desktop-0.1.5-Windows-x64.exe",
-            "hash": "b8301b97a0ce079ac2f405bca252174b7de3828e36b65b00baaa1dfb31a1a48b",
+            "url": "https://scr.kostricani.com/Kostricani-Capture-Desktop-$version-Windows-x64-beta.zip",
+            "hash": "6a8f10e56290a18bdc85fff1bfefae8591bbc9ea4a4541e91aa0c5315a56aae8",
             "shortcuts": [
                 [
-                    "Kostricani-Capture-Desktop-0.1.5-Windows-x64.exe",
+                    "Kostricani Capture.exe",
                     "Kostricani Capture"
                 ]
             ]
@@ -22,9 +22,18 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://scr.kostricani.com/Kostricani-Capture-Desktop-$version-Windows-x64.exe"
+                "url": "https://scr.kostricani.com/Kostricani-Capture-Desktop-$version-Windows-x64-beta.zip"
             }
         }
     },
-    "notes": "Electron Builder portable package. On launch, the app unpacks its runtime files under %TEMP%; this temporary extraction is expected behavior, not a Scoop install failure. The app is unsigned. The vendor has not documented a Scoop-persistable user-data directory."
+    "notes": "The upstream Electron Builder portable target extracts its app payload under %TEMP% at launch. The currently served 0.1.5 ZIP does not contain the declared portable EXE: it contains a nested NSIS Setup 1.0.1 package instead, and the direct portable EXE URL returns 404. To avoid running that installer, Scoop extracts its embedded app payload into the managed version directory and launches it directly. The %TEMP% behavior describes the upstream portable target, not this NSIS-payload fallback. The beta is unsigned.",
+    "pre_install": [
+        "$setupFiles = @(Get-ChildItem -LiteralPath $dir -File -Recurse -Filter 'Kostricani-Capture-Setup-1.0.1-Windows-x64.exe' -Force)",
+        "if ($setupFiles.Count -ne 1) { throw \"Expected one nested NSIS setup executable; found $($setupFiles.Count).\" }",
+        "Expand-7zipArchive $setupFiles[0].FullName $dir",
+        "if (!(Test-Path -LiteralPath (Join-Path $dir 'Kostricani Capture.exe') -PathType Leaf)) { throw 'Kostricani Capture.exe was not found in the extracted NSIS payload.' }",
+        "if (!(Test-Path -LiteralPath (Join-Path $dir 'resources\\app.asar') -PathType Leaf)) { throw 'resources\\app.asar was not found in the extracted NSIS payload.' }",
+        "Remove-Item -LiteralPath (Join-Path $dir 'Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta') -Recurse -Force -ErrorAction SilentlyContinue",
+        "Remove-Item -LiteralPath (Join-Path $dir 'Uninstall.exe') -Force -ErrorAction SilentlyContinue"
+    ]
 }
