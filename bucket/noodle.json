@@ -21,7 +21,13 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/noodle-rest/noodle/releases/download/v$version/noodle-windows-x86_64.exe"
+                "url": "https://github.com/noodle-rest/noodle/releases/download/v$version/noodle-windows-x86_64.exe",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/noodle-rest/noodle/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == '$basename')].digest",
+                    "regex": "^sha256:([a-fA-F0-9]{64})$"
+                }
             }
         }
     },
