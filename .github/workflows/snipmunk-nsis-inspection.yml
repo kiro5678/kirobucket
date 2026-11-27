@@ -73,18 +73,18 @@ jobs:
           @(
             '## Snipmunk NSIS extraction'
             ''
-            "- Installer SHA-256: `$actual`"
+            "- Installer SHA-256: $actual"
             '- 7-Zip listing: PASS'
             '- 7-Zip extraction: PASS'
             "- Extracted files: $($files.Count)"
-            "- Main executable: `$mainRelative`"
+            "- Main executable: $mainRelative"
             ''
             'The installer and extracted executable were not run.'
             ''
             '### Extracted files'
             ($files | Sort-Object FullName | ForEach-Object {
               $relative = [IO.Path]::GetRelativePath($extract, $_.FullName).Replace('\', '/')
-              "- `$relative` ($($_.Length) bytes)"
+              "- $relative ($($_.Length) bytes)"
             })
           ) | Set-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Encoding utf8
 
