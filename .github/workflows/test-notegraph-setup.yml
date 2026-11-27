@@ -1,0 +1,123 @@
+name: NoteGraph Setup Lifecycle Test
+
+on:
+  pull_request:
+    paths:
+      - "bucket/notegraph.json"
+      - ".github/workflows/test-notegraph-setup.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "bucket/notegraph.json"
+      - ".github/workflows/test-notegraph-setup.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  setup-lifecycle:
+    runs-on: windows-latest
+    steps:
+      - name: Download and verify official Setup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $url = 'https://github.com/MDYOUSUF20007-oss/notegraph/releases/download/latest/NoteGraph-Board-2.0.0-Windows-x64-Setup.exe'
+          $expectedHash = '2dca4dc024fe63328ae85c5601ac967c649ef2d098ba709e70a29bb5667520af'
+          $setup = Join-Path $env:RUNNER_TEMP 'NoteGraph-Board-Setup.exe'
+          Invoke-WebRequest -Uri $url -OutFile $setup
+          $actualHash = (Get-FileHash -LiteralPath $setup -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $expectedHash) {
+            throw "SHA256 mismatch. Expected $expectedHash; received $actualHash."
+          }
+          Write-Host "Official Setup SHA256 verified: $actualHash"
+
+      - name: Install into a path containing spaces
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $setup = Join-Path $env:RUNNER_TEMP 'NoteGraph-Board-Setup.exe'
+          $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraph Scoop Test\Current'
+          New-Item -ItemType Directory -Path (Split-Path -Parent $installDir) -Force | Out-Null
+          $arguments = "/S /D=$installDir"
+          $process = Start-Process -FilePath $setup -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "NoteGraph Setup exited with code $($process.ExitCode)."
+          }
+
+          $appExe = Join-Path $installDir 'NoteGraph Board.exe'
+          $uninstaller = Join-Path $installDir 'Uninstall NoteGraph Board.exe'
+          if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) {
+            throw "Expected application executable was not installed: $appExe"
+          }
+          if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
+            throw "Expected NSIS uninstaller was not installed: $uninstaller"
+          }
+
+          $desktop = [Environment]::GetFolderPath('Desktop')
+          $desktopShortcut = Join-Path $desktop 'NoteGraph Board.lnk'
+          if (-not (Test-Path -LiteralPath $desktopShortcut -PathType Leaf)) {
+            throw "Expected Desktop shortcut was not created: $desktopShortcut"
+          }
+
+          $programs = [Environment]::GetFolderPath('Programs')
+          $startMenuShortcuts = @(Get-ChildItem -LiteralPath $programs -Filter 'NoteGraph Board.lnk' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($startMenuShortcuts.Count -lt 1) {
+            throw 'Expected NoteGraph Board Start Menu shortcut was not created.'
+          }
+
+          $registryRoot = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall'
+          $uninstallEntry = Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue |
+            ForEach-Object { Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction SilentlyContinue } |
+            Where-Object {
+              $_.DisplayName -like 'NoteGraph Board*' -and
+              $_.InstallLocation -and
+              ([string]$_.InstallLocation).TrimEnd('\') -ieq $installDir.TrimEnd('\')
+            } |
+            Select-Object -First 1
+          if (-not $uninstallEntry) {
+            throw 'The expected current-user NoteGraph Board uninstall registration was not found.'
+          }
+
+          Write-Host "Installed app: $appExe"
+          Write-Host "Generated uninstaller: $uninstaller"
+          Write-Host "Start Menu shortcut: $($startMenuShortcuts[0].FullName)"
+
+      - name: Uninstall and verify cleanup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraph Scoop Test\Current'
+          $uninstaller = Join-Path $installDir 'Uninstall NoteGraph Board.exe'
+          Get-Process -Name 'NoteGraph Board' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+          $arguments = "/S _?=$installDir"
+          $process = Start-Process -FilePath $uninstaller -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "NoteGraph NSIS uninstaller exited with code $($process.ExitCode)."
+          }
+          if (Test-Path -LiteralPath $installDir) {
+            throw "The NSIS uninstaller left the Scoop target directory behind: $installDir"
+          }
+
+          $desktop = [Environment]::GetFolderPath('Desktop')
+          $desktopShortcut = Join-Path $desktop 'NoteGraph Board.lnk'
+          if (Test-Path -LiteralPath $desktopShortcut) {
+            throw "Desktop shortcut remained after uninstall: $desktopShortcut"
+          }
+
+          $programs = [Environment]::GetFolderPath('Programs')
+          $leftoverShortcuts = @(Get-ChildItem -LiteralPath $programs -Filter 'NoteGraph Board.lnk' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($leftoverShortcuts.Count -gt 0) {
+            throw "Start Menu shortcut remained after uninstall: $($leftoverShortcuts[0].FullName)"
+          }
+
+          $registryRoot = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall'
+          $leftoverEntry = Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue |
+            ForEach-Object { Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction SilentlyContinue } |
+            Where-Object { $_.DisplayName -like 'NoteGraph Board*' }
+          if ($leftoverEntry) {
+            throw 'NoteGraph Board uninstall registration remained after uninstall.'
+          }
+
+          Write-Host 'NSIS uninstall cleanup verified: target directory, shortcuts, and uninstall registration removed.'
