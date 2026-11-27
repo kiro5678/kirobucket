@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   install:
-    name: Install, verify nested ZIP extraction, and uninstall
+    name: Install, verify portable archive extraction, and uninstall
     runs-on: windows-latest
     timeout-minutes: 20
     steps:
