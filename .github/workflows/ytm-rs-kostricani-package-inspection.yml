@@ -13,6 +13,7 @@ on:
       - "bucket/ytm-rs.json"
       - "bucket/kostricani-orbit.json"
       - "bucket/kostricani-hdd-rescue.json"
+      - "bucket/kostricani-capture.json"
       - ".github/workflows/ytm-rs-kostricani-package-inspection.yml"
   workflow_dispatch:
 
@@ -43,7 +44,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $checkver = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\bin\\checkver.ps1'
           $bucket = Join-Path $env:GITHUB_WORKSPACE 'bucket'
-          foreach ($name in @('ytm-rs.json', 'kostricani-orbit.json', 'kostricani-hdd-rescue.json')) {
+          foreach ($name in @('ytm-rs.json', 'kostricani-orbit.json', 'kostricani-hdd-rescue.json', 'kostricani-capture.json')) {
             $manifest = Join-Path $bucket $name
             if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) { throw "Manifest is missing: $manifest" }
             Write-Host "Checking $name"
@@ -86,6 +87,12 @@ jobs:
               Url = 'https://scr.kostricani.com/Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta.zip'
               Type = 'ZIP'
               ExpectedHash = ''
+            },
+            [PSCustomObject]@{
+              Name = 'kostricani-capture-portable-0.1.5'
+              Url = 'https://scr.kostricani.com/Kostricani-Capture-Desktop-0.1.5-Windows-x64.exe'
+              Type = 'EXE'
+              ExpectedHash = 'b8301b97a0ce079ac2f405bca252174b7de3828e36b65b00baaa1dfb31a1a48b'
             },
             [PSCustomObject]@{
               Name = 'kostricani-orbit-0.3.0'
