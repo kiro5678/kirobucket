@@ -172,6 +172,22 @@
 
 
 
+### Requested Windows applications — 2026-11-27
+
+- [`flip-clock`](../bucket/flip-clock.json) — **Portable (official all-in-one ZIP)**: uses the v1.4.0 x64 archive and its GitHub-published SHA-256 `1d0693513e62e74599f4066cf64c0261c9ef72f1748f8291fa24a2d6a755aded`. Upstream documents that there is no installer and that the all-in-one build includes its .NET runtime. Settings are written under `%APPDATA%\\FlipClock`, outside Scoop's version directory; no Scoop persistence entry is needed.
+
+- [`sidestage`](../bucket/sidestage.json) — **Portable (official standalone x64 executable)**: the Windows release workflow copies the Cargo release binary directly to `sidestage-windows-x64-portable.exe`; it does not run the Inno Setup installer to produce this asset. The app stores its configuration under the current user's AppData path, so the manifest does not persist files inside the version directory. SHA-256: `c5bfbdbd9c77c186923f72489d69bdd2f438375ced165c4d6fce56a4d8705dc8`.
+
+- [`overlook`](../bucket/overlook.json) — **Portable (official ZIP)**: uses the stable v0.3.2 release, not the newer beta. The upstream build workflow packages `Overlook.exe`, its license and README into `Overlook.zip`; no vendor installer is involved. The app can store `Overlook.ini` beside the executable, so the manifest persists that file across Scoop updates. SHA-256: `9809e717fc5d65dfb667015c3d27953ede3390c420d40c6c65cfb79ee11fc36f`.
+
+- [`vidhoist`](../bucket/vidhoist.json) — **Portable (Inno Setup app-payload extraction)**: the manifest uses Scoop's `innosetup: true` handling on the official v1.2.0 x64 setup, with published SHA-256 `b466a437da5071d7bc3893596c7808416bf554463c78f0ee51fa9d094c322d67`. Scoop extracts the Inno `{app}` payload rather than running the vendor setup, so the HKCU `vidhoist://` URL-protocol registration and installer-created shortcuts are intentionally skipped. The manifest creates only its own Start Menu shortcut. No user data is redirected into the Scoop version directory.
+
+- **DigUp — not added:** the latest stable release does not publish a Windows package; the available Windows x64 NSIS build is v0.7.0-beta.3. Keep it in [Manifest Review](manifest-review.md) until a stable Windows package and its installation/update lifecycle can be inspected.
+
+- **NoteGraph Board — not added:** the Electron Builder portable target unpacks the application payload into Windows `TEMP` by default (its default unpack directory is a generated build UUID), rather than running from the Scoop-managed directory. The upstream desktop package also declares a proprietary license while the root license file is MIT; both concerns are recorded in [Manifest Review](manifest-review.md).
+
+- Scope: the version numbers, GitHub release digests, package-generation workflows and relevant application configuration paths were inspected. These entries still require the repository's Windows Scoop validation workflow and a real install/update/uninstall test; no GUI launch test is claimed here.
+
 ## Summary
 
 
