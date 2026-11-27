@@ -1,0 +1,65 @@
+name: Dainvo PDF Release Metadata Inspection
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/dainvo-pdf-release-metadata-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Inspect official Dainvo PDF download metadata
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - name: Read official download and product pages
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $urls = @(
+            'https://dainvo.com/downloads/?app=pdf',
+            'https://dainvo.com/pdf/'
+          )
+          $root = Join-Path $env:RUNNER_TEMP 'dainvo-pdf-release-metadata'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $summary = [System.Collections.Generic.List[string]]::new()
+          $summary.Add('# Dainvo PDF release metadata')
+          foreach ($url in $urls) {
+            $page = Invoke-WebRequest -Uri $url -MaximumRedirection 10 -TimeoutSec 120
+            $name = if ($url.Contains('downloads')) { 'downloads.html' } else { 'product.html' }
+            $path = Join-Path $root $name
+            $page.Content | Set-Content -LiteralPath $path -Encoding utf8
+            $summary.Add('')
+            $summary.Add("## $url")
+            $matches = [regex]::Matches($page.Content, '(?i)(?:https?:)?//download\.dainvo\.com/pdf/v[0-9.]+/[^"''\s<>]+')
+            if ($matches.Count -eq 0) {
+              $summary.Add('- No versioned direct PDF download URL found in the HTML.')
+            } else {
+              foreach ($match in $matches) { $summary.Add("- $($match.Value)") }
+            }
+            $versions = [regex]::Matches($page.Content, '(?i)Dainvo PDF[^\r\n]{0,100}?([0-9]+\.[0-9]+\.[0-9]+)')
+            if ($versions.Count -gt 0) {
+              foreach ($version in $versions) { $summary.Add("- Version text: $($version.Value)") }
+            }
+            $keywords = $page.Content -split '\r?\n' | Where-Object { $_ -match '(?i)pdf|version|release|download\.dainvo' } | Select-Object -First 40
+            foreach ($line in $keywords) {
+              $flat = ($line -replace '\s+', ' ').Trim()
+              if ($flat.Length -gt 500) { $flat = $flat.Substring(0,500) }
+              $summary.Add("- HTML: $flat")
+            }
+          }
+          $summary | Tee-Object -FilePath (Join-Path $root 'report.txt') | Add-Content $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload page source and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dainvo-pdf-release-metadata
+          path: ${{ runner.temp }}/dainvo-pdf-release-metadata
+          if-no-files-found: warn
+          retention-days: 7
