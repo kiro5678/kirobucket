@@ -2,7 +2,9 @@
     "version": "0.1.5",
     "description": "Windows screenshot capture and annotation companion. The upstream portable target extracts runtime files under %TEMP% on launch; the currently served ZIP instead contains an NSIS package that Scoop extracts into its version directory.",
     "homepage": "https://kostricani.com/screenshot-tool/",
-    "license": "Freeware",
+    "license": {
+        "identifier": "NOASSERTION"
+    },
     "architecture": {
         "64bit": {
             "url": "https://scr.kostricani.com/Kostricani-Capture-Desktop-$version-Windows-x64-beta.zip",
