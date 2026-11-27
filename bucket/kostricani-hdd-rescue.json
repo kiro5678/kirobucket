@@ -3,7 +3,7 @@
     "description": "Windows file recovery utility for scanning disks and recovering deleted files.",
     "homepage": "https://kostricani.com/hdd-rescue/",
     "license": "Unknown",
-    "url": "https://kostricani.com/recovery-app/HDD-Rescue-$version-Windows-x64.zip",
+    "url": "https://kostricani.com/recovery-app/HDD-Rescue-0.14.0-Windows-x64.zip",
     "hash": "d6571e7844eb2bc67da47a54708c886764cf7eb6177ddea7852641bdfb0c70b5",
     "shortcuts": [
         [
