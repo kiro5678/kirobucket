@@ -15,12 +15,12 @@ This is the repository-wide maintenance record for technical problems, resolutio
 
 ## 2026-11-27 — Add DeskBloom through its official Portable ZIP link
 
-- **Status:** Manifest added; archive and PR checks are pending.
+- **Status:** The Scoop Pull Request Handler passed all manifest checks after the URL correction; archive-path inspection remains to be rerun.
 - **Affected files:** `bucket/deskbloom.json`, `docs/categories.md`, `docs/manifest-portability.md`, `docs/manifest-review.md`.
 - **Problem:** DeskBloom was initially excluded because its source-available license prohibits redistribution of copies without permission.
-- **Root cause:** The review treated publishing a Scoop recipe that points to the publisher's own GitHub release as though the bucket were re-hosting or uploading the program binary.
+- **Root cause:** The review treated a direct upstream download link as redistribution. A separate manifest-validation issue then came from using `$version` in the base `url`; Scoop only permits that variable in `autoupdate.url`, not in the currently installed version's URL.
 - **Resolution:** Added a manifest that downloads the official `DeskBloom-4.1.3-portable.zip` directly from the upstream release URL. The manifest uses the release's published SHA-256, declares the portable executable shortcut, and identifies the license as Proprietary with a link to the upstream license. It does not mirror, upload, or include the program binary in this repository. The review blocker was removed. Documentation records the Portable ZIP's limitations: Explorer commands and the `.groups` association supplied by the Setup installer are not registered by the ZIP manifest; settings and group data remain in the user's Documents folders.
-- **Verification:** The upstream README explicitly allows sharing links to the official repository or release. GitHub publishes the v4.1.3 Portable ZIP SHA-256 as `630387278c54ebac855077bf242982a8a97aa11f3337ce013a9d0189fc2b5f95`. The manifest archive validation and Scoop PR checks are to be completed on PR #296; no install/launch test is claimed yet.
+- **Verification:** The upstream README explicitly allows sharing links to the official repository or release. GitHub publishes the v4.1.3 Portable ZIP SHA-256 as `630387278c54ebac855077bf242982a8a97aa11f3337ce013a9d0189fc2b5f95`. Scoop Pull Request Handler run [46054619485](https://github.com/kiro5678/kirobucket/actions/runs/46054619485) passed the manifest checks for DeskBloom, DigUp, and Noodle, including Lint, Description, License, Hashes, Checkver, Autoupdate, and Autoupdate Hash Extraction. Archive-path inspection and a full Scoop install/launch/uninstall test have not yet been recorded.
 - **Prevention:** Distinguish re-hosting/re-uploading a program from a bucket manifest that points directly to an official vendor URL. Review the license and the actual download flow separately; do not block a manifest solely because the license prohibits redistribution of copies.
 
 ## Mandatory rule
