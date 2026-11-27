@@ -274,6 +274,25 @@ jobs:
                 }
               }
 
+              if ($case.Name -eq 'kostricani-capture-0.1.5') {
+                $captureRoot = Join-Path $extractDir 'Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta/Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta'
+                $releaseJson = Join-Path $captureRoot 'RELEASE.json'
+                $setupExe = Join-Path $captureRoot 'Kostricani-Capture-Setup-1.0.1-Windows-x64.exe'
+                $sourcePackage = Join-Path $captureRoot 'source/desktop/package.json'
+                if (-not (Test-Path -LiteralPath $releaseJson -PathType Leaf) -or -not (Test-Path -LiteralPath $setupExe -PathType Leaf) -or -not (Test-Path -LiteralPath $sourcePackage -PathType Leaf)) {
+                  throw 'Capture ZIP is missing its release metadata, nested NSIS package, or bundled source package.'
+                }
+                $releaseInfo = Get-Content -LiteralPath $releaseJson -Raw | ConvertFrom-Json
+                $sourceInfo = Get-Content -LiteralPath $sourcePackage -Raw | ConvertFrom-Json
+                if ($releaseInfo.version -ne '0.1.5' -or $sourceInfo.version -ne '0.1.5' -or $sourceInfo.build.win.target[0].target -ne 'portable') {
+                  throw 'Capture release metadata and source do not agree on the declared 0.1.5 portable build.'
+                }
+                $payloadRoot = Join-Path $nestedRoot 'capture-setup'
+                if (-not (Test-Path -LiteralPath (Join-Path $payloadRoot 'Kostricani Capture.exe') -PathType Leaf) -or -not (Test-Path -LiteralPath (Join-Path $payloadRoot 'resources/app.asar') -PathType Leaf)) {
+                  throw 'The nested Capture NSIS package did not yield Kostricani Capture.exe and resources/app.asar.'
+                }
+              }
+
               $inventoryRoots = @($extractDir, $nestedRoot) | Where-Object { Test-Path -LiteralPath $_ -PathType Container }
               $result.Executables = @(
                 foreach ($inventoryRoot in $inventoryRoots) {
