@@ -2,6 +2,14 @@
 
 This is the repository-wide maintenance record for technical problems, resolutions, workflow changes, and CI validation history encountered while maintaining `kirobucket`.
 
+## 2026-11-27 — Identify the supplied Openote project and use Inno payload extraction
+
+- **Affected files:** `bucket/openote.json`, `docs/manifest-portability.md`, `.github/workflows/validate-manifest-archives.yml`.
+- **Problem:** The supplied Openote website belongs to `Kingdaniel4747/openote`; it is a different project from `icmric/openote`, which was initially inspected by mistake.
+- **Resolution:** Rechecked the exact website/repository and selected its latest stable Windows x64 release (v0.8.126). The publisher ships only an Inno Setup installer, not a separate Windows ZIP. The Scoop manifest uses `innosetup: true` so Scoop extracts the `{app}` payload with `innounp` without running Setup or applying its HKCU `.onotelink` file association. The app's notebook workspace remains under Documents/app support, outside the Scoop version directory.
+- **Verification:** GitHub's release API publishes the Setup SHA-256 `e7001ca49777682d415b7c2abd5adf5810582ffb024af86ed49abfd0357e2f94`. The repository archive-validation workflow was extended to run for `bucket/openote.json`; its result is checked in the PR before promotion. No GUI launch or full user-data lifecycle is claimed by static extraction alone.
+- **Prevention:** Resolve the exact website-to-repository link before reusing research from a similarly named project. For Inno Setup candidates, use Scoop's documented `innosetup: true` extraction and validate the actual `{app}` executable path; do not assume the publisher's setup routine must run.
+
 ## 2026-11-27 — Correct DigUp checkver and manifest formatting in PR #296
 
 - **Status:** Resolved in the PR branch; follow-up Pull Requests validation is required.
