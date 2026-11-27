@@ -1,6 +1,6 @@
 {
     "version": "0.1.5",
-    "description": "Windows screenshot capture and annotation companion with clipboard, PNG export, and optional image sharing.",
+    "description": "Windows screenshot capture and annotation companion. The upstream portable target extracts runtime files under %TEMP% on launch; the currently served ZIP instead contains an NSIS package that Scoop extracts into its version directory.",
     "homepage": "https://kostricani.com/screenshot-tool/",
     "license": {
         "identifier": "Proprietary"
@@ -17,9 +17,6 @@
             ]
         }
     },
-    "notes": [
-        "The upstream Electron Builder portable target extracts its app payload under %TEMP% at launch. The currently served 0.1.5 ZIP does not contain the declared portable EXE: it contains a nested NSIS Setup 1.0.1 package instead, and the direct portable EXE URL returns 404. To avoid running that installer, Scoop extracts its embedded app payload into the managed version directory and launches it directly. The %TEMP% behavior describes the upstream portable target, not this NSIS-payload fallback. The beta is unsigned. Automatic checkver/autoupdate are intentionally omitted: the publisher's declared portable EXE is missing from the served ZIP and its direct URL returns 404; the available nested NSIS build does not expose a trustworthy matching version URL."
-    ],
     "pre_install": [
         "$setupFiles = @(Get-ChildItem -LiteralPath $dir -File -Recurse -Filter 'Kostricani-Capture-Setup-1.0.1-Windows-x64.exe' -Force)",
         "if ($setupFiles.Count -ne 1) { throw \"Expected one nested NSIS setup executable; found $($setupFiles.Count).\" }",
