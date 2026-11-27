@@ -28,7 +28,7 @@
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 12 | [View](#network-security) |
 | Notch | 32 | [View](#notch) |
-| Notes & Knowledge | 27 | [View](#notes-knowledge) |
+| Notes & Knowledge | 28 | [View](#notes-knowledge) |
 | Other Utilities | 141 | [View](#other-utilities) |
 | Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
@@ -47,7 +47,7 @@
 | Windows Customization | 107 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1313**
+**Total unique categorized manifests: 1314**
 
 
 ## Android & Device Tools
@@ -798,6 +798,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [butterfly](../bucket/butterfly.json) | 2.6.1 | 64bit: 27.3 MiB | 2026-10-28 | A powerful, minimalistic, cross-platform note-taking app | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [butterfly-nightly](../bucket/butterfly-nightly.json) | 2026.10.24.1034 | 64bit: 27.4 MiB / arm64: 26.4 MiB | 2026-10-24 | A powerful, minimalistic, cross-platform note-taking app (nightly build) | [Homepage](https://github.com/LinwoodDev/Butterfly) |
 | [snoty](../bucket/snoty.json) | 1.0.0 | 57.2 MiB | 2026-11-19 | Lightweight sticky notes app with offline Whisper speech-to-text. | [Homepage](https://github.com/Brownfries/Snoty) |
+| [talkbar](../bucket/talkbar.json) | 0.3.7 | 64bit: 117.1 MiB | 2026-11-27 | Private AI meeting note taker with local recording, transcription, summaries, and searchable notes. | [Homepage](https://www.talkbar.app/) |
 | [softwareok-desktop-note-ok](../bucket/softwareok-desktop-note-ok.json) | 4.66 | 64bit: 292.3 KiB | 2026-06-13 | Create and manage notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopNoteOK) |
 | [deepown](../bucket/deepown.json) | 1.1.4 | 11.8 MiB | 2026-11-10 | Local-first encrypted data vaults with direct device-to-device LAN sync and revision history. | [Homepage](https://deepown.app/) |
 | [pake-flomo](../bucket/pake-flomo.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Flomo. | [Homepage](https://v.flomoapp.com/mine) |
