@@ -33,7 +33,8 @@
         }
     },
     "notes": [
-        "Uses the official NSIS Setup instead of the Portable EXE, which extracts into Windows TEMP. Setup creates the Desktop and Start Menu shortcuts; the NSIS uninstaller removes them.",
+        "Uses the official NSIS Setup instead of the Portable EXE, which extracts into Windows TEMP. Setup creates Desktop and Start Menu shortcuts; its uninstaller removes them.",
+        "Requires a Scoop root path without spaces. This electron-builder 25.1.8 Setup truncates an unquoted /D= path at the first space; quoting /D= caused this build to fail. A path such as D:\\Scoop is compatible.",
         "The desktop app stores its vault and sync configuration in Electron's userData directory under %APPDATA%, outside the Scoop version directory. Scoop does not redirect this data to persist.",
         "The repository README and root LICENSE.txt state MIT, but desktop/package.json declares Proprietary; this upstream license-metadata discrepancy remains unresolved."
     ]
