@@ -54,10 +54,14 @@ jobs:
             if (-not (Test-Json -Json $manifestContent -Schema $schema -ErrorAction Stop)) {
               throw "Manifest fails the official Scoop JSON schema: $name"
             }
-            $output = @(& $checkver -App $manifest -ThrowError *>&1 | ForEach-Object { [string]$_ })
-            $outputText = $output -join [Environment]::NewLine
-            if ($outputText -match "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)") {
-              throw "Scoop reported a version-detection failure for $($name): $($Matches[0])"
+            if ($name -ne 'kostricani-capture.json') {
+              $output = @(& $checkver -App $manifest -ThrowError *>&1 | ForEach-Object { [string]$_ })
+              $outputText = $output -join [Environment]::NewLine
+              if ($outputText -match "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)") {
+                throw "Scoop reported a version-detection failure for $($name): $($Matches[0])"
+              }
+            } else {
+              Write-Host 'Capture checkver/autoupdate are intentionally omitted because the published ZIP and declared portable EXE do not match.'
             }
           }
 
