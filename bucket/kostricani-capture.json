@@ -17,7 +17,7 @@
     },
     "checkver": {
         "url": "https://kostricani.com/screenshot-tool/",
-        "regex": "Kostricani-Capture-Desktop-(?<version>[\\d.]+)-Windows-x64-beta\\.zip"
+        "regex": "Capture-(?<version>[0-9.]+)-Windows"
     },
     "autoupdate": {
         "architecture": {
