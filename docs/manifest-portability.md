@@ -605,3 +605,37 @@ KeyDepot and Repo Hopper remain under Review in [Manifest Review](manifest-revie
 - `config.ini` is persisted through Scoop so custom menu configuration survives updates and uninstall. The application can optionally register a current-user Run entry when the user enables Start on login; this is an application setting, not part of Scoop installation.
 - The upstream repository does not declare a license in its repository metadata or root contents; the manifest records the license as Unknown rather than inventing an SPDX identifier.
 - Evidence: [manifest](../bucket/winmac-menu.json), [lifecycle workflow](../.github/workflows/winmac-menu-scoop-test.yml), [upstream releases](https://github.com/Asteski/WinMac-Menu/releases), and [upstream installation guide](https://github.com/Asteski/WinMac-Menu/wiki/Installation).
+
+
+## Requested desktop applications — November 28, 2026
+
+### ytm-rs 0.4.0 — Official portable ZIP
+
+- The official Windows x64 portable ZIP is used instead of the separate setup executable. SHA-256: `a6d9c21730d088fd3283478290e9538866e30a6260209fe4ba3c28621a641107` (17,030,153 bytes).
+- The Windows package-inspection workflow verified the ZIP listing and extraction (7-Zip exit code 0), found `ytm-rs.exe` and `portable.txt` at the archive root, and confirmed executable version 0.4.0. The manifest persists the package's `data` directory.
+- Stable releases are selected by their publication timestamp, excluding drafts and prereleases. The latest published stable release inspected was v0.4.0 (2026-11-25); the repository's API `latest` pointer did not identify that most recently published stable tag.
+- The application enables its own background updater by default, including in portable mode. The manifest does not modify the user's `data\\app.ron` preference. To keep Scoop in control, turn off the application updater in Settings → About → Updates.
+- Scope: package SHA-256, archive integrity, extracted layout, portable marker, and executable version were verified on a disposable Windows GitHub Actions runner. The executable is unsigned and was not launched; application behavior and real Scoop install/uninstall lifecycle were not tested.
+
+### Kostricani Orbit 0.3.0 — NSIS payload extraction
+
+- The official Windows x64 NSIS package URL is `https://kostricani.com/orbit-app/Orbit-0.3.0-Windows-x64.exe`. SHA-256: `94de79643cc0633ee99fc2e4aa8c32995b01e109261c4fca3bf0aadfc873383a` (100,637,205 bytes).
+- 7-Zip identified the outer package as NSIS. Its `$PLUGINSDIR\\app-64.7z` payload was extracted separately; the nested payload contains `Orbit.exe` (file version 0.3.0.0) and the Electron resources. The manifest follows the bucket's two-stage NSIS extraction pattern in `pre_install`, checks the main executable and `resources\\app.asar`, then removes only the outer temporary NSIS files.
+- The Windows package-inspection workflow verified the downloaded SHA-256 and both extraction stages. The application was not launched, and its runtime settings path and first-run behavior were not tested. The publisher has not provided a verifiable license declaration, so the manifest records `Unknown`.
+
+### Kostricani HDD Rescue 0.14.0 — Official Windows ZIP
+
+- The official Windows x64 ZIP is used directly. SHA-256: `d6571e7844eb2bc67da47a54708c886764cf7eb6177ddea7852641bdfb0c70b5` (183,799,871 bytes). The archive contains `HDDRescue.exe`, the application payload under `resources\\app`, and bundled Sleuth Kit and Python runtime files.
+- The bundled `resources\\app\\package.json` identifies application version 0.14.0. Static inspection of `resources\\app\\desktop\\main.js` confirms that the packaged app sets Electron's `userData` and `sessionData` paths to an `AppData` directory beside the executable. The archive also contains this directory. The manifest therefore persists `AppData`.
+- The Windows workflow verified the archive SHA-256, 7-Zip listing/extraction, main executable path, and bundled runtime files. The website describes source scanning as read-only; recovered output should be directed to a different drive. The app was not launched, and no recovery operation or physical-drive access was tested. The publisher has not provided a verifiable license declaration, so the manifest records `Unknown`.
+
+### Kostricani Capture 0.1.5 beta — not promoted to a Scoop manifest
+
+- The official beta download is a ZIP (SHA-256 `6a8f10e56290a18bdc85fff1bfefae8591bbc9ea4a4541e91aa0c5315a56aae8`, 172,240,193 bytes). It contains a nested `Kostricani-Capture-Setup-1.0.1-Windows-x64.exe`, release metadata, checksums, and source files; the direct URL guessed from the inner filename returns HTTP 404.
+- `RELEASE.json` identifies the desktop application as version 0.1.5 beta and calls it portable. The bundled `source/desktop/package.json` shows an Electron Builder `portable` target with `useZip: true`. Electron Builder documents that this target creates a self-extracting package whose application resources are unpacked into a temporary directory at launch. This is not the Scoop-managed, in-place payload behavior required here.
+- No manifest is created until the publisher supplies a Windows package whose application can run from its extracted Scoop directory without an unwanted TEMP extraction, or a supported packaging approach is verified. The outer ZIP and inner EXE were inspected, but neither was executed.
+
+### Scope of the inspection workflow
+
+- The package-inspection workflow only downloads the official assets, calculates SHA-256, lists/extracts their archive layers, and records file-version/signature metadata. It does not execute downloaded programs. A passing extraction workflow is not a substitute for a Scoop CLI lifecycle test or an interactive Windows application test.
+- Evidence: [package inspection workflow](../.github/workflows/ytm-rs-kostricani-package-inspection.yml), [ytm-rs manifest](../bucket/ytm-rs.json), [Orbit manifest](../bucket/kostricani-orbit.json), and [HDD Rescue manifest](../bucket/kostricani-hdd-rescue.json).
