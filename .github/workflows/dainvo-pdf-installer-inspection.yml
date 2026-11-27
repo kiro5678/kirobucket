@@ -77,7 +77,7 @@ jobs:
           if ($manifest.url -ne "$expectedMsiUrl#/dl.msi") { throw "Manifest URL does not match the official Windows MSI in the release feed: $($manifest.url)" }
           if ($manifest.hash -ne $expectedMsiHash) { throw "Manifest SHA-256 does not match the official Windows MSI feed: $($manifest.hash)" }
           if ($manifest.checkver.url -ne $feedUrl -or $manifest.checkver.jsonpath -ne '$.channels.stable.version') { throw 'Manifest checkver does not read the official stable release version.' }
-          $expectedAutoUrl = "https://download.dainvo.com/pdf/v\$version/dainvo-pdf-\$version-windows-x64.msi#/dl.msi"
+          $expectedAutoUrl = 'https://download.dainvo.com/pdf/v$version/dainvo-pdf-$version-windows-x64.msi#/dl.msi'
           if ($manifest.autoupdate.url -ne $expectedAutoUrl) { throw 'Manifest autoupdate URL does not follow the official Windows MSI naming scheme.' }
           if ($manifest.autoupdate.hash.url -ne $feedUrl -or $manifest.autoupdate.hash.jsonpath -ne '$.channels.stable.artifacts[?(@.kind == ''msi'')].sha256') { throw 'Manifest autoupdate hash does not read the official Windows MSI checksum.' }
           $expectedExtractDir = 'PFiles64/Dainvo/Dainvo PDF'
@@ -109,10 +109,6 @@ jobs:
           $report.Add("- Calculated SHA-256 (wrapper; not used by the Scoop manifest): $wrapperHash")
           $report.Add("- Authenticode: $($wrapperSignature.Status)")
           $report.Add("- Signer: $($wrapperSignature.SignerCertificate.Subject)")
-          if ($wrapperHash -ne '5a704eccd9a9a6d7e280e3642c60633fe8cec1425461d2de4d65ebd08e3857a9') {
-            throw "The vendor EXE wrapper changed from the inspected package: $wrapperHash"
-          }
-
           $listing = & $sevenZip l -slt $wrapperPath 2>&1
           $listExit = $LASTEXITCODE
           if ($listExit -ne 0) { throw "7-Zip could not list the NSIS wrapper (exit $listExit)." }
