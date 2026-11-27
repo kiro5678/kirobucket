@@ -1,0 +1,184 @@
+name: Dainvo PDF Scoop MSI Extraction Test
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "bucket/dainvo-pdf.json"
+      - ".github/workflows/dainvo-pdf-installer-inspection.yml"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - "bucket/dainvo-pdf.json"
+      - ".github/workflows/dainvo-pdf-installer-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Verify Dainvo release, MSI and Scoop paths
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install 7-Zip
+        shell: pwsh
+        run: |
+          choco install 7zip.install --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip installation failed." }
+
+      - name: Verify the official EXE wrapper, feed MSI, and Scoop manifest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $root = Join-Path $env:RUNNER_TEMP 'dainvo-pdf-scoop-test'
+          $outerRoot = Join-Path $root 'nsis-wrapper'
+          $msiRoot = Join-Path $root 'msi-administrative-extraction'
+          New-Item -ItemType Directory -Path $outerRoot -Force | Out-Null
+          New-Item -ItemType Directory -Path $msiRoot -Force | Out-Null
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $cmd = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if (-not $cmd) { throw '7-Zip executable not found.' }
+            $sevenZip = $cmd.Source
+          }
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/dainvo-pdf.json'
+          if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw 'bucket/dainvo-pdf.json was not checked out.' }
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+
+          $feedUrl = 'https://download.dainvo.com/pdf/manifest.json'
+          $feedResponse = Invoke-WebRequest -Uri $feedUrl -MaximumRedirection 10 -TimeoutSec 120
+          $feed = $feedResponse.Content | ConvertFrom-Json
+          if ($feed.schema -ne 1 -or $feed.app -ne 'com.dainvo.pdf') { throw 'Dainvo PDF release feed identity/schema mismatch.' }
+          $stable = $feed.channels.stable
+          $releaseVersion = [string]$stable.version
+          if ($releaseVersion -notmatch '^\d+\.\d+\.\d+$') { throw "Invalid stable release version in feed: $releaseVersion" }
+          $windowsArtifacts = @($stable.artifacts | Where-Object { $_.os -eq 'windows' -and $_.arch -eq 'x86_64' -and $_.kind -eq 'msi' })
+          if ($windowsArtifacts.Count -ne 1) { throw "Expected exactly one stable Windows x64 MSI asset; found $($windowsArtifacts.Count)." }
+          $windowsMsi = $windowsArtifacts[0]
+          $expectedMsiHash = ([string]$windowsMsi.sha256).ToLowerInvariant()
+          if ($expectedMsiHash -notmatch '^[a-f0-9]{64}$') { throw 'The official feed does not contain a valid SHA-256 for the Windows MSI.' }
+          if ([int64]$windowsMsi.size -le 100KB) { throw 'The Windows MSI size in the release feed is invalid.' }
+          $expectedMsiUrl = [string]$windowsMsi.url
+          $expectedMsiName = "dainvo-pdf-$releaseVersion-windows-x64.msi"
+
+          if ($manifest.version -ne $releaseVersion) { throw "Manifest version $($manifest.version) does not match official stable feed $releaseVersion." }
+          if ($manifest.url -ne "$expectedMsiUrl#/dl.msi") { throw "Manifest URL does not match the official Windows MSI in the release feed: $($manifest.url)" }
+          if ($manifest.hash -ne $expectedMsiHash) { throw "Manifest SHA-256 does not match the official Windows MSI feed: $($manifest.hash)" }
+          if ($manifest.checkver.url -ne $feedUrl -or $manifest.checkver.jsonpath -ne '$.channels.stable.version') { throw 'Manifest checkver does not read the official stable release version.' }
+          $expectedAutoUrl = 'https://download.dainvo.com/pdf/v$version/dainvo-pdf-$version-windows-x64.msi#/dl.msi'
+          if ($manifest.autoupdate.url -ne $expectedAutoUrl) { throw 'Manifest autoupdate URL does not follow the official Windows MSI naming scheme.' }
+          if ($manifest.autoupdate.hash.url -ne $feedUrl -or $manifest.autoupdate.hash.jsonpath -ne '$.channels.stable.artifacts[?(@.kind == ''msi'')].sha256') { throw 'Manifest autoupdate hash does not read the official Windows MSI checksum.' }
+          $expectedExtractDir = 'PFiles64/Dainvo/Dainvo PDF'
+          if ($manifest.extract_dir -ne $expectedExtractDir) { throw "Unexpected extract_dir: $($manifest.extract_dir)" }
+
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# Dainvo PDF Scoop MSI extraction test')
+          $report.Add('')
+          $report.Add("- Stable version in official feed: $releaseVersion")
+          $report.Add("- Feed release build: $($stable.build)")
+          $report.Add("- Feed release date: $($stable.released)")
+          $report.Add("- Direct MSI URL: $expectedMsiUrl")
+          $report.Add("- Direct MSI size in feed: $($windowsMsi.size) bytes")
+          $report.Add("- Official MSI SHA-256: $expectedMsiHash")
+          $report.Add("- Manifest version/URL/hash/checkver/autoupdate: matched official feed")
+          $report.Add('')
+
+          $wrapperUrl = "https://download.dainvo.com/pdf/v$releaseVersion/dainvo-pdf-$releaseVersion-windows-x64-installer.exe"
+          $wrapperPath = Join-Path $root "dainvo-pdf-$releaseVersion-windows-x64-installer.exe"
+          Invoke-WebRequest -Uri $wrapperUrl -OutFile $wrapperPath -MaximumRedirection 10 -TimeoutSec 900
+          $wrapperItem = Get-Item -LiteralPath $wrapperPath
+          $wrapperHash = (Get-FileHash -LiteralPath $wrapperPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $wrapperSignature = Get-AuthenticodeSignature -LiteralPath $wrapperPath
+          if ($wrapperSignature.Status -ne 'Valid') { throw "The official Windows installer signature is not valid: $($wrapperSignature.Status)" }
+          if ($wrapperItem.Length -lt 100KB) { throw 'The official Windows installer wrapper is unexpectedly small.' }
+          $report.Add('## Official EXE wrapper supplied by the requester')
+          $report.Add("- URL: $wrapperUrl")
+          $report.Add("- Size: $($wrapperItem.Length) bytes")
+          $report.Add("- Calculated SHA-256 (wrapper; not used by the Scoop manifest): $wrapperHash")
+          $report.Add("- Authenticode: $($wrapperSignature.Status)")
+          $report.Add("- Signer: $($wrapperSignature.SignerCertificate.Subject)")
+          $listing = & $sevenZip l -slt $wrapperPath 2>&1
+          $listExit = $LASTEXITCODE
+          if ($listExit -ne 0) { throw "7-Zip could not list the NSIS wrapper (exit $listExit)." }
+          $listing | Set-Content -LiteralPath (Join-Path $root 'nsis-listing.txt') -Encoding utf8
+          $extractOutput = & $sevenZip x $wrapperPath "-o$outerRoot" '-y' '-bd' 2>&1
+          $extractExit = $LASTEXITCODE
+          $extractOutput | Set-Content -LiteralPath (Join-Path $root 'nsis-extract.log') -Encoding utf8
+          if ($extractExit -gt 1) { throw "7-Zip NSIS extraction failed with exit code $extractExit." }
+          $embeddedMsi = Get-ChildItem -LiteralPath $outerRoot -Filter '*.msi' -File -Recurse -Force | Select-Object -First 1
+          if ($null -eq $embeddedMsi) { throw 'The NSIS wrapper does not contain the expected MSI payload.' }
+          $embeddedHash = (Get-FileHash -LiteralPath $embeddedMsi.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($embeddedHash -ne $expectedMsiHash) { throw "The MSI embedded in the supplied EXE does not match the vendor-published MSI hash: $embeddedHash" }
+          if ((Get-Item -LiteralPath $embeddedMsi.FullName).Length -ne [int64]$windowsMsi.size) { throw 'Embedded MSI size does not match the official release feed.' }
+          $report.Add('')
+          $report.Add('## NSIS wrapper payload')
+          $report.Add("- Embedded MSI: $([System.IO.Path]::GetRelativePath($outerRoot, $embeddedMsi.FullName).Replace('\', '/'))")
+          $report.Add("- Embedded MSI SHA-256: $embeddedHash (matches vendor feed)")
+          $report.Add('- Embedded MSI size: matches vendor feed')
+
+          $directMsiPath = Join-Path $root $expectedMsiName
+          Invoke-WebRequest -Uri $expectedMsiUrl -OutFile $directMsiPath -MaximumRedirection 10 -TimeoutSec 900
+          $directMsiHash = (Get-FileHash -LiteralPath $directMsiPath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($directMsiHash -ne $expectedMsiHash) { throw "Direct MSI download hash mismatch: $directMsiHash" }
+          if ((Get-Item -LiteralPath $directMsiPath).Length -ne [int64]$windowsMsi.size) { throw 'Direct MSI download size does not match the official release feed.' }
+          $report.Add("- Direct MSI download: SHA-256 and size verified")
+          $report.Add('')
+
+          $msiLog = Join-Path $root 'msiexec-admin.log'
+          $quotedMsi = '"' + $directMsiPath + '"'
+          $quotedTarget = 'TARGETDIR="' + $msiRoot + '"'
+          $quotedLog = '"' + $msiLog + '"'
+          $arguments = "/a $quotedMsi /qn $quotedTarget /L*V $quotedLog"
+          $process = Start-Process -FilePath "$env:WINDIR\System32\msiexec.exe" -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -notin @(0, 3010)) {
+            $tail = if (Test-Path -LiteralPath $msiLog) { (Get-Content -LiteralPath $msiLog -Tail 25) -join [Environment]::NewLine } else { 'No MSI log was produced.' }
+            throw "MSI administrative extraction failed with exit code $($process.ExitCode). $tail"
+          }
+
+          $appRoot = Join-Path $msiRoot 'PFiles64\Dainvo\Dainvo PDF'
+          if (-not (Test-Path -LiteralPath $appRoot -PathType Container)) { throw "The expected MSI payload directory was not found: $appRoot" }
+          $actualFiles = @(Get-ChildItem -LiteralPath $appRoot -File -Recurse -Force)
+          $requiredPaths = @($manifest.bin) + @($manifest.shortcuts | ForEach-Object { [string]$_[0] })
+          $missing = @($requiredPaths | Sort-Object -Unique | Where-Object { -not (Test-Path -LiteralPath (Join-Path $appRoot $_) -PathType Leaf) })
+          if ($missing.Count -gt 0) { throw "Manifest bin/shortcut files are missing after MSI extraction: $($missing -join ', ')" }
+          foreach ($exeName in @('dainvo-pdf.exe','dainvo-pdf-cli.exe')) {
+            $exe = Get-Item -LiteralPath (Join-Path $appRoot $exeName)
+            if ($exe.VersionInfo.ProductVersion -ne $releaseVersion) { throw "$exeName reports version $($exe.VersionInfo.ProductVersion), expected $releaseVersion." }
+            $report.Add("- $exeName | $($exe.Length) bytes | version $($exe.VersionInfo.ProductVersion)")
+          }
+
+          $report.Add('')
+          $report.Add('## Scoop MSI extraction results')
+          $report.Add("- msiexec /a exit code: $($process.ExitCode)")
+          $report.Add("- Extracted files under the declared extract_dir: $($actualFiles.Count)")
+          $report.Add("- extract_dir: $expectedExtractDir")
+          $report.Add("- Bin and shortcut targets: all present")
+          $report.Add('- Vendor installer, extracted application, and application CLI were not executed.')
+          $report | Set-Content -LiteralPath (Join-Path $root 'inspection-report.txt') -Encoding utf8
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          Write-Host ($report -join [Environment]::NewLine)
+
+      - name: Upload inspection report and extraction logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dainvo-pdf-scoop-extraction
+          path: |
+            ${{ runner.temp }}/dainvo-pdf-scoop-test/inspection-report.txt
+            ${{ runner.temp }}/dainvo-pdf-scoop-test/nsis-listing.txt
+            ${{ runner.temp }}/dainvo-pdf-scoop-test/nsis-extract.log
+            ${{ runner.temp }}/dainvo-pdf-scoop-test/msiexec-admin.log
+          if-no-files-found: warn
+          retention-days: 7
