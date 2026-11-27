@@ -63,6 +63,29 @@ jobs:
             $value = $match.Value.TrimEnd(',', ';', ')')
             $summary.Add("- $value")
           }
+          $manifestModuleUrl = 'https://dainvo-users.pages.dev/shared-downloads/pdf-download-manifest.20261125-v0.20.2-r2.js?v=20261125-v0.20.2-r2'
+          $module = Invoke-WebRequest -Uri $manifestModuleUrl -MaximumRedirection 10 -TimeoutSec 120
+          $module.Content | Set-Content -LiteralPath (Join-Path $root 'pdf-download-manifest.js') -Encoding utf8
+          $summary.Add('')
+          $summary.Add("## Built-in PDF download manifest module: $manifestModuleUrl")
+          $summary.Add(($module.Content -split '\r?\n' | Where-Object { $_ -match '(?i)pdfFeedUrl|version|windows|installer|download|url|release' } | Select-Object -First 80))
+          $feedMatch = [regex]::Match($module.Content, '(?is)pdfFeedUrl\s*=\s*["'']([^"'']+)["'']')
+          if ($feedMatch.Success) {
+            $feedUrl = $feedMatch.Groups[1].Value
+            if ($feedUrl.StartsWith('/')) { $feedUrl = 'https://dainvo.com' + $feedUrl }
+            if ($feedUrl.StartsWith('./')) { $feedUrl = 'https://dainvo-users.pages.dev/shared-downloads/' + $feedUrl.Substring(2) }
+            $summary.Add('')
+            $summary.Add("## Dainvo PDF release feed: $feedUrl")
+            try {
+              $feed = Invoke-WebRequest -Uri $feedUrl -MaximumRedirection 10 -TimeoutSec 120
+              $feed.Content | Set-Content -LiteralPath (Join-Path $root 'pdf-release-feed.json') -Encoding utf8
+              $summary.Add($feed.Content)
+            } catch {
+              $summary.Add("Feed request failed: $($_.Exception.Message)")
+            }
+          } else {
+            $summary.Add('- The module does not expose a literal pdfFeedUrl; inspect the module source for its feed builder.')
+          }
           foreach ($url in @('https://users.dainvo.com/downloads', 'https://users.dainvo.com/downloads?app=pdf')) {
             try {
               $page = Invoke-WebRequest -Uri $url -MaximumRedirection 10 -TimeoutSec 120
