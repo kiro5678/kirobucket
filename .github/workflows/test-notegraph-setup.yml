@@ -33,16 +33,16 @@ jobs:
           }
           Write-Host "Official Setup SHA256 verified: $actualHash"
 
-      - name: Install into a path containing spaces
+      - name: Install into a Scoop-compatible path
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           $setup = Join-Path $env:RUNNER_TEMP 'NoteGraph-Board-Setup.exe'
-          $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraph Scoop Test\Current'
+          $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraphScoopTest\Current'
           New-Item -ItemType Directory -Path (Split-Path -Parent $installDir) -Force | Out-Null
 
-          # electron-builder's NSIS template has a custom parser for quoted /D values.
-          $arguments = '/S "/D=' + $installDir + '"'
+          # NSIS requires /D to be the final, unquoted argument; the Scoop root is D:\Scoop.
+          $arguments = "/S /D=$installDir"
           $process = Start-Process -FilePath $setup -ArgumentList $arguments -Wait -PassThru
           if ($process.ExitCode -ne 0) {
             throw "NoteGraph Setup exited with code $($process.ExitCode)."
@@ -95,7 +95,7 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraph Scoop Test\Current'
+          $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraphScoopTest\Current'
           $uninstaller = Join-Path $installDir 'Uninstall NoteGraph Board.exe'
           if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
             throw "Cannot find the installed NoteGraph NSIS uninstaller: $uninstaller"
