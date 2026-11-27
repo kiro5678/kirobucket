@@ -14,7 +14,7 @@
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 27 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 80 | [View](#file-management) |
+| File Management | 81 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
 | Local File Sharing | 2 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 38 | [View](#forensics-diagnostics) |
@@ -47,7 +47,7 @@
 | Windows Customization | 107 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1316**
+**Total unique categorized manifests: 1317**
 
 
 ## Android & Device Tools
@@ -332,6 +332,7 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [czkawka-krokiet-skia-vulkan](../bucket/czkawka-krokiet-skia-vulkan.json) | 12.0.2 | 65.0 MiB | 2026-09-09 | Czkawka Krokiet Windows build using the Skia Vulkan backend | [Homepage](https://github.com/qarmin/czkawka) |
 | [deckhand](../bucket/deckhand.json) | 0.9.28 | 24.0 MiB | 2026-11-11 | Portable Windows file organizer with automated rules, schedules, previews, and undo history. | [Homepage](https://github.com/AuZzii-Xssistant/Deckhand) |
 | [declutter](../bucket/declutter.json) | 1.13.7 | 37.4 MiB | 2026-02-12 | Desktop application for managing and organizing files with automated processing rules and tagging. | [Homepage](https://github.com/midnightdim/declutter) |
+| [deskbloom](../bucket/deskbloom.json) | 4.1.3 | 60.8 KiB | 2026-11-22 | Creates collapsible desktop file groups while keeping files in ordinary Windows folders. | [Homepage](https://github.com/treyer012-commits/DeskBloom) |
 | [digup](../bucket/digup.json) | 0.7.0-beta.3 | 38.7 MiB | 2026-10-22 | Windows file-content search tool for semantic discovery across documents, images, audio, video, and code. | [Homepage](https://github.com/ARahim3/DigUp) |
 | [deskbox](../bucket/deskbox.json) | 1.5.9 | 64bit: 32.2 MiB / arm64: 31.6 MiB | 2026-10-23 | Local-first Windows desktop organizer with file and folder widgets, groups, tasks, notes, and desktop search. | [Homepage](https://github.com/Tianyu199509/DeskBox) |
 | [softwareok-delete-on-reboot](../bucket/softwareok-delete-on-reboot.json) | 3.47 | 64bit: 226.3 KiB | 2026-03-13 | Schedule files for deletion during the next reboot. | [Homepage](https://www.softwareok.com/?Download=Delete.On.Reboot) |
