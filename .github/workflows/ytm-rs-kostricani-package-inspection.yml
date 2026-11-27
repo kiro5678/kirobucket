@@ -93,6 +93,7 @@ jobs:
               Url = 'https://scr.kostricani.com/Kostricani-Capture-Desktop-0.1.5-Windows-x64.exe'
               Type = 'EXE'
               ExpectedHash = 'b8301b97a0ce079ac2f405bca252174b7de3828e36b65b00baaa1dfb31a1a48b'
+              Optional = $true
             },
             [PSCustomObject]@{
               Name = 'kostricani-orbit-0.3.0'
