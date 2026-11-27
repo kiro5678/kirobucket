@@ -31,7 +31,8 @@
                 "hash": {
                     "mode": "json",
                     "url": "https://api.github.com/repos/grapedjuice/ytm-rs/releases/tags/v$version",
-                    "jp": "$.assets[?(@.name == 'ytm-rs-portable-$version.zip')].digest"
+                    "jsonpath": "$.assets[?(@.name == 'ytm-rs-portable-$version.zip')].digest",
+                    "regex": "^sha256:([a-fA-F0-9]{64})$"
                 }
             }
         }
