@@ -15,7 +15,7 @@
             ]
         }
     },
-    "checkver": "Capture-(?<version>[0-9.]+)-Windows",
+    "checkver": "Capture-([0-9.]+)-Windows",
     "autoupdate": {
         "architecture": {
             "64bit": {
