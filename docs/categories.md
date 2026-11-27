@@ -21,7 +21,7 @@
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
 | Games Tools | 16 | [View](#games-tools) |
-| Images & Photos | 64 | [View](#images-photos) |
+| Images & Photos | 65 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
 | Media & Audio/Video | 64 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
@@ -47,7 +47,7 @@
 | Windows Customization | 107 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1322**
+**Total unique categorized manifests: 1323**
 
 
 ## Android & Device Tools
@@ -581,6 +581,9 @@ Utilities and launchers designed for a particular game or game series. General-p
 | [zint](../bucket/zint.json) | 2.16.0 | — | — | Zint is a suite of programs to allow easy encoding of data in any of the wide range of public domain barcode standards and to allow integration of this capability into your own programs. | [Homepage](https://sourceforge.net/projects/zint/) |
 
 | [apexshot](../bucket/apexshot.json) | 0.3.2 | 64bit: 173.2 MiB | 2026-11-25 | Windows screenshot and screen recording app with annotation, OCR, QR detection, and video editing. | [Homepage](https://github.com/apex-shot/apexshot) |
+| [kostricani-capture](../bucket/kostricani-capture.json) | 0.1.5 | 164.3 MiB | 2026-10-24 | Windows screenshot capture and annotation companion with clipboard, PNG export, and optional sharing. | [Homepage](https://kostricani.com/screenshot-tool/) |
+
+
 ## Keyboard & Language
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
