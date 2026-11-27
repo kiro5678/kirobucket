@@ -87,32 +87,32 @@ jobs:
           $report.Add("- 7-Zip extraction exit code: $extractExit")
 
           $extracted = @(Get-ChildItem -LiteralPath $outer -File -Recurse -Force -ErrorAction SilentlyContinue)
-          $extractedArchives = @($extracted | Where-Object { $_.Extension -in @('.7z', '.zip', '.cab', '.msi') })
-
-          if ($extracted.Count -eq 0 -or ($extractExit -gt 1)) {
-            $innounpZip = Join-Path $root 'innounp-2.zip'
-            $innounpHash = '078ddb005aa17e669f0b5545980bff92200f7401418174172dca0d75f9e5d8f0'
-            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/master/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 120
-            $actualHelperHash = (Get-FileHash -LiteralPath $innounpZip -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($actualHelperHash -ne $innounpHash) { throw "innounp helper SHA-256 mismatch: $actualHelperHash" }
-            $helperRoot = Join-Path $root 'innounp-helper'
-            New-Item -ItemType Directory -Path $helperRoot -Force | Out-Null
-            & $sevenZip x $innounpZip "-o$helperRoot" '-y' '-bd' 2>&1 | Set-Content (Join-Path $root 'innounp-helper-extract.log')
-            if ($LASTEXITCODE -ne 0) { throw 'Could not extract the verified innounp helper.' }
-            $innounp = Get-ChildItem -LiteralPath $helperRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
-            if ($null -eq $innounp) { throw 'Verified innounp archive did not contain innounp.exe.' }
-            $innoRoot = Join-Path $root 'innosetup-app-payload'
-            New-Item -ItemType Directory -Path $innoRoot -Force | Out-Null
-            $innoOutput = & $innounp.FullName '-x' "-d$innoRoot" $installer '-y' '-c{app}' 2>&1
-            $innoExit = $LASTEXITCODE
-            $innoOutput | Set-Content -LiteralPath (Join-Path $root 'innounp-extract.log') -Encoding utf8
-            $innoFiles = @(Get-ChildItem -LiteralPath $innoRoot -File -Recurse -Force -ErrorAction SilentlyContinue)
-            $report.Add('')
-            $report.Add('## Inno Setup fallback')
-            $report.Add("- innounp exit code: $innoExit")
-            $report.Add("- Files extracted from {app}: $($innoFiles.Count)")
-            if ($innoFiles.Count -gt 0) { $outer = $innoRoot }
+          $msi = Get-ChildItem -LiteralPath $outer -Filter '*.msi' -File -Recurse -Force -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($null -eq $msi) {
+            throw "The NSIS installer did not expose the expected nested MSI. Extracted files: $($extracted.Count)"
           }
+
+          $msiOutput = Join-Path $root 'msi-admin-extracted'
+          $msiLog = Join-Path $root 'msiexec-admin.log'
+          New-Item -ItemType Directory -Path $msiOutput -Force | Out-Null
+          $quotedMsi = '"' + $msi.FullName + '"'
+          $quotedTarget = 'TARGETDIR="' + $msiOutput + '"'
+          $quotedLog = '"' + $msiLog + '"'
+          $arguments = "/a $quotedMsi /qn $quotedTarget /L*V $quotedLog"
+          $process = Start-Process -FilePath "$env:WINDIR\System32\msiexec.exe" -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -notin @(0, 3010)) {
+            $tail = if (Test-Path -LiteralPath $msiLog) { (Get-Content -LiteralPath $msiLog -Tail 20) -join [Environment]::NewLine } else { 'No MSI log was produced.' }
+            throw "MSI administrative extraction failed with exit code $($process.ExitCode). $tail"
+          }
+
+          $msiFiles = @(Get-ChildItem -LiteralPath $msiOutput -File -Recurse -Force -ErrorAction SilentlyContinue)
+          if ($msiFiles.Count -eq 0) { throw 'MSI administrative extraction completed but produced no files.' }
+          $report.Add('')
+          $report.Add('## Nested MSI administrative extraction')
+          $report.Add("- Embedded MSI: $([System.IO.Path]::GetRelativePath($root, $msi.FullName).Replace('\', '/'))")
+          $report.Add("- MSI size: $((Get-Item -LiteralPath $msi.FullName).Length) bytes")
+          $report.Add("- msiexec /a exit code: $($process.ExitCode)")
+          $report.Add("- Files extracted: $($msiFiles.Count)")
 
           # Extract nested archives as payloads; do not execute the installer or any extracted file.
           $queue = [System.Collections.Generic.Queue[System.IO.FileInfo]]::new()
@@ -133,7 +133,7 @@ jobs:
             }
           }
 
-          $allRoots = @($outer) + @(Get-ChildItem -LiteralPath $root -Directory -Filter 'nested-*' | ForEach-Object FullName)
+          $allRoots = @($outer, $msiOutput) + @(Get-ChildItem -LiteralPath $root -Directory -Filter 'nested-*' | ForEach-Object FullName)
           $allFiles = @(
             foreach ($directory in $allRoots) {
               if (Test-Path -LiteralPath $directory -PathType Container) {
@@ -167,7 +167,7 @@ jobs:
           Write-Host "Downloaded bytes: $($item.Length)"
           Write-Host "Authenticode: $($signature.Status)"
           Write-Host "Extracted EXE count: $($executables.Count)"
-          if ($executables.Count -eq 0 -and $innoExit -ne 0) { throw 'No application executable could be found in the static extraction results.' }
+          if ($executables.Count -eq 0) { throw 'No application executable could be found in the extracted MSI payload.' }
 
       - name: Upload inspection report and extraction logs
         if: always()
@@ -178,6 +178,6 @@ jobs:
             ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/inspection-report.txt
             ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/7zip-listing.txt
             ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/7zip-extract.log
-            ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/innounp-extract.log
+            ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/msiexec-admin.log
           if-no-files-found: warn
           retention-days: 7
