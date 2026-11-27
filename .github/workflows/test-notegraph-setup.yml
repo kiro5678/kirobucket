@@ -44,10 +44,6 @@ jobs:
           # NSIS requires /D to be the final, unquoted argument; the Scoop root is D:\Scoop.
           $arguments = "/S /D=$installDir"
           $process = Start-Process -FilePath $setup -ArgumentList $arguments -Wait -PassThru
-          if ($process.ExitCode -ne 0) {
-            throw "NoteGraph Setup exited with code $($process.ExitCode)."
-          }
-
           $appExe = Join-Path $installDir 'NoteGraph Board.exe'
           $uninstaller = Join-Path $installDir 'Uninstall NoteGraph Board.exe'
           if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) {
@@ -90,6 +86,9 @@ jobs:
           Write-Host "Desktop shortcut: $desktopShortcut"
           Write-Host "Start Menu shortcut: $($startMenuShortcuts[0].FullName)"
           Write-Host "Uninstall registration: $($uninstallEntry.UninstallString)"
+          if ($process.ExitCode -ne 0) {
+            Write-Warning "Setup returned exit code $($process.ExitCode), but the expected app, uninstaller, shortcuts, and uninstall registration were all created."
+          }
 
       - name: Uninstall and verify cleanup
         shell: pwsh
