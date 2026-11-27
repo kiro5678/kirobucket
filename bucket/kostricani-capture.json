@@ -15,23 +15,7 @@
             ]
         }
     },
-    "checkver": {
-        "script": [
-            "$response = Invoke-WebRequest -Uri 'https://kostricani.com/screenshot-tool/' -Headers @{ 'User-Agent' = 'Scoop-KiroBucket' } -TimeoutSec 30 -ErrorAction Stop",
-            "$match = [regex]::Match($response.Content, 'Kostricani-Capture-Desktop-(?<version>[0-9.]+)-Windows-x64-beta\\.zip')",
-            "if (-not $match.Success) { throw 'Could not find the published Kostricani Capture Windows beta ZIP filename.' }",
-            "@{ version = $match.Groups['version'].Value } | ConvertTo-Json -Compress"
-        ],
-        "jsonpath": "$.version"
-    },
-    "autoupdate": {
-        "architecture": {
-            "64bit": {
-                "url": "https://scr.kostricani.com/Kostricani-Capture-Desktop-$version-Windows-x64-beta.zip"
-            }
-        }
-    },
-    "notes": "The upstream Electron Builder portable target extracts its app payload under %TEMP% at launch. The currently served 0.1.5 ZIP does not contain the declared portable EXE: it contains a nested NSIS Setup 1.0.1 package instead, and the direct portable EXE URL returns 404. To avoid running that installer, Scoop extracts its embedded app payload into the managed version directory and launches it directly. The %TEMP% behavior describes the upstream portable target, not this NSIS-payload fallback. The beta is unsigned.",
+    "notes": "The upstream Electron Builder portable target extracts its app payload under %TEMP% at launch. The currently served 0.1.5 ZIP does not contain the declared portable EXE: it contains a nested NSIS Setup 1.0.1 package instead, and the direct portable EXE URL returns 404. To avoid running that installer, Scoop extracts its embedded app payload into the managed version directory and launches it directly. The %TEMP% behavior describes the upstream portable target, not this NSIS-payload fallback. The beta is unsigned. Automatic checkver/autoupdate are intentionally omitted: the publisher's declared portable EXE is missing from the served ZIP and its direct URL returns 404; the available nested NSIS build does not expose a trustworthy matching version URL.",
     "pre_install": [
         "$setupFiles = @(Get-ChildItem -LiteralPath $dir -File -Recurse -Filter 'Kostricani-Capture-Setup-1.0.1-Windows-x64.exe' -Force)",
         "if ($setupFiles.Count -ne 1) { throw \"Expected one nested NSIS setup executable; found $($setupFiles.Count).\" }",
