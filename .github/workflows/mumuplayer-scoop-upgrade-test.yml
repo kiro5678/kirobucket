@@ -1,4 +1,4 @@
-name: MuMuPlayer Scoop Versioned Payload Regression
+name: MuMuPlayer Persisted Path Migration Regression
 
 on:
   push:
@@ -8,21 +8,21 @@ on:
     paths:
       - "bucket/mumuplayer.json"
       - ".github/workflows/mumuplayer-scoop-upgrade-test.yml"
-      - "tests/mumuplayer-stable-root.Tests.ps1"
+      - "tests/mumuplayer-persist-path-migration.Tests.ps1"
   pull_request:
     branches:
       - master
     paths:
       - "bucket/mumuplayer.json"
       - ".github/workflows/mumuplayer-scoop-upgrade-test.yml"
-      - "tests/mumuplayer-stable-root.Tests.ps1"
+      - "tests/mumuplayer-persist-path-migration.Tests.ps1"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  validate-and-upgrade-simulation:
+  validate-and-migration-simulation:
     runs-on: windows-latest
     timeout-minutes: 20
 
@@ -62,86 +62,72 @@ jobs:
             }
           }
 
-          $tokens = $null
-          $parseErrors = $null
-          $scriptText = @($manifest.pre_install) -join [Environment]::NewLine
-          [System.Management.Automation.Language.Parser]::ParseInput(
-            $scriptText,
-            [ref]$tokens,
-            [ref]$parseErrors
-          ) | Out-Null
-          if ($parseErrors.Count -gt 0) {
-            $parseErrors | ForEach-Object { Write-Error $_.Message }
-            throw 'The MuMuPlayer pre_install PowerShell script has syntax errors.'
-          }
-
-          $postUninstallText = @($manifest.post_uninstall) -join [Environment]::NewLine
-          [System.Management.Automation.Language.Parser]::ParseInput(
-            $postUninstallText,
-            [ref]$tokens,
-            [ref]$parseErrors
-          ) | Out-Null
-          if ($parseErrors.Count -gt 0) {
-            $parseErrors | ForEach-Object { Write-Error $_.Message }
-            throw 'The MuMuPlayer post_uninstall PowerShell script has syntax errors.'
-          }
-
-          foreach ($requiredText in @(
-            'Find-MuMuPreviousVersionInstallRoot',
-            '$requestedInstallFull',
-            'Move-MuMuInstallRootToVersion',
-            'Move-MuMuPersistDataIntoVersion',
-            'Restore-MuMuPersistDataToStore',
-            'Restore-MuMuCurrentVersionJunction',
-            'Update-MuMuUninstallRegistration',
-            'Restore-MuMuRegistrySnapshot',
-            'Backup-MuMuFile',
-            'install_prepare',
-            '80002',
-            'Wait-ForMuMuInstallStability',
-            'cache_path',
-            'mumuplayer-installer-'
+          foreach ($entry in @(
+            @{ Name = 'pre_install'; Script = (@($manifest.pre_install) -join [Environment]::NewLine) },
+            @{ Name = 'post_install'; Script = (@($manifest.post_install) -join [Environment]::NewLine) }
           )) {
-            if (-not $scriptText.Contains($requiredText)) {
-              throw "The pre_install script is missing required handling: $requiredText"
+            $tokens = $null
+            $parseErrors = $null
+            [System.Management.Automation.Language.Parser]::ParseInput(
+              $entry.Script,
+              [ref]$tokens,
+              [ref]$parseErrors
+            ) | Out-Null
+            if ($parseErrors.Count -gt 0) {
+              $parseErrors | ForEach-Object { Write-Error $_.Message }
+              throw "The MuMuPlayer $($entry.Name) PowerShell script has syntax errors."
             }
           }
 
-          if ($scriptText -notmatch '\$installRoot\s*=\s*\[IO\.Path\]::GetFullPath\(\$dir\)') {
-            throw 'The MuMuPlayer payload must use Scoop $dir, which is the real version directory during pre_install.'
+          $preText = @($manifest.pre_install) -join [Environment]::NewLine
+          $postText = @($manifest.post_install) -join [Environment]::NewLine
+          if (-not $preText.Contains('$mumuMigrationHelperContent')) { throw 'pre_install does not embed the path migration helper.' }
+          if (-not $preText.Contains('-Phase Pre')) { throw 'pre_install does not run the pre-update path migration.' }
+          if (-not $postText.Contains('-Phase Post')) { throw 'post_install does not run the post-persist path and registration checks.' }
+          if (-not $postText.Contains('$original_dir')) { throw 'post_install must pass Scoop original_dir, not the current junction.' }
+          if ($preText -match 'Set-ItemProperty|New-Item\s+.*HKLM|Remove-Item\s+.*HKLM') { throw 'pre_install must not modify Windows Registry state.' }
+
+          $helperMatch = [regex]::Match($preText, '(?s)\$mumuMigrationHelperContent\s*=\s*@''\r?\n(?<helper>.*?)\r?\n''@')
+          if (-not $helperMatch.Success) { throw 'Could not extract the embedded MuMu path migration helper.' }
+          $helperText = $helperMatch.Groups['helper'].Value
+          $tokens = $null
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseInput(
+            $helperText,
+            [ref]$tokens,
+            [ref]$parseErrors
+          ) | Out-Null
+          if ($parseErrors.Count -gt 0) {
+            $parseErrors | ForEach-Object { Write-Error $_.Message }
+            throw 'The embedded MuMu path migration helper has PowerShell syntax errors.'
           }
-          if ($scriptText -notmatch '\$currentAlias\s*=\s*Join-Path\s+\$scoopAppRoot\s+''current''') {
-            throw 'The rollback helper must resolve the Scoop current alias.'
+
+          foreach ($required in @(
+            'nx_device\12.0\configs',
+            'nx_device\15.0\configs',
+            '_mumu-scoop-path-backups',
+            'MuMuVMMDrv',
+            'MuMuNxSup',
+            'LocalServer32'
+          )) {
+            if (-not $helperText.Contains($required)) { throw "Migration helper is missing expected handling: $required" }
           }
-          if ($scriptText -match 'function New-MuMuCurrentVersionJunction') {
-            throw 'The manifest must not create or own Scoop current during pre_install.'
-          }
-          if ($scriptText -match '\$installRoot\s*=\s*Join-Path\s+\$persistRoot') {
-            throw 'The MuMuPlayer program payload must not be installed under persist.'
-          }
-          $installTarget = "('/D=' + " + '$installRoot' + ")"
-          if (-not $scriptText.Contains($installTarget)) {
-            throw 'The NSIS /D target must be Scoop $dir and remain the final unquoted argument.'
-          }
-          if (-not $scriptText.Contains('Move-MuMuPersistDataIntoVersion')) {
-            throw 'Existing persist data must be made available under the version directory before installer execution.'
-          }
-          if ($manifest.shortcuts[0][0] -ne 'MuMuPlayer.cmd') {
-            throw 'The Start Menu shortcut must use the launcher stored in the version directory.'
+          if ($helperText -match 'persist\\vms.*Get-ChildItem|Get-ChildItem.*persist\\vms') {
+            throw 'The migration helper must not scan or modify persisted VM data.'
           }
 
           & $checkver -App 'mumuplayer' -Dir (Join-Path $env:GITHUB_WORKSPACE 'bucket') -ThrowError
           if (-not $?) { throw 'Official Scoop checkver returned an unsuccessful result.' }
 
-      - name: Run migration, rollback, next-update and uninstall regression
+      - name: Run persisted-path, backup, VM-data and Hypervisor/COM regression
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          & (Join-Path $env:GITHUB_WORKSPACE 'tests\mumuplayer-stable-root.Tests.ps1')
+          & (Join-Path $env:GITHUB_WORKSPACE 'tests\mumuplayer-persist-path-migration.Tests.ps1')
 
       - name: Cleanup mock test roots
         if: always()
         shell: pwsh
         run: |
-          Get-ChildItem -LiteralPath $env:RUNNER_TEMP -Directory -Filter 'mumu-versioned-*' -ErrorAction SilentlyContinue |
+          Get-ChildItem -LiteralPath $env:RUNNER_TEMP -Directory -Filter 'mumu-persist-path-*' -ErrorAction SilentlyContinue |
             ForEach-Object { Remove-Item -LiteralPath $_.FullName -Recurse -Force -ErrorAction SilentlyContinue }
