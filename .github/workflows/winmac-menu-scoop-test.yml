@@ -1,0 +1,113 @@
+name: WinMac Menu Scoop Portable Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/winmac-menu.json'
+      - '.github/workflows/winmac-menu-scoop-test.yml'
+  push:
+    branches:
+      - master
+    paths:
+      - 'bucket/winmac-menu.json'
+      - '.github/workflows/winmac-menu-scoop-test.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    name: Install and verify WinMac Menu portable ZIP
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout bucket
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $scoopRoot = Join-Path $env:RUNNER_TEMP 'scoop-winmac-menu'
+          $installer = Join-Path $env:RUNNER_TEMP 'install-scoop.ps1'
+          Invoke-WebRequest -Uri 'https://get.scoop.sh' -OutFile $installer -TimeoutSec 120
+          & $installer -ScoopDir $scoopRoot
+          if ($LASTEXITCODE -ne 0) {
+            throw "Scoop bootstrap failed with exit code $LASTEXITCODE."
+          }
+          "SCOOP_ROOT=$scoopRoot" >> $env:GITHUB_ENV
+
+      - name: Install from manifest and verify portable payload
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $scoopRoot = $env:SCOOP_ROOT
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          $manifest = Join-Path $env:GITHUB_WORKSPACE 'bucket\winmac-menu.json'
+
+          & $scoopScript install $manifest
+          if ($LASTEXITCODE -ne 0) {
+            throw "Scoop install failed with exit code $LASTEXITCODE."
+          }
+
+          $appDir = Join-Path $scoopRoot 'apps\winmac-menu\current'
+          $required = @('WinMacMenu.exe', 'config.ini', 'winui3')
+          foreach ($item in $required) {
+            $path = Join-Path $appDir $item
+            if (-not (Test-Path -LiteralPath $path)) {
+              $entries = @(Get-ChildItem -LiteralPath $appDir -Force -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Name)
+              throw "Required portable payload item missing: $item. Found: $($entries -join ', ')"
+            }
+          }
+
+          $exe = Join-Path $appDir 'WinMacMenu.exe'
+          $bytes = [System.IO.File]::ReadAllBytes($exe)
+          if ($bytes.Length -lt 2 -or $bytes[0] -ne 0x4D -or $bytes[1] -ne 0x5A) {
+            throw 'WinMacMenu.exe does not have a valid Windows PE header.'
+          }
+
+          $config = Join-Path $appDir 'config.ini'
+          $persistedConfig = Join-Path $scoopRoot 'persist\winmac-menu\config.ini'
+          if (-not (Test-Path -LiteralPath $persistedConfig -PathType Leaf)) {
+            throw "Scoop did not create the persisted config file: $persistedConfig"
+          }
+          if ((Get-Content -LiteralPath $config -Raw) -ne (Get-Content -LiteralPath $persistedConfig -Raw)) {
+            throw 'The application config does not match the persisted config.'
+          }
+
+          Write-Host 'PASS: WinMacMenu.exe, config.ini, and winui3 were extracted.'
+          Write-Host 'PASS: config.ini is present and matches Scoop persistent storage.'
+
+      - name: Verify uninstall preserves persistent configuration
+        if: always()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:SCOOP_ROOT)) {
+            Write-Host 'Scoop was not installed; uninstall test skipped.'
+            exit 0
+          }
+
+          $scoopRoot = $env:SCOOP_ROOT
+          $env:SCOOP = $scoopRoot
+          $scoopScript = Join-Path $scoopRoot 'apps\scoop\current\bin\scoop.ps1'
+          $appRoot = Join-Path $scoopRoot 'apps\winmac-menu'
+          $persistedConfig = Join-Path $scoopRoot 'persist\winmac-menu\config.ini'
+
+          if (Test-Path -LiteralPath $appRoot) {
+            & $scoopScript uninstall winmac-menu
+            if ($LASTEXITCODE -ne 0) {
+              throw "Scoop uninstall failed with exit code $LASTEXITCODE."
+            }
+          }
+
+          if (-not (Test-Path -LiteralPath $persistedConfig -PathType Leaf)) {
+            throw "Scoop uninstall did not preserve config.ini: $persistedConfig"
+          }
+          Write-Host 'PASS: Scoop uninstall preserved config.ini in persist storage.'
