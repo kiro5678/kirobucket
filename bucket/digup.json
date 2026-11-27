@@ -25,13 +25,18 @@
         ]
     ],
     "checkver": {
-        "url": "https://github.com/ARahim3/DigUp/releases",
-        "regex": "DigUp (?<version>[0-9]+\\.[0-9]+\\.[0-9]+(?:-beta\\.[0-9]+)?) for Windows and Linux"
+        "github": "https://github.com/ARahim3/DigUp"
     },
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/ARahim3/DigUp/releases/download/v$version/DigUp_$version_x64-setup.exe#/dl.7z"
+                "url": "https://github.com/ARahim3/DigUp/releases/download/v$version/DigUp_$version_x64-setup.exe#/dl.7z",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/ARahim3/DigUp/releases/tags/v$version",
+                    "jsonpath": "$.assets[?(@.name == '$basename')].digest",
+                    "regex": "^sha256:([a-fA-F0-9]{64})$"
+                }
             }
         }
     },
