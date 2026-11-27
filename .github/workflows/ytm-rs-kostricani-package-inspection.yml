@@ -1,0 +1,173 @@
+name: ytm-rs and Kostricani package inspection
+
+on:
+  push:
+    branches:
+      - add/ytm-rs-kostricani-manifests
+    paths:
+      - ".github/workflows/ytm-rs-kostricani-package-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - name: Download, hash, and inspect official Windows packages
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $sevenZip = 'C:\Program Files\7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip)) {
+            $command = Get-Command 7z.exe -ErrorAction SilentlyContinue
+            if (-not $command) { throw '7-Zip is not available on this runner.' }
+            $sevenZip = $command.Source
+          }
+
+          $root = Join-Path $env:GITHUB_WORKSPACE 'package-inspection'
+          New-Item -ItemType Directory -Path $root -Force | Out-Null
+          $cases = @(
+            [PSCustomObject]@{
+              Name = 'ytm-rs-0.4.0'
+              Url = 'https://github.com/grapedjuice/ytm-rs/releases/download/v0.4.0/ytm-rs-portable-0.4.0.zip'
+              Type = 'ZIP'
+              ExpectedHash = 'a6d9c21730d088fd3283478290e9538866e30a6260209fe4ba3c28621a641107'
+            },
+            [PSCustomObject]@{
+              Name = 'kostricani-capture-0.1.5'
+              Url = 'https://scr.kostricani.com/Kostricani-Capture-Desktop-0.1.5-Windows-x64-beta.zip'
+              Type = 'ZIP'
+              ExpectedHash = ''
+            },
+            [PSCustomObject]@{
+              Name = 'kostricani-orbit-0.3.0'
+              Url = 'https://kostricani.com/orbit-app/Orbit-0.3.0-Windows-x64.exe'
+              Type = 'EXE'
+              ExpectedHash = ''
+            },
+            [PSCustomObject]@{
+              Name = 'kostricani-hdd-rescue-0.14.0'
+              Url = 'https://kostricani.com/recovery-app/HDD-Rescue-0.14.0-Windows-x64.zip'
+              Type = 'ZIP'
+              ExpectedHash = ''
+            }
+          )
+
+          $results = [System.Collections.Generic.List[object]]::new()
+          foreach ($case in $cases) {
+            $appRoot = Join-Path $root $case.Name
+            $extractDir = Join-Path $appRoot 'extracted'
+            New-Item -ItemType Directory -Path $extractDir -Force | Out-Null
+            $extension = $case.Type.ToLowerInvariant()
+            $download = Join-Path $appRoot "package.$extension"
+            $result = [ordered]@{
+              Name = $case.Name
+              Url = $case.Url
+              Type = $case.Type
+              Size = 0
+              SHA256 = ''
+              ExpectedHash = $case.ExpectedHash
+              HashVerified = $false
+              ListingExitCode = $null
+              ExtractionExitCode = $null
+              Extracted = $false
+              PortableMarker = $false
+              Files = @()
+              Executables = @()
+              Signature = ''
+              Error = ''
+            }
+
+            try {
+              Write-Host "Downloading $($case.Name)"
+              Invoke-WebRequest -Uri $case.Url -OutFile $download -MaximumRedirection 10 -TimeoutSec 1200 -Headers @{ 'User-Agent' = 'Mozilla/5.0 Scoop package inspection' }
+              $item = Get-Item -LiteralPath $download
+              $result.Size = $item.Length
+              $result.SHA256 = (Get-FileHash -LiteralPath $download -Algorithm SHA256).Hash.ToLowerInvariant()
+
+              if ($case.ExpectedHash) {
+                $result.HashVerified = $result.SHA256 -eq $case.ExpectedHash.ToLowerInvariant()
+                if (-not $result.HashVerified) {
+                  throw "SHA-256 mismatch: expected $($case.ExpectedHash), got $($result.SHA256)"
+                }
+              }
+
+              $listingPath = Join-Path $appRoot '7zip-listing.txt'
+              & $sevenZip l -slt $download 2>&1 | Set-Content -LiteralPath $listingPath -Encoding utf8
+              $result.ListingExitCode = $LASTEXITCODE
+              if ($result.ListingExitCode -eq 0) {
+                $result.Files = @(Get-Content -LiteralPath $listingPath | Where-Object { $_ -match '^Path = ' } | ForEach-Object { $_.Substring(7) })
+                $extractLog = Join-Path $appRoot '7zip-extract.txt'
+                & $sevenZip x $download "-o$extractDir" -y -bd 2>&1 | Set-Content -LiteralPath $extractLog -Encoding utf8
+                $result.ExtractionExitCode = $LASTEXITCODE
+                $result.Extracted = $result.ExtractionExitCode -eq 0
+              }
+
+              if (Test-Path -LiteralPath (Join-Path $extractDir 'portable.txt')) {
+                $result.PortableMarker = $true
+              }
+
+              $result.Executables = @(
+                Get-ChildItem -LiteralPath $extractDir -File -Recurse -Force -ErrorAction SilentlyContinue |
+                  Where-Object { $_.Extension -ieq '.exe' } |
+                  ForEach-Object {
+                    $signature = Get-AuthenticodeSignature -LiteralPath $_.FullName
+                    [PSCustomObject]@{
+                      Path = [IO.Path]::GetRelativePath($extractDir, $_.FullName).Replace('\', '/')
+                      Size = $_.Length
+                      ProductName = $_.VersionInfo.ProductName
+                      ProductVersion = $_.VersionInfo.ProductVersion
+                      FileDescription = $_.VersionInfo.FileDescription
+                      SignatureStatus = [string]$signature.Status
+                      Signer = if ($signature.SignerCertificate) { $signature.SignerCertificate.Subject } else { '' }
+                    }
+                  }
+              )
+
+              if ($case.Type -eq 'EXE') {
+                $signature = Get-AuthenticodeSignature -LiteralPath $download
+                $result.Signature = "$($signature.Status); $($signature.SignerCertificate.Subject)"
+              }
+
+              Write-Host "RESULT $($case.Name): size=$($result.Size); sha256=$($result.SHA256); 7z-list=$($result.ListingExitCode); extraction=$($result.ExtractionExitCode); portable-marker=$($result.PortableMarker)"
+              foreach ($exe in $result.Executables) {
+                Write-Host "EXE $($exe.Path) | $($exe.Size) bytes | $($exe.ProductVersion) | $($exe.SignatureStatus) | $($exe.Signer)"
+              }
+            } catch {
+              $result.Error = $_.Exception.Message
+              Write-Host "ERROR $($case.Name): $($result.Error)"
+            }
+
+            $results.Add([PSCustomObject]$result)
+          }
+
+          $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
+          @(
+            '## Official package inspection'
+            ''
+            '| Package | Type | Size | SHA-256 | 7-Zip listing | Extraction | Portable marker |'
+            '|---|---|---:|---|---:|---|---|'
+            foreach ($item in $results) {
+              "| $($item.Name) | $($item.Type) | $($item.Size) | $($item.SHA256) | $($item.ListingExitCode) | $($item.ExtractionExitCode) | $($item.PortableMarker) |"
+            }
+            ''
+            'No downloaded executable was launched.'
+            'File inventories, signatures, and 7-Zip logs are included in the artifact.'
+          ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          if (@($results | Where-Object { $_.Error }).Count -gt 0) {
+            throw 'One or more package downloads or integrity checks failed.'
+          }
+
+      - name: Upload inspection results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ytm-rs-kostricani-package-inspection
+          path: package-inspection/
+          if-no-files-found: warn
+          retention-days: 14
