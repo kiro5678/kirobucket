@@ -1,10 +1,10 @@
 {
-    "version": "0.8.0",
+    "version": "0.9.0",
     "description": "Native desktop database client for SQL databases, Redis and local files.",
     "homepage": "https://github.com/saanuregh/dgopher",
     "license": "Apache-2.0",
-    "url": "https://github.com/saanuregh/dgopher/releases/download/v0.8.0/dgopher-0.8.0-windows-amd64.tar.gz",
-    "hash": "b9594ea98983a18b6d7356e44328fb0a5624ddf129742f106dd0dc49ad43b67e",
+    "url": "https://github.com/saanuregh/dgopher/releases/download/v0.9.0/dgopher-0.9.0-windows-amd64.tar.gz",
+    "hash": "12c16984edc41b4357bcf9089126ee5e7ed3b1d1fa2a4b7a1b05941d84fe78a7",
     "bin": "DGopher.exe",
     "shortcuts": [
         [
