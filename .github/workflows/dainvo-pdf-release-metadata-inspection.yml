@@ -53,6 +53,30 @@ jobs:
               $summary.Add("- HTML: $flat")
             }
           }
+          $selectorUrl = 'https://dainvo-users.pages.dev/shared-downloads/download-selector.20261125-v0.20.2-r2.js'
+          $selector = Invoke-WebRequest -Uri $selectorUrl -MaximumRedirection 10 -TimeoutSec 120
+          $selector.Content | Set-Content -LiteralPath (Join-Path $root 'download-selector.js') -Encoding utf8
+          $summary.Add('')
+          $summary.Add("## Shared download selector: $selectorUrl")
+          $interesting = [regex]::Matches($selector.Content, '(?i)(?:https?://[^"''\\s]+|/api/[^"''\\s]+|/downloads?[^"''\\s]+|[^"''\\s]{0,80}(?:release|manifest|download|version|pdf)[^"''\\s]{0,120})')
+          foreach ($match in ($interesting | Select-Object -First 100)) {
+            $value = $match.Value.TrimEnd(',', ';', ')')
+            $summary.Add("- $value")
+          }
+          foreach ($url in @('https://users.dainvo.com/downloads', 'https://users.dainvo.com/downloads?app=pdf')) {
+            try {
+              $page = Invoke-WebRequest -Uri $url -MaximumRedirection 10 -TimeoutSec 120
+              $leaf = if ($url.Contains('?')) { 'shared-downloads-pdf.html' } else { 'shared-downloads.html' }
+              $page.Content | Set-Content -LiteralPath (Join-Path $root $leaf) -Encoding utf8
+              $summary.Add('')
+              $summary.Add("## Shared download endpoint: $url")
+              $hrefs = [regex]::Matches($page.Content, '(?i)(?:https?:)?//download\\.dainvo\\.com/pdf/v[0-9.]+/[^"''\\s<>]+')
+              foreach ($href in $hrefs) { $summary.Add("- $($href.Value)") }
+              if ($hrefs.Count -eq 0) { $summary.Add('- No versioned installer link in this response.') }
+            } catch {
+              $summary.Add("- $url could not be fetched: $($_.Exception.Message)")
+            }
+          }
           $summary | Tee-Object -FilePath (Join-Path $root 'report.txt') | Add-Content $env:GITHUB_STEP_SUMMARY
 
       - name: Upload page source and report
