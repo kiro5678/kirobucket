@@ -143,6 +143,14 @@ jobs:
             }
 
             $results.Add([PSCustomObject]$result)
+
+            # Keep only the generated inventory and 7-Zip logs; do not upload binaries or extracted payloads.
+            if (Test-Path -LiteralPath $download) {
+              Remove-Item -LiteralPath $download -Force
+            }
+            if (Test-Path -LiteralPath $extractDir) {
+              Remove-Item -LiteralPath $extractDir -Recurse -Force
+            }
           }
 
           $results | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $root 'results.json') -Encoding utf8
