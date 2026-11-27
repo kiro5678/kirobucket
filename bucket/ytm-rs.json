@@ -5,7 +5,7 @@
     "license": "GPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/grapedjuice/ytm-rs/releases/download/v$version/ytm-rs-portable-$version.zip",
+            "url": "https://github.com/grapedjuice/ytm-rs/releases/download/v0.4.0/ytm-rs-portable-0.4.0.zip",
             "hash": "a6d9c21730d088fd3283478290e9538866e30a6260209fe4ba3c28621a641107",
             "shortcuts": [
                 [
