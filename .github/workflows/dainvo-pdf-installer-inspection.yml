@@ -1,0 +1,183 @@
+name: Dainvo PDF 0.2.3 Installer Inspection
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/dainvo-pdf-installer-inspection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    name: Download and inspect Dainvo PDF installer
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Install 7-Zip
+        shell: pwsh
+        run: |
+          choco install 7zip.install --yes --no-progress
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip installation failed." }
+
+      - name: Download, hash, and extract official installer without running it
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+
+          $url = 'https://download.dainvo.com/pdf/v0.2.3/dainvo-pdf-0.2.3-windows-x64-installer.exe'
+          $fileName = 'dainvo-pdf-0.2.3-windows-x64-installer.exe'
+          $root = Join-Path $env:RUNNER_TEMP 'dainvo-pdf-0.2.3-inspection'
+          $installer = Join-Path $root $fileName
+          $outer = Join-Path $root 'installer-extracted'
+          $reportPath = Join-Path $root 'inspection-report.txt'
+          New-Item -ItemType Directory -Path $outer -Force | Out-Null
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $cmd = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if (-not $cmd) { throw '7-Zip executable not found.' }
+            $sevenZip = $cmd.Source
+          }
+
+          Invoke-WebRequest -Uri $url -OutFile $installer -MaximumRedirection 10 -TimeoutSec 900
+          if (-not (Test-Path -LiteralPath $installer -PathType Leaf)) { throw 'Installer download did not create a file.' }
+
+          $item = Get-Item -LiteralPath $installer
+          if ($item.Length -lt 100KB) { throw "Downloaded file is unexpectedly small ($($item.Length) bytes); refusing to treat it as an installer." }
+          $stream = [System.IO.File]::OpenRead($installer)
+          try {
+            $bytes = [byte[]]::new(2)
+            [void]$stream.Read($bytes, 0, 2)
+          } finally {
+            $stream.Dispose()
+          }
+          if ($bytes[0] -ne 0x4D -or $bytes[1] -ne 0x5A) { throw 'Downloaded response does not have an MZ executable header.' }
+
+          $hash = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash.ToLowerInvariant()
+          $signature = Get-AuthenticodeSignature -LiteralPath $installer
+          $version = (Get-Item -LiteralPath $installer).VersionInfo
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# Dainvo PDF 0.2.3 Windows installer inspection')
+          $report.Add('')
+          $report.Add("- Source: $url")
+          $report.Add("- Download size: $($item.Length) bytes")
+          $report.Add("- Calculated SHA-256 (not publisher-published): $hash")
+          $report.Add("- Authenticode status: $($signature.Status)")
+          $report.Add("- Signer: $($signature.SignerCertificate.Subject)")
+          $report.Add("- File version: $($version.FileVersion)")
+          $report.Add("- Product version: $($version.ProductVersion)")
+          $report.Add("- Product name: $($version.ProductName)")
+          $report.Add("- File description: $($version.FileDescription)")
+          $report.Add('')
+
+          $listing = & $sevenZip l -slt $installer 2>&1
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $root '7zip-listing.txt') -Encoding utf8
+          $report.Add("## 7-Zip listing")
+          $report.Add("- Exit code: $listExit")
+
+          $extractOutput = & $sevenZip x $installer "-o$outer" '-y' '-bd' 2>&1
+          $extractExit = $LASTEXITCODE
+          $extractOutput | Set-Content -LiteralPath (Join-Path $root '7zip-extract.log') -Encoding utf8
+          $report.Add("- 7-Zip extraction exit code: $extractExit")
+
+          $extracted = @(Get-ChildItem -LiteralPath $outer -File -Recurse -Force -ErrorAction SilentlyContinue)
+          $extractedArchives = @($extracted | Where-Object { $_.Extension -in @('.7z', '.zip', '.cab', '.msi') })
+
+          if ($extracted.Count -eq 0 -or ($extractExit -gt 1)) {
+            $innounpZip = Join-Path $root 'innounp-2.zip'
+            $innounpHash = '078ddb005aa17e669f0b5545980bff92200f7401418174172dca0d75f9e5d8f0'
+            Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/jrathlev/InnoUnpacker-Windows-GUI/master/innounp-2/bin/innounp-2.zip' -OutFile $innounpZip -MaximumRedirection 10 -TimeoutSec 120
+            $actualHelperHash = (Get-FileHash -LiteralPath $innounpZip -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actualHelperHash -ne $innounpHash) { throw "innounp helper SHA-256 mismatch: $actualHelperHash" }
+            $helperRoot = Join-Path $root 'innounp-helper'
+            New-Item -ItemType Directory -Path $helperRoot -Force | Out-Null
+            & $sevenZip x $innounpZip "-o$helperRoot" '-y' '-bd' 2>&1 | Set-Content (Join-Path $root 'innounp-helper-extract.log')
+            if ($LASTEXITCODE -ne 0) { throw 'Could not extract the verified innounp helper.' }
+            $innounp = Get-ChildItem -LiteralPath $helperRoot -Filter 'innounp.exe' -File -Recurse | Select-Object -First 1
+            if ($null -eq $innounp) { throw 'Verified innounp archive did not contain innounp.exe.' }
+            $innoRoot = Join-Path $root 'innosetup-app-payload'
+            New-Item -ItemType Directory -Path $innoRoot -Force | Out-Null
+            $innoOutput = & $innounp.FullName '-x' "-d$innoRoot" $installer '-y' '-c{app}' 2>&1
+            $innoExit = $LASTEXITCODE
+            $innoOutput | Set-Content -LiteralPath (Join-Path $root 'innounp-extract.log') -Encoding utf8
+            $innoFiles = @(Get-ChildItem -LiteralPath $innoRoot -File -Recurse -Force -ErrorAction SilentlyContinue)
+            $report.Add('')
+            $report.Add('## Inno Setup fallback')
+            $report.Add("- innounp exit code: $innoExit")
+            $report.Add("- Files extracted from {app}: $($innoFiles.Count)")
+            if ($innoFiles.Count -gt 0) { $outer = $innoRoot }
+          }
+
+          # Extract nested archives as payloads; do not execute the installer or any extracted file.
+          $queue = [System.Collections.Generic.Queue[System.IO.FileInfo]]::new()
+          foreach ($archive in (Get-ChildItem -LiteralPath $outer -File -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Extension -in @('.7z', '.zip', '.cab') })) {
+            $queue.Enqueue($archive)
+          }
+          $nestedIndex = 0
+          while ($queue.Count -gt 0 -and $nestedIndex -lt 30) {
+            $archive = $queue.Dequeue()
+            $nestedIndex++
+            $nestedOut = Join-Path $root ("nested-{0:D2}" -f $nestedIndex)
+            New-Item -ItemType Directory -Path $nestedOut -Force | Out-Null
+            & $sevenZip x $archive.FullName "-o$nestedOut" '-y' '-bd' 2>&1 | Set-Content (Join-Path $root ("nested-{0:D2}.log" -f $nestedIndex))
+            if ($LASTEXITCODE -eq 0) {
+              foreach ($child in (Get-ChildItem -LiteralPath $nestedOut -File -Recurse -Force | Where-Object { $_.Extension -in @('.7z', '.zip', '.cab') })) {
+                $queue.Enqueue($child)
+              }
+            }
+          }
+
+          $allRoots = @($outer) + @(Get-ChildItem -LiteralPath $root -Directory -Filter 'nested-*' | ForEach-Object FullName)
+          $allFiles = @(
+            foreach ($directory in $allRoots) {
+              if (Test-Path -LiteralPath $directory -PathType Container) {
+                Get-ChildItem -LiteralPath $directory -File -Recurse -Force -ErrorAction SilentlyContinue
+              }
+            }
+          ) | Sort-Object FullName -Unique
+          $executables = @($allFiles | Where-Object { $_.Extension -ieq '.exe' })
+          $report.Add('')
+          $report.Add('## Extracted executable inventory')
+          if ($executables.Count -eq 0) {
+            $report.Add('- No EXE files found in the extracted payloads.')
+          } else {
+            foreach ($exe in $executables) {
+              $relative = [System.IO.Path]::GetRelativePath($root, $exe.FullName).Replace('\', '/')
+              $info = $exe.VersionInfo
+              $report.Add("- $relative | $($exe.Length) bytes | Product=$($info.ProductName) | Description=$($info.FileDescription) | Version=$($info.ProductVersion)")
+            }
+          }
+          $report.Add('')
+          $report.Add('## Other extracted files')
+          foreach ($file in ($allFiles | Select-Object -First 120)) {
+            $report.Add("- " + [System.IO.Path]::GetRelativePath($root, $file.FullName).Replace('\', '/'))
+          }
+          $report.Add('')
+          $report.Add('The vendor installer and extracted application files were not executed.')
+          $report | Set-Content -LiteralPath $reportPath -Encoding utf8
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+          Write-Host "Calculated SHA-256: $hash"
+          Write-Host "Downloaded bytes: $($item.Length)"
+          Write-Host "Authenticode: $($signature.Status)"
+          Write-Host "Extracted EXE count: $($executables.Count)"
+          if ($executables.Count -eq 0 -and $innoExit -ne 0) { throw 'No application executable could be found in the static extraction results.' }
+
+      - name: Upload inspection report and extraction logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dainvo-pdf-0.2.3-inspection
+          path: |
+            ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/inspection-report.txt
+            ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/7zip-listing.txt
+            ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/7zip-extract.log
+            ${{ runner.temp }}/dainvo-pdf-0.2.3-inspection/innounp-extract.log
+          if-no-files-found: warn
+          retention-days: 7
