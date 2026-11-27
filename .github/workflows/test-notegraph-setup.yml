@@ -39,20 +39,80 @@ jobs:
           $ErrorActionPreference = 'Stop'
           $setup = Join-Path $env:RUNNER_TEMP 'NoteGraph-Board-Setup.exe'
           $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraph Scoop Test\Current'
-          $uninstaller = Get-ChildItem -LiteralPath $installDir -Filter 'Uninstall NoteGraph Board.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-          if (-not $uninstaller) {
-            throw "Cannot find the installed NoteGraph NSIS uninstaller under $installDir"
+          New-Item -ItemType Directory -Path (Split-Path -Parent $installDir) -Force | Out-Null
+
+          # electron-builder's NSIS template has a custom parser for quoted /D values.
+          $arguments = '/S "/D=' + $installDir + '"'
+          $process = Start-Process -FilePath $setup -ArgumentList $arguments -Wait -PassThru
+          if ($process.ExitCode -ne 0) {
+            throw "NoteGraph Setup exited with code $($process.ExitCode)."
           }
-          $installRoot = $uninstaller.Directory.FullName
+
+          $appExe = Join-Path $installDir 'NoteGraph Board.exe'
+          $uninstaller = Join-Path $installDir 'Uninstall NoteGraph Board.exe'
+          if (-not (Test-Path -LiteralPath $appExe -PathType Leaf)) {
+            Write-Host "Requested install directory: $installDir"
+            if (Test-Path -LiteralPath $installDir) {
+              Get-ChildItem -LiteralPath $installDir -Force -Recurse -Depth 4 | ForEach-Object { Write-Host $_.FullName }
+            }
+            throw "Expected application executable was not installed at: $appExe"
+          }
+          if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
+            throw "Expected NSIS uninstaller was not installed at: $uninstaller"
+          }
+
+          $desktop = [Environment]::GetFolderPath('Desktop')
+          $desktopShortcut = Join-Path $desktop 'NoteGraph Board.lnk'
+          if (-not (Test-Path -LiteralPath $desktopShortcut -PathType Leaf)) {
+            throw "Expected Desktop shortcut was not created: $desktopShortcut"
+          }
+
+          $programs = [Environment]::GetFolderPath('Programs')
+          $startMenuShortcuts = @(Get-ChildItem -LiteralPath $programs -Filter 'NoteGraph Board.lnk' -File -Recurse -ErrorAction SilentlyContinue)
+          if ($startMenuShortcuts.Count -lt 1) {
+            throw 'Expected NoteGraph Board Start Menu shortcut was not created.'
+          }
+
+          $registryRoot = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall'
+          $uninstallEntry = Get-ChildItem -LiteralPath $registryRoot -ErrorAction SilentlyContinue |
+            ForEach-Object { Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction SilentlyContinue } |
+            Where-Object {
+              $_.DisplayName -like 'NoteGraph Board*' -and
+              $_.UninstallString -like "*$installDir*"
+            } |
+            Select-Object -First 1
+          if (-not $uninstallEntry) {
+            throw 'The NoteGraph Board uninstall registration does not point to the requested install directory.'
+          }
+
+          Write-Host "Installed app: $appExe"
+          Write-Host "Generated uninstaller: $uninstaller"
+          Write-Host "Desktop shortcut: $desktopShortcut"
+          Write-Host "Start Menu shortcut: $($startMenuShortcuts[0].FullName)"
+          Write-Host "Uninstall registration: $($uninstallEntry.UninstallString)"
+
+      - name: Uninstall and verify cleanup
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $installDir = Join-Path $env:RUNNER_TEMP 'NoteGraph Scoop Test\Current'
+          $uninstaller = Join-Path $installDir 'Uninstall NoteGraph Board.exe'
+          if (-not (Test-Path -LiteralPath $uninstaller -PathType Leaf)) {
+            throw "Cannot find the installed NoteGraph NSIS uninstaller: $uninstaller"
+          }
+
           Get-Process -Name 'NoteGraph Board' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-          $arguments = "/S _?=$installRoot"
-          $process = Start-Process -FilePath $uninstaller.FullName -ArgumentList $arguments -Wait -PassThru
+          $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+          $startInfo.FileName = $uninstaller
+          $startInfo.UseShellExecute = $false
+          $startInfo.ArgumentList.Add('/S')
+          $startInfo.ArgumentList.Add("_?=$installDir")
+          $process = [System.Diagnostics.Process]::Start($startInfo)
+          $process.WaitForExit()
           if ($process.ExitCode -ne 0) {
             throw "NoteGraph NSIS uninstaller exited with code $($process.ExitCode)."
           }
-          if (Test-Path -LiteralPath $installRoot) {
-            throw "The NSIS uninstaller left its install root behind: $installRoot"
-          }
+
           if (Test-Path -LiteralPath $installDir) {
             $leftoverFiles = @(Get-ChildItem -LiteralPath $installDir -Force -ErrorAction SilentlyContinue)
             if ($leftoverFiles.Count -gt 0) {
