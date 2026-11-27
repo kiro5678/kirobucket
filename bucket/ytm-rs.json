@@ -18,7 +18,9 @@
     "persist": "data",
     "checkver": {
         "script": [
-            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/grapedjuice/ytm-rs/releases?per_page=100' -Headers @{ 'User-Agent' = 'Scoop' }",
+            "$headers = @{ 'Accept' = 'application/vnd.github+json'; 'User-Agent' = 'Scoop-KiroBucket' }",
+            "if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_TOKEN)) { $headers.Authorization = \"Bearer $env:GITHUB_TOKEN\" }",
+            "$releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/grapedjuice/ytm-rs/releases?per_page=100' -Headers $headers -TimeoutSec 30 -ErrorAction Stop",
             "$stable = $releases | Where-Object { -not $_.draft -and -not $_.prerelease -and $_.tag_name -match '^v[0-9.]+$' } | Sort-Object { [datetime]$_.published_at } -Descending | Select-Object -First 1",
             "if ($stable) { $stable.tag_name }"
         ],
