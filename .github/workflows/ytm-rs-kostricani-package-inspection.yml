@@ -47,6 +47,12 @@ jobs:
             $manifest = Join-Path $bucket $name
             if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) { throw "Manifest is missing: $manifest" }
             Write-Host "Checking $name"
+            $schemaPath = Join-Path $env:GITHUB_WORKSPACE 'scoop_core\\schema.json'
+            $schema = Get-Content -LiteralPath $schemaPath -Raw
+            $manifestContent = Get-Content -LiteralPath $manifest -Raw
+            if (-not (Test-Json -Json $manifestContent -Schema $schema -ErrorAction Stop)) {
+              throw "Manifest fails the official Scoop JSON schema: $name"
+            }
             $output = @(& $checkver -App $manifest -ThrowError *>&1 | ForEach-Object { [string]$_ })
             $outputText = $output -join [Environment]::NewLine
             if ($outputText -match "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)") {
