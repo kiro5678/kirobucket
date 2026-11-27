@@ -35,6 +35,7 @@ on:
       - 'bucket/autooff.json'
       - 'bucket/anton.json'
       - 'bucket/pake-desktop.json'
+      - 'bucket/talkbar.json'
       - '.github/workflows/multi-engine-installer-type-inspector.yml'
 
 permissions:
@@ -184,6 +185,23 @@ jobs:
               $name = [System.IO.Path]::GetFileName(([System.Uri]$url).AbsolutePath)
               $expectedHash = [string]$manifest.hash
               if ($expectedHash -and ($expectedHash.Length -ne 64 -or $expectedHash -match '[^0-9a-fA-F]')) { throw 'Manifest hash, when supplied, must be a 64-character SHA-256 digest.' }
+            } elseif ($changedPaths -contains 'bucket/talkbar.json') {
+              $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/talkbar.json'
+              $targetProduct = 'TalkBar'
+              if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { throw "Manifest not found: $manifestPath" }
+              $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+              $architecture = $manifest.architecture.'64bit'
+              if ($null -eq $architecture) { throw 'TalkBar manifest must define the verified x64 architecture.' }
+              $urlTemplate = [string]$architecture.url
+              $url = $urlTemplate.Replace('$version', [string]$manifest.version)
+              $uri = [System.Uri]::new($url)
+              if ($uri.Scheme -ne 'https' -or $uri.Host -ine 'download.talkbar.app' -or $uri.AbsolutePath -notmatch '^/download/windows/x86_64/[0-9.]+$' -or -not $url.EndsWith('#/dl.7z')) {
+                throw "TalkBar URL is not the verified official x64 NSIS extraction asset: $url"
+              }
+              $name = "TalkBar-$([string]$manifest.version)-Setup.exe"
+              $expectedHash = [string]$architecture.hash
+              if ($expectedHash -notmatch '^[0-9a-fA-F]{64}$') { throw 'TalkBar x64 SHA-256 must be a 64-character hexadecimal digest.' }
+              if ($manifest.shortcuts[0][0] -ne 'TalkBar.exe') { throw 'TalkBar shortcut must target the extracted TalkBar.exe.' }
             } else {
               throw 'Pull request does not modify a supported installer-inspection manifest.'
             }
@@ -1165,6 +1183,92 @@ jobs:
             '- Verified the installation directory was removed.'
           ) | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
+      - name: Extract TalkBar NSIS payload and verify Scoop manifest without executing it
+        if: steps.source.outputs.target_product == 'TalkBar'
+        shell: pwsh
+        env:
+          INSTALLER_PATH: ${{ steps.target.outputs.installer_path }}
+          EXPECTED_SHA256: ${{ steps.target.outputs.sha256 }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $root = Join-Path $env:RUNNER_TEMP 'talkbar-nsis-extraction'
+          $outer = Join-Path $root 'outer'
+          New-Item -ItemType Directory -Path $root,$outer -Force | Out-Null
+
+          $actualHash = (Get-FileHash -LiteralPath $env:INSTALLER_PATH -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($actualHash -ne $env:EXPECTED_SHA256.ToLowerInvariant()) { throw "TalkBar SHA-256 mismatch after download: $actualHash" }
+
+          $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            $command = Get-Command '7z.exe' -ErrorAction SilentlyContinue
+            if ($command) { $sevenZip = $command.Source }
+          }
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) {
+            choco install 7zip.install --yes --no-progress
+            if ($LASTEXITCODE -ne 0) { throw '7-Zip installation failed.' }
+            $sevenZip = Join-Path $env:ProgramFiles '7-Zip\7z.exe'
+          }
+          if (-not (Test-Path -LiteralPath $sevenZip -PathType Leaf)) { throw '7-Zip executable was not found.' }
+
+          $listing = @(& $sevenZip l -slt $env:INSTALLER_PATH 2>&1 | ForEach-Object { "$_" })
+          $listExit = $LASTEXITCODE
+          $listing | Set-Content -LiteralPath (Join-Path $root 'nsis-listing.txt') -Encoding utf8
+          if ($listExit -ne 0) { throw "7-Zip could not list TalkBar NSIS setup (exit code $listExit)." }
+
+          $extractLog = @(& $sevenZip x $env:INSTALLER_PATH "-o$outer" -y -bd 2>&1 | ForEach-Object { "$_" })
+          $extractExit = $LASTEXITCODE
+          $extractLog | Set-Content -LiteralPath (Join-Path $root 'nsis-extraction.log') -Encoding utf8
+          if ($extractExit -ne 0) { throw "7-Zip failed to extract TalkBar NSIS setup (exit code $extractExit)." }
+          $outerFiles = @(Get-ChildItem -LiteralPath $outer -File -Recurse -Force)
+          if ($outerFiles.Count -eq 0) { throw 'TalkBar NSIS extraction produced no files.' }
+
+          $manifestPath = Join-Path $env:GITHUB_WORKSPACE 'bucket/talkbar.json'
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json -ErrorAction Stop
+          if ($manifest.version -ne '0.3.7') { throw "Unexpected TalkBar manifest version: $($manifest.version)" }
+          $architectureNames = @($manifest.architecture.PSObject.Properties.Name)
+          if ($architectureNames.Count -ne 1 -or $architectureNames[0] -ne '64bit') {
+            throw "TalkBar manifest must expose only verified x64 architecture. Found: $($architectureNames -join ', ')"
+          }
+          $package = $manifest.architecture.'64bit'
+          $expectedUrlTemplate = 'https://download.talkbar.app/download/windows/x86_64/$version#/dl.7z'
+          if ($package.url -ne $expectedUrlTemplate) { throw "TalkBar 64bit URL template differs from verified NSIS asset: $($package.url)" }
+          $resolvedPackageUrl = $package.url.Replace('$version', [string]$manifest.version)
+          $expectedResolvedUrl = "https://download.talkbar.app/download/windows/x86_64/$($manifest.version)#/dl.7z"
+          if ($resolvedPackageUrl -ne $expectedResolvedUrl) { throw 'TalkBar 64bit URL does not resolve to the inspected release.' }
+          if ($package.hash.ToLowerInvariant() -ne $actualHash) { throw 'TalkBar manifest hash does not match the verified installer hash.' }
+          if ($manifest.shortcuts[0][0] -ne 'TalkBar.exe') { throw 'TalkBar shortcut must target TalkBar.exe.' }
+          if ($manifest.autoupdate.url -ne $package.url) {
+            throw 'TalkBar autoupdate URL template must match the verified 64bit URL template.'
+          }
+          if ($manifest.checkver.url -ne 'https://download.talkbar.app/') { throw 'TalkBar checkver must use the official download page.' }
+          $downloadPage = Invoke-WebRequest -Uri $manifest.checkver.url -MaximumRedirection 10 -TimeoutSec 120
+          $versionMatch = [regex]::Match($downloadPage.Content, [string]$manifest.checkver.regex)
+          if (-not $versionMatch.Success -or $versionMatch.Groups['version'].Value -ne $manifest.version) {
+            throw "TalkBar checkver regex did not identify version $($manifest.version) in official download page HTML."
+          }
+          $mainExecutable = Join-Path $outer 'TalkBar.exe'
+          if (-not (Test-Path -LiteralPath $mainExecutable -PathType Leaf)) { throw 'TalkBar.exe is missing from the extracted installer root.' }
+          $mainVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo($mainExecutable)
+          if ($mainVersion.FileVersion -ne $manifest.version -or $mainVersion.ProductName -ne 'TalkBar') {
+            throw "Extracted TalkBar.exe metadata does not match manifest version $($manifest.version)."
+          }
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('TalkBar NSIS extraction and manifest verification')
+          $report.Add("Installer SHA-256: $actualHash")
+          $report.Add("7-Zip extracted files: $($outerFiles.Count)")
+          $report.Add('TalkBar.exe path: root\TalkBar.exe')
+          $report.Add("TalkBar.exe product/version: $($mainVersion.ProductName) $($mainVersion.FileVersion)")
+          $report.Add('Manifest architecture: 64bit only')
+          $report.Add('Manifest URL, hash, shortcut, checkver and autoupdate: PASS')
+          $report.Add('Installer and extracted application were not executed.')
+          $report | Set-Content -LiteralPath (Join-Path $root 'extraction-report.txt') -Encoding utf8
+          $report | ForEach-Object { Write-Output $_ }
+          $report | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+          foreach ($file in $outerFiles | Where-Object { $_.Name -in @('TalkBar.exe','talkbar-cli.exe','talkbar-local-llm.exe','MicrosoftEdgeWebview2Setup.exe') }) {
+            Write-Output ("PAYLOAD {0} [{1} bytes]" -f [IO.Path]::GetRelativePath($outer,$file.FullName).Replace('\','/'),$file.Length)
+          }
+
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -1173,4 +1277,5 @@ jobs:
           path: |
             ${{ runner.temp }}/detect-it-easy-api/*.txt
             ${{ runner.temp }}/pake-desktop-verification/*
+            ${{ runner.temp }}/talkbar-nsis-extraction/*
           if-no-files-found: ignore
