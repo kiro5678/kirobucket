@@ -147,7 +147,7 @@ jobs:
             throw "MSI administrative extraction failed with exit code $($process.ExitCode). $tail"
           }
 
-          $appRoot = Join-Path $msiRoot 'SourceDir\PFiles64\Dainvo\Dainvo PDF'
+          $appRoot = Join-Path $msiRoot 'PFiles64\Dainvo\Dainvo PDF'
           if (-not (Test-Path -LiteralPath $appRoot -PathType Container)) { throw "The expected MSI payload directory was not found: $appRoot" }
           $actualFiles = @(Get-ChildItem -LiteralPath $appRoot -File -Recurse -Force)
           $requiredPaths = @($manifest.bin) + @($manifest.shortcuts | ForEach-Object { [string]$_[0] })
