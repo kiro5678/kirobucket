@@ -10,11 +10,11 @@
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 8 | [View](#cross-device-integration) |
 | Desktop Docks | 10 | [View](#desktop-docks) |
-| Developer & Technical Tools | 59 | [View](#developer-technical-tools) |
+| Developer & Technical Tools | 60 | [View](#developer-technical-tools) |
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 27 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 79 | [View](#file-management) |
+| File Management | 81 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
 | Local File Sharing | 2 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 38 | [View](#forensics-diagnostics) |
@@ -28,7 +28,7 @@
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 12 | [View](#network-security) |
 | Notch | 32 | [View](#notch) |
-| Notes & Knowledge | 28 | [View](#notes-knowledge) |
+| Notes & Knowledge | 29 | [View](#notes-knowledge) |
 | Other Utilities | 141 | [View](#other-utilities) |
 | Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
@@ -47,7 +47,7 @@
 | Windows Customization | 107 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1314**
+**Total unique categorized manifests: 1318**
 
 
 ## Android & Device Tools
@@ -202,6 +202,7 @@
 | [modern-windows-message-box-generator-thiojoe](../bucket/modern-windows-message-box-generator-thiojoe.json) | 1.2.1 | 111.7 MiB | 2025-03-30 | Generate customizable modern Windows message boxes and Task Dialogs. | [Homepage](https://github.com/ThioJoe/Modern-Windows-Message-Box-Generator) |
 | [mypack](../bucket/mypack.json) | 0.2.0 | 64bit: 14.9 MiB / arm64: 13.8 MiB | 2026-11-12 | Turns websites and local HTML projects into standalone desktop apps. | [Homepage](https://github.com/sinhong2011/mypack) |
 | [nekossh](../bucket/nekossh.json) | 0.3.64 | 5.3 MiB | 2026-11-05 | Native SSH terminal and SFTP client with local host management. | [Homepage](https://github.com/neko233-com/nekossh) |
+| [noodle](../bucket/noodle.json) | 1.0.0 | 151.5 MiB | 2026-11-22 | Terminal REST client for editing, sending, inspecting, and automating file-based API requests. | [Homepage](https://github.com/noodle-rest/noodle) |
 | [paseo](../bucket/paseo.json) | 0.13.2 | 64bit: 138.3 MiB / arm64: 138.8 MiB | 2026-10-29 | Voice-controlled development environment for local AI coding agents. | [Homepage](https://paseo.sh) |
 | [powershell-np](../bucket/powershell-np.json) | 7.6.9 | 64bit: 112.1 MiB / 32bit: 105.3 MiB / arm64: 105.8 MiB | 2026-10-25 | PowerShell Core, the cross-platform task automation and configuration management framework/tool. | [Homepage](https://github.com/PowerShell/PowerShell) |
 | [pyinstxtractor-ng](../bucket/pyinstxtractor-ng.json) | 2026.07.03 | 7.6 MiB | 2026-07-03 | pyinstxtractor-ng is a tool to extract the contents of a Pyinstaller generated executable file. | [Homepage](https://github.com/pyinstxtractor/pyinstxtractor-ng) |
@@ -331,6 +332,8 @@ Tools focused on HDD/SSD health, SMART telemetry, drive activity and endurance, 
 | [czkawka-krokiet-skia-vulkan](../bucket/czkawka-krokiet-skia-vulkan.json) | 12.0.2 | 65.0 MiB | 2026-09-09 | Czkawka Krokiet Windows build using the Skia Vulkan backend | [Homepage](https://github.com/qarmin/czkawka) |
 | [deckhand](../bucket/deckhand.json) | 0.9.28 | 24.0 MiB | 2026-11-11 | Portable Windows file organizer with automated rules, schedules, previews, and undo history. | [Homepage](https://github.com/AuZzii-Xssistant/Deckhand) |
 | [declutter](../bucket/declutter.json) | 1.13.7 | 37.4 MiB | 2026-02-12 | Desktop application for managing and organizing files with automated processing rules and tagging. | [Homepage](https://github.com/midnightdim/declutter) |
+| [deskbloom](../bucket/deskbloom.json) | 4.1.3 | 60.8 KiB | 2026-11-22 | Creates collapsible desktop file groups while keeping files in ordinary Windows folders. | [Homepage](https://github.com/treyer012-commits/DeskBloom) |
+| [digup](../bucket/digup.json) | 0.7.0-beta.3 | 38.7 MiB | 2026-10-22 | Windows file-content search tool for semantic discovery across documents, images, audio, video, and code. | [Homepage](https://github.com/ARahim3/DigUp) |
 | [deskbox](../bucket/deskbox.json) | 1.5.9 | 64bit: 32.2 MiB / arm64: 31.6 MiB | 2026-10-23 | Local-first Windows desktop organizer with file and folder widgets, groups, tasks, notes, and desktop search. | [Homepage](https://github.com/Tianyu199509/DeskBox) |
 | [softwareok-delete-on-reboot](../bucket/softwareok-delete-on-reboot.json) | 3.47 | 64bit: 226.3 KiB | 2026-03-13 | Schedule files for deletion during the next reboot. | [Homepage](https://www.softwareok.com/?Download=Delete.On.Reboot) |
 | [softwareok-dirprintok](../bucket/softwareok-dirprintok.json) | 7.69 | 64bit: 852.5 KiB | 2026-10-20 | Print directory listings and export them to XLS, HTML, CSV, and TXT. | [Homepage](https://www.softwareok.com/?Download=DirPrintOK) |
@@ -801,6 +804,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [talkbar](../bucket/talkbar.json) | 0.3.7 | 64bit: 117.1 MiB | 2026-11-27 | Private AI meeting note taker with local recording, transcription, summaries, and searchable notes. | [Homepage](https://www.talkbar.app/) |
 | [softwareok-desktop-note-ok](../bucket/softwareok-desktop-note-ok.json) | 4.66 | 64bit: 292.3 KiB | 2026-06-13 | Create and manage notes on the desktop. | [Homepage](https://www.softwareok.com/?Download=DesktopNoteOK) |
 | [deepown](../bucket/deepown.json) | 1.1.4 | 11.8 MiB | 2026-11-10 | Local-first encrypted data vaults with direct device-to-device LAN sync and revision history. | [Homepage](https://deepown.app/) |
+| [notegraph](../bucket/notegraph.json) | 2.0.0 | 64bit: 77.2 MiB | 2026-11-14 | Offline classroom whiteboard with infinite canvas, PDF markup, notes, and cross-device sync. | [Homepage](https://github.com/MDYOUSUF20007-oss/notegraph) |
 | [pake-flomo](../bucket/pake-flomo.json) | 3.18.0 | 64bit: 3.5 MiB | 2026-11-04 | Pake-generated desktop wrapper for Flomo. | [Homepage](https://v.flomoapp.com/mine) |
 | [softwareok-flyout-notepad](../bucket/softwareok-flyout-notepad.json) | 1.05 | 64bit: 234.8 KiB | 2026-08-17 | Dockable text and image workspace that opens from screen edges. | [Homepage](https://www.softwareok.com/?seite=Microsoft/FlyOutNotePad) |
 | [goldendict-ng](../bucket/goldendict-ng.json) | v26.11.0 | 64bit: 129.6 MiB | 2026-10-23 | A feature-rich dictionary lookup program, supporting multiple dictionary formats (StarDict/Babylon/Lingvo/Dictd/AARD/MDict/SDict) and online dictionaries, featuring perfect article rendering with the complete markup, illustrations and other content retained, and allowing you to type in words without any accents or correct case. | [Homepage](https://github.com/xiaoyifang/goldendict) |
