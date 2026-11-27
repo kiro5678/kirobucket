@@ -2,7 +2,10 @@
     "version": "4.1.3",
     "description": "Collapsible desktop file groups that organize Windows files into movable panels.",
     "homepage": "https://github.com/treyer012-commits/DeskBloom",
-    "license": "Proprietary",
+    "license": {
+        "identifier": "Proprietary",
+        "url": "https://github.com/treyer012-commits/DeskBloom/blob/main/LICENSE"
+    },
     "url": "https://github.com/treyer012-commits/DeskBloom/releases/download/v4.1.3/DeskBloom-4.1.3-portable.zip",
     "hash": "630387278c54ebac855077bf242982a8a97aa11f3337ce013a9d0189fc2b5f95",
     "shortcuts": [
