@@ -15,7 +15,15 @@
             ]
         }
     },
-    "checkver": "Capture-([0-9.]+)-Windows",
+    "checkver": {
+        "script": [
+            "$response = Invoke-WebRequest -Uri 'https://kostricani.com/screenshot-tool/' -Headers @{ 'User-Agent' = 'Scoop-KiroBucket' } -TimeoutSec 30 -ErrorAction Stop",
+            "$match = [regex]::Match($response.Content, 'Kostricani-Capture-Desktop-(?<version>[0-9.]+)-Windows-x64-beta\\.zip')",
+            "if (-not $match.Success) { throw 'Could not find the published Kostricani Capture Windows beta ZIP filename.' }",
+            "@{ version = $match.Groups['version'].Value } | ConvertTo-Json -Compress"
+        ],
+        "jsonpath": "$.version"
+    },
     "autoupdate": {
         "architecture": {
             "64bit": {
