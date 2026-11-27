@@ -34,6 +34,15 @@
 
 
 
+### Dainvo PDF 0.2.3 — Official Windows x64 MSI
+
+- The official stable feed at [download.dainvo.com/pdf/manifest.json](https://download.dainvo.com/pdf/manifest.json) reports version 0.2.3, build 2003, and publishes the Windows x64 MSI with SHA-256 `8845a40efea32e2214afb961a2f848b7dc9e565f430d5388e4d3a164f963ca4b`.
+- The Windows installer URL supplied for inspection is an Authenticode-valid NSIS wrapper. Its embedded MSI matches the direct MSI asset's published SHA-256 and size, so the Scoop manifest uses the direct MSI rather than the additional NSIS wrapper.
+- MSI administrative extraction finds the application under `PFiles64/Dainvo/Dainvo PDF`, including `dainvo-pdf.exe` and `dainvo-pdf-cli.exe`, both reporting version 0.2.3. The package also contains the PDFium XFA helper and offline OCR resources.
+- The manifest uses Scoop's MSI archive extraction (`#/dl.msi`) and does not run the vendor installer or Windows Installer registration routine. The dedicated Windows workflow verifies the feed, wrapper's embedded MSI, direct MSI digest, extraction directory, executable versions, and declared bin/shortcut targets.
+- The test does not execute the application or verify interactive GUI functionality or runtime data locations.
+- Evidence: [manifest](../bucket/dainvo-pdf.json), [Windows MSI extraction workflow](../.github/workflows/dainvo-pdf-installer-inspection.yml), and the official [release feed](https://download.dainvo.com/pdf/manifest.json).
+
 ### Hearth 0.4.3 — Official Portable ZIP
 
 
