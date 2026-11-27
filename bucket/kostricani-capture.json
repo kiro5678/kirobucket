@@ -15,10 +15,7 @@
             ]
         }
     },
-    "checkver": {
-        "url": "https://kostricani.com/screenshot-tool/",
-        "regex": "Capture-(?<version>[0-9.]+)-Windows"
-    },
+    "checkver": "Capture-(?<version>[0-9.]+)-Windows",
     "autoupdate": {
         "architecture": {
             "64bit": {
