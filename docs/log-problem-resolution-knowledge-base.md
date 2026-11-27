@@ -2,6 +2,17 @@
 
 This is the repository-wide maintenance record for technical problems, resolutions, workflow changes, and CI validation history encountered while maintaining `kirobucket`.
 
+## 2026-11-27 — Correct DigUp checkver and manifest formatting in PR #296
+
+- **Status:** Resolved in the PR branch; follow-up Pull Requests validation is required.
+- **Affected files:** `bucket/digup.json`, `bucket/noodle.json`.
+- **Problem:** The first Pull Requests workflow reported `Lint: False` for both new manifests. DigUp also reported `Checkver: False` and `Autoupdate: False`.
+- **Root cause:** GitHub's create-file content preserved the submitted text without a final newline; Scoop's formatter requires a final CRLF. DigUp's custom checkver regex was written against a release-title phrase that did not match the actual tags.
+- **Resolution:** Re-serialized both manifests with four-space indentation and CRLF line endings including the final CRLF. Replaced DigUp's brittle release-title regex with the full GitHub repository URL for `checkver.github`. Added release-API digest extraction for DigUp and Noodle autoupdate hashes.
+- **Verification:** The first archive validation run [46049338961](https://github.com/kiro5678/kirobucket/actions/runs/46049338961) reported zero failures and confirmed DigUp's downloaded SHA-256 and declared `DigUp.exe` / `helper/digup.exe` paths. It skipped Noodle's raw EXE as a non-archive, as expected. The independent hash run [46049338909](https://github.com/kiro5678/kirobucket/actions/runs/46049338909) downloaded both assets and matched their manifest hashes. GitHub Actions workflow validation [46049338948](https://github.com/kiro5678/kirobucket/actions/runs/46049338948) passed. The original PR title lint failure was caused by an invalid initial PR title; the title was corrected to the repository's `manifest-name(*): description` convention. The Pull Requests handler run [46049339003](https://github.com/kiro5678/kirobucket/actions/runs/46049339003) exposed the manifest problems above and is to be rerun after the fixes.
+- **Scope:** These checks do not prove full Scoop install/uninstall or application launch behavior. DigUp remains a Windows beta; Noodle's Windows x64 build is also beta.
+- **Prevention:** Always terminate newly created manifest files with CRLF, use full GitHub repository URLs for `checkver.github`, and prefer tag-based checking unless a release-page regex has been verified against the exact upstream page.
+
 ## Mandatory rule
 
 Whenever a real problem is encountered in this repository, investigate it to an evidence-supported cause and apply a fix. **After the problem has been resolved, add an entry to this file in the same task.** Do not finish the task with a fix that exists only in chat, a commit message, or an unrecorded workflow run.
