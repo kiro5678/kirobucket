@@ -113,10 +113,24 @@ jobs:
             throw "NoteGraph NSIS uninstaller exited with code $($process.ExitCode)."
           }
 
+          # NSIS may spawn Un_A.exe to finish deleting files while the original uninstaller exits.
+          $deadline = [DateTime]::UtcNow.AddSeconds(30)
+          do {
+            $pendingUninstall = @(Get-Process -Name 'Un_A' -ErrorAction SilentlyContinue)
+            if ($pendingUninstall.Count -eq 0) { break }
+            Start-Sleep -Milliseconds 500
+          } while ([DateTime]::UtcNow -lt $deadline)
+          if (@(Get-Process -Name 'Un_A' -ErrorAction SilentlyContinue).Count -gt 0) {
+            throw 'The NSIS Un_A cleanup process did not exit within 30 seconds.'
+          }
+          Start-Sleep -Seconds 2
+
           if (Test-Path -LiteralPath $installDir) {
-            $leftoverFiles = @(Get-ChildItem -LiteralPath $installDir -Force -ErrorAction SilentlyContinue)
-            if ($leftoverFiles.Count -gt 0) {
-              throw "The Scoop target still contains files after uninstall: $installDir"
+            $remaining = @(Get-ChildItem -LiteralPath $installDir -Force -Recurse -ErrorAction SilentlyContinue)
+            if ($remaining.Count -gt 0) {
+              Write-Host 'Files still present after the NSIS cleanup process exited:'
+              $remaining | ForEach-Object { Write-Host $_.FullName }
+              throw "The NSIS uninstaller left files under the Scoop target: $installDir"
             }
             Remove-Item -LiteralPath $installDir -Force -ErrorAction SilentlyContinue
           }
