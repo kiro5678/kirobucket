@@ -6,6 +6,13 @@ on:
       - master
     paths:
       - 'bucket/magpie-search.json'
+      - 'bucket/dainvo-pdf.json'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - master
+    paths:
+      - 'bucket/dainvo-pdf.json'
   workflow_dispatch:
     inputs:
       manifest:
@@ -66,7 +73,7 @@ jobs:
       - name: Validate changed manifests with checkver
         env:
           EVENT_NAME: ${{ github.event_name }}
-          MANUAL_MANIFEST: ${{ inputs.manifest || (github.event_name == 'push' && 'bucket/magpie-search.json') || '' }}
+          MANUAL_MANIFEST: ${{ inputs.manifest || (github.event_name == 'push' && 'bucket/magpie-search.json') || (github.event_name == 'pull_request' && 'bucket/dainvo-pdf.json') || '' }}
           BASE_SHA: ${{ github.event.before || '' }}
           HEAD_SHA: ${{ github.sha }}
           GITHUB_TOKEN: ${{ secrets.CHECKVER_GITHUB_TOKEN || github.token }}
@@ -79,7 +86,7 @@ jobs:
           $skipped = @()
           $failurePattern = "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)"
 
-          if ($env:EVENT_NAME -eq 'workflow_dispatch' -or $env:EVENT_NAME -eq 'push') {
+          if ($env:EVENT_NAME -in @('workflow_dispatch', 'push', 'pull_request')) {
             $manualManifest = $env:MANUAL_MANIFEST.Trim().Replace('\', '/')
             if (-not [string]::IsNullOrWhiteSpace($manualManifest)) {
               if ($manualManifest -notmatch '(?i)^(?:bucket/)?(?<name>[^/]+\.json)$') {
