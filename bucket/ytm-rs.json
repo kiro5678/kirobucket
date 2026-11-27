@@ -1,0 +1,37 @@
+{
+    "version": "0.4.0",
+    "description": "Native YouTube Music desktop client with synchronized lyrics, downloads, and system media controls.",
+    "homepage": "https://github.com/grapedjuice/ytm-rs",
+    "license": "GPL-3.0-only",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/grapedjuice/ytm-rs/releases/download/v$version/ytm-rs-portable-$version.zip",
+            "hash": "a6d9c21730d088fd3283478290e9538866e30a6260209fe4ba3c28621a641107",
+            "shortcuts": [
+                [
+                    "ytm-rs.exe",
+                    "ytm-rs"
+                ]
+            ]
+        }
+    },
+    "persist": "data",
+    "checkver": {
+        "url": "https://api.github.com/repos/grapedjuice/ytm-rs/releases?per_page=100",
+        "jsonpath": "$[?(@.prerelease == false && @.draft == false)][0].tag_name",
+        "regex": "^v(?<version>[\\d.]+)$"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/grapedjuice/ytm-rs/releases/download/v$version/ytm-rs-portable-$version.zip",
+                "hash": {
+                    "mode": "json",
+                    "url": "https://api.github.com/repos/grapedjuice/ytm-rs/releases/tags/v$version",
+                    "jp": "$.assets[?(@.name == 'ytm-rs-portable-$version.zip')].digest"
+                }
+            }
+        }
+    },
+    "notes": "Automatic updates are enabled by default in the app. Disable them in Settings > About > Updates to keep Scoop in control of application updates."
+}
