@@ -49,7 +49,7 @@ jobs:
             Write-Host "Checking $name"
             $output = @(& $checkver -App $manifest -ThrowError *>&1 | ForEach-Object { [string]$_ })
             $outputText = $output -join [Environment]::NewLine
-            if ($outputText -match "(?i)(couldn't\\s+(retrieve|find|match)|could\\s+not\\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)") {
+            if ($outputText -match "(?i)(couldn't\s+(retrieve|find|match)|could\s+not\s+find|URL .+ is not valid|Conversion from JSON failed|failed to convert JSON)") {
               throw "Scoop reported a version-detection failure for $($name): $($Matches[0])"
             }
           }
@@ -229,6 +229,35 @@ jobs:
 
               if (Test-Path -LiteralPath (Join-Path $extractDir 'portable.txt')) {
                 $result.PortableMarker = $true
+              }
+
+              if ($case.Name -eq 'ytm-rs-0.4.0') {
+                if (-not (Test-Path -LiteralPath (Join-Path $extractDir 'ytm-rs.exe') -PathType Leaf) -or -not $result.PortableMarker) {
+                  throw 'ytm-rs portable ZIP is missing its root executable or portable marker.'
+                }
+              }
+
+              if ($case.Name -eq 'kostricani-orbit-0.3.0') {
+                $orbitRoot = Join-Path $nestedRoot 'orbit-app'
+                if (-not (Test-Path -LiteralPath (Join-Path $orbitRoot 'Orbit.exe') -PathType Leaf)) {
+                  throw 'Orbit.exe is missing from the extracted inner payload.'
+                }
+                if (-not (Test-Path -LiteralPath (Join-Path $orbitRoot 'resources/app.asar') -PathType Leaf)) {
+                  throw 'Orbit resources/app.asar is missing from the extracted inner payload.'
+                }
+              }
+
+              if ($case.Name -eq 'kostricani-hdd-rescue-0.14.0') {
+                if (-not (Test-Path -LiteralPath (Join-Path $extractDir 'HDDRescue.exe') -PathType Leaf)) {
+                  throw 'HDDRescue.exe is missing from the ZIP root.'
+                }
+                if (-not (Test-Path -LiteralPath (Join-Path $extractDir 'AppData') -PathType Container)) {
+                  throw 'The packaged AppData directory is missing.'
+                }
+                $packageJson = Join-Path $extractDir 'resources/app/package.json'
+                if (-not (Test-Path -LiteralPath $packageJson -PathType Leaf) -or (Get-Content -LiteralPath $packageJson -Raw | ConvertFrom-Json).version -ne '0.14.0') {
+                  throw 'The embedded HDD Rescue package version does not match 0.14.0.'
+                }
               }
 
               $inventoryRoots = @($extractDir, $nestedRoot) | Where-Object { Test-Path -LiteralPath $_ -PathType Container }
