@@ -25,5 +25,6 @@
                 "url": "https://github.com/wallbangz/Overlook/releases/download/v$version/Overlook.zip"
             }
         }
-    }
+    },
+    "pre_install": "if (-not (Test-Path -LiteralPath \"$dir\\Overlook.ini\")) { New-Item -ItemType File -Path \"$dir\\Overlook.ini\" | Out-Null }"
 }
