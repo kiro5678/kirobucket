@@ -14,16 +14,16 @@
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 26 | [View](#download-managers) |
 | Emulators & Compatibility | 16 | [View](#emulators-compatibility) |
-| File Management | 78 | [View](#file-management) |
+| File Management | 79 | [View](#file-management) |
 | File Managers & Explorers | 15 | [View](#file-managers-explorers) |
 | Local File Sharing | 2 | [View](#local-file-sharing) |
 | Forensics & Diagnostics | 38 | [View](#forensics-diagnostics) |
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
 | Games Tools | 16 | [View](#games-tools) |
-| Images & Photos | 62 | [View](#images-photos) |
+| Images & Photos | 63 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 62 | [View](#media-audio-video) |
+| Media & Audio/Video | 63 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 12 | [View](#network-security) |
@@ -44,10 +44,10 @@
 | Time Tracking & Focus | 14 | [View](#time-tracking-focus) |
 | Translation & OCR | 9 | [View](#translation-ocr) |
 | Weather & Information | 1 | [View](#weather-information) |
-| Windows Customization | 101 | [View](#windows-customization) |
-| Windows Privacy & Tweaks | 51 | [View](#windows-privacy-tweaks) |
+| Windows Customization | 106 | [View](#windows-customization) |
+| Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1299**
+**Total unique categorized manifests: 1308**
 
 
 ## Android & Device Tools
@@ -574,6 +574,7 @@ Utilities and launchers designed for a particular game or game series. General-p
 | [walpa](../bucket/walpa.json) | 26.10 | 736.7 KiB | 2026-10-10 | Lossless raster icon recoloring tool for Windows. | [Homepage](https://github.com/turkaysoft/walpa) |
 | [zint](../bucket/zint.json) | 2.16.0 | — | — | Zint is a suite of programs to allow easy encoding of data in any of the wide range of public domain barcode standards and to allow integration of this capability into your own programs. | [Homepage](https://sourceforge.net/projects/zint/) |
 
+| [apexshot](../bucket/apexshot.json) | 0.3.2 | 64bit: 173.2 MiB | 2026-11-25 | Windows screenshot and screen recording app with annotation, OCR, QR detection, and video editing. | [Homepage](https://github.com/apex-shot/apexshot) |
 ## Keyboard & Language
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
@@ -665,6 +666,7 @@ Utilities and launchers designed for a particular game or game series. General-p
 | [pake-youtube](../bucket/pake-youtube.json) | 3.18.0 | 64bit: 3.4 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube. | [Homepage](https://www.youtube.com/) |
 | [pake-youtubemusic](../bucket/pake-youtubemusic.json) | 3.18.0 | 64bit: 3.8 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube Music. | [Homepage](https://music.youtube.com/) |
 
+| [audify](../bucket/audify.json) | 1.0.3 | 64bit: 26.0 MiB | 2026-11-26 | Offline audio sample and music library manager with waveform editing and local AI tagging. | [Homepage](https://github.com/saimdeniz/audify) |
 ## Music Education & Piano Learning
 
 Desktop software focused on piano learning, music reading, music theory, and instrumental practice.
@@ -1442,6 +1444,10 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [softwareok-zigarettenschachtel-spruch](../bucket/softwareok-zigarettenschachtel-spruch.json) | 2.32 | 64bit: 64.7 KiB | 2021-05-31 | Display short sayings and quotes. | [Homepage](https://www.softwareok.com/?Download=Zigarettenschachtel-Spruch) |
 | [folder-icon-maker](../bucket/folder-icon-maker.json) | 1.3.0 | 64bit: 19.4 MiB | 2026-11-22 | Windows utility for changing folder colors and icons from the system tray. | [Homepage](https://github.com/garfiewlolz/folder-icon-maker) |
 
+| [iconic-windows](../bucket/iconic-windows.json) | 1.0.0 | 64bit: 56.9 MiB | 2026-11-25 | Windows desktop icon manager with a frosted-glass panel for grouping apps, files, and folders. | [Homepage](https://github.com/brette912/iconic_windows) |
+| [nightlight-flor](../bucket/nightlight-flor.json) | 2.0 | 64bit: 2.0 MiB | 2026-11-27 | Portable Windows tray utility for display color temperature, brightness, contrast, and monitor controls. | [Homepage](https://github.com/iamfromreallife/NightLightFlor) |
+| [pearui](../bucket/pearui.json) | 1.5.2 | 64bit: 59.5 MiB | 2026-11-27 | macOS-inspired Windows desktop shell with a menu bar, Dock, search, and Control Center. | [Homepage](https://github.com/guruswarupa/PearUI) |
+| [wacos](../bucket/wacos.json) | 2026-11-26 | 64bit: 178.6 MiB | 2026-11-26 | Native macOS-style desktop shell and built-in apps for Windows 11. | [Homepage](https://github.com/renzyxx/WacOS) |
 ## Windows Privacy & Tweaks
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
@@ -1499,6 +1505,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [oo-regeditor](../bucket/oo-regeditor.json) | 16.1.6660 | 15.1 MiB | — | Portable advanced Windows Registry editor. | [Homepage](https://www.oo-software.com/en/ooregeditor) |
 
 
+| [win-optimizer](../bucket/win-optimizer.json) | 26.11.27 | 64bit: 61.8 MiB | 2026-11-27 | Windows cleanup, optimization, privacy, and maintenance utility. | [Homepage](https://github.com/sh1zen/win-optimizer) |
 ## Windows Update & Management
 
 | Manifest | Version | Size | Program Update | Description | Homepage |
