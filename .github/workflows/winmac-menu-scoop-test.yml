@@ -73,12 +73,16 @@ jobs:
           }
 
           $config = Join-Path $appDir 'config.ini'
-          if (-not ((Get-Item -LiteralPath $config).Attributes -band [System.IO.FileAttributes]::ReparsePoint)) {
-            throw 'config.ini was not persisted by Scoop as expected.'
+          $persistedConfig = Join-Path $scoopRoot 'persist\winmac-menu\config.ini'
+          if (-not (Test-Path -LiteralPath $persistedConfig -PathType Leaf)) {
+            throw "Scoop did not create the persisted config file: $persistedConfig"
+          }
+          if ((Get-Content -LiteralPath $config -Raw) -ne (Get-Content -LiteralPath $persistedConfig -Raw)) {
+            throw 'The application config does not match the persisted config.'
           }
 
           Write-Host 'PASS: WinMacMenu.exe, config.ini, and winui3 were extracted.'
-          Write-Host 'PASS: config.ini is linked to Scoop persistent storage.'
+          Write-Host 'PASS: config.ini is present and matches Scoop persistent storage.'
 
       - name: Verify uninstall preserves persistent configuration
         if: always()
