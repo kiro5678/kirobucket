@@ -9,7 +9,7 @@
 | Clipboard Tools | 19 | [View](#clipboard-tools) |
 | Codec Pack | 1 | [View](#codec-pack) |
 | Cross-Device Integration | 8 | [View](#cross-device-integration) |
-| Desktop Docks | 9 | [View](#desktop-docks) |
+| Desktop Docks | 10 | [View](#desktop-docks) |
 | Developer & Technical Tools | 59 | [View](#developer-technical-tools) |
 | Disk Monitor | 10 | [View](#disk-monitor) |
 | Download Managers | 27 | [View](#download-managers) |
@@ -47,7 +47,7 @@
 | Windows Customization | 107 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1312**
+**Total unique categorized manifests: 1313**
 
 
 ## Android & Device Tools
@@ -167,6 +167,7 @@
 | [gloof](../bucket/gloof.json) | 0.1.0-beta.10 | 35.6 MiB | Unknown | Desktop dock and status bar for Windows 11, with modular widgets and customizable themes. | [Homepage](https://gloof.app/) |
 | [glowz-dock](../bucket/glowz-dock.json) | 1.2.1 | 122.5 MiB | 2026-09-26 | A glossy dock for launching EXE, LNK, and Steam URLs on Windows 10/11 (portable ZIP release). | [Homepage](https://github.com/Suraween/GlowZ-Dock) |
 | [sidestage](../bucket/sidestage.json) | 0.3.0 | 10.8 MiB | 2026-11-23 | Edge sidebar for favourite apps and minimized windows on Windows and Linux. | [Homepage](https://github.com/danny19862025/sidestage) |
+| [nopbar](../bucket/nopbar.json) | 0.1.116 | 14.8 MiB | 2026-11-26 | Windows dock and top bar with desktop widgets, Quick Settings, and a desktop assistant. | [Homepage](https://nopbard.com/nopbar) |
 | [stack-dock](../bucket/stack-dock.json) | 0.2.0-beta | 64bit: 2.3 MiB | 2026-11-18 | Customizable Windows dock for apps, games, files, folders, and links. | [Homepage](https://github.com/TNVR-HSN/stack-dock) |
 | [winmac-dock](../bucket/winmac-dock.json) | 1.0.0 | 64bit: 83.3 MiB / arm64: 79.4 MiB | 2026-11-22 | Standalone WinUI 3 dock for Windows 11 with macOS-style magnification and native Windows visuals. | [Homepage](https://github.com/Asteski/WinMac-Dock) |
 | [wisp](../bucket/wisp.json) | 0.8.2 | — | — | Windows 11 dock and keyboard launcher that replaces the taskbar. | [Homepage](https://github.com/SumirSeth/wisp) |
