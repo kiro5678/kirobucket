@@ -21,9 +21,9 @@
 | Game-Specific Tools | 6 | [View](#game-specific-tools) |
 | Games & Game Utilities | 9 | [View](#games-game-utilities) |
 | Games Tools | 16 | [View](#games-tools) |
-| Images & Photos | 63 | [View](#images-photos) |
+| Images & Photos | 64 | [View](#images-photos) |
 | Keyboard & Language | 18 | [View](#keyboard-language) |
-| Media & Audio/Video | 63 | [View](#media-audio-video) |
+| Media & Audio/Video | 64 | [View](#media-audio-video) |
 | Music Education & Piano Learning | 1 | [View](#music-education-piano-learning) |
 | Network & DNS | 49 | [View](#network-dns) |
 | Network Security | 12 | [View](#network-security) |
@@ -32,10 +32,10 @@
 | Other Utilities | 141 | [View](#other-utilities) |
 | Package Management | 14 | [View](#package-management) |
 | PDF & Documents | 33 | [View](#pdf-documents) |
-| Productivity & Launchers | 36 | [View](#productivity-launchers) |
+| Productivity & Launchers | 37 | [View](#productivity-launchers) |
 | Security | 46 | [View](#security) |
 | Speech-to-Text (STT) | 8 | [View](#speech-to-text-stt) |
-| Storage & Disk Tools | 33 | [View](#storage-disk-tools) |
+| Storage & Disk Tools | 34 | [View](#storage-disk-tools) |
 | Sync & Backup | 13 | [View](#sync-backup) |
 | System Monitoring & Hardware | 79 | [View](#system-monitoring-hardware) |
 | Sysinternals Utilities | 76 | [View](#sysinternals-utilities) |
@@ -47,7 +47,7 @@
 | Windows Customization | 107 | [View](#windows-customization) |
 | Windows Privacy & Tweaks | 52 | [View](#windows-privacy-tweaks) |
 | Windows Update & Management | 6 | [View](#windows-update-management) |
-**Total unique categorized manifests: 1319**
+**Total unique categorized manifests: 1322**
 
 
 ## Android & Device Tools
@@ -673,6 +673,9 @@ Utilities and launchers designed for a particular game or game series. General-p
 | [pake-youtubemusic](../bucket/pake-youtubemusic.json) | 3.18.0 | 64bit: 3.8 MiB | 2026-11-04 | Pake-generated desktop wrapper for YouTube Music. | [Homepage](https://music.youtube.com/) |
 
 | [audify](../bucket/audify.json) | 1.0.3 | 64bit: 26.0 MiB | 2026-11-26 | Offline audio sample and music library manager with waveform editing and local AI tagging. | [Homepage](https://github.com/saimdeniz/audify) |
+| [ytm-rs](../bucket/ytm-rs.json) | 0.4.0 | 16.2 MiB | 2026-11-25 | Native YouTube Music desktop player with synchronized lyrics, downloads, and system media controls. | [Homepage](https://github.com/grapedjuice/ytm-rs) |
+
+
 ## Music Education & Piano Learning
 
 Desktop software focused on piano learning, music reading, music theory, and instrumental practice.
@@ -1069,6 +1072,8 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [vovsoft-world-heatmap-creator](../bucket/vovsoft-world-heatmap-creator.json) | 2.0 | 2.1 MiB | 2026-08-13 | Portable edition of Vovsoft World Heatmap Creator. | [Homepage](https://vovsoft.com/software/world-heatmap-creator/) |
 | [winpinmenu](../bucket/winpinmenu.json) | 0.1.1 | 64bit: 334.2 KiB / 32bit: 282.0 KiB / arm64: 313.3 KiB | 2024-12-12 | Portable menu for pinning folders and Quick Launch-style menus to the Windows taskbar. | [Homepage](https://github.com/hatelamers/WinPinMenu) |
 | [wox](../bucket/wox.json) | 2.4.8 | 64bit: 61.8 MiB | 2026-10-31 | A fully native, open-source launcher for Windows, macOS, and Linux. | [Homepage](https://github.com/Wox-launcher/Wox) |
+| [kostricani-orbit](../bucket/kostricani-orbit.json) | 0.3.0 | 96.0 MiB | — | Windows launcher for organizing application shortcuts and launching desktop programs. | [Homepage](https://kostricani.com/orbit/) |
+
 
 ## Security
 
@@ -1171,6 +1176,7 @@ The `winisland` and `winisland-rheme18` entries are different upstream projects;
 | [oo-diskimage](../bucket/oo-diskimage.json) | 23.2.26060 | — | — | Create and restore full disk images and Windows system backups. | [Homepage](https://www.oo-software.com/en/diskimage-backup-your-data) |
 | [oo-diskcommander](../bucket/oo-diskcommander.json) | 5.1.1020 | — | — | Analyze drives and inspect storage contents. | [Homepage](https://www.oo-software.com/en/oodiskcommander) |
 | [oo-defrag](../bucket/oo-defrag.json) | 32.1.26138 | — | — | Defragment and optimize Windows storage drives. | [Homepage](https://www.oo-software.com/en/products/oodefrag) |
+| [kostricani-hdd-rescue](../bucket/kostricani-hdd-rescue.json) | 0.14.0 | 175.3 MiB | — | Windows file-recovery application with read-only source scanning and recovery to another drive. | [Homepage](https://kostricani.com/hdd-rescue/) |
 
 
 ## Sync & Backup
