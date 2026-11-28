@@ -1,5 +1,5 @@
 {
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "Windows Dynamic Island with music visualization, synchronized notifications, privacy indicators, and fullscreen-aware behavior.",
     "homepage": "https://github.com/Risuleia/Lumen",
     "license": {
@@ -8,8 +8,8 @@
     },
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Risuleia/Lumen/releases/download/v0.2.1/Lumen-0.2.1-setup.exe",
-            "hash": "7f68b3f90891818988c1089d2ff67aef84f8681bfc1281f4e1783213857dc948"
+            "url": "https://github.com/Risuleia/Lumen/releases/download/v0.3.0/Lumen-0.3.0-setup.exe",
+            "hash": "d4a751179b5c7a4b304599b5dcb8faa8c2426b85bb6b1327b553e53e86782c8f"
         }
     },
     "innosetup": true,
