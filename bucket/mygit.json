@@ -1,12 +1,12 @@
 {
-    "version": "0.3.47",
+    "version": "0.3.48",
     "description": "Native Git client with commit graph, staging, diff review, and remote repository support.",
     "homepage": "https://binaryify.com/mygit/",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/Binaryify/MyGit/releases/download/v0.3.47/MyGit-windows-amd64.zip",
-            "hash": "61ffa8f3e423323e3e866d267f3b302cf7eba52dbfd44cdd60a0bf3a4e24dfc1"
+            "url": "https://github.com/Binaryify/MyGit/releases/download/v0.3.48/MyGit-windows-amd64.zip",
+            "hash": "5e13e08621baa3ba4a8f19a3d75075c083dd4d7c53f79444728931847f4deb86"
         }
     },
     "depends": "git",
